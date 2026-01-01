@@ -1,0 +1,120 @@
+## Paladin
+### Description
+Le **Paladin** est un chevalier saint, alliant puissance martiale et lumière sacrée. Il protège les innocents, repousse les ténèbres et inspire les alliés par sa foi inébranlable. Sur le champ de bataille, il est aussi résistant qu’un Guerrier et possède quelques sorts pour soutenir ou punir. Le Paladin peut être un fanatique inflexible, un gardien bienveillant ou un croisé implacable.
+### Caractéristiques de base
+##### Compétences de base
+Les caractéristiques de base d’un Paladin sont :
+- **Mêlée** : 5+
+- **Tir** : 5+
+- **PV** : 7
+- Choisissez sept compétences que vous apprenez niveau 1.
+L'équipement d'un Paladin est :
+- **Maitrises** : Armures complètes.
+- **Argent de départ** : 400 Florins.
+##### Faveur divine
+Vous pouvez dépenser un dé de votre réserve de magie pour transformer n'importe quel résultat obtenu lors d'un test de compétence ou  d'attaque pour le transformer en 6 explosif.
+##### Sacrifice
+Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirigée contre une créature alliée à 6'' ou moins. La portée et la vision restent calculées vers votre allié.
+##### Condamnation
+Lorsque vous réussissez une attaque en mêlée contre une cible, placez un marqueur Condamnation. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
+##### Vœux
+Les paladins choisissent un vœu, et doivent le respecter. Si un Paladin trahit son vœu, il perd les pouvoirs associés. Un Paladin sans vœu peu en prononcer un nouveau lorsqu'il monte de niveau.
+**Vœu de Justice** : *Vous avez juré de luter pour la justice*. Votre compétence de **Présence** augmente de 1 niveau.
+**Vœu de vengeance** : *vous avez juré de venger quelqu'un : votre famille, votre ami peut-être ?* Ce vœu confère +1d6 sur vos attaques de mêlée.
+**Vœu de pureté** : *Vous avez juré de ne rester pur.e et de ne pas céder aux tentations obscures.* Votre réserve de dés de magie augmente de 1d6.
+**Vœu de vaillance** : *Quelle que soit la situation, jamais vous ne céderez face à l'ennemi !* Vous possédez 1 PV supplémentaire et êtes immunisé à l'effet de Panique.
+**Vœu de protection** : *vous avez juré de protéger les plus faibles*. Ce vœu vous permet de relancer vos jets d'armure ayant obtenu 1.
+### Par delà le niveau 1
+Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 3 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+## Magie
+| Niveaux de Paladin | Niveau de sorts max | Reserve de Dés de magie |
+| :----------------: | :-----------------: | :---------------------: |
+|       **1**        |          1          |           4d6           |
+|       **2**        |          1          |           4d6           |
+|       **3**        |          1          |           4d6           |
+|       **4**        |          1          |           4d6           |
+|       **5**        |          1          |           5d6           |
+|       **6**        |          2          |           5d6           |
+|       **7**        |          2          |           5d6           |
+|       **8**        |          2          |           5d6           |
+|       **9**        |          2          |           6d6           |
+|       **10**       |          2          |           6d6           |
+|       **11**       |          3          |           6d6           |
+|       **12**       |          3          |           6d6           |
+Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaines de la Lumière.
+## Niveau 2
+A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
+## Niveau 3, 6, 9
+##### Amélioration de caractéristique
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
+##### Amélioration de compétence
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
+## Niveau 4
+##### Sang Pur
+A partir du niveau 4, vous êtes immunisé aux *empoisonnements*.
+## Niveau 7
+##### Garde Sacrée
+Vous pouvez dépenser une action longue pour placer une garde sacrée sur une créature alliée pendant 1 heure. Au début de chaque tour, une créature sous Garde sacrée gagne Egide (1).
+## Niveau 10
+##### Champion des Rois
+A partir du niveau 10, vous pouvez prendre la forme d'un Champion de Roi pendant 3 tours, une fois entre deux repos. Tant que vous êtes sous cette forme, vous gagnez 3d6 sur vos attaques en mêlée.
+## Niveau 12
+##### Verdict Final
+A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
+
+# Spécialisations
+
+### Protecteur
+Le Protecteur incarne le bouclier du groupe. Il protège ses alliés par sa foi et sa robustesse, et attire l'attention des ennemis pour encaisser les coups à leur place.
+##### Accusation (niveau 2)
+Lorsqu'une créature affectée par *Condamnation* attaque, elle perd 2d6 sur son attaque.
+##### Volonté de Fer (niveau 2)
+Vous pouvez relancer vos jets d'armure ayant obtenu 1 si une créature alliée se trouve à 6'' ou moins.
+##### Première ligne (Niveau 5)
+A partir du niveau 5, si vous bénéficiez de Charge dévastatrice. Si vous réussissez une charge en portant un bouclier, vous gagnez Egide (1).
+##### Présence oppressante (Niveau 8)
+A partir du niveau 8, les créatures adverses à 2'' ou moins souffrent d'un malus de -1 sur leurs attaques en mêlée et -1d6 en Social.
+##### Forteresse de Lumière (Niveau 11)
+A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
+### Le Banneret
+Le Banneret est un meneur d'hommes, un symbole vivant d'espoir. Il inspire et renforce ses alliés par sa simple présence et ses paroles.
+##### Sceaux (Niveau 2)
+Lorsque vous infligez une *Condamnation* à une cible, choisissez le sceau que vous appliquez :
+- Sceau de Rédemption : l'allié déclenchant la *Condamnation* récupère également 1 PV.
+- Sceau de Foi : l'allié déclenchant la *Condamnation* récupère également 1 dé dans sa réserve de magie.
+- Sceau de Discipline : Une créature ainsi condamnée souffre d'un malus de -2 à ses lancement de sorts tant que la *Condamnation* n'est pas brisée.
+- Sceau d'enchaînement : Une créature ainsi condamnée souffre d'un malus de -2 à sa Vitesse tant que la *Condamnation* n'est pas brisée.
+##### Voix céleste (Niveau 2)
+Vous pouvez utiliser **Faveur Divine** pour aider le jet d'une créature alliée à 6'' ou moins.
+##### Condamnation supérieure (niveau 5)
+A partir du niveau 5, votre *Condamnation* et son Sceau durent pour 2 attaques au lieu d'une seule.
+##### Double garde (niveau 8)
+A partir du niveau 8, deux créatures peuvent être affectées par votre Garde Sacrée.
+##### Double champion (niveau 11)
+A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6'' ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
+### Gardien du Sanctuaire
+##### Sacrifice supérieur (niveau 2)
+A partir du niveau 2, lorsque vous utilisez **Sacrifice**, vous gagnez au préalable Egide (1).
+##### Sanctuaire sacré (niveau 2)
+A partir du niveau 2, vous pouvez dépenser une action longue pour invoquer un sanctuaire ayant un rayon de 3'' à 9'' ou moins de vous. Les créatures alliées au sein du sanctuaire peuvent relancer leurs jets d'armure ayant obtenu 1.
+Tant que vous vous situez dans votre Sanctuaire, vous bénéficiez d'un bonus de +1d6 en Social et ne pouvez en être déplacé sans votre volonté.
+Vous ne pouvez posséder qu'un seul Sanctuaire à la fois.
+##### Mur de Foi (Niveau 5)
+A partir du niveau 5, au début de chaque tour, les créatures alliées au sein du Sanctuaire gagnent Egide (1).
+##### Dernier Rempart(Niveau 8)
+A partir du niveau 8, les créature alliées au sein du sanctuaire sont immunisées à la Panique et bénéficient de +1d6 en mêlée lorsqu'elles attaque une créature présente dans le Sanctuaire.
+Lorsque vous utilisez **Sacrifice** sur une créature au sein du Sanctuaire, elle gagne Egide (1).
+##### Sanctuaire parfait (Niveau 11)
+A partir du niveau 11, le rayon de votre sanctuaire passe à 6''.
+### L'Inquisiteur
+L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
+##### Chasseur d'Hérétiques (niveau 2)
+Vous gagnez +1d6 d'attaque en mêlée contre les mages, morts-vivants, démons et créatures corrompues.
+##### Vengeance (niveau 2)
+Lorsque vous effectuez une attaque en mêlée, vous pouvez dépenser une à plusieurs Egide et déclencher la règle Faveur Divine pour chaque Egide ainsi dépensée.
+##### Convergence sacrée (Niveau 5)
+A partir du niveau 5, si vous obtenez au moins deux 6 lors d'une attaque en mêlée, vous bénéficiez de +1 à vos jets de touche pour l'attaque en cours.
+##### Tranchant sacré (Niveau 8)
+A partir du niveau 8, vous attaques deviennent magiques.
+##### Juge et Bourreau (Niveau 11
+Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
