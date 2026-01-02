@@ -1,3 +1,19 @@
-@use "./base.scss";
+// Dans quartz/styles/custom.scss
 
-// put your custom CSS here!
+// Enlever les coins arrondis pour un aspect plus "brut/papier"
+* {
+  border-radius: 0px !important;
+}
+
+// Ajouter une petite texture de papier au fond (optionnel)
+// Si vous trouvez une image de texture papier, c'est ici qu'on l'ajoute.
+body {
+  background-image: linear-gradient(to right, rgba(0,0,0,0.05) 1px, transparent 1px),
+                    linear-gradient(to bottom, rgba(0,0,0,0.05) 1px, transparent 1px);
+  background-size: 20px 20px; // Effet grille très subtil style carte
+}
+
+// Styliser l'explorateur de fichiers pour qu'il ressemble plus à une liste
+.explorer {
+  font-family: var(--headerFont); // Utiliser la police des titres
+}

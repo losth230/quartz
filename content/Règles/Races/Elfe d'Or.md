@@ -1,4 +1,3 @@
-DEPLOY_MARKER_2026_01_02
 ### **Description**
 Les **Elfes d'Or** sont une race fascinante, aussi belle que dangereuse. Leur existence est intimement liée à la magie, qu’ils consomment comme d'autres respirent. Leur peau semble briller d’une lueur dorée, leurs yeux sont des puits de lumière pure, et leur simple présence perturbe subtilement la réalité.  
 Les autres peuples admirent leur beauté et leur puissance, tout en craignant leurs ambitions sans limites et leurs étranges sautes d’humeur. À la fois maîtres et esclaves de leurs propres pouvoirs, les Elfes d'Or incarnent parfaitement l’ambiguïté d’un peuple voué tout entier à la magie. Cette dépendance à la magie les rend aussi puissants qu’instables, et nombreux sont ceux qui sombrent dans l’obsession ou la folie.
