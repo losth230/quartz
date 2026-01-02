@@ -19,39 +19,42 @@ const config: QuartzConfig = {
     baseUrl: "losth230.github.io/quartz",
     ignorePatterns: ["private", "templates", ".obsidian"],
     defaultDateType: "modified",
+    // quartz.config.ts (extrait)
     theme: {
       fontOrigin: "googleFonts",
       cdnCaching: true,
       typography: {
-        header: "Cinzel Decorative",
-        body: "Crimson Text",
-        code: "Fira Code",
+        header: { name: "Cinzel", weights: [400, 600, 700] },
+        body: { name: "IM Fell English", weights: [400], includeItalic: true },
+        code: "IBM Plex Mono",
       },
       colors: {
         lightMode: {
-          light: "#faf8f8",
-          lightgray: "#e5e5e5",
-          gray: "#b8b8b8",
-          darkgray: "#4e4e4e",
-          dark: "#2b2b2b",
-          secondary: "#284b63",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#fff23688",
+          light: "#f3e7c6",        // base “papier”
+          lightgray: "#d7c59a",
+          gray: "#a88b5a",
+          darkgray: "#3b2a1a",     // “encre”
+          dark: "#23160c",
+          secondary: "#7a2e19",    // liens (rouge/brun)
+          tertiary: "#b14b2a",
+          highlight: "rgba(122, 46, 25, 0.10)",
+          textHighlight: "#fff1a888",
         },
         darkMode: {
-          light: "#161618",
-          lightgray: "#393639",
-          gray: "#646464",
-          darkgray: "#d4d4d4",
-          dark: "#ebebec",
-          secondary: "#7b97aa",
-          tertiary: "#84a59d",
-          highlight: "rgba(143, 159, 169, 0.15)",
-          textHighlight: "#b3aa0288",
+          // “parchemin de nuit” (lisible mais chaleureux)
+          light: "#1a120c",
+          lightgray: "#2a1d12",
+          gray: "#7a6a55",
+          darkgray: "#f0e3c7",
+          dark: "#fff6df",
+          secondary: "#d9b26f",
+          tertiary: "#c98b6b",
+          highlight: "rgba(217, 178, 111, 0.14)",
+          textHighlight: "#d9b26f55",
         },
       },
     },
+
   },
   plugins: {
     transformers: [

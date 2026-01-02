@@ -1,17 +1,95 @@
-/* Effet de grain de papier */
+/* quartz/styles/custom.scss */
+
+/* --- Fond “bois” derrière tout --- */
+body, section {
+  background-color: transparent !important;
+}
+
 body {
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
-  background-repeat: repeat;
+  /* bois sombre (CSS-only, sans image) */
+  background:
+    radial-gradient(1200px 800px at 15% 0%, rgba(255,255,255,0.06), transparent 60%),
+    radial-gradient(900px 700px at 85% 100%, rgba(255,255,255,0.04), transparent 55%),
+    linear-gradient(180deg, #2b1b10 0%, #1b1109 100%) !important;
 }
 
-/* Bordures douces pour les encadrés */
-.callout, pre, code {
-  border-radius: 2px !important; /* Coins moins ronds, plus "coupés" */
-  border: 1px solid var(--gray);
+/* --- “Texture parchemin” réutilisable --- */
+@mixin parchment-surface {
+  background-color: var(--light);
+  background-image:
+    radial-gradient(circle at 18% 28%, rgba(0,0,0,0.05), transparent 55%),
+    radial-gradient(circle at 82% 72%, rgba(0,0,0,0.04), transparent 52%),
+    repeating-linear-gradient(90deg, rgba(0,0,0,0.012) 0 1px, transparent 1px 7px),
+    repeating-linear-gradient(0deg,  rgba(0,0,0,0.010) 0 1px, transparent 1px 9px);
+  border: 1px solid rgba(60, 40, 20, 0.28);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
 }
 
-/* Changer la couleur de la sélection de texte (pour faire pro) */
-::selection {
-  background: var(--tertiary);
-  color: var(--light);
+/* --- Centre (le “parchemin”) --- */
+.page #quartz-body .center {
+  @include parchment-surface;
+  border-radius: 14px;
+  padding: 2.3rem 2.6rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* éviter un double fond si l’article a déjà du style ailleurs */
+.page #quartz-body .center > article {
+  background: transparent;
+  padding: 0;
+}
+
+/* bords “brûlés/courbés” subtils */
+.page #quartz-body .center::before,
+.page #quartz-body .center::after {
+  content: "";
+  position: absolute;
+  left: -40px;
+  right: -40px;
+  height: 80px;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.28) 0%, transparent 70%);
+  opacity: 0.22;
+  filter: blur(12px);
+}
+.page #quartz-body .center::before { top: -55px; transform: rotate(-1deg); }
+.page #quartz-body .center::after  { bottom: -55px; transform: rotate(1deg); }
+
+/* Header + footer en “cartouches” parchemin aussi (optionnel mais plus lisible sur le bois) */
+.page .page-header,
+.page footer {
+  @include parchment-surface;
+  border-radius: 14px;
+  padding: 1.2rem 1.6rem;
+}
+
+/* --- Détails “manuscrit” --- */
+.page #quartz-body .center h1,
+.page #quartz-body .center h2 {
+  letter-spacing: 0.02em;
+}
+
+a {
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+/* liens internes (surbrillance plus “encre”) */
+a.internal {
+  background-color: rgba(0,0,0,0.05) !important;
+}
+
+/* Blockquotes un peu plus “scribe” */
+blockquote {
+  border-left-width: 4px;
+  border-left-color: var(--secondary);
+}
+
+/* --- Dark mode : on garde le bois, mais on renforce un peu la “lueur” --- */
+:root[saved-theme="dark"] body {
+  background:
+    radial-gradient(1100px 700px at 20% 0%, rgba(255,255,255,0.07), transparent 60%),
+    radial-gradient(900px 700px at 80% 100%, rgba(255,255,255,0.05), transparent 55%),
+    linear-gradient(180deg, #120b07 0%, #090604 100%) !important;
 }
