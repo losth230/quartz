@@ -68,7 +68,7 @@ Vous pouvez posséder 3 niveaux de runes supplémentaires.
 #### Botaniste (niveau 2)
 Fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
 #### Elixir instable
-Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 1 **Métal** pour fabriquer un **Elixir instable**. Quiconque bois l'élixir
+Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 2 **Métaux** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1, définitivement.
 #### Réactivité *(niveau 5)*
 Utilisez une concoction comme **réaction** après avoir été ciblé par une attaque.
 

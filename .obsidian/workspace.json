@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/Règles/Magie/Magie.md",
+                "file": "content/Règles/Classes/Savant.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Magie"
+              "title": "Savant"
             }
           }
         ]
@@ -33,12 +33,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "content/Règles/Objets/Potions & Elixirs.md",
+                "file": "content/Règles/Magie/Magie.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Potions & Elixirs"
+              "title": "Magie"
             }
           }
         ]
@@ -186,15 +186,8 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "f09ba81eb8e0492f",
+  "active": "aa21ac337b1ae4d8",
   "lastOpenFiles": [
-    "public/MJ/Créatures/Cadavérique/Requin-Zombie-1.html",
-    "public/MJ/Créatures/Cadavérique/Requin-Zombie.html",
-    "public/MJ/Créatures/Cadavérique/Transporteur-de-Cadavres.html",
-    "public/MJ/Créatures/Cadavérique/Zombie.html",
-    "public/MJ/Créatures/Cadavérique/ẞterblich.html",
-    "content/Règles/Magie/Magie.md",
-    "content/Règles/Classes/Savant.md",
     "public/Règles/Règles-og-image.webp",
     "public/Règles/Règles-spéciales-og-image.webp",
     "public/Règles/Races/Vermine-og-image.webp",
@@ -205,34 +198,41 @@
     "public/Règles/Races/Marcheur-og-image.webp",
     "public/Règles/Races/Humain-og-image.webp",
     "public/Règles/Races/Honni-og-image.webp",
-    "public/MJ/Créatures/Ombres/Valseuse-sans-tête.html",
-    "public/MJ/Créatures/Ombres/Servante-spectrale.html",
-    "public/MJ/Créatures/Ombres/Prima-Donna.html",
-    "public/MJ/Créatures/Ombres/Majordome-spectral.html",
-    "public/MJ/Créatures/Ombres/index.html",
-    "public/MJ/Créatures/Ombres/gouvernante-possessive.html",
-    "content/Règles/Objets/Potions & Elixirs.md",
-    "content/Règles/Equipement.md",
-    "content/Règles/Classes/Voleur.md",
-    "content/Règles/Classes/Revenant.md",
-    "content/Règles/Classes/Chaman.md",
-    "CODE_OF_CONDUCT.md",
+    "public/Règles/Races/Elfe-d'Or-og-image.webp",
+    "public/MJ/Créatures/Elémentaire/Elémentaire-d'eau.html",
+    "public/MJ/Créatures/Elémentaire/index.html",
+    "public/MJ/Créatures/Elémentaire",
+    "public/MJ/zdnd/campagne-noirecendre.html",
+    "public/MJ/zdnd/index.html",
+    "public/MJ/zdnd",
+    "public/MJ/One-Shot-Armand/Créatures/Voyante-Sophiestys.html",
+    "public/MJ/One-Shot-Armand/Créatures/Peaux-Vertes.html",
+    "public/MJ/One-Shot-Armand/Créatures/Kramik-le-Diablotin-des-Ficelles.html",
+    "public/MJ/One-Shot-Armand/Créatures/index.html",
+    "content/Règles/Magie/Magie.md",
+    "content/MJ/Créatures/Esprits/Esprit du ragondin.md",
+    "content/MJ/Créatures/Esprits/Esprit du ragondin 1.md",
+    "content/MJ/Créatures/Esprits/Esprit de la chouette.md",
+    "content/MJ/Créatures/Esprits/Esprit de la chèvre.md",
+    "content/MJ/Créatures/Esprits/Esprit de l'Elan.md",
+    "content/MJ/Créatures/Elémentaire/Elémentaire d'eau.md",
+    "content/MJ/Créatures/Cadavérique/Transporteur de Cadavres.md",
+    "content/MJ/Créatures/Cadavérique/Zombie.md",
+    "content/MJ/Créatures/Cadavérique/ẞterblich.md",
+    "content/MJ/zdnd/campagne noirecendre.md",
     "content/MJ/One Shot Armand/Créatures/Voyante Sophiestys.md",
     "content/MJ/One Shot Armand/Créatures/Peaux Vertes.md",
     "content/MJ/One Shot Armand/Créatures/Kramik le Diablotin des Ficelles.md",
     "content/MJ/One Shot Armand/Créatures/Humains.md",
     "content/MJ/One Shot Armand/Créatures/Bêtes.md",
-    "content/MJ/Créatures/Ombres/Valseuse sans tête.md",
-    "content/MJ/Créatures/Ombres/Servante spectrale.md",
-    "content/MJ/Créatures/Ombres/Prima Donna.md",
-    "content/MJ/Créatures/Ombres/Majordome spectral.md",
-    "content/MJ/Créatures/Ombres/gouvernante possessive.md",
-    "content/MJ/Créatures/Esprits/Esprit du ragondin.md",
-    "content/MJ/Créatures/Esprits/Esprit du ragondin 1.md",
-    "content/MJ/Créatures/Esprits/Esprit de la chèvre.md",
-    "content/MJ/Créatures/Esprits/Esprit de la chouette.md",
-    "content/MJ/Créatures/Esprits/Esprit de l'Elan.md",
-    "content/MJ/Créatures/Elémentaire/Elémentaire d'eau.md",
-    "content/MJ/Créatures/Cadavérique/ẞterblich.md"
+    "content/MJ/One Shot Armand/Le Cirque Infernal.md",
+    "content/MJ/Créatures/Compagnon du néant.md",
+    "content/MJ/Créatures/Gobelin.md",
+    "content/Règles/Races/Vermine.md",
+    "content/Règles/Races/Peaux - Vertes.md",
+    "content/Règles/Races/Ogres.md",
+    "content/Règles/Races/Norls.md",
+    "content/Règles/Races/Nain.md",
+    "content/Règles/Races/Marcheur.md"
   ]
 }
