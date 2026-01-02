@@ -27,6 +27,8 @@ export const defaultContentPageLayout: PageLayout = {
   ],
   left: [
     Component.PageTitle(),
+    // DÉPLACÉ ICI : L'explorateur est maintenant juste sous le titre du site (Haut-Gauche)
+    Component.Explorer(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
       components: [
@@ -38,20 +40,22 @@ export const defaultContentPageLayout: PageLayout = {
         { Component: Component.ReaderMode() },
       ],
     }),
-    Component.Explorer(),
   ],
   right: [
-    Component.Graph(),
+    // DÉPLACÉ ICI : La table des matières est maintenant tout en haut (Haut-Droite)
     Component.DesktopOnly(Component.TableOfContents()),
+    Component.Graph(),
     Component.Backlinks(),
   ],
 }
 
-// components for pages that display lists of pages  (e.g. tags or folders)
+// components for pages that display lists of pages (e.g. tags or folders)
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [
     Component.PageTitle(),
+    // DÉPLACÉ ICI AUSSI pour la cohérence
+    Component.Explorer(),
     Component.MobileOnly(Component.Spacer()),
     Component.Flex({
       components: [
@@ -62,7 +66,6 @@ export const defaultListPageLayout: PageLayout = {
         { Component: Component.Darkmode() },
       ],
     }),
-    Component.Explorer(),
   ],
   right: [],
 }
