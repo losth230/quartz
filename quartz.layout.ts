@@ -9,6 +9,7 @@ export const sharedPageComponents: SharedLayout = {
   footer: Component.Footer({
     links: {
       GitHub: "https://github.com/jackyzha0/quartz",
+      "Discord Community": "https://discord.gg/cRFFHYye7t",
     },
   }),
 }
@@ -26,22 +27,14 @@ export const defaultContentPageLayout: PageLayout = {
   left: [
     Component.PageTitle(),
     Component.MobileOnly(Component.Spacer()),
-    Component.Flex({
-      components: [
-        {
-          Component: Component.Search(),
-          grow: true,
-        },
-        { Component: Component.Darkmode() },
-        { Component: Component.ReaderMode() },
-      ],
-    }),
-    Component.Explorer(),
+    Component.Search(),
+    Component.Darkmode(),
+    Component.DesktopOnly(Component.Explorer()), // L'explorateur est remonté ici
   ],
   right: [
-    Component.Graph(),
-    Component.DesktopOnly(Component.TableOfContents()),
+    Component.DesktopOnly(Component.TableOfContents()), // La table des matières tout en haut
     Component.Backlinks(),
+    Component.Graph(), // Le graphique tout en bas
   ],
 }
 
@@ -49,18 +42,18 @@ export const defaultContentPageLayout: PageLayout = {
 export const defaultListPageLayout: PageLayout = {
   beforeBody: [Component.Breadcrumbs(), Component.ArticleTitle(), Component.ContentMeta()],
   left: [
-      Component.PageTitle(),
-      Component.MobileOnly(Component.Spacer()),
-      Component.Search(),
-      Component.Darkmode(),
-      // L'explorateur est remonté juste après la recherche
-      Component.DesktopOnly(Component.Explorer()),
-    ],
-    right: [
-      // La table des matières (TOC) passe tout en haut
-      Component.DesktopOnly(Component.TableOfContents()),
-      Component.Backlinks(),
-      // La vue graphique passe tout en bas
-      Component.Graph(),
-    ],
+    Component.PageTitle(),
+    Component.MobileOnly(Component.Spacer()),
+    Component.Flex({
+      components: [
+        {
+          Component: Component.Search(),
+          grow: true,
+        },
+        { Component: Component.Darkmode() },
+      ],
+    }),
+    Component.Explorer(),
+  ],
+  right: [],
 }
