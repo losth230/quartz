@@ -51,7 +51,7 @@ Vous êtes immunisé au poison.
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous gagnez toutes les **règles spéciales** de la créature pendant 1 jour.
 ## Niveau 10
 ##### Ajouter la sauce
-Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plante par ration pour lui octroyer un effet d'Elixir (cf. [[Consommables]]) de votre choix.
+Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plante par ration pour lui octroyer un effet d'Elixir (cf. [[Potions & Elixirs]]) de votre choix.
 ## Niveau 12
 ##### Umami
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
