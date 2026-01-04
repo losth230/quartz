@@ -99,3 +99,29 @@ Les objets sont fabriqués à partir de **5 types de matériaux** :
 | 2         | Succès normal : objet utilisable                |
 | 3         | Objet de qualité : bonus léger                  |
 | 4+        | Chef-d'œuvre : bonus important ou effet spécial |
+
+---
+
+### ✨ Exemples de bonus selon l'objet
+
+- **Armes** :
+  - +1 portée
+  - +1d6 en attaque
+  - Propriété spéciale : « Perforant », « Léger », etc.
+- **Armures** :
+  - +1 à l’armure
+  - Résistance à un type de dégât (feu, poison…)
+- **Outils ou objets** :
+  - +1 aux tests concernés
+  - +1 utilisation ou durée accrue
+
+---
+
+### 📖 Exemple de craft
+
+> Lucie veut fabriquer une **arbalète**.  
+> Recette : 2x métal, 2x bois, 1x organique (corde)  
+> Elle a 3d6 en Mental et une compétence DIY à 4+.  
+> Elle lance : 🎲 3d6 → [2, 5, 6] → 2 réussites  
+> Résultat : arbalète fonctionnelle.
+

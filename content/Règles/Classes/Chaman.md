@@ -73,7 +73,7 @@ Lorsque vous attaquez, vous pouvez dépenser les marqueurs *enflammés* ou *gel�
 Lorsque vous êtes ciblé par un sort Elémentaire (Domaines des Cieux, Primordial, Givre ou du C), vous gagnez Egide (1).
 ##### Assiette de plomb (niveau 11)
 
-### Mande Esprit
+### Spiritualiste
 ##### Esprit animal (niveau 2)
 A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dé de magie.
 ##### Communication extra sensorielle (niveau 2)
@@ -84,4 +84,3 @@ Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon
 Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine lié à votre aura.
 ##### Réincarnation (niveau 11)
 A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capaciter d'envoyer des messages télépathiques aux créatures proches de vous.
-### 
