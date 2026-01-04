@@ -30,6 +30,7 @@
 | **Javelot**            | Mêlée (1 main)/ Portée 9" | 3d6  | FD (1), Lancer.                                             | 2 Bois, 1 Métal        | 80f  |
 | **Bâton**              | Mêlée (2 mains)           | 2d6  |                                                             | 2 Bois                 | 20f  |
 | **Fouet**              | Mêlée (1 main)            | 1d6  | Anti infanterie, Gauche                                     | 2 Organiques, 2 Tissus | 170f |
+
 **Arme gauche** : posséder une arme en main gauche vous octroie un bonus de +1d6 à toutes vos attaques en mêlée.
 ##### Armes à distance
 | Nom                    | Maniement  | Atta | Propriétés              | Ingrédients      | Coût |
@@ -44,10 +45,10 @@
 ### Améliorations de rang I (3 réussites)
 Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet en fonction de son type :
 ##### Arme
-**Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.
-**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.
-**Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
-**Légère** : confère **Rapide**.
+- **Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.
+- **Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.
+- **Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
+- **Légère** : confère **Rapide**.
 ##### Armures
 **Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.
 **Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.
