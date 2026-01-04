@@ -46,9 +46,10 @@
 Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet en fonction de son type :
 ##### Arme
 - **Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.
-- **Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.
-- **Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
-- **Légère** : confère **Rapide**.
+- 
+**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir. \n
+**Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
+**Légère** : confère **Rapide**.
 ##### Armures
 **Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.
 **Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.
