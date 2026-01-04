@@ -50,12 +50,14 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 - **Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
 - **Légère** : confère **Rapide**.
 ##### Armures
-**Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.
-**Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.
-**Discrète** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
+- **Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.
+- **Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.
+- **Discrète** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
 ##### Outils / Objets
 **Solide** : +1 utilisation supplémentaire.
+
 **Optimisé** : +1d6 aux tests de **DIY** ou **Science** associés.
+
 **Compact** : moitié du poids ou de l’encombrement.
 ### Améliorations de Rang II (4 réussites)
 ##### Armes
