@@ -20,6 +20,20 @@
               "icon": "lucide-file",
               "title": "Savant"
             }
+          },
+          {
+            "id": "60f716aae02f421d",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/MJ/Créatures/Bêtes/Loup.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Loup"
+            }
           }
         ]
       },
@@ -33,6 +47,34 @@
             "state": {
               "type": "markdown",
               "state": {
+                "file": "content/Règles/Objets/Potions & Elixirs.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Potions & Elixirs"
+            }
+          },
+          {
+            "id": "7ed1e0528cf707cc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/MJ/Créatures/Homonculus.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Homonculus"
+            }
+          },
+          {
+            "id": "4b62391bbe8042a9",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
                 "file": "content/Règles/Magie/Magie.md",
                 "mode": "source",
                 "source": false
@@ -41,7 +83,8 @@
               "title": "Magie"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -92,6 +135,20 @@
               "state": {},
               "icon": "lucide-bookmark",
               "title": "Bookmarks"
+            }
+          },
+          {
+            "id": "85b8958871c3ad5c",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "content/MJ/Créatures/Homonculus.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Homonculus"
             }
           }
         ]
@@ -188,32 +245,27 @@
   },
   "active": "aa21ac337b1ae4d8",
   "lastOpenFiles": [
-    "public/Règles/Règles-og-image.webp",
-    "public/Règles/Règles-spéciales-og-image.webp",
-    "public/Règles/Races/Vermine-og-image.webp",
-    "public/Règles/Races/Peaux---Vertes-og-image.webp",
-    "public/Règles/Races/Ogres-og-image.webp",
-    "public/Règles/Races/Norls-og-image.webp",
-    "public/Règles/Races/Nain-og-image.webp",
-    "public/Règles/Races/Marcheur-og-image.webp",
-    "public/Règles/Races/Humain-og-image.webp",
-    "public/Règles/Races/Honni-og-image.webp",
-    "public/Règles/Races/Elfe-d'Or-og-image.webp",
-    "public/MJ/Créatures/Elémentaire/Elémentaire-d'eau.html",
-    "public/MJ/Créatures/Elémentaire/index.html",
-    "public/MJ/Créatures/Elémentaire",
-    "public/MJ/zdnd/campagne-noirecendre.html",
-    "public/MJ/zdnd/index.html",
-    "public/MJ/zdnd",
-    "public/MJ/One-Shot-Armand/Créatures/Voyante-Sophiestys.html",
-    "public/MJ/One-Shot-Armand/Créatures/Peaux-Vertes.html",
-    "public/MJ/One-Shot-Armand/Créatures/Kramik-le-Diablotin-des-Ficelles.html",
-    "public/MJ/One-Shot-Armand/Créatures/index.html",
+    "content/MJ/Créatures/Homonculus.md",
+    "content/Règles/Classes/Savant.md",
+    "content/MJ/Créatures/Compagnon du néant.md",
+    "content/MJ/Créatures/Bêtes/Loup.md",
+    "content/MJ/Créatures/Gobelin.md",
+    "content/MJ/Créatures/Lycanthrope.md",
     "content/Règles/Magie/Magie.md",
+    "public/MJ/Créatures/Cadavérique/Banshie.html",
+    "public/MJ/Créatures/Cadavérique/Boucanier-zombie.html",
+    "public/MJ/Créatures/Cadavérique/index.html",
+    "public/MJ/Créatures/Cadavérique/Requin-Zombie-1.html",
+    "public/MJ/Créatures/Cadavérique/Pleureuse.html",
+    "public/MJ/Créatures/Cadavérique/Requin-Zombie.html",
+    "public/MJ/Créatures/Cadavérique/Transporteur-de-Cadavres.html",
+    "public/MJ/Créatures/Cadavérique/Zombie.html",
+    "public/MJ/Créatures/Cadavérique/ẞterblich.html",
+    "public/MJ/Créatures/Compagnon-du-néant.html",
     "content/MJ/Créatures/Esprits/Esprit du ragondin.md",
     "content/MJ/Créatures/Esprits/Esprit du ragondin 1.md",
-    "content/MJ/Créatures/Esprits/Esprit de la chouette.md",
     "content/MJ/Créatures/Esprits/Esprit de la chèvre.md",
+    "content/MJ/Créatures/Esprits/Esprit de la chouette.md",
     "content/MJ/Créatures/Esprits/Esprit de l'Elan.md",
     "content/MJ/Créatures/Elémentaire/Elémentaire d'eau.md",
     "content/MJ/Créatures/Cadavérique/Transporteur de Cadavres.md",
@@ -226,13 +278,18 @@
     "content/MJ/One Shot Armand/Créatures/Humains.md",
     "content/MJ/One Shot Armand/Créatures/Bêtes.md",
     "content/MJ/One Shot Armand/Le Cirque Infernal.md",
-    "content/MJ/Créatures/Compagnon du néant.md",
-    "content/MJ/Créatures/Gobelin.md",
+    "content/Règles/Objets/Potions & Elixirs.md",
     "content/Règles/Races/Vermine.md",
     "content/Règles/Races/Peaux - Vertes.md",
-    "content/Règles/Races/Ogres.md",
-    "content/Règles/Races/Norls.md",
-    "content/Règles/Races/Nain.md",
-    "content/Règles/Races/Marcheur.md"
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Vermine-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Peaux---Vertes-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Ogres-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Norls-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Nain-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Marcheur-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Humain-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Honni-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Races/Elfe-d'Or-og-image.webp",
+    "content/MJ/Créatures/Cadavérique/Règles/Objets/Services--and--Transport-og-image.webp"
   ]
 }

@@ -67,14 +67,20 @@ Vous pouvez posséder 3 niveaux de runes supplémentaires.
 ### Alchimiste
 #### Botaniste (niveau 2)
 Fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
-#### Elixir instable
-Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 2 **Métaux** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1, définitivement.
-#### Réactivité *(niveau 5)*
-Utilisez une concoction comme **réaction** après avoir été ciblé par une attaque.
-
-#### Formule instable *(niveau 8)*
-Vos concoctions affectent toutes les cibles dans un rayon de **3'' supplémentaires**.
-
-#### Transmutation *(niveau 11)*
-Une fois par combat, transformez une concoction en une autre **instantanément** avant de la lancer.
-**
+#### Transmutation agressive (niveau 5)
+Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Empoisonnement* ou *Gel* à votre cible.
+#### Formule instable (niveau 8)
+#### Transmutation (niveau 11)
+### Biomancien
+#### Création d’homonculus mineur (niveau 2)
+Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
+Ce familier vous obéit. Un seul actif à la fois.
+#### Elixir instable (niveau 2)
+Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 2 **Métaux** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1 définitivement et effectue un jet de **Puissance irrésistible** de la table de [[Magie]].
+#### Transfusion (niveau 5)
+Vous pouvez perdre 2 PV pour rendre 1 PV et augmenter de 1 le maximum de PV de votre [[Homonculus]]. Votre Homonculus peut perdre 1 PV pour conférer **Sauvagerie** à une créature consentante à 1'' ou moins.
+Dans les deux cas, la transfusion demande une action courte.
+#### Homonculus supérieur (niveau 8)
+Votre [[Homonculus]] peut prendre la forme de jusqu'à trois **Bêtes** de votre choix, et ainsi combiner leurs **Traits**. Les attaques en mêlée de votre [[Homonculus]] gagnent Force dévastatrice (1).
+#### Formidable expérience (niveau 11)
+Votre Homonculus peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.
