@@ -47,12 +47,12 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 ##### Arme
 - **Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.
 - 
-**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir. \n
+**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.
 **Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
 **Légère** : confère **Rapide**.
 ##### Armures
-**Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.
-**Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.
+**Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.  
+**Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.  
 **Discrète** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
 ##### Outils / Objets
 **Solide** : +1 utilisation supplémentaire.
