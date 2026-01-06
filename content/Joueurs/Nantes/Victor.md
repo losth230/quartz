@@ -16,9 +16,6 @@
             width: calc(100% + 250px);
             height: 750px;
             border: 0;"
-        frameborder="0" 
-        width="100%" 
-        height="1050" 
         allowfullscreen="true">
     </iframe>
 
