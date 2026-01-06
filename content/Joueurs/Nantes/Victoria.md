@@ -6,6 +6,6 @@
         height="100%" 
         scrolling="no" 
         allowfullscreen="true"
-        style="position: absolute; top: 0; left: 0; transform: scale(1.2); transform-origin: 0 0;">
+        style="position: absolute; top: 0; left: 0; object-fit: cover;">
     </iframe>
 </div>
