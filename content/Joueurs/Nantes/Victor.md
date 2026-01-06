@@ -88,7 +88,7 @@
 <body>
 
     <div class="fiche-container">
-        <img src="blank.jpg" alt="Fiche Personnage" class="fiche-img">
+        <img src="C:\Users\lafue\OneDrive\Jdr\C&P\blank.png" alt="Fiche Personnage" class="fiche-img">
 
         <div id="zone-nom" class="editable-zone" contenteditable="true" data-placeholder="Nom du héros..."></div>
         
