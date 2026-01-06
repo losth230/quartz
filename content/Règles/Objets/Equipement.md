@@ -45,31 +45,28 @@
 ### Améliorations de rang I (3 réussites)
 Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet en fonction de son type :
 ##### Arme
-- **Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.
-- 
-**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.
-**Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.
+**Tranchante I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.   
+**Précise I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.  
+**Equilibrée** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.  
 **Légère** : confère **Rapide**.
 ##### Armures
 **Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.  
 **Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.  
 **Discrète** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
 ##### Outils / Objets
-**Solide** : +1 utilisation supplémentaire.
-
-**Optimisé** : +1d6 aux tests de **DIY** ou **Science** associés.
-
+**Solide** : +1 utilisation supplémentaire.  
+**Optimisé** : +1d6 aux tests de **DIY** ou **Science** associés.  
 **Compact** : moitié du poids ou de l’encombrement.
 ### Améliorations de Rang II (4 réussites)
 ##### Armes
-**Tranchante II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Mêlée.
+**Tranchante II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Mêlée.  
 **Précise II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Tir.
-**Saignante** : les attaques effectuées avec cette arme  infligent 1 marqueur *Saignement* en cas de blessure.
-**Assommante** : les attaques effectuées avec cette arme infligent *Etourdissement* pendant 1 tour en cas de blessure.
-**Filante** : les attaques à distance effectuées avec cette arme à distance ont +3'' de portée. 
+**Saignante** : les attaques effectuées avec cette arme  infligent 1 marqueur *Saignement* en cas de blessure.  
+**Assommante** : les attaques effectuées avec cette arme infligent *Etourdissement* pendant 1 tour en cas de blessure.  
+**Filante** : les attaques à distance effectuées avec cette arme à distance ont +3'' de portée.  
 ##### Armures
-**Renforcée** : +1 à la valeur d’Armure.
-**Souple II** : annule la pénalité de  mouvement lié à cette armure.
+**Renforcée** : +1 à la valeur d’Armure.  
+**Souple II** : annule la pénalité de  mouvement lié à cette armure.  
 ### Matériaux de base
 Les objets sont fabriqués à partir de **5 types de matériaux** :
 - **Métaux** : acier, fer, cuivre…
