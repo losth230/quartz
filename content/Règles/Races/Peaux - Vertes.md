@@ -29,7 +29,7 @@ Les Orques sont entiers, directs, loyaux, parfois rustres. Ils valorisent le cou
 - **Langues** : Commun, Gobelin
 - **Magie** : 
 ### **Capacités Spéciales**
-**Fuite** : Vous pouvez dépenser votre Réaction pour effectuer une marche lorsqu'une créature se déplace à 2'' ou moins de vous.
+**Fuite** : Vous pouvez dépenser votre Réaction pour effectuer une marche lorsqu'une créature se déplace à 2'' ou moins de vous.  
 **Bricolo** : lorsque vous effectuez une fabrication, vous pouvez remplacer un matériau par un autre (par exemple utiliser 1 Bois à la place de 1 Métal).
 ### **Culture et Histoire**
 Les **Gobelins** sont les enfants perdus de la guerre entre les Peaux-Vertes. Trop faibles pour s’imposer par la force, ils ont survécu en utilisant leur ruse et leur magie. Certains ont choisi la voie des **Chamans**, se liant aux forêts, aux marais ou aux totems d’animaux. D’autres ont suivi des sorciers et des invocateurs dans les profondeurs corrompues, où ils ont appris à survivre parmi les démons et les anomalies magiques.

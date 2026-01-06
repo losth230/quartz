@@ -9,7 +9,7 @@ Les Ogres vivent généralement en petits groupes familiaux ou tribaux. Leur vie
 - **Langues** : Commun.
 - **Magie** : les Ogres ont accès au Domaine du Festin.
 ### **Capacités Spéciales**
-**Ventre plein** : Lorsque vous créez un **Ogre** au niveau 1, vous commencez avec 1 PV supplémentaire.
+**Ventre plein** : Lorsque vous créez un **Ogre** au niveau 1, vous commencez avec 1 PV supplémentaire.  
 **Gros Bras** : Vos attaques en mêlée bénéficient de Force dévastatrice (+1).
 ### **Culture et Histoire**
 Les **Ogres** ont une culture fortement axée sur la survie et la guerre. Leur société est généralement tribale et fondée sur la force. Les plus forts deviennent les leaders, et les guerriers sont vénérés. Ils vivent principalement dans des régions montagneuses ou des plaines sauvages, loin des cités civilisées.

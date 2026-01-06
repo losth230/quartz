@@ -10,7 +10,7 @@ Les Nains vivent dans des montagnes escarpées ou sous des forteresses souterrai
 - **Magie** : les Nains n'ont accès à aucun Domaine particulier.
 - **Vision dans le noir** : 15''.
 ### **Capacités Spéciales**
-**Êtres de Pierre** : Lorsque vous êtes touché par un sort (quelle qu'en soit la source), jetez 1d6, sur 5+ le sort est annulé.
+**Êtres de Pierre** : Lorsque vous êtes touché par un sort (quelle qu'en soit la source), jetez 1d6, sur 5+ le sort est annulé.  
 **Mur de Boucliers** : le premier tour  de chaque  combat, vous bénéficiez d'un bonus de +1 à vos jets d'armure.
 ### **Culture et Histoire**
 Les **Nains** ont une histoire longue et fière, marquée par des victoires sur des créatures puissantes, la construction de grandes cités souterraines et une profonde connexion avec la terre. Leur société est fondée sur des valeurs telles que l'honneur, la loyauté et l'engagement.

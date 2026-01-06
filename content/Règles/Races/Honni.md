@@ -10,7 +10,7 @@ Ils ne cherchent ni vengeance ni pardon. Ils veulent seulement vivre libres, loi
 - **Langues** : Elfique, Commun.
 - **Magie** : les Honnis n'ont accès à aucun Domaine particulier.
 ### **Capacités Spéciales**
-**Mémoire des chaînes** : Vous connaissez l'esclavage mieux que personne et savez y résister. Tant que vous possédez moins de la moitié de vos PV, vous ignorez les effets de *fatigue*, d'*étourdissement*, de *ralentissement* et d'*immobilisation*.
+**Mémoire des chaînes** : Vous connaissez l'esclavage mieux que personne et savez y résister. Tant que vous possédez moins de la moitié de vos PV, vous ignorez les effets de *fatigue*, d'*étourdissement*, de *ralentissement* et d'*immobilisation*.  
 **Sensibilité à la Magie** : Lorsque vous subissez une attaque magique de projectile, votre jet d'armure s'effectue avec un malus de -1.
 ### **Culture et Histoire**
 Les **Honnis** sont nés d’une révolte : celle de ceux qui ont refusé de se laisser consumer par la magie. Traqués, enchaînés, torturés, ils ont fui pour survivre, abandonnant le luxe et le pouvoir pour retrouver leur liberté. Ils se sont faits bergers, chasseurs, nomades, artisans des ombres et des pierres. Leur culture rejette toute dépendance à l’invisible. Ils valorisent la force, le savoir concret, la patience, et la mémoire des humiliations.

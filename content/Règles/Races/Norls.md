@@ -10,7 +10,6 @@ Les **Norls** sont un peuple du Nord, né entre **fjords**, **forêts de pins** 
 ### **Capacités Spéciales**
 **Robustesse Glaciale** : Vous pouvez dépenser votre Réaction pour perdre un marqueur *Fatigue* ou *Gel* et gagner Egide (1).
 ### **Culture et Histoire**
-
 Les **Norls** ne forment pas un empire unique: ils sont une mosaïque de **clans** et de **chefferies** reliés par la mer, les alliances et les rivalités. Leur monde est dur, et la survie y récompense la prudence autant que l’audace.
 - **Histoire** : les sagas racontent des migrations, des hivers noirs, des guerres de succession et des expéditions lointaines; chaque clan possède ses hauts faits… et ses hontes.
 - **Société** : un **Jarl** ou chef mène, mais les décisions importantes se discutent au **Thing**; l’honneur, la dette et la réparation publique structurent la justice.

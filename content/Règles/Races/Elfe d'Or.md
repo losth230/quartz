@@ -9,7 +9,7 @@ Les autres peuples admirent leur beauté et leur puissance, tout en craignant le
 - **Langues** : Commun, Elfique, 1 langue supplémentaire au choix.
 - **Magie** : les Elfes d'Or ont accès au Domaine de la Lumière et au Domaine de la Pureté.
 ### **Capacités Spéciales**
-**Sang bleu** : votre sang hors du commun vous immunise aux effets de *Saignements* et de *Poison*.
+**Sang bleu** : votre sang hors du commun vous immunise aux effets de *Saignements* et de *Poison*.  
 **Assoiffés de mana** : une fois par jour et au prix d'une action longue, vous pouvez drainez la magie d'une créature morte ou vivante possédant une affinité magique pour lui voler un nombre de dés de magie égal à la moitié (arrondie au supérieur) de votre niveau.
 Si pour une quelconque raison votre réserve de dés de magie tombe à 0, vous obtenez Sauvagerie et ne pouvez plus différencier vos amis de vos ennemis.
 ### **Culture et Histoire**
