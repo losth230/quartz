@@ -8,7 +8,7 @@
 ">
 
     <iframe 
-        src="https://docs.google.com/presentation/d/1fyuDCbruUBrShDOp25MFsc0VIYL9vbx2kqaHJTGkNJA/edit?mp=minimal"
+        src="https://docs.google.com/presentation/d/1fyuDCbruUBrShDOp25MFsc0VIYL9vbx2kqaHJTGkNJA/edit?rm=minimal"
         style="
             position: absolute;
             top: 0px; 
