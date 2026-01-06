@@ -18,13 +18,16 @@
 | **Armure de plate complète en mithril** | Complète  |         3+/5+         |   2''   |      -3d6      | 24 Métaux   | 1440f |
 
 **Bouclier rond en  fer** (4 Bois, 1 Métal): 100 florins.  Réduit de 1  la valeur requise pour réussir  vos  jets  d'armures physique provenant de l'arc avant (un 4+ devient  donc 3+).
-### Améliorations de rang I (3 réussites)
+## Améliorations de rang I (3 réussites)
 Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet :
-##### Armures
-**Souple I** : la pénalité de mouvement liée à cette armure est réduite de 1.  
-**Solide** : cette armure permet de relancer les jets d'armure physique ayant obtenu  1.  
-**Discrète** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
-### Améliorations de Rang II (4 réussites)
-##### Armures
-**Renforcée** : +1 à la valeur d’Armure.  
-**Souple II** : annule la pénalité de  mouvement lié à cette armure.  
+**Souplesse I** : la pénalité de mouvement liée à cette armure est réduite de 1.  
+**Solidité** : cette armure permet de relancer les jets d'armure physique ayant obtenu 1.  
+**Discrétion** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
+**ignifuge** : cette armure protège son porteur de la [[Règles spéciales]] Attaques enflammées.
+## Améliorations de Rang II (4 réussites)
+**Robustesse I** : +1 à la valeur d’Armure.  
+**Souplesse II** : annule la pénalité de mouvement liée à cette armure.  
+## Améliorations de Rang III (5 réussites)
+**Robustesse II** : +2 à la valeur d’Armure.  
+**Antimagie** : +1 à la valeur de Résistance Magique.
+**Protection élémentaire** : cette protège le porteur des [[Règles spéciales]] Force dévastatrice (N) et Perforant (N) des attaques ciblant le porteur.

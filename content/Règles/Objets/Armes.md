@@ -28,7 +28,7 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 **Tranchant I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.   
 **Précision I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.  
 **Equilibre** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.  
-**Léger** : confère **Rapide**.
+**Léger** : confère **Rapide**.  
 **Poussée I** : les attaques à distance effectuées avec cette arme repoussent leur cible de 1 case en cas de touche.  
 ## Améliorations de Rang II (4 réussites)
 **Tranchant II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Mêlée.  
@@ -37,7 +37,7 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 **Assommage** : les attaques effectuées avec cette arme infligent *Etourdissement* pendant 1 tour en cas de blessure.  
 **Filante** : les attaques à distance effectuées avec cette arme à distance ont +3'' de portée.  
 **Poussée II** : les attaques à distance effectuées avec cette arme repoussent leur cible de 2 cases en cas de touches.  
-## Améliorations de Rang II (4 réussites)
+## Améliorations de Rang II (5 réussites)
 **Tranchant III** : les attaques effectuées avec cette arme bénéficient de +3d6 en Mêlée.  
 **Précision II** : les attaques effectuées avec cette arme bénéficient de +3d6 en Tir.  
 **Poussée III** : les attaques à distance effectuées avec cette arme repoussent leur cible de 3 case en cas de touches.  
