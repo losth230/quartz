@@ -3,7 +3,7 @@
         src="https://docs.google.com/presentation/d/1XwcNiuVs2B9ZnVn4faReMWxEYR4Fwj8AdcMDoPuSiNM/edit?rm=minimal" 
         frameborder="0" 
         width="100%" 
-        height="100%" 
+        height="1100px" 
         scrolling="no" 
         allowfullscreen="true"
         style="position: absolute; top: 0; left: 0; clip-path: inset(0% 0% 0% 25%);
