@@ -19,7 +19,7 @@
         frameborder="0" 
         width="100%" 
         height="1050" 
-        "allowfullscreen="true">
+        allowfullscreen="true">
     </iframe>
 
 </div>
