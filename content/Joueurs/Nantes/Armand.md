@@ -1,4 +1,4 @@
-<div style="width: 100%; height: 1150px; overflow: hidden; position: relative;">
+<div style="width: 100%; height: 1100px; overflow: hidden; position: relative;">
     <iframe 
         src="https://docs.google.com/presentation/d/1xtCkI8U5ocjieWVdbb0UcKr6bT0Ran0moNgh_MGpHa8/edit?rm=minimal" 
         frameborder="0" 
