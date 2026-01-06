@@ -6,6 +6,6 @@
         height="1050" 
         scrolling="no" 
         allowfullscreen="true"
-	        style="position: absolute; top: 0; left: 0; clip-path: inset(120px 90px 200px 240px); object-fit: fill;">
+	        style="position: absolute; top: 0; left: 0; clip-path: inset(12% 9% 20% 26%); object-fit: fill;">
     </iframe>
 </div>
