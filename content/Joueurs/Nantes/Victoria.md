@@ -7,7 +7,7 @@
         scrolling="no" 
         allowfullscreen="true"
         style="position: absolute; top: 0; left: 0; clip-path: inset(5% 5% 5% 30%);
-               transform: scale(1.7); transform-origin: 50% 50%;">
+               transform: scale(1.5); transform-origin: 70% 50%;">
     </iframe>
 </div>
 
