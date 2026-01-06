@@ -1,10 +1,25 @@
 
-<div style="width: 100%; height: 1000px; overflow: hidden; position: relative;">
-    <iframe src="https://docs.google.com/presentation/d/13LzRLJGZLKpA8By8rb_9bGUwkYFONNs4vebt7j6e3Dk/edit?rm=minimal" 
+<div style="
+    width: 960px;
+    height: 540px;  
+    overflow: hidden;  
+    border: 1px solid #ccc;
+    position: relative;
+">
+
+    <iframe 
+        src="https://docs.google.com/presentation/d/1fyuDCbruUBrShDOp25MFsc0VIYL9vbx2kqaHJTGkNJA/edit?mp=minimal"
+        style="
+            position: absolute;
+            top: 0px; 
+            left: -250px;
+            width: calc(100% + 250px);
+            height: 750px;
+            border: 0;"
         frameborder="0" 
         width="100%" 
         height="1050" 
-        allowfullscreen="true"
-        style="position: absolute; top: 0; left: 0;">
+        "allowfullscreen="true">
     </iframe>
+
 </div>
