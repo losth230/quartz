@@ -9,19 +9,20 @@ Les caractéristiques de base en combat d'un Guerrier sont :
 - **Tir** : 5+
 - **PV** : 6 + niveau de [[Règles#Physique :|Résistance]].
 - Choisissez sept [[Règles#Compétences|compétences]] que vous apprenez au niveau 1.
-L'équipement d'un Guerrier est :
+L'[[content/Règles/Equipements/|équipement]] d'un Guerrier est :
 - **Maitrises** : Armures complètes.
 - **Argent de départ** : 300 Florins.
 ##### Entrainement
-Lorsque vous créez un Guerrier, vous pouvez choisir une Entrainement militaire dans la liste ci-dessous :
+Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire dans la liste ci-dessous :
 - **Charge dévastatrice** : après avoir réussi une charge, vous bénéficiez d'1d6 bonus à l'attaque gratuite octroyée.
 - **Maitre-lame** : lors d'une attaque en mêlée, vous pouvez relancer les jets de touche ayant obtenu 1.
 - **Tireur d'élite** : lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1.
-- **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est pas réutilisable avant d'avoir effectué un sommeil.
+- **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est utilisable qu'une seule fois par jour.
 - **Défenseur** : lorsque vous effectuez des jets d'armure, vous pouvez relancer vos jets ayant obtenu 1 si vous possédez un bouclier.
 - **Esquive** : lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour jeter 1d6 supplémentaire lors de votre test d'armure.
 - **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle Anti-infanterie.
-- **Discipline** : apprenez une compétence supplémentaire.
+- **Discipline** : apprenez une [[content/Règles/Règles#Compétences|compétence]] supplémentaire.
+- **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 ##### Saignements
 Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *saignement* sur votre cible.
 ##### Injure
