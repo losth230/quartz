@@ -1,14 +1,14 @@
 ## Description
 Le Guerrier est un maître du combat physique, qu'il s'agisse de mêlée ou de distance. Il est entraîné à l'utilisation de toutes sortes d'armes et d'armures, et est souvent vu en première ligne des batailles. Leur rôle principal est de protéger leurs alliés et d'éliminer les menaces sur le champ de bataille. Ils peuvent être des soldats disciplinés ou des mercenaires aguerris, chacun portant son propre style de combat.
 ## Race
-Les Guerriers peuvent être de n'importe quelle **race** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
+Les Guerriers peuvent être de n'importe quelle **[[Race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
 ## Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base en combat d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 6
-- Choisissez sept compétences que vous apprenez niveau 1.
+- **PV** : 6 + niveau de [[Règles#Physique :|Résistance]].
+- Choisissez sept [[Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 L'équipement d'un Guerrier est :
 - **Maitrises** : Armures complètes.
 - **Argent de départ** : 300 Florins.

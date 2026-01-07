@@ -23,17 +23,18 @@
 | **Arbalète**           | Portée 12" | 3d6  | Tir long, Perforant (1) | 1 Métal          | 60f  |
 | **Arquebuse**          | Portée 15" | 3d6  | Tir long, Perforant (1) | 2 Bois, 1 Métal  | 80f  |
 ## Améliorations de rang I (3 réussites)
-Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet :
+Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer une arme :
 
 **Tranchant I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Mêlée.   
 **Précision I** : les attaques effectuées avec cette arme bénéficient de +1d6 en Tir.  
-**Equilibre** : les attaques effectuées en mêlée avec cette arme bénéficient de la règle **Maitre-lame**.  
-**Léger** : confère **Rapide**.  
+**Equilibre** : les attaques effectuées en mêlée avec cette arme bénéficient de [[Règles/Règles spéciales#Maitre-lame|maitre-lame]].  
+**Léger** : confère [[Règles/Règles spéciales#Rapide|rapide]].  
 **Poussée I** : les attaques à distance effectuées avec cette arme repoussent leur cible de 1 case en cas de touche.  
 ## Améliorations de Rang II (4 réussites)
 **Tranchant II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Mêlée.  
 **Précision II** : les attaques effectuées avec cette arme bénéficient de +2d6 en Tir.  
-**Saignante** : les attaques effectuées avec cette arme  infligent 1 marqueur *Saignement* en cas de blessure.  
+**Saignante** : les attaques effectuées avec cette arme  infligent 1 marqueur *[[Règles spéciales#Saignement|Saignement]]*
+en cas de blessure.  
 **Assommage** : les attaques effectuées avec cette arme infligent *Etourdissement* pendant 1 tour en cas de blessure.  
 **Filante** : les attaques à distance effectuées avec cette arme à distance ont +3'' de portée.  
 **Poussée II** : les attaques à distance effectuées avec cette arme repoussent leur cible de 2 cases en cas de touches.  

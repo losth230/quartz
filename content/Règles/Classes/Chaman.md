@@ -1,13 +1,13 @@
 ## Description
 Le Chaman est un intermédiaire entre les mondes. Capable de communier avec les esprits de la nature, des ancêtres ou des éléments, il est à la fois un guide spirituel et un guerrier mystique. Son pouvoir provient de ses liens étroits avec le monde spirituel, qu’il utilise pour soutenir ses alliés ou affaiblir ses ennemis.
 ## Race
-Le Chaman peut être de n’importe quelle **race**, mais les races proches de la nature comme les Elfes ou les Orques sont naturellement attirées par cette classe.
+Le Chaman peut être de n’importe quelle **[[Race]]**, mais les races proches de la nature comme les [[Race/Elfe d'Or]] ou les [[Race/Peaux - Vertes]] sont naturellement attirées par cette classe.
 ## Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base d’un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4
+- **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
 - Choisissez sept compétences que vous apprenez niveau 1.
 L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.
@@ -18,8 +18,6 @@ Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés �
 **Bénédiction primordiale** : les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.
 **Bénédiction du cataclysme** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.
 **Bénédiction de tempête** : une créature bénéficiant de cette bénédiction gagne +1 Vitesse.
-### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
 | Niveaux de Chaman | Niveau de sorts max | Réserve de Dés de magie |
 | :---------------: | :-----------------: | :---------------------: |
@@ -36,6 +34,8 @@ Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 2 PV. Co
 |      **11**       |          4          |           9d6           |
 |      **12**       |          4          |           9d6           |
 Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deux domaines parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre.
+### Par delà le niveau 1
+Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9

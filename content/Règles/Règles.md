@@ -1,6 +1,5 @@
 ## **Introduction**
 Bienvenue dans **Chasse & Pêche**, un jeu de rôle où vous incarnez un personnage dans un monde fantastique et où vos choix façonnent l’histoire. Vous explorerez des terres inconnues, interagirez avec des créatures mythiques, combattrez des ennemis redoutables et découvrirez des secrets ancestraux. Le système repose sur des **jets de dés**, l’utilisation de **compétences** et des choix narratifs.
-
 ## **Mécanismes du Jeu**
 ### Caractéristiques
 Chaque personnage possède 7 caractéristiques :
@@ -18,7 +17,7 @@ Les personnages peuvent posséder 6 niveaux différents de compétences :
 | ------------------- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Seuil de succès** | 6+  | 5+  | 4+  | 3+  | 2+  | 1+  |
 Chaque compétence est reliée à une caractéristique principale comme suit :
-##### **Physique :**
+##### Physique :
 **Brute** : Utilisé pour les actions de force brute, comme soulever des objets lourds ou casser des portes.
 **Crochetage / Désamorçage** : Permet d’ouvrir des serrures ou de désamorcer des pièges.
 **Escalade** : Compétence utilisée pour grimper des murs, des arbres ou d’autres surfaces.
@@ -26,7 +25,7 @@ Chaque compétence est reliée à une caractéristique principale comme suit :
 **Intimidation** : Permet d'intimider les autres par votre physique.
 **Pickpocket** : Permet de voler discrètement des objets dans les poches des autres.
 **Résilience** : Utilisée pour résister à la fatigue, aux douleurs ou à des effets physiques négatifs (empoisonnement, maladies).
-##### **Mental :**
+##### Mental :
 **Analyse** : Permet d'examiner et de comprendre une situation complexe ou identifier des objets magiques.
 **Discrétion** : Sert à se déplacer sans être vu ni entendu.
 **DIY** : Compétence en artisanat, utilisée pour créer ou réparer des objets.
