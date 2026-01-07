@@ -26,7 +26,7 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 **ignifuge** : cette armure protège son porteur contre les [[Règles spéciales#Attaques enflammées|attaques enflammées]].
 ## Améliorations de Rang II (4 réussites)
 **Robustesse I** : +1 à la valeur d’Armure.  
-**Souplesse II** : annule la pénalité de mouvement liée à cette armure.  
+**Souplesse II** : annule la pénalité de mouvement liée à cette armure.  [[Honni#**Description**|test]]
 ## Améliorations de Rang III (5 réussites)
 **Robustesse II** : +2 à la valeur d’Armure.  
 **Antimagie** : +1 à la valeur de Résistance Magique.
