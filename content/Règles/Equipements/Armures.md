@@ -23,11 +23,11 @@ Lorsque vous réalisez une réussite suffisante, vous pouvez améliorer un objet
 **Souplesse I** : la pénalité de mouvement liée à cette armure est réduite de 1.  
 **Solidité** : cette armure permet de relancer les jets d'armure physique ayant obtenu 1.  
 **Discrétion** : +1d6 aux tests de **Discrétion** si aucune autre armure n’est portée.
-**ignifuge** : cette armure protège son porteur de la [[Règles spéciales]] Attaques enflammées.
+**ignifuge** : cette armure protège son porteur contre les [[Règles spéciales#Attaques enflammées|attaques enflammées]].
 ## Améliorations de Rang II (4 réussites)
 **Robustesse I** : +1 à la valeur d’Armure.  
 **Souplesse II** : annule la pénalité de mouvement liée à cette armure.  
 ## Améliorations de Rang III (5 réussites)
 **Robustesse II** : +2 à la valeur d’Armure.  
 **Antimagie** : +1 à la valeur de Résistance Magique.
-**Protection élémentaire** : cette protège le porteur des [[Règles spéciales]] Force dévastatrice (N) et Perforant (N) des attaques ciblant le porteur.
+**Protection élémentaire** : cette protège le porteur contre les attaques [[Règles spéciales#Force dévastatrice (N)|dévastatrices]] et [[Règles spéciales#Perforant (N)|perforantes]].
