@@ -70,40 +70,38 @@ Vous pouvez utiliser votre réaction pour bondir sur une case adjacente à une c
 ##### Pisteur chevronné (niveau 5)
 Vous gagnez un niveau dans la compétence Nature et votre vitesse de déplacement augmente de 1.
 ##### Pièges améliorés (niveau 8)
-Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent un saignement *supplémentaire*.
+Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent un *[[Règles/Règles spéciales#saignement|saignement]]* supplémentaire.
 ##### Danse de guerre (niveau 11)
 Vous gagnez 1d6 en mêlée et à distance. Après avoir réalisé une attaque en mêlée ou à distance, vous pouvez vous déplacer de  2''.
 ### Chevalier
 ##### Cavalier expérimenté (niveau 2)
-Votre monture vous octroie la règle Cavalerie également contre les créatures de votre taille.
-##### Fabrication de pièges (niveau 2)
-Après chaque sommeil, vous pouvez effectuer un test de DIY, pour chaque réussite, vous pouvez dépenser 5 Florins en matériaux pour vous procurer un piège à loup.
+Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cavalerie]] également contre les créatures de votre taille.
 ##### Bond (niveau 2)
-Vous pouvez utiliser votre réaction pour bondir sur une case adjacente à une créature qui souffre de *saignements* à 6'' ou moins et réaliser une attaque en mêlée contre celle-ci.
+
 ##### Pisteur chevronné (niveau 5)
-Vous gagnez un niveau dans la compétence Nature et votre vitesse de déplacement augmente de 1.
+
 ##### Pièges améliorés (niveau 8)
-Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent un saignement *supplémentaire*.
+
 ##### Danse de guerre (niveau 11)
-Vous gagnez 1d6 en mêlée et à distance. Après avoir réalisé une attaque en mêlée ou à distance, vous pouvez vous déplacer de  2''.
+
 ### Escrimeur
 ##### Postures (Niveau 2)
-Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adapter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.
-**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *saigne*, vous entrez en posture de l'Aube au lieu de changer votre posture pour la suivante.
-**Posture du Zéphyr** : lorsque vous tenez cette posture, vous possédez +1 Vitesse et ignorez les  *ralentissements*  et  *immobilisations*.
-**Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Roc. Si votre cible *saignait*, vous pouvez choisir entre le posture de l'Aube et la posture du Roc.
-**Posture du du Roc** : lorsque vous entrez dans cette posture, vous gagnez Egide (1).
+Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adapter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
+**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous entrez en posture de l'Aube au lieu de changer votre posture pour la suivante.  
+**Posture du Zéphyr** : lorsque vous tenez cette posture, vous possédez +1 Vitesse et ignorez les  *[[Règles/Règles#États Spéciaux|ralentissements]]*  et  *[[Règles/Règles#États Spéciaux|immobilisations]]*.  
+**Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Roc. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Roc.  
+**Posture du du Roc** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
 ##### Posture de l'Etoile (Niveau 2)
-Si vous parvenez à changer 2 fois de postures en 1 seul tour, vous entrez en posture de L'Etoile.
-**Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement  effectuer une marche puis réaliser une attaque en mêlée qui ignorent l'armure de votre adversaire. Ensuite, perdez votre posture.
+Si vous parvenez à changer 2 fois de posture en 1 seul tour, vous entrez en posture de L'Etoile.  
+**Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement  effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
 ##### Feinte (niveau 5)
-Si  vous changez de posture pendant un tour, vous pouvez immédiatement effectuer un mouvement de 3'' et appliquer un marqueur saignement à une créature à  1'' ou moins.
+Si vous changez de posture pendant un tour, vous pouvez immédiatement effectuer un mouvement de 3'' et appliquer un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* à une créature à  1'' ou moins.
 ##### Stabilité (niveau 8)
 Vos postures s'améliorent comme suit :
-**Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée (total +2d6 en mêlée).
-**Posture du Zéphyr** : +1 Vitesse supplémentaire (total +2 Vitesse).
-**Posture du Crépuscule** : votre riposte s'effectue avec 1d6 supplémentaire.
-**Posture du du Roc** : vous gagnez une Egide supplémentaire (total Egide (2)).
-**Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *saignement* à votre cible.
+**Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée (total +2d6 en mêlée).  
+**Posture du Zéphyr** : +1 Vitesse supplémentaire (total +2 Vitesse).  
+**Posture du Crépuscule** : votre riposte s'effectue avec 1d6 supplémentaire.  
+**Posture du du Roc** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
+**Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]* à votre cible.  
 ##### Exploiter les points faibles (niveau 11)
 Vos postures de l'Aube et du Crépuscule gagnent la règle spéciale Anti-infanterie, vos postures du Zéphyr et du Roc gagnent la règle spéciale  Anti-large. De plus, lorsque vous quittez la posture de l'Etoile, vous entrez dans la posture du Roc.

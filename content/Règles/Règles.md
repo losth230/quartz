@@ -97,21 +97,21 @@ Lors de son tour, un personnage peut effectuer au choix : deux actions courtes,
 Un terrain difficile compte double pour le calcul de distance en déplacement. Ainsi, une créature avec une vitesse de 5  ne pourra traverser que2 cases de terrain difficile.
 ### États Spéciaux
 Certains effets peuvent infliger un État à un personnage. Chaque État modifie temporairement ses capacités.
-**À Terre** : Le personnage ne peut pas effectuer d'action tant qu'il ne s'est pas relevé.
-**Étourdi** : Le personnage perd une action par tour.
-**Saignement** : Le personnage perd 1 PV par tour, stoppé par un test de Premiers Secours (chaque réussite annule 1 **Saignement**).
-**En feu** : Le personnage subit une touche à la fin de chaque tour par marqueur **enflammé**, peut tenter de s’éteindre avec un test de Résilience (Facile).
-**Paniqué** : Le personnage se recroqueville de peur, perdant ses actions et sa réaction
-**Gelé** : La vitesse et l'armure du personnage sont réduites de 1.
-**Empoisonné** : Lorsque le joueur obtient des 6 lors de n'importe quel test de compétence ou attaque, ceux-ci ne sont pas explosifs.
+**À Terre** : Le personnage ne peut pas effectuer d'action tant qu'il ne s'est pas relevé.  
+**Étourdi** : Le personnage perd une action par tour.  
+**Saignement** : Le personnage perd 1 PV par tour, stoppé par un test de Premiers Secours (chaque réussite annule 1 **Saignement**).  
+**En feu** : Le personnage subit une touche à la fin de chaque tour par marqueur **enflammé**, peut tenter de s’éteindre avec un test de Résilience (Facile).  
+**Paniqué** : Le personnage se recroqueville de peur, perdant ses actions et sa réaction.  
+**Gelé** : La vitesse et l'armure du personnage sont réduites de 1.  
+**Empoisonné** : Lorsque le joueur obtient des 6 lors de n'importe quel test de compétence ou attaque, ceux-ci ne sont pas explosifs.  
 **Aveuglé** : -2d6 à toutes les attaques, ne peut cibler qu'en mêlée.
-**Transi** : Ne peut effectuer qu’une seule action courte par tour.
-**Fatigué** : Le personnage souffre d'un malus de 1d6 à tous ses tests de compétences et attaques.
-**Immobilisé** : La vitesse du personnage est réduite à 0.
-**Silencieux** : Ne peut parler, crier ni lancer de sort.
-**Invisible** : Ne peut être ciblé qu’après un test réussi d’Intuition ou Perception.
-**Protégé** : Réduit de 1 tous les dégâts subis (non cumulable avec bonus magique).
-**Béni** : Le prochain test réussi gagne +1 réussite, puis l’état disparaît.
+**Transi** : Ne peut effectuer qu’une seule action courte par tour.  
+**Fatigué** : Le personnage souffre d'un malus de 1d6 à tous ses tests de compétences et attaques.  
+**Immobilisé** : La vitesse du personnage est réduite à 0.  
+**Silencieux** : Ne peut parler, crier ni lancer de sort.  
+**Invisible** : Ne peut être ciblé qu’après un test réussi d’Intuition ou Perception.  
+**Protégé** : Réduit de 1 tous les dégâts subis (non cumulable avec bonus magique).  
+**Béni** : Le prochain test réussi gagne +1 réussite, puis l’état disparaît.  
 ### État Mourant
 Lorsqu’un personnage tombe à 0 PV, il devient **Mourant**. Un personnage Mourant ne peut effectuer qu’une seule action par tour et doit réaliser un test de **Résilience** à chaque fois qu'il réalise une action.
 ##### Marqueurs d’Agonie
