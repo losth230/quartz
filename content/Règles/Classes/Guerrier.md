@@ -1,7 +1,7 @@
 ## Description
 Le Guerrier est un maître du combat physique, qu'il s'agisse de mêlée ou de distance. Il est entraîné à l'utilisation de toutes sortes d'armes et d'armures, et est souvent vu en première ligne des batailles. Leur rôle principal est de protéger leurs alliés et d'éliminer les menaces sur le champ de bataille. Ils peuvent être des soldats disciplinés ou des mercenaires aguerris, chacun portant son propre style de combat.
 ## Race
-Les Guerriers peuvent être de n'importe quelle **[[Règles/Race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
+Les Guerriers peuvent être de n'importe quelle **[[Règles/Race|race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
 ## Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base en combat d'un Guerrier sont :
@@ -21,52 +21,52 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Défenseur** : lorsque vous effectuez des jets d'armure, vous pouvez relancer vos jets ayant obtenu 1 si vous possédez un bouclier.
 - **Esquive** : lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour jeter 1d6 supplémentaire lors de votre test d'armure.
 - **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle Anti-infanterie.
-- **Discipline** : apprenez une [[content/Règles/Règles#Compétences|compétence]] supplémentaire.
+- **Discipline** : apprenez une [[Règles/Règles#Compétences|compétence]] supplémentaire.
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 ##### Saignements
-Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *saignement* sur votre cible.
+Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* sur votre cible.
 ##### Injure
 lorsqu'une créature à 9 cases ou moins se déplace, vous pouvez dépenser votre réaction pour lui imposer un malus de -2 Vitesse.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 3 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles capacités.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre [[Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la [[Règles/Règles#Compétences|compétence]] de votre choix de 1 niveau.
 ## Niveau 4
 ##### Exécution
-A partir du niveau 4, si, après une de vos attaques en mêlée, une créature possède moins PV restant que de marqueurs *saignements*, elle est automatiquement exécutée.
+A partir du niveau 4, si, après une de vos attaques en mêlée, une créature possède moins PV restant que de marqueurs *[[Règles/Règles spéciales#saignement|saignements]]*, elle est automatiquement exécutée.
 ## Niveau 7
 ###### Entrainement avancé
-Lorsque vous atteignez le niveau 7, vous pouvez apprendre un deuxième Entrainement.
+Lorsque vous atteignez le niveau 7, vous pouvez apprendre un deuxième [[Règles/classes/guerrier#Entrainement|entrainement]].
 ## Niveau 10
 ##### Charge supérieure
-A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez Force dévastatrice (+1) et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
+A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[Règles/Règles spéciales#Force dévastatrice (N)|Force dévastatrice (+1)]] et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
 ## Niveau 12
 ##### Frénésie guerrière
 A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant.
 # Spécialisations
 ### Sanguinaire
 ##### Saignement supérieur (niveau 2)
-Lorsque vous réussissez une attaque en mêlée, vous infligez 2 *saignements* au lieu d'un seul.
+Lorsque vous réussissez une attaque en mêlée, vous infligez 2 *[[Règles/Règles spéciales#saignement|saignements]]* au lieu d'un seul.
 ##### Soif de sang (niveau 2)
-Lorsque vous réussissez une attaque sur une créature possédant 3 *saignements* ou plus, vous récupérez 1  PV.
+Lorsque vous réussissez une attaque sur une créature possédant 3 *[[Règles/Règles spéciales#saignement|saignements]]* ou plus, vous récupérez 1  PV.
 ##### Furie sanguinaire (niveau 5)
-Lorsque vous éliminez une créature affectée par *saignement*, vous récupérez une action courte.
+Lorsque vous éliminez une créature affectée par *[[Règles/Règles spéciales#saignement|saignements]]*, vous récupérez une [[Règles/Règles#Actions|action courte]].
 ##### Massacre (niveau 8)
-Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *saignements*, vous pouvez relancer vos jets de touche ayant obtenu 1 ou 2.
+Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *[[Règles/Règles spéciales#saignement|saignements]]*, vous pouvez relancer vos jets de touche ayant obtenu 1 ou  les jets de dé ayant obtenu 1 ou 2 si vous connaissez l'[[Règles/classes/guerrier#Entrainement|entrainement]] [[Règles/Règles spéciales#Maitre-lame|maitre-lame]].
 ##### Bain de sang (niveau 11)
-Après avoir réussi une touche en mêlée sur une créature affectée par *saignement*, vous pouvez dépenser une action courte pour octroyer 2 *saignements* aux créatures de votre choix à 6'' ou moins.
+Après avoir réussi une touche en mêlée sur une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous pouvez dépenser une [[Règles/Règles#Actions|action courte]] pour octroyer 2 *[[Règles/Règles spéciales#saignement|saignements]]* aux créatures de votre choix à 6'' ou moins.
 ### Chasseur
 ##### Maitrise des armes de jets (niveau 2)
-Lorsque vous effectuez une attaque à distance avec une arme ayant la règle spéciale Lancer, vous appliquez un *saignement*.
+Lorsque vous effectuez une attaque à distance avec une arme ayant la règle *[[Règles/Règles spéciales#lancer|Lancer]]*, vous appliquez un *[[Règles/Règles spéciales#saignement|saignement]]*.
 ##### Fabrication de pièges (niveau 2)
-Après chaque sommeil, vous pouvez effectuer un test de DIY, pour chaque réussite, vous pouvez dépenser 5 Florins en matériaux pour vous procurer un piège à loup.
+Après chaque sommeil, vous pouvez effectuer un test de [[Règles/Règles#Compétences|DIY]], pour chaque réussite, vous pouvez dépenser 15 Florins en matériaux pour vous procurer un [[Règles/Equipements/Objets divers#utilitaires|piège à loup]]. Vous êtes le seul à pouvoir utiliser ces pièges et ne pouvez en posséder plus de 3 à la fois.
 ##### Bond (niveau 2)
-Vous pouvez utiliser votre réaction pour bondir sur une case adjacente à une créature qui souffre de *saignements* à 6'' ou moins et réaliser une attaque en mêlée contre celle-ci.
+Vous pouvez utiliser votre réaction pour bondir sur une case adjacente à une créature qui souffre de [[Règles/Règles#Compétences|compétence]] à 6'' ou moins et réaliser une attaque en mêlée contre celle-ci.
 ##### Pisteur chevronné (niveau 5)
 Vous gagnez un niveau dans la compétence Nature et votre vitesse de déplacement augmente de 1.
 ##### Pièges améliorés (niveau 8)

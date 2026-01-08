@@ -7,6 +7,8 @@ Après avoir réussi une charge, une créature possédant cette règle bénéfic
 Lorsqu’une créature possédant cette règle effectue une attaque en mêlée, sa cible souffre d’un malus de -N sur ses jets d’armure (max -3).
 ##### Indomptable : 
 Si une créature avec cette règle tombe à 0 PV, elle remonte à 1 PV. 
+##### Lancer : 
+Si une arme de mêlée possède cette règle, elle peut être utiliser dans le cadre d'attaque à distance sans malus. Une armée ne possédant pas cette règle applique un malus de -1 aux jets de touche.
 ##### Maitre-lame
 Lorsqu’une créature possédant cette règle effectue une attaque en en mêlée, elle peut relancer ses jets de touche ayant obtenu 1.
 ##### Perforant (N)
