@@ -9,7 +9,7 @@ Leurs corps massif, leur peau sombre et leurs crocs proéminents leur donnent un
 - **Taille** : M (parfois à la limite du G).
 - **Vitesse** : 5''.
 - **Langues** : Orque, Commun.
-- **Magie** : les Orques ont accès au Domaine du Cataclysme ou au Domaine des Ténèbres.
+- **Magie** : les Orques ont accès au Domaine du Cataclysme et au Domaine des Ténèbres.
 ### **Capacités Spéciales**
 **Brutalité** : Lorsque vous éliminez une créature de votre niveau ou plus, vous récupérez 1 action courte, qui peut être utilisée pour une action que vous avez déjà effectuée ce tour-ci.
 ### **Culture et Histoire**
