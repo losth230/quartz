@@ -16,6 +16,7 @@ Les personnages peuvent posséder 6 niveaux différents de compétences :
 | **Niveau**          | 0   | 1   | 2   | 3   | 4   | 5   |
 | ------------------- | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Seuil de succès** | 6+  | 5+  | 4+  | 3+  | 2+  | 1+  |
+
 Chaque compétence est reliée à une caractéristique principale comme suit :
 ##### Physique :
 **Brute** : Utilisé pour les actions de force brute, comme soulever des objets lourds ou casser des portes.
@@ -46,8 +47,8 @@ Chaque compétence est reliée à une caractéristique principale comme suit :
 La valeur en d6 d'une caractéristique est égale à la somme des niveaux des compétences associées à celle-ci.
 *Par exemple : Victor est niveau 1 en **Brute** et niveau 1 en **Escalade**, il possède donc 2d6 en **Physique**.*
 ##### Aider
-Un personnage peut choisir d'en aider un autre à effectuer une action, dans ce cas le joueur effectuant le test peut ajouter à son jet un nombre de d6  égal à la moitié (arrondie au supérieur) de la valeur du personnage l'ayant aidé.
-*Par exemple, Anatole possède 3d6 en Mental et souhaite aider Anton sur un test de DIY. Anton possédant 2d6 en mental, il va donc lancer ses 2d6 plus 2d6 offerts par Anatole pour son test.*
+Un personnage peut choisir d'en aider un autre à effectuer une action sur une compétence, dans ce cas le joueur effectuant le test peut ajouter à son jet un nombre de d6 égal au niveau de compétence du personnage l'ayant aidé.
+*Par exemple, Anatole possède 1 niveau en Mental et souhaite aider Anton sur un test de DIY. Anton possédant 2d6 en mental, il va donc lancer ses 2d6 plus 1d6 offert par Anatole pour son test.*
 ### Jets de Dés
 Les actions sont résolues à l'aide de **dés à 6 faces (d6)**. Pour effectuer un test, un joueur doit connaitre 3 variables :
 - Le nombre de dé à lancer (par exemple 3d6).
@@ -55,13 +56,13 @@ Les actions sont résolues à l'aide de **dés à 6 faces (d6)**. Pour effectuer
 - La difficulté du test s'il s'agit d'un test de compétence.
 ##### Réaliser un test de compétences
 Lorsqu'un joueur tente de réaliser un test de compétence, il doit se référer à la caractéristique correspondante (par exemple **Mental** pour la compétence **Histoire**) et jeter autant de dés que votre niveau de caractéristique. Les réussites étant les résultats supérieurs à sa valeur de compétence.
-*Par exemple : Lucas doit faire un test de **Crochetage** pour déverrouiller un petit coffre. Il a une compétence en **Crochetage** de 5+ et 4d6 en **Physique**. Lors de son jet, il jette ses 4d6 et obtient 2, 3, 3, 5. Il a donc obtenu une réussite!*
+*Par exemple : Aurore doit faire un test de **Crochetage** pour déverrouiller un petit coffre. Elle a une compétence en **Crochetage** de 5+ et 4d6 en **Physique**. Lors de son jet, elle jette ses 4d6 et obtient 2, 3, 3, 5. Elle a donc obtenu une réussite!*
 La difficulté du test, si elle n'est pas précisée, est à l'appréciation du MJ, il existe 4 degrés de difficultés différents :
 - Facile : nécessite 1 réussite.
 - Moyen : nécessite 2 réussites.
 - Difficile : nécessite 3 réussites.
 - Extrême : nécessite 4 réussites.
-*Dans le cas de l'exemple précédent, il s'agissait d'une serrure simple, de difficulté facile. Lucas a donc réussit a déverrouiller son coffre.*
+*Dans le cas de l'exemple précédent, il s'agissait d'une serrure simple, de difficulté facile. Aurore a donc réussit a déverrouiller son coffre.*
 ##### Réaliser une attaque en mêlée
 Un Personnage adjacent à un autre personnage peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l’intermédiaire d’une charge ou de l’action Mêlée.
 Un personnage doit nécessairement effectuer son attaque contre un autre situé dans son arc avant. Un personnage effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.

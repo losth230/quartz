@@ -1,3 +1,7 @@
+#### Anti-infanterie
+Une créature avec cette règle bénéficie de +2d6 en mêlée lorsqu’elle attaque une créature de Taille 2 ou moins.
+#### Anti-large
+Une créature avec cette règle bénéficie de +2d6 en mêlée lorsqu’elle attaque une créature de Taille 2 ou plus.
 ##### Attaques enflammées (N)
 Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit N marqueurs _enflammé._   
 Une créature _enflammée_ perd 1 PV à la fin de chaque tour et ne peut plus bénéficier de la règle Régénération (N), puis défausse un marqueur _enflammé_.
@@ -22,5 +26,7 @@ Une arme avec cette propriété ne demande pas d'action pour être dégainée.
 ##### Saignement
 Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit N marqueurs _saignement._   
 Une créature marquée par *saignement* perd 1 PV  à la fin de chaque tour, puis défausse marqueur *saignement*.
+##### Tir indirect : 
+Une attaque à distance disposant de cette règle ne nécessite pas de LdV directe sur sa cible mais une LdV verticale.
 ##### Tireur d'élite : 
 Lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1.

@@ -13,7 +13,7 @@ L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
 ##### Nourriture savoureuse
-Lorsque vous réalisez un repos, vous pouvez réaliser un test de **DIY** et cuisinier un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
+Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
 ##### Coup de fourchette
 Lorsque vous réussissez une attaque en mêlée, votre cible doit réussir un test de résilience ou souffrir d'un malus de -1d6 ses ses jets d'attaque en mêlée et à distance pour le reste du tour.
 ##### Soupe trop salée
