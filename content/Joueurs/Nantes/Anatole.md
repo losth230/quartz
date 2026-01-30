@@ -1,4 +1,4 @@
-[Lien du Gdrive](https://docs.google.com/presentation/d/1Kb3fzGXz6Kji2cqbDY73Wepr9kdvfoYvgxhKkUMN0OE/edit?rm=minimal)
+[Lien du Gdrive](https://docs.google.com/presentation/d/1Kb3fzGXz6Kji2cqbDY73Wepr9kdvfoYvgxhKkUMN0OE/edit?)
 <div style="width: 100%; height: 1200px; overflow: hidden; position: relative;">
     <iframe 
         src="https://docs.google.com/presentation/d/1Kb3fzGXz6Kji2cqbDY73Wepr9kdvfoYvgxhKkUMN0OE/edit?rm=minimal" 
