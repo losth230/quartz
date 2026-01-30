@@ -9,7 +9,7 @@ Portée 6'', Inflige 3 *Saignements*.
 -> Renforcement (3) : inflige 1 *Saignement* supplémentaire.
 ##### Invocation de nourriture (court, 3+, amélioration)
 Invoque un nombre de mets de moyenne qualité pouvant nourrir un humain pour un jour égal au niveau de réussite du sort.
-## Niveau 1
+## Niveau 2
 ##### Régurgitation (long, 12+, projectile)
 Portée 6'', 3d6, Perforant (1), Souffle. Les cibles sont marquées empoisonnées pour le reste du tour.
 -> Renforcement (5) : +1d6
