@@ -18,6 +18,8 @@ Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés �
 **Bénédiction primordiale** : les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.
 **Bénédiction du cataclysme** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.
 **Bénédiction de tempête** : une créature bénéficiant de cette bénédiction gagne +1 Vitesse.
+### Par delà le niveau 1
+Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
 | Niveaux de Chaman | Niveau de sorts max | Réserve de Dés de magie |
 | :---------------: | :-----------------: | :---------------------: |
@@ -33,9 +35,8 @@ Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés �
 |      **10**       |          4          |           9d6           |
 |      **11**       |          4          |           9d6           |
 |      **12**       |          4          |           9d6           |
+
 Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deux domaines parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre.
-### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
