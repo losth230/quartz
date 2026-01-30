@@ -28,18 +28,18 @@ Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétenc
 ## Niveaux 7, 12
 ##### Connaissances avancées
 Lorsque vous atteignez le niveau 4 et le niveau 10, vous pouvez gagner 1 niveau dans la compétence de votre choix.
-## Niveau 7 : Science appliquée
+## Niveau 7
 ##### Optimisation
 Lorsque vous fabriquez un objet, vous dépensez  1  matériaux en moins.
-## Niveau 10 : Génie reconnu
+## Niveau 10
+##### Génie reconnu
 Une fois par combat, vous pouvez effectuer **deux actions longues** au lieu d’une seule.
 # Spécialisations
 
 ### Runiste
-
 ##### Gravure magique (niveau 2)
-En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque rune possède un niveau. Le **niveau combiné des runes** que vous avez appliqué ne peut jamais dépasser votre **niveau en DIY**.
-##### Runes de niveau I
+En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque rune possède un niveau. Le **niveau combiné des runes** que peut manier une créature ne peut jamais dépasser son **niveau en DIY**.
+##### Runes de niveau I (niveau 2)
 **Rune de Protection I** : lorsqu'un personnage subit des touches en portant une **armure** possédant cette rune, il peut relancer ses jets d'armure ayant obtenu 1. 
 **Rune de Fer** : lorsqu'un personnage subit des touches en portant un **bouclier** possédant cette rune, il bénéficie d'un bonus de +1 aux jets d’armure tant qu'il ne se déplace pas pendant son tour.  
 **Rune de Frappe I** : lorsqu'un personnage porte une **arme** avec cette rune, il gagne +1d6 en mêlée.  
@@ -62,25 +62,67 @@ En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque run
 **Rune tranchante** : lorsqu'un personnage attaque avec une **arme** gravée de cette rune, il gagne  Force dévastatrice (1).
 **Rune de vision pure** : lorsqu'un personnage porte un objet gravé de cette rune, il peut l'invisibilité à 6'' ou moins.
 **Rune de projection II** :  une **arme à distance** gravée de cette rune gagne +3'' à sa portée.
-#### Maitre Rune *(niveau 11)*
-Vous pouvez posséder 3 niveaux de runes supplémentaires.
+##### Maitre Rune *(niveau 11)*
+A partir du niveau 11, vous pouvez posséder 3 niveaux de runes supplémentaires.
 ### Alchimiste
-#### Botaniste (niveau 2)
-Fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
-#### Transmutation agressive (niveau 5)
+##### Botaniste (niveau 2)
+A partir du niveau 2, fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
+##### Transmutation mineure (niveau 2)
+A partir du niveau 2, vous pouvez modifier transformer 1 [[Règles/Equipements/Matériaux|#matériaux]] en un autre une fois par jour ou altérer une petite surface.
+##### Transmutation agressive (niveau 5)
 Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Empoisonnement* ou *Gel* à votre cible.
-#### Formule instable (niveau 8)
-#### Transmutation (niveau 11)
+##### Formule instable (niveau 8)
+##### Transmutation (niveau 11)
 ### Biomancien
-#### Création d’homonculus mineur (niveau 2)
+##### Création d’homonculus mineur (niveau 2)
 Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
 Ce familier vous obéit. Un seul actif à la fois.
-#### Elixir instable (niveau 2)
+##### Elixir instable (niveau 2)
 Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 2 **Métaux** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1 définitivement et effectue un jet de **Puissance irrésistible** de la table de [[Magie]].
-#### Transfusion (niveau 5)
+##### Transfusion (niveau 5)
 Vous pouvez perdre 2 PV pour rendre 1 PV et augmenter de 1 le maximum de PV de votre [[Homonculus]]. Votre Homonculus peut perdre 1 PV pour conférer **Sauvagerie** à une créature consentante à 1'' ou moins.
 Dans les deux cas, la transfusion demande une action courte.
-#### Homonculus supérieur (niveau 8)
+##### Homonculus supérieur (niveau 8)
 Votre [[Homonculus]] peut prendre la forme de jusqu'à trois **Bêtes** de votre choix, et ainsi combiner leurs **Traits**. Les attaques en mêlée de votre [[Homonculus]] gagnent Force dévastatrice (1).
-#### Formidable expérience (niveau 11)
+##### Formidable expérience (niveau 11)
 Votre [[Homonculus]] peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.
+### Artificier
+##### Surcharge (niveau 2)
+A partir du niveau 2, vous pouvez dépenser votre réaction pour surcharger votre arme ou celle d'un allié le temps d'une action. Cependant, si au moins un résultat 1 survient pendant l'attaque avec une arme surchargée, celle-ci est brisée et doit être réparée avec un teste de DIY dont le nombre de réussite doit être supérieur ou égal au nombre de 1 obtenus avant de pouvoir être réutilisée.
+Voici la liste des surcharges possibles :
+- **Pointe de foreuse :** l'arme obtient la règle Perforant (3).
+- **Double lame :** l'arme bénéficie de +2d6 en mêlée et maitre-lame.
+- **Tête explosive :** l'arme perd 2d6 à distance mais devient une attaque de zone ciblant une case et toutes les cases adjacentes.
+- **Tête d'enclume :** la cible d'une attaque par cette arme doit effectuer un test de Résilience avec pour difficulté le nombre de touches ou être assommée.
+- **Bâillon déployable :** l'arme perd -1d6 mais silence sa cible en cas de touche.
+- **Pyrofusées :** cette arme gagne la règle Lancer et portée +6''.
+##### Poudre explosive (niveau 2)
+A partir du niveau 2, vos armes à poudre obtiennent la règle spéciale [[Règles spéciales#Attaques enflammées (N)|Attaques enflammées (1)]].
+##### Double surcharge (niveau 5)
+A partir du niveau 5, lorsque vous surchargez l'arme d'un allié, vous pouvez également surcharger une de vos armes.
+##### Prendre quelques précautions (niveau 8)
+A partir du niveau 8, vous êtes immunisé contre les [[Règles spéciales#Attaques enflammées (N)|Attaques enflammées]]. Si vous surchargez l'arme d'un allié, il est également immunisé à cette règle pour le reste du tour.
+##### Renforcement supérieur (niveau 11)
+A partir du niveau 11, vous pouvez appliquer 2 surcharges au lieu d'une seule lorsque vous surchargez.
+### Machiniste
+Le Machiniste ne fait pas confiance à la chair, trop fragile, ni à la magie, trop instable. Il ne croit qu'en l'acier, la vapeur et l'huile. Son chef-d'œuvre est son Exosquelette, une armure mécanisée qu'il pilote comme une extension de son propre corps.
+##### Mecka (niveau 2)
+A partir du niveau 2, Vous pouvez construire votre propre exosquelette. Il compte comme une **Monture** dont vous êtes le seul pilote capable.
+Construire un Mecka vous prend 12 heures et 4 [[Règles/Equipements/Matériaux|#métaux]]. Vous êtes protégé des attaques venant de l'extérieur tant que votre Mecka n'a pas été détruit. Le Mecka ne se soigne pas tous les jours, mais vous pouvez dépenser 1 [[Règles/Equipements/Matériaux|#métal]] et une action longue pour lui rendre 1 PV. Monter ou descendre de votre Mecka vous prend une action longue.
+Le Mecka que vous fabriquez doit être de niveau inférieur ou égal au votre.
+##### Modularité (niveau 2)
+A partir du niveau 2, vous pouvez ajouter des modules à votre Mecka, dans la limite de 2 en dépensant 1 [[Règles/Equipements/Matériaux|#métal]] et 2 [[Règles/Equipements/Matériaux|#tissus]] par module :
+- **Piston Hydraulique :** vos attaques en mêlée gagnent Force Dévastatrice (1).
+- **Plaques Renforcées :** au début de chaque tour, le Mecka gagne Egide (1).
+- **Viseur Télescopique :** si vous ne bougez pas, vos attaques de Tir gagnent +1d6.
+- **Compartiment supplémentaire :** le Mecka peut transporter 2 voyageurs supplémentaires.
+##### Surcharge (niveau 5)
+A partir du niveau 5, vous pouvez surcharger votre Mecka. Il gagne +2 Vitesse et +1 Action courte pendant 2 tours. Une fois cet effet terminé, il reçoit 2 fatigues.
+##### Ingénierie supérieure (niveau 8)
+A partir du niveau 8, votre Mecka possède un emplacement de module supplémentaire et peut obtenir les nouveaux modules suivants pour 2 [[Règles/Equipements/Matériaux|#métaux]] et 3 [[Règles/Equipements/Matériaux|#tissus]] par module :
+- **Réacteurs Dorsaux :** le Mecka gagne la règle spéciale **Vol** et +1 Vitesse.
+- **Lance-Flammes Intégré :** action courte. Tir, Portée 6'', 4d6, souffle, Attaques enflammées.
+- **Générateur de Champ :** au début de chaque tour, le Mecka gagne Egide (2).
+- **Bras Grappin :** action courte : Tir, Portée 9'', 3d6, attire la cible (taille 2 ou moins) au contact si touchée.
+##### Protocole T.I.T.A.N (niveau 11)
+A partir du niveau 11, votre Mecka gagne +2 PV, +1d6 en mêlée et à distance et peut relancer ses jets d'armure ayant obtenu 1.

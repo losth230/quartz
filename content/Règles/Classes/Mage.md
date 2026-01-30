@@ -72,13 +72,13 @@ Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé da
 A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
 ### Sage
 ##### Théoricien (niveau 2)
-Vous pouvez apprendre le domaine de magie de votre choix en plus des deux domaines que vous connaissez déjà.
+Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
 ##### Exactitude (niveau 2)
-Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (1).
+Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (3).
 ##### Le choix des possibles (niveau 5)
 Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vous choisissez l'attribut de domaine que vous déclenchez parmi les domaines que vous connaissez.
 ##### Rat de bibliothèque (niveau 8)
-A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous  gagnez un bonus de +1 au lancement des sorts.
+A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
 ##### Vision double (niveau 11)
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
 
