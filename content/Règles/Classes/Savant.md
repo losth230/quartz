@@ -108,22 +108,22 @@ A partir du niveau 11, vous pouvez appliquer 2 surcharges au lieu d'une seule lo
 Le Machiniste ne fait pas confiance à la chair, trop fragile, ni à la magie, trop instable. Il ne croit qu'en l'acier, la vapeur et l'huile. Son chef-d'œuvre est son Exosquelette, une armure mécanisée qu'il pilote comme une extension de son propre corps.
 ##### Mecka (niveau 2)
 A partir du niveau 2, Vous pouvez construire votre propre exosquelette. Il compte comme une **Monture** dont vous êtes le seul pilote capable.
-Construire un [Mecka](MJ/Créatures/Mecka) vous prend 12 heures et 4 [[Règles/Equipements/Matériaux|métaux]]. Vous êtes protégé des attaques venant de l'extérieur tant que votre Mecka n'a pas été détruit. Le Mecka ne se soigne pas tous les jours, mais vous pouvez dépenser 1 [[Règles/Equipements/Matériaux|métal]] et une action longue pour lui rendre 1 PV. Monter ou descendre de votre Mecka vous prend une action longue.
+Construire un [Mecka](MJ/Créatures/Mecka) vous prend 12 heures et 4 [[Règles/Equipements/Matériaux|métaux]]. Vous êtes protégé des attaques venant de l'extérieur tant que votre [Mecka](MJ/Créatures/Mecka) n'a pas été détruit. Le [Mecka](MJ/Créatures/Mecka) ne se soigne pas tous les jours, mais vous pouvez dépenser 1 [[Règles/Equipements/Matériaux|métal]] et une action longue pour lui rendre 1 PV. Monter ou descendre de votre [Mecka](MJ/Créatures/Mecka) vous prend une action longue.
 Le Mecka que vous fabriquez doit être de niveau inférieur ou égal au votre.
 ##### Modularité (niveau 2)
-A partir du niveau 2, vous pouvez ajouter des modules à votre Mecka, dans la limite de 2 en dépensant 1 [[Règles/Equipements/Matériaux|métal]] et 2 [[Règles/Equipements/Matériaux|tissus]] par module :
+A partir du niveau 2, vous pouvez ajouter des modules à votre [Mecka](MJ/Créatures/Mecka), dans la limite de 2 en dépensant 1 [[Règles/Equipements/Matériaux|métal]] et 2 [[Règles/Equipements/Matériaux|tissus]] par module :
 - **Piston Hydraulique :** vos attaques en mêlée gagnent Force Dévastatrice (1).
-- **Plaques Renforcées :** au début de chaque tour, le Mecka gagne Egide (1).
+- **Plaques Renforcées :** au début de chaque tour, le [Mecka](MJ/Créatures/Mecka) gagne Egide (1).
 - **Viseur Télescopique :** si vous ne bougez pas, vos attaques de Tir gagnent +1d6.
-- **Compartiment supplémentaire :** le Mecka peut transporter 2 voyageurs supplémentaires. Ils peuvent utiliser une action courte pour effectuer une attaque de tir, même si le Mecka est engagé en mêlée.
-- **Ressorts condensés :** le Mecka peut dépenser une action courte pour faire un bond de 6'' de haut et avec une vitesse de 4.
+- **Compartiment supplémentaire :** le [Mecka](MJ/Créatures/Mecka) peut transporter 2 voyageurs supplémentaires. Ils peuvent utiliser une action courte pour effectuer une attaque de tir, même si le Mecka est engagé en mêlée.
+- **Ressorts condensés :** le [Mecka](MJ/Créatures/Mecka) peut dépenser une action courte pour faire un bond de 6'' de haut et avec une vitesse de 4.
 ##### Surcharge (niveau 5)
-A partir du niveau 5, vous pouvez surcharger votre Mecka. Il gagne +2 Vitesse et +1 Action courte pendant 2 tours. Une fois cet effet terminé, il reçoit 2 fatigues.
+A partir du niveau 5, vous pouvez surcharger votre [Mecka](MJ/Créatures/Mecka). Il gagne +2 Vitesse et +1 Action courte pendant 2 tours. Une fois cet effet terminé, il reçoit 2 fatigues.
 ##### Ingénierie supérieure (niveau 8)
-A partir du niveau 8, votre Mecka possède un emplacement de module supplémentaire et peut obtenir les nouveaux modules suivants pour 2 [[Règles/Equipements/Matériaux|métaux]] et 3 [[Règles/Equipements/Matériaux|tissus]] par module :
-- **Réacteurs Dorsaux :** le Mecka gagne la règle spéciale **Vol** et +1 Vitesse.
+A partir du niveau 8, votre [Mecka](MJ/Créatures/Mecka) possède un emplacement de module supplémentaire et peut obtenir les nouveaux modules suivants pour 2 [[Règles/Equipements/Matériaux|métaux]] et 3 [[Règles/Equipements/Matériaux|tissus]] par module :
+- **Réacteurs Dorsaux :** le [Mecka](MJ/Créatures/Mecka) gagne la règle spéciale **Vol** et +1 Vitesse.
 - **Lance-Flammes Intégré :** action courte. Tir, Portée 6'', 4d6, souffle, Attaques enflammées.
-- **Générateur de Champ :** au début de chaque tour, le Mecka gagne Egide (2).
+- **Générateur de Champ :** au début de chaque tour, le [Mecka](MJ/Créatures/Mecka) gagne Egide (2).
 - **Bras Grappin :** action courte : Tir, Portée 9'', 3d6, attire la cible (taille 2 ou moins) au contact si touchée.
 ##### Protocole T.I.T.A.N (niveau 11)
-A partir du niveau 11, votre Mecka gagne +2 PV, +1d6 en mêlée et à distance et peut relancer ses jets d'armure ayant obtenu 1.
+A partir du niveau 11, votre [Mecka](MJ/Créatures/Mecka) gagne +2 PV, +1d6 en mêlée et à distance et peut relancer ses jets d'armure ayant obtenu 1.
