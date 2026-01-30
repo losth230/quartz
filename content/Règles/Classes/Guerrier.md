@@ -28,7 +28,7 @@ Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/
 ##### Injure
 lorsqu'une créature à 9 cases ou moins se déplace, vous pouvez dépenser votre réaction pour lui imposer un malus de -2 Vitesse.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles capacités.
+Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9

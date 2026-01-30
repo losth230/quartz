@@ -34,7 +34,6 @@ Chaque compétence est reliée à une caractéristique principale comme suit :
 **Exploration** : Compétence pour se repérer dans un environnement, comprendre la nature et identifier des éléments du paysage.
 **Histoire** : Connaissance des événements passés, des traditions et des légendes.
 **Premiers secours** : Permet de soigner des blessures et de traiter des maladies mineures.
-
 ##### Social :
 **Etiquette** : Connaissance des normes sociales et des bonnes manières dans des contextes formels.
 **Intuition** : Permet de comprendre les motivations des autres ou de détecter des mensonges.
@@ -49,6 +48,11 @@ La valeur en d6 d'une caractéristique est égale à la somme des niveaux des co
 ##### Aider
 Un personnage peut choisir d'en aider un autre à effectuer une action sur une compétence, dans ce cas le joueur effectuant le test peut ajouter à son jet un nombre de d6 égal au niveau de compétence du personnage l'ayant aidé.
 *Par exemple, Anatole possède 1 niveau en Mental et souhaite aider Anton sur un test de DIY. Anton possédant 2d6 en mental, il va donc lancer ses 2d6 plus 1d6 offert par Anatole pour son test.*
+##### Points de talent
+Lorsque vous montez de niveau, vous gagnez des points de talent que vous pouvez dépenser pour améliorer vos compétences :
+- débloquer une compétence au niveau 1 : 1 point de talent.
+- améliorer une compétence au niveau 2 : 2 points de talent.
+- améliorer une compétence au niveau 3 : 3 points de talent.
 ### Jets de Dés
 Les actions sont résolues à l'aide de **dés à 6 faces (d6)**. Pour effectuer un test, un joueur doit connaitre 3 variables :
 - Le nombre de dé à lancer (par exemple 3d6).

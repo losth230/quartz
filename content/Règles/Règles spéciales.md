@@ -24,7 +24,7 @@ Lorsqu’une créature possédant cette règle effectue une attaque à distance,
 ##### Rapide
 Une arme avec cette propriété ne demande pas d'action pour être dégainée.
 ##### Saignement
-Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit N marqueurs _saignement._   
+Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit 1 marqueur _saignement._   
 Une créature marquée par *saignement* perd 1 PV  à la fin de chaque tour, puis défausse marqueur *saignement*.
 ##### Tir indirect : 
 Une attaque à distance disposant de cette règle ne nécessite pas de LdV directe sur sa cible mais une LdV verticale.

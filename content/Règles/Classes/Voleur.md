@@ -19,7 +19,7 @@ Lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour a
 ##### Coup bas
 Lorsque vous effectuez  une attaque dans le dos d'une  cible, vous pouvez jeter 1d6 supplémentaire lors de votre jet d'attaque et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Voleur, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Voleur, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ### Niveau 2 :
 À partir du niveau 2, vous pouvez choisir une spécialisation parmi celles présentées dans les sections suivantes.
 ### Niveau 3, 6, 9
@@ -29,7 +29,7 @@ Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compét
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ### Niveau 4
 ##### Instinct
-Lorsque vous atteignez le niveau 4, vous pouvez améliorer votre compétence de **Perception** de un niveau. De plus, vous bénéficiez d'un bonus de +2 à votre initiative.
+Lorsque vous atteignez le niveau 4, vous pouvez améliorer votre compétence de **Perception** de un niveau.
 ### Niveau 7
 ###### Course
 Lorsque vous atteignez le niveau 7, votre Vitesse augmente de 1.
@@ -44,14 +44,14 @@ Lorsque vous atteignez le niveau 7, votre Vitesse augmente de 1.
 ##### Attaques empoisonnées
 Vos attaques en mêlée bénéficient de la règle **Attaques Empoisonnées**.
 ##### Coup bas amélioré
-Lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et encore un dé supplémentaire si vous possédez une arme de main gauche.
+Lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ##### Rapidité mortelle (niveau 5)
 Lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire, qui peut être une action déjà effectuée durant le tour.
 ##### Frappe fatale (niveau 8)
 Lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
-##### Coup final (niveau 11)
-Lorsque vous exécutez un ennemi affecté par *dégâts sournois*, vous récupérez immédiatement 1 action courte.
-### Pilouface
+##### Premier coup (niveau 11)
+Si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
+### Pilouface (PAFINI)
 ##### Parité
 Lorsque vous obtenez au moins un résultat pair lors d'un test de compétence ou une attaque, vous pouvez ajouter une réussite à ce test.
 ##### Trucage 

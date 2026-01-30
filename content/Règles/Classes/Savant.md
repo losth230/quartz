@@ -1,7 +1,7 @@
 ## Description
 Le Savant est un érudit maîtrisant les mystères de la science, de la magie ancienne ou des arcanes naturelles. Moins tourné vers le combat physique, il compense par ses connaissances, ses créations, et sa capacité à analyser les situations. Il excelle dans l’utilisation de gadgets, de formules, ou de runes pour contrôler le champ de bataille.
 ## Race
-Les Savants peuvent être de toute **race**, mais les Elfes et les Gnomes sont souvent attirés par cette voie en raison de leur curiosité naturelle et de leur lien avec les forces magiques ou naturelles.
+Les Savants peuvent être de toute **race**, mais les Vermines et les Gnomes sont souvent attirés par cette voie en raison de leur curiosité naturelle et de leur lien avec les forces magiques ou naturelles.
 ## Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base en combat d'un Savant sont :
@@ -17,7 +17,7 @@ Vous pouvez dépenser votre réaction pour permettre à un allié ou  à vous-m�
 ##### Eclair de génie
 Vous pouvez dépenser votre réaction pour octroyer automatiquement une réussite à l'un de vos tests de compétence ou test de compétence que vous aidez. Vous ne pouvez utiliser cette réaction de nouveau avant d'avoir effectué un repos.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Savant, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 : 
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveaux 3, 6, 9 :
@@ -83,4 +83,4 @@ Dans les deux cas, la transfusion demande une action courte.
 #### Homonculus supérieur (niveau 8)
 Votre [[Homonculus]] peut prendre la forme de jusqu'à trois **Bêtes** de votre choix, et ainsi combiner leurs **Traits**. Les attaques en mêlée de votre [[Homonculus]] gagnent Force dévastatrice (1).
 #### Formidable expérience (niveau 11)
-Votre Homonculus peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.
+Votre [[Homonculus]] peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.

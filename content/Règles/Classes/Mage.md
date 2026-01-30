@@ -17,8 +17,10 @@ Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficiez d'un bonus de 1 à votre résistance magique le temps de l'attaque.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
+
 | Niveaux de Mage | Niveau de sorts max | Reserve de Dés de magie |
 | :-------------: | :-----------------: | :---------------------: |
 |      **1**      |          1          |           5d6           |
@@ -33,7 +35,7 @@ Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV.
 |     **10**      |          4          |           9d6           |
 |     **11**      |          4          |           9d6           |
 |     **12**      |          4          |           9d6           |
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
+
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).

@@ -10,3 +10,5 @@
                transform: scale(1.65); transform-origin: 77% 40%;">
     </iframe>
 </div>
+
+> [!quote] Le Grimoire des Sorts > [Lien vers le site]([https://exemple.com](https://docs.google.com/presentation/d/1Kb3fzGXz6Kji2cqbDY73Wepr9kdvfoYvgxhKkUMN0OE/edit?rm=minimal)) 
