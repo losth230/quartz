@@ -42,8 +42,6 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveau 4
 ##### Volonté des ancêtres 
 Une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui vous confère 1 action courte supplémentaire par tour pendant 3 tours.

@@ -17,26 +17,24 @@ L'équipement d'un Voleur est :
 ##### Esquive supérieure
 Lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour annuler automatiquement une touche.
 ##### Coup bas
-Lorsque vous effectuez  une attaque dans le dos d'une  cible, vous pouvez jeter 1d6 supplémentaire lors de votre jet d'attaque et 1d6 supplémentaire si vous possédez une arme de main gauche.
+Lorsque vous effectuez  une attaque dans le dos d'une cible, vous pouvez jeter 1d6 supplémentaire lors de votre jet d'attaque et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Voleur, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
-### Niveau 2 :
+## Niveau 2 :
 À partir du niveau 2, vous pouvez choisir une spécialisation parmi celles présentées dans les sections suivantes.
-### Niveau 3, 6, 9
+## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
-### Niveau 4
+## Niveau 4
 ##### Instinct
 Lorsque vous atteignez le niveau 4, vous pouvez améliorer votre compétence de **Perception** de un niveau.
-### Niveau 7
+## Niveau 7
 ###### Course
 Lorsque vous atteignez le niveau 7, votre Vitesse augmente de 1.
-### Niveau 10
+## Niveau 10
 ##### Maître des Ombres
 À partir du niveau 10, une fois par repos long, vous pouvez devenir invisible pendant 10 minutes ou jusqu’à ce vous attaquiez.
-### Niveau 12
+## Niveau 12
 ##### Disparition
 À partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant. 
 # Spécialisations
@@ -51,18 +49,21 @@ Lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire
 Lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
 ##### Premier coup (niveau 11)
 Si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
-### Pilouface (PAFINI)
+### Pilouface
 ##### Parité
-Lorsque vous obtenez au moins un résultat pair lors d'un test de compétence ou une attaque, vous pouvez ajouter une réussite à ce test.
+A partir du niveau 2, lorsque vous lancez les dés pour une compétence ou une attaque, vous pouvez choisir de parier sur **Pair** ou **Impair**.
+- Si la majorité de vos dés affichent le résultat choisi : ajoutez **1 Réussites** au résultat final.
+- Si vous vous trompez : vous subissez **Fatigue**.
 ##### Trucage 
-Une fois par jour, lorsque vous effectuez un test de compétence ou d'attaque, vous pouvez inverser le résultat d'un dé (un  1 devient un  6 ou  un 5  devient un 2).
+A partir du niveau 2,jour, lorsque vous effectuez un test de compétence ou d'attaque, vous pouvez dépenser votre réaction pour inverser le résultat d'un dé (un 1 devient un 6 ou un 5 devient un 2).
 ##### Règle de 4 (niveau 5)
-Lorsque vous obtenez exactement 2 succès sur un test de compétences ou d'attaque, vous pouvez considérer que vous en avez obtenu 4.
+A partir du niveau 5, lorsque vous obtenez exactement 2 succès sur un test de compétences ou d'attaque, vous pouvez considérer que vous en avez obtenu 4.
 ##### Double jeu (niveau 8)
-Lorsque vous obtenez 2 résultats identiques sur un test de compétence ou d'attaque, vous pouvez ajouter un effet supplémentaire :
-- 
+A partir du niveau 8, lorsque vous obtenez un double sur un test de compétence ou d'attaque, vous pouvez ajouter un effet supplémentaire :
+- **Double pair :** vous gagnez +1 Réaction pour ce tour.
+- **Double impair :** choisissez une cible à 6'' ou moins qui perd une action courte.
 ##### Geste du diable (niveau 11)
-Une fois par jour, vous pouvez relancer intégralement un test, tous les résultats pairs sont des **réussites explosives**, les résultats impairs sont des échecs.
+A partir du niveau 11, une fois par jour, vous pouvez relancer intégralement un test, tous les résultats pairs sont des **réussites explosives**, les résultats impairs sont des échecs.
 ### Danseur de lames
 ##### Riposte (niveau 2)
 Lorsque vous réussissez un jet d'armure, vous pouvez dépenser votre réaction pour immédiatement effectuer une attaque en mêlée.
@@ -86,4 +87,40 @@ Lorsque vous effectuez une attaque en mêlée contre une créature contre laquel
 ##### Ralliement (niveau 8)
 Vous pouvez dépenser votre réaction pour octroyer un bonus de +1d6 à un nombre d'alliés égal à votre nombre de dé de Social pour leur prochaine attaque  en mêlée ou à  distance.
 ##### Tir de sommation (niveau 11)
-Au début  de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
+Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
+### Franc-Tireur
+Le Franc-Tireur préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
+##### Tir de précision (niveau 2)
+A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche.
+##### Position avantageuse (niveau 2)
+A partir du niveau 2, si vous n'avez pas bougé pendant votre tour, vous gagnez Portée +5 et pouvez relancer les jets de tir ayant obtenu 1.
+##### Tir dans le genou (niveau 5)
+A partir du niveau 5, lorsque vous infligez des dégâts avec une arme à distance, vous pouvez choisir de retirer une touche pour infliger l'état **Immobilisé** ou **À Terre** à la cible.
+##### Avantagé en toute circonstance (niveau 8)
+A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
+##### Tir de sommation (niveau 11)
+Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
+### Franc-Tireur
+Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
+##### Tir de précision (niveau 2)
+A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche.
+##### Position avantageuse (niveau 2)
+A partir du niveau 2, si vous n'avez pas bougé pendant votre tour, vous gagnez Portée +5 et pouvez relancer les jets de tir ayant obtenu 1.
+##### Tir dans le genou (niveau 5)
+A partir du niveau 5, lorsque vous infligez des dégâts avec une arme à distance, vous pouvez choisir de retirer une touche pour infliger l'état **Immobilisé** ou **À Terre** à la cible.
+##### Avantagé en toute circonstance (niveau 8)
+A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
+##### Tir de sommation (niveau 11)
+### Ombrelame
+Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
+##### Magie mineure (niveau 2)
+A partir du niveau 2, vous gagnez une **Réserve de Magie de 3d6** et connaissez le [Domaine de magie](Règles/Magie) de votre choix. Votre niveau de sort max est 1.
+##### Lame spectrale (niveau 2)
+A partir du niveau 2, vous pouvez utiliser une action courte pour dépenser un de vos dé de magie et invoquer une dague d'énergie pure qui inflige des dégâts magiques. Elle disparaît si elle se trouve à plus de 20m de vous.
+##### Tir dans le genou (niveau 5)
+A partir du niveau 5, vous pouvez dépenser 1 dé de magie pour vous téléporter instantanément à la place de votre **Lame Spectrale** (Portée 9m).
+De plus, votre réserve de dés de magie augmente de 1.
+##### Magie intermédiaire (niveau 8)
+A partir du niveau 8, votre réserve de dés de magie augmente de 1 et votre niveau de sort max devient 2.
+##### Art onirique (niveau 11)
+A partir du niveau 11, vous pouvez lancer des sorts depuis votre **Lame spectrale**. De plus, lancer un sort depuis votre **Lame spectrale** ne vous coûte aucune action et vous pouvez lancer des sorts en étant engagé en mêlée si cette dernière a réussi à infliger une blessure ce tour-ci.

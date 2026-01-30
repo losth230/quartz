@@ -21,7 +21,7 @@ Lorsqu'une créature à 6'' ou moins  que vous voyez obtient au moins une réuss
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine des Ténèbres, Domaines du Festin, Domaine Primordial.
+Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin, Domaine Primordial.
 
 | Niveaux de Cuisinier | Niveau de sorts max | Reserve de Dés de magie |
 | :------------------: | :-----------------: | :---------------------: |
@@ -42,8 +42,6 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveau 4
 ##### Tout goûter
 Vous êtes immunisé au poison.

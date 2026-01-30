@@ -23,8 +23,6 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ## Niveaux 3, 6, 9 :
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveaux 7, 12
 ##### Connaissances avancées
 Lorsque vous atteignez le niveau 4 et le niveau 10, vous pouvez gagner 1 niveau dans la compétence de votre choix.

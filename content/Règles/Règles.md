@@ -102,6 +102,7 @@ Lors de son tour, un personnage peut effectuer au choix : deux actions courtes,
 Un terrain difficile compte double pour le calcul de distance en déplacement. Ainsi, une créature avec une vitesse de 5  ne pourra traverser que2 cases de terrain difficile.
 ### États Spéciaux
 Certains effets peuvent infliger un État à un personnage. Chaque État modifie temporairement ses capacités.
+**Aveuglé :** : Le personnage perd 2d6 sur toutes ses actions.
 **À Terre** : Le personnage ne peut pas effectuer d'action tant qu'il ne s'est pas relevé.  
 **Étourdi** : Le personnage perd une action par tour.  
 **Saignement** : Le personnage perd 1 PV par tour, stoppé par un test de Premiers Secours (chaque réussite annule 1 **Saignement**).  
