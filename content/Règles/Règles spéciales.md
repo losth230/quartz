@@ -13,8 +13,6 @@ Après avoir réussi une charge, une créature possédant cette règle bénéfic
 Lorsqu’une créature possédant un ou plusieurs marqueur Egide subit des touches, retirez d’abord ses N marqueurs Egide avant d’effectuer les jets d’armure. Les marqueurs Egide non utilisés en fin de tour sont perdus.
 ##### Force dévastatrice (N)
 Lorsqu’une créature possédant cette règle effectue une attaque en mêlée, sa cible souffre d’un malus de -N sur ses jets d’armure (max -3).
-##### Furtif
-Lorsqu’une créature possédant cette règle est ciblée lors d’une attaque à distance, l’attaquant souffre d’un malus de -1 sur ses jets de touche.
 ##### Indomptable : 
 Si une créature avec cette règle tombe à 0 PV, elle remonte à 1 PV. 
 ##### Lancer : 
@@ -26,7 +24,7 @@ Lorsqu’une créature possédant cette règle effectue une attaque à distance,
 ##### Rapide
 Une arme avec cette propriété ne demande pas d'action pour être dégainée.
 ##### Saignement
-Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit 1 marqueur _saignement._   
+Lorsqu’une créature possédant cette règle attaque, si la moindre touche est obtenue, sa cible reçoit N marqueurs _saignement._   
 Une créature marquée par *saignement* perd 1 PV  à la fin de chaque tour, puis défausse marqueur *saignement*.
 ##### Tir indirect : 
 Une attaque à distance disposant de cette règle ne nécessite pas de LdV directe sur sa cible mais une LdV verticale.

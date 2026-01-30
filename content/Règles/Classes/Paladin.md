@@ -25,10 +25,8 @@ Les paladins choisissent un vœu, et doivent le respecter. Si un Paladin trahit 
 **Vœu de vaillance** : *Quelle que soit la situation, jamais vous ne céderez face à l'ennemi !* Vous possédez 1 PV supplémentaire et êtes immunisé à l'effet de Panique.
 **Vœu de protection** : *vous avez juré de protéger les plus faibles*. Ce vœu vous permet de relancer vos jets d'armure ayant obtenu 1.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Paladin, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 3 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez deux domaines parmi les suivants : Domaine des Cieux, Domaine de la Lumière, Domaines de la Pureté.
-
 | Niveaux de Paladin | Niveau de sorts max | Reserve de Dés de magie |
 | :----------------: | :-----------------: | :---------------------: |
 |       **1**        |          1          |           4d6           |
@@ -43,11 +41,14 @@ Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez d
 |       **10**       |          2          |           6d6           |
 |       **11**       |          3          |           6d6           |
 |       **12**       |          3          |           6d6           |
+Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaines de la Lumière.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
+##### Amélioration de compétence
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveau 4
 ##### Sang Pur
 A partir du niveau 4, vous êtes immunisé aux *empoisonnements*.

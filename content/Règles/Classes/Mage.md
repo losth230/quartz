@@ -17,10 +17,8 @@ Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficiez d'un bonus de 1 à votre résistance magique le temps de l'attaque.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
-
 | Niveaux de Mage | Niveau de sorts max | Reserve de Dés de magie |
 | :-------------: | :-----------------: | :---------------------: |
 |      **1**      |          1          |           5d6           |
@@ -35,19 +33,18 @@ Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux do
 |     **10**      |          4          |           9d6           |
 |     **11**      |          4          |           9d6           |
 |     **12**      |          4          |           9d6           |
-
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-## Niveau 4
-##### Bouclier de mana
-A partir du niveau 4, vous pouvez dépenser votre réaction et un dé de magie. Lancer le dé et gagnez autant d'*[[Règles/Règles spéciales#Egide (N)|Egides]]* que le résultat indiqué par le dé.
+##### Amélioration de compétence
+Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
+## Niveaux 4, 10
+##### Connaissances avancées
+Lorsque vous atteignez le niveau 4 et le niveau 10, vous pouvez gagner 1 niveau dans la caractéristique de votre choix.
 ## Niveau 7
 ##### Rapidité arcanique
 A partir du niveau 7, vous pouvez lancer des sorts long au prix d'action courte en augmentant leur valeur de lancement de 5.
-## Niveau 10
-##### A l'épreuve des échecs
-A partir du niveau 10, vous bénéficiez de +1 à votre résistance magique.
 ## Niveau 12
 ##### Eveil
 A partir du niveau 12, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
@@ -73,23 +70,13 @@ Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé da
 A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
 ### Sage
 ##### Théoricien (niveau 2)
-Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
+Vous pouvez apprendre le domaine de magie de votre choix en plus des deux domaines que vous connaissez déjà.
 ##### Exactitude (niveau 2)
-Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (3).
+Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (1).
 ##### Le choix des possibles (niveau 5)
 Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vous choisissez l'attribut de domaine que vous déclenchez parmi les domaines que vous connaissez.
 ##### Rat de bibliothèque (niveau 8)
-A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
+A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous  gagnez un bonus de +1 au lancement des sorts.
 ##### Vision double (niveau 11)
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
-### Sage
-##### Théoricien (niveau 2)
-Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
-##### Exactitude (niveau 2)
-Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (3).
-##### Le choix des possibles (niveau 5)
-Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vous choisissez l'attribut de domaine que vous déclenchez parmi les domaines que vous connaissez.
-##### Rat de bibliothèque (niveau 8)
-A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
-##### Vision double (niveau 11)
-Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
+
