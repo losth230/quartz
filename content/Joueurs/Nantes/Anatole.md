@@ -11,4 +11,4 @@
     </iframe>
 </div>
 
-> [!quote] Le Grimoire des Sorts > [Lien vers le site]([https://exemple.com](https://docs.google.com/presentation/d/1Kb3fzGXz6Kji2cqbDY73Wepr9kdvfoYvgxhKkUMN0OE/edit?rm=minimal)) 
+Voici un lien vers [Google](https://www.google.fr) qui doit fonctionner.
