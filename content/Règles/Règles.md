@@ -29,17 +29,17 @@ Chaque compétence est reliée à une caractéristique principale comme suit :
 ##### Mental :
 **Analyse** : Permet d'examiner et de comprendre une situation complexe ou identifier des objets magiques.  
 **Discrétion** : Sert à se déplacer sans être vu ni entendu.  
-**DIY** : Compétence en artisanat, utilisée pour créer ou réparer des objets.
+**DIY** : Compétence en artisanat, utilisée pour créer ou réparer des objets.  
 **Dressage** : Permet d'apprivoiser, de dresser ou de communiquer avec les animaux.  
 **Exploration** : Compétence pour se repérer dans un environnement, comprendre la nature et identifier des éléments du paysage.  
-**Histoire** : Connaissance des événements passés, des traditions et des légendes.
+**Histoire** : Connaissance des événements passés, des traditions et des légendes.  
 **Premiers secours** : Permet de soigner des blessures et de traiter des maladies mineures.  
 ##### Social :
 **Etiquette** : Connaissance des normes sociales et des bonnes manières dans des contextes formels.  
 **Intuition** : Permet de comprendre les motivations des autres ou de détecter des mensonges.  
 **Manipulation** : Compétence pour tromper, influencer ou convaincre les autres dans leur propre intérêt.  
 **Négociation** : Utilisé pour marchander ou convaincre quelqu’un de faire des compromis ou de conclure un accord.  
-**Présence** : Capacité à impressionner ou à inspirer les autres par son aura.
+**Présence** : Capacité à impressionner ou à inspirer les autres par son aura.  
 **Séduction** : Utilisée pour charmer ou attirer l’attention de quelqu’un dans un contexte romantique ou social.  
 **Spectacle** : Compétence pour performer en public, que ce soit par la musique, la danse, le théâtre ou une autre forme d’art.  
 ##### Liens Caractéristiques - Compétences
@@ -71,7 +71,7 @@ Une fois sa cible désignée, l’attaquant lance un nombre de d6 égal à son n
 ##### Réaliser un attaque à distance
 Dans la majorité des cas, les attaques à distance ont lieu lorsqu’un modèle effectue l’action Tir. Un personnage effectuant une telle attaque doit choisir une de ses armes à distance (et donc en posséder une) puis une cible à portée de l’arme et dont la LdV est au moins partiellement dégagée.  
 **Effectuer une attaque à distance** :
-Une fois sa cible désignée, l’attaquant lance un nombre de d6 égal à son nombre d’attaque à distances en prenant en compte les modificateurs suivants :
+Une fois sa cible désignée, l’attaquant lance un nombre de d6 égal à son nombre d’attaque à distances en prenant en compte les modificateurs suivants :  
 -1d6 si le tireur ne possède pas de ligne de vue dégagée sur sa cible.  
 +1 aux chances de toucher si le tireur se situe en situation de tir  avantageuse (*par exemple en position surélevée*).  
 ##### Jets d’armure
@@ -81,7 +81,8 @@ Lorsqu’un personnage subit une touche, il peut faire un jet d’armure. Pour c
 Un Échec Critique est un résultat dramatique ou catastrophique qui survient lorsqu’un personnage rate une action de manière exceptionnelle.  
 ##### Conditions d’un Échec Critique
 Un Échec Critique survient lorsqu’un **jet de compétence** ou d’attaque :
-- Ne contient aucune réussite **ET**
+- Ne contient aucune réussite.  
+**ET**
 - Contient au moins deux résultat de 1 parmi les dés lancés.  
 ## Actions
 Lors de son tour, un personnage peut effectuer au choix : deux actions courtes, ou une action longue. Un personnage ne peut effectuer deux fois la même action lors d’un tour. Voici la liste des actions possibles :  
