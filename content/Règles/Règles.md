@@ -2,7 +2,7 @@
 Bienvenue dans **Chasse & Pêche**, un jeu de rôle où vous incarnez un personnage dans un monde fantastique et où vos choix façonnent l’histoire. Vous explorerez des terres inconnues, interagirez avec des créatures mythiques, combattrez des ennemis redoutables et découvrirez des secrets ancestraux. Le système repose sur des **jets de dés**, l’utilisation de **compétences** et des choix narratifs.
 ## **Mécanismes du Jeu**
 ### Caractéristiques
-Chaque personnage possède 7 caractéristiques :
+Chaque personnage possède 7 caractéristiques :  
 **Vitesse** : Il s'agit de la vitesse de déplacement du personnage, si vous jouez avec le déplacement par case, il s'agit du nombre de case que peut parcourir le personnage en une action.  
 **Mêlée** : il s'agit de la valeur d'attaque en mêlée du personnage.  
 **Tir** : il s'agit de la valeur d'attaque à distance du personnage.  
@@ -116,39 +116,41 @@ Lorsqu’un personnage tombe à 0 PV, il subit un **Trauma**. Le joueur doit dé
 *Par exemple la perte d'un membre, le développement d'une phobie, etc...*   
 Une fois le Trauma subit, le joueur réduit une caractéristique de son choix de 1, **définitivement,** puis remonte à 1 PV et gagne un nombre d'*[[Règles/Règles spéciales#Egide (N)|Egides]]* égal à son niveau.
 ##### Refuser un Trauma
-Un joueur peut choisir de ne pas résister au Trauma, et donc de ne pas réduire sa caractéristique et ne pas remonter à 1 PV. Dans ce cas, il doit justifier son acte de manière Roleplay.
+Un joueur peut choisir de ne pas résister au Trauma, et donc de ne pas réduire sa caractéristique et ne pas remonter à 1 PV. Dans ce cas, il doit justifier son acte de manière Roleplay.  
 *Par exemple, son personnage peut être brisé et fondre en pleurs, avoir subit un choc qui le plonge dans l'inconscience, etc...*
 ##### Dernière Scène
 Un joueur ayant déjà subit des Traumas peut choisir de déclencher une **dernière scène** pour son personnage. Dans ce cas, le joueur joue immédiatement, récupère 1 PV par niveau et tous ses dés de magie, mais meurt définitivement à la fin de la scène ou si ses PV sont de nouveau réduit à 0.
+##### Guérir d'un Trauma
+Aucun Trauma n'est irréversible, il est tout à fait possible à un joueur de compenser la perte d'un bras avec l'aide d'une prothèse ou une phobie avec de la thérapie.
 ##### Table des traumas
 La table qui suit a pour objectif de servir d'exemple, et n'est en aucun cas une liste exhaustive.
 
-| **D66** | **Type** | **Description du Trauma** | **Caractéristique Impactée (Suggérée)** |
-|:---:|:---:|:---:|:---:|
-|11|Jambe Broyée|Vous boitez définitivement. Votre déplacement est douloureux.|**Vitesse**|
-|12|Bras Mort|Un nerf est touché, votre bras principal tremble ou est inerte.|**Mêlée** ou **Tir**|
-|13|Main en miettes|Il vous manque des doigts ou la main est rigide.|**Tir** ou **DIY**|
-|14|Dos Brisé|Vous ne pouvez plus porter de charges lourdes sans hurler de douleur.|**Brute**|
-|15|Borgne|La perception des profondeurs est faussée.|**Tir**|
-|16|Cicatrices nerveuses|Vos réflexes sont engourdis par d'anciennes douleurs.|**Crochetage**|
-|21|Souffle court|Un poumon perforé ou écrasé. Vous vous essoufflez vite.|**Résilience**|
-|22|Digestion difficile|Votre estomac a été touché, manger est une épreuve. Vous êtes frêle.|**PV Max**|
-|23|Migraines chroniques|Un coup à la tête vous lance dès que vous réfléchissez trop.|**Analyse**|
-|24|Oreille interne|Votre équilibre est précaire, vous avez le vertige.|**Physique** (Agilité)|
-|25|Constitution ruinée|Votre système immunitaire est HS, vous attrapez tout ce qui traîne.|**PV Max**|
-|26|Douleur Fantôme|Une ancienne blessure se réveille aléatoirement, vous crispant.|**Mêlée**|
-|31|Paranoïa|Vous voyez des ennemis partout. Impossible de faire confiance.|*peur du feu*|
-|32|Phobie Spécifique|Peur panique du feu, du noir, ou des créatures type X.|**Volonté**|
-|33|Insomnie|Les cauchemars hantent vos nuits. Vous n'êtes jamais reposé.|**Réserve de magie**|
-|34|Mutisme traumatique|Les mots restent bloqués dans votre gorge en cas de stress.|**Manipulation**|
-|35|Perte de mémoire|Des pans entiers de votre savoir se sont effacés.|**Histoire**|
-|36|Hystérie|Le sang ou la violence vous font perdre vos moyens (Rire nerveux, pleurs).|**Volonté**|
-|41|Visage Défiguré|Une cicatrice traverse votre visage ou il vous manque le nez/une oreille.|**Séduction**|
-|42|Regard de Fou|Vos yeux ne clignent plus, vous mettez tout le monde mal à l'aise.|**Etiquette**|
-|43|Voix brisée|Votre gorge a été écrasée, vous parlez avec un râle effrayant.|**Spectacle**|
-|44|Aura de Mort|Vous sentez le formol ou la terre humide. Les animaux vous fuient.|**Dressage**|
-|45|Cynisme absolu|Vous ne croyez plus en rien, votre nihilisme sape le moral du groupe.|*incroyant*|
-|46|Tics nerveux|Vous grimacez ou claquez des dents sans arrêt.|**Discréation**|
+| **D66** |       **Type**       |                         **Description du Trauma**                          | **Caractéristique Impactée (Suggérée)** |
+| :-----: | :------------------: | :------------------------------------------------------------------------: | :-------------------------------------: |
+|   11    |     Jambe Broyée     |       Vous boitez définitivement. Votre déplacement est douloureux.        |               **Vitesse**               |
+|   12    |      Bras Mort       |      Un nerf est touché, votre bras principal tremble ou est inerte.       |          **Mêlée** ou **Tir**           |
+|   13    |   Main en miettes    |              Il vous manque des doigts ou la main est rigide.              |           **Tir** ou **DIY**            |
+|   14    |      Dos Brisé       |   Vous ne pouvez plus porter de charges lourdes sans hurler de douleur.    |                **Brute**                |
+|   15    |        Borgne        |                 La perception des profondeurs est faussée.                 |                 **Tir**                 |
+|   16    | Cicatrices nerveuses |           Vos réflexes sont engourdis par d'anciennes douleurs.            |             **Crochetage**              |
+|   21    |    Souffle court     |          Un poumon perforé ou écrasé. Vous vous essoufflez vite.           |             **Résilience**              |
+|   22    | Digestion difficile  |    Votre estomac a été touché, manger est une épreuve. Vous êtes frêle.    |               **PV Max**                |
+|   23    | Migraines chroniques |        Un coup à la tête vous lance dès que vous réfléchissez trop.        |               **Analyse**               |
+|   24    |   Oreille interne    |            Votre équilibre est précaire, vous avez le vertige.             |         **Physique** (Agilité)          |
+|   25    | Constitution ruinée  |    Votre système immunitaire est HS, vous attrapez tout ce qui traîne.     |               **PV Max**                |
+|   26    |   Douleur Fantôme    |      Une ancienne blessure se réveille aléatoirement, vous crispant.       |                **Mêlée**                |
+|   31    |       Paranoïa       |       Vous voyez des ennemis partout. Impossible de faire confiance.       |              *peur du feu*              |
+|   32    |  Phobie Spécifique   |           Peur panique du feu, du noir, ou des créatures type X.           |               **Volonté**               |
+|   33    |       Insomnie       |        Les cauchemars hantent vos nuits. Vous n'êtes jamais reposé.        |          **Réserve de magie**           |
+|   34    | Mutisme traumatique  |        Les mots restent bloqués dans votre gorge en cas de stress.         |            **Manipulation**             |
+|   35    |   Perte de mémoire   |             Des pans entiers de votre savoir se sont effacés.              |              **Histoire**               |
+|   36    |       Hystérie       | Le sang ou la violence vous font perdre vos moyens (Rire nerveux, pleurs). |               **Volonté**               |
+|   41    |   Visage Défiguré    | Une cicatrice traverse votre visage ou il vous manque le nez/une oreille.  |              **Séduction**              |
+|   42    |    Regard de Fou     |     Vos yeux ne clignent plus, vous mettez tout le monde mal à l'aise.     |              **Etiquette**              |
+|   43    |     Voix brisée      |       Votre gorge a été écrasée, vous parlez avec un râle effrayant.       |              **Spectacle**              |
+|   44    |     Aura de Mort     |     Vous sentez le formol ou la terre humide. Les animaux vous fuient.     |              **Dressage**               |
+|   45    |    Cynisme absolu    |   Vous ne croyez plus en rien, votre nihilisme sape le moral du groupe.    |            *blasphématueur*             |
+|   46    |     Tics nerveux     |               Vous grimacez ou claquez des dents sans arrêt.               |             **Discréation**             |
 
 
 ## **Magie**
