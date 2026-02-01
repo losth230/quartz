@@ -111,10 +111,18 @@ Certains effets peuvent infliger un État à un personnage. Chaque État modifie
 **Invisible** : Ne peut être ciblé qu’après un test réussi d’Intuition ou Perception.  
 **Protégé** : Réduit de 1 tous les dégâts subis (non cumulable avec bonus magique).  
 **Béni** : Le prochain test réussi gagne +1 réussite, puis l’état disparaît.  
-### État Mourant
-Lorsqu’un personnage tombe à 0 PV, il devient **Mourant**. Un personnage Mourant ne peut effectuer qu’une seule action par tour et doit réaliser un test de **Résilience** à chaque fois qu'il réalise une action.  
-##### Marqueurs d’Agonie
-Si le personnage subit des dégâts ou échoue à un test de Résilience, il reçoit 1 marqueur Agonie. Un personnage atteignant 3 marqueurs Agonie meurt définitivement.  
+### Tomber à 0 PV
+Lorsqu’un personnage tombe à 0 PV, il subit un **Trauma**. Le joueur doit décrire ce trauma et comment son personnage réagit.  
+*Par exemple la perte d'un membre, le développement d'une phobie, etc...*   
+Une fois le Trauma subit, le joueur réduit une caractéristique de son choix de 1, **définitivement,** puis remonte à 1 PV et gagne un nombre d'*[[Règles/Règles spéciales#Egide (N)|Egides]]* égal à son niveau.
+##### Refuser un Trauma
+Un joueur peut choisir de ne pas résister au Trauma, et donc de ne pas réduire sa caractéristique et ne pas remonter à 1 PV. Dans ce cas, il doit justifier son acte de manière Roleplay.
+*Par exemple, son personnage peut être brisé et fondre en pleurs, avoir subit un choc qui le plonge dans l'inconscience, etc...*
+##### Dernière Scène
+Un joueur ayant déjà subit des Traumas peut choisir de déclencher une **dernière scène** pour son personnage. Dans ce cas, le joueur joue immédiatement, récupère 1 PV par niveau et tous ses dés de magie, mais meurt définitivement à la fin de la scène ou si ses PV sont de nouveau réduit à 0.
+##### Table des traumas
+La table qui suit a pour objectif de servir d'exemple, et n'est en aucun cas une liste exhaustive.
+
 ## **Magie**
 ##### Réserve de magie
 Les personnages capables de lancer un sort possèdent une Réserve de Magie. Celle-ci se compose de d6 et est réinitialisée après chaque repos. 

@@ -19,8 +19,10 @@ Lorsque vous réussissez une attaque en mêlée, votre cible doit réussir un te
 ##### Soupe trop salée
 Lorsqu'une créature à 6'' ou moins  que vous voyez obtient au moins une réussite sur un test de compétence ou un jet d'attaque, vous pouvez utiliser votre réaction et 1 dé de votre réserve de magie pour lui jeter de l'eau salée et l'étourdir pendant 1 tour.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
+Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin, Domaine Primordial.
+
 | Niveaux de Cuisinier | Niveau de sorts max | Reserve de Dés de magie |
 | :------------------: | :-----------------: | :---------------------: |
 |        **1**         |          1          |           4d6           |
@@ -35,14 +37,11 @@ Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV.
 |        **10**        |          2          |           6d6           |
 |        **11**        |          3          |           6d6           |
 |        **12**        |          3          |           6d6           |
-Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine des Ténèbres, Domaines du Festin, Domaine Primordial.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveau 4
 ##### Tout goûter
 Vous êtes immunisé au poison.
@@ -53,7 +52,7 @@ Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous gagn
 ##### Ajouter la sauce
 Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plante par ration pour lui octroyer un effet d'Elixir (cf. [[Potions & Elixirs]]) de votre choix.
 ## Niveau 12
-##### Umami
+##### Hors d'œuvre 
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
 # Spécialisations
 ### Chef de Guerre
@@ -84,3 +83,15 @@ Une fois par jour, après avoir tué une créature légendaire, vous pouvez cuis
 - +1 PV max.
 Ou
 - +1 en une compétence liée à la créature.
+### Gastromancien
+Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un art magique à part entière, et un bon client est toujours un client satisfait.
+##### Service en salle(niveau 2)
+Vos **Rations savoureuses** ne coûtent plus qu'une action courte pour être consommées.
+##### Complément alimentaire (niveau 2)
+Lorsque vous fabriquez vos **Rations savoureuses**, vous pouvez dépenser un dé de votre réserve de magie pour les imprégner. Une créature bénéficie de +1d6 sur son prochain test d'attaque ou de compétence après avoir mangé une **Ration savoureuse** ainsi imprégnée.
+##### Dopamine (niveau 5)
+Les créatures ingérant une **Ration savoureuse** peuvent immédiatement effectuer une marche gratuite.
+##### Récupération des sucs (niveau 8)
+Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupère 1 dé de magie.
+##### Banquet (niveau 11)
+Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.

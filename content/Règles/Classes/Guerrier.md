@@ -28,17 +28,15 @@ Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/
 ##### Injure
 lorsqu'une créature à 9 cases ou moins se déplace, vous pouvez dépenser votre réaction pour lui imposer un malus de -2 Vitesse.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles capacités.
+Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre [[Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la [[Règles/Règles#Compétences|compétence]] de votre choix de 1 niveau.
 ## Niveau 4
 ##### Exécution
-A partir du niveau 4, si, après une de vos attaques en mêlée, une créature possède moins PV restant que de marqueurs *[[Règles/Règles spéciales#saignement|saignements]]*, elle est automatiquement exécutée.
+A partir du niveau 4, si, après une de vos attaques en mêlée, une créature possède moins PV restant que de marqueurs *[[Règles/Règles spéciales#saignement|saignement]]*, elle est automatiquement exécutée.
 ## Niveau 7
 ###### Entrainement avancé
 Lorsque vous atteignez le niveau 7, vous pouvez apprendre un deuxième [[Règles/classes/guerrier#Entrainement|entrainement]].
@@ -55,7 +53,7 @@ Lorsque vous réussissez une attaque en mêlée, vous infligez 2 *[[Règles/Règ
 ##### Soif de sang (niveau 2)
 Lorsque vous réussissez une attaque sur une créature possédant 3 *[[Règles/Règles spéciales#saignement|saignements]]* ou plus, vous récupérez 1  PV.
 ##### Furie sanguinaire (niveau 5)
-Lorsque vous éliminez une créature affectée par *[[Règles/Règles spéciales#saignement|saignements]]*, vous récupérez une [[Règles/Règles#Actions|action courte]].
+Lorsque vous éliminez une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous récupérez une [[Règles/Règles#Actions|action courte]].
 ##### Massacre (niveau 8)
 Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *[[Règles/Règles spéciales#saignement|saignements]]*, vous pouvez relancer vos jets de touche ayant obtenu 1 ou  les jets de dé ayant obtenu 1 ou 2 si vous connaissez l'[[Règles/classes/guerrier#Entrainement|entrainement]] [[Règles/Règles spéciales#Maitre-lame|maitre-lame]].
 ##### Bain de sang (niveau 11)
@@ -86,14 +84,14 @@ Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cava
 
 ### Escrimeur
 ##### Postures (Niveau 2)
-Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adapter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
-**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous entrez en posture de l'Aube au lieu de changer votre posture pour la suivante.  
+Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
+**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous rester en posture de l'Aube au lieu de changer votre posture pour la suivante.  
 **Posture du Zéphyr** : lorsque vous tenez cette posture, vous possédez +1 Vitesse et ignorez les  *[[Règles/Règles#États Spéciaux|ralentissements]]*  et  *[[Règles/Règles#États Spéciaux|immobilisations]]*.  
 **Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Roc. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Roc.  
 **Posture du du Roc** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
 ##### Posture de l'Etoile (Niveau 2)
 Si vous parvenez à changer 2 fois de posture en 1 seul tour, vous entrez en posture de L'Etoile.  
-**Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement  effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
+**Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
 ##### Feinte (niveau 5)
 Si vous changez de posture pendant un tour, vous pouvez immédiatement effectuer un mouvement de 3'' et appliquer un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* à une créature à  1'' ou moins.
 ##### Stabilité (niveau 8)
@@ -104,4 +102,4 @@ Vos postures s'améliorent comme suit :
 **Posture du du Roc** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
 **Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]* à votre cible.  
 ##### Exploiter les points faibles (niveau 11)
-Vos postures de l'Aube et du Crépuscule gagnent la règle spéciale Anti-infanterie, vos postures du Zéphyr et du Roc gagnent la règle spéciale  Anti-large. De plus, lorsque vous quittez la posture de l'Etoile, vous entrez dans la posture du Roc.
+Vos postures de l'Aube et du Crépuscule gagnent +2d6 contre les créatures de aille 2 ou moins, vos postures du Zéphyr et du Roc gagnent+2d6 contre les créatures de taille 3 ou plus. De plus, lorsque vous quittez la posture de l'Etoile, vous entrez dans la posture du Roc.

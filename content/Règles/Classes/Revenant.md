@@ -19,8 +19,10 @@ Vous pouvez dépenser un dé de votre réserve de magie pour vous téléporter s
 ##### Résistance à la magie
 Vous bénéficiez d'une résistance magique naturelle de 6+. Si vous portez des objets vous octroyant une résistance magique, vous résistance magique totale est améliorée de 1 (un 5+ devient donc 4+).
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Revenant, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
+Le Revenant est un lanceur de sorts. Lorsque vous créez un Revenant, choisissez deux domaines parmi les suivants : Domaine de la Tombe, Domaine des Ténèbres, Domaine des Racines, Domaine du Givre.
+
 | Niveaux de Revenant | Niveau de sorts max | Reserve de Dés de magie |
 | :-----------------: | :-----------------: | :---------------------: |
 |        **1**        |          1          |           4d6           |
@@ -35,14 +37,12 @@ Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 2 PV.
 |       **10**        |          2          |           6d6           |
 |       **11**        |          3          |           6d6           |
 |       **12**        |          3          |           6d6           |
-Le Revenant est un lanceur de sorts. Lorsque vous créez un Revenant, choisissez deux domaines parmi les suivants : Domaine de la Tombe, Domaine des Ténèbres, Domaine des Racines.
+
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-##### Amélioration de compétence
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer la compétence de votre choix de 1 niveau.
 ## Niveau 4
 ##### Marche sans fin
 A partir du niveau 4, votre Vitesse augmente de 1.
@@ -78,3 +78,27 @@ A partir du niveau 5, vos invocations Cadavériques ont +1d6 en mêlée.
 A partir du niveau 8, une fois entre deux sommeils, vous pouvez dépenser une action longue pour prendre le contrôle d'une créature Cadavérique jusqu'à votre prochain sommeil. Elle est considérée comme étant l'une de vos invocations pour la durée de l'effet.
 ##### Avancée sans fin (niveau 11)
 A partir du niveau 11, vos invocation Cadavériques ont +1 Vitesse.
+### Chevalier noir
+Le Chevalier Noir est une forteresse imprenable, une ancre spectrale sur le champ de bataille. Il encaisse la vie sans broncher, protégé par des armures lourdes et une aura de terreur qui gèle le sang de ses ennemis.
+##### Maitrise des plaques (Niveau 2)
+Vous gagnez la maitrise des armures lourdes.
+##### Parade (niveau 2)
+Après avoir subit des touches en mêlée mais avant d'effectuer vos jets d'armure, vous pouvez annuler un nombre de touches égales à votre niveau. Si votre niveau est supérieur au nombre de touches que vous avez subies, l'attaquant reçoit un nombre de touche égal à la différence auxquelles s'applique la [[Règles/Règles spéciales#force dévastatrice(N)|force dévastatrice]] de votre arme.
+##### Retour d'outre-tombe (niveau 5)
+Vous pouvez dépenser votre réaction et 1 dé de magie par niveau du sort pour renvoyer un sort vous prenant pour cible à son envoyeur.
+##### Aura de désespoir (niveau 8)
+Les créatures hostiles à 3'' ou moins subissent un malus de -1 vitesse et -1 à leurs tests de Résilience.
+##### Drain d'essence (niveau 11)
+A partir du niveau 11, lorsque vous éliminez une créature, vous récupérer 1 PV et 1 dé de magie.
+### Déchu
+Le Déchu est un paladin qui a non seulement pactisé avec la mort, mais qui utilise cette énergie pour corrompre la réalité. C'est un destructeur qui infuse ses coups de magie noire. Il excelle à punir ses ennemis et à briser leurs défenses.
+##### Sceau de corruption (Niveau 2)
+A partir du niveau 2, si une de vos attaques obtient au moins une blessure, la cible est marquée par un sceau de corruption. La prochaine attaque physique qu'elle subit fait éclater le sceau qui fait passer l'armure de la créature à 6+ le temps de l'attaque.
+##### Arme Impie (niveau 2)
+A partir du niveau 2, vous pouvez vous lier avec une arme au maximum. Tant que vous maniez votre arme liée, vous bénéficiez de +1d6 en mêlée et les cibles blessées par votre arme sont réduites au silence pour le reste du tour. Vous lier avec une arme prend 6 heures.
+##### Profanation (niveau 5)
+A partir du niveau 5, vous pouvez dépenser une action longue pour planter votre arme liée dans le sol et profaner la zone à 6 cases ou moins. Les créatures de votre choix dans la zone subissent un malus de -1 vitesse et ne peuvent plus s'envoler. De plus, les créatures vivantes de votre choix perdent 1 PV à la fin de chaque tour qu'elles finissent dans la zone, ne peuvent être soignées et vous récupérez 1 PV par PV ainsi enlevé. L'effet perdure tant que l'arme est plantée dans le sol.
+##### Moisson d'os (niveau 8)
+Lorsque vous tuez un ennemi avec une attaque de Mêlée, vous pouvez immédiatement créer un [[MJ/Créatures/Cadavérique/Archer squelette|Squelette]] à sa place. Il agit à la fin du tour et tombe en poussière après 1 autre tour.
+##### Avatar de la ruine (niveau 11)
+A partir du niveau 11, lorsque vous éliminez une créature, les créatures à 6'' ou moins ayant moins de PV actuels que vous doivent réussir un test de volonté (nombre de réussite égal à la différence de PV actuels) ou être [[content/Règles/Règles#États Spéciaux|paniqués]].
