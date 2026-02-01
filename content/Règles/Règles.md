@@ -123,6 +123,34 @@ Un joueur ayant déjà subit des Traumas peut choisir de déclencher une **derni
 ##### Table des traumas
 La table qui suit a pour objectif de servir d'exemple, et n'est en aucun cas une liste exhaustive.
 
+| **D66** | **Type** | **Description du Trauma** | **Caractéristique Impactée (Suggérée)** |
+|:---:|:---:|:---:|:---:|
+|11|Jambe Broyée|Vous boitez définitivement. Votre déplacement est douloureux.|**Vitesse**|
+|12|Bras Mort|Un nerf est touché, votre bras principal tremble ou est inerte.|**Mêlée** ou **Tir**|
+|13|Main en miettes|Il vous manque des doigts ou la main est rigide.|**Tir** ou **DIY**|
+|14|Dos Brisé|Vous ne pouvez plus porter de charges lourdes sans hurler de douleur.|**Brute**|
+|15|Borgne|La perception des profondeurs est faussée.|**Tir**|
+|16|Cicatrices nerveuses|Vos réflexes sont engourdis par d'anciennes douleurs.|**Crochetage**|
+|21|Souffle court|Un poumon perforé ou écrasé. Vous vous essoufflez vite.|**Résilience**|
+|22|Digestion difficile|Votre estomac a été touché, manger est une épreuve. Vous êtes frêle.|**PV Max**|
+|23|Migraines chroniques|Un coup à la tête vous lance dès que vous réfléchissez trop.|**Analyse**|
+|24|Oreille interne|Votre équilibre est précaire, vous avez le vertige.|**Physique** (Agilité)|
+|25|Constitution ruinée|Votre système immunitaire est HS, vous attrapez tout ce qui traîne.|**PV Max**|
+|26|Douleur Fantôme|Une ancienne blessure se réveille aléatoirement, vous crispant.|**Mêlée**|
+|31|Paranoïa|Vous voyez des ennemis partout. Impossible de faire confiance.|*peur du feu*|
+|32|Phobie Spécifique|Peur panique du feu, du noir, ou des créatures type X.|**Volonté**|
+|33|Insomnie|Les cauchemars hantent vos nuits. Vous n'êtes jamais reposé.|**Réserve de magie**|
+|34|Mutisme traumatique|Les mots restent bloqués dans votre gorge en cas de stress.|**Manipulation**|
+|35|Perte de mémoire|Des pans entiers de votre savoir se sont effacés.|**Histoire**|
+|36|Hystérie|Le sang ou la violence vous font perdre vos moyens (Rire nerveux, pleurs).|**Volonté**|
+|41|Visage Défiguré|Une cicatrice traverse votre visage ou il vous manque le nez/une oreille.|**Séduction**|
+|42|Regard de Fou|Vos yeux ne clignent plus, vous mettez tout le monde mal à l'aise.|**Etiquette**|
+|43|Voix brisée|Votre gorge a été écrasée, vous parlez avec un râle effrayant.|**Spectacle**|
+|44|Aura de Mort|Vous sentez le formol ou la terre humide. Les animaux vous fuient.|**Dressage**|
+|45|Cynisme absolu|Vous ne croyez plus en rien, votre nihilisme sape le moral du groupe.|*incroyant*|
+|46|Tics nerveux|Vous grimacez ou claquez des dents sans arrêt.|**Discréation**|
+
+
 ## **Magie**
 ##### Réserve de magie
 Les personnages capables de lancer un sort possèdent une Réserve de Magie. Celle-ci se compose de d6 et est réinitialisée après chaque repos. 
