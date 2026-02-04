@@ -101,5 +101,24 @@ Vos postures s'améliorent comme suit :
 **Posture du Crépuscule** : votre riposte s'effectue avec 1d6 supplémentaire.  
 **Posture du du Roc** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
 **Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]* à votre cible.  
-##### Exploiter les points faibles (niveau 11)
-Vos postures de l'Aube et du Crépuscule gagnent +2d6 contre les créatures de aille 2 ou moins, vos postures du Zéphyr et du Roc gagnent+2d6 contre les créatures de taille 3 ou plus. De plus, lorsque vous quittez la posture de l'Etoile, vous entrez dans la posture du Roc.
+##### Coup de grâce (niveau 11)
+A partir du niveau 11, votre posture du Crépuscule vous permet de riposter contre les attaques à distance, sans limite de portée.  
+De plus, vous pouvez refuser d'entrer au Posture de l'Aube. A la place, si vous parvenez à changer de posture 3 fois en un seul tour, vous entrez en Posture de l'Aube Radieuse, ce qui vous octroie tous les bonus de la Posture de l'Aube, un bonus de +5d6 en mêlée pour le reste du tour ainsi que 5 *[[Règles/Règles spéciales#Egide (N)|Egides]]* que vous pouvez répartir entre vos alliés à 6'' ou moins. 
+### Masochiste
+##### Souffrance (niveau 2)
+A partir du niveau 2, pour chaque PV perdu, vous gagnez en souffrances. Les modificateurs apportés par les souffrances sont cumulatives.
+**2 Souffrances :** +1d6 en mêlée.  
+**4 Souffrances :** +1d6 en mêlée.  
+**6 Souffrances :** +1d6 en mêlée.  
+**8 Souffrances :** vous bénéficiez de Sauvagerie (1).  
+**10 Souffrances :** vous bénéficiez d'un bonus de +1 à vos jets d'armure contre les attaques physiques.  
+**12 Souffrances :** vous bénéficiez de Sauvagerie (1).    
+**14 Souffrances :** vos attaques en mêlées infligeant au moins 1 blessure infligent 2 *[[Règles/Règles spéciales#saignement|saignements]]* supplémentaires.
+##### A l'épreuve de la douleur (niveau 2)
+Lorsque vous atteignez les niveaux 2,6 et 10, vous gagnez +1 PV.
+##### Peau épaisse (niveau 5)
+A partir du niveau 5, vous pouvez choisir de réduire de 1 les dégâts physiques que vous subissez lors d'une attaque.
+##### Provocation (niveau 8)
+A partir du niveau 8, vous pouvez dépenser votre réaction pour forcer une créature que vous voyez à 3'' ou moins à vous attaquer. Si cette créature vous inflige au moins 1 blessure, vous gagner Sauvagerie (1) et pouvez riposter gratuitement.
+##### Saigner à vif (niveau 11)
+A partir du niveau 11, vous gagnez Sauvagerie (1) à chaque fois que vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]*. 
