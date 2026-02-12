@@ -44,17 +44,17 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
-##### Marche sans fin
-A partir du niveau 4, votre Vitesse augmente de 1.
-## Niveau 7
 ##### Camouflage
-A partir du niveau 7, vous gagnez un niveau dans la compétence Discrétion.
-## Niveau 10
+A partir du niveau 4, vous pouvez dépenser une action courte pour entrer ou sortir d’une forme éthérée. Tant que vous êtes sous forme éthérée, vous bénéficiez de Vitesse +1, Furtif et de +1 à vos tests de discrétion, mais ne pouvez effectuer quelconque action autre que marche ou course. Une charge réussit vous bascule automatiquement en forme normale.
+## Niveau 7
 ##### Charge du fond du monde
-A partir du niveau 10, lorsque vous ou une de vos invocation Cadavérique réussit une charge sur une distance de 7'' ou plus, l'attaque gratuite  octroyée bénéficie d'un bonus de Force Dévastatrice (+1).
+A partir du niveau 10, lorsque vous ou une de vos invocation Cadavérique réussit une charge sur une distance de 7'' ou plus, l'attaque gratuite  octroyée bénéficie d'un bonus de Force Dévastatrice (+1), si la  distance est de 11''   ou plus, l'attaque  gratuite  octroyée bénéficie d'un bonus de Force Dévastatrice (+2).
+## Niveau 10
+##### Aura de crainte
+A partir du niveau 10, les créatures de votre choix à 6'' ou moins de vous souffrent d'un malus de -1d6 en moral
 ## Niveau 12
 ##### Forme Ethérée
-A partir du niveau 12, vous pouvez dépenser une action courte pour entrer ou sortir d'une forme éthérée. Tant que vous êtes sous forme éthérée, vous bénéficiez de Vitesse +1 et Vol, mais ne pouvez attaquer en mêlée. Une charge réussit vous bascule  automatiquement en forme normale.
+A partir du niveau 12, votre forme éthérée vous confère Vol et +1 Vitesse
 # Spécialisations
 ### Faucheur
 ##### Entrainement
