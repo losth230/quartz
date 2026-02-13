@@ -16,8 +16,8 @@ L'équipement d'un Cuisinier est :
 Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
 ##### Coup de fourchette
 Lorsque vous réussissez une attaque en mêlée, votre cible doit réussir un test de résilience ou souffrir d'un malus de -1d6 ses ses jets d'attaque en mêlée et à distance pour le reste du tour.
-##### Soupe trop salée
-Lorsqu'une créature à 6'' ou moins  que vous voyez obtient au moins une réussite sur un test de compétence ou un jet d'attaque, vous pouvez utiliser votre réaction et 1 dé de votre réserve de magie pour lui jeter de l'eau salée et l'étourdir pendant 1 tour.
+##### Chef de service
+Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
@@ -61,9 +61,9 @@ Le Chef de Guerre est un maître des cuisines… et du champ de bataille. Il tra
 Vos attaques avec des armes improvisées suivent les règles suivantes :
 Mêlée, 3d6, Anti-infanterie, Lancer.
 ##### Rôtissage brutal (niveau 2)
-Lorsque vous réussissez une attaque avec une arme improvisée, vous infligez un malus de **-1 à l’armure** de votre cible jusqu’à la fin du tour.
+Lorsque vous infligez au moins une blessure avec une arme improvisée, vous infligez un malus de **-1 à l’armure** de votre cible jusqu’à la fin du tour.
 ##### Fumet Intimidant (niveau 5)
-Lorsque vous obtenez une réussite critique avec une attaque en mêlée, votre cible est marquée Fatiguée.
+Vos attaques avec des armes improvisées gagnent la règle Attaques enflammées.
 ##### Tranche chair (niveau 8)
 Vos attaques avec une arme de cuisine infligent un marqueur *Saignement* en plus de leurs effets habituels.
 ##### Assiette de plomb (niveau 11)
@@ -95,3 +95,23 @@ Les créatures ingérant une **Ration savoureuse** peuvent immédiatement effect
 Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupère 1 dé de magie.
 ##### Banquet (niveau 11)
 Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.
+### Glouton
+##### Ventre plein
+Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1.
+##### Couenne épaisse
+Les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
+##### Coup de bidon
+A partir du niveau 5, lorsque vous réussissez une charge, votre civle soit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
+##### Digestion
+A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
+### Maitre-brasseur
+##### Alcool fort
+Vos rations savoureuses peuvent être consommées avec une action courte plutôt que longue, mais quiconque en consomme une gagne 1 niveau d'ivresse pendant 1 heure et +2d6 sur ses attaques en mêlée le temps de l'effet.
+##### Rot bruyant
+Immédiatement et gratuitement après avoir consommé une de vos rations savoureuses. La créature l'ayant consommée peut effectuer une attaque à distance selon les règles suivantes : portée 6m, 3d6, attaques enflammées, souffle.
+##### Jouer avec le feu
+Tant que vous êtes ivre, vos attaques gagnent +1d6 en mêlée et à distance ainsi que la règle attaques enflammées.
+##### Bagarreur de taverne
+Vos attaques à mains nues et vos attaques à distance a l'aide d'armes improvisées gagnent respectivement Force dévastatrice (2) et Perforant (2), ainsi que +2d6.
+##### Cuvée légendaire
+A partir du niveau 11, les personnes que vous avez rendues ivres avec vos rations savoureuses gagnent Egide (1) au début de chaque tour par état d'ivresse. De plus, lorsqu'une créature à 6'' ou moins consomme un de vos rations savoureuses, vous pouvez également devenir ivre si vous le souhaitez

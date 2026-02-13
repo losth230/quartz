@@ -59,14 +59,15 @@ A partir du niveau 12, votre forme éthérée vous confère Vol et +1 Vitesse
 ### Faucheur
 ##### Entrainement
 Lorsque vous apprenez la sous-classe de Faucheur, choisissez un Entrainement dans la classe de Guerrier.
-##### Purulence
-Lorsque vous réussissez au moins une blessure en mêlée, la cible de votre attaque est marquée *fatiguée*.
-##### Siphon d'âme (niveau 5)
+##### Main de Weißroth (niveau 2)
+A partir du niveau 2, vous pouvez faire appel aux pouvoirs de Weißroth une fois par jour pour placer une _Marque Blanche_ sur une créature à 9'' ou moins. Chaque fois qu'un 6 est obtenu pour un jet d'attaque contre cette créature, elle subit 1 fatigue.
+##### Purulence (niveau 5)
 Lorsque vous attaquez une créature en mêlée, vous ajoutez un nombre de d6 à votre attaque égal au nombre de *fatigues* de la créature.
 ##### Drain de vie (niveau 8)
-Chaque fois que vous infligez au moins une blessure lors d'une attaque en mêlée, vous récupérez 1 PV.
+Chaque fois que vous infligez au moins une blessure lors d'une attaque en mêlée, vous récupérez 1 PV par *Marque Blanche* qui affecte votre cible.
 ##### Revanche des Anciens Rois (niveau 11)
-Lorsque vous attaquez une créature *fatiguée*, vos attaques ne peuvent être arrêtées que par des jets d'armure de 6+.
+Lorsque vous attaquez une créature affectée par *Marque Blanche*, vos attaques ne peuvent être arrêtées que par des jets d'armure de 6+.  
+Vous pouvez dorénavant faire appel aux pouvoirs  de Weißroth 2 fois par jour.
 ### Nécromant
 ##### Maitre des morts (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour invoquer un Zombie à 6'' ou moins et le faire jouer immédiatement. Cette compétence n'est réutilisable qu'après un repos.
