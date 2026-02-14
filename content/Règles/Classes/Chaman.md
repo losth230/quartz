@@ -7,7 +7,7 @@ Le Chaman peut être de n’importe quelle **[[Race]]**, mais les races proches 
 Les caractéristiques de base d’un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
+- **PV** : 5 + niveau de [[Règles#Physique :|Résistance]].
 - Choisissez sept compétences que vous apprenez niveau 1.
 L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.

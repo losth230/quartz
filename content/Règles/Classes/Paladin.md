@@ -6,7 +6,7 @@ Le **Paladin** est un chevalier saint, alliant puissance martiale et lumière sa
 Les caractéristiques de base d’un Paladin sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 7
+- **PV** : 6
 - Choisissez sept compétences que vous apprenez niveau 1.
 L'équipement d'un Paladin est :
 - **Maitrises** : Armures complètes.
@@ -14,9 +14,9 @@ L'équipement d'un Paladin est :
 ##### Faveur divine
 Vous pouvez dépenser un dé de votre réserve de magie pour transformer n'importe quel résultat obtenu lors d'un test de compétence ou  d'attaque pour le transformer en 6 explosif.
 ##### Sacrifice
-Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirigée contre une créature alliée à 6'' ou moins. La portée et la vision restent calculées vers votre allié.
+Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirigée contre une créature alliée à 6m ou moins. La portée et la vision restent calculées vers votre allié.
 ##### Condamnation
-Lorsque vous réussissez une attaque en mêlée contre une cible, placez un marqueur Condamnation. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
+Lorsque vous réussissez à infliger une blessure en mêlée, placez un marqueur Condamnation sur la cible. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
 ##### Vœux
 Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divinité]] à laquelle vous jurez fidélité, et le  vœu que vous souhaitez prononcer. une fois par jour, vous pouvez faire une offrande d'une valeur totale de 100 florins pour utiliser une fraction de leurs pouvoirs. Vous trouverez ci-dessous quelques exemples de vœux.
 **Vœu de Justice** : *Vous avez juré de luter pour la justice*.  
@@ -27,7 +27,7 @@ Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divi
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Paladin, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez deux domaines parmi les suivants : Domaine des Cieux, Domaine de la Lumière, Domaines de la Pureté.
+Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez un domaine parmi les suivants : Domaine des Cieux, Domaine de la Lumière, Domaines de la Pureté.
 
 | Niveaux de Paladin | Niveau de sorts max | Reserve de Dés de magie |
 | :----------------: | :-----------------: | :---------------------: |
@@ -66,16 +66,16 @@ A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
 ### Protecteur
 Le Protecteur incarne le bouclier du groupe. Il protège ses alliés par sa foi et sa robustesse, et attire l'attention des ennemis pour encaisser les coups à leur place.
 ##### Accusation (niveau 2)
-Lorsqu'une créature affectée par *Condamnation* attaque, elle perd 2d6 sur son attaque.
+Lorsqu'une créature affectée par *Condamnation* attaque une créature autre  que vous, elle perd 2d6 sur son attaque.
 ##### Volonté de Fer (niveau 2)
-Vous pouvez relancer vos jets d'armure ayant obtenu 1 si une créature alliée se trouve à 6'' ou moins.
+Vous pouvez relancer vos jets d'armure ayant obtenu 1 si une créature alliée se trouve à 6m ou moins.
 ##### Première ligne (Niveau 5)
 A partir du niveau 5, si vous bénéficiez de Charge dévastatrice. Si vous réussissez une charge en portant un bouclier, vous gagnez Egide (1).
 ##### Aura de pureté (niveau 8)
-A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient de +1 sur leurs jets d'attaque. Les autres souffrent d'un malus de -1 qur ces mêmes jets
+A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient de +1 sur leurs jets d'attaque. Les autres souffrent d'un malus de -1 sur ces mêmes jets
 ##### Forteresse de Lumière (Niveau 11)
 A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
-### Le Banneret
+### Banneret
 Le Banneret est un meneur d'hommes, un symbole vivant d'espoir. Il inspire et renforce ses alliés par sa simple présence et ses paroles.
 ##### Sceaux (Niveau 2)
 Lorsque vous infligez une *Condamnation* à une cible, choisissez le sceau que vous appliquez :
@@ -84,18 +84,18 @@ Lorsque vous infligez une *Condamnation* à une cible, choisissez le sceau que v
 - Sceau de Discipline : Une créature ainsi condamnée souffre d'un malus de -2 à ses lancement de sorts tant que la *Condamnation* n'est pas brisée.
 - Sceau d'enchaînement : Une créature ainsi condamnée souffre d'un malus de -2 à sa Vitesse tant que la *Condamnation* n'est pas brisée.
 ##### Voix céleste (Niveau 2)
-Vous pouvez utiliser **Faveur Divine** pour aider le jet d'une créature alliée à 6'' ou moins.
+Vous pouvez utiliser **Faveur Divine** pour aider le jet d'une créature alliée à 6m ou moins.
 ##### Condamnation supérieure (niveau 5)
 A partir du niveau 5, votre *Condamnation* et son Sceau durent pour 2 attaques au lieu d'une seule.
-##### Double garde (niveau 8)
-A partir du niveau 8, deux créatures peuvent être affectées par votre Garde Sacrée.
+##### Etendard d'espoir (niveau 8)
+A partir du niveau 8, tous les alliés à 6m ou moins  ajoutent +1d6 à leurs tests de Résilience et de Volonté.
 ##### Double champion (niveau 11)
-A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6'' ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
+A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6m ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
 ### Gardien du Sanctuaire
 ##### Sacrifice supérieur (niveau 2)
 A partir du niveau 2, lorsque vous utilisez **Sacrifice**, vous gagnez au préalable Egide (1).
 ##### Sanctuaire sacré (niveau 2)
-A partir du niveau 2, vous pouvez dépenser une action longue pour invoquer un sanctuaire ayant un rayon de 3'' à 9'' ou moins de vous. Les créatures alliées au sein du sanctuaire peuvent relancer leurs jets d'armure ayant obtenu 1.
+A partir du niveau 2, vous pouvez dépenser une action longue pour invoquer un sanctuaire ayant un rayon de 3m à 9m ou moins de vous. Les créatures alliées au sein du sanctuaire peuvent relancer leurs jets d'armure ayant obtenu 1.
 Tant que vous vous situez dans votre Sanctuaire, vous bénéficiez d'un bonus de +1d6 en Social et ne pouvez en être déplacé sans votre volonté.
 Vous ne pouvez posséder qu'un seul Sanctuaire à la fois.
 ##### Mur de Foi (Niveau 5)
@@ -104,8 +104,8 @@ A partir du niveau 5, au début de chaque tour, les créatures alliées au sein 
 A partir du niveau 8, les créature alliées au sein du sanctuaire sont immunisées à la Panique et bénéficient de +1d6 en mêlée lorsqu'elles attaque une créature présente dans le Sanctuaire.
 Lorsque vous utilisez **Sacrifice** sur une créature au sein du Sanctuaire, elle gagne Egide (1).
 ##### Sanctuaire parfait (Niveau 11)
-A partir du niveau 11, le rayon de votre sanctuaire passe à 6''.
-### L'Inquisiteur
+A partir du niveau 11, le rayon de votre sanctuaire passe à 6m.
+### Inquisiteur
 L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
 ##### Chasseur d'Hérétiques (niveau 2)
 Vous gagnez +1d6 d'attaque en mêlée contre les mages, morts-vivants, démons et créatures corrompues.
@@ -117,3 +117,18 @@ A partir du niveau 5, si vous obtenez au moins deux 6 lors d'une attaque en mêl
 A partir du niveau 8, vous attaques deviennent magiques.
 ##### Juge et Bourreau (Niveau 11
 Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
+### Prêtre
+Le Prêtre est un Paladin qui a posé l'épée pour se concentrer à la tâche d'aider son prochain. Il n'est plus un combattant de première ligne, mais un lanceur de sorts pur et un soutien majeur.
+##### Ranger les armes (Niveau 2)
+A tout moment, un Paladin peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et rejoindre les rangs des prêtres. Un paladin devenant prêtre peut immédiatement apprendre le un domaine parmi le Domaine de la Pureté, le Domaine de la Lumière et le Domaine des Cieux.  
+Cependant, en montant  de niveau, le prêtre ne gagne plus qu'un seul PV, mais augmente sa réserve de dés de magie de 1d6 chaque fois qu'il progresse vers un niveau pair.   
+A partir du niveau 6, vous pouvez lancer des sorts de niveau 3.  
+A partir du niveau 9, vous pouvez lancer des sorts de niveau 4.
+##### Prière de Sérénité (Niveau 2)
+A partir  du niveau 2, vous pouvez faire appel aux pouvoirs de votre divinité 3 fois par jour. La première fois gratuitement, la deuxième fois pour une offrande totale de 50 florins et la troisième fois pour 100 florins.
+##### Protection divine (Niveau 5)
+A partir du niveau 5, vous pouvez dépenser votre réaction pour octroyer Egide (2) et +2d6 sur la prochaine attaque d'un allié à 9m ou moins.
+##### Protection Contre la Mort (Niveau 8)
+Vous pouvez lancer un rituel de 1 minute sur une créature. Pendant 24h, la première fois que cette créature devrait tomber à 0 PV, elle reste à 1 PV et le sort se dissipe. Vous ne pouvez avoir qu'une seule protection active à la fois.
+##### Avatar Divin (Niveau 11)
+A partir du niveau 11, lorsque vous faites appel au pouvoirs de votre divinité, vous pouvez déclencher l'effet deux fois.

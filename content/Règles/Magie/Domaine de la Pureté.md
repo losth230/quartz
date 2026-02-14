@@ -6,7 +6,7 @@ Portée 12’’, confère Egide (2).
 -> Renforcement (4) : confère Egide (+1).
 ##### Damoclès (court, 8+, malédiction, concentration (10 tours))
 Portée 9'', la cible souffre d'un malus de -1d6 sur tous ses tests de compétences et d'attaque.  
--> Renforcement (4) : la cible souffre d'un malus supplémentaire de -1d6
+-> Renforcement (4) : la cible souffre d'un malus supplémentaire de -1d6.
 ##### Mot de silence (court, 5+, malédiction, concentration (10 tours))
 Portée 12’, la cible souffre d'un malus de -4 à ses jets de lancement de sorts.  
 -> renforcement (4) : le malus augmente de -2.

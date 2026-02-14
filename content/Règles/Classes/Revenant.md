@@ -9,7 +9,7 @@ Lorsque vous créez un Revenant, choisissez :
 Les caractéristiques de base d'un Revenant sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 5
+- **PV** : 6 + niveau de [[Règles#Physique :|Résistance]].
 - Choisissez sept compétences que vous apprenez niveau 1.
 L'équipement d'un Revenant est :
 - **Maitrises** : Armures partielles.
@@ -19,7 +19,7 @@ Vous pouvez dépenser un dé de votre réserve de magie pour vous téléporter s
 ##### Résistance à la magie
 Vous bénéficiez d'une résistance magique naturelle de 6+. Si vous portez des objets vous octroyant une résistance magique, vous résistance magique totale est améliorée de 1 (un 5+ devient donc 4+).
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Revenant, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Revenant, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
 Le Revenant est un lanceur de sorts. Lorsque vous créez un Revenant, choisissez deux domaines parmi les suivants : Domaine de la Tombe, Domaine des Ténèbres, Domaine des Racines, Domaine du Givre.
 

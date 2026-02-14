@@ -7,7 +7,7 @@ Les Cuisiniers peuvent être de n'importe quelle **race** (Humain, Nain, Gobelin
 Les caractéristiques de base d’un Cuisinier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4
+- **PV** : 5 + niveau de [[Règles#Physique :|Résistance]].
 - Choisissez sept compétences que vous apprenez niveau 1.
 L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
