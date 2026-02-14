@@ -18,12 +18,12 @@ Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirig�
 ##### Condamnation
 Lorsque vous réussissez une attaque en mêlée contre une cible, placez un marqueur Condamnation. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
 ##### Vœux
-Les paladins choisissent un vœu, et doivent le respecter. Si un Paladin trahit son vœu, il perd les pouvoirs associés. Un Paladin sans vœu peu en prononcer un nouveau lorsqu'il monte de niveau.
-**Vœu de Justice** : *Vous avez juré de luter pour la justice*. Votre compétence de **Présence** augmente de 1 niveau.
-**Vœu de vengeance** : *vous avez juré de venger quelqu'un : votre famille, votre ami peut-être ?* Ce vœu confère +1d6 sur vos attaques de mêlée.
-**Vœu de pureté** : *Vous avez juré de ne rester pur.e et de ne pas céder aux tentations obscures.* Votre réserve de dés de magie augmente de 1d6.
-**Vœu de vaillance** : *Quelle que soit la situation, jamais vous ne céderez face à l'ennemi !* Vous possédez 1 PV supplémentaire et êtes immunisé à l'effet de Panique.
-**Vœu de protection** : *vous avez juré de protéger les plus faibles*. Ce vœu vous permet de relancer vos jets d'armure ayant obtenu 1.
+Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divinité]] à laquelle vous jurez fidélité, et le  vœu que vous souhaitez prononcer. une fois par jour, vous pouvez faire une offrande d'une valeur totale de 100 florins pour utiliser une fraction de leurs pouvoirs. Vous trouverez ci-dessous quelques exemples de vœux.
+**Vœu de Justice** : *Vous avez juré de luter pour la justice*.  
+**Vœu de vengeance** : *vous avez juré de venger quelqu'un : votre famille, votre ami peut-être ?*  
+**Vœu de pureté** : *Vous avez juré de ne rester pur.e et de ne pas céder aux tentations obscures.*  
+**Vœu de vaillance** : *Quelle que soit la situation, jamais vous ne céderez face à l'ennemi !*  
+**Vœu de protection** : *vous avez juré de protéger les plus faibles*.  
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Paladin, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
@@ -52,11 +52,11 @@ Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compét
 ##### Sang Pur
 A partir du niveau 4, vous êtes immunisé aux *empoisonnements*.
 ## Niveau 7
-##### Garde Sacrée
-Vous pouvez dépenser une action longue pour placer une garde sacrée sur une créature alliée pendant 1 heure. Au début de chaque tour, une créature sous Garde sacrée gagne Egide (1).
+##### Prière 
+A partir du niveau 7, vous pouvez effectuer une prière par jour, au prix d'une action longue. Prononcez votre souhait et votre offrande à votre dieu, qui pourra, ou non, vous réponde (à la discrétion du MJ).
 ## Niveau 10
-##### Champion des Rois
-A partir du niveau 10, vous pouvez prendre la forme d'un Champion de Roi pendant 3 tours, une fois entre deux repos. Tant que vous êtes sous cette forme, vous gagnez 3d6 sur vos attaques en mêlée.
+##### Lame de foi
+vous pouvez vous lier avec une arme au maximum. Vous lier avec une arme prend 6 heures. Tant que vous maniez cette arme, vous bénéficiez de +2d6 en mêlée si vos actions vont dans le sens de votre Vœu.
 ## Niveau 12
 ##### Verdict Final
 A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
@@ -71,8 +71,8 @@ Lorsqu'une créature affectée par *Condamnation* attaque, elle perd 2d6 sur son
 Vous pouvez relancer vos jets d'armure ayant obtenu 1 si une créature alliée se trouve à 6'' ou moins.
 ##### Première ligne (Niveau 5)
 A partir du niveau 5, si vous bénéficiez de Charge dévastatrice. Si vous réussissez une charge en portant un bouclier, vous gagnez Egide (1).
-##### Présence oppressante (Niveau 8)
-A partir du niveau 8, les créatures adverses à 2'' ou moins souffrent d'un malus de -1 sur leurs attaques en mêlée et -1d6 en Social.
+##### Aura de pureté (niveau 8)
+A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient de +1 sur leurs jets d'attaque. Les autres souffrent d'un malus de -1 qur ces mêmes jets
 ##### Forteresse de Lumière (Niveau 11)
 A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
 ### Le Banneret
