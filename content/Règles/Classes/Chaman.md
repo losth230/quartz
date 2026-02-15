@@ -59,10 +59,8 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 ##### Les 4 éléments
 A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
 
- <center> Spécialisations </center>
-
----
-### [!NOTE]Élémentaire 
+ <center> <h1> Spécialisations </h1></center>
+### Élémentaire 
 ##### Harmonie (niveau 2)
 Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. SI l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
 ##### Combattant astral (niveau 2)
