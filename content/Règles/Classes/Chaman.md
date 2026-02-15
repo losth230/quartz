@@ -58,8 +58,11 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 ## Niveau 12
 ##### Les 4 éléments
 A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
-# Spécialisations
-### Élémentaire 
+
+ <center> Spécialisations </center>
+
+---
+### [!NOTE]Élémentaire 
 ##### Harmonie (niveau 2)
 Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. SI l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
 ##### Combattant astral (niveau 2)
@@ -73,6 +76,7 @@ Lorsque vous êtes ciblé par un sort Elémentaire (Domaines des Cieux, Primordi
 ##### Mande - Eléments (niveau 11)
 Lors que vous attaquez en mêlée, déclenchez l'attribut de domaine relatif à votre aura.
 
+---
 ### Mande Esprit
 ##### Esprit animal (niveau 2)
 A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dé de magie.
@@ -83,5 +87,5 @@ Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon
 ##### Esprit supérieur (niveau 8)
 Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine lié à votre aura.
 ##### Réincarnation (niveau 11)
-A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capaciter d'envoyer des messages télépathiques aux créatures proches de vous.
+A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capacité d'envoyer des messages télépathiques aux créatures proches de vous.
 ### 
