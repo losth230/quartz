@@ -8,7 +8,7 @@ Les caractéristiques de base en combat d'un Mage sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
-- Choisissez sept compétences que vous apprenez niveau 1.
+- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.

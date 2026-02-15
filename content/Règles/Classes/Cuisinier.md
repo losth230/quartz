@@ -8,7 +8,7 @@ Les caractéristiques de base d’un Cuisinier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de [[Règles#Physique :|Résistance]].
-- Choisissez sept compétences que vous apprenez niveau 1.
+- Choisissez 8 compétences que vous apprenez niveau 1.
 L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.

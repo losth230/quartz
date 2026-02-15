@@ -7,7 +7,7 @@ Les caractéristiques de base d’un Paladin sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 6
-- Choisissez sept compétences que vous apprenez niveau 1.
+- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Paladin est :
 - **Maitrises** : Armures complètes.
 - **Argent de départ** : 400 Florins.

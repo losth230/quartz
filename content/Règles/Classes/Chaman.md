@@ -8,7 +8,7 @@ Les caractéristiques de base d’un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de [[Règles#Physique :|Résistance]].
-- Choisissez sept compétences que vous apprenez niveau 1.
+- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.

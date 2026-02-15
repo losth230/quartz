@@ -8,7 +8,7 @@ Les caractéristiques de base en combat d'un Savant sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
-- Choisissez sept compétences que vous apprenez niveau 1.
+- Choisissez 9 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Savant est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 300 Florins.

@@ -8,7 +8,7 @@ Les caractéristiques de base en combat d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 6 + niveau de [[Règles/Règles#Physique :|Résistance]].
-- Choisissez sept [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+- Choisissez 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 L'[[Règles/Equipements/|équipement]] d'un Guerrier est :
 - **Maitrises** : Armures complètes.
 - **Argent de départ** : 300 Florins.

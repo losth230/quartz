@@ -12,7 +12,7 @@ Souvent méprisées ou chassées, les Vermines ont développé des sociétés se
 ### **Capacités Spéciales**
 **Maitre empoisonneur** : Vous pouvez dépenser une action courte pour enduire une arme de poison et lui octroyer la règle Attaques empoisonnées pour leur prochaine attaque.  
 **Nuée** : Si votre cible  est engagée avec un adversaire, vous bénéficiez d'un bonus de +1d6 sur vos attaques dirigées contre elle.  
-**Frêle** : Vous possédez 1 PV de moins au niveau 1.
+**Frêle** : Vous possédez 1 PV de moins au niveau 1.  
 ### **Culture et Histoire**
 Les **Vermines** ont émergé dans les égouts des grandes cités, les galeries abandonnées ou les forêts dévastées. Leur histoire est marquée par la fuite, la survie, le vol… mais aussi l’ingéniosité et la capacité à prospérer dans le chaos.
 
