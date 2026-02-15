@@ -4,8 +4,8 @@ Les autres peuples admirent leur beauté et leur puissance, tout en craignant le
 ### **Caractéristiques de la Race**
 - **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
 - **Age** : jusqu'à 200 ans, parfois plus en fonction de la quantité de mana ingurgitée.
-- **Taille** : M.
-- **Vitesse** : 5''.
+- **Taille** : 2.
+- **Vitesse** : 5.
 - **Langues** : Commun, Elfique, 1 langue supplémentaire au choix.
 - **Magie** : les Elfes d'Or ont accès au Domaine de la Lumière et au Domaine de la Pureté.
 ### **Capacités Spéciales**

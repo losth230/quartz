@@ -6,10 +6,10 @@ Leurs corps massif, leur peau sombre et leurs crocs proéminents leur donnent un
 ### **Caractéristiques de la Race**
 - **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
 - **Âge** : jusqu’à 80 ans, considérés adultes dès 12 ans.
-- **Taille** : M (parfois à la limite du G).
-- **Vitesse** : 5''.
+- **Taille** : 2.
+- **Vitesse** : 5m.
 - **Langues** : Orque, Commun.
-- **Magie** : les Orques ont accès au Domaine du Cataclysme et au Domaine des Ténèbres.
+- **Magie** : les Orques ont accès au Domaine du Cataclysme ou au Domaine des Ténèbres.
 ### **Capacités Spéciales**
 **Brutalité** : Lorsque vous éliminez une créature de votre niveau ou plus, vous récupérez 1 action courte, qui peut être utilisée pour une action que vous avez déjà effectuée ce tour-ci.
 ### **Culture et Histoire**
@@ -27,7 +27,7 @@ Les Orques sont entiers, directs, loyaux, parfois rustres. Ils valorisent le cou
 - **Taille** : 2 (Petite).
 - **Vitesse** : 5''.
 - **Langues** : Commun, Gobelin
-- **Magie** : 
+- **Magie** : les Gobelins ont accès au Domaine du Cataclysme ou au Domaine des Ténèbres.
 ### **Capacités Spéciales**
 **Fuite** : Vous pouvez dépenser votre Réaction pour effectuer une marche lorsqu'une créature se déplace à 2'' ou moins de vous.  
 **Bricolo** : lorsque vous effectuez une fabrication, vous pouvez remplacer un matériau par un autre (par exemple utiliser 1 Bois à la place de 1 Métal).
@@ -58,4 +58,4 @@ Lorsque de la création d'un personnage **Peaux - Vertes**, vous pouvez choisir 
 - **Courroux élémentaire** : Toutes vos attaques sont des attaques magiques.
 ### **Clan Forgefeu**
 *Technomagiciens ou pyromanciens dégénérés, ils transforment leur haine en flammes dévastatrices.*
-  - **Embrasement** : vos attaques en mêlée et à distance bénéficient de la règle Attaques Enflammées.
+- **Embrasement** : vos attaques en mêlée et à distance bénéficient de la règle Attaques Enflammées.
