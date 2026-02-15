@@ -13,11 +13,11 @@ L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
 ##### Affinité élémentaire
-Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés à 12'' ou moins qui dure jusqu'à ce que vous relanciez un sort.
-**Bénédiction de l'hiver** : lorsqu'un sort d'amélioration est lancé sur une créature bénéficiant de cette bénédiction, elle gagne Egide (1).
-**Bénédiction primordiale** : les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.
-**Bénédiction du cataclysme** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.
-**Bénédiction de tempête** : une créature bénéficiant de cette bénédiction gagne +1 Vitesse.
+Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés à 12'' ou moins qui dure jusqu'à ce que vous relanciez un sort.  
+**Bénédiction de l'hiver** : lorsqu'un sort d'amélioration est lancé sur une créature bénéficiant de cette bénédiction, elle gagne Egide (1).  
+**Bénédiction primordiale** : les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.  
+**Bénédiction du cataclysme** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.  
+**Bénédiction de tempête** : une créature bénéficiant de cette bénédiction gagne +1 Vitesse.  
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
@@ -50,11 +50,11 @@ Une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui
 A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire supplémentaire.
 ## Niveau 10
 ##### Absorption élémentaire
-A partir du niveau 7, vous pouvez dépenser une action longue pour retirer votre aura et déclencher un effet correspondant :
-**Bénédiction de l'hiver** : toutes les créatures affectées par cette aura gagnent Egide (1).
-**Bénédiction primordiale** : toutes les créatures affectées par cette aura gagnent Egide (2)
-**Bénédiction du cataclysme** : Effectuez une attaque à distance selon les règles suivantes : Portée 12'', 2d6, attaques enflammées. Cette attaque gagne 2d6 par aura retirée.
-**Bénédiction de tempête** : toutes les créatures affectées par cette aura peuvent immédiatement effectuer une marche gratuite.
+A partir du niveau 7, vous pouvez dépenser une action longue pour retirer votre aura et déclencher un effet correspondant :  
+**Bénédiction de l'hiver** : toutes les créatures affectées par cette aura gagnent Egide (1).  
+**Bénédiction primordiale** : toutes les créatures affectées par cette aura gagnent Egide (2).  
+**Bénédiction du cataclysme** : Effectuez une attaque à distance selon les règles suivantes : Portée 12'', 2d6, attaques enflammées. Cette attaque gagne 2d6 par aura retirée.  
+**Bénédiction de tempête** : toutes les créatures affectées par cette aura peuvent immédiatement effectuer une marche gratuite.  
 ## Niveau 12
 ##### Les 4 éléments
 A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
