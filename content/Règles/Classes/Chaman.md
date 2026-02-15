@@ -50,7 +50,7 @@ Une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui
 A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire supplémentaire.
 ## Niveau 10
 ##### Absorption élémentaire
-A partir du niveau 7, vous pouvez dépenser une action longue pour retirer votre aura et déclencher un effet correspondant :  
+A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votre aura et déclencher un effet correspondant :  
 **Bénédiction de l'hiver** : toutes les créatures affectées par cette aura gagnent Egide (1).  
 **Bénédiction primordiale** : toutes les créatures affectées par cette aura gagnent Egide (2).  
 **Bénédiction du cataclysme** : Effectuez une attaque à distance selon les règles suivantes : Portée 12'', 2d6, attaques enflammées. Cette attaque gagne 2d6 par aura retirée.  
@@ -70,7 +70,8 @@ Lorsque vous lancez un sort, vous gagnez Egide (1), si une créature détruit ce
 ##### Absorption élémentaire (niveau 8)
 Lorsque vous attaquez, vous pouvez dépenser les marqueurs *enflammés* ou *gelé* de votre cible pour lui infliger autant de dégâts.
 Lorsque vous êtes ciblé par un sort Elémentaire (Domaines des Cieux, Primordial, Givre ou du C), vous gagnez Egide (1).
-##### Assiette de plomb (niveau 11)
+##### Mande - Eléments (niveau 11)
+Lors que vous attaquez en mêlée, déclenchez l'attribut de domaine relatif à votre aura.
 
 ### Mande Esprit
 ##### Esprit animal (niveau 2)

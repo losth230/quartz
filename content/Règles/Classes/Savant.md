@@ -76,7 +76,7 @@ Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Emp
 Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
 Ce familier vous obéit. Un seul actif à la fois.
 ##### Elixir instable (niveau 2)
-Vous pouvez utiliser 5 **Plantes**, 2 **Organiques** et 2 **Métaux** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1 définitivement et effectue un jet de **Puissance irrésistible** de la table de [[Magie]].
+Vous pouvez utiliser 5 **Plantes** et 2 **Organiques** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1 définitivement et effectue un jet de **Puissance irrésistible** de la table de [[Magie]].
 ##### Transfusion (niveau 5)
 Vous pouvez perdre 2 PV pour rendre 1 PV et augmenter de 1 le maximum de PV de votre [[Homonculus]]. Votre Homonculus peut perdre 1 PV pour conférer **Sauvagerie** à une créature consentante à 1'' ou moins.
 Dans les deux cas, la transfusion demande une action courte.

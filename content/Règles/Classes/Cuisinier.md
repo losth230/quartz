@@ -96,22 +96,22 @@ Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupèr
 ##### Banquet (niveau 11)
 Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.
 ### Glouton
-##### Ventre plein
+##### Ventre plein (niveau 2)
 Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1.
-##### Couenne épaisse
+##### Couenne épaisse (niveau 2)
 Les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
-##### Coup de bidon
-A partir du niveau 5, lorsque vous réussissez une charge, votre civle soit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
-##### Digestion
+##### Coup de bidon (niveau 5)
+A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
+##### Digestion (niveau 8)
 A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
 ### Maitre-brasseur
-##### Alcool fort
+##### Alcool fort (niveau 2)
 Vos rations savoureuses peuvent être consommées avec une action courte plutôt que longue, mais quiconque en consomme une gagne 1 niveau d'ivresse pendant 1 heure et +2d6 sur ses attaques en mêlée le temps de l'effet.
-##### Rot bruyant
+##### Rot bruyant (niveau 2)
 Immédiatement et gratuitement après avoir consommé une de vos rations savoureuses. La créature l'ayant consommée peut effectuer une attaque à distance selon les règles suivantes : portée 6m, 3d6, attaques enflammées, souffle.
-##### Jouer avec le feu
+##### Jouer avec le feu (niveau 5)
 Tant que vous êtes ivre, vos attaques gagnent +1d6 en mêlée et à distance ainsi que la règle attaques enflammées.
-##### Bagarreur de taverne
+##### Bagarreur de taverne (niveau 8)
 Vos attaques à mains nues et vos attaques à distance a l'aide d'armes improvisées gagnent respectivement Force dévastatrice (2) et Perforant (2), ainsi que +2d6.
-##### Cuvée légendaire
+##### Cuvée légendaire (niveau 11)
 A partir du niveau 11, les personnes que vous avez rendues ivres avec vos rations savoureuses gagnent Egide (1) au début de chaque tour par état d'ivresse. De plus, lorsqu'une créature à 6'' ou moins consomme un de vos rations savoureuses, vous pouvez également devenir ivre si vous le souhaitez
