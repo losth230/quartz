@@ -63,6 +63,8 @@ Lorsque vous subissez des dégâts suite à  une attaque en mêlée, l'attaquant
 Au prix d'une action courte, vous pouvez enlever tous les *enflammements* sur une créature et lui infliger autant de blessures qu'elle ne possédait d'*enflammements*. pour chaque enflammement ainsi enlevé, gagnez un *enflammement*.
 ##### Combustion (niveau 11)
 Au prix  d'une action courte, vous pouvez effectuer  une attaque à distance selon les règles suivantes : Portée9'', Nd6, où N est égal à votre nombre d'*enflammement*.
+
+---
 ### Occultiste
 ##### Compagnon du néant
 Vous pouvez dépenser un dé de magie pour invoquer un [[Compagnon du néant]].
@@ -71,6 +73,8 @@ Chaque fois de vous lancez un sort en utilisant au moins 1 dé de votre réserve
 Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé dans votre réserve de magie.
 ##### Focalisateur arcanique (Niveau 5)
 A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
+
+---
 ### Sage
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
@@ -82,6 +86,8 @@ Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vou
 A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
 ##### Vision double (niveau 11)
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
+
+---
 ### Sage
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.

@@ -49,6 +49,8 @@ Lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire
 Lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
 ##### Premier coup (niveau 11)
 Si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
+
+---
 ### Pilouface
 ##### Parité
 A partir du niveau 2, lorsque vous lancez les dés pour une compétence ou une attaque, vous pouvez choisir de parier sur **Pair** ou **Impair**.
@@ -64,6 +66,8 @@ A partir du niveau 8, lorsque vous obtenez un double sur un test de compétence 
 - **Double impair :** choisissez une cible à 6'' ou moins qui perd une action courte.
 ##### Geste du diable (niveau 11)
 A partir du niveau 11, une fois par jour, vous pouvez relancer intégralement un test, tous les résultats pairs sont des **réussites explosives**, les résultats impairs sont des échecs.
+
+---
 ### Danseur de lames
 ##### Riposte (niveau 2)
 Lorsque vous réussissez un jet d'armure, vous pouvez dépenser votre réaction pour immédiatement effectuer une attaque en mêlée.
@@ -76,6 +80,8 @@ Vous possédez une réaction supplémentaire par tour (total 2 réactions).
 Lorsque vous subissez une attaque, vous pouvez vous déplacer d'une distance égale au nombre de jets d'armures que vous avez réussi.
 ##### Moulinet (niveau 11)
 Lorsque vous effectuez une Riposte, vous ajoutez un nombre de d6 égal au nombre de jets  d'armures que vous avez réussi.
+
+---
 ### Pirate
 ##### Tir rapide (niveau 2)
 Lorsque vous maniez une arme à distance en main gauche, vous gagnez +1d6 en mêlée. Vous pouvez effectuer des actions de tir avec des armes à distance à 1   main même si vous êtes engagé en mêlée.
@@ -88,6 +94,8 @@ Lorsque vous effectuez une attaque en mêlée contre une créature contre laquel
 Vous pouvez dépenser votre réaction pour octroyer un bonus de +1d6 à un nombre d'alliés égal à votre nombre de dé de Social pour leur prochaine attaque  en mêlée ou à  distance.
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
+
+---
 ### Franc-Tireur
 Le Franc-Tireur préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
 ##### Tir de précision (niveau 2)
@@ -100,17 +108,8 @@ A partir du niveau 5, lorsque vous infligez des dégâts avec une arme à distan
 A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
-### Franc-Tireur
-Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
-##### Tir de précision (niveau 2)
-A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche.
-##### Position avantageuse (niveau 2)
-A partir du niveau 2, si vous n'avez pas bougé pendant votre tour, vous gagnez Portée +5 et pouvez relancer les jets de tir ayant obtenu 1.
-##### Tir dans le genou (niveau 5)
-A partir du niveau 5, lorsque vous infligez des dégâts avec une arme à distance, vous pouvez choisir de retirer une touche pour infliger l'état **Immobilisé** ou **À Terre** à la cible.
-##### Avantagé en toute circonstance (niveau 8)
-A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
-##### Tir de sommation (niveau 11)
+
+---
 ### Ombrelame
 Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
 ##### Magie mineure (niveau 2)

@@ -62,6 +62,8 @@ En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque run
 **Rune de projection II** :  une **arme à distance** gravée de cette rune gagne +3'' à sa portée.
 ##### Maitre Rune *(niveau 11)*
 A partir du niveau 11, vous pouvez posséder 3 niveaux de runes supplémentaires.
+
+---
 ### Alchimiste
 ##### Botaniste (niveau 2)
 A partir du niveau 2, fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
@@ -71,6 +73,8 @@ A partir du niveau 2, vous pouvez modifier transformer 1 [[Règles/Equipements/M
 Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Empoisonnement* ou *Gel* à votre cible.
 ##### Formule instable (niveau 8)
 ##### Transmutation (niveau 11)
+
+---
 ### Biomancien
 ##### Création d’homonculus mineur (niveau 2)
 Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
@@ -84,6 +88,8 @@ Dans les deux cas, la transfusion demande une action courte.
 Votre [[Homonculus]] peut prendre la forme de jusqu'à trois **Bêtes** de votre choix, et ainsi combiner leurs **Traits**. Les attaques en mêlée de votre [[Homonculus]] gagnent Force dévastatrice (1).
 ##### Formidable expérience (niveau 11)
 Votre [[Homonculus]] peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.
+
+---
 ### Artificier
 ##### Surcharge (niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour surcharger votre arme ou celle d'un allié le temps d'une action. Cependant, si au moins un résultat 1 survient pendant l'attaque avec une arme surchargée, celle-ci est brisée et doit être réparée avec un teste de DIY dont le nombre de réussite doit être supérieur ou égal au nombre de 1 obtenus avant de pouvoir être réutilisée.
@@ -102,6 +108,8 @@ A partir du niveau 5, lorsque vous surchargez l'arme d'un allié, vous pouvez é
 A partir du niveau 8, vous êtes immunisé contre les [[Règles spéciales#Attaques enflammées (N)|Attaques enflammées]]. Si vous surchargez l'arme d'un allié, il est également immunisé à cette règle pour le reste du tour.
 ##### Renforcement supérieur (niveau 11)
 A partir du niveau 11, vous pouvez appliquer 2 surcharges au lieu d'une seule lorsque vous surchargez.
+
+---
 ### Machiniste
 Le Machiniste ne fait pas confiance à la chair, trop fragile, ni à la magie, trop instable. Il ne croit qu'en l'acier, la vapeur et l'huile. Son chef-d'œuvre est son Exosquelette, une armure mécanisée qu'il pilote comme une extension de son propre corps.
 ##### Mecka (niveau 2)

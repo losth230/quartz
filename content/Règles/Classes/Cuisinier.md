@@ -68,6 +68,8 @@ Vos attaques avec des armes improvisées gagnent la règle Attaques enflammées.
 Vos attaques avec une arme de cuisine infligent un marqueur *Saignement* en plus de leurs effets habituels.
 ##### Assiette de plomb (niveau 11)
 Vous pouvez, une fois par combat, effectuer une attaque de zone avec votre poêle. Toutes les créatures à 2'' ou moins de vous subissent une attaque de 3d6, force dévastatrice (2) et un test de Résilience ou sont **étourdies** pour 1 tour.
+
+---
 ### Chef Cannibale
 Le Chef Cannibale croit que la chair des créatures puissantes transmet leur force. Il cuisine les restes de ses ennemis, et chaque bouchée devient un acte de domination… ou de perversion.
 ##### Chair savoureuse (niveau 2)
@@ -83,6 +85,8 @@ Une fois par jour, après avoir tué une créature légendaire, vous pouvez cuis
 - +1 PV max.
 Ou
 - +1 en une compétence liée à la créature.
+
+---
 ### Gastromancien
 Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un art magique à part entière, et un bon client est toujours un client satisfait.
 ##### Service en salle(niveau 2)
@@ -95,6 +99,8 @@ Les créatures ingérant une **Ration savoureuse** peuvent immédiatement effect
 Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupère 1 dé de magie.
 ##### Banquet (niveau 11)
 Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.
+
+---
 ### Glouton
 ##### Ventre plein (niveau 2)
 Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1.
@@ -104,6 +110,8 @@ Les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 
 A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
 ##### Digestion (niveau 8)
 A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
+
+---
 ### Maitre-brasseur
 ##### Alcool fort (niveau 2)
 Vos rations savoureuses peuvent être consommées avec une action courte plutôt que longue, mais quiconque en consomme une gagne 1 niveau d'ivresse pendant 1 heure et +2d6 sur ses attaques en mêlée le temps de l'effet.

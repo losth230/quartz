@@ -7,7 +7,7 @@ Souvent méprisées ou chassées, les Vermines ont développé des sociétés se
 - **Taille** : P (Petite).
 - **Vitesse** : 5''.
 - **Langues** : Commun.
-- **Magie** : les Ogres Vermines accès au Domaine des Egouts.
+- **Magie** : les Vermines accès au Domaine des Egouts.
 - **Vision dans le noir** : 15''.
 ### **Capacités Spéciales**
 **Maitre empoisonneur** : Vous pouvez dépenser une action courte pour enduire une arme de poison et lui octroyer la règle Attaques empoisonnées pour leur prochaine attaque.  

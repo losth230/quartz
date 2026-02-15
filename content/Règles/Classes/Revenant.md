@@ -68,6 +68,8 @@ Chaque fois que vous infligez au moins une blessure lors d'une attaque en mêlé
 ##### Revanche des Anciens Rois (niveau 11)
 Lorsque vous attaquez une créature affectée par *Marque Blanche*, vos attaques ne peuvent être arrêtées que par des jets d'armure de 6+.  
 Vous pouvez dorénavant faire appel aux pouvoirs  de Weißroth 2 fois par jour.
+
+---
 ### Nécromant
 ##### Maitre des morts (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour invoquer un Zombie à 6'' ou moins et le faire jouer immédiatement. Cette compétence n'est réutilisable qu'après un repos.
@@ -79,6 +81,8 @@ A partir du niveau 5, vos invocations Cadavériques ont +1d6 en mêlée.
 A partir du niveau 8, une fois entre deux sommeils, vous pouvez dépenser une action longue pour prendre le contrôle d'une créature Cadavérique jusqu'à votre prochain sommeil. Elle est considérée comme étant l'une de vos invocations pour la durée de l'effet.
 ##### Avancée sans fin (niveau 11)
 A partir du niveau 11, vos invocation Cadavériques ont +1 Vitesse.
+
+---
 ### Chevalier noir
 Le Chevalier Noir est une forteresse imprenable, une ancre spectrale sur le champ de bataille. Il encaisse la vie sans broncher, protégé par des armures lourdes et une aura de terreur qui gèle le sang de ses ennemis.
 ##### Maitrise des plaques (Niveau 2)
@@ -91,6 +95,8 @@ Vous pouvez dépenser votre réaction et 1 dé de magie par niveau du sort pour 
 Les créatures hostiles à 3'' ou moins subissent un malus de -1 vitesse et -1 à leurs tests de Résilience.
 ##### Drain d'essence (niveau 11)
 A partir du niveau 11, lorsque vous éliminez une créature, vous récupérer 1 PV et 1 dé de magie.
+
+---
 ### Déchu
 Le Déchu est un paladin qui a non seulement pactisé avec la mort, mais qui utilise cette énergie pour corrompre la réalité. C'est un destructeur qui infuse ses coups de magie noire. Il excelle à punir ses ennemis et à briser leurs défenses.
 ##### Sceau de corruption (Niveau 2)

@@ -7,7 +7,7 @@ Ils sont souvent perçus avec méfiance, voire horreur, par les autres races, ma
 - **Taille** : voir Réincarnation.
 - **Vitesse** : voir Réincarnation.
 - **Langues** : voir Réincarnation.
-- **Magie** : les Revenants ont accès au Domaine des Racines.
+- **Magie** : les Marcheurs ont accès au Domaine des Racines.
 ### **Capacités Spéciales**
 **Décharné** : Lorsque vous jouez un Marcheur, vous n'avez pas besoin de manger ou dormir. A la place, vous considérez comme sommeil toute période de 8h passée sans combattre ou utiliser de la magie.  
 **Réincarnation** : Lorsque vous créez un Marcheur, choisissez une autre race dont vous êtes la réincarnation. Vous héritez de  toutes les caractéristiques et capacités spéciales propres à la race, en plus des vôtres.  

@@ -60,7 +60,6 @@ vous pouvez vous lier avec une arme au maximum. Vous lier avec une arme prend 6 
 ## Niveau 12
 ##### Verdict Final
 A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
-
 # Spécialisations
 
 ### Protecteur
@@ -75,6 +74,8 @@ A partir du niveau 5, si vous bénéficiez de Charge dévastatrice. Si vous réu
 A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient de +1 sur leurs jets d'attaque. Les autres souffrent d'un malus de -1 sur ces mêmes jets
 ##### Forteresse de Lumière (Niveau 11)
 A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
+
+---
 ### Banneret
 Le Banneret est un meneur d'hommes, un symbole vivant d'espoir. Il inspire et renforce ses alliés par sa simple présence et ses paroles.
 ##### Sceaux (Niveau 2)
@@ -91,6 +92,8 @@ A partir du niveau 5, votre *Condamnation* et son Sceau durent pour 2 attaques a
 A partir du niveau 8, tous les alliés à 6m ou moins  ajoutent +1d6 à leurs tests de Résilience et de Volonté.
 ##### Double champion (niveau 11)
 A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6m ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
+
+---
 ### Gardien du Sanctuaire
 ##### Sacrifice supérieur (niveau 2)
 A partir du niveau 2, lorsque vous utilisez **Sacrifice**, vous gagnez au préalable Egide (1).
@@ -105,6 +108,8 @@ A partir du niveau 8, les créature alliées au sein du sanctuaire sont immunis�
 Lorsque vous utilisez **Sacrifice** sur une créature au sein du Sanctuaire, elle gagne Egide (1).
 ##### Sanctuaire parfait (Niveau 11)
 A partir du niveau 11, le rayon de votre sanctuaire passe à 6m.
+
+---
 ### Inquisiteur
 L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
 ##### Chasseur d'Hérétiques (niveau 2)
@@ -117,6 +122,8 @@ A partir du niveau 5, si vous obtenez au moins deux 6 lors d'une attaque en mêl
 A partir du niveau 8, vous attaques deviennent magiques.
 ##### Juge et Bourreau (Niveau 11
 Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
+
+---
 ### Prêtre
 Le Prêtre est un Paladin qui a posé l'épée pour se concentrer à la tâche d'aider son prochain. Il n'est plus un combattant de première ligne, mais un lanceur de sorts pur et un soutien majeur.
 ##### Ranger les armes (Niveau 2)

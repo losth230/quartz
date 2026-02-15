@@ -58,6 +58,8 @@ Lorsque vous éliminez une créature affectée par *[[Règles/Règles spéciales
 Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *[[Règles/Règles spéciales#saignement|saignements]]*, vous pouvez relancer vos jets de touche ayant obtenu 1 ou  les jets de dé ayant obtenu 1 ou 2 si vous connaissez l'[[Règles/classes/guerrier#Entrainement|entrainement]] [[Règles/Règles spéciales#Maitre-lame|maitre-lame]].
 ##### Bain de sang (niveau 11)
 Après avoir réussi une touche en mêlée sur une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous pouvez dépenser une [[Règles/Règles#Actions|action courte]] pour octroyer 2 *[[Règles/Règles spéciales#saignement|saignements]]* aux créatures de votre choix à 6'' ou moins.
+
+---
 ### Chasseur
 ##### Maitrise des armes de jets (niveau 2)
 Lorsque vous effectuez une attaque à distance avec une arme ayant la règle *[[Règles/Règles spéciales#lancer|Lancer]]*, vous appliquez un *[[Règles/Règles spéciales#saignement|saignement]]*.
@@ -71,6 +73,8 @@ Vous gagnez un niveau dans la compétence Nature et votre vitesse de déplacemen
 Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent un *[[Règles/Règles spéciales#saignement|saignement]]* supplémentaire.
 ##### Danse de guerre (niveau 11)
 Vous gagnez 1d6 en mêlée et à distance. Après avoir réalisé une attaque en mêlée ou à distance, vous pouvez vous déplacer de  2''.
+
+---
 ### Chevalier
 ##### Cavalier expérimenté (niveau 2)
 Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cavalerie]] également contre les créatures de votre taille.
@@ -82,6 +86,7 @@ Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cava
 
 ##### Danse de guerre (niveau 11)
 
+---
 ### Escrimeur
 ##### Postures (Niveau 2)
 Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
@@ -104,6 +109,8 @@ Vos postures s'améliorent comme suit :
 ##### Coup de grâce (niveau 11)
 A partir du niveau 11, votre posture du Crépuscule vous permet de riposter contre les attaques à distance, sans limite de portée.  
 De plus, vous pouvez refuser d'entrer au Posture de l'Aube. A la place, si vous parvenez à changer de posture 3 fois en un seul tour, vous entrez en Posture de l'Aube Radieuse, ce qui vous octroie tous les bonus de la Posture de l'Aube, un bonus de +5d6 en mêlée pour le reste du tour ainsi que 5 *[[Règles/Règles spéciales#Egide (N)|Egides]]* que vous pouvez répartir entre vos alliés à 6'' ou moins. 
+
+---
 ### Masochiste
 ##### Souffrance (niveau 2)
 A partir du niveau 2, pour chaque PV perdu, vous gagnez en souffrances. Les modificateurs apportés par les souffrances sont cumulatives.
