@@ -4,7 +4,6 @@ Physiquement, les Orques sont grands, musclés et imposants, alors que les Gobel
 Leurs corps massif, leur peau sombre et leurs crocs proéminents leur donnent une apparence redoutable, souvent mal perçue par les autres races. Pourtant, les **Peaux - Vertes** ne sont pas que des brutes : leur sens de l’honneur, leur lien à la nature et leur tradition orale riche en font un peuple profond et digne.
 # Orques
 ### **Caractéristiques de la Race**
-- **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
 - **Âge** : jusqu’à 80 ans, considérés adultes dès 12 ans.
 - **Taille** : 2.
 - **Vitesse** : 5m.
