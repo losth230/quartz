@@ -37,8 +37,11 @@ Lorsque vous atteignez le niveau 7, votre Vitesse augmente de 1.
 ## Niveau 12
 ##### Disparition
 À partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant. 
-# Spécialisations
-### Assassin
+<center><h2>Spécialisations</h2> </center>
+
+___
+<center><h3>Assassin</h3> </center>
+
 ##### Attaques empoisonnées
 Vos attaques en mêlée bénéficient de la règle **Attaques Empoisonnées**.
 ##### Coup bas amélioré
@@ -50,8 +53,9 @@ Lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez un
 ##### Premier coup (niveau 11)
 Si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
 
----
-### Pilouface
+___
+<center><h3>Pilouface</h3> </center>
+
 ##### Parité
 A partir du niveau 2, lorsque vous lancez les dés pour une compétence ou une attaque, vous pouvez choisir de parier sur **Pair** ou **Impair**.
 - Si la majorité de vos dés affichent le résultat choisi : ajoutez **1 Réussites** au résultat final.
@@ -67,8 +71,9 @@ A partir du niveau 8, lorsque vous obtenez un double sur un test de compétence 
 ##### Geste du diable (niveau 11)
 A partir du niveau 11, une fois par jour, vous pouvez relancer intégralement un test, tous les résultats pairs sont des **réussites explosives**, les résultats impairs sont des échecs.
 
----
-### Danseur de lames
+___
+<center><h3>Danseur de lame</h3> </center>
+
 ##### Riposte (niveau 2)
 Lorsque vous réussissez un jet d'armure, vous pouvez dépenser votre réaction pour immédiatement effectuer une attaque en mêlée.
 ##### De cape et d'épée (niveau 2)
@@ -81,8 +86,9 @@ Lorsque vous subissez une attaque, vous pouvez vous déplacer d'une distance ég
 ##### Moulinet (niveau 11)
 Lorsque vous effectuez une Riposte, vous ajoutez un nombre de d6 égal au nombre de jets  d'armures que vous avez réussi.
 
----
-### Pirate
+___
+<center><h3>Pirate</h3> </center>
+
 ##### Tir rapide (niveau 2)
 Lorsque vous maniez une arme à distance en main gauche, vous gagnez +1d6 en mêlée. Vous pouvez effectuer des actions de tir avec des armes à distance à 1   main même si vous êtes engagé en mêlée.
 ##### Feindre la mort (niveau 2)
@@ -95,8 +101,9 @@ Vous pouvez dépenser votre réaction pour octroyer un bonus de +1d6 à un nombr
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
 
----
-### Franc-Tireur
+___
+<center><h3>Franc-tireur</h3> </center>
+
 Le Franc-Tireur préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
 ##### Tir de précision (niveau 2)
 A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche.
@@ -109,8 +116,9 @@ A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) 
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
 
----
-### Ombrelame
+___
+<center><h3>Ombrelame</h3> </center>
+
 Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
 ##### Magie mineure (niveau 2)
 A partir du niveau 2, vous gagnez une **Réserve de Magie de 3d6** et connaissez le [Domaine de magie](Règles/Magie) de votre choix. Votre niveau de sort max est 1.

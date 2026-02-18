@@ -32,9 +32,11 @@ Lorsque vous fabriquez un objet, vous dépensez  1  matériaux en moins.
 ## Niveau 10
 ##### Génie reconnu
 Une fois par combat, vous pouvez effectuer **deux actions longues** au lieu d’une seule.
-# Spécialisations
+<center><h2>Spécialisations</h2> </center>
 
-### Runiste
+___
+<center><h3>Runiste</h3> </center>
+
 ##### Gravure magique (niveau 2)
 En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque rune possède un niveau. Le **niveau combiné des runes** que peut manier une créature ne peut jamais dépasser son **niveau en DIY**.
 ##### Runes de niveau I (niveau 2)
@@ -63,8 +65,9 @@ En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque run
 ##### Maitre Rune *(niveau 11)*
 A partir du niveau 11, vous pouvez posséder 3 niveaux de runes supplémentaires.
 
----
-### Alchimiste
+___
+<center><h3>Alchimiste</h3> </center>
+
 ##### Botaniste (niveau 2)
 A partir du niveau 2, fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
 ##### Transmutation mineure (niveau 2)
@@ -74,8 +77,9 @@ Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Emp
 ##### Formule instable (niveau 8)
 ##### Transmutation (niveau 11)
 
----
-### Biomancien
+___
+<center><h3>Biomancien</h3> </center>
+
 ##### Création d’homonculus mineur (niveau 2)
 Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
 Ce familier vous obéit. Un seul actif à la fois.
@@ -89,8 +93,9 @@ Votre [[Homonculus]] peut prendre la forme de jusqu'à trois **Bêtes** de votre
 ##### Formidable expérience (niveau 11)
 Votre [[Homonculus]] peut prendre la forme de jusqu'à cinq **Bêtes** ou **Démons** de votre choix, et ainsi combiner leurs **Traits**. La caractéristique en mêlée de votre [[Homonculus]] devient 4+.
 
----
-### Artificier
+___
+<center><h3>Artificier</h3> </center>
+
 ##### Surcharge (niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour surcharger votre arme ou celle d'un allié le temps d'une action. Cependant, si au moins un résultat 1 survient pendant l'attaque avec une arme surchargée, celle-ci est brisée et doit être réparée avec un teste de DIY dont le nombre de réussite doit être supérieur ou égal au nombre de 1 obtenus avant de pouvoir être réutilisée.
 Voici la liste des surcharges possibles :
@@ -109,8 +114,9 @@ A partir du niveau 8, vous êtes immunisé contre les [[Règles spéciales#Attaq
 ##### Renforcement supérieur (niveau 11)
 A partir du niveau 11, vous pouvez appliquer 2 surcharges au lieu d'une seule lorsque vous surchargez.
 
----
-### Machiniste
+___
+<center><h3>Machiniste</h3> </center>
+
 Le Machiniste ne fait pas confiance à la chair, trop fragile, ni à la magie, trop instable. Il ne croit qu'en l'acier, la vapeur et l'huile. Son chef-d'œuvre est son Exosquelette, une armure mécanisée qu'il pilote comme une extension de son propre corps.
 ##### Mecka (niveau 2)
 A partir du niveau 2, Vous pouvez construire votre propre exosquelette. Il compte comme une **Monture** dont vous êtes le seul pilote capable.

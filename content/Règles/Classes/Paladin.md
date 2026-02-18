@@ -60,9 +60,11 @@ vous pouvez vous lier avec une arme au maximum. Vous lier avec une arme prend 6 
 ## Niveau 12
 ##### Verdict Final
 A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
-# Spécialisations
+<center><h2>Spécialisations</h2> </center>
 
-### Protecteur
+___
+<center><h3>Protecteur</h3> </center>
+
 Le Protecteur incarne le bouclier du groupe. Il protège ses alliés par sa foi et sa robustesse, et attire l'attention des ennemis pour encaisser les coups à leur place.
 ##### Accusation (niveau 2)
 Lorsqu'une créature affectée par *Condamnation* attaque une créature autre  que vous, elle perd 2d6 sur son attaque.
@@ -75,8 +77,9 @@ A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient
 ##### Forteresse de Lumière (Niveau 11)
 A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
 
----
-### Banneret
+___
+<center><h3>Banneret</h3> </center>
+
 Le Banneret est un meneur d'hommes, un symbole vivant d'espoir. Il inspire et renforce ses alliés par sa simple présence et ses paroles.
 ##### Sceaux (Niveau 2)
 Lorsque vous infligez une *Condamnation* à une cible, choisissez le sceau que vous appliquez :
@@ -93,8 +96,9 @@ A partir du niveau 8, tous les alliés à 6m ou moins  ajoutent +1d6 à leurs te
 ##### Double champion (niveau 11)
 A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6m ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
 
----
-### Gardien du Sanctuaire
+___
+<center><h3>Gardien du sanctuaire</h3> </center>
+
 ##### Sacrifice supérieur (niveau 2)
 A partir du niveau 2, lorsque vous utilisez **Sacrifice**, vous gagnez au préalable Egide (1).
 ##### Sanctuaire sacré (niveau 2)
@@ -109,8 +113,9 @@ Lorsque vous utilisez **Sacrifice** sur une créature au sein du Sanctuaire, ell
 ##### Sanctuaire parfait (Niveau 11)
 A partir du niveau 11, le rayon de votre sanctuaire passe à 6m.
 
----
-### Inquisiteur
+___
+<center><h3>Inquisiteur</h3> </center>
+
 L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
 ##### Chasseur d'Hérétiques (niveau 2)
 Vous gagnez +1d6 d'attaque en mêlée contre les mages, morts-vivants, démons et créatures corrompues.
@@ -123,8 +128,9 @@ A partir du niveau 8, vous attaques deviennent magiques.
 ##### Juge et Bourreau (Niveau 11
 Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
 
----
-### Prêtre
+___
+<center><h3>Prêtre</h3> </center>
+
 Le Prêtre est un Paladin qui a posé l'épée pour se concentrer à la tâche d'aider son prochain. Il n'est plus un combattant de première ligne, mais un lanceur de sorts pur et un soutien majeur.
 ##### Ranger les armes (Niveau 2)
 A tout moment, un Paladin peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et rejoindre les rangs des prêtres. Un paladin devenant prêtre peut immédiatement apprendre le un domaine parmi le Domaine de la Pureté, le Domaine de la Lumière et le Domaine des Cieux.  

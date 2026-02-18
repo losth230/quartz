@@ -54,8 +54,11 @@ Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plant
 ## Niveau 12
 ##### Hors d'œuvre 
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
-# Spécialisations
-### Chef de Guerre
+<center><h2>Spécialisation</h2> </center>
+
+---
+<center><h3>Chef de guerre</h3> </center>
+
 Le Chef de Guerre est un maître des cuisines… et du champ de bataille. Il transforme ses poêles en armes et ses plats en outils de domination physique. Quand ça chauffe, c’est lui qui sert le plat principal : la baston.
 ##### Ustensiles de guerre (niveau 2)
 Vos attaques avec des armes improvisées suivent les règles suivantes :
@@ -70,7 +73,8 @@ Vos attaques avec une arme de cuisine infligent un marqueur *Saignement* en plus
 Vous pouvez, une fois par combat, effectuer une attaque de zone avec votre poêle. Toutes les créatures à 2'' ou moins de vous subissent une attaque de 3d6, force dévastatrice (2) et un test de Résilience ou sont **étourdies** pour 1 tour.
 
 ---
-### Chef Cannibale
+<center><h3>Cannibale</h3> </center>
+
 Le Chef Cannibale croit que la chair des créatures puissantes transmet leur force. Il cuisine les restes de ses ennemis, et chaque bouchée devient un acte de domination… ou de perversion.
 ##### Chair savoureuse (niveau 2)
 Vous pouvez transformer des créatures comestibles mortes en **Rations savoureuses**.
@@ -87,7 +91,8 @@ Ou
 - +1 en une compétence liée à la créature.
 
 ---
-### Gastromancien
+<center><h3>Gastromancien</h3> </center>
+
 Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un art magique à part entière, et un bon client est toujours un client satisfait.
 ##### Service en salle(niveau 2)
 Vos **Rations savoureuses** ne coûtent plus qu'une action courte pour être consommées.
@@ -101,7 +106,8 @@ Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupèr
 Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.
 
 ---
-### Glouton
+<center><h3>Glouton</h3> </center>
+
 ##### Ventre plein (niveau 2)
 Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1.
 ##### Couenne épaisse (niveau 2)
@@ -111,8 +117,8 @@ A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réu
 ##### Digestion (niveau 8)
 A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
 
----
-### Maitre-brasseur
+___
+<center><h3>Maitre brasseur</h3> </center>
 ##### Alcool fort (niveau 2)
 Vos rations savoureuses peuvent être consommées avec une action courte plutôt que longue, mais quiconque en consomme une gagne 1 niveau d'ivresse pendant 1 heure et +2d6 sur ses attaques en mêlée le temps de l'effet.
 ##### Rot bruyant (niveau 2)

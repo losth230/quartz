@@ -51,8 +51,11 @@ A partir du niveau 10, vous bénéficiez de +1 à votre résistance magique.
 ## Niveau 12
 ##### Eveil
 A partir du niveau 12, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
-# Spécialisations
-### Pyromane
+<center><h2>Spécialisations</h2> </center>
+
+___
+<center><h3>Pyromane</h3> </center>
+
 ##### Retour de flammes (Niveau 2)
 Vous pouvez dépenser votre réaction après qu'une créature amie ait subit une touche en mêlée pour infliger 1  *enflammement* à son attaquant.
 ##### Embrasement (Niveau 2)
@@ -64,8 +67,9 @@ Au prix d'une action courte, vous pouvez enlever tous les *enflammements* sur un
 ##### Combustion (niveau 11)
 Au prix  d'une action courte, vous pouvez effectuer  une attaque à distance selon les règles suivantes : Portée9'', Nd6, où N est égal à votre nombre d'*enflammement*.
 
----
-### Occultiste
+___
+<center><h3>Occultiste</h3> </center>
+
 ##### Compagnon du néant
 Vous pouvez dépenser un dé de magie pour invoquer un [[Compagnon du néant]].
 Chaque fois de vous lancez un sort en utilisant au moins 1 dé de votre réserve de magie, vous pouvez ajouter une charge de Buveur de magie à votre compagnon du néant. Lorsque le Compagnon du néant attaque, X correspond au nombre de charge de Buveur de magie qu'il possède.
@@ -74,8 +78,9 @@ Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé da
 ##### Focalisateur arcanique (Niveau 5)
 A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
 
----
-### Sage
+___
+<center><h3>Sage</h3> </center>
+
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
 ##### Exactitude (niveau 2)
@@ -87,8 +92,9 @@ A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre c
 ##### Vision double (niveau 11)
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
 
----
-### Sage
+___
+<center><h3>Sage</h3> </center>
+
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
 ##### Exactitude (niveau 2)

@@ -58,7 +58,7 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 ## Niveau 12
 ##### Les 4 éléments
 A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
-<mark style="background:rgba(140, 140, 140, 0.12)"> <center> <h1> Spécialisations </h1></center></mark>
+<center> <h2> Spécialisations </h2></center>
 
 ---
 <center><h3>Élémentaire</h3> </center>

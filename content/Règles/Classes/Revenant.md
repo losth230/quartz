@@ -55,8 +55,11 @@ A partir du niveau 10, les créatures de votre choix à 6'' ou moins de vous sou
 ## Niveau 12
 ##### Forme Ethérée
 A partir du niveau 12, votre forme éthérée vous confère Vol et +1 Vitesse
-# Spécialisations
-### Faucheur
+<center><h2>Spécialisations</h2> </center>
+
+___
+<center><h3>Faucheur</h3> </center>
+
 ##### Entrainement
 Lorsque vous apprenez la sous-classe de Faucheur, choisissez un Entrainement dans la classe de Guerrier.
 ##### Main de Weißroth (niveau 2)
@@ -69,8 +72,9 @@ Chaque fois que vous infligez au moins une blessure lors d'une attaque en mêlé
 Lorsque vous attaquez une créature affectée par *Marque Blanche*, vos attaques ne peuvent être arrêtées que par des jets d'armure de 6+.  
 Vous pouvez dorénavant faire appel aux pouvoirs  de Weißroth 2 fois par jour.
 
----
-### Nécromant
+___
+<center><h3>Nécromant</h3> </center>
+
 ##### Maitre des morts (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour invoquer un Zombie à 6'' ou moins et le faire jouer immédiatement. Cette compétence n'est réutilisable qu'après un repos.
 ##### Contrôle d'esprit (niveau 2)
@@ -82,8 +86,9 @@ A partir du niveau 8, une fois entre deux sommeils, vous pouvez dépenser une ac
 ##### Avancée sans fin (niveau 11)
 A partir du niveau 11, vos invocation Cadavériques ont +1 Vitesse.
 
----
-### Chevalier noir
+___
+<center><h3>Chevalier noir</h3> </center>
+
 Le Chevalier Noir est une forteresse imprenable, une ancre spectrale sur le champ de bataille. Il encaisse la vie sans broncher, protégé par des armures lourdes et une aura de terreur qui gèle le sang de ses ennemis.
 ##### Maitrise des plaques (Niveau 2)
 Vous gagnez la maitrise des armures lourdes.
@@ -96,8 +101,9 @@ Les créatures hostiles à 3'' ou moins subissent un malus de -1 vitesse et -1 �
 ##### Drain d'essence (niveau 11)
 A partir du niveau 11, lorsque vous éliminez une créature, vous récupérer 1 PV et 1 dé de magie.
 
----
-### Déchu
+___
+<center><h3>Déchu</h3> </center>
+
 Le Déchu est un paladin qui a non seulement pactisé avec la mort, mais qui utilise cette énergie pour corrompre la réalité. C'est un destructeur qui infuse ses coups de magie noire. Il excelle à punir ses ennemis et à briser leurs défenses.
 ##### Sceau de corruption (Niveau 2)
 A partir du niveau 2, si une de vos attaques obtient au moins une blessure, la cible est marquée par un sceau de corruption. La prochaine attaque physique qu'elle subit fait éclater le sceau qui fait passer l'armure de la créature à 6+ le temps de l'attaque.
