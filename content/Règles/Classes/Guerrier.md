@@ -46,10 +46,10 @@ A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[Règles/
 ## Niveau 12
 ##### Frénésie guerrière
 A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant.
-<center><h2>Spécialisations</h2> </center>
+<center><h1>Spécialisations</h1> </center>
 
 ___
-<center><h3>Sanguinaire</h3> </center>
+<center><h2>Sanguinaire</h2> </center>
 
 ##### Saignement supérieur (niveau 2)
 Lorsque vous réussissez une attaque en mêlée, vous infligez 2 *[[Règles/Règles spéciales#saignement|saignements]]* au lieu d'un seul.
@@ -63,7 +63,7 @@ Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *[
 Après avoir réussi une touche en mêlée sur une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous pouvez dépenser une [[Règles/Règles#Actions|action courte]] pour octroyer 2 *[[Règles/Règles spéciales#saignement|saignements]]* aux créatures de votre choix à 6'' ou moins.
 
 ___
-<center><h3>Chasseur</h3> </center>
+<center><h2>Chasseur</h2> </center>
 
 ##### Maitrise des armes de jets (niveau 2)
 Lorsque vous effectuez une attaque à distance avec une arme ayant la règle *[[Règles/Règles spéciales#lancer|Lancer]]*, vous appliquez un *[[Règles/Règles spéciales#saignement|saignement]]*.
@@ -79,7 +79,7 @@ Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent u
 Vous gagnez 1d6 en mêlée et à distance. Après avoir réalisé une attaque en mêlée ou à distance, vous pouvez vous déplacer de  2''.
 
 ___
-<center><h3>Chevalier</h3> </center>
+<center><h2>Chevalier</h2> </center>
 
 ##### Cavalier expérimenté (niveau 2)
 Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cavalerie]] également contre les créatures de votre taille.
@@ -92,7 +92,7 @@ Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cava
 ##### Danse de guerre (niveau 11)
 
 ___
-<center><h3>Escrimeur</h3> </center>
+<center><h2>Escrimeur</h2> </center>
 
 ##### Postures (Niveau 2)
 Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
@@ -117,7 +117,7 @@ A partir du niveau 11, votre posture du Crépuscule vous permet de riposter cont
 De plus, vous pouvez refuser d'entrer au Posture de l'Aube. A la place, si vous parvenez à changer de posture 3 fois en un seul tour, vous entrez en Posture de l'Aube Radieuse, ce qui vous octroie tous les bonus de la Posture de l'Aube, un bonus de +5d6 en mêlée pour le reste du tour ainsi que 5 *[[Règles/Règles spéciales#Egide (N)|Egides]]* que vous pouvez répartir entre vos alliés à 6'' ou moins. 
 
 ___
-<center><h3>Masochiste</h3> </center>
+<center><h2>Masochiste</h2> </center>
 
 ##### Souffrance (niveau 2)
 A partir du niveau 2, pour chaque PV perdu, vous gagnez en souffrances. Les modificateurs apportés par les souffrances sont cumulatives.

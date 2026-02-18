@@ -55,10 +55,10 @@ A partir du niveau 10, les créatures de votre choix à 6'' ou moins de vous sou
 ## Niveau 12
 ##### Forme Ethérée
 A partir du niveau 12, votre forme éthérée vous confère Vol et +1 Vitesse
-<center><h2>Spécialisations</h2> </center>
+<center><h1>Spécialisations</h1> </center>
 
 ___
-<center><h3>Faucheur</h3> </center>
+<center><h2>Faucheur</h2> </center>
 
 ##### Entrainement
 Lorsque vous apprenez la sous-classe de Faucheur, choisissez un Entrainement dans la classe de Guerrier.
@@ -73,7 +73,7 @@ Lorsque vous attaquez une créature affectée par *Marque Blanche*, vos attaques
 Vous pouvez dorénavant faire appel aux pouvoirs  de Weißroth 2 fois par jour.
 
 ___
-<center><h3>Nécromant</h3> </center>
+<center><h2>Nécromant</h2> </center>
 
 ##### Maitre des morts (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour invoquer un Zombie à 6'' ou moins et le faire jouer immédiatement. Cette compétence n'est réutilisable qu'après un repos.
@@ -87,7 +87,7 @@ A partir du niveau 8, une fois entre deux sommeils, vous pouvez dépenser une ac
 A partir du niveau 11, vos invocation Cadavériques ont +1 Vitesse.
 
 ___
-<center><h3>Chevalier noir</h3> </center>
+<center><h2>Chevalier noir</h2> </center>
 
 Le Chevalier Noir est une forteresse imprenable, une ancre spectrale sur le champ de bataille. Il encaisse la vie sans broncher, protégé par des armures lourdes et une aura de terreur qui gèle le sang de ses ennemis.
 ##### Maitrise des plaques (Niveau 2)
@@ -102,7 +102,7 @@ Les créatures hostiles à 3'' ou moins subissent un malus de -1 vitesse et -1 �
 A partir du niveau 11, lorsque vous éliminez une créature, vous récupérer 1 PV et 1 dé de magie.
 
 ___
-<center><h3>Déchu</h3> </center>
+<center><h2>Déchu</h2> </center>
 
 Le Déchu est un paladin qui a non seulement pactisé avec la mort, mais qui utilise cette énergie pour corrompre la réalité. C'est un destructeur qui infuse ses coups de magie noire. Il excelle à punir ses ennemis et à briser leurs défenses.
 ##### Sceau de corruption (Niveau 2)

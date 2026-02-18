@@ -60,10 +60,10 @@ vous pouvez vous lier avec une arme au maximum. Vous lier avec une arme prend 6 
 ## Niveau 12
 ##### Verdict Final
 A partir du niveau 12, Condamnation ajoute 1d6 supplémentaire (total 2d6).
-<center><h2>Spécialisations</h2> </center>
+<center><h1>Spécialisations</h1> </center>
 
 ___
-<center><h3>Protecteur</h3> </center>
+<center><h2>Protecteur</h2> </center>
 
 Le Protecteur incarne le bouclier du groupe. Il protège ses alliés par sa foi et sa robustesse, et attire l'attention des ennemis pour encaisser les coups à leur place.
 ##### Accusation (niveau 2)
@@ -78,7 +78,7 @@ A partir du niveau 8, les créatures de votre choix à 3m ou moins bénéficient
 A partir du niveau 11, si vous parvenez à ne subir aucun dégâts lors d'une attaque, vous pouvez dépenser votre réaction pour effectuer une attaque contre la créature vous ayant attaquée.
 
 ___
-<center><h3>Banneret</h3> </center>
+<center><h2>Banneret</h2> </center>
 
 Le Banneret est un meneur d'hommes, un symbole vivant d'espoir. Il inspire et renforce ses alliés par sa simple présence et ses paroles.
 ##### Sceaux (Niveau 2)
@@ -97,7 +97,7 @@ A partir du niveau 8, tous les alliés à 6m ou moins  ajoutent +1d6 à leurs te
 A partir du niveau 11, vous pouvez donner le Champion des Rois à une créature alliée à 6m ou moins, si vous le faites, vous bénéficiez également de Champion des Rois.
 
 ___
-<center><h3>Gardien du sanctuaire</h3> </center>
+<center><h2>Gardien du sanctuaire</h2> </center>
 
 ##### Sacrifice supérieur (niveau 2)
 A partir du niveau 2, lorsque vous utilisez **Sacrifice**, vous gagnez au préalable Egide (1).
@@ -114,7 +114,7 @@ Lorsque vous utilisez **Sacrifice** sur une créature au sein du Sanctuaire, ell
 A partir du niveau 11, le rayon de votre sanctuaire passe à 6m.
 
 ___
-<center><h3>Inquisiteur</h3> </center>
+<center><h2>Inquisiteur</h2> </center>
 
 L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
 ##### Chasseur d'Hérétiques (niveau 2)
@@ -129,7 +129,7 @@ A partir du niveau 8, vous attaques deviennent magiques.
 Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
 
 ___
-<center><h3>Prêtre</h3> </center>
+<center><h2>Prêtre</h2> </center>
 
 Le Prêtre est un Paladin qui a posé l'épée pour se concentrer à la tâche d'aider son prochain. Il n'est plus un combattant de première ligne, mais un lanceur de sorts pur et un soutien majeur.
 ##### Ranger les armes (Niveau 2)

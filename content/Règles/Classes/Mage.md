@@ -51,10 +51,10 @@ A partir du niveau 10, vous bénéficiez de +1 à votre résistance magique.
 ## Niveau 12
 ##### Eveil
 A partir du niveau 12, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
-<center><h2>Spécialisations</h2> </center>
+<center><h1>Spécialisations</h1> </center>
 
 ___
-<center><h3>Pyromane</h3> </center>
+<center><h2>Pyromane</h2> </center>
 
 ##### Retour de flammes (Niveau 2)
 Vous pouvez dépenser votre réaction après qu'une créature amie ait subit une touche en mêlée pour infliger 1  *enflammement* à son attaquant.
@@ -68,7 +68,7 @@ Au prix d'une action courte, vous pouvez enlever tous les *enflammements* sur un
 Au prix  d'une action courte, vous pouvez effectuer  une attaque à distance selon les règles suivantes : Portée9'', Nd6, où N est égal à votre nombre d'*enflammement*.
 
 ___
-<center><h3>Occultiste</h3> </center>
+<center><h2>Occultiste</h2> </center>
 
 ##### Compagnon du néant
 Vous pouvez dépenser un dé de magie pour invoquer un [[Compagnon du néant]].
@@ -79,7 +79,7 @@ Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé da
 A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
 
 ___
-<center><h3>Sage</h3> </center>
+<center><h2>Sage</h2> </center>
 
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
@@ -93,7 +93,7 @@ A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre c
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
 
 ___
-<center><h3>Sage</h3> </center>
+<center><h2>Sage</h2> </center>
 
 ##### Théoricien (niveau 2)
 Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.

@@ -58,10 +58,10 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 ## Niveau 12
 ##### Les 4 éléments
 A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
-<center> <h2> Spécialisations </h2></center>
+<center> <h1> Spécialisations </h1></center>
 
 ---
-<center><h3>Élémentaire</h3> </center>
+<center><h2>Élémentaire</h2> </center>
 
 ##### Harmonie (niveau 2)
 Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. SI l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
@@ -77,7 +77,7 @@ Lorsque vous êtes ciblé par un sort Elémentaire (Domaines des Cieux, Primordi
 Lors que vous attaquez en mêlée, déclenchez l'attribut de domaine relatif à votre aura.
 
 ---
-<center><h3> Mande Esprit</h3></center>
+<center><h2> Mande Esprit</h2></center>
 
 ##### Esprit animal (niveau 2)
 A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dé de magie.
