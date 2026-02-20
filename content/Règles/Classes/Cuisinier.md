@@ -54,7 +54,7 @@ Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plant
 ## Niveau 12
 ##### Hors d'œuvre 
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
-<center><h1>Spécialisation</h1> </center>
+<center><h1>Spécialisations</h1> </center>
 
 ---
 <center><h2>Chef de guerre</h2> </center>

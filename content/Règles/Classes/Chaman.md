@@ -57,7 +57,7 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 **Bénédiction de tempête** : toutes les créatures affectées par cette aura peuvent immédiatement effectuer une marche gratuite.  
 ## Niveau 12
 ##### Les 4 éléments
-A partir du niveau 12, vous pouvez apprendre le quatrième domaine élémentaire.
+Lorsque vous atteignez le niveau 10, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, vous pouvez à la place posséder 2 domaines simultanément.
 <center> <h1> Spécialisations </h1></center>
 
 ---
