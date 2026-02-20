@@ -57,14 +57,14 @@ A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votr
 **Bénédiction de tempête** : toutes les créatures affectées par cette aura peuvent immédiatement effectuer une marche gratuite.  
 ## Niveau 12
 ##### Les 4 éléments
-Lorsque vous atteignez le niveau 10, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, vous pouvez à la place posséder 2 domaines simultanément.
+Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, vous pouvez à la place posséder 2 auras simultanément.
 <center> <h1> Spécialisations </h1></center>
 
 ---
 <center><h2>Élémentaire</h2> </center>
 
 ##### Harmonie (niveau 2)
-Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. SI l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
+Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. Si l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
 ##### Combattant astral (niveau 2)
 Si vous possédez une aura, vos attaques en mêlée ne sont plus physiques mais du type de cette aura.
 Vous gagnez également la capacité à lancer des sorts en étant engagé en mêlée.

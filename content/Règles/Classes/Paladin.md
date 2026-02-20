@@ -18,7 +18,7 @@ Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirig�
 ##### Condamnation
 Lorsque vous réussissez à infliger une blessure en mêlée, placez un marqueur Condamnation sur la cible. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
 ##### Vœux
-Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divinité]] à laquelle vous jurez fidélité, et le  vœu que vous souhaitez prononcer. une fois par jour, vous pouvez faire une offrande d'une valeur totale de 100 florins pour utiliser une fraction de leurs pouvoirs. Vous trouverez ci-dessous quelques exemples de vœux.
+Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divinité]] à laquelle vous jurez fidélité, et le  vœu que vous souhaitez prononcer. une fois par jour, vous pouvez faire une offrande d'une valeur totale de 100 florins pour utiliser une fraction de leurs pouvoirs. Vous trouverez ci-dessous quelques exemples de vœux:  
 **Vœu de Justice** : *Vous avez juré de luter pour la justice*.  
 **Vœu de vengeance** : *vous avez juré de venger quelqu'un : votre famille, votre ami peut-être ?*  
 **Vœu de pureté** : *Vous avez juré de ne rester pur.e et de ne pas céder aux tentations obscures.*  
