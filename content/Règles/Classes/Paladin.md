@@ -118,14 +118,14 @@ ___
 
 L'Inquisiteur est le bras armé de la foi, traquant sans relâche les hérétiques, morts-vivants et démons. Sa fureur sacrée se déchaîne en châtiment purificateur.
 ##### Chasseur d'Hérétiques (niveau 2)
-Vous gagnez +1d6 d'attaque en mêlée contre les mages, morts-vivants, démons et créatures corrompues.
+Vous gagnez +1d6 d'attaque en mêlée contre les mages, morts-vivants, démons et créatures corrompues. Au début de chaque tour, vous gagnez Egide (1).
 ##### Vengeance (niveau 2)
 Lorsque vous effectuez une attaque en mêlée, vous pouvez dépenser une à plusieurs Egide et déclencher la règle Faveur Divine pour chaque Egide ainsi dépensée.
 ##### Convergence sacrée (Niveau 5)
 A partir du niveau 5, si vous obtenez au moins deux 6 lors d'une attaque en mêlée, vous bénéficiez de +1 à vos jets de touche pour l'attaque en cours.
 ##### Tranchant sacré (Niveau 8)
 A partir du niveau 8, vous attaques deviennent magiques.
-##### Juge et Bourreau (Niveau 11
+##### Juge et Bourreau (Niveau 11)
 Si une créature affectée par votre *Condamnation* meurt, vous récupérez 2 dés de votre réserve de magie.
 
 ___
@@ -133,7 +133,7 @@ ___
 
 Le Prêtre est un Paladin qui a posé l'épée pour se concentrer à la tâche d'aider son prochain. Il n'est plus un combattant de première ligne, mais un lanceur de sorts pur et un soutien majeur.
 ##### Ranger les armes (Niveau 2)
-A tout moment, un Paladin peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et rejoindre les rangs des prêtres. Un paladin devenant prêtre peut immédiatement apprendre le un domaine parmi le Domaine de la Pureté, le Domaine de la Lumière et le Domaine des Cieux.  
+A tout moment, un Paladin peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et rejoindre les rangs des prêtres. Un paladin devenant prêtre peut immédiatement apprendre un domaine parmi le Domaine de la Pureté, le Domaine de la Lumière et le Domaine des Cieux.  
 Cependant, en montant  de niveau, le prêtre ne gagne plus qu'un seul PV, mais augmente sa réserve de dés de magie de 1d6 chaque fois qu'il progresse vers un niveau pair.   
 A partir du niveau 6, vous pouvez lancer des sorts de niveau 3.  
 A partir du niveau 9, vous pouvez lancer des sorts de niveau 4.

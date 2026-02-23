@@ -13,11 +13,11 @@ L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
 ##### Nourriture savoureuse
-Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
+Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier 1 + un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
 ##### Coup de fourchette
-Lorsque vous réussissez une attaque en mêlée, votre cible doit réussir un test de résilience ou souffrir d'un malus de -1d6 ses ses jets d'attaque en mêlée et à distance pour le reste du tour.
+Lorsque vous réussissez une attaque en mêlée, votre cible souffre d'un malus de -1d6 ses ses jets d'attaque en mêlée et à distance pour le reste du tour.
 ##### Chef de service
-Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins
+Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
@@ -109,7 +109,7 @@ Si vous passer plusieurs heures afin de créer un banquet capable de nourrir aut
 <center><h2>Glouton</h2> </center>
 
 ##### Ventre plein (niveau 2)
-Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1.
+Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1 supplémentaire.
 ##### Couenne épaisse (niveau 2)
 Les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
 ##### Coup de bidon (niveau 5)

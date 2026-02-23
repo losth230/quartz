@@ -13,11 +13,11 @@ L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
 ##### Affinité élémentaire
-Lorsque vous lancez un sort, vous gagnez une aura qui affecte tous vos alliés à 12'' ou moins qui dure jusqu'à ce que vous relanciez un sort.  
-**Bénédiction de l'hiver** : lorsqu'un sort d'amélioration est lancé sur une créature bénéficiant de cette bénédiction, elle gagne Egide (1).  
-**Bénédiction primordiale** : les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.  
-**Bénédiction du cataclysme** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.  
-**Bénédiction de tempête** : une créature bénéficiant de cette bénédiction gagne +1 Vitesse.  
+Lorsque vous lancez un sort, vous gagnez une aura en fonction du domaine du sort que vous lancer qui affecte tous vos alliés à 12'' ou moins qui dure jusqu'à ce que vous relanciez un sort.  
+**Bénédiction de l'hiver (Domaine du Givre) :** lorsqu'un sort d'amélioration est lancé sur une créature bénéficiant de cette bénédiction, elle gagne Egide (1).  
+**Bénédiction primordiale (Domaine Primordial) :** les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.  
+**Bénédiction du cataclysme (Domaine du Cataclysme) :** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.  
+**Bénédiction de tempête (Domaine des Cieux) :** une créature bénéficiant de cette bénédiction gagne +1 Vitesse.  
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
