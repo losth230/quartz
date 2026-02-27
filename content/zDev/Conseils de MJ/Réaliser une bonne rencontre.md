@@ -4,7 +4,7 @@
 * **combat potentiel :** des ennemis tentent  de discuter avec les joueurs : l'objectif est de créer un obstacle dans la progression des joueurs. Si les joueurs préfèrent combattre, ils peuvent, s'ils préfèrent parler, ils peuvent aussi, ce qui leur donne le choix dans la manière de résoudre la situation.
 * **combat immédiat :** dès que les joueurs arrivent, le combat se déclenche. Deux raisons : soit parce que les combats c'est amusant, soit parce qu'il n'y a aucune possibilité pour de DM de ne pas déclencher de combat.
 ## 2. être ouvert au dialogue
-Il faut laisser aux joueurs le choix, de s'ils veulent combattre, persuadier, représenter, etc... cela permettra aux joueurs de moins se sentir sur une route toute tracée. Pour cela, le MJ peut simplement commencer par du dialogue plutôt qu'un combat direct.
+Il faut laisser aux joueurs le choix, de s'ils veulent combattre, persuader, représenter, etc... cela permettra aux joueurs de moins se sentir sur une route toute tracée. Pour cela, le MJ peut simplement commencer par du dialogue plutôt qu'un combat direct. Dans la mesure du possible, il vaut mieux éviter les combats obligatoires.
 ## 3. qu'est-ce qui vient après la rencontre ?
 
 * Imaginer les issues (pas forcément toutes) de la rencontre en avance, mais ça prend bcp de temps.

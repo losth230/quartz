@@ -89,4 +89,21 @@ Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon
 Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine lié à votre aura.
 ##### Réincarnation (niveau 11)
 A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capacité d'envoyer des messages télépathiques aux créatures proches de vous.
-### 
+<h2><center>Oracle</center></h2>
+##### Se tourner vers les astres (niveau 2)
+A tout moment, un Chaman peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et les esprits élémentaires pour se tourner vers les Astres. Un Chaman devenant Oracle peut immédiatement abandonner autant de domaine de magie qu'il le souhaite et apprendre le domaine des Astres.  
+Pour chaque domaine qu'il abandonne, l'Oracle reçoit 1 **Présage**. La valeur de lancement des sorts de l'Oracle augmente de 1 par **Présage** qu'il possède.  
+Si le Chaman doit apprendre un nouveau domaine de magie, il reçoit à la place 1 **Présage.**  
+Certaines compétences peuvent vous demander de défausser des **Présages**, vous récupérez tous vos **Présages** défaussés après un repos. 
+##### Aura des Astres (niveau 2) 
+A partir du niveau 2, lorsque vous lancez un sort, vous pouvez choisir une aura que vous octroyez aux créatures alliées à 12m ou moins. Cette aura remplace l'aura élémentaire et ne peut être une aura dont ils bénéficient déjà :
+- Aura Solaire : les créatures affectées par cette aura bénéficient d'un bonus de +1 au lancement de leurs sorts.
+- Aura Lunaire : lorsqu'une créature affectée par cette aura lance un sort, vous récupérez votre réaction.
+##### Voir l'avenir (niveau 5) 
+A partir du niveau 5, lorsqu'une créature attaque à 9m ou moins, vous pouvez dépenser votre réaction pour ajouter -ou soustraire- autant de dés à son attaque que vous n'avez de **Présages**. Défaussez ensuite 1 **Présage.**
+##### Prémonition (niveau 8)
+A partir du niveau 8, vous pouvez utiliser votre réaction pour lancer un sort qui aurait nécessité une action courte.
+##### Dualité cosmique (niveau 11)
+A partir du niveau 11, vos auras sont renforcées comme suit :
+- Aura Solaire : une créature affectée par cette aura ajoute votre nombre de **Présages** à la valeur de lancement des sorts qu'elle lance.
+- Aura Lunaire : Lorsqu'une créature lance un sort, elle récupère également sa réaction à elle.
