@@ -1,12 +1,12 @@
-##### Attribut : transposition
-Lorsqu'un sort de ce domaine est lancé, vous pouvez déplacer un objet ou une créature d'un poids inférieur à 100 kg de 2m.
+##### Attribut : Prémonition
+Lorsqu'un sort de ce domaine est lancé en dépensant au moins 1 dé de magie, le lanceur peut récupérer 1 dé de sa réserve de magie.
 ## Niveau 1
-##### Electrocution (court, 6+, projectile)
-Portée 12'', 3d6, Perforant (1).  
--> Renforcement (3) : +1d6.
-##### Frappe foudroyante (court, 7+, amélioration)
-Ce sort est utilisable en mêlée, effectuez une attaque en mêlée normale avec un bonus de Force dévastatrice (+1).  
--> Renforcement (3)  : l'attaque en mêlée bénéficie de  +1d6.
-##### Fourche d'éclair (court, 7+, projectile)
+##### Bénédiction de l'étoile (long, 10+, amélioration, concentration (10 tours))
+Portée 9m, ce sort cible une créature consentante, lui conférant un bonus de +1d6 pour tous ses prochains jets d'attaque ou de compétence.  
+-> Renforcement (10) : le bonus octroyé augment de 1d6.
+##### Rayon traçant (court, 9+, projectile)
+Protée 15m, 4d6, Perforant (1). 
+-> Renforcement (3) : confère +1d6.
+##### Décharge d'énergie (court, 7+, projectile)
 Portée 9'', 2d6, Perforant (1). Ce sort frappe deux cibles différentes.  
 -> Renforcement (5) :  +1d6.

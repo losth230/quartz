@@ -81,8 +81,9 @@ ___
 <center><h2>Biomancien</h2> </center>
 
 ##### Création d’homonculus mineur (niveau 2)
-Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).
-Ce familier vous obéit. Un seul actif à la fois.
+Vous pouvez utiliser 5 **Organiques** pour créer  un **petit [[Homonculus]]** (taille d’un chat ou corbeau).  
+Ce familier vous obéit. Un seul actif à la fois.  
+Votre [[Homonculus]] peut prendre la forme d'une **Bêtes** de votre choix, et ainsi bénéficier de ses **Traits**. 
 ##### Elixir instable (niveau 2)
 Vous pouvez utiliser 5 **Plantes** et 2 **Organiques** pour fabriquer un **Elixir instable**. Quiconque boit l'élixir augmente son maximum de PV de 1 définitivement et effectue un jet de **Puissance irrésistible** de la table de [[Magie]]. Un [[Homonculus]]** qui boit l'élixir instable augmente son maximum de PV de 1 PV supplémentaire. 
 ##### Transfusion (niveau 5)
