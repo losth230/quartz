@@ -112,6 +112,6 @@ A partir du niveau 2, vous pouvez vous lier avec une arme au maximum. Tant que v
 ##### Profanation (niveau 5)
 A partir du niveau 5, vous pouvez dépenser une action longue pour planter votre arme liée dans le sol et profaner la zone à 6 cases ou moins. Les créatures de votre choix dans la zone subissent un malus de -1 vitesse et ne peuvent plus s'envoler. De plus, les créatures vivantes de votre choix perdent 1 PV à la fin de chaque tour qu'elles finissent dans la zone, ne peuvent être soignées et vous récupérez 1 PV par PV ainsi enlevé. L'effet perdure tant que l'arme est plantée dans le sol.
 ##### Moisson d'os (niveau 8)
-A partir du niveau 8, vos attaques deviennent magiques.
+A partir du niveau 8, vos attaques deviennent magiques. Vos attaques en mêlée déclenche le sceau de corruption (même si elles sont  magiques).
 ##### Avatar de la ruine (niveau 11)
 A partir du niveau 11, lorsque vous éliminez une créature, les créatures à 6'' ou moins ayant moins de PV actuels que vous doivent réussir un test de volonté (nombre de réussite égal à la différence de PV actuels) ou être [[content/Règles/Règles#États Spéciaux|paniqués]].
