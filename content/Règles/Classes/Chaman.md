@@ -90,6 +90,7 @@ Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de doma
 ##### Réincarnation (niveau 11)
 A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capacité d'envoyer des messages télépathiques aux créatures proches de vous.
 <h2><center>Oracle</center></h2>
+
 ##### Se tourner vers les astres (niveau 2)
 A tout moment, un Chaman peut, à la discrétion du MJ, abandonner sa spécialisation actuelle et les esprits élémentaires pour se tourner vers les Astres. Un Chaman devenant Oracle peut immédiatement abandonner autant de domaine de magie qu'il le souhaite et apprendre le domaine des Astres.  
 Pour chaque domaine qu'il abandonne, l'Oracle reçoit 1 **Présage**. La valeur de lancement des sorts de l'Oracle augmente de 1 par **Présage** qu'il possède.  
