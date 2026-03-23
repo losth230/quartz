@@ -96,7 +96,7 @@ ___
 
 ##### Postures (Niveau 2)
 Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
-**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous rester en posture de l'Aube au lieu de changer votre posture pour la suivante.  
+**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous entrer en posture de l'Aube après a voir changé votre posture pour la suivante.  
 **Posture du Zéphyr** : lorsque vous tenez cette posture, vous possédez +1 Vitesse et ignorez les  *[[Règles/Règles#États Spéciaux|ralentissements]]*  et  *[[Règles/Règles#États Spéciaux|immobilisations]]*.  
 **Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Roc. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Roc.  
 **Posture du du Roc** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
