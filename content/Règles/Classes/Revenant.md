@@ -28,15 +28,15 @@ Le Revenant est un lanceur de sorts. Lorsque vous créez un Revenant, choisissez
 |        **1**        |          1          |           4d6           |
 |        **2**        |          1          |           4d6           |
 |        **3**        |          1          |           4d6           |
-|        **4**        |          1          |           4d6           |
-|        **5**        |          1          |           5d6           |
+|        **4**        |          1          |           5d6           |
+|        **5**        |          2          |           5d6           |
 |        **6**        |          2          |           5d6           |
 |        **7**        |          2          |           5d6           |
-|        **8**        |          2          |           5d6           |
-|        **9**        |          2          |           6d6           |
-|       **10**        |          2          |           6d6           |
+|        **8**        |          2          |           6d6           |
+|        **9**        |          3          |           6d6           |
+|       **10**        |          3          |           6d6           |
 |       **11**        |          3          |           6d6           |
-|       **12**        |          3          |           6d6           |
+|       **12**        |          3          |           7d6           |
 
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
@@ -55,6 +55,7 @@ A partir du niveau 10, les créatures de votre choix à 6'' ou moins de vous sou
 ## Niveau 12
 ##### Forme Ethérée
 A partir du niveau 12, votre forme éthérée vous confère Vol et +1 Vitesse
+
 <center><h1>Spécialisations</h1> </center>
 
 ___
@@ -106,12 +107,12 @@ ___
 
 Le Déchu est un paladin qui a non seulement pactisé avec la mort, mais qui utilise cette énergie pour corrompre la réalité. C'est un destructeur qui infuse ses coups de magie noire. Il excelle à punir ses ennemis et à briser leurs défenses.
 ##### Sceau de corruption (Niveau 2)
-A partir du niveau 2, si une de vos attaques obtient au moins une blessure, la cible est marquée par un sceau de corruption. La prochaine attaque physique qu'elle subit fait éclater le sceau qui fait passer l'armure de la créature à 6+ le temps de l'attaque.
+A partir du niveau 2, si une de vos attaques obtient au moins une blessure, déclencher l'attribut de domaine d'un de vos domaine de magie.
 ##### Arme Impie (niveau 2)
 A partir du niveau 2, vous pouvez vous lier avec une arme au maximum. Tant que vous maniez votre arme liée, vous bénéficiez de +1d6 en mêlée et les cibles blessées par votre arme sont réduites au silence pour le reste du tour. Vous lier avec une arme prend 6 heures.
 ##### Profanation (niveau 5)
 A partir du niveau 5, vous pouvez dépenser une action longue pour planter votre arme liée dans le sol et profaner la zone à 6 cases ou moins. Les créatures de votre choix dans la zone subissent un malus de -1 vitesse et ne peuvent plus s'envoler. De plus, les créatures vivantes de votre choix perdent 1 PV à la fin de chaque tour qu'elles finissent dans la zone, ne peuvent être soignées et vous récupérez 1 PV par PV ainsi enlevé. L'effet perdure tant que l'arme est plantée dans le sol.
 ##### Moisson d'os (niveau 8)
-A partir du niveau 8, vos attaques deviennent magiques. Vos attaques en mêlée déclenche le sceau de corruption (même si elles sont  magiques).
+A partir du niveau 8, vos attaques deviennent magiques.
 ##### Avatar de la ruine (niveau 11)
 A partir du niveau 11, lorsque vous éliminez une créature, les créatures à 6'' ou moins ayant moins de PV actuels que vous doivent réussir un test de volonté (nombre de réussite égal à la différence de PV actuels) ou être [[content/Règles/Règles#États Spéciaux|paniqués]].

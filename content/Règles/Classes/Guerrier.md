@@ -25,8 +25,8 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 ##### Saignements
 Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* sur votre cible.
-##### Injure
-lorsqu'une créature à 9 cases ou moins se déplace, vous pouvez dépenser votre réaction pour lui imposer un malus de -2 Vitesse.
+##### Croc en jambe
+Lorsqu'une créature au contact avec vous essaye de se désengager, vous pouvez réduire sa vitesse à 0.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
@@ -46,6 +46,7 @@ A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[Règles/
 ## Niveau 12
 ##### Frénésie guerrière
 A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant.
+
 <center><h1>Spécialisations</h1> </center>
 
 ___

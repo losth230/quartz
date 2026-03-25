@@ -1,5 +1,5 @@
-##### Attribut : Culpabilité
-Lorsqu'un sort de ce domaine est lancé, désignez une créature à 12'' et marquez là *fatiguée*.
+##### Attribut : Disparition
+Lorsqu'un sort de ce domaine est lancé, le lanceur peut se déplacer de 3m.
 ## Niveau 1
 ##### Destrier d'ombre (court, 6+, amélioration, concentration  (10 tours))
 Portée 12'', confère +1 Vitesse, +1 Taille et la règle Cavalerie.

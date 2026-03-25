@@ -12,12 +12,10 @@ Les caractéristiques de base d’un Chaman sont :
 L'équipement d'un Chaman est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
-##### Affinité élémentaire
-Lorsque vous lancez un sort, vous gagnez une aura en fonction du domaine du sort que vous lancer qui affecte tous vos alliés à 12'' ou moins qui dure jusqu'à ce que vous relanciez un sort.  
-**Bénédiction de l'hiver (Domaine du Givre) :** lorsqu'un sort d'amélioration est lancé sur une créature bénéficiant de cette bénédiction, elle gagne Egide (1).  
-**Bénédiction primordiale (Domaine Primordial) :** les créatures bénéficiant de cette bénédiction peuvent relancer leurs jets d'armure ayant obtenu 1 contre des attaques physiques.  
-**Bénédiction du cataclysme (Domaine du Cataclysme) :** : lorsqu'une créature bénéficiant de cette bénédiction lance un sort de type projectile, elle bénéficie d'un bonus de +1d6 sur son attaque.  
-**Bénédiction de tempête (Domaine des Cieux) :** une créature bénéficiant de cette bénédiction gagne +1 Vitesse.  
+##### Communication spirituelle (niveau 1 )
+Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre réserve de magie.
+##### Conseil des esprits (niveau 1)
+Une fois par jour, vous pouvez avec les esprits au prix d'une action longue et leur poser une question pour laquelle ils répondront oui ou non.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
@@ -36,7 +34,7 @@ Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deu
 |       **9**       |          4          |           8d6           |
 |      **10**       |          4          |           9d6           |
 |      **11**       |          4          |           9d6           |
-|      **12**       |          4          |           9d6           |
+|      **12**       |          4          |          10d6           |
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
@@ -50,31 +48,31 @@ Une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui
 A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire supplémentaire.
 ## Niveau 10
 ##### Absorption élémentaire
-A partir du niveau 10, vous pouvez dépenser une action longue pour retirer votre aura et déclencher un effet correspondant :  
-**Bénédiction de l'hiver** : toutes les créatures affectées par cette aura gagnent Egide (1).  
-**Bénédiction primordiale** : toutes les créatures affectées par cette aura gagnent Egide (2).  
-**Bénédiction du cataclysme** : Effectuez une attaque à distance selon les règles suivantes : Portée 12'', 2d6, attaques enflammées. Cette attaque gagne 2d6 par aura retirée.  
-**Bénédiction de tempête** : toutes les créatures affectées par cette aura peuvent immédiatement effectuer une marche gratuite.  
+??????
+
 ## Niveau 12
 ##### Les 4 éléments
-Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, vous pouvez à la place posséder 2 auras simultanément.
+Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, votre maximum de dés de magie augmente de 2.
+
 <center> <h1> Spécialisations </h1></center>
 
 ---
 <center><h2>Élémentaire</h2> </center>
 
-##### Harmonie (niveau 2)
-Lorsque vous lancer un sort alors que vous possédez l'aura relative au domaine du sort, vous bénéficiez d'un bonus de +1d6 à l'effet du sort. Si l'aura diffère du domaine du sort que vous lancez, vous bénéficiez d'un bonus de +3 au lancement de sort.
-##### Combattant astral (niveau 2)
-Si vous possédez une aura, vos attaques en mêlée ne sont plus physiques mais du type de cette aura.
-Vous gagnez également la capacité à lancer des sorts en étant engagé en mêlée.
-##### Barrière élémentaire (niveau 5)
-Lorsque vous lancez un sort, vous gagnez Egide (1), si une créature détruit cette Egide lors d'une attaque en mêlée, elle déclenche l'attribut de domaine lié à votre aura.
+##### Frappe élémentaire (niveau 2)
+A partir du niveau 2, vos attaques en mêlée deviennent magiques.
+##### Réceptacle élémentaire (niveau 2)
+A partir du niveau 2, vous pouvez offrir votre corps à un esprit élémentaire et ainsi devenir son réceptacle. Les effets liés dépendent du type de l'élémentaire :
+- élémentaire de feu : vous êtes immunisé aux attaques enflammées et gagnez la règle spéciale attaques enflammées sur toutes vos attaques en mêlée.
+- élémentaire du givre : vous êtes immunisé au gel. Votre résistance magique augmente de 1.
+- élémentaire de terre : votre armure augmente de 1 et vous recevez Egide (1) à chaque sort que vous lancez.
+- élémentaire de foudre : votre vitesse augmente de 1, vos attaques en mêlée bénéficient de force dévastatrice (1).
+##### Harmonie (niveau 5)
+A partir du niveau 5, lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
 ##### Absorption élémentaire (niveau 8)
 Lorsque vous attaquez, vous pouvez dépenser les marqueurs *enflammés* ou *gelé* de votre cible pour lui infliger autant de dégâts.
-Lorsque vous êtes ciblé par un sort Elémentaire (Domaines des Cieux, Primordial, Givre ou du C), vous gagnez Egide (1).
 ##### Mande - Eléments (niveau 11)
-Lors que vous attaquez en mêlée, déclenchez l'attribut de domaine relatif à votre aura.
+A partir du niveau 11 vous voulez vous lier à un second élémentaire ou doubler l'effet de votre élémentaire.
 
 ---
 <center><h2> Mande Esprit</h2></center>

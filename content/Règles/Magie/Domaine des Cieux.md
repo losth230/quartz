@@ -1,5 +1,5 @@
-##### Attribut : transposition
-Lorsqu'un sort de ce domaine est lancé, vous pouvez déplacer un objet ou une créature d'un poids inférieur à 100 kg de 2m.
+##### Attribut : Bourrasque
+Lorsqu'un sort de ce domaine est lancé, le lanceur peut déplacer une créature sur 3m.
 ## Niveau 1
 ##### Electrocution (court, 6+, projectile)
 Portée 12'', 3d6, Perforant (1).  

@@ -1,5 +1,5 @@
 ##### Attribut : Bouclier de lumière
-Lorsqu'un sort de ce domaine est lancé, désignez une créature amie à 9'' ou moins et conférez lui Egide (1)
+Lorsqu'un sort de ce domaine est lancé, désignez une créature amie à 9'' ou moins et conférez lui Egide (1).
 ## Niveau 1
 ##### Orbe aveuglant (court, 6+, malédiction)
 Portée 12’’, la cible doit réussir un test de Résilience (difficulté 1) ou être aveuglée pendant 1 tour.  

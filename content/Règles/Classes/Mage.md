@@ -34,7 +34,7 @@ Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux do
 |      **9**      |          4          |           8d6           |
 |     **10**      |          4          |           9d6           |
 |     **11**      |          4          |           9d6           |
-|     **12**      |          4          |           9d6           |
+|     **12**      |          4          |          10d6           |
 
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique

@@ -7,7 +7,7 @@ Portée 9’’, 3d6, Si la cible souffre d'au moins un _[[Règles/Règles spéc
 ##### Sacrifice rituel (long, 0+, amélioration)
 Vous pouvez sacrifier 1 PV pour récupérer 1 dé de magie.
 ##### Coagulation (court, 5+, amélioration)
-Portée 12’, vous manipulez le sang pour refermer les plaies : retirez un marqueur _[[Règles/Règles spéciales#Saignement|Saignement]]_ d'une cible et transformez-le en *[[Règles/Règles spéciales#Egide (N)|Egides]]*.  
+Portée 12’, vous manipulez le sang pour refermer les plaies : retirez un marqueur _[[Règles/Règles spéciales#Saignement|Saignement]]_ d'une cible et transformez le en *[[Règles/Règles spéciales#Egide (N)|Egides]]*.  
 -> Renforcement (3) : transformez un marqueur supplémentaire.
 ## Niveau 2
 ##### Rupture d'anévrisme (court, 9+, projectile)

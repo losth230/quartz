@@ -28,15 +28,15 @@ Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisiss
 |        **1**         |          1          |           4d6           |
 |        **2**         |          1          |           4d6           |
 |        **3**         |          1          |           4d6           |
-|        **4**         |          1          |           4d6           |
-|        **5**         |          1          |           5d6           |
+|        **4**         |          1          |           5d6           |
+|        **5**         |          2          |           5d6           |
 |        **6**         |          2          |           5d6           |
 |        **7**         |          2          |           5d6           |
-|        **8**         |          2          |           5d6           |
-|        **9**         |          2          |           6d6           |
-|        **10**        |          2          |           6d6           |
+|        **8**         |          2          |           6d6           |
+|        **9**         |          3          |           6d6           |
+|        **10**        |          3          |           6d6           |
 |        **11**        |          3          |           6d6           |
-|        **12**        |          3          |           6d6           |
+|        **12**        |          3          |           7d6           |
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
@@ -54,6 +54,7 @@ Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plant
 ## Niveau 12
 ##### Hors d'œuvre 
 Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
+
 <center><h1>Spécialisations</h1> </center>
 
 ---
@@ -64,7 +65,7 @@ Le Chef de Guerre est un maître des cuisines… et du champ de bataille. Il tra
 Vos attaques avec des armes improvisées suivent les règles suivantes :
 Mêlée, 3d6, Anti-infanterie, Lancer.
 ##### Rôtissage brutal (niveau 2)
-Lorsque vous infligez au moins une blessure avec une arme improvisée, vous infligez un malus de **-1 à l’armure** de votre cible jusqu’à la fin du tour.
+A partir du niveau 2, si une de vos attaques obtient au moins une blessure, déclencher l'attribut de domaine d'un de vos domaine de magie.
 ##### Fumet Intimidant (niveau 5)
 Vos attaques avec des armes improvisées gagnent la règle Attaques enflammées.
 ##### Tranche chair (niveau 8)
@@ -97,7 +98,7 @@ Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un ar
 ##### Service en salle(niveau 2)
 Vos **Rations savoureuses** ne coûtent plus qu'une action courte pour être consommées.
 ##### Complément alimentaire (niveau 2)
-Lorsque vous fabriquez vos **Rations savoureuses**, vous pouvez dépenser un dé de votre réserve de magie pour les imprégner. Une créature bénéficie de +1d6 sur son prochain test d'attaque ou de compétence après avoir mangé une **Ration savoureuse** ainsi imprégnée.
+Lorsque vous fabriquez vos **Rations savoureuses**, vous pouvez dépenser un dé de votre réserve de magie pour les imprégner. Vous pouvez dépenser un dé de votre réserve de magie pour gagner 2 rations savoureuses supplémentaires.
 ##### Dopamine (niveau 5)
 Les créatures ingérant une **Ration savoureuse** peuvent immédiatement effectuer une marche gratuite.
 ##### Récupération des sucs (niveau 8)
@@ -119,6 +120,7 @@ A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
 
 ___
 <center><h2>Maitre brasseur</h2> </center>
+
 ##### Alcool fort (niveau 2)
 Vos rations savoureuses peuvent être consommées avec une action courte plutôt que longue, mais quiconque en consomme une gagne 1 niveau d'ivresse pendant 1 heure et +2d6 sur ses attaques en mêlée le temps de l'effet.
 ##### Rot bruyant (niveau 2)

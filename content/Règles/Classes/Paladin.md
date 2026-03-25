@@ -15,8 +15,6 @@ L'équipement d'un Paladin est :
 Vous pouvez dépenser un dé de votre réserve de magie pour transformer n'importe quel résultat obtenu lors d'un test de compétence ou  d'attaque pour le transformer en 6 explosif.
 ##### Sacrifice
 Vous pouvez dépenser votre réaction pour devenir la cible d'une attaque dirigée contre une créature alliée à 6m ou moins. La portée et la vision restent calculées vers votre allié.
-##### Condamnation
-Lorsque vous réussissez à infliger une blessure en mêlée, placez un marqueur Condamnation sur la cible. La prochaine fois qu'elle subit une attaque, l'attaquant gagne 1d6 sur son jet d'attaque.
 ##### Vœux
 Lorsque vous créez un paladin, vous devez choisir une [[Règles/Divinités|Divinité]] à laquelle vous jurez fidélité, et le  vœu que vous souhaitez prononcer. une fois par jour, vous pouvez faire une offrande d'une valeur totale de 100 florins pour utiliser une fraction de leurs pouvoirs. Vous trouverez ci-dessous quelques exemples de vœux:  
 **Vœu de Justice** : *Vous avez juré de luter pour la justice*.  
@@ -34,15 +32,15 @@ Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez u
 |       **1**        |          1          |           4d6           |
 |       **2**        |          1          |           4d6           |
 |       **3**        |          1          |           4d6           |
-|       **4**        |          1          |           4d6           |
-|       **5**        |          1          |           5d6           |
+|       **4**        |          1          |           5d6           |
+|       **5**        |          2          |           5d6           |
 |       **6**        |          2          |           5d6           |
 |       **7**        |          2          |           5d6           |
-|       **8**        |          2          |           5d6           |
-|       **9**        |          2          |           6d6           |
-|       **10**       |          2          |           6d6           |
+|       **8**        |          2          |           6d6           |
+|       **9**        |          3          |           6d6           |
+|       **10**       |          3          |           6d6           |
 |       **11**       |          3          |           6d6           |
-|       **12**       |          3          |           6d6           |
+|       **12**       |          3          |           7d6           |
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
