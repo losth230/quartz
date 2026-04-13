@@ -14,14 +14,12 @@ L'équipement d'un Cuisinier est :
 - **Argent de départ** : 200 Florins.
 ##### Nourriture savoureuse
 Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier 1 + un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
-##### Coup de fourchette
-Lorsque vous réussissez une attaque en mêlée, votre cible souffre d'un malus de -1d6 ses ses jets d'attaque en mêlée et à distance pour le reste du tour.
 ##### Chef de service
 Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin, Domaine Primordial.
+Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin, Domaine Primordial ou votre Domaine de Race.
 
 | Niveaux de Cuisinier | Niveau de sorts max | Reserve de Dés de magie |
 | :------------------: | :-----------------: | :---------------------: |
@@ -67,7 +65,7 @@ Mêlée, 3d6, Anti-infanterie, Lancer.
 ##### Rôtissage brutal (niveau 2)
 A partir du niveau 2, si une de vos attaques obtient au moins une blessure, déclencher l'attribut de domaine d'un de vos domaine de magie.
 ##### Fumet Intimidant (niveau 5)
-Vos attaques avec des armes improvisées gagnent la règle Attaques enflammées.
+Vos attaques avec des armes improvisées gagnent +2d6 (total 5d6, Anti-infanterie, Lancer).
 ##### Tranche chair (niveau 8)
 Vos attaques avec une arme de cuisine infligent un marqueur *Saignement* en plus de leurs effets habituels.
 ##### Assiette de plomb (niveau 11)

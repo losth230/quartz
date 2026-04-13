@@ -98,9 +98,8 @@ ___
 ##### Postures (Niveau 2)
 Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
 **Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous entrer en posture de l'Aube après a voir changé votre posture pour la suivante.  
-**Posture du Zéphyr** : lorsque vous tenez cette posture, vous possédez +1 Vitesse et ignorez les  *[[Règles/Règles#États Spéciaux|ralentissements]]*  et  *[[Règles/Règles#États Spéciaux|immobilisations]]*.  
-**Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Roc. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Roc.  
-**Posture du du Roc** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
+**Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Aurore. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Aurore.  
+**Posture de l'Aurore** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
 ##### Posture de l'Etoile (Niveau 2)
 Si vous parvenez à changer 2 fois de posture en 1 seul tour, vous entrez en posture de L'Etoile.  
 **Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
@@ -109,9 +108,8 @@ Si vous changez de posture pendant un tour, vous pouvez immédiatement effectuer
 ##### Stabilité (niveau 8)
 Vos postures s'améliorent comme suit :
 **Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée (total +2d6 en mêlée).  
-**Posture du Zéphyr** : +1 Vitesse supplémentaire (total +2 Vitesse).  
 **Posture du Crépuscule** : votre riposte s'effectue avec 1d6 supplémentaire.  
-**Posture du du Roc** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
+**Posture de l'aurore** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
 **Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]* à votre cible.  
 ##### Coup de grâce (niveau 11)
 A partir du niveau 11, votre posture du Crépuscule vous permet de riposter contre les attaques à distance, sans limite de portée.  

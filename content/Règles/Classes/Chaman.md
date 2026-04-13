@@ -19,7 +19,7 @@ Une fois par jour, vous pouvez avec les esprits au prix d'une action longue et l
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deux domaines parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre.
+Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez trois domaines parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre ou votre Domaine de Race.
 
 | Niveaux de Chaman | Niveau de sorts max | Réserve de Dés de magie |
 | :---------------: | :-----------------: | :---------------------: |
@@ -60,7 +60,7 @@ Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine éléme
 <center><h2>Élémentaire</h2> </center>
 
 ##### Frappe élémentaire (niveau 2)
-A partir du niveau 2, vos attaques en mêlée deviennent magiques.
+A partir du niveau 2, vous pouvez lancer des sorts en mêlée.
 ##### Réceptacle élémentaire (niveau 2)
 A partir du niveau 2, vous pouvez offrir votre corps à un esprit élémentaire et ainsi devenir son réceptacle. Les effets liés dépendent du type de l'élémentaire :
 - élémentaire de feu : vous êtes immunisé aux attaques enflammées et gagnez la règle spéciale attaques enflammées sur toutes vos attaques en mêlée.
@@ -68,7 +68,7 @@ A partir du niveau 2, vous pouvez offrir votre corps à un esprit élémentaire 
 - élémentaire de terre : votre armure augmente de 1 et vous recevez Egide (1) à chaque sort que vous lancez.
 - élémentaire de foudre : votre vitesse augmente de 1, vos attaques en mêlée bénéficient de force dévastatrice (1).
 ##### Harmonie (niveau 5)
-A partir du niveau 5, lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
+A partir du niveau 5, vos attaques en mêlée deviennent magiques. Lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
 ##### Absorption élémentaire (niveau 8)
 Lorsque vous attaquez, vous pouvez dépenser les marqueurs *enflammés* ou *gelé* de votre cible pour lui infliger autant de dégâts.
 ##### Mande - Eléments (niveau 11)
