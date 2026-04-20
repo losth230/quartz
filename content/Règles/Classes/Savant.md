@@ -23,6 +23,9 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ## Niveaux 3, 6, 9 :
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
+## Niveau 4 : 
+##### Rat de bibliothèque 
+A partir du niveau 4, lorsque vous aidez ou vous faite aidez par lors d'un test de compétence, vous ou la créature que vous aidez bénéficie de +3d6 au lieu de +2d6
 ## Niveaux 7, 12
 ##### Connaissances avancées
 Lorsque vous atteignez le niveau 4 et le niveau 10, vous pouvez gagner 1 niveau dans la compétence de votre choix.
