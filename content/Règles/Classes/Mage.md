@@ -7,7 +7,7 @@ Les Mages peuvent être de n'importe quelle **race** (Humain, Elfe, Nain, etc.),
 Les caractéristiques de base en combat d'un Mage sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
+- **PV** : 4 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.

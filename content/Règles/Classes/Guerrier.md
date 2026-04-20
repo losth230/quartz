@@ -7,7 +7,7 @@ Les Guerriers peuvent être de n'importe quelle **[[Règles/Race|race]]** (Humai
 Les caractéristiques de base en combat d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 6 + niveau de [[Règles/Règles#Physique :|Résistance]].
+- **PV** : 6 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 L'[[Règles/Equipements/|équipement]] d'un Guerrier est :
 - **Maitrises** : Armures complètes.

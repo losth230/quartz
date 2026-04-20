@@ -9,7 +9,7 @@ Lorsque vous créez un Voleur, choisissez :
 Les caractéristiques de base en combat d'un Voleur sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4 + niveau de [[Règles#Physique :|Résistance]].
+- **PV** : 4 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Voleur est :
 - **Maitrises** : Armures partielles.

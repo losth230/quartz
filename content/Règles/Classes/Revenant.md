@@ -9,7 +9,7 @@ Lorsque vous créez un Revenant, choisissez :
 Les caractéristiques de base d'un Revenant sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 6 + niveau de [[Règles#Physique :|Résistance]].
+- **PV** : 6 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Revenant est :
 - **Maitrises** : Armures partielles.

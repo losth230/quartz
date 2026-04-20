@@ -6,7 +6,7 @@ Le **Paladin** est un chevalier saint, alliant puissance martiale et lumière sa
 Les caractéristiques de base d’un Paladin sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 6
+- **PV** : 6+  niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Paladin est :
 - **Maitrises** : Armures complètes.
