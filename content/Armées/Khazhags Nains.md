@@ -93,11 +93,11 @@ _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (
 
 **Mêlée : 6d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Hache de Hÿdja : Borgrimm gagne un montant de d6 égal à la masse de l’unité la plus élevée contre laquelle il effectue une attaque en mêlée.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - La mort honorable : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.
     
@@ -110,22 +110,22 @@ _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (
 
 ### Gortrek l’Abatteur <small>(52 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Gortrek|**4**|**2**|**4+**|**4+**|**3+**|**9**|**4**|**2**|**5**|Nain, Mine|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Gortrek|**4**|**4+**|**4+**|**3+**|**9**|**4**|**2**|**5**|Nain, Mine|
 
 _Motivant, Tireur d'élite._
 
 **Mêlée : 2d6 · Tir : 6d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Lance – torpilles : Portée (C : 9’’, L :12’’), Anti-large, Perforant (3).
     
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, Anti-infanterie, Perforant (1).
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Chef de la brigade anti nuisibles : à la fin de chaque tour, Gortrek peut donner une dynamite à percussions à un modèle ami à 9’’ ou moins ou à lui-même.
     
@@ -144,11 +144,11 @@ _Tireur d'élite._
 
 **Mêlée : 2d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Fusil long : Portée (C : 15’’, L : 21’’), Perforant (1), Tir long.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Aller plus vite : chaque fois qu’un modèle ami Forge à 9’’ ou moins, désignez une Machine à 9’’ ou moins et déclencher sa surcharge.
 
@@ -165,11 +165,11 @@ _Egide (1), Force dévastatrice (2), Charge dévastatrice, Indomptable / Force d
 
 **Mêlée : 8d6/4d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Annuaire des rancunes : Au début de chaque tour, désignez un modèle ennemi. S’il est tué avant la fin du tour, vous générez 3 Manœuvres supplémentaires au prochain tour.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Rancunier : le Haut-Roi bénéficie à la fois des rancunes de Vengeance et de Protection si vous les avez débloqués.
     
@@ -193,22 +193,22 @@ _Cavalerie, Force dévastatrice (1) /._
 
 ### Vieux Sage <small>(32 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Sage|**4**|**2**|**4+**|**-**|**4+**|**8**|**2**|**2**|**4**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Sage|**4**|**4+**|**-**|**4+**|**8**|**2**|**2**|**4**|Nain|
 
 _Anti-infanterie, Force dévastatrice (1), Maitre-lame, Motivant._
 
 **Mêlée : 3d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Bouclier (+4 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
     
 - Arme lourde (+6 pts) : confère Force dévastatrice (+1).
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Ruse du Vieux Sage (1) : utilisable une seule fois par tour après avoir été ciblé par une attaque en mêlée, votre adversaire doit relancer tous ses jets réussis.
 
@@ -216,22 +216,22 @@ _Anti-infanterie, Force dévastatrice (1), Maitre-lame, Motivant._
 
 ### Prospecteur <small>(30 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Prospecteur|**4**|**1**|**4+**|**4+**|**4+**|**8**|**3**|**2**|**4**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Prospecteur|**4**|**4+**|**4+**|**4+**|**8**|**3**|**2**|**4**|Nain|
 
 _Tireur d’élite._
 
 **Mêlée : 2d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Pistolet lourd : Portée (C : 9’’, L : 15’’), Perforant (1).
     
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, Anti-infanterie, Perforant (1).
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Excavation des ruines : à la fin de chaque tour, Forge.
 
@@ -239,22 +239,22 @@ _Tireur d’élite._
 
 ### Vor’ Jin l’excavateur <small>(38 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Vor’ Jin|**5**|**3**|**4+**|**3+**|**4+**|**8**|**3**|**2**|**4**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Vor’ Jin|**5**|**4+**|**3+**|**4+**|**8**|**3**|**2**|**4**|Nain|
 
 _Avant-garde, Tireur d'élite._
 
 **Mêlée : 2d6 · Tir : 4d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Fusil : Portée (C : 12’’, L : 18’’), Perforant (1), Tir long.
     
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, Anti-infanterie, Perforant (1).
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Plus vite ! : au début de chaque tour, désignez un modèle à 12’’ ou moins avec une règle se déclenchant en début ou fin de tour et déclenchez-là gratuitement.
 
@@ -265,22 +265,22 @@ _Avant-garde, Tireur d'élite._
 
 ### Autogyre <small>(27 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Autogyre|**6**|**4**|**6+**|**4+**|**5+**|**7**|**3**|**3**|**4**|Nain, Machine|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Autogyre|**6**|**6+**|**4+**|**5+**|**7**|**3**|**3**|**4**|Nain, Machine|
 
 _Vol._
 
 **Mêlée : 1d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Canon long : Portée 15’’.
     
 - Canon à percussion : Portée 9’’, Anti-infanterie.
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Bombardement : utilisable une seule fois par partie. Les bombes peuvent être lâchées sur un modèle survolé par l’Autogyre au cours d’un mouvement, réalisez alors une attaque de tir selon la règle suivante : 3d6, Anti-infanterie, Perforant (1).
     
@@ -295,15 +295,15 @@ _Vol._
 
 ### Arquebusier <small>(14 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Arquebusier|**4**|**2**|**5+**|**4+**|**5+**|**7**|**2**|**2**|**1**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Arquebusier|**4**|**5+**|**4+**|**5+**|**7**|**2**|**2**|**1**|Nain|
 
 _Tireur d’élite._
 
 **Mêlée : 2d6 · Tir : 2d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Arquebuse : Portée (C : 12’’, L : 18’’), Perforant (1), Tir long.
 
@@ -311,15 +311,15 @@ _Tireur d’élite._
 
 ### Brise fer <small>(18 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Brise fer|**4**|**2**|**4+**|**4+**|**3+**|**9**|**2**|**2**|**2**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Brise fer|**4**|**4+**|**4+**|**3+**|**9**|**2**|**2**|**2**|Nain|
 
 _Indomptable._
 
 **Mêlée : 3d6 · Tir : 2d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Armure forgés d’adamantium (+2 pts) : ce modèle est immunisé à la règle spéciale Attaques enflammées.
     
@@ -330,7 +330,7 @@ _Indomptable._
 - Lance – flammes (+4 pts) : Portée (C : 4’’, L : 8’’), Anti-infanterie, Attaques enflammées, Souffle.
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Surcharge (1) : ajoutez 2’’ et Perforant (1) au prochain tir de cette unité, puis marquez-là fatiguée.
 
@@ -338,15 +338,15 @@ _Indomptable._
 
 ### Cabochard <small>(14 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Cabochard|**5**|**6**|**3+**|**4+**|**6+**|**9**|**2**|**2**|**2**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Cabochard|**5**|**3+**|**4+**|**6+**|**9**|**2**|**2**|**2**|Nain|
 
 _Maitre-lame._
 
 **Mêlée : 3d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Hache de jet (+1pts) : Portée (C : 8’’).
     
@@ -357,7 +357,7 @@ _Maitre-lame._
 - Bénédiction des flammes (+1 pts) : les modèles touchés par une attaque en mêlée de ce modèle perdent leur potentielle règle Régénération et ne peuvent être soignée pour le reste du tour.
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - La mort honorable : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.
 
@@ -365,23 +365,23 @@ _Maitre-lame._
 
 ### Eperon d’argent <small>(28 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Eperon|**-**|**2**|**4+**|**-**|**4+**|**9**|**3**|**2**|**2**|Nain|
-|Bélier|**5**|**1**|**4+**|**-**|**-**|**-**|**-**|**-**|**-**|Bête|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Eperon|**-**|**4+**|**-**|**4+**|**9**|**3**|**2**|**2**|Nain|
+|Bélier|**5**|**4+**|**-**|**-**|**-**|**-**|**-**|**-**|Bête|
 
 _Avant-garde / Charge dévastatrice (1), Force dévastatrice (1)._
 
 **Mêlée : 2d6 / 2d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
     
 - Lance de cavalerie (+1 pts) : +1d8 en mêlée.
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Par ici : au début de chaque tour, désignez un modèle ami à 9’’ ou moins qui effectue un mouvement d’une distance égale au nombre d’unité d’Eperon d’argent dans votre modèle. Vous ne pouvez utiliser cette règle sur un modèle d’Eperon d’argent.
     
@@ -392,19 +392,19 @@ _Avant-garde / Charge dévastatrice (1), Force dévastatrice (1)._
 
 ### Garde royal <small>(26 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Martelier|**4**|**2**|**3+**|**-**|**4+**|**8**|**2**|**2**|**2**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Martelier|**4**|**3+**|**-**|**4+**|**8**|**2**|**2**|**2**|Nain|
 
 _Charge dévastatrice, Egide (1), Force dévastatrice (2), Indomptable._
 
 **Mêlée : 4d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Runes d'antimagie (+1 pts) : si ce modèle est ciblé par une attaque à distance de sort, son armure passe à 3+ le temps du sort et ne peut être modifiée d'aucune façon.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Dernier Défenseur : Si cette unité se retrouve à 9’’ ou moins d’un Commandant (ami, allié ou ennemi), elle gagne +1d6 en mêlée.
 
@@ -412,13 +412,13 @@ _Charge dévastatrice, Egide (1), Force dévastatrice (2), Indomptable._
 
 ### Guerrier du clan <small>(6 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Guerrier|**4**|**2**|**5+**|**4+**|**5+**|**6**|**1**|**2**|**1**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Guerrier|**4**|**5+**|**4+**|**5+**|**6**|**1**|**2**|**1**|Nain|
 
 **Mêlée : 2d6 · Tir : 1d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Bouclier (+1 pts) : l’armure de cette unité devient 4+.
     
@@ -437,14 +437,14 @@ _Charge dévastatrice, Egide (1), Force dévastatrice (2), Indomptable._
 
 **Mêlée : 2d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Bouclier (+2 pts) : l’armure de cette unité devient 4+.
     
 - Arme lourde (+3 pts) : confère Force dévastatrice (+1).
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - C’était mieux avant : cette unité n’a jamais à effectuer de jet de Panique et ne souffre jamais de malus au moral.
 
@@ -452,15 +452,15 @@ _Charge dévastatrice, Egide (1), Force dévastatrice (2), Indomptable._
 
 ### Martelier <small>(17 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Martelier|**4**|**2**|**3+**|**-**|**4+**|**8**|**2**|**2**|**2**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Martelier|**4**|**3+**|**-**|**4+**|**8**|**2**|**2**|**2**|Nain|
 
 _Charge dévastatrice, Force dévastatrice (1)._
 
 **Mêlée : 3d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Runes d'antimagie (+1 pts) : si ce modèle est ciblé par une attaque à distance de sort, son armure passe à 3+ le temps du sort et ne peut être modifiée d'aucune façon.
 
@@ -468,15 +468,15 @@ _Charge dévastatrice, Force dévastatrice (1)._
 
 ### Mineur <small>(11 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Mineur|**4**|**2**|**4+**|**5+**|**5+**|**6**|**1**|**2**|**1**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Mineur|**4**|**4+**|**5+**|**5+**|**6**|**1**|**2**|**1**|Nain|
 
 _Force dévastatrice (1)._
 
 **Mêlée : 2d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Dynamite (+3 pts) : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 3d6, Anti-infanterie, Perforant (1).
     
@@ -485,7 +485,7 @@ _Force dévastatrice (1)._
 - Instrument de géomètre (+3 pts) : ce modèle n’est pas marqué activé quand il réalise une Progression souterraine, mais ne peut être activé via une action anticipée.
     
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse. Marquez-le ensuite activé.
 
@@ -493,15 +493,15 @@ _Force dévastatrice (1)._
 
 ### Ranger <small>(15 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Ranger|**5**|**2**|**4+**|**3+**|**5+**|**7**|**2**|**2**|**2**|Nain|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Ranger|**5**|**4+**|**3+**|**5+**|**7**|**2**|**2**|**2**|Nain|
 
 _Avant-garde._
 
 **Mêlée : 2d6 · Tir : 2d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Arbalète légère : Portée (C : 9’’, L : 15’’).
 
@@ -512,19 +512,19 @@ _Avant-garde._
 
 ### Autobombardier <small>(38 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Autobombardier|**6**|**4**|**6+**|**4+**|**5+**|**7**|**5**|**3**|**4**|Nain, Machine|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Autobombardier|**6**|**6+**|**4+**|**5+**|**7**|**5**|**3**|**4**|Nain, Machine|
 
 _Vol._
 
 **Mêlée : 1d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Canon : Portée (C : 12’’).
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Bombardement massif : les bombes peuvent être lâchées sur une unité survolée par le Gyrocoptère au cours d’un mouvement avec la règle suivante : 5d6, Anti-infanterie, Perforant (1).
     
@@ -545,7 +545,7 @@ _Force dévastatrice (1)._
 
 **Mêlée : 2d6 · Tir : 2d6**
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Renforcement : au prix d’une action courte, vous pouvez renforcer un modèle Nain ami à 6’’ ou moins avec l’une des améliorations suivantes :
     
@@ -564,11 +564,11 @@ _Force dévastatrice (1)._
 
 **Mêlée : 1d6 · Tir : 3d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Canon : Portée (C : 15’’, L : 24’’) Anti-large, Perforant (2), Tir long.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Surcharge (1) : ajoutez 1d6 et Perforant (1) au prochain tir de ce modèle, puis marquez-là fatiguée.
     
@@ -585,11 +585,11 @@ _Force dévastatrice (1)._
 
 **Mêlée : 2d6 · Tir : 2d6**
 
-**⚔ Équipement**
+**Équipement**
 
 - Canon à flammes : Portée (C : 9’’, L : 15’’), Attaques enflammées, Souffle.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Surcharge (1) : ajoutez 1d6 au prochain tir de ce modèle, puis marquez-le fatiguée.
 
@@ -597,17 +597,17 @@ _Force dévastatrice (1)._
 
 ### Canon à mitraille <small>(39 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Canon|**4**|**1**|**6+**|**4+**|**5+**|**7**|**3**|**2**|**4**|Machine|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Canon|**4**|**6+**|**4+**|**5+**|**7**|**3**|**2**|**4**|Machine|
 
 **Mêlée : 1d6 · Tir : voir ci-dessous**
 
-**⚔ Équipement**
+**Équipement**
 
 - Canon à mitraille : Portée (C : 9’’, L : 15’’), Anti-infanterie, Perforant (1), Tir long.
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Canon à mitraille : lorsque cette unité effectue une attaque de tir, jetez 2d6, il s’agit du nombre de tirs qu’elle effectue. Si vous obtenez au moins deux résultats de 6, le canon s’enraille et ne tire pas.
     
@@ -626,7 +626,7 @@ _Force dévastatrice (1)._
 
 **Mêlée : 2d6 · Tir : 3d6**
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer Force dévastatrice (+1) ou Perforant (+1), non cumulable.
     
@@ -647,7 +647,7 @@ _Force dévastatrice (1)._
 
 **Mêlée : 2d6 · Tir : -**
 
-**⚔ Équipement**
+**Équipement**
 
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
     
@@ -662,15 +662,15 @@ _Force dévastatrice (1)._
 
 ### Avatar <small>(64 pts)</small>
 
-||**Vit**|**Ini**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|---|
-|Avatar|**5**|**1**|**4+**|**4+**|**3+**|**6+**|**8**|**5**|**6**|Machine|
+||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Avatar|**5**|**4+**|**4+**|**3+**|**6+**|**8**|**5**|**6**|Machine|
 
 _Force dévastatrice (2)._
 
 **Mêlée : 8d6 · Tir : -**
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Avatar enfoui : l’avatar n’est pas jouable tant qu’il n’a pas été forgé trois fois.
     
@@ -687,7 +687,7 @@ _Force dévastatrice (2)._
 
 **Mêlée : - · Tir : -**
 
-**✦ Règles spéciales**
+**Règles spéciales**
 
 - Financer la guerre : si un modèle nain est présent à 6’’ ou moins au début du tour, générez 1 Manœuvre. S’il s’agit d’un mineur, générez 1 Manœuvre supplémentaire.
     

@@ -1,3 +1,13 @@
-@use "./base.scss";
+/* Tables : scroll horizontal + taille réduite */
+.quartz-body table {
+  display: block;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-size: 0.85em;
+  width: 100%;
+}
 
-// put your custom CSS here!
+.quartz-body table th,
+.quartz-body table td {
+  padding: 4px 8px;
+}
