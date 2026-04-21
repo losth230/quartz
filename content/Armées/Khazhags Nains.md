@@ -1,29 +1,18 @@
 <center><h2>Règles de Faction</h2></center>
 
 #### Rancunes :
-
 Les nains n’oublient jamais une rancune envers un ennemi, et celle-ci ressurgit lorsqu’ils ont l’opportunité d’enfin affronter cet adversaire. La nature de la rancune dépend de la première unité morte d’une bataille : s’il s’agit d’une unité amie, les nains ont une rancune de Vengeance, s’il s’agit d’une unité ennemie, ils ont une rance de Protection.
-
 #### Rancune de Vengeance :
-
 - **Rang I (à la première unité amie tuée) :** toute votre armée peut relancer ses jets de touche ayant obtenu 1.
 - **Rang II (Si votre armée est en déroute) :** Toute votre armée peut relancer tous ses jets de touche ratés.
-
 #### Rancune de Protection :
-
 - **Rang I (à la première unité ennemie tuée) :** toute votre armée peut relancer ses jets d’armure ayant obtenu 1.
 - **Rang II (Si l’armée ennemie est en déroute) :** Toute votre armée peut relancer tous ses jets d’armure ratés.
-
 #### Être de Pierre :
-
 Lorsqu’un modèle Nain est affecté par un sort (ami, allié ou ennemi), jetez un dé, sur 5+ le sort n’a aucun effet.
-
 Vous ne pouvez cependant pas lancer de sorts : la magie c’est pour les faibles (ou ces connards d’elfes).
-
 #### Mur de Boucliers :
-
 La première fois qu’un modèle Nain est attaqué en mêlée sur son arc avant par un nouveau modèle ennemi, il bénéficie d’un bonus de +1 à son jet d’armure.
-
 #### Forge :
 
 Lorsqu’un modèle Nain Forge, désignez un modèle Artéfact à 12’’ ou moins et ajoutez-lui un marqueur Forge.
@@ -33,49 +22,32 @@ Lorsqu’un modèle Nain Forge, désignez un modèle Artéfact à 12’’ ou mo
 <center><h2>Manœuvres Naines</h2></center>
 
 Les nains sont réputés pour leur ténacité légendaire, mais également pour obéissance et leur discipline. Pour refléter ceci, ils ont accès à de nouvelles Manœuvres uniques :
-
 - **Frappe Foudroyante (4) :** à utiliser en début de tour, désignez jusqu’à 3 modèles amis. Ces modèles peuvent effectuer une activation complète avant le début du tour et ne sont pas marqués Activés.
-    
 - **Excavation ! (3) :** à utiliser en début de tour, retirez un modèle ami non engagé en mêlée ni en déroute de la table et remplacez-le par un marqueur pour vous souvenir de sa position. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse et 15’’ ou moins de son précédent emplacement. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée).
-    
 - **Garder le trésor (2) :** utilisable uniquement par un modèle contrôlant un objectif et remplace l’ajout de dé bonus lors de jets d’attaque ou de jets d’armure. Pour le reste du tour le modèle bénéficie d’un bonus de +1 à ses jets d’attaque et d’armure.
-    
 
 ---
 
 <center><h2>Runes Naines</h2></center>
 
 Lors de la création d’une armée Naines, vous pouvez runez vos modèles. Chaque modèle ne peut être runé qu’une seule fois et chaque rune ne peut être allouée qu’à un seul modèle.
-
 - **Rune de vitesse (+2 pts/Ma) :** l’unité bénéficie de +2 Vit mais son armure est réduite de 1 (une valeur de 4+ devient donc 5+).
-    
 - **Rune de vent (+4 pts, machine uniquement)** : la portée des tirs est augmentée de 3’’.
-    
 - **Rune de précision (+2 pts/Ma)** : l’unité bénéficie d'un bonus de +1 à ses jets de touche sur ses attaques à distance mais sa portée de tir est réduite de 3’’.
-    
-- **Rune de parfaite vigueur (+2 pts/Ma) **: si au début de tour l’unité est marquée fatiguée, retirez sa fatigue. L’unité souffre d’un malus de -1 Vit.
-    
-- **Rune de rage (+1 pts/Ma) **: L’unité bénéficie d’un bonus de +1d6 en mêlée mais son armure est réduite de 1 (une valeur de 4+ devient donc 5+).
-    
-- **Rune explosive (+5 pts, machine uniquement) **: si la machine est détruite, désignez un modèle ennemi à 3’’ ou moins qui subit 5d6 touches.
-    
+- **Rune de parfaite vigueur (+2 pts/Ma)**: si au début de tour l’unité est marquée fatiguée, retirez sa fatigue. L’unité souffre d’un malus de -1 Vit.
+- **Rune de rage (+1 pts/Ma)** : L’unité bénéficie d’un bonus de +1d6 en mêlée mais son armure est réduite de 1 (une valeur de 4+ devient donc 5+).
+- **Rune explosive (+5 pts, machine uniquement)** : si la machine est détruite, désignez un modèle ennemi à 3’’ ou moins qui subit 5d6 touches.
 
 ---
 
 <center><h2>Grandes Bannières</h2></center>
 
 Les grandes bannières se réunissent autour des grandes bannières de leurs clans, voici les grandes bannières possibles :
-
 - **Bannière du clan (10 pts) :** Les modèles amis à 12’’ ou moins de cette grande bannière bénéficient de +1 à leurs jets de moral.
-    
 - **Bannière d’hardiesse (10 pts) :** Les modèles amis à 12’’ ou moins de cette grande bannière n’ont pas à effectuer de test de déroute.
-    
 - **Bannière d’antimagie (15 pts) :** La règle êtres de pierre des modèles amis à 12’’ ou moins de cette grande bannière se déclenche sur 4+ au lieu de 5+.
-    
 - **Bannières Feu-de-Forge (20 pts) :** Les modèles adverses à 8’’ ou moins ne peuvent récupérer de PV.
-    
 - **Etendard de patiente (20 pts) :** chaque fois qu’un évènement de fin de tour se déclenche, mettez une Manœuvre de côté pour le prochain tour.
-    
 
 ---
 
@@ -83,54 +55,37 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 ---
 
-### Borgrimm <small>(66 pts)</small>
+### Borgrimm (66 pts)
 
 ||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Borgrim|**5**|**3+**|**-**|**5+**|**10**|**6**|**2**|**6**|Nain|
 
 _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (1), Indomptable, Maitre-lame._
-
 **Mêlée : 6d6 · Tir : -**
-
 **Équipement**
-
 - Hache de Hÿdja : Borgrimm gagne un montant de d6 égal à la masse de l’unité la plus élevée contre laquelle il effectue une attaque en mêlée.
-
 **Règles spéciales**
-
 - La mort honorable : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.
-    
 - L’heure de mourir : lors de la création de votre bande, désignez un modèle ami avec la règle spéciale La mort honorable et conférez lui Avant-garde.
-    
 - Cape en cuir de Magmadon : Borgrimm ne peut perdre de PV lié à des marqueurs _enflammé_.
-    
 
 ---
 
-### Gortrek l’Abatteur <small>(52 pts)</small>
+### Gortrek l’Abatteur (52 pts)
 
 ||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gortrek|**4**|**4+**|**4+**|**3+**|**9**|**4**|**2**|**5**|Nain, Mine|
 
 _Motivant, Tireur d'élite._
-
 **Mêlée : 2d6 · Tir : 6d6**
-
 **Équipement**
-
 - Lance – torpilles : Portée (C : 9’’, L :12’’), Anti-large, Perforant (3).
-    
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, Anti-infanterie, Perforant (1).
-    
-
 **Règles spéciales**
-
 - Chef de la brigade anti nuisibles : à la fin de chaque tour, Gortrek peut donner une dynamite à percussions à un modèle ami à 9’’ ou moins ou à lui-même.
-    
 - Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée).
-    
 
 ---
 
