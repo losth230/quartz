@@ -56,6 +56,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Borgrim|**5**|**3+**|**-**|**5+**|**10**|**6**|**2**|**6**|Nain|
+|**Mêlée**|2d6||**Tir**|6d6||||||
 
 _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (1), Indomptable, Maitre-lame._
 ##### Mêlée : 6d6 · Tir : -
@@ -73,6 +74,7 @@ _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (
 ||**Vit**|**Me**|**Tir**|**Ar**|**Mo**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gortrek|**4**|**4+**|**4+**|**3+**|**9**|**4**|**2**|**5**|Nain, Mine|
+|**Mêlée**|2d6||**Tir**|6d6||||||
 
 _Motivant, Tireur d'élite._ **Mêlée : 2d6 · Tir : 6d6** **Équipement**
 
