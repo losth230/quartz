@@ -60,7 +60,8 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 _Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (1), Indomptable, Maitre-lame._
 **Mêlée : 6d6 · Tir : -**  
 **Équipement :**  
-- Hache de Hÿdja : Borgrimm gagne un montant de d6 égal à la masse de l’unité la plus élevée contre laquelle il effectue une attaque en mêlée. **Règles spéciales**
+- Hache de Hÿdja : Borgrimm gagne un montant de d6 égal à la masse de l’unité la plus élevée contre laquelle il effectue une attaque en mêlée.
+**Règles spéciales :**  
 - La mort honorable : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.
 - L’heure de mourir : lors de la création de votre bande, désignez un modèle ami avec la règle spéciale La mort honorable et conférez lui Avant-garde.
 - Cape en cuir de Magmadon : Borgrimm ne peut perdre de PV lié à des marqueurs _enflammé_.
