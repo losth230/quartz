@@ -160,9 +160,8 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, Anti-infanterie, Perforant (1).
 ##### Règles spéciales :
 - Plus vite ! : au début de chaque tour, désignez un modèle à 12’’ ou moins avec une règle se déclenchant en début ou fin de tour et déclenchez-là gratuitement.
-
-| Modèles de base |
-|-----------------|
+---
+## Modèles de base
 
 ---
 ### Autogyre — 27 pts
@@ -316,8 +315,8 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Équipement :
 - Arbalète légère : Portée (C : 9’’, L : 15’’).
 
-| Modèles de soutient |
-|---------------------|
+---
+## Modèles de soutient
 
 ---
 ### Autobombardier — 38 pts
@@ -411,8 +410,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
 - Grande bannière : ce modèle peut posséder une grande bannière.
 ---
-
-<center><h2>Modèles Spéciaux</h2></center>
+## Modèles Spéciaux
 
 ---
 ### Avatar — 64 pts
