@@ -1,1 +1,10 @@
 @use "./base.scss";
+
+.table-container > table {
+  font-size: 0.75em;   // était 0.82em, descends jusqu'à 0.7em si besoin
+}
+
+.table-container > table th,
+.table-container > table td {
+  padding: 3px 5px;    // était 3px 8px, tu peux descendre à 3px 3px
+}
