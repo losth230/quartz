@@ -48,9 +48,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - **Etendard de patiente (20 pts) :** chaque fois qu’un évènement de fin de tour se déclenche, mettez une Manœuvre de côté pour le prochain tour.
 ---
 
-<center>
-## Commandants
-</center>
+## <center><h2>Commandants</h2></center>
 
 ---
 ### Borgrimm — 66 pts
