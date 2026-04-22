@@ -4,7 +4,7 @@
 #### Rancunes :
 Les nains n’oublient jamais une rancune envers un ennemi, et celle-ci ressurgit lorsqu’ils ont l’opportunité d’enfin affronter cet adversaire. La nature de la rancune dépend de la première unité morte d’une bataille : s’il s’agit d’une unité amie, les nains ont une rancune de Vengeance, s’il s’agit d’une unité ennemie, ils ont une rance de Protection.
 #### Rancune de Vengeance :
-- **Rang I (à la première unité amie tuée) :** toute votre armée peut relancer ses jets de touche ayant obtenu 1.
+- **Rang I (à la première unité amie tuée) :** toute votre armée peut relancer ses jets de touche ayant obtenu 1.  
 - **Rang II (Si votre armée est en déroute) :** Toute votre armée peut relancer tous ses jets de touche ratés.
 #### Rancune de Protection :
 - **Rang I (à la première unité ennemie tuée) :** toute votre armée peut relancer ses jets d’armure ayant obtenu 1.
