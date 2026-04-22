@@ -29,7 +29,7 @@ Les nains sont réputés pour leur ténacité légendaire, mais également pour 
 
 <center><h2>Runes Naines</h2></center>
 
-Lors de la création d’une armée Naines, vous pouvez runez vos modèles. Chaque modèle ne peut être runé qu’une seule fois et chaque rune ne peut être allouée qu’à un seul modèle.
+Lors de la création d’une armée Naines, vous pouvez runez vos modèles. Chaque modèle ne peut porter qu’une seule fois et chaque rune ne peut être allouée qu’à un seul modèle.
 - **Rune de vitesse (+2 pts/Ma) :** l’unité bénéficie de +2 Vit mais son armure est réduite de 1 (une valeur de 4+ devient donc 5+).
 - **Rune de vent (+4 pts, machine uniquement)** : la portée des tirs est augmentée de 3’’.
 - **Rune de précision (+2 pts/Ma)** : l’unité bénéficie d'un bonus de +1 à ses jets de touche sur ses attaques à distance mais sa portée de tir est réduite de 3’’.
