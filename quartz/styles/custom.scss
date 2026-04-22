@@ -6,7 +6,8 @@
 
 .table-container > table th,
 .table-container > table td {
-  padding: 0px 0px;    // était 3px 8px, tu peux descendre à 3px 3px
+  padding: 2px 4px;
+  min-width: 40 px;
 }
 
 article h2 {
