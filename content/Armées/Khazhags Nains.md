@@ -52,10 +52,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Borgrimm — 66 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Borgrim | **5** | **3+** | **-** | **5+** | **10** | **6** | **2** | **6** | Nain |
-| **Mêlée :** | 6d6 |  | **Tir :** | - |  |  |  |  |  |
+| 🟥🟥🟥      | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Borgrim     | **5**   | **3+** | **-**     | **5+** | **10** | **6**  | **2**  | **6**  | Nain     |
+| **Mêlée :** | 6d6     |        | **Tir :** | -      |        |        |        |        |          |
 
 *Anti-large, Attaques enflammées, Avant-garde, Egide (1), Force dévastatrice (1), Indomptable, Maitre-lame.*
 ##### Équipement :
@@ -67,10 +67,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Gortrek l’Abatteur — 52 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Gortrek | **4** | **4+** | **4+** | **3+** | **9** | **4** | **2** | **5** | Nain, Mine |
-| **Mêlée :** | 2d6 |  | **Tir :** | 6d6 |  |  |  |  |  |
+| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type**   |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ---------- |
+| Gortrek     | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **5**  | Nain, Mine |
+| **Mêlée :** | 2d6     |        | **Tir :** | 6d6    |        |        |        |        |            |
 
 *Motivant, Tireur d'élite.*
 ##### Équipement :
@@ -82,10 +82,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Grand ingénieur — 34 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Ingénieur | **4** | **4+** | **4+** | **3+** | **9** | **4** | **2** | **4** | Nain |
-| **Mêlée :** | 2d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
+| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Ingénieur   | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **4**  | Nain     |
+| **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |          |
 
 *Tireur d'élite.*
 ##### Équipement :
@@ -95,11 +95,11 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Haut-Roi — 78 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Haut-Roi |  | **4+** | **-** | **3+** | **10** | **8** | **3** | **7** | Nain |
-| Porteur | **4** | **4+** | **-** | **-** | **-** |  |  |  |  |
-| **Mêlée :** | 8d6/4d6 |  | **Tir :** | - |  |  |  |  |  |
+| 🟦          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Haut-Roi    |         | **4+** | **-**     | **3+** | **10** | **8**  | **3**  | **7**  | Nain     |
+| Porteur     | **4**   | **4+** | **-**     | **-**  | **-**  |        |        |        |          |
+| **Mêlée :** | 8d6/4d6 |        | **Tir :** | -      |        |        |        |        |          |
 
 *Egide (1), Force dévastatrice (2), Charge dévastatrice, Indomptable / Force dévastatrice (1).*
 ##### Équipement :
@@ -110,21 +110,21 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Seigneur nain sur bouclier — 44 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Seigneur | **4** | **3+** | **-** | **4+** | **8** | **5** | **3** | **5** | Nain |
-| Porteurs | **-** | **5+** | **-** | **-** | **-** | **-** | **-** | **-** |  |
-| **Mêlée :** | 4d6 / 2d6 |  | **Tir :** | - |  |  |  |  |  |
+| 🟥🟥        | **Vit**   | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | --------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Seigneur    | **4**     | **3+** | **-**     | **4+** | **8**  | **5**  | **3**  | **5**  | Nain     |
+| Porteurs    | **-**     | **5+** | **-**     | **-**  | **-**  | **-**  | **-**  | **-**  |          |
+| **Mêlée :** | 4d6 / 2d6 |        | **Tir :** | -      |        |        |        |        |          |
 
 *Cavalerie, Force dévastatrice (1) / - .*
 
 ---
 ### Vieux Sage — 32 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Sage | **4** | **4+** | **-** | **4+** | **8** | **2** | **2** | **4** | Nain |
-| **Mêlée :** | 3d6 |  | **Tir :** | - |  |  |  |  |  |
+| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Sage        | **4**   | **4+** | **-**     | **4+** | **8**  | **2**  | **2**  | **4**  | Nain     |
+| **Mêlée :** | 3d6     |        | **Tir :** | -      |        |        |        |        |          |
 
 *Anti-infanterie, Force dévastatrice (1), Maitre-lame, Motivant.*
 ##### Équipement :
@@ -135,10 +135,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Prospecteur — 30 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Prospecteur | **4** | **4+** | **4+** | **4+** | **8** | **3** | **2** | **4** | Nain |
-| **Mêlée :** | 2d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
+| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Prospecteur | **4**   | **4+** | **4+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
+| **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |          |
 
 *Tireur d’élite.*
 ##### Équipement :
@@ -149,10 +149,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Vor’ Jin l’excavateur — 38 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Vor’ Jin | **5** | **4+** | **3+** | **4+** | **8** | **3** | **2** | **4** | Nain |
-| **Mêlée :** | 2d6 |  | **Tir :** | 4d6 |  |  |  |  |  |
+| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Vor’ Jin    | **5**   | **4+** | **3+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
+| **Mêlée :** | 2d6     |        | **Tir :** | 4d6    |        |        |        |        |          |
 
 *Avant-garde, Tireur d'élite.*
 ##### Équipement :
@@ -388,10 +388,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Chariot de mine — 21 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Chariot | **4** | **6+** | **4+** | **5+** | **7** | **2** | **2** | **2** | Machine, Mine |
-| **Mêlée :** | 2d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
+| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type**      |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ------------- |
+| Chariot     | **4**   | **6+** | **4+**    | **5+** | **7**  | **2**  | **2**  | **2**  | Machine, Mine |
+| **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |               |
 
 ##### Règles spéciales :
 - Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer Force dévastatrice (+1) ou Perforant (+1), non cumulable.
@@ -400,10 +400,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Thane — 16 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Thane | **4** | **4+** | **-** | **4+** | **8** | **3** | **2** | **4** | Nain |
-| **Mêlée :** | 2d6 |  | **Tir :** | - |  |  |  |  |  |
+| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Thane       | **4**   | **4+** | **-**     | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
+| **Mêlée :** | 2d6     |        | **Tir :** | -      |        |        |        |        |          |
 
 *Force dévastatrice (1).*
 ##### Équipement :
@@ -427,10 +427,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Mine — 14 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Mine | **-** | **-** | **-** | **1+** | **-** | **7** | **4** | **6** | Terrain |
-| **Mêlée :** | - |  | **Tir :** | - |  |  |  |  |  |
+| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
+| Mine        | **-**   | **-**  | **-**     | **1+** | **-**  | **7**  | **4**  | **6**  | Terrain  |
+| **Mêlée :** | -       |        | **Tir :** | -      |        |        |        |        |          |
 
 ##### Règles spéciales :
 - Financer la guerre : si un modèle nain est présent à 6’’ ou moins au début du tour, générez 1 Manœuvre. S’il s’agit d’un mineur, générez 1 Manœuvre supplémentaire.
