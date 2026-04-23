@@ -1,0 +1,15 @@
+@use "./base.scss";
+
+.table-container > table {
+  font-size: 0.9em;   // était 0.82em, descends jusqu'à 0.7em si besoin
+}
+
+.table-container > table th,
+.table-container > table td {
+  padding: 2px 4px;
+  min-width: 20 px;
+}
+
+article h2 {
+  text-align: center;
+}
