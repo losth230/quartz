@@ -179,6 +179,7 @@ Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute ve
 Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
 *Au cœur de la bataille, le rugissement des trébuchets et le sifflement des flèches créent un tourbillon chaotique. Soudain, mes camarades et moi sommes pris dans une étreinte de terreur alors qu'une troupe de Revenants fonce droit sur nous. Les ordres deviennent inaudibles, la fumée trouble notre vision, et l'ennemi semble surgir de tous les côtés. Mes jambes s'alourdissent, le poids de l'incertitude écrase mon esprit, et la cohésion de notre troupe se délite. La peur m'envahit, une sensation viscérale qui étouffe la bravoure. Mes camarades d'armes deviennent des silhouettes floues dans la brume de la panique, et la tentation de la fuite devient irrésistible. Mes jambes, autrefois fermes, tremblent sous le poids de l'effroi. Dans cet abîme de désarroi, la nécessité de la survie prévaut, et je succombe à l'instinct primal de la fuite, de me soustraire à la furie du conflit. La déroute devient ma seule voie, un retrait précipité dans l'espoir fragile de voir un autre jour, une honte future .*
 *Isabeau Lumièrepure, Abbesse de Lun.*
+
 ---
 
 <center><h2>La Déroute</h2></center>
@@ -191,6 +192,7 @@ Une bande est considérée en déroute dès lors qu'elle a perdu plus de 50% de 
 Un modèle mis-à-terre ratant un test de déroute doit d'abord se relever puis effectuer une Marche vers le bord de table le plus proche.
 ### Le Général : 
 Avant le début du premier tour, chaque joueur choisi secrètement un Général parmi ses commandants et héros de légende. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour, s'il meurt, tous ses jets de moral se font avec un malus de -1.
+
 ---
 
 <center><h2>Règles Spéciales</h2></center>
