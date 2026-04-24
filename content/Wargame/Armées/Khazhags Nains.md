@@ -67,7 +67,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Gortrek l’Abatteur — 52 pts
 
-| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type**   |
+| ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ---------- |
 | Gortrek     | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée :** | 2d6     |        | **Tir :** | 6d6    |        |        |        |        |            |
@@ -82,7 +82,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Grand ingénieur — 34 pts
 
-| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Ingénieur   | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **4**  | Nain     |
 | **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |          |
@@ -95,7 +95,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Haut-Roi — 78 pts
 
-| 🟦          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟦          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Haut-Roi    |         | **4+** | **-**     | **3+** | **10** | **8**  | **3**  | **7**  | Nain     |
 | Porteur     | **4**   | **4+** | **-**     | **-**  | **-**  |        |        |        |          |
@@ -110,7 +110,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Seigneur nain sur bouclier — 44 pts
 
-| 🟥🟥        | **Vit**   | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥🟥        | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | --------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Seigneur    | **4**     | **3+** | **-**     | **4+** | **8**  | **5**  | **3**  | **5**  | Nain     |
 | Porteurs    | **-**     | **5+** | **-**     | **-**  | **-**  | **-**  | **-**  | **-**  |          |
@@ -121,7 +121,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Vieux Sage — 32 pts
 
-| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Sage        | **4**   | **4+** | **-**     | **4+** | **8**  | **2**  | **2**  | **4**  | Nain     |
 | **Mêlée :** | 3d6     |        | **Tir :** | -      |        |        |        |        |          |
@@ -135,7 +135,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Prospecteur — 30 pts
 
-| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Prospecteur | **4**   | **4+** | **4+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |          |
@@ -149,7 +149,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Vor’ Jin l’excavateur — 38 pts
 
-| ⬜           | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Vor’ Jin    | **5**   | **4+** | **3+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée :** | 2d6     |        | **Tir :** | 4d6    |        |        |        |        |          |
@@ -166,7 +166,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Autogyre — 27 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Autogyre | **6** | **6+** | **4+** | **5+** | **7** | **3** | **3** | **4** | Nain, Machine |
 | **Mêlée :** | 1d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
@@ -183,7 +183,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Arquebusier — 14 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Arquebusier | **4** | **5+** | **4+** | **5+** | **7** | **2** | **2** | **1** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | 2d6 |  |  |  |  |  |
@@ -194,7 +194,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Brise fer — 18 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Brise fer | **4** | **4+** | **4+** | **3+** | **9** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 3d6 |  | **Tir :** | 2d6 |  |  |  |  |  |
@@ -210,7 +210,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Cabochard — 14 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Cabochard | **5** | **3+** | **4+** | **6+** | **9** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 3d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
@@ -226,7 +226,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Eperon d’argent — 28 pts
 
-|             | **Vit**   | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|             | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | --------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Eperon      | **-**     | **4+** | **-**     | **4+** | **9**  | **3**  | **2**  | **2**  | Nain     |
 | Bélier      | **5**     | **4+** | **-**     | **-**  | **-**  | **-**  | **-**  | **-**  | Bête     |
@@ -242,7 +242,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Garde royal — 26 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Martelier | **4** | **3+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 4d6 |  | **Tir :** | - |  |  |  |  |  |
@@ -255,7 +255,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Guerrier du clan — 6 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Guerrier | **4** | **5+** | **4+** | **5+** | **6** | **1** | **2** | **1** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | 1d6 |  |  |  |  |  |
@@ -267,7 +267,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Grincheur — 13 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Grincheur | **4** | **4+** | **-** | **5+** | **9** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | - |  |  |  |  |  |
@@ -280,7 +280,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Martelier — 17 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Martelier | **4** | **3+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 3d6 |  | **Tir :** | - |  |  |  |  |  |
@@ -291,7 +291,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Mineur — 11 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Mineur | **4** | **4+** | **5+** | **5+** | **6** | **1** | **2** | **1** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
@@ -306,7 +306,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Ranger — 15 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Ranger | **5** | **4+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | 2d6 |  |  |  |  |  |
@@ -321,7 +321,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Autobombardier — 38 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Autobombardier | **6** | **6+** | **4+** | **5+** | **7** | **5** | **3** | **4** | Nain, Machine |
 | **Mêlée :** | 1d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
@@ -336,7 +336,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Armurier — 22 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Armurier | **4** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée :** | 2d6 |  | **Tir :** | 2d6 |  |  |  |  |  |
@@ -349,7 +349,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Canon — 36 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Canon | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
 | **Mêlée :** | 1d6 |  | **Tir :** | 3d6 |  |  |  |  |  |
@@ -362,7 +362,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Canon à flammes — 41 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Grincheur | **4** | **6+** | **4+** | **5+** | **7** | **2** | **2** | **4** | Machine |
 | **Mêlée :** | 2d6 |  | **Tir :** | 2d6 |  |  |  |  |  |
@@ -374,7 +374,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Canon à mitraille — 39 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Canon | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
 | **Mêlée :** | 1d6 |  | **Tir :** | voir ci-dessous |  |  |  |  |  |
@@ -388,7 +388,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Chariot de mine — 21 pts
 
-| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type**      |
+| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ------------- |
 | Chariot     | **4**   | **6+** | **4+**    | **5+** | **7**  | **2**  | **2**  | **2**  | Machine, Mine |
 | **Mêlée :** | 2d6     |        | **Tir :** | 3d6    |        |        |        |        |               |
@@ -400,7 +400,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Thane — 16 pts
 
-| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Thane       | **4**   | **4+** | **-**     | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée :** | 2d6     |        | **Tir :** | -      |        |        |        |        |          |
@@ -415,7 +415,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Avatar — 64 pts
 
-|  | **Vit** | **Me** | **Tir** | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Avatar | **5** | **4+** | **4+** | **3+** | **6+** | **8** | **5** | **6** | Machine |
 | **Mêlée :** | 8d6 |  | **Tir :** | - |  |  |  |  |  |
@@ -427,7 +427,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Mine — 14 pts
 
-| 🟥          | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Mine        | **-**   | **-**  | **-**     | **1+** | **-**  | **7**  | **4**  | **6**  | Terrain  |
 | **Mêlée :** | -       |        | **Tir :** | -      |        |        |        |        |          |
