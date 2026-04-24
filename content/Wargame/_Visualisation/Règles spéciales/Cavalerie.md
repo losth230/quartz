@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle effectue une attaque en mêlée contre une cible d'une taille inférieure, il gagne +1 à ses chances de toucher. Cependant, un tel modèle est incapable d'escalader.

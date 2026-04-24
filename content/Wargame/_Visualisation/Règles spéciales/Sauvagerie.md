@@ -1,0 +1,2 @@
+Tant qu'un modèle bénéficie de cette règle spéciale, il bénéficie d'un bonus de +1 Vit et +1d6 en mêlée mais doit nécessairement charger le modèle ennemi le plus proche si une telle cible à portée de charge existe.  
+A la fin de chaque tour, il doit effectuer un test de moral et perd un effet sauvagerie en cas de réussite.

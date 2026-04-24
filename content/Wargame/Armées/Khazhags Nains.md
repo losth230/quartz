@@ -52,7 +52,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Borgrimm — 66 pts
 
-| 🟥🟥🟥      | **Vit** | **Me** | **Tir**   | **Ar** | **Mo** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥🟥🟥      | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Borgrim     | **5**   | **3+** | **-**     | **5+** | **10** | **6**  | **2**  | **6**  | Nain     |
 | **Mêlée :** | 6d6     |        | **Tir :** | -      |        |        |        |        |          |

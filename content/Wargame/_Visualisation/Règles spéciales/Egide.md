@@ -1,0 +1,2 @@
+Lorsqu'un modèle possédant un ou plusieurs marqueur Egide subit des touches, retirez d'abord ses N marqueurs Egide avant d'effectuer les jets d'armure.  
+Les marqueurs Egide non utilisés en fin de tour sont perdus.

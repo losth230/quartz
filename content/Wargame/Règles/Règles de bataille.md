@@ -120,6 +120,7 @@ Les autres modèles, le décor et les objectifs sont tous considérés comme des
 #### Cas particuliers :
 Si un modèle se retrouve en contact avec un obstacle de sa taille ou moins, il ignore cet obstacle pour ses lignes de vue (on considère qu'il se penche par-dessus), et ses adversaires considèrent que la LdV est partiellement dégagée, au lieu d'obstruée. De plus, le modèle en contact est considéré comme défendant un obstacle pour les attaques provenant de l'autre côté de l'obstacle.
 Petit point vocabulaire : dans C&P est désigné comme touche une attaque ayant réussi à toucher et comme blessure une touche dont le jet d'armure a échoué.
+
 ---
 
 <center><h2>Combattre</h2></center>
@@ -135,8 +136,8 @@ Un modèle ne peut effectuer d'attaque à distance contre une cible engagée ou 
 Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque à distances en prenant en compte les modificateurs suivants :
 +1 aux chances de toucher si la taille du tireur plus celle du potentiel terrain sur lequel il se situe dépasse de 3 ou plus celle de sa cible.
 +1 aux chances de toucher si la cible est de taille 4 ou plus.
--1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Rechargez !
 -1 aux chances de toucher si la LdV est au moins partiellement couverte.
+-1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Rechargez !
 *Par exemple : un Arquebusier nain tente de tirer sur un Kroxigor homme-lézard (eh oui ! parfois il faut tenter). L'Arquebusier possède 2d6 à distances, et malheureusement la LdV entre lui et le Kroxigor est obstruée par une barrière, lui faisant subir un malus de -1 à ses jets de touche. Comme l'Arquebusier se tient sur un terrain de taille 4, sa taille virtuelle est de 2 +4, soit 6, ce qui est supérieur de 3 à celle du Kroxigor qui est de 3. Le bonus et le malus s'annulent donc.*
 #### Tir de contre-charge :
 Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
@@ -150,6 +151,7 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 -1 aux chances de toucher par marqueur Fatigue.
 ### Jets d'armure :
 Lorsqu'un modèle subit une touche, il peut faire un jet d'armure. Pour cela il jette un nombre de d6 égal au nombre de touches subies selon modificateurs suivants :
+-1 aux jets d'armure si l'attaque provient de l'arrière du modèle.
 -1 aux jets d'amure par marqueur Désorganisation.
 ### Riposte :
 Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi, ceci ne compte pas comme l'activation du joueur. Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
@@ -161,17 +163,16 @@ Une fois une attaque de corps à corps effectuée il faut calculer le score de c
 +1 par blessure subie.
 +1 si le Général a été éliminé.
 -2 toutes les 3 unités au sein du modèle.
--1 par Commandant ami à 6'' ou moins.
-+1 par modèle ami ou allié en Déroute à 6'' ou moins.
+-1 si un Commandant ami se trouve 6'' ou moins.
 +1 par marqueur Désorganisé sur le modèle.
 Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
 Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.
 #### Test de panique :
 Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :
-+1 par blessure subie.
++1 si le Général a été éliminé.
+-1 si un Commandant ami se trouve 6'' ou moins.
 -2 toutes les 3 unités au sein du modèle.
 -1 par Commandant ami à 6'' ou moins.
-+1 par modèle ami ou allié en Déroute à 6'' ou moins.
 +1 par marqueur Désorganisé sur le modèle.
 Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
 Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute vers le bord de table le plus proche.
@@ -197,9 +198,9 @@ Avant le début du premier tour, chaque joueur choisi secrètement un Général 
 
 <center><h2>Règles Spéciales</h2></center>
 
-#### Anti-infanterie (N) : 
+#### Anti-infanterie : 
 Un modèle possédant cette règle bénéficie de +2d6 en mêlée lorsqu'il attaque un modèle de Taille 2 ou moins.
-#### Anti-large (N) :
+#### Anti-large :
 Un modèle possédant cette règle bénéficie de +2d6 en mêlée lorsqu'il attaque un modèle de Taille 2 ou plus.
 #### Attaques enflammées :
 Lorsqu'un modèle possédant cette règle attaque, si la moindre touche est obtenue, sa cible est marquée *enflammée.* Un modèle *enflammé* perd 1 PV à la fin de chaque tour par marqueur *enflammé* qu'il possède et ne peut plus bénéficier de la règle Régénération (N). Un modèle peut dépenser une action courte pour enlever un marqueur *enflammé*.
@@ -239,6 +240,7 @@ Lorsqu'un modèle possédant cette règle effectue une attaque à distance, il n
 L'action de tir est une action longue pour les armes possédant cette règle.
 #### Tireur d'élite : 
 Lorsqu'un modèle possédant cette règle effectue une attaque en à distance, il peut relancer ses jets de touche ayant obtenu 1.
+
 ---
 
 <center><h2>Hiérarchisation et Troupes</h2></center>
@@ -265,11 +267,12 @@ Les unités de base forment la base de toute armée, et les seules à pouvoir fo
 Les unités de soutient apportent des bonus uniques à votre bande, vous pouvez en posséder une par tranche de 50 pts dans votre bande.
 #### Spéciaux :
 Les modèles spéciaux sont des unités rares et chères, mais très puissantes. Vous pouvez en posséder une par tranche de 150 pts dans votre bande.
-Le monde de Chasse & Pêche est parcouru d'énergies mystiques et les individus les plus talentueux (ou souvent les plus corrompus) peuvent puiser dans cette énergie et plier ces flux selon leur volonté.
+
+
 ---
 
 <center><h2>La Magie</h2></center>
-
+*Le monde de Chasse & Pêche est parcouru d'énergies mystiques et les individus les plus talentueux (ou souvent les plus corrompus) peuvent puiser dans cette énergie et plier ces flux selon leur volonté.*
 ### Les lanceurs de sorts :
 Seules les unités de Lanceurs de Sorts peuvent puiser dans la puissance mystique qu'est la magie et se divisent en quatre niveaux, de 1 à 4 (4 étant le maximum). Plus le niveau d'un Lanceur de Sort est élevé, plus il maitrisera de sorts et plus ses sorts seront efficaces : un Lanceur de Sort possède un emplacement de sort pour chacun de ses niveaux, les sorts qu'il peut apprendre consomme un emplacement de sort par niveau du sort.
 Par exemple : un Lanceur de Sort de niveau 3 pourra posséder trois sorts de niveau 1 ou un sort de niveau 2 et un sort de niveau 1 ou 1 seul sort de niveau 3.
@@ -283,9 +286,8 @@ Lorsqu'un Lanceur de Sort tente de lancer un sort, son action est en tout point 
 Certains sorts peuvent également être renforcés, généralement au prix d'une action longue ou en échange de Points de Pouvoir. Cela est toujours indiqué dans la description du sort. Si une figurine apprend un sort, elle en apprend également la version renforcée.
 A moins que le contraire ne soit précisé, un sort requiert toujours une ligne de vue, ne peut être utilisé sur une cible *engagée*.
 #### Les types de sorts :
-> Il existe 5 types de sorts :
+> Il existe 4 types de sorts :
 - Les projectiles : ces sorts se lancent sur un modèle adverse visible, leur résolution s'effectuant de la même manière qu'une attaque de tir.
-- Les soins : ces sorts se lancent sur un modèle ami visible, leur résolution s'effectuant de la même manière qu'une attaque de tir.
 - Les améliorations : ces sorts se lancent sur des modèles amis, la difficulté du lancement du sort augmente de 1 par Masse du modèle ciblé.
 - Les malédictions : ces sorts se lancent sur des modèles ennemis, la difficulté du lancement du sort augmente de 1 par Masse du modèle ciblé.
 - Les météos : ces sorts affectent le jeu pour le reste de la partie, et sont remplacés dès qu'une autre météo est lancée.
