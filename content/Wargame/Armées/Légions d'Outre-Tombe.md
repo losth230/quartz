@@ -1,9 +1,3 @@
----
-title: "Légions d'Outre-Tombe"
-tags: [khazhags, outre-tombe, morts-vivants, armée]
----
-
-<center><h1>Légions d'Outre-Tombe</h1></center>
 
 <center><h2>Règles de Faction</h2></center>
 

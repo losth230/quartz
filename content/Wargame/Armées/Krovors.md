@@ -1,13 +1,3 @@
----
-title: Krovors
-tags:
-  - krovors
-  - armée
----
-
----
-
-<center><h1>Krovors</h1></center>
 
 <center><h2>Règles de Faction</h2></center>
 

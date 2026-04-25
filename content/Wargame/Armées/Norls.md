@@ -1,9 +1,3 @@
----
-title: "Norls"
-tags: [khazhags, norls, armée]
----
-
-<center><h1>Norls</h1></center>
 
 <center><h2>Règles de Faction</h2></center>
 

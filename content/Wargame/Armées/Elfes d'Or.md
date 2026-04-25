@@ -1,9 +1,3 @@
----
-title: "Elfes d'Or"
-tags: [khazhags, elfes, elfes-d-or, armée]
----
-
-<center><h1>Elfes d'Or</h1></center>
 
 <center><h2>Règles de Faction</h2></center>
 

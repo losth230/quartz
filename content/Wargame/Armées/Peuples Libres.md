@@ -1,9 +1,3 @@
----
-title: "Peuples Libres"
-tags: [khazhags, peuples-libres, armée]
----
-
-<center><h1>Peuples Libres</h1></center>
 
 <center><h2>Règles de Faction</h2></center>
 

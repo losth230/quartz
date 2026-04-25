@@ -1,7 +1,4 @@
----
-title: "Peaux-Vertes"
-tags: [khazhags, peaux-vertes, armée]
----
+
 <center><h2>Règles de Faction</h2></center>
 
 #### Frénésie (3)

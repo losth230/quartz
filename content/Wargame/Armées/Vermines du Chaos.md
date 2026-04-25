@@ -1,10 +1,3 @@
----
-title: "Vermines du Chaos"
-tags: [khazhags, vermines, chaos, armée]
----
-
-<center><h1>Vermines du Chaos</h1></center>
-
 <center><h2>Règles de Faction</h2></center>
 
 #### Amasser de Scories
@@ -21,6 +14,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 **Modèles de masse 5-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
 **Modèles de masse 11-15 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
 **Modèles de masse 16+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (3)]].
+
 ---
 
 <center><h2>Domaines de Faction</h2></center>
