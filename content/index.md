@@ -1,6 +1,6 @@
 ---
 title: "Bites"
-cssclasses: - homepage
+cssclasses: [homepage]
 ---
 
 <div class="hero">
