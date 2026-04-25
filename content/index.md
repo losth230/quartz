@@ -1,5 +1,5 @@
 ---
-title: "Bites"
+title: Chasse et Pêche
 cssclasses:
   - homepage
 ---
