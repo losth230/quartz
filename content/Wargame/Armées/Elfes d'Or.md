@@ -8,6 +8,7 @@ Si vous tombez à 0 dé dans votre réserve de magie, toute votre armée bénéf
 Votre réserve de magie augmente de 1d6.
 #### Barrage (1)
 Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un modèle ami ayant la portée pour tirer et tirer immédiatement. Une fois le tir résolu, votre modèle est marqué Activé et fatigué.
+
 ---
 
 <center><h2>Domaines de Faction</h2></center>
