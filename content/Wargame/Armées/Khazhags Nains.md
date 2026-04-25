@@ -52,10 +52,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Borgrimm — 66 pts
 
-| 🟥🟥🟥      | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Borgrim     | **5**   | **3+** | **-**     | **5+** | **10** | **6**  | **2**  | **6**  | Nain     |
-| **Mêlée:** | 6d6     |        | **Tir:** | -      |        |        |        |        |          |
+| 🟥🟥🟥     | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Borgrim    | **5**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **6**  | **2**  | **6**  | Nain     |
+| **Mêlée:** | 6d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Équipement :
@@ -67,10 +67,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Gortrek l’Abatteur — 52 pts
 
-| ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
-| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ---------- |
-| Gortrek     | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **5**  | Nain, Mine |
-| **Mêlée:** | 2d6     |        | **Tir:** | 6d6    |        |        |        |        |            |
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
+| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **3+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 6d6                                                                             |                                                                                  |        |        |        |            |
 
 *[[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
@@ -95,11 +95,11 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Haut-Roi — 78 pts
 
-| 🟦          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Haut-Roi    |         | **4+** | **-**     | **3+** | **10** | **8**  | **3**  | **7**  | Nain     |
-| Porteur     | **4**   | **4+** | **-**     | **-**  | **-**  |        |        |        |          |
-| **Mêlée:** | 8d6/4d6 |        | **Tir:** | -      |        |        |        |        |          |
+| 🟦         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Haut-Roi   |         | **4+**                                                                               | **-**                                                                                   | **3+**                                                                          | **10**                                                                           | **8**  | **3**  | **7**  | Nain     |
+| Porteur    | **4**   | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            |        |        |        |          |
+| **Mêlée:** | 8d6/4d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge Dévastatrice]], [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
