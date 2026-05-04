@@ -12,8 +12,8 @@ Les caractéristiques de base d’un Cuisinier sont :
 L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
-##### Nourriture savoureuse
-Lorsque vous réalisez un repos, vous pouvez réaliser un test de **[[Règles/Règles#Compétences|DIY]]** et cuisinier 1 + un nombre de **Rations Savoureuses** égal au nombre de réussites. Ces rations peuvent être consommées au prix d'une action longue pour récupérer 1 PV.
+##### Bien nourri
+Lorsque vous cuisinez, quiconque se nourrit de votre nourriture reçoit 1 PV temporaire pour le reste de la journée.
 ##### Chef de service
 Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
@@ -93,16 +93,16 @@ Ou
 <center><h2>Gastromancien</h2> </center>
 
 Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un art magique à part entière, et un bon client est toujours un client satisfait.
-##### Service en salle(niveau 2)
-Vos **Rations savoureuses** ne coûtent plus qu'une action courte pour être consommées.
+##### Remontant(niveau 2)
+A partir du niveau 2, vous pouvez dépenser votre réaction pour octroyer Egide (1) à une créature qui vient de subir une au moins une touche.
 ##### Complément alimentaire (niveau 2)
-Lorsque vous fabriquez vos **Rations savoureuses**, vous pouvez dépenser un dé de votre réserve de magie pour les imprégner. Vous pouvez dépenser un dé de votre réserve de magie pour gagner 2 rations savoureuses supplémentaires.
+A partir du niveau 2, les créatures **Bien nourries** bénéficient également de +1 dé à leur réserve de magie.
 ##### Dopamine (niveau 5)
-Les créatures ingérant une **Ration savoureuse** peuvent immédiatement effectuer une marche gratuite.
+A partir du niveau 5, les créatures **Bien nourries** bénéficient de 2 Réactions par tour.
 ##### Récupération des sucs (niveau 8)
-Lorsqu'une créature consomme une de vos **Rations savoureuses**, elle récupère 1 dé de magie.
+A partir du niveau 8, lorsqu'une créature **Bien nourrie** lance un sort, elle bénéficie d'un bonus de +2 à ses jets de lancement.
 ##### Banquet (niveau 11)
-Si vous passer plusieurs heures afin de créer un banquet capable de nourrir autant de personnes que vous n'avez passé d'heures à cuisiner. Toute personne consommant des plats du banquet bénéficie de +1 Vitesse et +1 dé dans sa réserve de magie pendant 24 heures.
+
 
 ---
 <center><h2>Glouton</h2> </center>
