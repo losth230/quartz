@@ -30,7 +30,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Mère de couvée — 32 pts
 
-|🟥|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gnûl|**3**|**4+**|**-**|**5+**|**9**|**4**|**2**|**4**|Thraksan|
 |**Mêlée:**|9d6||**Tir:**|-||||||
@@ -45,7 +45,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Gnûl le destructeur — 92 pts
 
-|⬜⬜⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜⬜⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gnûl|**3**|**3+**|**-**|**3+**|**10**|**9**|**5**|**10**|Primal|
 |**Mêlée:**|9d6||**Tir:**|-||||||
@@ -59,7 +59,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Vor’Thul — 48 pts
 
-|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
@@ -72,7 +72,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Véranthia la séductrice — 62 pts
 
-|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Véranthia|**6**|**4+**|**4+**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
@@ -89,7 +89,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Naar'Vaath l'usurpatrice — 104 pts
 
-|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Naar'Vaath|**4**|**3+**|**-**|**5+**|**9**|**4**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
@@ -107,7 +107,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Cultiste — 14 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Cultiste|**5**|**5+**|**5+**|**6+**|**7**|**1**|**2**|**2**|Humain|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -121,7 +121,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Horreur Chasseresse — 22 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Horreur|**6**|**4+**|**-**|**5+**|**8**|**2**|**3**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -134,7 +134,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Profond — 13 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Profond|**5**|**5+**|**-**|**6+**|**7**|**2**|**2**|**2**|Thraksan|
 |**Mêlée:**|2d6||**Tir:**|-||||||
@@ -147,7 +147,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Ver du vide — 30 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Ver|**6**|**5+**|**4+**|**5+**|**8**|**4**|**3**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
@@ -160,7 +160,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Eventreur — 26 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**2**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -177,7 +177,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Corrupteur — 20 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -193,7 +193,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Biovore — 56 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Biovore|**4**|**6+**|**5+**|**5+**|**8**|**5**|**3**|**4**|Primal|
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
@@ -212,7 +212,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Tolgoth — 72 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Tolgoth|**4**|**3+**|**5+**|**5+**|**7**|**6**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
@@ -226,7 +226,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Cahlta — 72 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**4**|**4**|**5**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
@@ -241,7 +241,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Dévoreur de monde — 102 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Dévoreur|**4**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
@@ -255,7 +255,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Emissaire — 64 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Emissaire|**4**|**3+**|**-**|**-**|**9**|**1**|**4**|**6**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
@@ -269,7 +269,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Soleil Pourpre — 76 pts
 
-||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Soleil|**-**|**-**|**3+**|**5+**|**-**|**8**|**4**|**4**|Météo|
 |**Mêlée:**|-||**Tir:**|-||||||
