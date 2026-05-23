@@ -28,7 +28,7 @@ Les nains sont réputés pour leur ténacité légendaire, mais également pour 
 
 <center><h2>Runes Naines</h2></center>
 
-Lors de la création d’une armée Naines, vous pouvez runer vos modèles. Chaque modèle ne peut porter qu’une seule fois et chaque rune ne peut être allouée qu'une seule fois.
+Lors de la création d’une armée Naines, vous pouvez runez vos modèles. Chaque modèle ne peut porter qu’une seule fois et chaque rune ne peut être allouée qu’à un seul modèle.
 - **Rune de vitesse (+2 pts/Ma) :** l’unité bénéficie de +2 Vit mais son armure est réduite de 1 (une valeur de 4+ devient donc 5+).
 - **Rune de vent (+4 pts, machine uniquement)** : la portée des tirs est augmentée de 3’’.
 - **Rune de précision (+2 pts/Ma)** : l’unité bénéficie d'un bonus de +1 à ses jets de touche sur ses attaques à distance mais sa portée de tir est réduite de 3’’.
@@ -219,7 +219,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Hache de jet (+1pts) : Portée (C : 8’’).
 - Paire de haches (+2 pts) : confère +1d6 en mêlée.
 - Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
-- Bénédiction des flammes (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
+- Bénédiction des flammes (+1 pts) : les modèles touchés par une attaque en mêlée de ce modèle perdent leur potentielle règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] et ne peuvent être soignée pour le reste du tour.
 ##### Règles spéciales :
 - La mort honorable : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.
 ---

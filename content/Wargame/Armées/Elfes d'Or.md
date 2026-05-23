@@ -17,7 +17,7 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, confère [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]] à un modèle ami à 12’’ ou moins sur leur prochaine attaque.
 #### Niveau 1
-- **Initiative (court, 3+, amélioration) :** Portée 12’’, confère Frappe Toujours en Premier.
+- **Initiative (court, 3+, amélioration) :** Portée 12’’, confère [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours En Premier|Frappe Toujours En Premier]].
 - **Voile (court, 4+, amélioration) :** Portée 12’’, confère [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].
 #### Niveau 2
 - **Harmonie (court, 16+, projectile) :** Tous les modèles amis à 12’’ ou moins bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] et Vitesse +1 pour le reste du tour.
