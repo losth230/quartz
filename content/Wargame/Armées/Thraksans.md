@@ -280,6 +280,6 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 ##### Règles spéciales :
 - Eclipse : ne déployez pas ce modèle normalement, à la place, déployez-le au centre de la table avant le début du déploiement. Le Soleil Pourpre agit comme une Météo, qui annule toutes les autres Météos.
 - La menace venant du ciel : le Soleil Pourpre ne peut être engagé en mêlée que par des modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]], et peut lancer des sorts même s’il est engagé en mêlée.
-- Absorption totale : chaque fois qu'un sort est lancé dans la partie, ajoutez 1 marqueur Corruption au Soleil Pourpre. La portée de tous les sorts et attributs de magie lancés par le Soleil Pourpre sont té de 1’’ par marqueur Corruption.
+- Absorption totale : chaque fois qu'un sort est lancé dans la partie, ajoutez 1 marqueur Corruption au Soleil Pourpre. La portée de tous les sorts et attributs de magie lancés par le Soleil Pourpre sont augmentés de 1’’ par marqueur Corruption.
 
 ---
