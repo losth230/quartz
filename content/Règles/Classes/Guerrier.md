@@ -31,15 +31,12 @@ Lorsqu'une créature au contact avec vous essaye de se désengager, vous pouvez 
 Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
-## Niveau 3, 6, 9
+## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
-Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre [[Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-## Niveau 4
+Lorsque vous atteignez le niveau 3, 6 ou 9, vous pouvez améliorer votre [[Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
+## Niveaux 4,7
 ##### Exécution
-A partir du niveau 4, si, après une de vos attaques en mêlée, une créature possède moins PV restant que de marqueurs *[[Règles/Règles spéciales#saignement|saignement]]*, elle est automatiquement exécutée.
-## Niveau 7
-###### Entrainement avancé
-Lorsque vous atteignez le niveau 7, vous pouvez apprendre un deuxième [[Règles/classes/guerrier#Entrainement|entrainement]].
+Lorsque vous atteignez le niveau 4 ou 7, vous pouvez apprendre un nouvel [[Règles/classes/guerrier#Entrainement|entrainement]].
 ## Niveau 10
 ##### Charge supérieure
 A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[Règles/Règles spéciales#Force dévastatrice (N)|Force dévastatrice (+1)]] et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
@@ -52,17 +49,16 @@ A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous
 ___
 <center><h2>Sanguinaire</h2> </center>
 
-##### Saignement supérieur (niveau 2)
-Lorsque vous réussissez une attaque en mêlée, vous infligez 2 *[[Règles/Règles spéciales#saignement|saignements]]* au lieu d'un seul.
+#### Exécution (niveau 2)
+A partir du niveau 2, vos attaques contre les cibles ayant moins de 50% bénéficient de +2d6 et infligent des dégâts bruts.
 ##### Soif de sang (niveau 2)
-Lorsque vous réussissez une attaque sur une créature possédant 3 *[[Règles/Règles spéciales#saignement|saignements]]* ou plus, vous récupérez 1  PV.
-##### Furie sanguinaire (niveau 5)
-Lorsque vous éliminez une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous récupérez une [[Règles/Règles#Actions|action courte]].
-##### Massacre (niveau 8)
-Lorsque vous effectuez une attaque contre une créature possédant au moins 2 *[[Règles/Règles spéciales#saignement|saignements]]*, vous pouvez relancer vos jets de touche ayant obtenu 1 ou  les jets de dé ayant obtenu 1 ou 2 si vous connaissez l'[[Règles/classes/guerrier#Entrainement|entrainement]] [[Règles/Règles spéciales#Maitre-lame|maitre-lame]].
-##### Bain de sang (niveau 11)
-Après avoir réussi une touche en mêlée sur une créature affectée par *[[Règles/Règles spéciales#saignement|saignement]]*, vous pouvez dépenser une [[Règles/Règles#Actions|action courte]] pour octroyer 2 *[[Règles/Règles spéciales#saignement|saignements]]* aux créatures de votre choix à 6'' ou moins.
-
+A partir du niveau 2, lorsque vous infligez au moins 1 dégât brut, vous récupérez 1 PV.
+##### Bourreau (niveau 5)
+A partir du niveau 5, vos attaques contre les cibles ayant perdu au moins 1 PV bénéficient de +2d6.
+##### Exécution améliorée (niveau 8)
+A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% PV avec la règle Force Dévastatrice. Vous infligez 2 blessure par force dévastatrice.
+##### Mise a mort (niveau 11)
+A partir du niveau 11, lorsque vous tuez une créature de niveau 6 ou plus, vous récupérez toutes vos actions.
 ___
 <center><h2>Chasseur</h2> </center>
 

@@ -8,7 +8,7 @@ Une unité de type Fantôme peut posséder un modèle ami qui devient son hôte.
 #### Le règne des Morts :
 Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
 #### Marque Blanche :
-Vos modèles ont un bonus de +1 à leurs jets de touche contre les modèles souffrant d’une Marque Blanche.
+Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -5 lorsqu'ils tentent de lancer un sort.  
 #### Cadavre :
 Chaque fois qu’une unité amie qui n’est pas du type Cadavérique meure, vous gagnez 1 cadavre, une ressource unique.
 #### Ombre :
@@ -135,9 +135,8 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - Weißroth est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Tombe et au Domaine des Ténèbres.
 - Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
 ##### Règles spéciales :
-- Marque Blanche : si un modèle adverse marqué par la Marque Blanche rate un test de moral, elle est détruite.
-- Martyr : lorsque cette unité est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
-- Première Dame : les modèles amis peuvent se lier à Weißroth s’ils sont à 12’’ ou moins au lieu de 6’’.
+- Marque Blanche supérieure : si un modèle adverse marqué par la Marque Blanche rate un test de moral, elle est détruite.
+- Martyr : lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
 - Siphonner les faibles : Weißroth gagne un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
 ---
 ### Yehudiah — 58 pts

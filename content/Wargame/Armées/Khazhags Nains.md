@@ -24,7 +24,6 @@ Lorsqu’un modèle Nain Forge, désignez un modèle Artéfact à 12’’ ou mo
 Les nains sont réputés pour leur ténacité légendaire, mais également pour obéissance et leur discipline. Pour refléter ceci, ils ont accès à de nouvelles Manœuvres uniques :
 - **Frappe Foudroyante (4) :** à utiliser en début de tour, désignez jusqu’à 3 modèles amis. Ces modèles peuvent effectuer une activation complète avant le début du tour et ne sont pas marqués Activés.
 - **Excavation ! (3) :** à utiliser en début de tour, retirez un modèle ami non engagé en mêlée ni en déroute de la table et remplacez-le par un marqueur pour vous souvenir de sa position. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse et 15’’ ou moins de son précédent emplacement. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée).
-- **Garder le trésor (2) :** utilisable uniquement par un modèle contrôlant un objectif et remplace l’ajout de dé bonus lors de jets d’attaque ou de jets d’armure. Pour le reste du tour le modèle bénéficie d’un bonus de +1 à ses jets d’attaque et d’armure.
 ---
 
 <center><h2>Runes Naines</h2></center>
