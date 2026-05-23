@@ -1,4 +1,5 @@
  <center><h2>Règles de Faction</h2></center>
+ 
 #### Marque
 Lorsqu’un modèle ami attaque un modèle _marqué_, il peut relancer les jets d’attaques en mêlée et à distance ayant obtenu 1.
 #### Corruption
