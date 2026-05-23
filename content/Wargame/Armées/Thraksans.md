@@ -30,12 +30,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Mère de couvée — 32 pts
 
-|🟥|**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|🟥|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gnûl|**3**|**4+**|**-**|**5+**|**9**|**4**|**2**|**4**|Thraksan|
 |**Mêlée:**|9d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/*Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 
 ##### Règles spéciales :
 
@@ -45,12 +45,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Gnûl le destructeur — 92 pts
 
-|⬜⬜⬜|**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜⬜⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Gnûl|**3**|**3+**|**-**|**3+**|**10**|**9**|**5**|**10**|Primal|
 |**Mêlée:**|9d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/*Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
 - Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
@@ -59,12 +59,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Vor’Thul — 48 pts
 
-|⬜|**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Dévoreur d’espoir : Vor’Thul gagne +1d6 lors de ses attaques en mêlée par marqueur Corruption que possède sa cible.
 
@@ -72,12 +72,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Véranthia la séductrice — 62 pts
 
-|⬜|**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Véranthia|**6**|**4+**|**4+**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/*Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/*Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Magie :
 - Véranthia est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
@@ -89,12 +89,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Naar'Vaath l'usurpatrice — 104 pts
 
-|⬜|**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|⬜|*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Naar'Vaath|**4**|**3+**|**-**|**5+**|**9**|**4**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].*
+*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].*
 
 ##### Règles spéciales :
 - Usurpatrice : ne déployez pas Naar’Vaath selon les règles de déploiement standard. A la place, une fois le déploiement terminé, désignez secrètement une unité adverse valant 50 pts ou moins dans laquelle Naar’Vaath est cachée. Durant la partie, au lieu d'une activation normale, vous pouvez retirer comme perte l'unité hôte et la remplacer par Naar'Vaath. Naar'Vaath obtient 5 Egides puis son tour se termine.
@@ -107,7 +107,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Cultiste — 14 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Cultiste|**5**|**5+**|**5+**|**6+**|**7**|**1**|**2**|**2**|Humain|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -121,12 +121,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Horreur Chasseresse — 22 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Horreur|**6**|**4+**|**-**|**5+**|**8**|**2**|**3**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/*Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/*Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Vision d’effroi : un modèle ayant subi une blessure d’une Horreur Chasseresse doit réaliser un test de moral, en cas d’échec, le modèle effectue un mouvement de déroute et est marqué activé.
 
@@ -134,12 +134,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Profond — 13 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Profond|**5**|**5+**|**-**|**6+**|**7**|**2**|**2**|**2**|Thraksan|
 |**Mêlée:**|2d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Evolution (1) : ajoutez un profond supplémentaire à ce modèle et à votre liste d’armée.
 
@@ -147,12 +147,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Ver du vide — 30 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Ver|**6**|**5+**|**4+**|**5+**|**8**|**4**|**3**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
+*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
 - Crachat : portée 9’’, attaques empoisonnées, souffle.
 
@@ -160,7 +160,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Eventreur — 26 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**2**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -177,7 +177,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Corrupteur — 20 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
@@ -193,13 +193,13 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Biovore — 56 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Biovore|**4**|**6+**|**5+**|**5+**|**8**|**5**|**3**|**4**|Primal|
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
 
 ##### Équipement :
-- Mortier : Portée 12-28’’, Anti-Infanterie, [[Wargame/*Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/*Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], Rechargez.
+- Mortier : Portée 12-28’’, Anti-Infanterie, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], Rechargez.
 ##### Règles spéciales :
 - Pilonnage : un modèle touché par un tir de Biovore perd 1 Vit pour le reste du tour par touche subie.
 - Pluie de feu : ce modèle gagne +1d6 par marqueur Corruption qu’il possède.
@@ -212,12 +212,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Tolgoth — 72 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Tolgoth|**4**|**3+**|**5+**|**5+**|**7**|**6**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Ambassadeur des abimes : lorsque Tolgoth meurt, placez une Cité Engloutie à 3’’ ou moins.
 - Evolution (6) : le Tolgoth se transforme en Dévoreur de monde, il conserve ses blessures.
@@ -226,14 +226,14 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Cahlta — 72 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**4**|**4**|**5**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
-- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/*Visualisation/Règles spéciales/Perforant|Perforant (2)]].
+- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
 - Evolution (6) : le Cahlta se transforme en Dévoreur de monde, il conserve ses blessures.
 
@@ -241,12 +241,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Dévoreur de monde — 102 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Dévoreur|**4**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Dévoration : lorsque ce modèle élimine ou met en déroute un modèle adverse, il gagne autant de *Corruptions* que sa cible en possédait.
 - Bien nourri : ce modèle gagne un nombre de d6 en mêlée égal au nombre de corruptions qui l'affectent.
@@ -255,12 +255,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Emissaire — 64 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Emissaire|**4**|**3+**|**-**|**-**|**9**|**1**|**4**|**6**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Egide|Egide (8)]], [[Wargame/*Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (8)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Ombre invisible : au lieu de déployer l’Emissaire normalement, déployez-le à l’endroit de votre choix sans que votre adversaire ne vous voie, prenez-le en photo et retirez-le. A la place de n’importe quelle activation, vous pouvez montrer la photo et déployer l'Emissaire à cet endroit, il n’est pas marqué comme activé et peut librement agir.
 - Evolution (2) : retirez ce modèle du plateau et replacez-le à 6’’ ou moins. Cette compétence ne peut être utilisée plus de 2 fois par tour.
@@ -269,17 +269,17 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Soleil Pourpre — 76 pts
 
-||**Vit**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/*Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+||*_Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Soleil|**-**|**-**|**3+**|**5+**|**-**|**8**|**4**|**4**|Météo|
 |**Mêlée:**|-||**Tir:**|-||||||
 
-*[[Wargame/*Visualisation/Règles spéciales/Furtif|Furtif]]. [[Wargame/*Visualisation/Règles spéciales/Egide|Egide (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]]. [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].*
 ##### Magie :
 - Le Soleil Pourpre est un lanceur de sorts de niveau 6 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
 - Eclipse : ne déployez pas ce modèle normalement, à la place, déployez-le au centre de la table avant le début du déploiement. Le Soleil Pourpre agit comme une Météo, qui annule toutes les autres Météos.
-- La menace venant du ciel : le Soleil Pourpre ne peut être engagé en mêlée que par des modèles ayant la règle spéciale [[Wargame/*Visualisation/Règles spéciales/Vol|Vol]], et peut lancer des sorts même s’il est engagé en mêlée.
+- La menace venant du ciel : le Soleil Pourpre ne peut être engagé en mêlée que par des modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]], et peut lancer des sorts même s’il est engagé en mêlée.
 - Absorption totale : chaque fois qu'un sort est lancé dans la partie, ajoutez 1 marqueur Corruption au Soleil Pourpre. La portée de tous les sorts et attributs de magie lancés par le Soleil Pourpre sont té de 1’’ par marqueur Corruption.
 
 ---

@@ -13,7 +13,7 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 
 <center><h2>Domaines de Faction</h2></center>
 
-<center><h3>Domaine du GEPAFE</h3></center>
+<center><h3>Domaine de la Noblesse</h3></center>
 
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, confère [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]] à un modèle ami à 12’’ ou moins sur leur prochaine attaque.
 #### Niveau 1
@@ -38,7 +38,7 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 - Epée en vif-argent (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Noblesse : si cette unité est attaquée par un modèle valant moins de pts que lui, celui-ci souffre d’un malus de -1 à ses jets d’attaque. Cette règle ne fonctionne pas si le Noble rejoint une Troupe, mais fonctionne en cas de duel.
-- Vivace (1) : confère Frappe Toujours en Premier le temps d’une attaque.
+- Vivace (1) : confère [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours En Premier|Frappe Toujours En Premier]] le temps d’une attaque.
 ---
 ## Modèles de base
 ---
@@ -65,19 +65,19 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 ##### Équipement :
 - Arc (+4 pts) : Portée (C : 9’’, L : 15’’).
 - Epée double (+2 pts) : +1d6 en mêlée.
-**Règle spéciale :**
+##### Règle spéciale :
 - Frappe de l’au-delà (2) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]] sur votre prochaine attaque.
 ---
 ### Garde de la Maison — 18 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Garde Maison | **5** | **3+** | **-** | **4+** | **9** | **2** | **2** | **2** | Elfe |
-| **Mêlée:** | 3d6 |  | **Tir:** |  |  |  |  |  |  |
+|              | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ------------ | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Garde Maison | **5**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **2**  | **2**  | **2**  | Elfe     |
+| **Mêlée:**   | 3d6     |                                                                                      | **Tir:**                                                                                |                                                                                 |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Bien-né Phénix (+2 pts) : cette unité est immunisée à la règle Attaques Enflammées et gagne [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
+- Bien-né Phénix (+2 pts) : cette unité est immunisée à la règle [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] et gagne [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
 ##### Règles spéciales :
 - Vision du destin (2) : vous pouvez relancer les jets d’armure de 1 le temps d’une attaque.
 ---
@@ -92,7 +92,7 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 ##### Équipement :
 - Cape d’invisibilité (+3 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].
 ##### Magie :
-- Etudiant en magie : un modèle de Peintre possède un niveau de lanceur de sort égal à son nombre d’unité de Peintre mais ne peuvent apprendre le moindre sort. A la place, chaque fois qu’un sort est lancé à 18’’ ou moins, le Peintre apprend le sort.
+- Etudiant en magie : un modèle de Peintre possède un niveau de lanceur de sort égal à son nombre d’unité de Peintre au sein du modèle mais ne peuvent apprendre le moindre sort. A la place, chaque fois qu’un sort est lancé à 18’’ ou moins, le Peintre apprend le sort.
 ---
 ## Modèles de soutient
 ---
@@ -109,11 +109,11 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 ---
 ### Char — 52 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Garde Maison | **-** | **3+** | **-** | **4+** | **8+** | **5** | **3** | **4** | Machine-Elfe |
-| Chevaux | **7** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Bête |
-| **Mêlée:** | 4d6 / 4d6 |  | **Tir:** | 4d6 |  |  |  |  |  |
+|              | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**     |
+| ------------ | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------ |
+| Garde Maison | **-**     | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8+**                                                                           | **5**  | **3**  | **4**  | Machine-Elfe |
+| Chevaux      | **7**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Bête         |
+| **Mêlée:**   | 4d6 / 4d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |              |
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
@@ -134,7 +134,7 @@ Lorsqu’un modèle adverse débute son activation, vous pouvez désigner un mod
 - 2<sup>e</sup> année (+5 pts) : lanceur de sorts de niveau 2.
 - 3<sup>e</sup> année (+11 pts) : lanceur de sorts de niveau 3.
 ##### Magie :
-- Le Mage à accès au Domaine des Cieux et au Domaine du GEPAFE.
+- Le Mage à accès au Domaine des Cieux et au Domaine de la Noblesse.
 ---
 ## Modèles Spéciaux
 ---
