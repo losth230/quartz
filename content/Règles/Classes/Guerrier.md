@@ -98,7 +98,6 @@ A partir du niveau 2, si vous combattez avec une arme à une main et rien dans v
 - **Posture de l'Aurore :** après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Si votre attaque  obtient au moins une blessure, vous générez une **Manœuvre**. 
 - **Posture de l'Aube :** lorsque vous entrez dans cette posture, vos attaques en mêlée bénéficient de +1d6. Si votre attaque  obtient au moins une touche, vous générez une **Manœuvre**. 
 - **Posture du Crépuscule :** lorsque vous entrez dans cette posture, vous recevez Egide (1). Si votre égide bloque une touche, vous générez une **Manœuvre**. 
-- **Posture de l’Etoile :** lorsque vous effectuez une attaque en mêlée dans cette posture, votre attaque inflige des dégâts bruts. Perdez ensuite tous les dés octroyés par la posture de l'Aube.
 ##### Manœuvres (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser vos **Manœuvres** pour des actions spéciales.
 - **Frappe de l'étoile (3 Manœuvres)** : dépenser une action courte pour effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
