@@ -115,9 +115,9 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
-- Fusils : Portée 18’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Fusils : Portée (C : 15’’, L : 21’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
-- Ils sont tombés dans le piège ! (3) : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance contre une Machine selon les règles suivantes : Portée 18’’, 6d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]].
+- Ils sont tombés dans le piège ! (3) : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance contre une Machine selon les règles suivantes : Portée (C : 15’’, L : 21’’)’’, 6d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]].
 ---
 ### Saxon — 52 pts
 
@@ -130,6 +130,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ##### Règles spéciales :
 - Unis autour du chef ! : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 - Montrer l’exemple : Si Saxon élimine une unité en mêlée, déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] d’un modèle ami à 8’’ ou moins. Au début de chaque tour, Saxon génère 1 Scorie.
+
 ---
 ## Modèles de base
 ---
@@ -163,7 +164,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 *[[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
-- Fusil long : Portée 15’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Fusil long : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 - Réservoir à peste (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] sur les attaques du Fusil long.
 ##### Règles spéciales :
 - Tir précis : ce modèle ne souffre jamais du malus de ligne de vue non dégagée.
@@ -189,16 +190,16 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ---
 ### Porte-peste — 16 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Porte-peste | **5** | **4+** | **-** | **5+** | **7** | **2** | **2** | **2** | Vermine |
-| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+|             | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ----------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Porte-peste | **5**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Vermine  |
+| **Mêlée:**  | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Fléau enflammée (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
+- Fléau enflammée (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 ##### Règles spéciales :
-- Exploiter les faiblesses : si ce modèle attaque un modèle empoisonné, ses résultats d’attaque obtenant 5+ naturel ne peuvent être sauvegardés par des jets d’armure.
+- Exploiter les faiblesses : si ce modèle attaque un modèle empoisonné, ses résultats d’attaque obtenant 5+ infligent  des dégâts bruts.
 ---
 ### Rat mutant — 21 pts
 
@@ -303,8 +304,8 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 | **Mêlée:** | 3d6 |  | **Tir:** | 4d6 |  |  |  |  |  |
 
 ##### Équipement :
-- Roulis léger : Portée 15’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-- Roulis lourd : Portée 18’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].
+- Roulis léger : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+- Roulis lourd : Portée (C : 15’’, L : 21’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].
 ##### Règles spéciales :
 - Tourner les barils plus vite ! (1-4) : renforcement à utiliser lors d’une attaque de tir, pour chaque Scorie dépensée, ajoutez 1d6 au nombre d’attaques. Cependant, pour chaque résultat de 6 obtenu, reculez le Bourreau à Roulis de 2’’ dans la direction opposée au tir.
 ---
@@ -355,11 +356,11 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 | **Mêlée:** | 3d6 |  | **Tir:** | voir ci-dessous |  |  |  |  |  |
 
 ##### Équipement :
-- Techno-canon : Portée 24’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Techno-canon : Portée (C : 15’’, L : 24’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
 - Surcharge de scories (1-3) : renforcement, lorsque le techno-canon effectue une attaque de tir, jetez 1 à 3 d6 pour déterminer le nombre de tir que le canon va effectuer. Cependant, si au moins un résultat de 6 est obtenu pour déterminer le nombre de tirs, le canon s’enraille et ne peut pas tirer.
 ---
-### Tunnel — 16 pts
+### Tunnel — 24 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

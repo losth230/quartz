@@ -254,10 +254,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Guerrier du clan — 6 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Guerrier | **4** | **5+** | **4+** | **5+** | **6** | **1** | **2** | **1** | Nain |
-| **Mêlée:** | 2d6 |  | **Tir:** | 1d6 |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Guerrier   | **4**   | **5+**                                                                               | **5+**                                                                                  | **5+**                                                                          | **6**                                                                            | **1**  | **2**  | **1**  | Nain     |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 2d6                                                                             |                                                                                  |        |        |        |          |
 
 ##### Équipement :
 - Bouclier (+1 pts) : l’armure de cette unité devient 4+.

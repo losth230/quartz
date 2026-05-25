@@ -39,8 +39,8 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 - **Gueule Béante (court, 9+, projectile) :** Portée 12'', 4d6, si la moindre blessure est obtenue, vous récupérez 1 PV.
 - **Ruée (court, 7+, projectile) :** Tous les modèles amis à 6'' ou moins bénéficient de +2 Vitesse pour le reste du tour.
 #### Niveau 2
-- **Renforcement (court, 16+) :** Portée.
-- **Reflet Cristallin (12+, réaction) :** Portée.
+- **Partir à la chasse (court, 13+, projectile) :** Portée  12'', cette  attaque possède un montant de d6 égal à la caractéristique de PV de sa cible.
+- **Régurgitation (court, 12+, projectile) :** Portée  12'', 3d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].
 #### Niveau 3
 - **Grand festin (long, 18+, amélioration 5) :** Déclenchez un festin sur l'intégralité de vos modèles, où qu'ils soient.
 
@@ -58,7 +58,6 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 - Hache lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]]
 ##### Magie :
 - Le Crache-feu est un lanceur de sorts de niveau 2 ayant accès au Domaine Primordial et au Domaine du Festin.
-
 ##### Règles spéciales :
 - Immolation : vous pouvez dépenser 1 dé de votre réserve de magie pour gagner la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] le temps d’une attaque.
 
@@ -125,10 +124,10 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 ---
 ### Gabier — 26 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Gabier | **6** | **3+** | **-** | **4+** | **8** | **4** | **3** | **3** | Krovor |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Gabier     | **6**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **4**  | **3**  | **3**  | Krovor   |
+| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
@@ -196,7 +195,7 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 ##### Équipement :
 - Bombarde : Portée 18’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
-- Charge avec défenses (1) : si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 1d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] à l’attaque du mammouth. Les unités ainsi chargées ne peuvent bénéficier de Préparation ni de Défense d’un décor.
+- Charge avec défenses (1) : si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 1d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] à l’attaque du Grondeur. Les modèles ainsi ne peuvent bénéficier de Défense d’obstacle, ou de n’importe quelle autre règle défensive.
 
 ---
 ## Modèles Spéciaux
@@ -214,7 +213,7 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 - Niom : à la fin de chaque tour, le Géant peut désigner une unité de taille 2 ou moins avec laquelle il est engagé en mêlée, et la manger. Elle est alors retirée du jeu.
 
 ---
-### Mammouth — 76 pts
+### Mammouth — 80 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -223,6 +222,6 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].*
 ##### Règles spéciales :
-- Charge avec défenses (1) : si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 1d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] à l’attaque du mammouth. Les unités ainsi chargées ne peuvent bénéficier de règle défensive.
+- Charge avec défenses supérieure (1) : si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 4d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] à l’attaque du mammouth. Les modèles ainsi ne peuvent bénéficier de Défense d’obstacle, ou de n’importe quelle autre règle défensive.
 
 ---

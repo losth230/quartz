@@ -44,30 +44,31 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 
 <center><h2>Royaumes et Ordres</h2></center>
 
-#### Royaume de Til Armen
+## Royaume de Til Armen
 Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
 #### Inquisition
 Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
-#### Ordre des Chevaliers :
+#### Ordre des Chevaliers
 Les modèles Chevaliers bénéficient de +1 Vitesse.
-#### Royaume de Lun
+## Royaume de Lun
 Lors de chaque phase d’initiative, vous générez 3 manœuvres.
 #### Palais des Légendes
 Lorsqu’un modèle utilise Faveur Divine, il gagne [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 #### Ordre des Paladins
 Au début de chaque tour, désignez un modèle adverse comme Hérétique, les modèles Chevaliers peuvent relancer leurs attaques en mêlée ratées contre ce modèle pour le reste du tour.
-#### Royaume de Seth
+## Empire de Seth
 Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 #### Duché d’Hydrac
 Au début de chaque tour, désignez un modèle Chevalier et octroyez-lui Volonté de Fer.
-#### Ordre des Chevaliers d’Ocre
+#### Ordre des Chevaliers du Clair Obscur
 Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
-#### Royaume de Thoriath
+## Royaume de Thoriath
 Au début de chaque tour, tous les modèles Paysan bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 #### Duché de Boïtal
 Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1d6 en mêlée sur leurs montures.
 #### Duché de Fessac
 Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer une marche gratuite.
+
 ---
 ## Commandants
 ### Abbesse — 44 pts
@@ -139,7 +140,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Équipement :
 - Pistolet : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
-- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Lenera, générez 2 Manœuvres.
+- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Hegel, générez 2 Manœuvres.
 - Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 ### Jeanne — 42 pts
@@ -264,7 +265,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Assassinat : si ce modèle attaque une cible de dos et après avoir résolu les touches, vous pouvez soit transformer une de ses touches impaires en touche pair, soit lui conférer la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
 ---
-### Chevaucheur de Pégase — 24 pts
+### Chevaucheur de Pégase — 26 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

@@ -23,6 +23,8 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle Anti-infanterie.
 - **Discipline** : apprenez une [[Règles/Règles#Compétences|compétence]] supplémentaire.
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
+- **Bourreau :** vos attaques contre les cibles ayant moins de 50% de leurs Points de Vie bénéficient de +2d6.
+- **Visée :** vos pouvez utiliser une action longue au lieu d'une action courte pour un tir et ainsi bénéficier de Perforant (+1) pour cette attaque.
 ##### Saignements
 Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* sur votre cible.
 ##### Croc en jambe
@@ -35,7 +37,7 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 ou 9, vous pouvez améliorer votre [[Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveaux 4,7
-##### Exécution
+##### Entrainement supérieur
 Lorsque vous atteignez le niveau 4 ou 7, vous pouvez apprendre un nouvel [[Règles/classes/guerrier#Entrainement|entrainement]].
 ## Niveau 10
 ##### Charge supérieure
@@ -91,25 +93,26 @@ Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cava
 ___
 <center><h2>Escrimeur</h2> </center>
 
-##### Postures (Niveau 2)
-Si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de l'Aube, et chaque attaque change votre posture pour la suivante.  
-**Posture de l'Aube** : lorsque vous attaquez dans cette posture, vos attaques ont +1d6 en mêlée. Lorsque vous réussissez à toucher un ennemi qui *[[Règles/Règles spéciales#saignement|saigne]]*, vous entrer en posture de l'Aube après a voir changé votre posture pour la suivante.  
-**Posture du Crépuscule** : après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Une fois votre réaction dépensée, adoptez la posture du Aurore. Si votre cible *[[Règles/Règles spéciales#saignement|saignait]]*, vous pouvez choisir entre le posture de l'Aube et la posture du Aurore.  
-**Posture de l'Aurore** : lorsque vous entrez dans cette posture, vous gagnez *[[Règles/Règles spéciales#Egide (N)|Egide (1)]]*.
-##### Posture de l'Etoile (Niveau 2)
-Si vous parvenez à changer 2 fois de posture en 1 seul tour, vous entrez en posture de L'Etoile.  
-**Posture de l'Etoile** : Lorsque vous entrez dans cette posture, vous pouvez immédiatement effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
+##### Postures (niveau 2)
+A partir du niveau 2, si vous combattez avec une arme à une main et rien dans votre autre main, vous pouvez adopter une posture en attaquant. Votre première attaque vous octroie la posture de de l'Aurore, et chaque attaque change votre posture la posture différente de votre choix.
+- **Posture de l'Aurore :** après avoir subit une attaque en mêlée en tenant cette posture, vous pouvez dépenser votre réaction pour effectuer une attaque en mêlée contre la cible. Si votre attaque  obtient au moins une blessure, vous générez une **Manœuvre**. 
+- **Posture de l'Aube :** lorsque vous entrez dans cette posture, vos attaques en mêlée bénéficient de +1d6. Si votre attaque  obtient au moins une touche, vous générez une **Manœuvre**. 
+- **Posture du Crépuscule :** lorsque vous entrez dans cette posture, vous recevez Egide (1). Si votre égide bloque une touche, vous générez une **Manœuvre**. 
+- **Posture de l’Etoile :** lorsque vous effectuez une attaque en mêlée dans cette posture, votre attaque inflige des dégâts bruts. Perdez ensuite tous les dés octroyés par la posture de l'Aube.
+##### Manœuvres (Niveau 2)
+A partir du niveau 2, vous pouvez dépenser vos **Manœuvres** pour des actions spéciales.
+- **Frappe de l'étoile (3 Manœuvres)** : dépenser une action courte pour effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
+- **Retrait défensif (1 Manœuvre)** : dépensez votre réaction pour recevoir Egide (2).
+- **Massacre (1 Manœuvre)** : à utiliser lors d'une attaque en mêlée pour gagner 2d6 supplémentaires.
 ##### Feinte (niveau 5)
-Si vous changez de posture pendant un tour, vous pouvez immédiatement effectuer un mouvement de 3'' et appliquer un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* à une créature à  1'' ou moins.
+A partir du niveau 5, si vous réussissez au moins 1 jet d'armure après une attaque, vous pouvez dépenser votre réaction pour vous déplacer de 3m et infligez 1 dégât brut à une créature à 1m ou moins. Cette règle s'applique si une Egide bloque une touche
 ##### Stabilité (niveau 8)
 Vos postures s'améliorent comme suit :
-**Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée (total +2d6 en mêlée).  
-**Posture du Crépuscule** : votre riposte s'effectue avec 1d6 supplémentaire.  
-**Posture de l'aurore** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
-**Posture de l'Etoile** : pour chaque blessure obtenue, vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]* à votre cible.  
+**Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée.
+**Posture de l'Aurore** : vous pouvez maintenant riposter contre des attaques à distance sans limite de portée. 
+**Posture du crépuscule** : vous gagnez une *[[Règles/Règles spéciales#Egide (N)|Egide]]* supplémentaire (total *[[Règles/Règles spéciales#Egide (N)|Egide (2)]]*).  
 ##### Coup de grâce (niveau 11)
-A partir du niveau 11, votre posture du Crépuscule vous permet de riposter contre les attaques à distance, sans limite de portée.  
-De plus, vous pouvez refuser d'entrer au Posture de l'Aube. A la place, si vous parvenez à changer de posture 3 fois en un seul tour, vous entrez en Posture de l'Aube Radieuse, ce qui vous octroie tous les bonus de la Posture de l'Aube, un bonus de +5d6 en mêlée pour le reste du tour ainsi que 5 *[[Règles/Règles spéciales#Egide (N)|Egides]]* que vous pouvez répartir entre vos alliés à 6'' ou moins. 
+
 
 ___
 <center><h2>Masochiste</h2> </center>

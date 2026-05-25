@@ -14,7 +14,7 @@ Que vous soyez un vétéran chevronné des wargames ou un nouveau venu cherchant
 S'il arrive que vous ne compreniez pas une règle, que vous ne soyez pas sûr de comment l'appliquer ou quoi que ce soit d'autre, la meilleure solution est d'en discuter avec les autres joueurs. Chasse & Pêche est votre jeu, à vous de l'adapter selon vos envies afin d'avoir la meilleure expérience possible.
 ### Le matériel d'un.e chef.fe de guerre :
 #### Les dés :
-Chasse & Pêche se joue essentiellement avec des d6 (dés à 6 faces) Nous vous recommandons donc de vous munir d'une vingtaine de d8 et d'une trentaine de d6. Certaines règles vous demanderont de lancer 2d6, 3d6 ou même davantage, jetez alors autant de dés que nécessaires. *Par exemple, si une règle vous demande de lancer 3d6, vous devrez lancer 3 dés à 6 faces.* Notez que des règles peuvent vous demander de relancer des dés, cependant, aucun dé ne peut être relancé plus d'une fois.
+Chasse & Pêche se joue essentiellement avec des d6 (dés à 6 faces) Nous vous recommandons donc de vous munir d'une vingtaine de d6. Certaines règles vous demanderont de lancer 2d6, 3d6 ou même davantage, jetez alors autant de dés que nécessaires. *Par exemple, si une règle vous demande de lancer 3d6, vous devrez lancer 3 dés à 6 faces.* Notez que des règles peuvent vous demander de relancer des dés, cependant, aucun dé ne peut être relancé plus d'une fois.
 Certaines règles peuvent venir modifier les lancer d'un dé, par exemple, un modificateur de +1 implique que vous devez ajouter 1 au score obtenu par chacun de vos dés (plusieurs modificateurs peuvent être cumulés).
 #### Le mètre-ruban :
 Pour jouer à Chasse & Pêche, vous devrez également vous munir d'un mètre-ruban afin de mesurer les distances, celles-ci sont toutes exprimées en pouces, notées ''. Vous pouvez mesurer les distances à tout moment durant la partie.
@@ -54,6 +54,7 @@ Dans Chasse & Pêche, les figurines de votre bande sont rangées en trois catég
 - Modèles : le terme modèle désigne n'importe quel corps (unités, troupes) à son rang le plus haut : en cas de troupe, le terme modèle fait référence à la troupe et non aux unités.
 ### Amis, alliés et ennemis :
 Le terme ami désigne l'ensemble des unités que vous contrôlez, allié désigne l'ensemble des unités de vos alliés si vous jouez dans un format autre que le 1v1 et ennemi désigne l'ensemble des unités de votre ou vos adversaires.
+
 ---
 
 <center><h2>Déroulement d'une Partie</h2></center>
@@ -421,6 +422,7 @@ Portée 12'', cible une unité ennemie. Lors de la prochaine activation de l'uni
 - Zone orange : il s'agit de la zone de déploiement du joueur défenseur.
 #### Se déployer :
 Une fois le déploiement et le scénario tiré, chaque joueur jette 1d6. Le joueur ayant obtenu le résultat le plus haut choisit sa zone de déploiement, puis déploie son premier modèle. Les joueurs déploient leurs modèles chacun leur tour, celui ayant fini de déployer sa bande en premier choisira quel joueur prend le premier tour.
+
 ---
 
 <center><h2>Déploiements</h2></center>

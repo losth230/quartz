@@ -19,7 +19,7 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 - **Tenir bon ! (court, 3+, amélioration) :** Portée 9’’, cible un modèle ami, même si celui-ci est engagé en mêlée. Il bénéficie d’un bonus de +1 à ses jets de moral et d’armure pour le reste du tour.
 → Version renforcée : au prix d’une action longue, le bonus aux jets passe de +1 à +2.
 #### Niveau 2
-- **Blizzard (long, 8+, météo) :** La vitesse de tous les modèles est réduite de 1, pour un maximum ne pouvant dépasser 5.
+- **Blizzard (long, 8+, météo) :** La vitesse de tous les modèles est réduite de 1, et leur vitesse ne peut pas dépasser 5.
 - **Mur de glace (long, 8+, projectile) :** Placez un mur de glace entièrement à 18’’ du lanceur. Il fait Taille 4 et est indestructible. Il disparait à la fin du tour.
 #### Niveau 3
 - **[[Wargame/_Visualisation/Règles spéciales/Souffle|Souffle]] du grand dragon blanc (court, 13+, projectile) :** Portée 12’’, 3d6, Gel, [[Wargame/_Visualisation/Règles spéciales/Souffle|Souffle]]. Ce sort se lance deux fois.
@@ -80,10 +80,10 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ---
 ### Guerrier des steppes — 6 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Guerrier | **5** | **5+** | **-** | **5+** | **7** | **1** | **2** | **1** | Norls |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Guerrier   | **5**   | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **1**  | **2**  | **1**  | Norls    |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Équipement :
 - Bouclier (+1 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.

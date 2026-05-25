@@ -26,188 +26,93 @@ plateforme de tir / plateforme de tir instable
 
 KROVORS 
 
-  
+~~domaine du festin :~~ 
+#### ~~Niveau 2~~
+- ~~Renforcement (court, 16+) : Portée.~~
+- ~~Reflet Cristallin (12+, réaction) : Portée.~~
 
-domaine du festin : 
+~~le gabier : il a 4 PV ?~~  
 
-#### Niveau 2
+~~le goinfre il a 4 PV ?~~
 
-- Renforcement (court, 16+) : Portée.
-    
-- Reflet Cristallin (12+, réaction) : Portée.
-    
+~~bélier bombarde : à l’attaque du mammouth.  c’est un mammouth ?~~ 
 
-  
+~~les règles des mamouths, il y en a plusieurs dont la bombarde :  si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 1d6 et [Force Dévastatrice (+1)](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Force-D%C3%A9vastatrice) à l’attaque du mammouth. Les unités ainsi chargées ne peuvent bénéficier de Préparation ni de Défense d’un décor.~~ 
 
-le gabier : il a 4 PV ?  
-
-  
-
-le goinfre il a 4 PV ?
-
-  
-
-bélier bombarde : à l’attaque du mammouth.  c’est un mammouth ? 
-
-  
-
-les règles des mamouths, il y en a plusieurs dont la bombarde :  si cette unité réalise une charge sur une distance supérieure à 4’’, ajoutez 1d6 et [Force Dévastatrice (+1)](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Force-D%C3%A9vastatrice) à l’attaque du mammouth. Les unités ainsi chargées ne peuvent bénéficier de Préparation ni de Défense d’un décor. 
-
-  
-
-à remplacer par : les modèles adverses ne peuvent bénéficier de Défense d’obstacle, ou de n’importe quelle autre règle défensive 
-
-  
+~~à remplacer par : les modèles adverses ne peuvent bénéficier de Défense d’obstacle, ou de n’importe quelle autre règle défensive~~ 
 
 LEGION D OUTRE TOMBE
 
-  
+~~sur le domblaf  : Danse Macabre : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche.~~
 
-sur le domblaf  : Danse Macabre : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche.
+~~une petite définition des marques blanches ?~~
 
-une petite définition des marques blanches ?
+~~sur weibroth :  une Marque Blanche.~~ 
 
-  
-
-sur weibroth :  une Marque Blanche. 
-
-  
-
-sur cavalier de l’effroie : la police sur les modèles de bases au niveau des règles spéciales est cheloue
-
-  
+~~sur cavalier de l’effroie : la police sur les modèles de bases au niveau des règles spéciales est cheloue~~
 
 NORLS 
 
-  
+- ~~Blizzard (long, 8+, météo) : La vitesse de tous les modèles est réduite de 1, pour un maximum ne pouvant dépasser 5.~~
+~~pas clair~~
 
-- Blizzard (long, 8+, météo) : La vitesse de tous les modèles est réduite de 1, pour un maximum ne pouvant dépasser 5.
-    
-
-pas clair
-
-  
-
-guerrier des steppes à 4D6 !!!!
-
-  
+~~guerrier des steppes à 4D6 !!!!~~
 
 PEAUX VERTES 
 
-  
+#### ~~Railleries :~~
+~~Les modèles Orques ne sont pas affectés par les modèles Gobelins comme faisant partie de leur armée en ce qui concerne la Déroute.~~
 
-#### Railleries :
+~~Brutalité~~
+~~Orques uniquement. Après qu’un modèle ami ait éliminé un modèle ennemi, retirez son marqueur Activé ne peut être utilisé qu’une seule fois par unité dans un même tour. L’unité ne peut bénéficier d’action anticipée.~~ 
 
-Les modèles Orques ne sont pas affectés par les modèles Gobelins comme faisant partie de leur armée en ce qui concerne la Déroute.
+~~Equilibre~~ 
 
-  
+~~Equilibre : Si l’affinité de votre bande est équilibrée, vous pouvez relancer tous les jets d’attaque en mêlée et à distance, ainsi que les jets d’armure, ayant obtenu 1.~~ 
+#### ~~Occultisme~~
+~~Affinité Occulte (5+) : Si votre bande est d’affinité Occulte, chaque fois qu’un de vos modèles rate un test de moral, il peut perdre 2 PV pour le réussir. Equilibre : Si l’affinité de votre bande est équilibrée, vous pouvez relancer tous les jets d’attaque en mêlée et à distance, ainsi que les jets d’armure ayant obtenu 1.~~
 
-Brutalité
+#### ~~Niveau 1~~
+- ~~Colonne de feu (court, 6+, projectile) : Portée 9”, attaques enflammées. La cible perd 1d6 PV.~~
+~~CA C CASSE C TROP FOR~~
 
-Orques uniquement. Après qu’un modèle ami ait éliminé un modèle ennemi, retirez son marqueur Activé ne peut être utilisé qu’une seule fois par unité dans un même tour. L’unité ne peut bénéficier d’action anticipée. 
+### ~~Domaine de la Sournoizerie~~
 
-  
+~~Attribut : Filouterie : Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 15” ou moins qui bénéficie de +3 Ini pour le reste du tour.~~
 
-Equilibre 
+### ~~Slaig le Pourfeneur sur Magmadon asservi~~
+~~Très motivant /~~ 
 
-Equilibre : Si l’affinité de votre bande est équilibrée, vous pouvez relancer tous les jets d’attaque en mêlée et à distance, ainsi que les jets d’armure, ayant obtenu 1. 
+~~Chevaucheur de grondeur~~ 
+ ~~[Charge Furieuse](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Charge-Furieuse)~~ 
 
-  
+~~le sapeur c’est trop fort~~ 
 
-#### Occultisme
+~~traqueur embusqué~~ 
+~~[Frappe Toujours en Premier](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Frappe-Toujours-en-Premier).  lien en bleu qui ne marche pas (cf plus haut je disais faudrait faire un lien)~~
 
-Affinité Occulte (5+) : Si votre bande est d’affinité Occulte, chaque fois qu’un de vos modèles rate un test de moral, il peut perdre 2 PV pour le réussir. Equilibre : Si l’affinité de votre bande est équilibrée, vous pouvez relancer tous les jets d’attaque en mêlée et à distance, ainsi que les jets d’armure ayant obtenu 1.
+### ~~Catapulte — 32 pts~~
+~~pas de valeur de tire de la catapulte~~ 
 
-  
+~~Grand icone sanglant~~ 
+~~[Motivant](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Motivant). le lien est cassé~~ 
 
-#### Niveau 1
+~~Tarentule :~~ 
+~~c’est marqué géant au lieu de tarentule dans le tableau~~
+~~et [Anti-Infanterie](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Anti-Infanterie), [Cavalerie](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Cavalerie), [Force Dévastatrice (2)](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Force-D%C3%A9vastatrice). / -~~
 
-- Colonne de feu (court, 6+, projectile) : Portée 9”, attaques enflammées. La cible perd 1d6 PV.
-    
+~~PEUPLE LIBRE~~ 
+~~j’ai juré y a trop de personnages nommés~~
+~~les chevaliers pégases c fort~~
 
-CA C CASSE C TROP FOR
+~~VERMINE DU CHAOS~~
 
-  
+~~double portee a faire sur les skavens~~ 
 
-### Domaine de la Sournoizerie
+~~porte peste : fléau enflammé sur l’unité vaux un point d’amélioration ?~~ 
+~~catapulte un peu faible en coût ? notamment par rapport au techno cannon~~
 
-Attribut : Filouterie : Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 15” ou moins qui bénéficie de +3 Ini pour le reste du tour.
-
-  
-
-### Slaig le Pourfendeur sur Magmadon asservi
-
-Très motivant / 
-
-  
-
-Chevaucheur de grondeur 
-
- [Charge Furieuse](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Charge-Furieuse) 
-
-  
-
-le sapeur c’est trop fort 
-
-  
-
-traqueur embusqué 
-
-[Frappe Toujours en Premier](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Frappe-Toujours-en-Premier).  lien en bleu qui ne marche pas (cf plus haut je disais faudrait faire un lien)
-
-  
-
-### Catapulte — 32 pts
-
-pas de valeur de tire de la catapulte 
-
-  
-
-Grand icone sanglant 
-
-[Motivant](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Motivant). le lien est cassé 
-
-  
-
-Tarentule : 
-
-c’est marqué géant au lieu de tarentule dans le tableau
-
-et
-
-[Anti-Infanterie](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Anti-Infanterie), [Cavalerie](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Cavalerie), [Force Dévastatrice (2)](https://losth230.github.io/quartz/Wargame/_Visualisation/R%C3%A8gles-sp%C3%A9ciales/Force-D%C3%A9vastatrice). / -
-
-  
-
-PEUPLE LIBRE 
-
-  
-
-j’ai juré y a trop de personnages nommés
-
-  
-
-les chevaliers pégases c fort
-
-  
-
-VERMINE DU CHAOS
-
-  
-
-double portee a faire sur les skavens 
-
-  
-
-porte peste : fléau enflammé sur l’unité vaux un point d’amélioration ? 
-
-  
-
-catapulte un peu faible en coût ? notamment par rapport au techno cannon
-
-  
-
-TUNNEL BROKEN
+~~TUNNEL BROKEN~~
 
   
 
@@ -233,11 +138,11 @@ la règle “recharger” n’existe plus pour les modificatifs des tirs. 
   
   
 
-LES REGLES DE BATAILLES 
+L~~ES REGLES DE BATAILLES~~ 
 
   
 
-les dès : Nous vous recommandons donc de vous munir d’une vingtaine de d8 et d’une trentaine de d6.  ?
+~~les dès : Nous vous recommandons donc de vous munir d’une vingtaine de d8 et d’une trentaine de d6.  ?~~
 
   
 

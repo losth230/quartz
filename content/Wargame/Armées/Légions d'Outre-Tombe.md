@@ -35,10 +35,10 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ## Commandants
 ### Aklash le Maitre du temps — 41 pts
 
-| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Aklash | **6** | **6+** | **4+** | **5+** | **8** | **3** | **2** | **3** | Fantôme/Ombre |
-| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------- |
+| Aklash     | **6**   | **6+**                                                                               | **4+**                                                                                  | **5+**                                                                          | **8**                                                                            | **3**  | **2**  | **3**  | Fantôme/Ombre |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |               |
 
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Magie :
@@ -74,10 +74,10 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ---
 ### Domblaʄ — 56 pts
 
-| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Domblaʄ | **6** | **4+** | **-** | **5+** | **10** | **5** | **2** | **4** | Fantôme |
-| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Domblaʄ    | **6**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **5**  | **2**  | **4**  | Ombre    |
+| **Mêlée:** | 6d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
@@ -87,10 +87,10 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ---
 ### Geôlier — 34 pts
 
-| 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Geôlier | **6** | **4+** | **-** | **5+** | **10** | **8** | **4** | **6** | Fantôme/Ombre |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |     |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------- | --- |
+| Geôlier    | **6**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **8**  | **4**  | **6**  | Fantôme/Ombre |     |
+| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |               |     |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
@@ -178,6 +178,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+
 ---
 ### Cavalier de l’effroi — 21 pts
 
@@ -188,6 +189,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 | **Mêlée:** | 2d6 / 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+
 ---
 ### ẞterblich — 58 pts
 
