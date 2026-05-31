@@ -3,7 +3,7 @@
 #### Marque
 Lorsqu’un modèle ami attaque un modèle *marqué*, il peut relancer les jets d’attaques en mêlée et à distance ayant obtenu 1.
 #### Corruption
-Lorsqu’un modèle ami *Corrompt,* désignez un modèle adverse à 6’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
+Lorsqu’un modèle ami *Corrompt,* désignez un modèle à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par marqueur *Corruption*.
 #### Cité engloutie
 Au début de chaque tour, Corrompt.
 #### Evolution (N)
@@ -14,14 +14,12 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 9’’ ou moins du lanceur qui doit effectuer un test de panique.
 #### Niveau 1
-
 - **Dévoration d’esprit (court, 3+, projectile) :** Portée 12’’, la cible reçoit 2 marqueurs *Corruption*.
 - **Marquage d’âme (court, 0+, malédiction) :** Portée 18’’, la cible est *Marquée* pour le reste de la partie.
 #### Niveau 2
 - **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12’’ ou moins.
 - **Hantise (court, 14+, Projectile) :** Portée 9’’, force un modèle à effectuer un test de moral.
 #### Niveau 3
-
 - **Corruption supérieure (long, 18+, projectile) :** Portée 18’’, Corrompt 3 fois. Ce sort se relance ensuite une nouvelle fois depuis la cible.
 
 ---
@@ -30,10 +28,10 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ### Mère de couvée — 32 pts
 
-| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
-| Gnûl       | **3**   | **4+**                                                                       | **-**    | **5+**                                                                         | **9**   | **4**                                                                   | **2**  | **4**                                                                    | Thraksan |        |        |        |          |
-| **Mêlée:** | 5d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- |
+| Gnûl       | **3**   | **4+**                                                                       | **-**    | **5+**                                                                         | **9**   | **4**                                                                   | **2**  | **4**                                                                    | Thraksan |
+| **Mêlée:** | 5d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 
@@ -61,7 +59,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
+|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**3**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -162,7 +160,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**2**|**2**|Thraksan|
+|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**3**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
@@ -179,7 +177,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
+|Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**3**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Équipement :
