@@ -1,7 +1,11 @@
 **Daïne :** *Fille de Yehudiah, Daïne est la déesse des glaces, qui a notamment fait don de la moitié de son coeur pour fabriquer une arme capable de sauver les siens.* Un paladin faisant appel aux pouvoirs de Daïne peut dépenser sa réaction pour appliquer 2 marqueurs Gel sur une cible.  
 **Bahamutt :** *Bahamutt est l'exemple du dieu auto intronisé, né humain, la légende raconte qu'il a fondé l'empire de Lun en repoussant des hordes de créatures venues des Ténèbres, et qu'à sa mort un culte lui a été dédié.*  Un paladin faisant appel aux pouvoirs de Bahamutt peut désigner à la fin d'un tour une créature à 6m ou moins qui peut immédiatement rejouer un tour complet.  
 **Yehudiah :** *Yehudiah, Père des Dieux et Maitre des Racines, est le responsable du passage entre la vie et la mort. La présence des Marcheurs en ce monde est la faute de ses échecs, et Yehudiah semble se terrer en silence depuis plusieurs décennies.* Un paladin faisant appel aux pouvoirs de Yehudiah peut dépenser sa réaction pour placer deux marqueurs Fatigue sur une cible à 9m ou moins.  
+
 **Pasublo :**  *Pasublo est le dieu de la  fourberie et des  subterfuges. Il  sauva se sacrifia pour sauver sa sœur Daïne, mais la légende raconte qu'il serait toujours en vie.* Un paladin faisant appel aux pouvoirs de Pasublo peut dépenser sa réaction pour se téléporter sur 6m et gagner la règle spéciale Furtif pour 3 tours.
-**Vaela :** *Vaela est la déesse des plaines et des moissons.*  Un paladin faisant appel aux pouvoirs de Vaela peut dépenser une action courte pour rendre 2 PV à une créature qu'il peut toucher.  
-**Vrasha :** *Vrasha est la déesse orque de la magie, celle responsable de la transition des peaux-vertes de l'occultisme vers le chamanisme.* Un paladin faisant appel aux pouvoirs de Vrasha peut dépenser sa réaction pour récupérer 2 dés dans sa réserve de magie.  
+
+**Vaela :** *Vaela est la déesse des plaines et des moissons.*  Un paladin faisant appel aux pouvoirs de Vaela peut dépenser une action courte pour rendre 2 PV à une créature qu'il peut toucher. 
+
+**Vrasha :** *Vrasha est la déesse orque de la magie, celle responsable de la transition des peaux-vertes de l'occultisme vers le chamanisme.*  Un paladin faisant appel aux pouvoirs de Vrasha peut dépenser sa réaction pour récupérer 2 dés dans sa réserve de magie.  
+
 **Paramus :** *Après la  destruction de son peuple par les Thraksans, Fordinson jura de se venger et devint Paramus, le forgeron des dieux.* Un paladin faisant appel aux pouvoirs de Paramus peut conférer Attaques enflammées à une arme qu'il fabrique.  

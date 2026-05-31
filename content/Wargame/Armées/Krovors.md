@@ -62,7 +62,7 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 - Immolation : vous pouvez dépenser 1 dé de votre réserve de magie pour gagner la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] le temps d’une attaque.
 
 ---
-### Daguiel le sanguinaire — 45 pts
+### Daguiel l'imbutable — 54 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -74,6 +74,7 @@ Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclenche
 - Hache lourde (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Manger la chair des vaincus : les attaques de Daguiel génèrent une quantité de **Stock de vivres** égale au nombre de blessures réussies.
+- Robustesse : la première fois que Daguiel est réduit à 0 PV, il remonte à 1 PV.
 
 ---
 ### Onytar — 46 pts
