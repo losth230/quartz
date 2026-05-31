@@ -20,7 +20,7 @@ Lorsqu’une unité Krovor réussit une charge, elle génère un **Stock de vivr
 
 <center><h2>Festins</h2></center>
 
-Les Commandants Krovors peuvent dépenser 5 **Stocks de vivres** pour déclencher des festins, l'effet du festin est aléatoire :
+Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de vivres** pour déclencher des festins, l'effet du festin est aléatoire :
 - **Festin léger :** les modèles amis à 6’’ ou moins bénéficient d’une marche gratuite.
 - **Festin de sang :** les modèles amis à 6’’ ou moins bénéficient de +1d6 en mêlée pour le reste du tour.
 - **Festin régénérant :** les modèles à 9’’ ou moins perdent une fatigue et récupèrent 1 PV. S’ils ne possédaient pas de fatigue, ils gagnent [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
