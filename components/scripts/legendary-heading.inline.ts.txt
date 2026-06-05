@@ -1,0 +1,10 @@
+document.addEventListener("nav", () => {
+  // Cible tous les h3 du contenu principal
+  document.querySelectorAll("article h3").forEach((heading) => {
+    const text = heading.textContent ?? ""
+    // Si le titre contient ✦, on ajoute la classe
+    if (text.includes("✦")) {
+      heading.classList.add("legendary-unit")
+    }
+  })
+})
