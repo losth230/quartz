@@ -128,10 +128,28 @@ body[data-slug="index"] {
   position: relative;
   padding: 1.2rem 1.5rem 1rem;
   margin: 1.5rem 0;
-  border-radius: 6px;
 
   // Animation de scintillement subtil
   animation: legendary-glow 4s ease-in-out infinite;
+
+  // Le titre h3 à l'intérieur prend la couleur dorée
+  h3 {
+    background: linear-gradient(
+      135deg,
+      #b8860b,
+      #d4a017 30%,
+      #f4d03f 50%,
+      #d4a017 70%,
+      #b8860b
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    border-left-color: #d4a017;  // si tu avais une bordure gauche
+    animation: legendary-shimmer 4s ease-in-out infinite;
+  }
 
 }
 
