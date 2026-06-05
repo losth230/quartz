@@ -117,18 +117,23 @@ body[data-slug="index"] {
   }
 }
 
+// 
+
+
 // ═══════════════════════════════════════════════════════════
-//   Personnages légendaires — effet carte rare
+//   Titres de personnages légendaires
 // ═══════════════════════════════════════════════════════════
 
-.legendary {
-  // Texte doré avec dégradé
+article h3.legendary-unit {
+  // Dégradé doré métallique
   background: linear-gradient(
     135deg,
-    #d4a017 0%,
-    #f4d03f 25%,
+    #b8860b 0%,
+    #d4a017 20%,
+    #f4d03f 40%,
     #fff4b8 50%,
-    #f4d03f 75%,
+    #f4d03f 60%,
+    #d4a017 80%,
     #b8860b 100%
   );
   background-size: 200% auto;
@@ -137,24 +142,20 @@ body[data-slug="index"] {
   color: transparent;
   -webkit-text-fill-color: transparent;
   
-  // Légère ombre dorée
+  // Lueur dorée
   filter: drop-shadow(0 0 4px rgba(212, 160, 23, 0.4));
   
-  // Animation de scintillement (le dégradé glisse en boucle)
+  // Animation : le dégradé glisse en boucle
   animation: legendary-shimmer 4s ease-in-out infinite;
 }
 
 @keyframes legendary-shimmer {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
 }
 
-// Mode sombre : tonalité plus orangée et glow plus marqué
-[saved-theme="dark"] .legendary {
+// Mode sombre : tonalité plus dorée et glow renforcé
+[saved-theme="dark"] article h3.legendary-unit {
   background: linear-gradient(
     135deg,
     #b8860b 0%,

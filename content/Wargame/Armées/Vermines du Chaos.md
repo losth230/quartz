@@ -84,21 +84,21 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ---
 ### Meneur — 34 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Meneur | **5** | **4+** | **-** | **4+** | **4** | **4** | **2** | **5** | Rat |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Meneur     | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **6**                                                                            | **4**  | **2**  | **5**  | Rat      |
+| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]].*
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Appel au clan (1-2) : choisissez 1 à 2 modèles amis (en fonction du nombre de scories dépensées) pour déclencher leur règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 ---
 ### Prophète de la Peste — 29 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Prophète | **5** | **4+** | **4+** | **4+** | **4** | **4** | **2** | **5** | Rat |
-| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Prophète   | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **4**                                                                            | **2**  | **2**  | **5**  | Rat      |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Magie :
 - Le Prophète est un lanceur de sorts de niveau 3 ayant accès au Domaine des Egouts et au Domaine des Ténèbres.
