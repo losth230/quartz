@@ -32,12 +32,12 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - **Expérience finale (long, 18+, projectile) :** Déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] de tous vos modèles.
 ---
 ## Commandants
-### Assassin des bas-fonds — 52 pts
+### Assassin des bas-fonds — 56 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Assassin | **5** | **3+** | **-** | **6+** | **7** | **3** | **2** | **4** | Rat |
-| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 7d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Équipement :
@@ -45,6 +45,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ##### Règles spéciales :
 - Assassin : ne déployez pas ce modèle, à la place, une fois le déploiement terminé, désignez secrètement un modèle adverse dans lequel il est caché. A la place d’une activation normale vous pouvez révéler l’assassin et le placer à 1’’ ou moins de son modèle hôte puis résoudre le combat, il ne s’agit pas d’une charge.
 - Bombe de fumée toxique (2) : si l’assassin élimine une unité lors d’une attaque en mêlée, retirez-le du jeu et désignez secrètement un nouveau modèle hôte selon la règle Assassin.
+- Poison mortel : si l'assassin attaque une cible empoisonnée, les résultats obtenant 5+ infligent des dégâts bruts.
 ---
 ### Docteur Skritzz — 36 pts
 

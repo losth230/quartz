@@ -143,22 +143,6 @@ body[data-slug="index"] {
   // Animation de scintillement (le dégradé glisse en boucle)
   animation: legendary-shimmer 4s ease-in-out infinite;
   
-  // Petite icône avant le nom (optionnel — étoile)
-  &::before {
-    content: "✦ ";
-    color: #d4a017;
-    -webkit-text-fill-color: #d4a017;
-    filter: drop-shadow(0 0 3px rgba(244, 208, 63, 0.6));
-    margin-right: 0.1em;
-  }
-  
-  // Et après aussi pour la symétrie
-  &::after {
-    content: " ✦";
-    color: #d4a017;
-    -webkit-text-fill-color: #d4a017;
-    filter: drop-shadow(0 0 3px rgba(244, 208, 63, 0.6));
-    margin-left: 0.1em;
   }
 }
 
