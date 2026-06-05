@@ -170,18 +170,6 @@ body[data-slug="index"] {
     animation: legendary-shimmer 4s ease-in-out infinite;
   }
 
-  // Petite couronne décorative en haut à droite
-  &::before {
-    content: "✦";
-    position: absolute;
-    top: -12px;
-    right: 16px;
-    background: var(--light);
-    color: #d4a017;
-    padding: 0 8px;
-    font-size: 1.1rem;
-    text-shadow: 0 0 6px rgba(244, 208, 63, 0.6);
-  }
 }
 
 @keyframes legendary-glow {
