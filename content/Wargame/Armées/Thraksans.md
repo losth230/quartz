@@ -41,7 +41,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### Gnûl le destructeur — 112 pts
+### <span class="legendary">Gnûl le destructeur</span> — 112 pts
 
 |⬜⬜⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 | ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | ------ | ------ | ------ | ------ | -------- |
@@ -84,7 +84,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### Véranthia la séductrice — 62 pts
+### <span class="legendary">Véranthia la séductrice</span> — 62 pts
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
@@ -101,7 +101,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### Naar'Vaath l'usurpatrice — 104 pts
+### <span class="legendary">Naar'Vaath l'usurpatrice</span> — 104 pts
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
@@ -296,7 +296,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### Soleil Pourpre — 76 pts
+### <span class="legendary">Soleil Pourpre</span> — 76 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
