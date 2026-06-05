@@ -116,3 +116,73 @@ body[data-slug="index"] {
     border: none;
   }
 }
+
+// ═══════════════════════════════════════════════════════════
+//   Personnages légendaires — effet carte rare
+// ═══════════════════════════════════════════════════════════
+
+.legendary {
+  // Texte doré avec dégradé
+  background: linear-gradient(
+    135deg,
+    #d4a017 0%,
+    #f4d03f 25%,
+    #fff4b8 50%,
+    #f4d03f 75%,
+    #b8860b 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  
+  // Légère ombre dorée
+  filter: drop-shadow(0 0 4px rgba(212, 160, 23, 0.4));
+  
+  // Animation de scintillement (le dégradé glisse en boucle)
+  animation: legendary-shimmer 4s ease-in-out infinite;
+  
+  // Petite icône avant le nom (optionnel — étoile)
+  &::before {
+    content: "✦ ";
+    color: #d4a017;
+    -webkit-text-fill-color: #d4a017;
+    filter: drop-shadow(0 0 3px rgba(244, 208, 63, 0.6));
+    margin-right: 0.1em;
+  }
+  
+  // Et après aussi pour la symétrie
+  &::after {
+    content: " ✦";
+    color: #d4a017;
+    -webkit-text-fill-color: #d4a017;
+    filter: drop-shadow(0 0 3px rgba(244, 208, 63, 0.6));
+    margin-left: 0.1em;
+  }
+}
+
+@keyframes legendary-shimmer {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+// Mode sombre : tonalité plus orangée et glow plus marqué
+[saved-theme="dark"] .legendary {
+  background: linear-gradient(
+    135deg,
+    #b8860b 0%,
+    #ffd700 25%,
+    #fff8dc 50%,
+    #ffd700 75%,
+    #b8860b 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
+}
