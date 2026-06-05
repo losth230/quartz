@@ -41,7 +41,9 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### <span class="legendary">Gnûl le destructeur</span> — 112 pts
+<span class="legendary">
+### Gnûl le destructeur — 112 pts
+</span>
 
 |⬜⬜⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 | ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | ------ | ------ | ------ | ------ | -------- |
