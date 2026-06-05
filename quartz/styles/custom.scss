@@ -130,24 +130,6 @@ body[data-slug="index"] {
   margin: 1.5rem 0;
   border-radius: 6px;
 
-  // Double bordure dorée avec gradient
-  background: 
-    linear-gradient(var(--light), var(--light)) padding-box,
-    linear-gradient(
-      135deg,
-      #b8860b 0%,
-      #d4a017 25%,
-      #f4d03f 50%,
-      #d4a017 75%,
-      #b8860b 100%
-    ) border-box;
-  border: 2px solid transparent;
-
-  // Lueur dorée discrète autour
-  box-shadow: 
-    0 0 12px color-mix(in srgb, #d4a017 25%, transparent),
-    0 0 2px color-mix(in srgb, #d4a017 50%, transparent);
-
   // Animation de scintillement subtil
   animation: legendary-glow 4s ease-in-out infinite;
 
@@ -202,10 +184,6 @@ body[data-slug="index"] {
       #ffd700 75%,
       #b8860b 100%
     ) border-box;
-
-  box-shadow: 
-    0 0 16px color-mix(in srgb, #ffd700 35%, transparent),
-    0 0 3px color-mix(in srgb, #ffd700 60%, transparent);
 
   h3 {
     background: linear-gradient(
