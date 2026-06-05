@@ -84,7 +84,9 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### <span class="legendary">Véranthia la séductrice</span> — 62 pts
+<div class="legendary">
+
+### Véranthia la séductrice — 62 pts
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
@@ -100,6 +102,8 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 - Donner les rênes : tant que Véranthia est en vie, votre adversaire génère 3 manœuvres au début de son tour. Chaque fois qu'un modèle *Corrompu* dépense 1 Manœuvre à 9'’ ou moins de Véranthia, la portée de toutes les compétences et sorts de celle-ci (dont Donner les rênes) augmente de 2’’ et elle peut *Corrompre* un modèle à 9’’ ou moins.
 
 ---
+
+</div>
 
 ### <span class="legendary">Naar'Vaath l'usurpatrice</span> — 104 pts
 

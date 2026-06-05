@@ -1,0 +1,11 @@
+// @ts-ignore
+import script from "./scripts/legendary-headings.inline"
+import { QuartzComponent, QuartzComponentConstructor } from "./types"
+
+const Legendary: QuartzComponent = () => {
+  return null
+}
+
+Legendary.afterDOMLoaded = script
+
+export default (() => Legendary) satisfies QuartzComponentConstructor
