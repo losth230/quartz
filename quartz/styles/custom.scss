@@ -120,33 +120,81 @@ body[data-slug="index"] {
 // 
 
 
-// ═══════════════════════════════════════════════════════════
-//   Titres de personnages légendaires
+// // ═══════════════════════════════════════════════════════════
+//   Unités légendaires — cadre doré
 // ═══════════════════════════════════════════════════════════
 
-article h3.legendary-unit {
-  // Dégradé doré métallique
-  background: linear-gradient(
-    135deg,
-    #b8860b 0%,
-    #d4a017 20%,
-    #f4d03f 40%,
-    #fff4b8 50%,
-    #f4d03f 60%,
-    #d4a017 80%,
-    #b8860b 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
-  
-  // Lueur dorée
-  filter: drop-shadow(0 0 4px rgba(212, 160, 23, 0.4));
-  
-  // Animation : le dégradé glisse en boucle
-  animation: legendary-shimmer 4s ease-in-out infinite;
+.legendary {
+  position: relative;
+  padding: 1.2rem 1.5rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 6px;
+
+  // Double bordure dorée avec gradient
+  background: 
+    linear-gradient(var(--light), var(--light)) padding-box,
+    linear-gradient(
+      135deg,
+      #b8860b 0%,
+      #d4a017 25%,
+      #f4d03f 50%,
+      #d4a017 75%,
+      #b8860b 100%
+    ) border-box;
+  border: 2px solid transparent;
+
+  // Lueur dorée discrète autour
+  box-shadow: 
+    0 0 12px color-mix(in srgb, #d4a017 25%, transparent),
+    0 0 2px color-mix(in srgb, #d4a017 50%, transparent);
+
+  // Animation de scintillement subtil
+  animation: legendary-glow 4s ease-in-out infinite;
+
+  // Le titre h3 à l'intérieur prend la couleur dorée
+  h3 {
+    background: linear-gradient(
+      135deg,
+      #b8860b,
+      #d4a017 30%,
+      #f4d03f 50%,
+      #d4a017 70%,
+      #b8860b
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    border-left-color: #d4a017;  // si tu avais une bordure gauche
+    animation: legendary-shimmer 4s ease-in-out infinite;
+  }
+
+  // Petite couronne décorative en haut à droite
+  &::before {
+    content: "✦";
+    position: absolute;
+    top: -12px;
+    right: 16px;
+    background: var(--light);
+    color: #d4a017;
+    padding: 0 8px;
+    font-size: 1.1rem;
+    text-shadow: 0 0 6px rgba(244, 208, 63, 0.6);
+  }
+}
+
+@keyframes legendary-glow {
+  0%, 100% {
+    box-shadow: 
+      0 0 12px color-mix(in srgb, #d4a017 25%, transparent),
+      0 0 2px color-mix(in srgb, #d4a017 50%, transparent);
+  }
+  50% {
+    box-shadow: 
+      0 0 20px color-mix(in srgb, #d4a017 40%, transparent),
+      0 0 4px color-mix(in srgb, #d4a017 60%, transparent);
+  }
 }
 
 @keyframes legendary-shimmer {
@@ -154,18 +202,39 @@ article h3.legendary-unit {
   50%      { background-position: 100% 50%; }
 }
 
-// Mode sombre : tonalité plus dorée et glow renforcé
-[saved-theme="dark"] article h3.legendary-unit {
-  background: linear-gradient(
-    135deg,
-    #b8860b 0%,
-    #ffd700 25%,
-    #fff8dc 50%,
-    #ffd700 75%,
-    #b8860b 100%
-  );
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.5));
+// Mode sombre : tons plus chauds
+[saved-theme="dark"] .legendary {
+  background: 
+    linear-gradient(var(--light), var(--light)) padding-box,
+    linear-gradient(
+      135deg,
+      #b8860b 0%,
+      #ffd700 25%,
+      #fff8dc 50%,
+      #ffd700 75%,
+      #b8860b 100%
+    ) border-box;
+
+  box-shadow: 
+    0 0 16px color-mix(in srgb, #ffd700 35%, transparent),
+    0 0 3px color-mix(in srgb, #ffd700 60%, transparent);
+
+  h3 {
+    background: linear-gradient(
+      135deg,
+      #b8860b,
+      #ffd700 30%,
+      #fff8dc 50%,
+      #ffd700 70%,
+      #b8860b
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+
+  &::before {
+    background: var(--light);
+    text-shadow: 0 0 8px rgba(255, 215, 0, 0.7);
+  }
 }
