@@ -260,10 +260,10 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ---
 ### ẞanshee — 22 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ẞanshee | **4** | **5+** | **4+** | **6+** | **7** | **2** | **2** | **3** | Fantôme |
-| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| ẞanshee    | **4**   | **5+**                                                                               | **4+**                                                                                  | **6+**                                                                          | **7**                                                                            | **2**  | **2**  | **3**  | Fantôme  |
+| **Mêlée:** | 1d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
@@ -272,13 +272,14 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - Vengeresse (+11 pts) : lanceur de sorts de niveau 3.
 ##### Magie :
 - Les ẞanshee ont accès au Domaine de la Tombe et au Domain des Ténèbres**.**
+- Hantise: les modèles adverses  à 9'' ou moins de la ẞanshee souffrent d'un malus de -1 à leurs tests de moral.
 ---
-### Nécromant — 22 pts
+### Nécromant — 18 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Nécromant | **5** | **5+** | **4+** | **5+** | **7** | **2** | **2** | **3** | Mort |
-| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Nécromant  | **5**   | **6+**                                                                               | **4+**                                                                                  | **5+**                                                                          | **7**                                                                            | **2**  | **2**  | **3**  | Mort     |
+| **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Équipement :
 - Ame en Peine (par défaut) : lanceur de sorts de niveau 1

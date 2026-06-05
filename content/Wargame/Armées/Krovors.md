@@ -10,10 +10,9 @@
 **Tour 4** : vos modèles bénéficient de +1 Vitesse et +1d6 en mêlée.  
 **Tour 5** : vos modèles bénéficient de +1 action courte.  
 #### Préparer le festin
-Un Krovor ne se déplace jamais sans un bon festin, et fait tout pour avoir quelque chose à manger. Les Krovors ne peuvent pas gagner de points de Manœuvres comme les autres factions, mais peuvent dépenser leurs **Stocks de vivres** comme s’ils s’agissaient de points de Manœuvre.  
+Un Krovor ne se déplace jamais sans un bon festin, et fait tout pour avoir quelque chose à manger. Les Krovors ne peuvent pas gagner de points de Manœuvres comme les autres factions, mais peuvent dépenser leurs **Stocks de vivres** comme s’ils s’agissaient de points de Manœuvre. Ils ne sont donc pas comptabilisés lors de l'initiative mais peuvent être affectés par des  aptitudes en lien avec la dépense de manœuvres. 
 A la fin de chaque tour, les **Stocks de vivres** ne sont pas perdus.
 #### Passer à table
-
 Lorsqu’une unité Krovor réussit une charge, elle génère un **Stock de vivre.**
 
 ---

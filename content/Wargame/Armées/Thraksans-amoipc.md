@@ -3,7 +3,7 @@
 #### Marque
 Lorsqu’un modèle ami attaque un modèle *marqué*, il peut relancer les jets d’attaques en mêlée et à distance ayant obtenu 1.
 #### Corruption
-Lorsqu’un modèle ami *Corrompt,* désignez un modèle adverse à 6’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
+Lorsqu’un modèle ami *Corrompt,* désignez un modèle à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par marqueur *Corruption*.
 #### Cité engloutie
 Au début de chaque tour, Corrompt.
 #### Evolution (N)
@@ -26,44 +26,14 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ## Commandants
 
-### Ambassadeur du vide — 41 pts
-
-| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
-| ----------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
-| Ambassadeur | **5**   | **6+**                                                                       | **4+**   | **6+**                                                                         | **9**   | **4**                                                                   | **3**  | **4**                                                                    | Thraksan |        |        |        |          |
-| **Mêlée:**  | 3d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
-
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
-##### Magie :
-- Le Soleil Pourpre est un lanceur de sorts de niveau 3 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
-##### Règles spéciales :
-- Déjà installé : une fois le déploiement terminé, placez 2 marqueurs corruption sur les modèles de votre choix.
-
----
-
-### Gnûl le destructeur — 112 pts
-
-| ⬜⬜⬜        | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | ------ | ------ | ------ | ------ | -------- |
-| Gnûl       | **3**   | **3+**                                                                       | **-**    | **2+**                                                                         | **10**  | **6**                                                                   | **5**  | **10**                                                                   | Primal |        |        |        |          |
-| **Mêlée:** | 9d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |        |        |        |        |          |
-
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].
-##### Règles spéciales :
-- Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
-- Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
-- Dévoration : a la fin que ch1que tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec Gnûl et retirez là du jeu, elle est considérée comme perte. Gnûl gagne alors 1 Corruption.
-- Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Corruptions qui l'affectent.
-
----
 ### Mère de couvée — 32 pts
 
-| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
-| Mère       | **4**   | **4+**                                                                       | **-**    | **5+**                                                                         | **9**   | **4**                                                                   | **3**  | **4**                                                                    | Thraksan |        |        |        |          |
-| **Mêlée:** | 4d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- |
+| Gnûl       | **3**   | **4+**                                                                       | **-**    | **5+**                                                                         | **9**   | **4**                                                                   | **2**  | **4**                                                                    | Thraksan |
+| **Mêlée:** | 5d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 
 ##### Règles spéciales :
 
@@ -71,11 +41,25 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
+### Gnûl le destructeur — 92 pts
+
+|⬜⬜⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Gnûl|**3**|**3+**|**-**|**3+**|**10**|**10**|**5**|**10**|Primal|
+|**Mêlée:**|9d6||**Tir:**|-||||||
+
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+##### Règles spéciales :
+- Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
+- Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
+
+---
+
 ### Vor’Thul — 48 pts
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
+|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**3**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -168,7 +152,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
-- Crachat : portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], souffle.
+- Crachat : portée 9’’, attaques empoisonnées, souffle.
 
 ---
 
@@ -176,7 +160,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**2**|**2**|Thraksan|
+|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**3**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
@@ -193,7 +177,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
+|Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**3**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Équipement :
@@ -205,11 +189,11 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ---
 
-### Biovore — 56 pts
+### Biovore — 54 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Biovore|**4**|**6+**|**5+**|**5+**|**8**|**5**|**3**|**4**|Primal|
+|Biovore|**4**|**6+**|**5+**|**4+**|**8**|**5**|**3**|**4**|Primal|
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
 
 ##### Équipement :
@@ -228,13 +212,13 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Tolgoth|**4**|**3+**|**5+**|**5+**|**7**|**6**|**4**|**4**|Primal|
+|Tolgoth|**4**|**3+**|**5+**|**4+**|**7**|**6**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Ambassadeur des abimes : lorsque Tolgoth meurt, placez une Cité Engloutie à 3’’ ou moins.
-- Evolution (6) : le Tolgoth se transforme en Dévoreur de monde ou Scylax, il conserve ses blessures.
+- Evolution (6) : le Tolgoth se transforme en Dévoreur de monde, il conserve ses blessures.
 
 ---
 
@@ -242,36 +226,22 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**4**|**4**|**5**|Primal|
+|Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**6**|**4**|**5**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
-- Evolution (6) : le Cahlta se transforme en Dévoreur de monde ou Scylax, il conserve ses blessures.
+- Evolution (6) : le Cahlta se transforme en Dévoreur de monde, il conserve ses blessures.
 
 ---
 
-### Dévoreur de monde — 112 pts
+### Dévoreur de monde — 102 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Dévoreur|**4**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
-|**Mêlée:**|8d6||**Tir:**|-||||||
-
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
-##### Règles spéciales :
-- Dévoration : lorsque ce modèle élimine ou met en déroute un modèle adverse, il gagne autant de *Corruptions* que sa cible en possédait.
-- Bien nourri : ce modèle gagne un nombre de d6 en mêlée égal au nombre de corruptions qui l'affectent.
-
----
-
-### Dévoreur de monde — 112 pts
-
-||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Dévoreur|**4**|**3+**|**-**|**3+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
@@ -292,21 +262,6 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 ##### Règles spéciales :
 - Ombre invisible : au lieu de déployer l’Emissaire normalement, déployez-le à l’endroit de votre choix sans que votre adversaire ne vous voie, prenez-le en photo et retirez-le. A la place de n’importe quelle activation, vous pouvez montrer la photo et déployer l'Emissaire à cet endroit, il n’est pas marqué comme activé et peut librement agir.
 - Evolution (2) : retirez ce modèle du plateau et replacez-le à 6’’ ou moins. Cette compétence ne peut être utilisée plus de 2 fois par tour.
-
----
-### Scylax — 102 pts
-
-||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Scylax|**4**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**12**|Primal|
-|**Mêlée:**|8d6||**Tir:**|-||||||
-
-*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-##### Règles spéciales :
-- Chitine obscure : lorsque cette unité obtient un 6 sur un jet  d'armure après une attaque en mêlée, l'attaquant  subit une touche.
-- Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
-- Souffle empoisonné : au début de chaque tour, le Scylax peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-- Venin scorpioïde : les résultats de 6+ obtenus lors d'attaques en mêlée infligent des dégâts bruts.
 
 ---
 
