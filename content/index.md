@@ -98,7 +98,7 @@ cssclasses:
   <span class="army-desc">Nuées corrompues des bas-fonds</span>
 </summary>
 
-- [[Wargame/Armées/Vermines du Chaos|Voir la fiche complète]]
+- [[Vermines de Kaoss|Voir la fiche complète]]
 - Spécialités : Domaine des Égouts, Attaques Empoisonnées, Invasion sans fin
 - Type d'armée : nuée, harcèlement
 

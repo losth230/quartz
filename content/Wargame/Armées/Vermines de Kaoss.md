@@ -117,7 +117,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Jouons un coup : cachez un dé dans votre main, si votre adversaire le trouve, le Prophète est marqué Empoisonné. Sinon, désignez un modèle ennemi à 9’’ ou moins et marquez-le empoisonné.
 - Et paf, surprise ! : lorsque ce modèle est révélé, placez un socle 20mm x 20mm à 15’’ ou moins du Prophète. Si un modèle ennemi entre à moins de 6’’, retirez le socle. Le modèle ennemi subit une attaque à distance selon les règles suivantes : 4d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 ---
-### Saboteur — 42 pts
+### Saboteur — 38 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -146,6 +146,28 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ##### Règles spéciales :
 - Unis autour du chef ! : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 - Montrer l’exemple : Si Saxon élimine une unité en mêlée, déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] d’un modèle ami à 8’’ ou moins. Au début de chaque tour, Saxon génère 1 Scorie.
+
+<div class="legendary">
+
+### ZigZon — 42 pts
+
+</div>
+
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| ZigZon     | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **5**  | **2**  | **4**  | Rat      |
+| Roue       | **Spé** | **4+**                                                                               | **-**                                                                                   |                                                                                 |                                                                                  |        |        |        | Machine  |
+| **Mêlée:** | 5d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
+
+ [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Mort sur Roue de Guerre (+38 pts) : ZigZon gagne +4 PV, +1 Ta, +2 Ma, la règle spéciale cavalerie, la monture Mort sur Roue de Guerre et la vitesse de sa monture.
+##### Règles spéciales :
+- Faire avec les restes : tant que ZigZon est en vie, les Renforcements de votre armée coûtent 1 Scorie en moins.
+- Pompez fort ! : au début de chaque tour, désignez un modèle à 9'' ou moins de ZigZon et décenchez gratuitement son Renforcement.
+- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 s ont obtenus ou plus, la roue perd 4 PV.
+- Broyez-les tous ! (nécessite la roue): lors d’une charge, le nombre d’attaque en mêlée de la roue est égal à sa vitesse. Sinon, elle possède 0d6 en mêlée.
+- Percée (nécessite la roue): si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
 
 ---
 ## Modèles de base
@@ -314,16 +336,16 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ---
 ### Bourreau à Roulis — 52 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Bourreau | **5** | **5+** | **3+** | **4+** | **7** | **4** | **3** | **4** | Machine |
-| **Mêlée:** | 3d6 |  | **Tir:** | 4d6 |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Bourreau   | **6**   | **5+**                                                                               | **3+**                                                                                  | **4+**                                                                          | **7**                                                                            | **4**  | **3**  | **4**  | Machine  |
+| **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 4d6                                                                             |                                                                                  |        |        |        |          |
 
 ##### Équipement :
 - Roulis léger : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Roulis lourd : Portée (C : 15’’, L : 21’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].
 ##### Règles spéciales :
-- Tourner les barils plus vite ! (1-4) : renforcement à utiliser lors d’une attaque de tir, pour chaque Scorie dépensée, ajoutez 1d6 au nombre d’attaques. Cependant, pour chaque résultat de 6 obtenu, reculez le Bourreau à Roulis de 2’’ dans la direction opposée au tir.
+- Tourner les barils plus vite ! (1-4) : renforcement à utiliser lors d’une attaque de tir, pour chaque Scorie dépensée, jetez 1d6 et ajoutez le résultat au nombre d’attaques. Cependant, pour chaque résultat de 6 obtenu, reculez le Bourreau à Roulis de 2’’ dans la direction opposée au tir.
 ---
 ### Cloche hurlante — 52 pts
 
