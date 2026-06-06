@@ -262,7 +262,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
-- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
+- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
 - Evolution (6) : le Cahlta se transforme en Dévoreur de monde ou Scylax, il conserve ses blessures.
 
