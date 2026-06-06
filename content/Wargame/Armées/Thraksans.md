@@ -191,7 +191,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**2**|**2**|Thraksan|
+|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**3**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
