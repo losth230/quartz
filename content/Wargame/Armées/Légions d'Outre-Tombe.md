@@ -30,7 +30,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - **Horreur (court, 4+, malédiction) :** Portée 6’’. La cible doit réussir un test de moral ou être marquée Activée et fatiguée.
 - **Entraves de malédiction (court, 10+, amélioration) :** Placez 2 entraves à 12’’ ou moins du pour le reste de la partie. Un modèle adverse débutant son tour à 4’’ ou moins d’une entrave souffre d’un malus de -1 à sa caractéristique de vitesse pour le tour.
 #### Niveau 3
-- **Moisson d’âmes (long, 15+, projectile) :** Portée 15’’, 7d6, si la moindre blessure est infligée, le lanceur récupère 2 PV.
+- **Moisson d’âmes (long, 15+, projectile) :** Portée 15’’, 7d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], si la moindre blessure est infligée, le lanceur récupère 2 PV.
 ---
 ## Commandants
 
@@ -157,7 +157,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Magie :
 - Weißroth est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Tombe et au Domaine des Ténèbres.
-- Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
+- Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]]. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
 ##### Règles spéciales :
 - Marque Blanche supérieure : si un modèle adverse marqué par la Marque Blanche rate un test de moral, elle est détruite.
 - Martyr : lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
