@@ -3,7 +3,7 @@
 #### Marque
 Lorsqu’un modèle ami attaque un modèle *marqué*, il peut relancer les jets d’attaques en mêlée et à distance ayant obtenu 1.
 #### Corruption
-Lorsqu’un modèle ami *Corrompt,* désignez un modèle adverse à 6’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
+Lorsqu’un modèle ami *Corrompt,* désignez un modèle adverse à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
 #### Cité engloutie
 Au début de chaque tour, Corrompt.
 #### Evolution (N)
@@ -287,7 +287,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Emissaire|**4**|**3+**|**-**|**-**|**9**|**1**|**4**|**6**|Primal|
-|**Mêlée:**|8d6||**Tir:**|-||||||
+|**Mêlée:**|10d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (8)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :

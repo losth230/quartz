@@ -184,17 +184,18 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Équipement :
 - *Défait lors de son dernier affrontement face à Solar, Yehudiah cherche désormais à récupérer son âme, fragmentée en morceaux.* La puissance de Yehudiah dépend du nombre de Fragments d’Âmes qu’il possède (vous n’êtes pas obligé de l’annoncer à votre adversaire) :
   - 0 Fragment (par défaut).
-  - 1 Fragments (+8 pts) : Yehudiah possède 1 emplacement de sort supplémentaire.
-  - 2 Fragments (+16 pts) : Yehudiah possède 1 emplacement de sort supplémentaire.
-  - 3 Fragments (+24 pts) : Yehudiah possède 2 emplacements de sort supplémentaires.
-  - 4 Fragments (+30 pts) : Yehudiah possède 3 emplacements de sort supplémentaires.
-  - 5 Fragments (+40 pts) : Yehudiah possède 4 emplacements de sort supplémentaires.
+  - 1 Fragments (+9 pts) : Yehudiah possède 1 emplacement de sort supplémentaire.
+  - 2 Fragments (+18 pts) : Yehudiah possède 2 emplacements de sort supplémentaire.
+  - 3 Fragments (+27 pts) : Yehudiah possède 2 emplacements de sort supplémentaires. Yehudiah devient un lanceur de sort de niveau 5.
+  - 4 Fragments (+36 pts) : Yehudiah possède 3 emplacements de sort supplémentaires.
+  - 5 Fragments (+45 pts) : Yehudiah possède 3 emplacements de sort supplémentaires. Tehudiah devient un lanceur de sort de niveau 6.
 ##### Magie :
 - Yehudiah est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Tombe, et au Domaine des Racines.
 - Rite des morts (long, 18+, projectile) : Portée 12’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Le nombre de touches est égal à la valeur de lancement de ce sort.
 ##### Règles spéciales :
 - Livres des morts : Yehudiah possède autant de Livres des morts qu’il n’a réussi à rassembler de fragments d’âmes. Il peut en défausser un pour lancer un par tour pour lancer un sort sans dépenser d’action. Chaque fois que Yehudiah défausse un livre des morts, il perd un fragment (son profil devient donc moins fort).
 - Funestes serviteurs : au début de chaque tour, Yehudiah gagne Egide (N) où N est le nombre de ẞterblich présent sur la table.
+
 ---
 ## Modèles de base
 ---

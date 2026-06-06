@@ -307,7 +307,7 @@ Cependant, à trop puiser dans des forces qu'il ne maitrise pas, le Lanceur de S
 - 2 – Surpuissance : le lanceur de sorts laiche échapper trop de puissance de ses mains, perdez tous vos dés de votre réserve de magie.
 - 3 - Parasites : des parasites viennent sucer la magie du lanceur, qui perd 1 PV. Tant que le lanceur de sorts est encore vivant, vous perdez 1 dé de votre réserve de magie au début de chaque tour.
 - 4 – Drain de magie : souhaitant canaliser trop de puissance, le lanceur ouvre une brèche, donnez tous les dés de votre réserve de magie à votre adversaire.
-- 5 – Déflagration : le Lanceur ne parvient pas à contrôler sa puissance et risque de tout détruire ! Tous les modèles à 3'' ou moins du lanceur subissent une attaque selon les règles suivantes : 5d6, 4+, Perforant (2). Le Lanceur est également touché par cette attaque.
+- 5 – Déflagration : le Lanceur ne parvient pas à contrôler sa puissance et risque de tout détruire ! Tous les modèles à 3'' ou moins du lanceur subissent une attaque selon les règles suivantes : 5 touches perforant (1). Le Lanceur est également touché par cette attaque.
 - 6 – Arbitre implacable : une entité mystique vient cueillir ce lanceur un peu trop téméraire. Retirez-le du jeu et considérez-le comme perte.
 ### Les domaines de magie :
 Vous trouverez dans les pages suivantes les domaines de magie « classique » de Chasse & Pêche. Des domaines comme celui des Cieux vont comporter des sorts destructeurs tandis que ceux comme celui de la Vie offriront des sorts de protection ou de guérison.
@@ -459,8 +459,10 @@ Une fois le déploiement déterminé, il vous faut déterminer quel scénario vi
 - Condition de victoire : à la fin du 5e tour, le joueur ayant la plus grande bande (comptée en points) remporte la partie.
 #### Capture du drapeau :
 *Le vent souffle sur les plaines, présages d'une bataille sanglante. Si vous souhaitez reporter la victoire en limitant au maximum les pertes de votre armée, il faut démoraliser la bande adverse en capturant leur étendard !*
-#### Mise en place : chaque joueur place 2 Drapeaux dans sa moitié de table, qui doivent être placées à 7'' ou plus du bord de table et à 12'' ou plus d'un autre drapeau. Ils doivent être inaccessibles (pas dans un décor infranchissable).
-#### Condition de victoire : si un joueur contrôle un drapeau adverse à la fin d'un tour, il remporte la victoire !
+#### Mise en place : 
+chaque joueur place 2 Drapeaux dans sa moitié de table, qui doivent être placées à 7'' ou plus du bord de table et à 12'' ou plus d'un autre drapeau. Ils doivent être inaccessibles (pas dans un décor infranchissable).
+#### Condition de victoire : 
+si un joueur contrôle un drapeau adverse à la fin d'un tour, il remporte la victoire !
 #### Rattraper les bébés vaches :
 *La famine pèse de plus en plus sur les différentes contrées. Plus que jamais, il est important de sécuriser de la nourriture pour passer l'hiver, sous peine d'une importante crise démographique.*
 - Mise en place : placez 5 bébés vaches sur la ligne médiane du champ de bataille. Un au centre puis espacés de 9'' les uns des autres.
