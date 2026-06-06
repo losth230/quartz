@@ -33,7 +33,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - **Moisson d’âmes (long, 15+, projectile) :** Portée 15’’, 7d6, si la moindre blessure est infligée, le lanceur récupère 2 PV.
 ---
 ## Commandants
+
+<div class="legendary">
+
 ### Aklash le Maitre du temps — 41 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------- |
@@ -49,17 +54,16 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ---
 ### Clochard — 44 pts
 
-| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Clochard | **3** | **3+** | **-** | **5+** | **9** | **3** | **2** | **4** | Ombre |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Clochard   | **3**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **9**                                                                            | **3**  | **2**  | **4**  | Ombre    |
+| **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Siphon d’âme : lorsque ce modèle tue une unité, volez un point de Manœuvre à votre adversaire.
-- Pas de l’ombre (1/2 par unité) : action courte, Le modèle du Faucheur se téléporte sur 12’’. S’il entre en contact avec un modèle adverse, il s‘agit d’une charge.
-- Martyr : lorsque cette unité est révélée, désignez un modèle adverse qui reçoit une Marque Blanche (voir Weißroth).
-- Sonner le glas (1) : choisissez une unité adverse à 12’’ ou moins, jusqu’à la fin du tour, celle-ci ne peut dépenser de point de pouvoir.
+- Pas de l’ombre (1/2 par unité) : action courte, le Clochard se téléporte sur 12’’. S’il entre en contact avec un modèle adverse, il s‘agit d’une charge.
+- Martyr : lorsque cette unité est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
 ---
 ### Coureur de minuit — 40 pts
 
@@ -72,7 +76,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Équipement :
 - Lame purulente : en cas de blessure en mêlée, la cible est marquée Fatiguée.
 ---
+
+<div class="legendary">
+
 ### Domblaʄ — 56 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -96,7 +105,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Équipement :
 - Chaînes hurlantes : Si ce modèle inflige au moins une blessure, la vitesse de sa cible tombe à 0 pour le reste du tour.
 ---
+
+<div class="legendary">
+
 ### L’Ankou — 64 pts
+
+</div>
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -110,7 +124,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Règles spéciales :
 - Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
 ---
+
+<div class="legendary">
+
 ### Mok’Tor — 68 pts
+
+</div>
 
 | 🟦         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -123,7 +142,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Règles spéciales :
 - Un Roi règne seul : 3 fois par partie, lors de la phase d’initiative, vous pouvez voler 1 Manœuvre à votre adversaire. Vous pouvez ainsi voler plusieurs Manœuvres le même tour.
 ---
+
+<div class="legendary">
+
 ### Weißroth — 54 pts
+
+</div> 
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -139,7 +163,12 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - Martyr : lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
 - Siphonner les faibles : Weißroth gagne un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
 ---
+
+<div class="legendary">
+
 ### Yehudiah — 58 pts
+
+</div>
 
 | 🟦           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ------------ | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |

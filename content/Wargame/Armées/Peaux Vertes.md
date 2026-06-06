@@ -140,7 +140,12 @@ Affinité Chamanique (12)
 - Tu la vois celle-là ? (1) : à utiliser lorsque qu’un modèle ami rate un test de moral à 6’’ ou moins, il le réussit.
 
 ---
+
+<div class="legendary">
+
 ### Grushek Kinoeil — 44 pts
+
+</div>
 
 | 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -154,7 +159,12 @@ Affinité Chamanique (12)
 - Par-là ! (1) : retirez le marqueur Activé d’un modèle à 6’’ ou moins.
 
 ---
+
+<div class="legendary">
+
 ### Hoogit et Gro’os — 52 pts
+
+</div>
 
 | 🟥🟥       | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -170,7 +180,12 @@ Affinité Chamanique (12)
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
 
 ---
+
+<div class="legendary">
+
 ### Kiggit Œil de Lynx — 42 pts
+
+</div>
 
 | ⬜🟥        | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -185,7 +200,12 @@ Affinité Chamanique (12)
 - Lé fidèl de Kiggit : Lors de la construction de votre bande, vous pouvez désigner un modèle Gobelin comment Fidèles de Kiggit. Si vous le faites, celui-ci voit son coût augmenter de 1 pts par unité et gagne la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], mais doit être déployé en Troupe avec Kiggit.
 
 ---
+
+<div class="legendary">
+
 ### Slaig le Pourfendeur sur Magmadon asservi — 124 pts
+
+</div>
 
 | 🟥🟥🟥     | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**    |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |

@@ -49,7 +49,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ## Commandants
 
 ---
+
+<div class="legendary">
+
 ### Borgrimm — 66 pts
+
+</div>
 
 | 🟥🟥🟥     | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -64,7 +69,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - L’heure de mourir : lors de la création de votre bande, désignez un modèle ami avec la règle spéciale La mort honorable et conférez lui [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
 - Cape en cuir de Magmadon : Borgrimm ne peut perdre de PV lié à des marqueurs *enflammé*.
 ---
+
+<div class="legendary">
+
 ### Gortrek l’Abatteur — 52 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
@@ -92,7 +102,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Règles spéciales :
 - Aller plus vite : chaque fois qu’un modèle ami Forge à 9’’ ou moins, désignez une Machine à 9’’ ou moins et déclencher sa surcharge.
 ---
+
+<div class="legendary">
+
 ### Haut-Roi — 78 pts
+
+</div>
 
 | 🟦         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -146,7 +161,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Règles spéciales :
 - Excavation des ruines : à la fin de chaque tour, Forge.
 ---
+
+<div class="legendary">
+
 ### Vor’ Jin l’excavateur — 38 pts
+
+</div>
 
 | ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |

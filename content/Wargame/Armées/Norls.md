@@ -37,7 +37,12 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ##### Équipement :
 - Lame de glace : si cette unité réussit une blessure en mêlée, sa cible est marquée Gelée.
 ---
+
+<div class="legendary">
+
 ### Jörgen — 45 pts
+
+</div>
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -48,7 +53,12 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ##### Équipement :
 - Hache de Fordinson : si cette unité réussit une blessure en mêlée, ajoutez des marqueurs fatigue ou gel à la cible de manière qu’elle ait autant de fatigues que de gel.
 ---
+
+<div class="legendary">
+
 ### Daïne Cœur-de-Glace — 49 pts
+
+</div>
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |

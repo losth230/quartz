@@ -61,12 +61,17 @@ Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de viv
 - Immolation : vous pouvez dépenser 1 dé de votre réserve de magie pour gagner la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] le temps d’une attaque.
 
 ---
+
+<div class="legendary">
+
 ### Daguiel l'imbutable — 54 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Sabaoth | **6** | **3+** | **-** | **5+** | **10** | **5** | **3** | **4** | Krovor |
-| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+</div>
+
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Sabaoth    | **6**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **5**  | **3**  | **4**  | Krovor   |
+| **Mêlée:** | 5d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].*
 ##### Équipement :
@@ -76,7 +81,12 @@ Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de viv
 - Robustesse : la première fois que Daguiel est réduit à 0 PV, il remonte à 1 PV.
 
 ---
+
+<div class="legendary">
+
 ### Onytar — 46 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -91,7 +101,12 @@ Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de viv
 - Manger tout de suite : si Onytar est votre général, la règle Amasser les victuailles est inversée (le Tour 1 devient le tour 5 et inversement).
 
 ---
+
+<div class="legendary">
+
 ### Sabaoth le gros — 126 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
