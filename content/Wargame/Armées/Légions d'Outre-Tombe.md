@@ -4,7 +4,7 @@
 #### Charge du fond du monde :
 Si un modèle charge sur une distance de 7’’ ou plus, il gagne un bonus de Force Dévastatrice (+1). S’il charge sur une distance de 13’’ ou plus, il gagne Force Dévastatrice (+2). Il peut dépasser la limite maximale à l’aide de cette règle.
 #### Hanter :
-Une unité de type Fantôme peut posséder un modèle ami qui devient son hôte. Ne déployez alors pas le Fantôme. A la place, pendant l’activation de l’hôte, vous pouvez révéler l’unité ainsi cachée et la placez à 3’’ ou moins de l’hôte.
+Une unité de type Fantôme peut posséder un modèle ami qui devient son hôte. Ne déployez alors pas le Fantôme. A la place, pendant l’activation de l’hôte, vous pouvez révéler l’unité ainsi cachée et la placez à 3’’ ou moins de l’hôte. Un hôte ne peut cacher plus d'unité qu'il n'a d'unité au sein de son modèle.
 #### Le règne des Morts :
 Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
 #### Marque Blanche :
@@ -90,7 +90,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
-- Danse Macabre : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche.
+- Danse Macabre : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche. Domblaʄ n'a pas besoin d'être révélé.
 - Premier Roi : Domblaʄ bénéficie d’un bonus de +2 sur ses résultats de combat.
 - Galanterie : Si Weißroth est présente, Domblaʄ coûte 12 pts de moins.
 ---
