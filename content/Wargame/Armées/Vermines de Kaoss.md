@@ -79,11 +79,11 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 </div>
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Petit roi | **-** | **5+** | **-** | **5+** | **7** | **4** | **2** | **4** | Rat |
-| Fou piégé | **5** | **-** | **-** | **-** | **-** | **-** | **-** | **-** |  |
-| **Mêlée:** | 1d6 / 0d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Petit roi  | **-**     | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **4**  | **2**  | **4**  | Rat      |
+| Fou piégé  | **5**     | **-**                                                                                | **4+**                                                                                  | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  |          |
+| **Mêlée:** | 1d6 / 0d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]].*
 ##### Règles spéciales :
@@ -107,7 +107,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Prophète   | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **4**                                                                            | **2**  | **2**  | **5**  | Rat      |
+| Prophète   | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **6**                                                                            | **2**  | **2**  | **5**  | Rat      |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Magie :

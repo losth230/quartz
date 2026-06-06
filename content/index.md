@@ -72,7 +72,7 @@ cssclasses:
   <span class="army-desc">Chevaliers et sorciers de la Pureté</span>
 </summary>
 
-- [[Wargame/Armées/Peuples Libres|Voir la fiche complète]]
+- [[Peuples Libres|Voir la fiche complète]]
 - Spécialités : Domaine de la Pureté, Royaumes et Ordres
 - Type d'armée : équilibrée, polyvalente
 
