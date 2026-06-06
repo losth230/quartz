@@ -83,7 +83,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Appel divin (3) : utilisable une seule fois par partie lorsque vous avez terminé l’activation de l’Abbesse. Désignez jusqu’à 3 modèles amis à 6’’ ou et retirez leurs marqueurs Activés.
 - Regard silencieux : la règle Vœu de silence de cette unité peut affecter un modèle déjà affecté par la règle Vœu de silence.
 ---
+
+<div class="legendary">
+
 ### Allie — 49 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -114,7 +119,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Attaque en piquée (1) : pégase uniquement, à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ---
+
+<div class="legendary">
+
 ### Grand Paladin — 48 pts
+
+</div>
 
 | ⬜             | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ------------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
@@ -129,7 +139,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Préparer le rituel : Au début de chaque tour, désignez un modèle Paysan ou Sœur et octroyez-lui une marche gratuite.
 ---
+
+<div class="legendary">
+
 ### Hegel — 32 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
@@ -143,7 +158,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Hegel, générez 2 Manœuvres.
 - Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
+
+<div class="legendary">
+
 ### Jeanne — 42 pts
+
+</div>
 
 | ⬜          | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
@@ -158,7 +178,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de pureté : les modèles adverses à 1’’ ou moins bénéficie d’un malus de -1 sur leurs jets d’attaque en mêlée.
 - Bouter l’ennemi (2) : à utiliser en début de tour, une seule fois par partie. Pour le reste du tour, les modèles Paysan à 8’’ ou moins bénéficie de +1d6 en mêlée et à distance, et peuvent immédiatement effectuer une action courte.
 ---
+
+<div class="legendary">
+
 ### Kalane — 110 pts
+
+</div>
 
 | ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**       |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------------- |
@@ -171,7 +196,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Tempête de lames (1) : utilisable une seule fois par tour, ce modèle peut Riposter sans s’activer ou se fatiguer.
 ---
+
+<div class="legendary">
+
 ### Lenera — 36 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -183,7 +213,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Lenera, générez 2 Manœuvres.
 - Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
+
+<div class="legendary">
+
 ### Loneline — 36 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -195,7 +230,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Ardent défenseur : Loneline commence avec la partie avec la Volonté de Fer.
 - Chevalière de Sang : Si Losette est présente, Loneline est considérée comme un Chevalier de Sang (voir Losette).
 ---
+
+<div class="legendary">
+
 ### Losette — 46 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -208,7 +248,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Chevalière de Sang : Losette est considérée comme un Chevalier de Sang. Les Chevaliers de Sang bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.
 - Première Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers de Sang.
 ---
+
+<div class="legendary">
+
 ### Luxana — 36 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
@@ -238,7 +283,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Formation défensive : au début de chaque tour, désignez un modèle ami à 9’’ ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 ---
+
+<div class="legendary">
+
 ### Tristan le Rayonnant — 28 pts
+
+</div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |

@@ -47,7 +47,12 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Bombe de fumée toxique (2) : si l’assassin élimine une unité lors d’une attaque en mêlée, retirez-le du jeu et désignez secrètement un nouveau modèle hôte selon la règle Assassin.
 - Poison mortel : si l'assassin attaque une cible empoisonnée, les résultats obtenant 5+ infligent des dégâts bruts.
 ---
+
+<div class="legendary">
+
 ### Docteur Skritzz — 36 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -67,7 +72,12 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Ramasser ce qui brille : au début de chaque tour, gagnez 1 scorie.
 - Rats-zombis du Docteur Skritzz : au début du premier tour, désignez un modèle Vermine ami. Pour le reste de la partie, chaque fois qu’il bénéficie de la règle spéciale Régénération (X), il récupère 1 PV supplémentaire. A la fin de chaque tour, ce modèle perd 1d3 PV.
 ---
+
+<div class="legendary">
+
 ### Petit roi — 26 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -120,7 +130,12 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ##### Règles spéciales :
 - Ils sont tombés dans le piège ! (3) : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance contre une Machine selon les règles suivantes : Portée (C : 15’’, L : 21’’)’’, 6d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]].
 ---
+
+<div class="legendary">
+
 ### Saxon — 52 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -324,7 +339,12 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Toujours plus de rats ! : au début de chaque tour, désignez un modèle à 6’’ ou moins et déclenchez sa règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 - Cloche de protection : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
+
+<div class="legendary">
+
 ### Formidable Expérience — 58 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
