@@ -1,1 +1,0 @@
-Lorsqu'une unité bénéficiant de cette règle effectue une charge, elle bénéficie de +1d6 en mêlée.

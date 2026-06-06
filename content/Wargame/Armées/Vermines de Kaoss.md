@@ -161,7 +161,7 @@ ___
 | Roue       | **Spé**   | **4+**                                                                               | **-**                                                                                   |                                                                                 |                                                                                  |        |        |        | Machine  |
 | **Mêlée:** | 5d6 / spé |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
- [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+ *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / [[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]],[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Mort sur Roue de Guerre (+38 pts) : ZigZon gagne +4 PV, +1 Ta, +2 Ma, la règle spéciale cavalerie, la monture Mort sur Roue de Guerre et la vitesse de sa monture.
 ##### Règles spéciales :
@@ -387,7 +387,7 @@ ___
 | Roue | **Spé** | **4+** | **-** | **5+** | **7** | **6** | **3** | **6** | Machine |
 | **Mêlée:** | Voir ci-dessous |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Tourner la roue (1-3) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 s ont obtenus ou plus, la roue perd 4 PV.
 - Broyez-les tous ! : lors d’une charge, le nombre d’attaque en mêlée de ce modèle est égal à sa vitesse. Sinon, ce modèle possède 0d6 en mêlée.

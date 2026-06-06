@@ -206,7 +206,7 @@ Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de viv
 | Grondeur | **6** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Bête |
 | **Mêlée:** | 2d6 / 4d6 |  | **Tir:** | 4d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Bombarde : Portée 18’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :

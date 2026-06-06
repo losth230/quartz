@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle réussit une charge, il bénéficie de +1d6 en mêlée pour l'attaque gratuite offerte.
