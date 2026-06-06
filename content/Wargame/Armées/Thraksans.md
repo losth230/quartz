@@ -35,7 +35,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Magie :
-- Le Soleil Pourpre est un lanceur de sorts de niveau 3 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
+- L'Ambassadeur du vide est un lanceur de sorts de niveau 3 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
 - Déjà installé : une fois le déploiement terminé, placez 2 marqueurs corruption sur les modèles de votre choix.
 

@@ -166,7 +166,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 
 <div class="legendary">
 
-### Yehudiah — 58 pts
+### Yehudiah — 52 pts
 
 </div>
 
@@ -194,7 +194,6 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - Rite des morts (long, 18+, projectile) : Portée 12’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Le nombre de touches est égal à la valeur de lancement de ce sort.
 ##### Règles spéciales :
 - Livres des morts : Yehudiah possède autant de Livres des morts qu’il n’a réussi à rassembler de fragments d’âmes. Il peut en défausser un pour lancer un par tour pour lancer un sort sans dépenser d’action. Chaque fois que Yehudiah défausse un livre des morts, il perd un fragment (son profil devient donc moins fort).
-- Seigneur suprême de la Non-Mort : les Modèles amis (même les Commandants !) peuvent se Lier à Yehudiah s’ils sont à 12’’ ou moins de lui au lieu de 6’’.
 - Funestes serviteurs : au début de chaque tour, Yehudiah gagne Egide (N) où N est le nombre de ẞterblich présent sur la table.
 ---
 ## Modèles de base
