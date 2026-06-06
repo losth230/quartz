@@ -147,6 +147,8 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Unis autour du chef ! : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 - Montrer l’exemple : Si Saxon élimine une unité en mêlée, déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] d’un modèle ami à 8’’ ou moins. Au début de chaque tour, Saxon génère 1 Scorie.
 
+___
+
 <div class="legendary">
 
 ### ZigZon — 42 pts
