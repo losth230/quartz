@@ -3,7 +3,7 @@
 #### Marque
 Lorsqu’un modèle ami attaque un modèle *marqué*, il peut relancer les jets d’attaques en mêlée et à distance ayant obtenu 1.
 #### Corruption
-Lorsqu’un modèle ami *Corrompt,* désignez un modèle adverse à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
+Lorsqu’un modèle ami *Corrompt,* désignez un modèle à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
 #### Cité engloutie
 Au début de chaque tour, Corrompt.
 #### Evolution (N)
