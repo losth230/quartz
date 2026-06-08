@@ -23,7 +23,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 - **Bannières des Lames enchainées :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
 - **Bannière d’Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
 - **Bannière des Vétérans d’Innsmouth (15 pts) :** *"La peur est pour ceux qui n’ont jamais vu l’horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s’ils ont perdu au moins 1 PV ou une unité.
-- **Bannière des Chevaliers du Clair-Obscur (30 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+- **Bannière des Chevaliers du Clair-Obscur (25 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
 ---
 
 <center><h2>Domaines de Faction</h2></center>
