@@ -80,10 +80,10 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 </div>
 
-|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
-|**Mêlée:**|4d6||**Tir:**|-||||||
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
+| Vor’Thul   | **4**   | **3+**                                                                       | **-**    | **4+**                                                                         | **10**  | **5**                                                                   | **2**  | **5**                                                                    | Thraksan |        |        |        |          |
+| **Mêlée:** | 5d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
@@ -260,7 +260,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 |Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**6**|**4**|**6**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
