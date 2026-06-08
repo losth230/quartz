@@ -23,7 +23,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 - **Bannières des Lames enchainées :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
 - **Bannière d’Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
 - **Bannière des Vétérans d’Innsmouth (15 pts) :** *"La peur est pour ceux qui n’ont jamais vu l’horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s’ils ont perdu au moins 1 PV ou une unité.
-- **Bannière des Chevaliers de Sang (30 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+- **Bannière des Chevaliers du Clair-Obscur (30 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
 ---
 
 <center><h2>Domaines de Faction</h2></center>
@@ -228,7 +228,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Ardent défenseur : Loneline commence avec la partie avec la Volonté de Fer.
-- Chevalière de Sang : Si Losette est présente, Loneline est considérée comme un Chevalier de Sang (voir Losette).
+- Chevalière de Sang : Si Losette est présente, Loneline est considérée comme un Chevalier du Clair-Obscur (voir Losette).
 ---
 
 <div class="legendary">
@@ -239,14 +239,14 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Loneline   | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Sœur     |
+| Losette    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Sœur     |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
-- Ardent défenseur : Losette commence avec la partie avec la Volonté de Fer. SI Losette est déployée au sein d’un modèle, celui-ci bénéficie également de la Volonté de Fer.
-- Chevalière de Sang : Losette est considérée comme un Chevalier de Sang. Les Chevaliers de Sang bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.
-- Première Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers de Sang.
+- Ardent défenseur : Losette commence avec la partie avec la Volonté de Fer. Si Losette est déployée au sein d’un modèle, celui-ci bénéficie également de la Volonté de Fer.
+- Chevalière de Sang : Losette est considérée comme un Chevalier du Clair-Obscur. Les Chevaliers du Clair-Obscur bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.
+- Première Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers du Clair-Obscur.
 ---
 
 <div class="legendary">
