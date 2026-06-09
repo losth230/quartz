@@ -261,10 +261,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Garde royal — 26 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Martelier | **4** | **3+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+|            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Garde      | **4**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Nain     |
+| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge Dévastatrice]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].*
 ##### Équipement :
@@ -444,12 +444,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Avatar enfoui : l’avatar n’est pas jouable tant qu’il n’a pas été forgé trois fois.
 - Canon des Titans : à la fin de chaque tour, vous pouvez désigner un modèle éligible pour une attaque de tir à 18’’ ou moins et résolvez une attaque de tir selon les règles suivantes : 4d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 ---
-### Mine — 14 pts
+### Mine — 17 pts
 
-| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Mine        | **-**   | **-**  | **-**     | **1+** | **-**  | **7**  | **4**  | **6**  | Terrain  |
-| **Mêlée:** | -       |        | **Tir:** | -      |        |        |        |        |          |
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Mine       | **-**   | **-**                                                                                | **-**                                                                                   | **1+**                                                                          | **-**                                                                            | **7**  | **4**  | **6**  | Terrain  |
+| **Mêlée:** | -       |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Règles spéciales :
 - Financer la guerre : si un modèle nain est présent à 6’’ ou moins au début du tour, générez 1 Manœuvre. S’il s’agit d’un mineur, générez 1 Manœuvre supplémentaire.
