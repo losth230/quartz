@@ -128,7 +128,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 ##### Magie :
 - Véranthia est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
-- Parasitage : Au début de chaque tour, vous pouvez désignez une unité amie à laquelle Véranthia s'accroche et lui octroyer 1 *Corruption*. Tant que Véranthia est attachée, elle ne peut être attaquée d'aucune sorte. L'attache se brise si l'unité amie hôte est retirée du jeu.
+- Parasitage : Au début de chaque tour, vous pouvez désigner une unité amie à laquelle Véranthia s'accroche et lui octroyer 1 *Corruption*. Tant que Véranthia est attachée, elle ne peut être attaquée d'aucune sorte. L'attache se brise si l'unité amie hôte est retirée du jeu.
 - Créatrice de magie : tous les modèles sur le terrain bénéficient d'un bonus de +2 lorsqu'ils tentent de lancer un sort tant que Véranthia est en vie. L'unité hôte bénéficie à la place d'un bonus de +4.
 - Donner les rênes : tant que Véranthia est en vie, votre adversaire génère 3 manœuvres au début de son tour. Chaque fois qu'un modèle *Corrompu* dépense 1 Manœuvre à 12'’ ou moins de Véranthia, elle peut *Corrompre* un modèle à 9’’ ou moins.
 
