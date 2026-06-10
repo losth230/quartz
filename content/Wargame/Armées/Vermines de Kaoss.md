@@ -103,7 +103,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 ##### Règles spéciales :
 - Appel au clan (1-2) : choisissez 1 à 2 modèles amis (en fonction du nombre de scories dépensées) pour déclencher leur règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 ---
-### Prophète de la Peste — 29 pts
+### Prophète de Kaoss — 29 pts
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
