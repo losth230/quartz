@@ -13,223 +13,188 @@ const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 // ⬆️⬆️ ----------------------------- ⬆️⬆️
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Libellés + ordre d'affichage des états
-const STATUS = {
-  poste:    { label: "Posté",      cls: "st-poste" },
-  en_cours: { label: "En cours",   cls: "st-encours" },
-  traite:   { label: "Traité",     cls: "st-traite" },
-  refuse:   { label: "Refusé",     cls: "st-refuse" },
-};
-const STATUS_KEYS = ["poste", "en_cours", "traite", "refuse"];
-
-function init() {
-  const app = document.getElementById("cp-bug-app");
-  if (!app) return;
-  if (app.dataset.cpInit === "1") return;
-  app.dataset.cpInit = "1";
-
-  const $ = (id) => document.getElementById(id);
-  const listsEl = $("cp-bug-list");
-
-  let all = [];
-  let view = "table";
-  let statusFilter = "";
-  let searchTerm = "";
-  let sortKey = "created_at";
-  let sortDir = "desc";
-
-  function esc(s) {
-    return (s || "").replace(/[&<>"']/g, (c) => ({
-      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-    }[c]));
-  }
-  function frDate(iso) {
-    return new Date(iso).toLocaleDateString("fr-FR", {
-      day: "numeric", month: "short", year: "numeric",
-    });
-  }
-  function statusInfo(s) { return STATUS[s] || { label: s, cls: "" }; }
-
-  async function load() {
-    const { data, error } = await sb
-      .from("bug_reports")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) {
-      listsEl.innerHTML = '<p class="cp-empty">Erreur de chargement : ' + esc(error.message) + "</p>";
-      return;
+ 
+// URL de la page de suivi (adapte si tu la places ailleurs).
+const TRACKER_URL = "/quartz/Wargame/Signalements";
+ 
+function injectStyles() {
+  if (document.getElementById("cp-bug-styles")) return;
+  const css = `
+    #cp-bug-fab {
+      position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 9999;
+      width: 3.2rem; height: 3.2rem; border-radius: 50%;
+      background: var(--secondary, #6b3f2a); color: var(--light, #f4ecdd);
+      border: 1px solid var(--gray, #8a7a5c);
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+      font-family: Georgia, serif; font-size: 1.4rem;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: transform 0.15s, opacity 0.15s;
     }
-    all = data || [];
-    render();
-  }
-
-  async function changeStatus(id, newStatus) {
-    const { data, error } = await sb
-      .from("bug_reports")
-      .update({ status: newStatus })
-      .eq("id", id)
-      .select();
-    if (error) { alert("Échec du changement d'état : " + error.message); return; }
-    if (!data || !data.length) { alert("Aucune ligne modifiée (vérifie les permissions)."); return; }
-    const row = all.find((r) => r.id === id);
-    if (row) row.status = newStatus;
-    render();
-  }
-
-  function filtered() {
-    const term = searchTerm.toLowerCase();
-    let rows = all.filter((r) => {
-      if (statusFilter && r.status !== statusFilter) return false;
-      if (term) {
-        const hay = (r.reporter + " " + (r.page_title || "") + " " + r.description).toLowerCase();
-        if (!hay.includes(term)) return false;
-      }
-      return true;
-    });
-    rows.sort((a, b) => {
-      let va = a[sortKey], vb = b[sortKey];
-      if (sortKey === "created_at") { va = new Date(va).getTime(); vb = new Date(vb).getTime(); }
-      else { va = (va || "").toString().toLowerCase(); vb = (vb || "").toString().toLowerCase(); }
-      if (va < vb) return sortDir === "asc" ? -1 : 1;
-      if (va > vb) return sortDir === "asc" ? 1 : -1;
-      return 0;
-    });
-    return rows;
-  }
-
-  function statusSelect(r) {
-    const opts = STATUS_KEYS.map((k) =>
-      '<option value="' + k + '"' + (k === r.status ? " selected" : "") + ">" + STATUS[k].label + "</option>"
-    ).join("");
-    return '<select class="cp-status-sel ' + statusInfo(r.status).cls + '" data-id="' + r.id + '">' + opts + "</select>";
-  }
-
-  function render() {
-    const rows = filtered();
-    if (!rows.length) {
-      listsEl.innerHTML = all.length
-        ? '<p class="cp-empty">Aucun signalement ne correspond aux filtres.</p>'
-        : '<p class="cp-empty">Aucun signalement pour l\'instant.</p>';
-      return;
+    #cp-bug-fab:hover { opacity: 0.88; transform: scale(1.05); }
+    #cp-bug-overlay {
+      position: fixed; inset: 0; z-index: 10000;
+      background: rgba(20,16,12,0.55);
+      display: none; align-items: center; justify-content: center;
     }
-    listsEl.innerHTML = view === "table" ? renderTable(rows) : renderCollapse(rows);
-    bindStatus();
-    if (view === "table") bindSortHeaders();
-    if (view === "collapse") bindToggles();
-  }
-
-  function arrow(key) {
-    if (sortKey !== key) return '<span class="cp-sort"> </span>';
-    return '<span class="cp-sort">' + (sortDir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
-  }
-
-  function pageLink(r) {
-    if (!r.page_url) return esc(r.page_title || "—");
-    return '<a href="' + esc(r.page_url) + '" title="' + esc(r.page_url) + '">' + esc(r.page_title || r.page_url) + "</a>";
-  }
-
-  function renderTable(rows) {
-    const body = rows.map((r) => {
-      return '<tr>' +
-        '<td class="cp-c-state">' + statusSelect(r) + "</td>" +
-        '<td class="cp-c-page">' + pageLink(r) + "</td>" +
-        '<td>' + esc(r.reporter) + "</td>" +
-        '<td class="cp-c-date">' + frDate(r.created_at) + "</td>" +
-        "</tr>" +
-        '<tr class="cp-detail-row"><td colspan="4"><div class="cp-detail">' + esc(r.description) + "</div></td></tr>";
-    }).join("");
-    return '<p class="cp-hint">Astuce : clique sur une ligne pour lire le détail, change l\'état via le menu déroulant.</p>' +
-      '<table class="cp-table"><thead><tr>' +
-      '<th data-sort="status">État' + arrow("status") + "</th>" +
-      '<th data-sort="page_title">Page' + arrow("page_title") + "</th>" +
-      '<th data-sort="reporter">Auteur' + arrow("reporter") + "</th>" +
-      '<th data-sort="created_at">Date' + arrow("created_at") + "</th>" +
-      "</tr></thead><tbody>" + body + "</tbody></table>";
-  }
-
-  function renderCollapse(rows) {
-    return rows.map((r) => {
-      const si = statusInfo(r.status);
-      return '<div class="cp-coll">' +
-        '<div class="cp-coll-head" aria-expanded="false">' +
-          '<span class="cp-coll-arrow">\u25B8</span>' +
-          '<span class="cp-badge ' + si.cls + '">' + si.label + "</span>" +
-          '<span class="cp-coll-title">' + esc(r.page_title || "—") + "</span>" +
-          '<span class="cp-coll-meta">' + esc(r.reporter) + " · " + frDate(r.created_at) + "</span>" +
-        "</div>" +
-        '<div class="cp-coll-body" hidden>' +
-          '<div class="cp-coll-desc">' + esc(r.description) + "</div>" +
-          '<div class="cp-coll-foot">' +
-            '<span class="cp-coll-pagelink">' + pageLink(r) + "</span>" +
-            '<span class="cp-coll-status">État : ' + statusSelect(r) + "</span>" +
-          "</div>" +
-        "</div>" +
-      "</div>";
-    }).join("");
-  }
-
-  function bindStatus() {
-    listsEl.querySelectorAll(".cp-status-sel").forEach((sel) => {
-      sel.addEventListener("click", (e) => e.stopPropagation());
-      sel.addEventListener("change", (e) => {
-        e.stopPropagation();
-        changeStatus(sel.dataset.id, sel.value);
-      });
-    });
-  }
-
-  function bindSortHeaders() {
-    listsEl.querySelectorAll("th[data-sort]").forEach((th) => {
-      th.addEventListener("click", () => {
-        const key = th.dataset.sort;
-        if (sortKey === key) sortDir = sortDir === "asc" ? "desc" : "asc";
-        else { sortKey = key; sortDir = key === "created_at" ? "desc" : "asc"; }
-        render();
-      });
-    });
-  }
-
-  function bindToggles() {
-    listsEl.querySelectorAll(".cp-coll-head").forEach((head) => {
-      head.addEventListener("click", () => {
-        const body = head.nextElementSibling;
-        const arrowEl = head.querySelector(".cp-coll-arrow");
-        const open = body.hasAttribute("hidden");
-        if (open) { body.removeAttribute("hidden"); head.setAttribute("aria-expanded", "true"); arrowEl.textContent = "\u25BE"; }
-        else { body.setAttribute("hidden", ""); head.setAttribute("aria-expanded", "false"); arrowEl.textContent = "\u25B8"; }
-      });
-    });
-  }
-
-  listsEl.addEventListener("click", (e) => {
-    if (view !== "table") return;
-    if (e.target.closest(".cp-status-sel")) return;
-    if (e.target.closest("a")) return;
-    const tr = e.target.closest("tr");
-    if (!tr) return;
-    if (tr.parentElement && tr.parentElement.tagName === "THEAD") return;
-    if (tr.classList.contains("cp-detail-row")) return;
-    const detail = tr.nextElementSibling;
-    if (detail && detail.classList.contains("cp-detail-row")) detail.classList.toggle("open");
-  });
-
-  $("cp-bug-view-table").addEventListener("click", () => { view = "table"; updateViewButtons(); render(); });
-  $("cp-bug-view-collapse").addEventListener("click", () => { view = "collapse"; updateViewButtons(); render(); });
-  function updateViewButtons() {
-    $("cp-bug-view-table").classList.toggle("active", view === "table");
-    $("cp-bug-view-collapse").classList.toggle("active", view === "collapse");
-  }
-  $("cp-bug-filter-status").addEventListener("change", (e) => { statusFilter = e.target.value; render(); });
-  $("cp-bug-search").addEventListener("input", (e) => { searchTerm = e.target.value.trim(); render(); });
-
-  updateViewButtons();
-  load();
+    #cp-bug-overlay.open { display: flex; }
+    #cp-bug-modal {
+      background: var(--lightgray, #f4ecdd); color: var(--dark, #2b2520);
+      border: 1px solid var(--gray, #8a7a5c); border-radius: 5px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      width: min(420px, 92vw); padding: 1.4em 1.6em;
+      font-family: Georgia, "Times New Roman", serif;
+    }
+    #cp-bug-modal h3 {
+      margin: 0 0 0.6em; font-variant: small-caps; letter-spacing: 0.04em;
+      color: var(--dark, #2b2520);
+      border-bottom: 2px solid var(--gray, #8a7a5c); padding-bottom: 0.3em;
+    }
+    #cp-bug-modal label {
+      display: block; font-variant: small-caps; font-size: 0.82em;
+      letter-spacing: 0.05em; color: var(--secondary, #6b3f2a); margin: 0.7em 0 0.25em;
+    }
+    #cp-bug-modal input, #cp-bug-modal textarea {
+      width: 100%; box-sizing: border-box; background: var(--light, #fffdf8);
+      border: 1px solid var(--gray, #8a7a5c); border-radius: 3px;
+      padding: 0.5em 0.65em; font-family: inherit; font-size: 0.92em; color: var(--dark, #2b2520);
+    }
+    #cp-bug-modal textarea { min-height: 110px; resize: vertical; line-height: 1.5; }
+    #cp-bug-page {
+      font-size: 0.8em; color: var(--secondary, #6b3f2a); font-style: italic;
+      margin: 0.7em 0 0; word-break: break-all;
+    }
+    .cp-bug-actions { display: flex; gap: 0.6em; margin-top: 1.1em; }
+    .cp-bug-btn {
+      flex: 1; border: 1px solid var(--gray, #8a7a5c); border-radius: 3px;
+      padding: 0.55em 1em; font-family: inherit; font-variant: small-caps;
+      letter-spacing: 0.05em; font-size: 0.9em; cursor: pointer;
+    }
+    .cp-bug-btn.primary { background: var(--secondary, #6b3f2a); color: var(--light, #f4ecdd); }
+    .cp-bug-btn.primary:hover { opacity: 0.88; }
+    .cp-bug-btn.primary:disabled { opacity: 0.5; cursor: wait; }
+    .cp-bug-btn.ghost { background: transparent; color: var(--secondary, #6b3f2a); }
+    #cp-bug-link {
+      display: block; margin-top: 0.9em; font-size: 0.8em; text-align: center;
+      color: var(--secondary, #6b3f2a);
+    }
+    .cp-bug-msg { margin-top: 0.7em; font-size: 0.85em; min-height: 1.1em; }
+    .cp-bug-msg.ok { color: var(--tertiary, #3a6b2a); }
+    .cp-bug-msg.err { color: #c0563f; }
+  `;
+  const style = document.createElement("style");
+  style.id = "cp-bug-styles";
+  style.textContent = css;
+  document.head.appendChild(style);
 }
-
+ 
+function buildUI() {
+  const fab = document.createElement("button");
+  fab.id = "cp-bug-fab";
+  fab.title = "Signaler un problème sur cette page";
+  fab.setAttribute("aria-label", "Signaler un problème");
+  fab.textContent = "\u2691"; // ⚑
+ 
+  const overlay = document.createElement("div");
+  overlay.id = "cp-bug-overlay";
+  overlay.innerHTML = `
+    <div id="cp-bug-modal" role="dialog" aria-modal="true">
+      <h3>Signaler un probleme</h3>
+      <label for="cp-bug-name">Ton nom</label>
+      <input id="cp-bug-name" type="text" placeholder="Anonyme" />
+      <label for="cp-bug-desc">Description du probleme</label>
+      <textarea id="cp-bug-desc" placeholder="Decris ce qui ne va pas sur cette page..."></textarea>
+      <p id="cp-bug-page"></p>
+      <div class="cp-bug-msg" id="cp-bug-msg"></div>
+      <div class="cp-bug-actions">
+        <button class="cp-bug-btn ghost" id="cp-bug-cancel">Annuler</button>
+        <button class="cp-bug-btn primary" id="cp-bug-send">Envoyer</button>
+      </div>
+      <a id="cp-bug-link" href="${TRACKER_URL}">Voir tous les signalements →</a>
+    </div>
+  `;
+ 
+  document.body.appendChild(fab);
+  document.body.appendChild(overlay);
+  return { fab, overlay };
+}
+ 
+function wire(fab, overlay) {
+  const $ = (id) => document.getElementById(id);
+  const msg = $("cp-bug-msg");
+  const pageEl = $("cp-bug-page");
+ 
+  function currentPage() {
+    return { url: window.location.href, title: document.title || window.location.pathname };
+  }
+  function open() {
+    const p = currentPage();
+    pageEl.textContent = "Page : " + p.title;
+    msg.textContent = ""; msg.className = "cp-bug-msg";
+    overlay.classList.add("open");
+    $("cp-bug-name").focus();
+  }
+  function close() { overlay.classList.remove("open"); }
+ 
+  fab.addEventListener("click", open);
+  $("cp-bug-cancel").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && overlay.classList.contains("open")) close();
+  });
+ 
+  $("cp-bug-send").addEventListener("click", async () => {
+    const reporter = $("cp-bug-name").value.trim() || "Anonyme";
+    const description = $("cp-bug-desc").value.trim();
+    const p = currentPage();
+ 
+    msg.className = "cp-bug-msg";
+    if (!description) {
+      msg.className = "cp-bug-msg err";
+      msg.textContent = "La description est requise.";
+      return;
+    }
+    const btn = $("cp-bug-send");
+    btn.disabled = true;
+    const { error } = await sb.from("bug_reports").insert({
+      reporter, page_url: p.url, page_title: p.title, description,
+      // status laissé à sa valeur par défaut 'poste'
+    });
+    btn.disabled = false;
+    if (error) {
+      msg.className = "cp-bug-msg err";
+      msg.textContent = "Echec de l'envoi : " + error.message;
+      return;
+    }
+    msg.className = "cp-bug-msg ok";
+    msg.textContent = "Merci ! Signalement envoye.";
+    $("cp-bug-desc").value = "";
+    setTimeout(close, 1200);
+  });
+}
+ 
+function init() {
+  // Le body peut ne pas être prêt si le script s'exécute trop tôt
+  // (module dans le <head>). On reporte alors à plus tard.
+  if (!document.body) {
+    document.addEventListener("DOMContentLoaded", init, { once: true });
+    return;
+  }
+  if (document.getElementById("cp-bug-fab")) return;
+  injectStyles();
+  const { fab, overlay } = buildUI();
+  wire(fab, overlay);
+}
+ 
+// Trois filets de sécurité pour ne jamais rater le bon moment :
+// 1) si le DOM est déjà prêt, on tente tout de suite ;
+// 2) sinon, au DOMContentLoaded ;
+// 3) et dans tous les cas, sur l'événement "nav" de Quartz, qui est
+//    l'événement officiel signalant que le DOM de la page est prêt
+//    (et qui se redéclenche à chaque navigation SPA).
 if (document.readyState !== "loading") {
   init();
 } else {
-  document.addEventListener("DOMContentLoaded", init);
+  document.addEventListener("DOMContentLoaded", init, { once: true });
 }
 document.addEventListener("nav", init);
+window.addEventListener("load", init, { once: true });
