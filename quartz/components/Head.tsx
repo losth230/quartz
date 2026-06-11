@@ -97,7 +97,7 @@ export default (() => {
             return resource
           }
         })}
-      <script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve />
+        <script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve />
       </head>
     )
   }
