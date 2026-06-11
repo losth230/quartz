@@ -19,6 +19,12 @@ function init() {
   const app = document.getElementById("cp-army-app");
   if (!app) return; // pas sur la bonne page
 
+  // Garde-fou : Quartz peut déclencher init() plusieurs fois
+  // (DOMContentLoaded + event "nav" au même chargement). On marque
+  // le conteneur pour ne s'initialiser qu'une seule fois par page.
+  if (app.dataset.cpInit === "1") return;
+  app.dataset.cpInit = "1";
+
   const $ = (id) => document.getElementById(id);
   const msg = $("cp-msg");
   const listsEl = $("cp-lists");
