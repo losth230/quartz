@@ -174,7 +174,8 @@ function init() {
         "</tr>" +
         '<tr class="cp-detail-row"><td colspan="6"><div class="cp-detail">' + esc(l.body) + "</div></td></tr>";
     }).join("");
-    return '<table class="cp-table"><thead><tr>' +
+    return '<p class="cp-hint">Astuce : clique sur une ligne pour déplier le détail, sur un en-tête pour trier.</p>' +
+      '<table class="cp-table"><thead><tr>' +
       '<th data-sort="title">Titre' + arrow("title") + "</th>" +
       '<th data-sort="faction">Faction' + arrow("faction") + "</th>" +
       '<th data-sort="points">Points' + arrow("points") + "</th>" +
