@@ -112,4 +112,4 @@
   <div id="cp-lists"><p class="cp-empty">Chargement…</p></div>
 </div>
 
-<script type="module" src="/static/cp-army-lists.js"></script>
+<script type="module" src="/quartz/static/cp-army-lists.js"></script>
