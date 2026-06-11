@@ -181,8 +181,7 @@ function init() {
       '<th data-sort="author">Auteur' + arrow("author") + "</th>" +
       '<th data-sort="created_at">Date' + arrow("created_at") + "</th>" +
       "<th></th>" +
-      "</tr></thead><tbody>" + body + "</tbody></table>" +
-      '<p class="cp-hint">Astuce : clique sur une ligne pour déplier le détail, sur un en-tête pour trier.</p>';
+      "</tr></thead><tbody>" + body + "</tbody></table>";
   }
  
   function renderCollapse(rows) {
