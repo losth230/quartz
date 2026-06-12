@@ -375,8 +375,23 @@ function init() {
   loadLists();
 }
  
-if (document.readyState !== "loading") {
-  init();
-} else {
-  document.addEventListener("DOMContentLoaded", init);
+// ---- Démarrage robuste ----
+// Le conteneur peut ne pas être présent quand le module s'exécute
+// (Quartz injecte le DOM via son routage SPA). On réessaie plusieurs fois,
+// et on écoute l'événement "nav" officiel de Quartz.
+function bootstrap() {
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries++;
+    if (document.getElementById("cp-army-app")) { clearInterval(timer); init(); }
+    else if (tries > 40) { clearInterval(timer); }
+  }, 100);
 }
+if (document.readyState !== "loading") {
+  bootstrap();
+} else {
+  document.addEventListener("DOMContentLoaded", bootstrap);
+}
+document.addEventListener("nav", init);
+window.addEventListener("pageshow", () => { if (document.getElementById("cp-army-app")) init(); });
+ 

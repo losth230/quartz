@@ -457,7 +457,20 @@ function setup() {
   loadAll();
 }
  
-if (document.readyState !== "loading") setup();
-else document.addEventListener("DOMContentLoaded", setup);
-document.addEventListener("nav", setup);
+// ---- Démarrage robuste ----
+// Le conteneur peut ne pas être présent au moment où le module s'exécute
+// (Quartz injecte le DOM via son routage SPA). On réessaie donc plusieurs
+// fois, et on écoute aussi l'événement "nav" officiel de Quartz.
+function bootstrap() {
+  let tries = 0;
+  const timer = setInterval(() => {
+    tries++;
+    if (getApp()) { clearInterval(timer); setup(); }
+    else if (tries > 40) { clearInterval(timer); } // ~4 s max, on abandonne
+  }, 100);
+}
+if (document.readyState !== "loading") bootstrap();
+else document.addEventListener("DOMContentLoaded", bootstrap);
+document.addEventListener("nav", setup);          // navigations SPA
+window.addEventListener("pageshow", () => { if (getApp()) setup(); }); // retour arrière/cache
  
