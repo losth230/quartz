@@ -76,7 +76,8 @@ function optionsFrom(list) {
     list.map((x) => '<option value="' + esc(x.nom) + '">' + esc(x.nom) + "</option>").join("");
 }
 function resultatOptions() {
-  return '<option value="victoire">Victoire</option>' +
+  return '<option value="">— résultat —</option>' +
+    '<option value="victoire">Victoire</option>' +
     '<option value="defaite">Défaite</option>' +
     '<option value="egalite">Égalité</option>';
 }
@@ -170,6 +171,11 @@ async function savePartie() {
     if (!joueur || !peuple) {
       msg.className = "cp-msg err";
       msg.textContent = "Chaque participant doit avoir un joueur ET un peuple.";
+      return;
+    }
+    if (!resultat) {
+      msg.className = "cp-msg err";
+      msg.textContent = "Indique le résultat de chaque participant (victoire, défaite ou égalité).";
       return;
     }
     parts.push({ joueur, peuple, archetype, pertes, resultat, army_list_id });
@@ -417,6 +423,21 @@ function wireOnce() {
         if (li.value) { arch.value = ""; arch.disabled = true; arch.placeholder = "(liste choisie)"; }
         else { arch.disabled = false; arch.placeholder = "Archétype"; }
       }
+      return;
+    }
+ 
+    // pré-remplissage intelligent des résultats
+    const res = e.target.closest(".cp-p-resultat");
+    if (res && getApp().contains(res)) {
+      const allRes = [...document.querySelectorAll(".cp-p-resultat")];
+      if (res.value === "victoire") {
+        // les autres passent en défaite (cas du duel : finit la saisie)
+        allRes.forEach((s) => { if (s !== res) s.value = "defaite"; });
+      } else if (res.value === "egalite") {
+        // une égalité est partagée par tous
+        allRes.forEach((s) => { s.value = "egalite"; });
+      }
+      // "defaite" : on ne déduit rien (trop ambigu)
       return;
     }
   });
