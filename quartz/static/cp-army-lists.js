@@ -391,15 +391,18 @@ function init() {
 }
  
 // ---- Démarrage robuste ----
-// Le conteneur peut ne pas être présent quand le module s'exécute
-// (Quartz injecte le DOM via son routage SPA). On réessaie plusieurs fois,
-// et on écoute l'événement "nav" officiel de Quartz.
+// À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
+// pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
+// le DOM de la page de destination.
+let bootTimer = null;
 function bootstrap() {
+  if (bootTimer) clearInterval(bootTimer);
   let tries = 0;
-  const timer = setInterval(() => {
+  if (document.getElementById("cp-army-app")) { init(); return; }
+  bootTimer = setInterval(() => {
     tries++;
-    if (document.getElementById("cp-army-app")) { clearInterval(timer); init(); }
-    else if (tries > 40) { clearInterval(timer); }
+    if (document.getElementById("cp-army-app")) { clearInterval(bootTimer); bootTimer = null; init(); }
+    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; }
   }, 100);
 }
 if (document.readyState !== "loading") {
@@ -407,5 +410,5 @@ if (document.readyState !== "loading") {
 } else {
   document.addEventListener("DOMContentLoaded", bootstrap);
 }
-document.addEventListener("nav", init);
-window.addEventListener("pageshow", () => { if (document.getElementById("cp-army-app")) init(); });
+document.addEventListener("nav", bootstrap);
+window.addEventListener("pageshow", bootstrap);

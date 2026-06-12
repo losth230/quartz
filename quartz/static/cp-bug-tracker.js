@@ -308,15 +308,19 @@ function setup() {
 }
  
 // ---- Démarrage robuste ----
-// Le conteneur peut ne pas être présent au moment où le module s'exécute
-// (Quartz injecte le DOM via son routage SPA). On réessaie donc plusieurs
-// fois, et on écoute aussi l'événement "nav" officiel de Quartz.
+// À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
+// pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
+// le DOM de la page de destination. Un seul timer actif à la fois.
+let bootTimer = null;
 function bootstrap() {
+  if (bootTimer) clearInterval(bootTimer);
   let tries = 0;
-  const timer = setInterval(() => {
+  // tentative immédiate
+  if (getApp()) { setup(); return; }
+  bootTimer = setInterval(() => {
     tries++;
-    if (getApp()) { clearInterval(timer); setup(); }
-    else if (tries > 40) { clearInterval(timer); }
+    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
+    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; } // ~5 s puis abandon
   }, 100);
 }
 if (document.readyState !== "loading") {
@@ -324,5 +328,5 @@ if (document.readyState !== "loading") {
 } else {
   document.addEventListener("DOMContentLoaded", bootstrap);
 }
-document.addEventListener("nav", setup);
-window.addEventListener("pageshow", () => { if (getApp()) setup(); });
+document.addEventListener("nav", bootstrap);   // relance la détection à chaque navigation
+window.addEventListener("pageshow", bootstrap);
