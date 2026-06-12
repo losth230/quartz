@@ -204,6 +204,21 @@ function render() {
   const bc = document.getElementById("cp-bug-view-collapse");
   if (bt) bt.classList.toggle("active", view === "table");
   if (bc) bc.classList.toggle("active", view === "collapse");
+  forceRepaint(getApp());
+}
+ 
+// Force le navigateur à repeindre la zone après injection de contenu
+// (corrige un bug d'affichage post-navigation SPA Quartz).
+function forceRepaint(el) {
+  if (!el) return;
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const prev = el.style.transform;
+      el.style.transform = "translateZ(0)";
+      void el.offsetHeight;
+      el.style.transform = prev || "";
+    });
+  });
 }
  
 // ---- Câblage unique par DÉLÉGATION sur document ----

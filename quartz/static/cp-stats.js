@@ -70,6 +70,25 @@ function render() {
   if (tab === "saisie") main.innerHTML = renderSaisie();
   else if (tab === "historique") main.innerHTML = renderHistorique();
   else main.innerHTML = renderStats();
+  forceRepaint(app);
+}
+ 
+// Force le navigateur à repeindre la zone après injection de contenu.
+// Corrige un bug d'affichage où, après une navigation SPA Quartz, le DOM
+// est à jour mais l'écran n'est pas rafraîchi tant qu'aucun événement
+// (scroll, resize...) ne survient.
+function forceRepaint(el) {
+  if (!el) return;
+  // double rAF : on attend que le navigateur ait terminé son cycle de layout,
+  // puis on provoque un changement de style imperceptible qui force le repaint.
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      const prev = el.style.transform;
+      el.style.transform = "translateZ(0)";
+      void el.offsetHeight;            // lecture => reflow forcé
+      el.style.transform = prev || "";
+    });
+  });
 }
  
 // ---------- Onglet Saisie ----------

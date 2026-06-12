@@ -181,12 +181,27 @@ function init() {
       listsEl.innerHTML = allLists.length
         ? '<p class="cp-empty">Aucune liste ne correspond aux filtres.</p>'
         : '<p class="cp-empty">Aucune liste pour l\'instant. Sois le premier !</p>';
+      forceRepaint(app);
       return;
     }
     listsEl.innerHTML = view === "table" ? renderTable(rows) : renderCollapse(rows);
     bindActions();
     if (view === "table") bindSortHeaders();
     if (view === "collapse") bindToggles();
+    forceRepaint(app);
+  }
+ 
+  // Force le navigateur à repeindre après injection (bug d'affichage post-nav SPA).
+  function forceRepaint(el) {
+    if (!el) return;
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const prev = el.style.transform;
+        el.style.transform = "translateZ(0)";
+        void el.offsetHeight;
+        el.style.transform = prev || "";
+      });
+    });
   }
  
   function arrow(key) {
