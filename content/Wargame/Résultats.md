@@ -40,13 +40,15 @@
     }
 
     /* Lignes de participants */
-    .cp-part-row { display: flex; gap: 0.5em; align-items: center; margin-bottom: 0.5em; }
+    .cp-part-row { display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; margin-bottom: 0.6em; }
     .cp-part-num { font-variant: small-caps; font-weight: bold; color: var(--secondary); min-width: 2em; }
-    .cp-part-row .cp-p-joueur { flex: 1.2; }
-    .cp-part-row .cp-p-peuple { flex: 1.4; }
-    .cp-part-row .cp-p-archetype { flex: 1.2; }
-    .cp-part-row .cp-p-pertes { flex: 0.7; }
-    .cp-part-row .cp-p-resultat { flex: 1; }
+    .cp-part-row .cp-p-joueur { flex: 1.1; min-width: 100px; }
+    .cp-part-row .cp-p-peuple { flex: 1.2; min-width: 110px; }
+    .cp-part-row .cp-p-liste { flex: 1.6; min-width: 140px; }
+    .cp-part-row .cp-p-archetype { flex: 1; min-width: 100px; }
+    .cp-part-row .cp-p-pertes { flex: 0.6; min-width: 70px; }
+    .cp-part-row .cp-p-resultat { flex: 0.9; min-width: 95px; }
+    .cp-part-row input:disabled { opacity: 0.5; background: var(--lightgray); }
     .cp-part-del { background: none; border: 1px solid transparent; color: #b5524a; cursor: pointer;
       border-radius: 3px; padding: 0.2em 0.4em; }
     .cp-part-del:hover { background: #b5524a; color: var(--light); }
