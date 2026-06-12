@@ -52,11 +52,11 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 | Gnûl       | **4**   | **3+**                                                                               | **-**                                                                                   | **2+**                                                                          | **10**                                                                           | **5**  | **5**  | **10** | Thraksan |
 | **Mêlée:** | 9d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].
 ##### Règles spéciales :
 - Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
 - Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
-- Dévoration : a la fin que chaque tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec Gnûl et retirez là du jeu, elle est considérée comme perte. Gnûl gagne alors 1 Corruption.
+- Dévoration : a la fin que ch1que tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec Gnûl et retirez là du jeu, elle est considérée comme perte. Gnûl gagne alors 1 Corruption.
 - Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Corruptions qui l'affectent.
 
 ---
@@ -76,15 +76,14 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 <div class="legendary">
 
-### Vor'Thul — 48 
+### Vor'Thul — 48 pts
 
 </div>
 
-|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**5**|**3**|**5**|Thraksan|
-|**Mêlée:**|4d6||**Tir:**|-||||||
-
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\| Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\| Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
+| Vor’Thul   | **4**   | **3+**                                                                       | **-**    | **4+**                                                                         | **10**  | **5**                                                                   | **2**  | **5**                                                                    | Thraksan |        |        |        |          |
+| **Mêlée:** | 5d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
@@ -120,10 +119,10 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 
 </div>
 
-|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Véranthia|**6**|**4+**|**4+**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
-|**Mêlée:**|4d6||**Tir:**|-||||||
+| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée | Me]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance | Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure | Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral | Mo]]**   | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ---------------------------------------------------------------------------- | -------- | ------------------------------------------------------------------------------ | ------- | ----------------------------------------------------------------------- | ------ | ------------------------------------------------------------------------ | -------- | ------ | ------ | ------ | -------- |
+| Véranthia  | **6**   | **4+**                                                                       | **4+**   | **4+**                                                                         | **10**  | **3**                                                                   | **2**  | **5**                                                                    | Thraksan |        |        |        |          |
+| **Mêlée:** | 4d6     |                                                                              | **Tir:** | -                                                                              |         |                                                                         |        |                                                                          |          |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Magie :
@@ -161,8 +160,8 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Cultiste|**5**|**6+**|**5+**|**6+**|**7**|**1**|**2**|**2**|Humain|
-|**Mêlée:**|2d6||**Tir:**|-||||||
+|Cultiste|**5**|**5+**|**5+**|**6+**|**7**|**1**|**2**|**2**|Humain|
+|**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Magie :
 - Association de cultistes : un modèle de Cultiste possède un niveau de lanceur de sort égal à son nombre d’unité de Cultiste.
@@ -180,7 +179,7 @@ ___
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
-- Vision d’effroi : un modèle ayant subi une blessure d’une Horreur Chasseresse doit réaliser un test de moral en tenant compte du résultat de combat, en cas d’échec, le modèle effectue un mouvement de déroute et est marqué activé avant de pouvoir riposter.
+- Vision d’effroi : un modèle ayant subi une blessure d’une Horreur Chasseresse doit réaliser un test de moral, en cas d’échec, le modèle effectue un mouvement de déroute et est marqué activé.
 
 ---
 
@@ -266,7 +265,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Tolgoth|**4**|**3+**|**5+**|**4+**|**8**|**6**|**4**|**6**|Primal|
+|Tolgoth|**4**|**3+**|**5+**|**4+**|**7**|**6**|**4**|**6**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
@@ -280,7 +279,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Cahlta|**4**|**5+**|**4+**|**4+**|**8**|**6**|**4**|**6**|Primal|
+|Fanatique|**4**|**5+**|**4+**|**4+**|**8**|**6**|**4**|**6**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -295,14 +294,13 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Dévoreur|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
+|Dévoreur|**4**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Dévoration : lorsque ce modèle élimine ou met en déroute un modèle adverse, il gagne autant de *Corruptions* que sa cible en possédait.
 - Bien nourri : ce modèle gagne un nombre de d6 en mêlée égal au nombre de corruptions qui l'affectent.
-- Serviteur des abysses : à la fin de chaque tour, placez une Cité Engloutie à 9’’ ou moins de cette unité.
 
 ---
 
@@ -323,7 +321,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Scylax|**5**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**12**|Primal|
+|Scylax|**4**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
