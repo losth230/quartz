@@ -28,6 +28,7 @@ function init() {
   // État local
   let allLists = [];
   let refPeuples = [];         // factions de référence (ref_peuples)
+  let refVersions = [];        // versions de règles (ref_versions)
   let view = "table";          // "table" | "collapse"
   let factionFilter = "";
   let searchTerm = "";
@@ -54,6 +55,12 @@ function init() {
     fillFactionSelect();
   }
  
+  async function loadRefVersions() {
+    const { data } = await sb.from("ref_versions").select("nom").order("ordre");
+    refVersions = (data || []).map((r) => r.nom);
+    fillVersionSelect();
+  }
+ 
   // Remplit le menu de SAISIE de la faction depuis ref_peuples
   function fillFactionSelect() {
     const sel = $("cp-faction");
@@ -61,7 +68,16 @@ function init() {
     const current = sel.value;
     sel.innerHTML = '<option value="">— faction —</option>' +
       refPeuples.map((nom) => '<option value="' + esc(nom) + '">' + esc(nom) + "</option>").join("");
-    // restaure la valeur courante si toujours valide
+    if ([...sel.options].some((o) => o.value === current)) sel.value = current;
+  }
+ 
+  // Remplit le menu de SAISIE de la version depuis ref_versions
+  function fillVersionSelect() {
+    const sel = $("cp-version");
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— version —</option>' +
+      refVersions.map((nom) => '<option value="' + esc(nom) + '">' + esc(nom) + "</option>").join("");
     if ([...sel.options].some((o) => o.value === current)) sel.value = current;
   }
  
@@ -98,6 +114,7 @@ function init() {
     editingId = id;
     $("cp-author").value = l.author || "";
     $("cp-faction").value = l.faction || "";
+    $("cp-version").value = l.version || "";
     $("cp-title").value = l.title || "";
     $("cp-points").value = (l.points ?? "") === null ? "" : (l.points ?? "");
     $("cp-body").value = l.body || "";
@@ -113,6 +130,7 @@ function init() {
     editingId = null;
     $("cp-author").value = "";
     $("cp-faction").value = "";
+    $("cp-version").value = "";
     $("cp-title").value = "";
     $("cp-points").value = "";
     $("cp-body").value = "";
@@ -183,6 +201,7 @@ function init() {
         '<td class="cp-c-title">' + esc(l.title) + "</td>" +
         '<td>' + esc(l.faction || "—") + "</td>" +
         '<td class="cp-c-pts">' + pts + "</td>" +
+        '<td>' + esc(l.version || "—") + "</td>" +
         '<td>' + esc(l.author) + "</td>" +
         '<td class="cp-c-date">' + frDate(l.created_at) + "</td>" +
         '<td class="cp-c-act">' +
@@ -190,13 +209,14 @@ function init() {
           '<button class="cp-del" data-id="' + l.id + '" data-label="' + esc(l.title) + '" title="Supprimer">\u2715</button>' +
         "</td>" +
         "</tr>" +
-        '<tr class="cp-detail-row"><td colspan="6"><div class="cp-detail">' + esc(l.body) + "</div></td></tr>";
+        '<tr class="cp-detail-row"><td colspan="7"><div class="cp-detail">' + esc(l.body) + "</div></td></tr>";
     }).join("");
     return '<p class="cp-hint">Astuce : clique sur une ligne pour déplier le détail, sur un en-tête pour trier.</p>' +
       '<table class="cp-table"><thead><tr>' +
       '<th data-sort="title">Titre' + arrow("title") + "</th>" +
       '<th data-sort="faction">Faction' + arrow("faction") + "</th>" +
       '<th data-sort="points">Points' + arrow("points") + "</th>" +
+      '<th data-sort="version">Version' + arrow("version") + "</th>" +
       '<th data-sort="author">Auteur' + arrow("author") + "</th>" +
       '<th data-sort="created_at">Date' + arrow("created_at") + "</th>" +
       "<th></th>" +
@@ -207,11 +227,12 @@ function init() {
     return rows.map((l) => {
       const fac = l.faction ? " — " + esc(l.faction) : "";
       const pts = (l.points ?? null) === null ? "" : ' · <strong>' + l.points + " pts</strong>";
+      const ver = l.version ? " · " + esc(l.version) : "";
       return '<div class="cp-coll">' +
         '<div class="cp-coll-head" aria-expanded="false">' +
           '<span class="cp-coll-arrow">\u25B8</span>' +
           '<span class="cp-coll-title">' + esc(l.title) + fac + "</span>" +
-          '<span class="cp-coll-meta">' + esc(l.author) + " · " + frDate(l.created_at) + pts + "</span>" +
+          '<span class="cp-coll-meta">' + esc(l.author) + " · " + frDate(l.created_at) + pts + ver + "</span>" +
           '<span class="cp-coll-acts">' +
             '<span class="cp-edit" data-id="' + l.id + '" title="Modifier">\u270E</span>' +
             '<span class="cp-del" data-id="' + l.id + '" data-label="' + esc(l.title) + '" title="Supprimer">\u2715</span>' +
@@ -303,6 +324,7 @@ function init() {
   $("cp-submit").addEventListener("click", async () => {
     const author = $("cp-author").value.trim() || "Anonyme";
     const faction = $("cp-faction").value.trim() || null;
+    const version = $("cp-version").value.trim() || null;
     const title = $("cp-title").value.trim();
     const body = $("cp-body").value.trim();
     const ptsRaw = $("cp-points").value.trim();
@@ -327,11 +349,11 @@ function init() {
     let error;
     if (editingId) {
       ({ error } = await sb.from("army_lists")
-        .update({ author, faction, title, body, points })
+        .update({ author, faction, version, title, body, points })
         .eq("id", editingId));
     } else {
       ({ error } = await sb.from("army_lists")
-        .insert({ author, faction, title, body, points }));
+        .insert({ author, faction, version, title, body, points }));
     }
  
     btn.disabled = false;
@@ -349,6 +371,7 @@ function init() {
  
   updateViewButtons();
   loadRefPeuples();
+  loadRefVersions();
   loadLists();
 }
  

@@ -143,6 +143,10 @@
         <label for="cp-points">Coût (points)</label>
         <input id="cp-points" type="number" min="0" step="1" placeholder="ex. 1500" />
       </div>
+      <div>
+        <label for="cp-version">Version</label>
+        <select id="cp-version"><option value="">— version —</option></select>
+      </div>
     </div>
     <label for="cp-title">Titre de la liste</label>
     <input id="cp-title" type="text" placeholder="ex. Avant-garde du Crepuscule" />
