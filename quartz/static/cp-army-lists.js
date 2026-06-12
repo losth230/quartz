@@ -27,6 +27,7 @@ function init() {
  
   // État local
   let allLists = [];
+  let refPeuples = [];         // factions de référence (ref_peuples)
   let view = "table";          // "table" | "collapse"
   let factionFilter = "";
   let searchTerm = "";
@@ -47,6 +48,23 @@ function init() {
   }
  
   // ---- Récupération ----
+  async function loadRefPeuples() {
+    const { data } = await sb.from("ref_peuples").select("nom").order("ordre");
+    refPeuples = (data || []).map((r) => r.nom);
+    fillFactionSelect();
+  }
+ 
+  // Remplit le menu de SAISIE de la faction depuis ref_peuples
+  function fillFactionSelect() {
+    const sel = $("cp-faction");
+    if (!sel) return;
+    const current = sel.value;
+    sel.innerHTML = '<option value="">— faction —</option>' +
+      refPeuples.map((nom) => '<option value="' + esc(nom) + '">' + esc(nom) + "</option>").join("");
+    // restaure la valeur courante si toujours valide
+    if ([...sel.options].some((o) => o.value === current)) sel.value = current;
+  }
+ 
   async function loadLists() {
     const { data, error } = await sb
       .from("army_lists")
@@ -330,6 +348,7 @@ function init() {
   });
  
   updateViewButtons();
+  loadRefPeuples();
   loadLists();
 }
  
@@ -338,5 +357,3 @@ if (document.readyState !== "loading") {
 } else {
   document.addEventListener("DOMContentLoaded", init);
 }
-document.addEventListener("nav", init);
- 
