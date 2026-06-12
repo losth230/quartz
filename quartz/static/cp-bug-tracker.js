@@ -13,8 +13,8 @@ const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 // ⬆️⬆️ ----------------------------- ⬆️⬆️
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Libellés + ordre d'affichage des états
+ 
+// Libellés + classes des états (la classe sert au badge, au select ET au fond de ligne)
 const STATUS = {
   poste:    { label: "Posté",      cls: "st-poste" },
   en_cours: { label: "En cours",   cls: "st-encours" },
@@ -22,23 +22,24 @@ const STATUS = {
   refuse:   { label: "Refusé",     cls: "st-refuse" },
 };
 const STATUS_KEYS = ["poste", "en_cours", "traite", "refuse"];
-
+ 
 function init() {
   const app = document.getElementById("cp-bug-app");
   if (!app) return;
   if (app.dataset.cpInit === "1") return;
   app.dataset.cpInit = "1";
-
+ 
   const $ = (id) => document.getElementById(id);
   const listsEl = $("cp-bug-list");
-
+ 
   let all = [];
   let view = "table";
   let statusFilter = "";
   let searchTerm = "";
   let sortKey = "created_at";
   let sortDir = "desc";
-
+  let editingId = null;   // id du retour en cours d'édition en ligne
+ 
   function esc(s) {
     return (s || "").replace(/[&<>"']/g, (c) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -50,7 +51,7 @@ function init() {
     });
   }
   function statusInfo(s) { return STATUS[s] || { label: s, cls: "" }; }
-
+ 
   async function load() {
     const { data, error } = await sb
       .from("bug_reports")
@@ -63,7 +64,7 @@ function init() {
     all = data || [];
     render();
   }
-
+ 
   async function changeStatus(id, newStatus) {
     const { data, error } = await sb
       .from("bug_reports")
@@ -76,7 +77,24 @@ function init() {
     if (row) row.status = newStatus;
     render();
   }
-
+ 
+  async function saveEdit(id) {
+    const reporter = ($("cp-edit-author-" + id)?.value || "").trim() || "Anonyme";
+    const description = ($("cp-edit-desc-" + id)?.value || "").trim();
+    if (!description) { alert("La description ne peut pas être vide."); return; }
+    const { data, error } = await sb
+      .from("bug_reports")
+      .update({ reporter, description })
+      .eq("id", id)
+      .select();
+    if (error) { alert("Échec de la modification : " + error.message); return; }
+    if (!data || !data.length) { alert("Aucune ligne modifiée (vérifie les permissions)."); return; }
+    const row = all.find((r) => r.id === id);
+    if (row) { row.reporter = reporter; row.description = description; }
+    editingId = null;
+    render();
+  }
+ 
   function filtered() {
     const term = searchTerm.toLowerCase();
     let rows = all.filter((r) => {
@@ -97,14 +115,28 @@ function init() {
     });
     return rows;
   }
-
+ 
   function statusSelect(r) {
     const opts = STATUS_KEYS.map((k) =>
       '<option value="' + k + '"' + (k === r.status ? " selected" : "") + ">" + STATUS[k].label + "</option>"
     ).join("");
     return '<select class="cp-status-sel ' + statusInfo(r.status).cls + '" data-id="' + r.id + '">' + opts + "</select>";
   }
-
+ 
+  // Panneau d'édition en ligne (réutilisé dans les deux vues)
+  function editPanel(r) {
+    return '<div class="cp-edit-panel">' +
+      '<label>Auteur</label>' +
+      '<input id="cp-edit-author-' + r.id + '" type="text" value="' + esc(r.reporter) + '" />' +
+      '<label>Description</label>' +
+      '<textarea id="cp-edit-desc-' + r.id + '">' + esc(r.description) + '</textarea>' +
+      '<div class="cp-edit-actions">' +
+        '<button class="cp-edit-cancel" data-id="' + r.id + '">Annuler</button>' +
+        '<button class="cp-edit-save" data-id="' + r.id + '">Enregistrer</button>' +
+      '</div>' +
+    '</div>';
+  }
+ 
   function render() {
     const rows = filtered();
     if (!rows.length) {
@@ -115,60 +147,69 @@ function init() {
     }
     listsEl.innerHTML = view === "table" ? renderTable(rows) : renderCollapse(rows);
     bindStatus();
+    bindEditButtons();
     if (view === "table") bindSortHeaders();
     if (view === "collapse") bindToggles();
   }
-
+ 
   function arrow(key) {
     if (sortKey !== key) return '<span class="cp-sort"> </span>';
     return '<span class="cp-sort">' + (sortDir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
   }
-
+ 
   function pageLink(r) {
     if (!r.page_url) return esc(r.page_title || "—");
     return '<a href="' + esc(r.page_url) + '" title="' + esc(r.page_url) + '">' + esc(r.page_title || r.page_url) + "</a>";
   }
-
+ 
   function renderTable(rows) {
     const body = rows.map((r) => {
-      return '<tr>' +
+      const cls = statusInfo(r.status).cls;
+      const editingRow = editingId === r.id
+        ? '<tr class="cp-detail-row open ' + cls + '"><td colspan="5">' + editPanel(r) + "</td></tr>"
+        : '<tr class="cp-detail-row ' + cls + '"><td colspan="5"><div class="cp-detail">' + esc(r.description) + "</div></td></tr>";
+      return '<tr class="cp-row-' + cls + '">' +
         '<td class="cp-c-state">' + statusSelect(r) + "</td>" +
         '<td class="cp-c-page">' + pageLink(r) + "</td>" +
         '<td>' + esc(r.reporter) + "</td>" +
         '<td class="cp-c-date">' + frDate(r.created_at) + "</td>" +
+        '<td class="cp-c-act"><button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button></td>' +
         "</tr>" +
-        '<tr class="cp-detail-row"><td colspan="4"><div class="cp-detail">' + esc(r.description) + "</div></td></tr>";
+        editingRow;
     }).join("");
-    return '<p class="cp-hint">Astuce : clique sur une ligne pour lire le détail, change l\'état via le menu déroulant.</p>' +
+    return '<p class="cp-hint">Astuce : clique sur une ligne pour lire le détail, le crayon pour modifier, le menu pour changer l\'état.</p>' +
       '<table class="cp-table"><thead><tr>' +
       '<th data-sort="status">État' + arrow("status") + "</th>" +
       '<th data-sort="page_title">Page' + arrow("page_title") + "</th>" +
       '<th data-sort="reporter">Auteur' + arrow("reporter") + "</th>" +
       '<th data-sort="created_at">Date' + arrow("created_at") + "</th>" +
+      "<th></th>" +
       "</tr></thead><tbody>" + body + "</tbody></table>";
   }
-
+ 
   function renderCollapse(rows) {
     return rows.map((r) => {
       const si = statusInfo(r.status);
-      return '<div class="cp-coll">' +
+      const inner = editingId === r.id
+        ? editPanel(r)
+        : '<div class="cp-coll-desc">' + esc(r.description) + "</div>" +
+          '<div class="cp-coll-foot">' +
+            '<span class="cp-coll-pagelink">' + pageLink(r) + "</span>" +
+            '<span class="cp-coll-status">État : ' + statusSelect(r) + "</span>" +
+            '<button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' +
+          "</div>";
+      return '<div class="cp-coll cp-row-' + si.cls + '">' +
         '<div class="cp-coll-head" aria-expanded="false">' +
           '<span class="cp-coll-arrow">\u25B8</span>' +
           '<span class="cp-badge ' + si.cls + '">' + si.label + "</span>" +
           '<span class="cp-coll-title">' + esc(r.page_title || "—") + "</span>" +
           '<span class="cp-coll-meta">' + esc(r.reporter) + " · " + frDate(r.created_at) + "</span>" +
         "</div>" +
-        '<div class="cp-coll-body" hidden>' +
-          '<div class="cp-coll-desc">' + esc(r.description) + "</div>" +
-          '<div class="cp-coll-foot">' +
-            '<span class="cp-coll-pagelink">' + pageLink(r) + "</span>" +
-            '<span class="cp-coll-status">État : ' + statusSelect(r) + "</span>" +
-          "</div>" +
-        "</div>" +
+        '<div class="cp-coll-body"' + (editingId === r.id ? "" : " hidden") + ">" + inner + "</div>" +
       "</div>";
     }).join("");
   }
-
+ 
   function bindStatus() {
     listsEl.querySelectorAll(".cp-status-sel").forEach((sel) => {
       sel.addEventListener("click", (e) => e.stopPropagation());
@@ -178,7 +219,27 @@ function init() {
       });
     });
   }
-
+ 
+  function bindEditButtons() {
+    listsEl.querySelectorAll(".cp-edit").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        editingId = (editingId === btn.dataset.id) ? null : btn.dataset.id;
+        render();
+      });
+    });
+    listsEl.querySelectorAll(".cp-edit-save").forEach((btn) => {
+      btn.addEventListener("click", (e) => { e.stopPropagation(); saveEdit(btn.dataset.id); });
+    });
+    listsEl.querySelectorAll(".cp-edit-cancel").forEach((btn) => {
+      btn.addEventListener("click", (e) => { e.stopPropagation(); editingId = null; render(); });
+    });
+    // Empêche les clics dans le panneau de replier la ligne
+    listsEl.querySelectorAll(".cp-edit-panel").forEach((p) => {
+      p.addEventListener("click", (e) => e.stopPropagation());
+    });
+  }
+ 
   function bindSortHeaders() {
     listsEl.querySelectorAll("th[data-sort]").forEach((th) => {
       th.addEventListener("click", () => {
@@ -189,7 +250,7 @@ function init() {
       });
     });
   }
-
+ 
   function bindToggles() {
     listsEl.querySelectorAll(".cp-coll-head").forEach((head) => {
       head.addEventListener("click", () => {
@@ -201,10 +262,11 @@ function init() {
       });
     });
   }
-
+ 
   listsEl.addEventListener("click", (e) => {
     if (view !== "table") return;
     if (e.target.closest(".cp-status-sel")) return;
+    if (e.target.closest(".cp-edit") || e.target.closest(".cp-edit-panel")) return;
     if (e.target.closest("a")) return;
     const tr = e.target.closest("tr");
     if (!tr) return;
@@ -213,7 +275,7 @@ function init() {
     const detail = tr.nextElementSibling;
     if (detail && detail.classList.contains("cp-detail-row")) detail.classList.toggle("open");
   });
-
+ 
   $("cp-bug-view-table").addEventListener("click", () => { view = "table"; updateViewButtons(); render(); });
   $("cp-bug-view-collapse").addEventListener("click", () => { view = "collapse"; updateViewButtons(); render(); });
   function updateViewButtons() {
@@ -222,14 +284,15 @@ function init() {
   }
   $("cp-bug-filter-status").addEventListener("change", (e) => { statusFilter = e.target.value; render(); });
   $("cp-bug-search").addEventListener("input", (e) => { searchTerm = e.target.value.trim(); render(); });
-
+ 
   updateViewButtons();
   load();
 }
-
+ 
 if (document.readyState !== "loading") {
   init();
 } else {
   document.addEventListener("DOMContentLoaded", init);
 }
 document.addEventListener("nav", init);
+ 
