@@ -394,4 +394,3 @@ if (document.readyState !== "loading") {
 }
 document.addEventListener("nav", init);
 window.addEventListener("pageshow", () => { if (document.getElementById("cp-army-app")) init(); });
- 

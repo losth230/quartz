@@ -473,4 +473,3 @@ if (document.readyState !== "loading") bootstrap();
 else document.addEventListener("DOMContentLoaded", bootstrap);
 document.addEventListener("nav", setup);          // navigations SPA
 window.addEventListener("pageshow", () => { if (getApp()) setup(); }); // retour arrière/cache
- 
