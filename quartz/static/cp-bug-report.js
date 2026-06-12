@@ -15,7 +15,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  
 // URL de la page de suivi (adapte si tu la places ailleurs).
-const TRACKER_URL = "/quartz/Wargame/Signalements";
+const TRACKER_URL = "Retours";
  
 function injectStyles() {
   if (document.getElementById("cp-bug-styles")) return;
