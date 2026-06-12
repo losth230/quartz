@@ -141,7 +141,7 @@
       </div>
       <div>
         <label for="cp-points">Coût (points)</label>
-        <input id="cp-points" type="number" min="0" step="1" placeholder="ex. 1500" />
+        <input id="cp-points" type="number" min="0" step="1" placeholder="ex. 300" />
       </div>
       <div>
         <label for="cp-version">Version</label>
