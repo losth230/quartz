@@ -15,7 +15,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  
 // État module (survit aux nav)
-let refPeuples = [], refScenarios = [], refDeploiements = [];
+let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [];
 let parties = [], participations = [];
 let armyLists = [];          // listes d'armées disponibles (army_lists)
 let tab = "saisie";          // "saisie" | "historique" | "stats"
@@ -37,13 +37,14 @@ function frDate(iso) {
 function pct(n, d) { return d === 0 ? "—" : Math.round((n / d) * 100) + " %"; }
  
 async function loadAll() {
-  const [rp, rs, rd, pa, pp, al] = await Promise.all([
+  const [rp, rs, rd, pa, pp, al, rv] = await Promise.all([
     sb.from("ref_peuples").select("*").order("ordre"),
     sb.from("ref_scenarios").select("*").order("ordre"),
     sb.from("ref_deploiements").select("*").order("ordre"),
     sb.from("parties").select("*").order("created_at", { ascending: false }),
     sb.from("participations").select("*"),
     sb.from("army_lists").select("id, title, faction, author, points"),
+    sb.from("ref_versions").select("*").order("ordre"),
   ]);
   refPeuples = rp.data || [];
   refScenarios = rs.data || [];
@@ -51,6 +52,7 @@ async function loadAll() {
   parties = pa.data || [];
   participations = pp.data || [];
   armyLists = al.data || [];
+  refVersions = rv.data || [];
   render();
 }
  
@@ -132,7 +134,7 @@ function renderSaisie() {
   for (let i = 0; i < nbJoueurs; i++) rows += participantRow(i);
   return '<div class="cp-card">' +
     '<div class="cp-form-grid">' +
-      '<div><label>Version</label><input id="cp-f-version" placeholder="ex. A3.1" /></div>' +
+      '<div><label>Version</label><select id="cp-f-version">' + optionsFrom(refVersions) + "</select></div>" +
       '<div><label>Scénario</label><select id="cp-f-scenario">' + optionsFrom(refScenarios) + "</select></div>" +
       '<div><label>Déploiement</label><select id="cp-f-deploiement">' + optionsFrom(refDeploiements) + "</select></div>" +
       '<div><label>Saisi par</label><input id="cp-f-saisipar" placeholder="Ton nom" /></div>' +
@@ -458,3 +460,4 @@ function setup() {
 if (document.readyState !== "loading") setup();
 else document.addEventListener("DOMContentLoaded", setup);
 document.addEventListener("nav", setup);
+ 
