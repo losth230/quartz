@@ -32,17 +32,17 @@ Equilibre : Si l’affinité de votre bande n'est ni Occulte ni Chamanique, vou
 #### Occultisme
 Affinité Occulte (5+) : Si votre bande est d’affinité Occulte, chaque fois qu’un de vos modèles rate un test de moral, il peut perdre 2 PV pour le réussir.
 - Rang I (5+) : les modèles ennemis à 6’’ ou moins d’un Commandant ami souffrent d’un malus de -1 Moral.
-- Rang II (10+) : une fois par partie, vous choisir de réussir un test de moral qu’un de vos modèles a raté.
-- Rang III (20+) : lors de la création de votre bande, vous pouvez octroyer +1d6 en mêlée aux unités d’un de vos modèles.
-- Rang IV (30+) : lorsque vous activez un commandant, vous pouvez lui retirer 1 PV pour gagner 1 Manœuvre.
-- Rang V (40+) : si vous réussissez à dissiper un sort adverse, le lanceur est tué.
+- Rang II (10+) : une fois par partie, vous pouvez choisir de réussir un test de moral qu’un de vos modèles a raté.
+- Rang III (15+) : lors de la création de votre bande, vous pouvez octroyer +1d6 en mêlée aux unités d’un de vos modèles.
+- Rang IV (20+) : lorsque vous activez un commandant, vous pouvez lui retirer 1 PV pour gagner 1 Manœuvre.
+- Rang V (25+) : si vous réussissez à dissiper un sort adverse, le lanceur est tué.
 #### Chamanisme
 Affinité Chamanique (5+) : Si votre bande est d’affinité Chamanique, lorsque vous lancez un sort sur un modèle ami, vous le faites avec un bonus de +3 au lancement des sorts.
 - Rang I (5+) : votre Général vous permet de relancer deux dés de Manœuvre lors de la phase d’Initiative.
 - Rang II (10+) : les bêtes bénéficient de +1 Vitesse.
-- Rang III (20+) : lors de la création de votre bande, vous pouvez octroyer [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]] à deux de vos modèles.
-- Rang IV (30+) : au début de chaque tour, vous pouvez conférez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] au modèle de votre choix.
-- Rang V (40+) : vous possédez un dé de Manœuvre blanc supplémentaire.
+- Rang III (15+) : lors de la création de votre bande, vous pouvez octroyer [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]] à deux de vos modèles.
+- Rang IV (20+) : au début de chaque tour, vous pouvez conférez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] au modèle de votre choix.
+- Rang V (25+) : vous possédez un dé de Manœuvre blanc supplémentaire.
 
 
 ---
