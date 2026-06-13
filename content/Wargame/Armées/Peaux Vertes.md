@@ -321,7 +321,7 @@ Affinité Chamanique (12)
 *Affinité Occulte (1), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Équipement :
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
-- Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Arme lourde (+3 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 - Lance sinistre (+2 pts) : remplace [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]] par [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
 - Marque de Magmadon (+1 pt) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 - Zimmortels de Slaig (+4 pts) : la caractéristique de mêlée de cette unité devient 3+. La caractéristique de PV de cette unité devient 3.
