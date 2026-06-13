@@ -150,6 +150,7 @@ ___
 
 ##### Règles spéciales :
 - Usurpatrice : ne déployez pas Naar’Vaath selon les règles de déploiement standard. A la place, une fois le déploiement terminé, désignez secrètement une unité adverse valant 50 pts ou moins dans laquelle Naar’Vaath est cachée. Durant la partie, au lieu d'une activation normale, vous pouvez retirer comme perte l'unité hôte et la remplacer par Naar'Vaath. Naar'Vaath obtient 5 Egides puis son tour se termine.
+- L'heure
 
 ---
 

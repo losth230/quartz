@@ -1,1 +1,1 @@
-Les modèles avec cette règle spéciale infligent un *Empoisonnement* à la cible  si la moindre blessure est obtenue, tant que celui-ci est actif, le modèle *empoisonné* ne déclenche pas d'Explosion lorsqu'il obtient des 6 lors de tests de mêlée, de tir ou d'armure.
+Les modèles avec cette règle spéciale infligent un *Empoisonnement* à la cible si la moindre blessure est obtenue. Tant que celui-ci est actif, le modèle *empoisonné* ne déclenche peut plus faire exploser ses dés lors de tests de mêlée, de tir ou d'armure.

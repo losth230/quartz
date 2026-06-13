@@ -3,8 +3,6 @@
 #### Amasser de Scories
 Même sur les champs de batailles, les Rats sont à la recherche des Scories qu’ils pourraient y trouver. Les rats ne peuvent pas gagner de points de Manœuvres comme les autres factions, mais peuvent dépenser leurs Scories comme s’ils s’agissaient de points de Manœuvre.
 Au début de chaque tour, gagnez 1 Scorie. A la fin de chaque tour, les scories ne sont pas perdues.
-#### [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]]
-Vos modèles avec cette règle spéciale infligent un Empoisonnement à la cible, tant que celui-ci est actif, le modèle empoisonné doit relancer ses jets ayant obtenu un résultat explosif.
 #### Progression souterraine
 Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]] à vos modèles en dépensant leur Masse en points.
 #### Nuée :

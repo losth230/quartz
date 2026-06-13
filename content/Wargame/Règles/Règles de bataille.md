@@ -273,17 +273,18 @@ Les modèles spéciaux sont des unités rares et chères, mais très puissantes.
 ---
 
 <center><h2>La Magie</h2></center>
+
 *Le monde de Chasse & Pêche est parcouru d'énergies mystiques et les individus les plus talentueux (ou souvent les plus corrompus) peuvent puiser dans cette énergie et plier ces flux selon leur volonté.*
 ### Les lanceurs de sorts :
 Seules les unités de Lanceurs de Sorts peuvent puiser dans la puissance mystique qu'est la magie et se divisent en quatre niveaux, de 1 à 4 (4 étant le maximum). Plus le niveau d'un Lanceur de Sort est élevé, plus il maitrisera de sorts et plus ses sorts seront efficaces : un Lanceur de Sort possède un emplacement de sort pour chacun de ses niveaux, les sorts qu'il peut apprendre consomme un emplacement de sort par niveau du sort.
-Par exemple : un Lanceur de Sort de niveau 3 pourra posséder trois sorts de niveau 1 ou un sort de niveau 2 et un sort de niveau 1 ou 1 seul sort de niveau 3.
+Par exemple : un Lanceur de Sort de niveau 3 pourra posséder trois sorts de niveau 1 ou un sort de niveau 2 et un sort de niveau 1 ou 1 seul sort de niveau 3.  
 Les sorts les plus courants sont décrit dans les pages suivantes. Chaque faction possède également son propre domaine de magie et le Lanceur de Sort peut dépenser des emplacements de sort pour les apprendre. Les sorts inscrits directement sur la fiche de personnage d'un Lanceur de Sort lui sont innés et il n'a pas besoin de dépenser d'emplacement de sort pour les apprendre.
 ### Lancer un sort :
 #### Canaliser les vents de magie :
-Au début de chaque tour, les deux joueurs jettent chacun 2d6. Le dé ayant obtenu le plus gros résultat rejoindra la Réserve du joueur l'ayant lancé, l'autre rejoindra celle de son adversaire. Lorsqu'ils souhaiteront lancer ou dissiper un sort, ils devront puiser dans cette Réserve. Les dés non utilisés en fin de tour sont perdus.
+Au début de chaque tour, les deux joueurs jettent chacun 2d6. Le dé ayant obtenu le plus gros résultat rejoindra la Réserve du joueur l'ayant lancé, l'autre rejoindra celle de son adversaire. Lorsqu'ils souhaiteront lancer ou dissiper un sort, ils devront puiser dans cette Réserve. Les dés non utilisés en fin de tour sont perdus.  
 Par exemple Armand et Clément disputent une partie, Armand lance ses dés et obtient un 1 et un 2, il récupère 2 dés pour sa réserve et Clément un seul. Plus chanceux, celui-ci a obtenu 4 et 6, il ajoute ainsi 6 dés à sa Réserve tandis qu'Armand en ajoute 4. Ainsi, Armand la Réserve d'Armand comprend 6 dés et celle de Clément en comprend 7.
 #### Qu'est-ce qu'un sort ? :
-Lorsqu'un Lanceur de Sort tente de lancer un sort, son action est en tout point considérée comme une attaque de tir, à l'exception près qu'elle n'est pas limitée à une fois par tour. Bien qu'un lanceur de sorts puisse lancer plusieurs sorts par tour, chaque sort ne peut être lancé qu'une seule fois à chaque tour. Deux lanceurs de sorts différents ne pourront dont pas lancer le même sort, si son lancement est raté ou si l'adversaire parvient à le dissiper.
+Lorsqu'un Lanceur de Sort tente de lancer un sort, son action est en tout point considérée comme une attaque de tir, à l'exception près qu'elle n'est pas limitée à une fois par tour. Bien qu'un lanceur de sorts puisse lancer plusieurs sorts par tour, chaque sort ne peut être lancé qu'une seule fois à chaque tour. Deux lanceurs de sorts différents ne pourront dont pas lancer le même sort, si son lancement est raté ou si l'adversaire parvient à le dissiper.  
 Certains sorts peuvent également être renforcés, généralement au prix d'une action longue ou en échange de Points de Pouvoir. Cela est toujours indiqué dans la description du sort. Si une figurine apprend un sort, elle en apprend également la version renforcée.
 A moins que le contraire ne soit précisé, un sort requiert toujours une ligne de vue, ne peut être utilisé sur une cible *engagée*.
 #### Les types de sorts :
@@ -293,16 +294,16 @@ A moins que le contraire ne soit précisé, un sort requiert toujours une ligne 
 - Les malédictions : ces sorts se lancent sur des modèles ennemis, la difficulté du lancement du sort augmente de 1 par Masse du modèle ciblé.
 - Les météos : ces sorts affectent le jeu pour le reste de la partie, et sont remplacés dès qu'une autre météo est lancée.
 #### Lancer un sort :
-Lorsqu'un joueur active un Lanceur de Sort, il peut dépenser ses actions pour lancer un sort. Pour cela, il peut utiliser autant de dés de sa réserve qu'il le désire et doit, en ajoutant le niveau de son Lanceur de Sort, obtenir un résultat supérieur ou égal à la valeur de lancement du sort.
+Lorsqu'un joueur active un Lanceur de Sort, il peut dépenser ses actions pour lancer un sort. Pour cela, il peut utiliser autant de dés de sa réserve qu'il le désire et doit, en ajoutant le niveau de son Lanceur de Sort, obtenir un résultat supérieur ou égal à la valeur de lancement du sort.  
 Si on reprend l'exemple précédent, supposons qu'Armand vient d'activer un Chaman Orque de niveau 2 et qu'il désire lancer le sort Célérité qui possède une valeur de lancement de 7 sur son modèle de 5 Combattants Orques, le résultat qu'il doit obtenir est donc de 12. Il va choisir de jeter 3d6 et obtient 1,5 et 5 pour un total de 11. Heureusement, puisque son lanceur de sort est de niveau 2, le résultat final est de 13, le lancement du sort est donc une réussite.
 #### Dissiper un sort :
-Si un sort est lancé avec succès, un Lanceur de Sort adverse peut tenter de le dissiper s'il se trouve à 18'' ou moins (même s'il n'est pas en ligne de vue). La dissipation s'effectue comme le lancement, au détail près que le niveau du lanceur n'influence pas le jet de dé et que le résultat obtenu doit être supérieur à la valeur à laquelle le sort a été lancé.
-Toujours dans le même exemple, Clément décide de désigner Aklash le Maitre du temps pour dissiper et jette 4d6, obtenant 1, 3, 3 et 6 pour un total de 13. Malheureusement le résultat n'est pas supérieur au score de lancement d'Armand, le sort n'est donc pas dissipé, bien qu'Aklash le Maitre du temps soit un Lanceur de Sort de niveau 3.
+Si un sort est lancé avec succès, un Lanceur de Sort adverse peut tenter de le dissiper s'il se trouve à 18'' ou moins (même s'il n'est pas en ligne de vue). La dissipation s'effectue comme le lancement, au détail près que le niveau du lanceur n'influence pas le jet de dé et que le résultat obtenu doit être supérieur à la valeur à laquelle le sort a été lancé.  
+Toujours dans le même exemple, Clément décide de désigner Aklash le Maitre du temps pour dissiper et jette 4d6, obtenant 1, 3, 3 et 6 pour un total de 13. Malheureusement le résultat n'est pas supérieur au score de lancement d'Armand, le sort n'est donc pas dissipé, bien qu'Aklash le Maitre du temps soit un Lanceur de Sort de niveau 3.  
 Un Lanceur de Sort peut également dépenser une action longue pour tenter de dissiper une météo, celle-ci est dissipée si la valeur de dissipation est supérieure à la valeur de lancement du sort (et non la valeur à laquelle le sort a effectivement été lancé).
 #### Puissance irrésistible :
-Si le jet de lancement d'un sort obtient au moins un double 6, le sort est lancé automatiquement et ne pourra subir de tentative de dissipation pour le reste du tour.
-Si le jet de dissipation d'un sort obtient un double 6, il est dissipé automatiquement.
-Cependant, à trop puiser dans des forces qu'il ne maitrise pas, le Lanceur de Sort est marqué Fatigué et attise la colère des dieux. Jetez 1d6 et consultez le tableau de châtiment pour connaître le résultat que les dieux lui réservent.
+Si le jet de lancement d'un sort obtient au moins un double 6, le sort est lancé automatiquement et ne pourra subir de tentative de dissipation pour le reste du tour.  
+Si le jet de dissipation d'un sort obtient un double 6, il est dissipé automatiquement.  
+Cependant, à trop puiser dans des forces qu'il ne maitrise pas, le Lanceur de Sort est marqué Fatigué et attise la colère des dieux. Jetez 1d6 et consultez le tableau de châtiment pour connaître le résultat que les dieux lui réservent :
 - 1 Puissance contrôlée : de justesse le lanceur de sorts parvient à maitriser la puissance, perdez toutes vos Manœuvres.
 - 2 – Surpuissance : le lanceur de sorts laiche échapper trop de puissance de ses mains, perdez tous vos dés de votre réserve de magie.
 - 3 - Parasites : des parasites viennent sucer la magie du lanceur, qui perd 1 PV. Tant que le lanceur de sorts est encore vivant, vous perdez 1 dé de votre réserve de magie au début de chaque tour.

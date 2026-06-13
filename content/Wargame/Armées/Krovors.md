@@ -2,7 +2,6 @@
 <center><h2>Règles de Faction</h2></center>
 
 #### Amasser les victuailles
-
 *Les Krovors ont un lien particulier avec la nourriture.* Au début de chaque tour, consultez la table ci-dessous pour savoir ce qu’il se passe.  
 **Tour 1** : vos modèles bénéficient de +1 Vitesse.  
 **Tour 2** : vos modèles bénéficient de +1d6 en mêlée.  
@@ -78,7 +77,7 @@ Les Commandants ou lanceurs de sorts Krovors peuvent dépenser 5 **Stocks de viv
 - Hache lourde (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Manger la chair des vaincus : les attaques de Daguiel génèrent une quantité de **Stock de vivres** égale au nombre de blessures réussies.
-- Robustesse : la première fois que Daguiel est réduit à 0 PV, il remonte à 1 PV.
+- Indomptable : la première fois que Daguiel est réduit à 0 PV, il remonte à 1 PV.
 
 ---
 
