@@ -23,10 +23,21 @@ const STATUS = {
 };
 const STATUS_KEYS = ["poste", "en_cours", "traite", "refuse"];
  
+const TYPE = {
+  bug:         { label: "Bug",          cls: "ty-bug" },
+  equilibrage: { label: "Équilibrage",  cls: "ty-equilibrage" },
+  idee:        { label: "Idée",         cls: "ty-idee" },
+  regle:       { label: "Règle",        cls: "ty-regle" },
+  autre:       { label: "Autre",        cls: "ty-autre" },
+};
+function typeInfo(t) { return TYPE[t] || { label: t || "—", cls: "" }; }
+ 
+ 
 // État global au module (survit aux nav, réinitialisé à chaque setup)
 let all = [];
 let view = "table";
 let statusFilter = "";
+let typeFilter = "";
 let searchTerm = "";
 let sortKey = "created_at";
 let sortDir = "desc";
@@ -50,19 +61,16 @@ function statusInfo(s) { return STATUS[s] || { label: s, cls: "" }; }
  
 async function load() {
   const listsEl = getList();
-  if (!listsEl) { console.log("[CP-BUG] load() ABANDON: getList() null"); return; }
-  console.log("[CP-BUG] load() lance la requête Supabase...");
+  if (!listsEl) return;
   const { data, error } = await sb
     .from("bug_reports")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
-    console.log("[CP-BUG] load() ERREUR Supabase:", error.message);
     listsEl.innerHTML = '<p class="cp-empty">Erreur de chargement : ' + esc(error.message) + "</p>";
     return;
   }
   all = data || [];
-  console.log("[CP-BUG] load() OK,", all.length, "signalements -> render()");
   render();
 }
  
@@ -96,6 +104,7 @@ function filtered() {
   const term = searchTerm.toLowerCase();
   let rows = all.filter((r) => {
     if (statusFilter && r.status !== statusFilter) return false;
+    if (typeFilter && r.type !== typeFilter) return false;
     if (term) {
       const hay = (r.reporter + " " + (r.page_title || "") + " " + r.description).toLowerCase();
       if (!hay.includes(term)) return false;
@@ -146,11 +155,13 @@ function pageLink(r) {
 function renderTable(rows) {
   const body = rows.map((r) => {
     const cls = statusInfo(r.status).cls;
+    const ti = typeInfo(r.type);
     const editingRow = editingId === r.id
-      ? '<tr class="cp-detail-row open ' + cls + '"><td colspan="5">' + editPanel(r) + "</td></tr>"
-      : '<tr class="cp-detail-row ' + cls + '"><td colspan="5"><div class="cp-detail">' + esc(r.description) + "</div></td></tr>";
+      ? '<tr class="cp-detail-row open ' + cls + '"><td colspan="6">' + editPanel(r) + "</td></tr>"
+      : '<tr class="cp-detail-row ' + cls + '"><td colspan="6"><div class="cp-detail">' + esc(r.description) + "</div></td></tr>";
     return '<tr class="cp-row-' + cls + '" data-rowid="' + r.id + '">' +
       '<td class="cp-c-state">' + statusSelect(r) + "</td>" +
+      '<td><span class="cp-badge ' + ti.cls + '">' + esc(ti.label) + "</span></td>" +
       '<td class="cp-c-page">' + pageLink(r) + "</td>" +
       '<td>' + esc(r.reporter) + "</td>" +
       '<td class="cp-c-date">' + frDate(r.created_at) + "</td>" +
@@ -161,6 +172,7 @@ function renderTable(rows) {
   return '<p class="cp-hint">Astuce : tape une ligne pour lire le détail, le crayon pour modifier, le menu pour changer l\'état.</p>' +
     '<table class="cp-table"><thead><tr>' +
     '<th data-sort="status">État' + arrow("status") + "</th>" +
+    '<th data-sort="type">Type' + arrow("type") + "</th>" +
     '<th data-sort="page_title">Page' + arrow("page_title") + "</th>" +
     '<th data-sort="reporter">Auteur' + arrow("reporter") + "</th>" +
     '<th data-sort="created_at">Date' + arrow("created_at") + "</th>" +
@@ -171,6 +183,7 @@ function renderTable(rows) {
 function renderCollapse(rows) {
   return rows.map((r) => {
     const si = statusInfo(r.status);
+    const ti = typeInfo(r.type);
     const inner = editingId === r.id
       ? editPanel(r)
       : '<div class="cp-coll-desc">' + esc(r.description) + "</div>" +
@@ -183,6 +196,7 @@ function renderCollapse(rows) {
       '<div class="cp-coll-head" data-collhead="' + r.id + '" aria-expanded="' + (editingId === r.id ? "true" : "false") + '">' +
         '<span class="cp-coll-arrow">' + (editingId === r.id ? "\u25BE" : "\u25B8") + "</span>" +
         '<span class="cp-badge ' + si.cls + '">' + si.label + "</span>" +
+        '<span class="cp-badge ' + ti.cls + '">' + esc(ti.label) + "</span>" +
         '<span class="cp-coll-title">' + esc(r.page_title || "—") + "</span>" +
         '<span class="cp-coll-meta">' + esc(r.reporter) + " · " + frDate(r.created_at) + "</span>" +
       "</div>" +
@@ -294,6 +308,7 @@ function wireOnce() {
     const sel = e.target.closest(".cp-status-sel");
     if (sel && getApp().contains(sel)) { changeStatus(sel.dataset.id, sel.value); return; }
     if (e.target.id === "cp-bug-filter-status") { statusFilter = e.target.value; render(); return; }
+    if (e.target.id === "cp-bug-filter-type") { typeFilter = e.target.value; render(); return; }
   });
   document.addEventListener("input", (e) => {
     if (!getApp()) return;
@@ -303,7 +318,6 @@ function wireOnce() {
  
 // ---- Setup appelé à chaque affichage de page ----
 function setup() {
-  console.log("[CP-BUG] setup() | getApp()=", !!getApp(), "| getList()=", !!getList());
   if (!getApp()) return;          // pas la page Signalements
   wireOnce();                      // câblage délégué (une fois)
   // réinitialise l'état d'affichage pour une page fraîche
@@ -311,30 +325,27 @@ function setup() {
   load();                          // recharge et rend
 }
  
-// ---- Démarrage robuste (VERSION TRACÉE pour diagnostic) ----
+// ---- Démarrage robuste ----
+// À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
+// pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
+// le DOM de la page de destination. Un seul timer actif à la fois.
 let bootTimer = null;
-function bootstrap(origine) {
-  console.log("[CP-BUG] bootstrap() appelé depuis:", origine, "| getApp() =", !!getApp());
+function bootstrap() {
   if (bootTimer) clearInterval(bootTimer);
   let tries = 0;
-  if (getApp()) { console.log("[CP-BUG] conteneur trouvé immédiatement -> setup()"); setup(); return; }
+  // tentative immédiate
+  if (getApp()) { setup(); return; }
   bootTimer = setInterval(() => {
     tries++;
-    if (getApp()) {
-      console.log("[CP-BUG] conteneur trouvé après", tries, "essais -> setup()");
-      clearInterval(bootTimer); bootTimer = null; setup();
-    } else if (tries > 50) {
-      console.log("[CP-BUG] ABANDON après 50 essais, conteneur jamais trouvé");
-      clearInterval(bootTimer); bootTimer = null;
-    }
+    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
+    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; } // ~5 s puis abandon
   }, 100);
 }
- 
-console.log("[CP-BUG] script chargé, readyState =", document.readyState);
 if (document.readyState !== "loading") {
-  bootstrap("chargement-direct");
+  bootstrap();
 } else {
-  document.addEventListener("DOMContentLoaded", () => bootstrap("DOMContentLoaded"));
+  document.addEventListener("DOMContentLoaded", bootstrap);
 }
-document.addEventListener("nav", () => bootstrap("nav"));
-window.addEventListener("pageshow", () => bootstrap("pageshow"));
+document.addEventListener("nav", bootstrap);   // relance la détection à chaque navigation
+window.addEventListener("pageshow", bootstrap);
+ 

@@ -14,7 +14,7 @@ const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
  
-// URL de la page de suivi (adapte si tu la places ailleurs).
+// URL de la page de suivi
 const TRACKER_URL = "/quartz/Retours";
  
 function injectStyles() {
@@ -53,7 +53,7 @@ function injectStyles() {
       display: block; font-variant: small-caps; font-size: 0.82em;
       letter-spacing: 0.05em; color: var(--secondary, #6b3f2a); margin: 0.7em 0 0.25em;
     }
-    #cp-bug-modal input, #cp-bug-modal textarea {
+    #cp-bug-modal input, #cp-bug-modal textarea, #cp-bug-modal select {
       width: 100%; box-sizing: border-box; background: var(--light, #fffdf8);
       border: 1px solid var(--gray, #8a7a5c); border-radius: 3px;
       padding: 0.5em 0.65em; font-family: inherit; font-size: 0.92em; color: var(--dark, #2b2520);
@@ -98,11 +98,20 @@ function buildUI() {
   overlay.id = "cp-bug-overlay";
   overlay.innerHTML = `
     <div id="cp-bug-modal" role="dialog" aria-modal="true">
-      <h3>Signaler un probleme</h3>
+      <h3>Envoyer un retour</h3>
       <label for="cp-bug-name">Ton nom</label>
       <input id="cp-bug-name" type="text" placeholder="Anonyme" />
-      <label for="cp-bug-desc">Description du probleme</label>
-      <textarea id="cp-bug-desc" placeholder="Decris ce qui ne va pas sur cette page..."></textarea>
+      <label for="cp-bug-type">Type de retour</label>
+      <select id="cp-bug-type">
+        <option value="">— choisir —</option>
+        <option value="bug">Bug</option>
+        <option value="equilibrage">Équilibrage</option>
+        <option value="idee">Idée d'amélioration</option>
+        <option value="regle">Règle peu claire</option>
+        <option value="autre">Autre</option>
+      </select>
+      <label for="cp-bug-desc">Description</label>
+      <textarea id="cp-bug-desc" placeholder="Decris ton retour sur cette page..."></textarea>
       <p id="cp-bug-page"></p>
       <div class="cp-bug-msg" id="cp-bug-msg"></div>
       <div class="cp-bug-actions">
@@ -130,6 +139,7 @@ function wire(fab, overlay) {
     const p = currentPage();
     pageEl.textContent = "Page : " + p.title;
     msg.textContent = ""; msg.className = "cp-bug-msg";
+    $("cp-bug-type").value = "";
     overlay.classList.add("open");
     $("cp-bug-name").focus();
   }
@@ -144,10 +154,16 @@ function wire(fab, overlay) {
  
   $("cp-bug-send").addEventListener("click", async () => {
     const reporter = $("cp-bug-name").value.trim() || "Anonyme";
+    const type = $("cp-bug-type").value;
     const description = $("cp-bug-desc").value.trim();
     const p = currentPage();
  
     msg.className = "cp-bug-msg";
+    if (!type) {
+      msg.className = "cp-bug-msg err";
+      msg.textContent = "Choisis un type de retour.";
+      return;
+    }
     if (!description) {
       msg.className = "cp-bug-msg err";
       msg.textContent = "La description est requise.";
@@ -156,7 +172,7 @@ function wire(fab, overlay) {
     const btn = $("cp-bug-send");
     btn.disabled = true;
     const { error } = await sb.from("bug_reports").insert({
-      reporter, page_url: p.url, page_title: p.title, description,
+      reporter, type, page_url: p.url, page_title: p.title, description,
       // status laissé à sa valeur par défaut 'poste'
     });
     btn.disabled = false;
@@ -166,8 +182,9 @@ function wire(fab, overlay) {
       return;
     }
     msg.className = "cp-bug-msg ok";
-    msg.textContent = "Merci ! Signalement envoye.";
+    msg.textContent = "Merci ! Retour envoye.";
     $("cp-bug-desc").value = "";
+    $("cp-bug-type").value = "";
     setTimeout(close, 1200);
   });
 }
