@@ -50,16 +50,19 @@ function statusInfo(s) { return STATUS[s] || { label: s, cls: "" }; }
  
 async function load() {
   const listsEl = getList();
-  if (!listsEl) return;
+  if (!listsEl) { console.log("[CP-BUG] load() ABANDON: getList() null"); return; }
+  console.log("[CP-BUG] load() lance la requête Supabase...");
   const { data, error } = await sb
     .from("bug_reports")
     .select("*")
     .order("created_at", { ascending: false });
   if (error) {
+    console.log("[CP-BUG] load() ERREUR Supabase:", error.message);
     listsEl.innerHTML = '<p class="cp-empty">Erreur de chargement : ' + esc(error.message) + "</p>";
     return;
   }
   all = data || [];
+  console.log("[CP-BUG] load() OK,", all.length, "signalements -> render()");
   render();
 }
  
@@ -300,6 +303,7 @@ function wireOnce() {
  
 // ---- Setup appelé à chaque affichage de page ----
 function setup() {
+  console.log("[CP-BUG] setup() | getApp()=", !!getApp(), "| getList()=", !!getList());
   if (!getApp()) return;          // pas la page Signalements
   wireOnce();                      // câblage délégué (une fois)
   // réinitialise l'état d'affichage pour une page fraîche
@@ -307,26 +311,30 @@ function setup() {
   load();                          // recharge et rend
 }
  
-// ---- Démarrage robuste ----
-// À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
-// pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
-// le DOM de la page de destination. Un seul timer actif à la fois.
+// ---- Démarrage robuste (VERSION TRACÉE pour diagnostic) ----
 let bootTimer = null;
-function bootstrap() {
+function bootstrap(origine) {
+  console.log("[CP-BUG] bootstrap() appelé depuis:", origine, "| getApp() =", !!getApp());
   if (bootTimer) clearInterval(bootTimer);
   let tries = 0;
-  // tentative immédiate
-  if (getApp()) { setup(); return; }
+  if (getApp()) { console.log("[CP-BUG] conteneur trouvé immédiatement -> setup()"); setup(); return; }
   bootTimer = setInterval(() => {
     tries++;
-    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
-    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; } // ~5 s puis abandon
+    if (getApp()) {
+      console.log("[CP-BUG] conteneur trouvé après", tries, "essais -> setup()");
+      clearInterval(bootTimer); bootTimer = null; setup();
+    } else if (tries > 50) {
+      console.log("[CP-BUG] ABANDON après 50 essais, conteneur jamais trouvé");
+      clearInterval(bootTimer); bootTimer = null;
+    }
   }, 100);
 }
+ 
+console.log("[CP-BUG] script chargé, readyState =", document.readyState);
 if (document.readyState !== "loading") {
-  bootstrap();
+  bootstrap("chargement-direct");
 } else {
-  document.addEventListener("DOMContentLoaded", bootstrap);
+  document.addEventListener("DOMContentLoaded", () => bootstrap("DOMContentLoaded"));
 }
-document.addEventListener("nav", bootstrap);   // relance la détection à chaque navigation
-window.addEventListener("pageshow", bootstrap);
+document.addEventListener("nav", () => bootstrap("nav"));
+window.addEventListener("pageshow", () => bootstrap("pageshow"));

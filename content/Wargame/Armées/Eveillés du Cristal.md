@@ -15,6 +15,7 @@ Si une armée des Emissaires de Cristal se retrouve sans commandant, les dégât
 Tous les mages savent que la règle de Trois est la règle la plus fondamentale qui soit. Chaque tour, tous les deux modèles que vous activez, le troisième bénéficie de +1d6 en mêlée, +1d6 à distance et double ses bonus aux lancements de sorts.
 #### Unis avec le Cristal
 Lorsqu’un modèle Eveillé utilise la compétence Saillies de cristal, ajoutez 1 à la valeur de charge du Cristal.
+
 ---
 
 <center><h2>Domaines de Faction</h2></center>
@@ -33,7 +34,12 @@ Lorsqu’un modèle Eveillé utilise la compétence Saillies de cristal, ajoutez
 Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], Saillies de Cristal. Ce projectile se lance 3 fois.
 ---
 ## Commandants
+
+<div class="legendary">
+
 ### Keit Marteau-Hardi — 62 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -59,7 +65,12 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 - Frappe-éclat : Lorsque ce modèle bénéficie de la règle Saillies de Cristal, la règle se déclenche sur toutes ses touches réussies.
 - Stratège : à la fin de chaque tour, vous pouvez désigner un modèle ami à 9’’ ou moins et donnez-lui une formation (ou changez-là s’il en possède déjà une).
 ---
+
+<div class="legendary">
+
 ### Luc — 44 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -74,7 +85,12 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 ##### Règles spéciales :
 - Maitre du temps : Lorsque Luc lance un sort avec succès, désignez un modèle à 12’’ ou moins et déclenchez son effet de début de tour. Lorsque Luc dissipe un sort avec succès, désignez un modèle à 12’’ ou moins et déclenchez son effet de fin de tour.
 ---
+
+<div class="legendary">
+
 ### Reliquaire — 38 pts
+
+</div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
