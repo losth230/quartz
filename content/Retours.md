@@ -1,7 +1,5 @@
 <!-- ============================================================ Page Quartz : content/Retours.md Suivi des retours. HTML + CSS (variables Quartz). JS dans /quartz/static/cp-bug-tracker.js ============================================================ --> 
 
-### Titre
-
 <div id="cp-bug-app"> <style> #cp-bug-app { font-family: Georgia, "Times New Roman", serif; color: var(--dark); max-width: 920px; margin: 0 auto; } #cp-bug-app * { box-sizing: border-box; } #cp-bug-app h2 { font-variant: small-caps; letter-spacing: 0.04em; color: var(--dark); border-bottom: 2px solid var(--gray); padding-bottom: 0.3em; } #cp-bug-app .cp-intro { font-size: 0.9em; color: var(--gray); font-style: italic; margin-bottom: 1.2em; }
 
 ```
@@ -141,4 +139,4 @@
 .cp-empty { font-style: italic; color: var(--gray); }
 ```
 
-</style> <h2>Signalements</h2> <p class="cp-intro">Tous les problèmes remontés par les joueurs. Clique une ligne pour lire le détail, le crayon pour modifier, le menu pour changer l'état.</p> <!-- Contrôles --> <div class="cp-controls"> <div class="cp-viewtoggle"> <button id="cp-bug-view-table">Tableau</button> <button id="cp-bug-view-collapse">Repliable</button> </div> <select id="cp-bug-filter-status"> <option value="">Tous les états</option> <option value="poste">Posté</option> <option value="en_cours">En cours</option> <option value="traite">Traité</option> <option value="refuse">Refusé</option> </select> <input class="cp-search" id="cp-bug-search" type="text" placeholder="Rechercher..." /> </div> <div id="cp-bug-list"><p class="cp-empty">Chargement…</p></div> </div> <script type="module" src="/quartz/static/cp-bug-tracker.js"></script>
+</style> <h2>Signalements</h2> <p class="cp-intro">Tous les problèmes remontés par les joueurs. Clique une ligne pour lire le détail, le crayon pour modifier, le menu pour changer l'état.</p> <!-- Contrôles --> <div class="cp-controls"> <div class="cp-viewtoggle"> <button id="cp-bug-view-table">Tableau</button> <button id="cp-bug-view-collapse">Repliable</button> </div> <select id="cp-bug-filter-status"> <option value="">Tous les états</option> <option value="poste">Posté</option> <option value="en_cours">En cours</option> <option value="traite">Traité</option> <option value="refuse">Refusé</option> </select> <input class="cp-search" id="cp-bug-search" type="text" placeholder="Rechercher..." /> </div> <div id="cp-bug-list"><p class="cp-empty">Chargement…</p></div> </div>

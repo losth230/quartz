@@ -4,8 +4,6 @@
      JS dans /quartz/static/cp-stats.js
      ============================================================ -->
 
-### Titre
-
 <div id="cp-stats-app">
   <style>
     #cp-stats-app {
@@ -117,5 +115,3 @@
 
   <div id="cp-stats-main"><p class="cp-empty">Chargement…</p></div>
 </div>
-
-<script type="module" src="/quartz/static/cp-stats.js"></script>

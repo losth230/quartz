@@ -6,8 +6,6 @@
      JS dans /quartz/static/cp-army-lists.js
      ============================================================ -->
 
-### Titre
-
 <div id="cp-army-app">
   <style>
     #cp-army-app {
@@ -173,5 +171,3 @@
 
   <div id="cp-lists"><p class="cp-empty">Chargement…</p></div>
 </div>
-
-<script type="module" src="/quartz/static/cp-army-lists.js"></script>
