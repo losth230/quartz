@@ -233,11 +233,11 @@ Affinité Chamanique (12)
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Abatteur | **5** | **4+** | **4+** | **4+** | **7** | **2** | **2** | **2** | Orque |
-| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
+| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 *Affinité Occulte (1), [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
-- Arbalète lourde : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]] [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Arbalète lourde : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 
 ---
 ### Chevaucheur de Grondeur — 32 pts
