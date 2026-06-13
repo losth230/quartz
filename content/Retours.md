@@ -1,4 +1,7 @@
 <!-- ============================================================ Page Quartz : content/Retours.md Suivi des retours. HTML + CSS (variables Quartz). JS dans /quartz/static/cp-bug-tracker.js ============================================================ --> 
+
+### Titre
+
 <div id="cp-bug-app"> <style> #cp-bug-app { font-family: Georgia, "Times New Roman", serif; color: var(--dark); max-width: 920px; margin: 0 auto; } #cp-bug-app * { box-sizing: border-box; } #cp-bug-app h2 { font-variant: small-caps; letter-spacing: 0.04em; color: var(--dark); border-bottom: 2px solid var(--gray); padding-bottom: 0.3em; } #cp-bug-app .cp-intro { font-size: 0.9em; color: var(--gray); font-style: italic; margin-bottom: 1.2em; }
 
 ```
