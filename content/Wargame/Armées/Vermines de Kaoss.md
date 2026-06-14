@@ -340,12 +340,12 @@ ___
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Bélier | **5** | **4+** | **-** | **4+** | **7** | **7** | **5** | **6** | Machine |
-| **Mêlée:** | 10d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 9d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]*
 ##### Règles spéciales :
 - Tourner la roue (1-3) : renforcement, la vitesse de ce modèle augmente de 1d6 par Scories dépensées (max 3d6). Cependant, le bélier perd 1 PV par résultat 6 obtenu.
-- Pestilence Toxique : les attaques en mêlée de cette unité infligent des dégâts bruts contre les cibles empoisonnées.
+- Pestilence Toxique : les attaques en mêlée de cette unité infligent des dégâts bruts contre les cibles empoisonnées de taille 2 ou moins.
 ---
 
 ### Bourreau à Roulis — 52 pts
