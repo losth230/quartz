@@ -53,6 +53,13 @@
     .cp-partie-del { background: none; border: 1px solid transparent; color: #b5524a; cursor: pointer;
       border-radius: 3px; padding: 0.15em 0.4em; }
     .cp-partie-del:hover { background: #b5524a; color: var(--light); }
+    .cp-partie-edit { background: none; border: 1px solid transparent; color: var(--secondary); cursor: pointer;
+      border-radius: 3px; padding: 0.15em 0.4em; }
+    .cp-partie-edit:hover { background: var(--secondary); color: var(--light); }
+    .cp-form-mode {
+      font-variant: small-caps; font-size: 0.82em; letter-spacing: 0.05em;
+      color: var(--tertiary); font-weight: bold; margin-bottom: 0.6em;
+    }
 
     /* Camps colorés dans l'historique */
     .cp-camp { padding: 0.05em 0.3em; border-radius: 3px; }

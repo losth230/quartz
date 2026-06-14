@@ -19,6 +19,8 @@ let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [];
 let parties = [], participations = [];
 let armyLists = [];          // listes d'armées disponibles (army_lists)
 let tab = "saisie";          // "saisie" | "historique" | "stats"
+let editingPartieId = null;  // id de la partie en cours d'édition (null = création)
+let editData = null;         // {partie, participations} à pré-remplir dans le formulaire
 let statMode = "peuple";     // dimension d'analyse des stats
 let nbJoueurs = 2;           // nombre de lignes de participants dans le formulaire
 let wired = false;
@@ -67,7 +69,7 @@ function render() {
     const b = $("cp-tab-" + t);
     if (b) b.classList.toggle("active", tab === t);
   });
-  if (tab === "saisie") main.innerHTML = renderSaisie();
+  if (tab === "saisie") { main.innerHTML = renderSaisie(); applyEditData(); }
   else if (tab === "historique") main.innerHTML = renderHistorique();
   else main.innerHTML = renderStats();
   forceRepaint(app);
@@ -149,9 +151,13 @@ function fillListeMenu(row) {
 }
  
 function renderSaisie() {
+  // En édition, on génère autant de lignes que de participants existants
+  const nb = editData ? editData.participations.length : nbJoueurs;
   let rows = "";
-  for (let i = 0; i < nbJoueurs; i++) rows += participantRow(i);
+  for (let i = 0; i < nb; i++) rows += participantRow(i);
+  const enEdition = !!editingPartieId;
   return '<div class="cp-card">' +
+    (enEdition ? '<div class="cp-form-mode" id="cp-edit-banner">Modification d\'une partie</div>' : "") +
     '<div class="cp-form-grid">' +
       '<div><label>Version</label><select id="cp-f-version">' + optionsFrom(refVersions) + "</select></div>" +
       '<div><label>Scénario</label><select id="cp-f-scenario">' + optionsFrom(refScenarios) + "</select></div>" +
@@ -162,10 +168,40 @@ function renderSaisie() {
     '<div id="cp-participants">' + rows + "</div>" +
     '<button class="cp-btn-ghost" id="cp-add-participant">+ Ajouter un joueur</button>' +
     '<div class="cp-form-actions">' +
-      '<button class="cp-btn" id="cp-save-partie">Enregistrer la partie</button>' +
+      '<button class="cp-btn" id="cp-save-partie">' + (enEdition ? "Mettre à jour" : "Enregistrer la partie") + "</button>" +
+      (enEdition ? '<button class="cp-btn ghost" id="cp-cancel-edit">Annuler</button>' : "") +
     "</div>" +
     '<div class="cp-msg" id="cp-save-msg"></div>' +
   "</div>";
+}
+ 
+// Applique les valeurs de editData dans le formulaire (après rendu)
+function applyEditData() {
+  if (!editData) return;
+  const pa = editData.partie;
+  if ($("cp-f-version")) $("cp-f-version").value = pa.version || "";
+  if ($("cp-f-scenario")) $("cp-f-scenario").value = pa.scenario || "";
+  if ($("cp-f-deploiement")) $("cp-f-deploiement").value = pa.deploiement || "";
+  if ($("cp-f-saisipar")) $("cp-f-saisipar").value = pa.saisi_par || "";
+ 
+  const rows = [...document.querySelectorAll(".cp-part-row")];
+  editData.participations.forEach((p, i) => {
+    const row = rows[i];
+    if (!row) return;
+    row.querySelector(".cp-p-joueur").value = p.joueur || "";
+    row.querySelector(".cp-p-peuple").value = p.peuple || "";
+    fillListeMenu(row); // remplit le menu listes selon le peuple
+    const liste = row.querySelector(".cp-p-liste");
+    if (p.army_list_id && [...liste.options].some((o) => o.value === p.army_list_id)) {
+      liste.value = p.army_list_id;
+      const arch = row.querySelector(".cp-p-archetype");
+      arch.value = ""; arch.disabled = true; arch.placeholder = "(liste choisie)";
+    } else {
+      row.querySelector(".cp-p-archetype").value = p.archetype || "";
+    }
+    if (p.pertes != null) row.querySelector(".cp-p-pertes").value = p.pertes;
+    row.querySelector(".cp-p-resultat").value = p.resultat || "";
+  });
 }
  
 async function savePartie() {
@@ -210,20 +246,44 @@ async function savePartie() {
   const btn = $("cp-save-partie");
   btn.disabled = true;
  
-  // 1) créer la partie
-  const { data: pData, error: pErr } = await sb
-    .from("parties")
-    .insert({ version, scenario, deploiement, saisi_par })
-    .select();
-  if (pErr || !pData || !pData.length) {
-    btn.disabled = false;
-    msg.className = "cp-msg err";
-    msg.textContent = "Échec (partie) : " + (pErr ? pErr.message : "aucune ligne créée");
-    return;
+  let partieId;
+  if (editingPartieId) {
+    // --- MODE ÉDITION ---
+    // 1) mettre à jour le contexte de la partie
+    const { error: upErr } = await sb.from("parties")
+      .update({ version, scenario, deploiement, saisi_par })
+      .eq("id", editingPartieId);
+    if (upErr) {
+      btn.disabled = false;
+      msg.className = "cp-msg err";
+      msg.textContent = "Échec (mise à jour partie) : " + upErr.message;
+      return;
+    }
+    partieId = editingPartieId;
+    // 2) remplacer les participations : on supprime puis on réinsère
+    const { error: delErr } = await sb.from("participations").delete().eq("partie_id", partieId);
+    if (delErr) {
+      btn.disabled = false;
+      msg.className = "cp-msg err";
+      msg.textContent = "Échec (nettoyage participations) : " + delErr.message;
+      return;
+    }
+  } else {
+    // --- MODE CRÉATION ---
+    const { data: pData, error: pErr } = await sb
+      .from("parties")
+      .insert({ version, scenario, deploiement, saisi_par })
+      .select();
+    if (pErr || !pData || !pData.length) {
+      btn.disabled = false;
+      msg.className = "cp-msg err";
+      msg.textContent = "Échec (partie) : " + (pErr ? pErr.message : "aucune ligne créée");
+      return;
+    }
+    partieId = pData[0].id;
   }
-  const partieId = pData[0].id;
  
-  // 2) créer les participations
+  // insertion des participations (commun aux deux modes)
   const rowsToInsert = parts.map((p) => ({ ...p, partie_id: partieId }));
   const { error: ppErr } = await sb.from("participations").insert(rowsToInsert);
   if (ppErr) {
@@ -234,11 +294,13 @@ async function savePartie() {
   }
  
   btn.disabled = false;
-  msg.className = "cp-msg ok";
-  msg.textContent = "Partie enregistrée !";
+  const etaitEdition = !!editingPartieId;
+  editingPartieId = null;
+  editData = null;
   nbJoueurs = 2;
-  await loadAll();           // recharge et re-render
-  tab = "saisie"; render();  // reste sur la saisie, formulaire vidé
+  await loadAll();
+  if (etaitEdition) { tab = "historique"; render(); }   // retour à l'historique après édition
+  else { tab = "saisie"; render(); }                     // reste en saisie après création
 }
  
 // ---------- Onglet Historique ----------
@@ -263,12 +325,35 @@ function renderHistorique() {
       "<td>" + esc(pa.scenario || "—") + "</td>" +
       "<td>" + camps + "</td>" +
       '<td class="cp-c-date">' + frDate(pa.created_at) + "</td>" +
-      '<td class="cp-c-act"><button class="cp-partie-del" data-id="' + pa.id + '" title="Supprimer">\u2715</button></td>' +
+      '<td class="cp-c-act">' +
+        '<button class="cp-partie-edit" data-id="' + pa.id + '" title="Modifier">\u270E</button>' +
+        '<button class="cp-partie-del" data-id="' + pa.id + '" title="Supprimer">\u2715</button>' +
+      "</td>" +
       "</tr>";
   }).join("");
   return '<table class="cp-table"><thead><tr><th>Scénario</th><th>Opposition</th><th>Date</th><th></th></tr></thead><tbody>' +
     rows + "</tbody></table>";
 }
+ 
+function startEditPartie(id) {
+  const pa = parties.find((x) => x.id === id);
+  if (!pa) return;
+  const parts = participations.filter((p) => p.partie_id === id);
+  editingPartieId = id;
+  editData = { partie: pa, participations: parts };
+  tab = "saisie";
+  render();
+  const app = getApp();
+  if (app) app.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+ 
+function cancelEditPartie() {
+  editingPartieId = null;
+  editData = null;
+  nbJoueurs = 2;
+  render();
+}
+ 
 async function deletePartie(id) {
   if (!confirm("Supprimer cette partie et ses résultats ? Action définitive.")) return;
   const { error } = await sb.from("parties").delete().eq("id", id);
@@ -393,7 +478,13 @@ function wireOnce() {
  
     // onglets
     const tabBtn = e.target.closest("[data-tab]");
-    if (tabBtn && getApp().contains(tabBtn)) { tab = tabBtn.dataset.tab; render(); return; }
+    if (tabBtn && getApp().contains(tabBtn)) {
+      // si on quitte la saisie en cours d'édition, on annule proprement le mode édition
+      if (editingPartieId && tabBtn.dataset.tab !== "saisie") {
+        editingPartieId = null; editData = null; nbJoueurs = 2;
+      }
+      tab = tabBtn.dataset.tab; render(); return;
+    }
  
     // switch de stats
     const sb2 = e.target.closest(".cp-statbtn");
@@ -415,8 +506,15 @@ function wireOnce() {
       return;
     }
  
-    // enregistrer
+    // enregistrer / mettre à jour
     if (e.target.closest("#cp-save-partie")) { savePartie(); return; }
+ 
+    // annuler l'édition
+    if (e.target.closest("#cp-cancel-edit")) { cancelEditPartie(); return; }
+ 
+    // éditer une partie
+    const editPa = e.target.closest(".cp-partie-edit");
+    if (editPa && getApp().contains(editPa)) { startEditPartie(editPa.dataset.id); return; }
  
     // supprimer une partie
     const delPa = e.target.closest(".cp-partie-del");
@@ -495,4 +593,3 @@ if (document.readyState !== "loading") bootstrap();
 else document.addEventListener("DOMContentLoaded", bootstrap);
 document.addEventListener("nav", bootstrap);
 window.addEventListener("pageshow", bootstrap);
- 
