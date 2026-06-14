@@ -52,6 +52,8 @@ Dans Chasse & Pêche, les figurines de votre bande sont rangées en trois catég
 - Les Unités : le terme unité désigne une figurine dans le sens unique du terme. Il s'agit d'une figurine lorsqu'elle est prise seule.
 - Troupes : le terme troupe désigne un regroupement d'unités au sein d'un même corps. Les unités se déplacent ensemble, comme si elles ne faisaient qu'un. Seules les unités de Base peuvent être assemblées en troupe.
 - Modèles : le terme modèle désigne n'importe quel corps (unités, troupes) à son rang le plus haut : en cas de troupe, le terme modèle fait référence à la troupe et non aux unités.
+##### Faite-place :
+A tout moment lors d'une activation, une unité peut échanger de place avec une autre au sein du modèle.
 ### Amis, alliés et ennemis :
 Le terme ami désigne l'ensemble des unités que vous contrôlez, allié désigne l'ensemble des unités de vos alliés si vous jouez dans un format autre que le 1v1 et ennemi désigne l'ensemble des unités de votre ou vos adversaires.
 
@@ -86,7 +88,7 @@ Une fois que les deux joueurs ont tous les deux finis d'activer tous leurs modè
 4 : perdre les dés de magie et les manœuvres restantes, ils ne sont pas conservés pour le tour suivant.
 ### La fatigue :
 Lors d'une activation, un modèle peut choisir de se fatiguer pour gagner une action courte supplémentaire. Cette action doit impérativement être prise à la suite des deux actions courte ou à l'action longue résultant de l'activation standard du modèle (un modèle peut ainsi effectuer une action longue puis une action courte lors d'une fatigue, mais pas l'inverse). Ajoutez le marqueur *fatigue* avant la résolution de l'action courte bonus.
-Un modèle étant fatigué, souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 en vitesse et -1 moral.
+Un modèle étant fatigué, souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 en vitesse.
 ### Engager :
 Un modèle est considéré Engagé en mêlée lorsqu'il se trouve en contact socle à socle avec un ou plusieurs modèles ennemis. Lorsqu'un modèle se déplace pour engager un modèle ennemi, placez-les le plus possible en contact et centrés l'un par rapport à l'autre, quitte à devoir pivoter légèrement le modèle ennemi. Un modèle engagé en mêlée ne peut effectuer d'autre action que Mêlée ou Se désengager. Un modèle en déroute ne peut engager, mais peut être engagée.
 Si un modèle désire engager un modèle situé derrière un obstacle, placez-le au plus près du modèle ennemi, les deux modèles sont considérés engagés s'ils se trouvent à 1'' ou moins l'un de l'autre.
@@ -101,6 +103,8 @@ Vous avez généré des points de manœuvre lors de l'initiative, ceux-ci peuven
 Les combattants peuvent se déplacer à travers le champ de bataille lors des actions de Marche ou Course. Chaque modèle possède une valeur de vitesse propre, et ne peut se déplacer d'une distance supérieure à cette valeur. Un modèle peut se déplacer dans la direction de son choix et pivoter à volonté. Un modèle ne peut jamais se déplacer d'une distance supérieure à sa valeur de vitesse (ou deux fois sa vitesse lors d'une course).
 A moins de vouloir engager, un modèle ne peut se déplacer à moins de 1'' d'un autre et ne peux se déplacer à travers un autre model, même ami.
 Le terrain peut affecter le déplacement, si un modèle se trouve en contact avec un décors, il doit s'aligner avec lui.
+##### (Règles avancées) Déplacement en Troupe :
+Une Troupe (ou modèle composé de plusieurs unités) peut effectuer un pivot sur son centre en dépensant 2'' et réorganiser la largeur de son front et sa profondeur.
 #### Escalade :
 Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le mot-clé Bête ne peuvent grimper. A moins qu'il ne s'agisse d'une échelle ou similaire. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.
 Une distance d'escalade inférieure à la taille d'un modèle n'est pas considérée comme faisant partie de son mouvement.
@@ -146,6 +150,8 @@ Attention : une unité marquée activée ou engagée ne peut effectuer de tir de
 ### Attaques en mêlée :
 Un modèle en contact socle à socle avec un modèle ennemi peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l'intermédiaire d'une charge ou de l'action Mêlée.
 Un modèle doit nécessairement effectuer son attaque contre un modèle situé dans son arc avant et ne peut effectuer d'attaque contre un modèle ami ou allié. Un modèle effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.
+##### (Règles avancées) Demander un duel.
+Si deux modèles s'affrontent avec en leur sein un Commandant, un joueur peut demander le commandant adverse en duel. son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat. Si deux unités prennent part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle. Le vainqueur du duel peut voler un point de Manœuvre à son adversaire.
 #### Effectuer une attaque en mêlée :
 Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque en mêlée en prenant en compte les modificateurs suivants :
 -1 aux chances de toucher si le défenseur se situe derrière un obstacle.
@@ -159,41 +165,41 @@ Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter. Da
 Un modèle activé et fatigué ne peut riposter.
 ### Jets de Moral :
 #### Résolution des corps-à-corps :
-Une fois une attaque de corps à corps effectuée il faut calculer le score de combat avec les modificateurs suivants :
--1 par blessure infligée (les tirs de contre-charge ne sont pas inclus).
-+1 par blessure subie.
-+1 si le Général a été éliminé.
--2 toutes les 3 unités au sein du modèle.
--1 si un Commandant ami se trouve 6'' ou moins.
-+1 par marqueur Désorganisé sur le modèle.
+Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
 Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
 Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.
 #### Test de panique :
 Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :
-+1 si le Général a été éliminé.
--1 si un Commandant ami se trouve 6'' ou moins.
--2 toutes les 3 unités au sein du modèle.
--1 par Commandant ami à 6'' ou moins.
-+1 par marqueur Désorganisé sur le modèle.
+-2 si le modèle contient au moins 3 unités.
+-2 supplémentaires si le modèle contient au moins 5 figurines.  
+-1 si un Commandant ami se trouve 6'' ou moins.  
++1 par marqueur Désorganisé sur le modèle.  
+-1 si vous avez réussi une charge ce tour-ci.
++1 si vous avez subi un charge ce tour-ci.
++2 si vous avez remporté un duel.
+-2 si vous avez perdu un duel.
 Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
 Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute vers le bord de table le plus proche.
 ### Mouvements de poursuite.
 Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
 *Au cœur de la bataille, le rugissement des trébuchets et le sifflement des flèches créent un tourbillon chaotique. Soudain, mes camarades et moi sommes pris dans une étreinte de terreur alors qu'une troupe de Revenants fonce droit sur nous. Les ordres deviennent inaudibles, la fumée trouble notre vision, et l'ennemi semble surgir de tous les côtés. Mes jambes s'alourdissent, le poids de l'incertitude écrase mon esprit, et la cohésion de notre troupe se délite. La peur m'envahit, une sensation viscérale qui étouffe la bravoure. Mes camarades d'armes deviennent des silhouettes floues dans la brume de la panique, et la tentation de la fuite devient irrésistible. Mes jambes, autrefois fermes, tremblent sous le poids de l'effroi. Dans cet abîme de désarroi, la nécessité de la survie prévaut, et je succombe à l'instinct primal de la fuite, de me soustraire à la furie du conflit. La déroute devient ma seule voie, un retrait précipité dans l'espoir fragile de voir un autre jour, une honte future .*
 *Isabeau Lumièrepure, Abbesse de Lun.*
+### Combats et bâtiments :
+Chaque bâtiment peut accueillir une masse maximale d'unités, un modèle de masse supérieure à la capacité du bâtiment ne peut y entrer. Un modèle ne peut entrer et sortir d'un bâtiment au même tour.
+##### Attaquer un modèle dans un bâtiment :
+Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
 
 ---
 
 <center><h2>La Déroute</h2></center>
 
 ### Déroute d'un modèle :
-Lorsqu'un modèle est en déroute au début de son activation, il doit réussir un test de moral ou effectuer une course en direction du bord de table le plus proche et reste en état de déroute. En cas de réussite il peut être activé normalement.
+Lorsqu'un modèle est en déroute au début de son activation, il doit réussir un test de moral ou effectuer une course en direction du bord de table le plus proche et reste en état de déroute. En cas de réussite il peut être activé normalement.  
 Si un modèle en déroute entre en contact avec un bord de table, il est retiré comme perte.
 ### Déroute d'une bande :
-Une bande est considérée en déroute dès lors qu'elle a perdu plus de 50% de ses modèles. Dans ce cas, chaque modèle (même engagé en mêlée) doit effectuer un test de déroute au début de chacune de ses activations. Si un modèle engagé en mêlée rate un test de déroute, il doit se désengager avant d'effectuer sa course.
-Un modèle mis-à-terre ratant un test de déroute doit d'abord se relever puis effectuer une Marche vers le bord de table le plus proche.
+Une bande est considérée en déroute dès lors qu'elle a perdu plus de 50% de ses modèles (comptés en points). Dans ce cas, chaque modèle (même engagé en mêlée) doit effectuer un test de déroute au début de chacune de ses activations. Si un modèle engagé en mêlée rate un test de déroute, il doit se désengager avant d'effectuer sa course.
 ### Le Général : 
-Avant le début du premier tour, chaque joueur choisi secrètement un Général parmi ses commandants et héros de légende. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour, s'il meurt, tous ses jets de moral se font avec un malus de -1.
+Avant le début du premier tour, chaque joueur choisi secrètement un Général parmi ses commandants et héros de légende. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour.
 
 ---
 
@@ -244,7 +250,7 @@ Lorsqu'un modèle possédant cette règle effectue une attaque en à distance, i
 
 ---
 
-<center><h2>Hiérarchisation et Troupes</h2></center>
+<center><h2>(Règles avancées) Hiérarchisation et Troupes</h2></center>
 
 ### Hiérarchisation et structuration des armées :
 Afin de rendre les batailles à grandes échelle jouables en un minimum de temps, il est possible de réunir les unités en Troupes.

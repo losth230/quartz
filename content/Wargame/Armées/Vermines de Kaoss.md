@@ -8,7 +8,7 @@ Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Vi
 #### Nuée :
 Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche. La règle Masse Ecrasante se déclenche sur un nombre 5 fois supérieur au lieu d’un nombre 3 fois supérieur.
 #### Invasion sans fin :
-Vos modèles de type Vermine bénéficient de la règle Régénération (X), dépendant de sa masse originale. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]]. Cette règle ne se déclenche pas au premier tour de jeu.
+Vos modèles de type Vermine bénéficient de la règle Régénération (X), dépendant de sa masse originale. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 **Modèles de masse 5-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
 **Modèles de masse 11-15 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
 **Modèles de masse 16+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (3)]].
@@ -131,20 +131,18 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 <div class="legendary">
 
-### Saxon — 52 pts
+### Saxon — 48 pts
 
 </div>
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Saxon | **5** | **4+** | **-** | **4+** | **8** | **5** | **2** | **4** | Rat |
+| Saxon | **5** | **4+** | **-** | **4+** | **9** | **5** | **2** | **4** | Rat |
 | **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
-- Unis autour du chef ! : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
-- Montrer l’exemple : Si Saxon élimine une unité en mêlée, déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] d’un modèle ami à 8’’ ou moins. Au début de chaque tour, Saxon génère 1 Scorie.
-
+- Nuées sans fin : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+N)]] où N correspond au tour en cours.
 ___
 
 <div class="legendary">
@@ -165,7 +163,7 @@ ___
 ##### Règles spéciales :
 - Faire avec les restes : tant que ZigZon est en vie, les Renforcements de votre armée coûtent 1 Scorie en moins.
 - Pompez fort ! : au début de chaque tour, désignez un modèle à 9'' ou moins de ZigZon et décenchez gratuitement son Renforcement.
-- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 s ont obtenus ou plus, la roue perd 4 PV.
+- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). La vitesse maximale de se modèle n'est plus de 9 mais 12. Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 sont obtenus ou plus, la roue perd 4 PV.
 - Broyez-les tous ! (nécessite la roue): lors d’une charge, le nombre d’attaque en mêlée de la roue est égal à sa vitesse. Sinon, elle possède 0d6 en mêlée.
 - Percée (nécessite la roue): si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
 
@@ -270,7 +268,7 @@ ___
 | **Mêlée:** | Voir ci-dessous |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Règles spéciales :
-- Tourner la roue (1-3) : renforcement, la vitesse de ce modèle augmente de 1d6 par Scories dépensées (max 4d6). Cependant, la roue perd 1 PV par résultat 6 obtenu.
+- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). La vitesse maximale de se modèle n'est plus de 9 mais 12. Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 sont obtenus ou plus, la roue perd 4 PV.
 - Broyez-les tous ! : lors d’une charge, le nombre d’attaque en mêlée de ce modèle est égal à sa vitesse. Sinon, ce modèle possède 0d6 en mêlée.
 - Percée : si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
 ---
@@ -366,13 +364,13 @@ ___
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Cloche | **5** | **4+** | **-** | **5+** | **7** | **6** | **5** | **6** | Machine |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]].*
 ##### Règles spéciales :
 - Vent strident : le vent s’engouffrant dans la coche hurle, réduisant de 1 le moral des modèles ennemis à 12’’ ou moins.
 - Bouclier de scories (1) : pour le reste du tour, la cloche et tout modèle qu’elle a rejoint peuvent relancer leurs jets d’armure ayant obtenu 1.
-- Toujours plus de rats ! : au début de chaque tour, désignez un modèle à 6’’ ou moins et déclenchez sa règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
+- Toujours plus de rats ! : au début de chaque tour jetez un dé, dont le résultat correspond au nombre de modèles à 6’’ ou moins dont vous pouvez déclencher la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 - Cloche de protection : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 

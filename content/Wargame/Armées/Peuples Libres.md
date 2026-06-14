@@ -4,7 +4,7 @@ Version A3.1
 <center><h2>Règles de Faction</h2></center>
 
 #### Chanson de Geste
-Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. La limite de commandants est de 1 par tranche de 50. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
+Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. Les Peuples Libres n'ont pas de limite maximale de commandants. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
 #### Fer de Lance
 Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. S'ils ont ainsi acheté une monture, ils peuvent également acheter l'équipement de la lance médiéval :  
 - Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.
