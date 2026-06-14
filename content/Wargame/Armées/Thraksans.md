@@ -15,7 +15,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 12’’ ou moins du lanceur qui reçoit une *Corruption*.
 #### Niveau 1
 - **Dévoration d’esprit (court, 3+, projectile) :** Portée 12’’, la cible reçoit 2 marqueurs *Corruption*.
-- **Marquage d’âme (court, 0+, malédiction) :** Portée 18’’, la cible est *Marquée* pour le reste de la partie.
+- **Marquage d’âme (long, 12+, Projectile) :** Portée 18’’, la cible est marquée fatiguée.
 #### Niveau 2
 - **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12’’ ou moins.
 - **Hantise (court, 14+, Projectile) :** Portée 9’’, force un modèle à effectuer un test de moral.
@@ -142,7 +142,6 @@ ___
 - Association de cultistes : un modèle de Cultiste possède un niveau de lanceur de sort égal à son nombre d’unité de Cultiste.
 - Les Cultistes ont accès au Domaine de la Corruption et au domaine des Ténèbres.
 - Rituel d’invocation (long, 18+, projectile) : Ce sort nécessite au moins 3 Cultistes pour être lancé. S’il est lancé avec succès, retirez les cultistes et remplacez-les par un Cahlta ou un Tolgoth.
-
 ---
 
 ### Horreur Chasseresse — 22 pts
@@ -155,7 +154,6 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Vision d’effroi : un modèle ayant subi une blessure d’une Horreur Chasseresse doit réaliser un test de moral en tenant compte du résultat de combat, en cas d’échec, le modèle effectue un mouvement de déroute et est marqué activé avant de pouvoir riposter.
-
 ---
 
 ### Profond — 13 pts
@@ -168,7 +166,6 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Evolution (1) : ajoutez un profond supplémentaire à ce modèle et à votre liste d’armée.
-
 ---
 
 ### Ver du vide — 30 pts
@@ -181,7 +178,6 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
 - Crachat : portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], souffle.
-
 ---
 
 ### Eventreur — 26 pts
@@ -194,7 +190,6 @@ ___
 ##### Règles spéciales :
 - Proie facile : les attaques de ce modèle sont des Dégâts Purs contre les modèles de taille 2 ou moins.
 - Evolution (3) : ce modèle peut effectuer une marche gratuite.
-
 ---
 
 ## Modèles de soutient
@@ -306,12 +301,12 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Dévoreur|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
+|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
-- Dévoration : a la fin que chaque tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec cette unité et retirez là du jeu, elle est considérée comme perte. Le Dévoreur de monde gagne alors 1 Corruption.
+- Dévoration : a la fin que chaque tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec cette unité et retirez là du jeu, elle est considérée comme perte. Le Shtethroth gagne alors 1 Corruption.
 - Bien nourri : ce modèle gagne un nombre de d6 en mêlée égal au nombre de corruptions qui l'affectent.
 - Serviteur des abysses : à la fin de chaque tour, placez une Cité Engloutie à 9’’ ou moins de cette unité.
 ---
