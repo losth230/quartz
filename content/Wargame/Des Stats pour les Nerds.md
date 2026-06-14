@@ -76,6 +76,15 @@
     .cp-statbtn:hover { background: var(--highlight); }
     .cp-statbtn.active { background: var(--secondary); color: var(--light); border-color: var(--secondary); }
 
+    /* Sous-sélecteur (Par liste / Par archétype) */
+    .cp-substat { display: flex; gap: 0.4em; margin-bottom: 0.6em; }
+    .cp-subbtn {
+      background: transparent; border: 1px solid var(--gray); border-radius: 3px;
+      padding: 0.3em 0.8em; font-family: inherit; font-size: 0.8em; color: var(--secondary); cursor: pointer;
+    }
+    .cp-subbtn:hover { background: var(--highlight); }
+    .cp-subbtn.active { background: var(--tertiary); color: var(--light); border-color: var(--tertiary); }
+
     /* Filtres de statistiques */
     .cp-stat-filtres {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));

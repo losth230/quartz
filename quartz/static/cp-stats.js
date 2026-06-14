@@ -19,6 +19,51 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [];
 let parties = [], participations = [];
 let armyLists = [];          // listes d'armées disponibles (army_lists)
+
+// ============================================================
+//  Détection d'archétype de liste par mots-clés (APPROXIMATIF)
+//  Édite ce dictionnaire pour ajouter/affiner les archétypes.
+//  Chaque mot-clé trouvé rapporte des points ; le titre pèse plus
+//  lourd que le corps. L'archétype au plus haut score gagne.
+//  Un score nul => "Non catégorisé".
+// ============================================================
+const ARCHETYPES = {
+  "Poison":      ["poison", "venin", "venimeu", "toxine", "toxique"],
+  "Tir":         ["arc", "arbalèt", "arbalet", "tir", "archer", "fronde", "javelot"],
+  "Cavalerie":   ["cavalerie", "cavalier", "monture", "chevauché", "chevauche", "loup", "destrier"],
+  "Élite":       ["élite", "elite", "champion", "garde", "vétéran", "veteran"],
+  "Magie":       ["mage", "magie", "sorcier", "sortilège", "sortilege", "invocation", "rituel"],
+  "Horde":       ["horde", "masse", "nuée", "nuee", "essaim", "gobelin", "nombre"],
+};
+// Poids : une occurrence dans le titre vaut TITLE_WEIGHT, dans le corps BODY_WEIGHT
+const TITLE_WEIGHT = 5;
+const BODY_WEIGHT = 1;
+
+function normTxt(s) {
+  return (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
+// Détermine l'archétype d'une liste (objet army_lists) par score pondéré.
+function detectArchetype(list) {
+  if (!list) return "Non catégorisé";
+  const titre = normTxt(list.title);
+  const corps = normTxt(list.body);
+  let best = null, bestScore = 0;
+  for (const [arch, motsCles] of Object.entries(ARCHETYPES)) {
+    let score = 0;
+    for (const mc of motsCles) {
+      const m = normTxt(mc);
+      if (titre.includes(m)) score += TITLE_WEIGHT;
+      // compte les occurrences dans le corps (pondération faible)
+      if (corps.includes(m)) {
+        const occ = corps.split(m).length - 1;
+        score += occ * BODY_WEIGHT;
+      }
+    }
+    if (score > bestScore) { bestScore = score; best = arch; }
+  }
+  return best || "Non catégorisé";
+}
 let tab = "saisie";          // "saisie" | "historique" | "stats"
 let editingPartieId = null;  // id de la partie en cours d'édition (null = création)
 let editData = null;         // {partie, participations} à pré-remplir dans le formulaire
@@ -34,7 +79,13 @@ let statSort = {
   scenario:    { key: "n", dir: "desc" },
   deploiement: { key: "n", dir: "desc" },
   matchup:     { key: "total", dir: "desc" },
+  liste:       { key: "rate", dir: "desc" },
 };
+let listeSubMode = "individuelle";  // "individuelle" | "archetype"
+// Historique : filtres + recherche + tri
+let histFiltreVersion = "", histFiltreScenario = "", histFiltreJoueur = "", histFiltreFaction = "";
+let histSearch = "";
+let histSort = { key: "date", dir: "desc" };
 let nbJoueurs = 2;           // nombre de lignes de participants dans le formulaire
 let wired = false;
 
@@ -324,28 +375,100 @@ function renderHistorique() {
   if (!parties.length) return '<p class="cp-empty">Aucune partie enregistrée pour l\'instant.</p>';
   const listById = {};
   armyLists.forEach((l) => { listById[l.id] = l; });
-  const rows = parties.map((pa) => {
+
+  // Valeurs pour les menus de filtre
+  const versions = [...new Set(parties.map((p) => p.version).filter(Boolean))].sort();
+  const scenarios = [...new Set(parties.map((p) => p.scenario).filter(Boolean))].sort();
+  const joueurs = [...new Set(participations.map((p) => p.joueur).filter(Boolean))].sort();
+  const factions = [...new Set(participations.map((p) => p.peuple).filter(Boolean))].sort();
+  const opt = (list, current) => '<option value="">— tous —</option>' +
+    list.map((v) => '<option value="' + esc(v) + '"' + (v === current ? " selected" : "") + ">" + esc(v) + "</option>").join("");
+
+  const filtres = '<div class="cp-controls">' +
+    '<select id="cp-hist-f-version">' + ('<option value="">Toutes versions</option>' +
+      versions.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreVersion ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
+    '<select id="cp-hist-f-scenario">' + ('<option value="">Tous scénarios</option>' +
+      scenarios.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreScenario ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
+    '<select id="cp-hist-f-joueur">' + ('<option value="">Tous joueurs</option>' +
+      joueurs.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreJoueur ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
+    '<select id="cp-hist-f-faction">' + ('<option value="">Toutes factions</option>' +
+      factions.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreFaction ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
+    '<input class="cp-search" id="cp-hist-search" type="text" placeholder="Rechercher..." value="' + esc(histSearch) + '" />' +
+    "</div>";
+
+  // Construction des lignes-objets (avec champs triables + texte pour recherche)
+  const term = histSearch.trim().toLowerCase();
+  let baseRows = parties.map((pa) => {
     const ps = partParts(pa.id);
-    const camps = ps.map((p) => {
+    const oppositionTxt = ps.map((p) => p.joueur + " " + p.peuple).join(" ");
+    const campsHtml = ps.map((p) => {
       const cls = p.resultat === "victoire" ? "cp-win" : (p.resultat === "egalite" ? "cp-draw" : "cp-lose");
-      // armée affichée : liste liée en priorité, sinon archétype libre
       let army = "";
       if (p.army_list_id && listById[p.army_list_id]) army = " — " + esc(listById[p.army_list_id].title);
       else if (p.archetype) army = " — " + esc(p.archetype);
       return '<span class="cp-camp ' + cls + '">' + esc(p.joueur) + " (" + esc(p.peuple) + army + ")</span>";
     }).join(" vs ");
-    return '<tr data-partie="' + pa.id + '">' +
-      "<td>" + esc(pa.scenario || "—") + "</td>" +
-      "<td>" + camps + "</td>" +
-      '<td class="cp-c-date">' + frDate(pa.created_at) + "</td>" +
+    return {
+      id: pa.id,
+      scenario: pa.scenario || "—",
+      version: pa.version || "—",
+      opposition: oppositionTxt,            // pour tri/recherche
+      campsHtml,                             // pour affichage
+      nbjoueurs: ps.length,
+      date: new Date(pa.created_at).getTime(),
+      dateAffichee: frDate(pa.created_at),
+      _peuples: ps.map((p) => p.peuple),
+      _joueurs: ps.map((p) => p.joueur),
+      _search: (pa.scenario + " " + (pa.version || "") + " " + oppositionTxt).toLowerCase(),
+    };
+  });
+
+  // Filtres
+  baseRows = baseRows.filter((r) => {
+    if (histFiltreVersion && r.version !== histFiltreVersion) return false;
+    if (histFiltreScenario && r.scenario !== histFiltreScenario) return false;
+    if (histFiltreJoueur && !r._joueurs.includes(histFiltreJoueur)) return false;
+    if (histFiltreFaction && !r._peuples.includes(histFiltreFaction)) return false;
+    if (term && !r._search.includes(term)) return false;
+    return true;
+  });
+
+  if (!baseRows.length) {
+    return filtres + '<p class="cp-empty">Aucune partie ne correspond à ces critères.</p>';
+  }
+
+  // Tri
+  const rows = sortRows(baseRows, histSort.key, histSort.dir).map((r) =>
+    '<tr data-partie="' + r.id + '">' +
+      "<td>" + esc(r.scenario) + "</td>" +
+      "<td>" + esc(r.version) + "</td>" +
+      "<td>" + r.campsHtml + "</td>" +
+      '<td class="cp-c-date">' + r.dateAffichee + "</td>" +
       '<td class="cp-c-act">' +
-        '<button class="cp-partie-edit" data-id="' + pa.id + '" title="Modifier">\u270E</button>' +
-        '<button class="cp-partie-del" data-id="' + pa.id + '" title="Supprimer">\u2715</button>' +
+        '<button class="cp-partie-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' +
+        '<button class="cp-partie-del" data-id="' + r.id + '" title="Supprimer">\u2715</button>' +
       "</td>" +
-      "</tr>";
-  }).join("");
-  return '<table class="cp-table"><thead><tr><th>Scénario</th><th>Opposition</th><th>Date</th><th></th></tr></thead><tbody>' +
-    rows + "</tbody></table>";
+    "</tr>"
+  ).join("");
+
+  const head = '<thead><tr>' +
+    histTh("scenario", "Scénario") +
+    histTh("version", "Version") +
+    histTh("opposition", "Opposition") +
+    histTh("date", "Date") +
+    "<th></th>" +
+    "</tr></thead>";
+
+  return filtres +
+    '<table class="cp-table">' + head + "<tbody>" + rows + "</tbody></table>";
+}
+
+// En-tête triable pour l'historique
+function histTh(key, label) {
+  const ar = histSort.key === key
+    ? '<span class="cp-sort">' + (histSort.dir === "asc" ? "\u25B4" : "\u25BE") + "</span>"
+    : '<span class="cp-sort"> </span>';
+  return '<th data-histsort="' + key + '">' + label + ar + "</th>";
 }
 
 function startEditPartie(id) {
@@ -450,6 +573,7 @@ function renderStats() {
   const dims = [
     ["peuple", "Par peuple"],
     ["joueur", "Par joueur"],
+    ["liste", "Par liste"],
     ["scenario", "Par scénario"],
     ["deploiement", "Par déploiement"],
     ["matchup", "Matchups"],
@@ -460,6 +584,7 @@ function renderStats() {
 
   let contenu;
   if (statMode === "matchup") contenu = renderMatchups();
+  else if (statMode === "liste") contenu = renderByListe();
   else if (statMode === "scenario" || statMode === "deploiement") contenu = renderByPartieDim(statMode);
   else contenu = renderByParticipantDim(statMode);
 
@@ -519,6 +644,92 @@ function renderByParticipantDim(dim) {
     "</tr></thead><tbody>" + rows + "</tbody></table>";
 
   return '<div class="cp-charts">' +
+      '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
+      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
+    "</div>" +
+    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
+    table;
+}
+
+// Stats par liste d'armée : deux sous-modes (liste individuelle / archétype détecté)
+function renderByListe() {
+  const listById = {};
+  armyLists.forEach((l) => { listById[l.id] = l; });
+  const data = statParticipations();
+
+  // Clé de regroupement selon le sous-mode
+  function groupKey(p) {
+    const liste = p.army_list_id ? listById[p.army_list_id] : null;
+    if (listeSubMode === "archetype") {
+      // liste liée -> archétype détecté ; archétype libre -> son texte ; sinon non catégorisé
+      if (liste) return detectArchetype(liste);
+      if (p.archetype) return p.archetype;
+      return "Non catégorisé";
+    }
+    // sous-mode "individuelle"
+    if (liste) return liste.title;
+    if (p.archetype) return "« " + p.archetype + " » (libre)";
+    return "Sans liste";
+  }
+
+  const map = {};
+  data.forEach((p) => {
+    const key = groupKey(p);
+    if (!map[key]) map[key] = { total: 0, v: 0, d: 0, e: 0 };
+    const m = map[key];
+    m.total++;
+    if (p.resultat === "victoire") m.v++;
+    else if (p.resultat === "egalite") m.e++;
+    else m.d++;
+  });
+
+  const baseRows = Object.entries(map).map(([key, m]) => ({
+    nom: key, total: m.total, v: m.v, d: m.d, e: m.e,
+    rate: m.total ? m.v / m.total : 0,
+  }));
+
+  // Sélecteur de sous-mode
+  const sub = '<div class="cp-substat">' +
+    '<button class="cp-subbtn' + (listeSubMode === "individuelle" ? " active" : "") + '" data-listsub="individuelle">Par liste</button>' +
+    '<button class="cp-subbtn' + (listeSubMode === "archetype" ? " active" : "") + '" data-listsub="archetype">Par archétype détecté</button>' +
+    "</div>";
+
+  const note = listeSubMode === "archetype"
+    ? '<p class="cp-hint">⚠ Regroupement approximatif par mots-clés (titre pondéré plus fort que le corps). Une liste non reconnue tombe dans « Non catégorisé ».</p>'
+    : '<p class="cp-hint">Regroupement exact : chaque liste enregistrée + les archétypes libres.</p>';
+
+  if (!baseRows.length) return sub + note + '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
+
+  // Graphiques (ordre fixe par taux décroissant)
+  const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
+  const payload = encodeURIComponent(JSON.stringify({
+    labels: chartRows.map((r) => r.nom),
+    taux: chartRows.map((r) => Math.round(r.rate * 100)),
+    repartition: chartRows.map((r) => r.total),
+    isPeuple: false,
+  }));
+
+  // Table triable
+  const s = statSort.liste;
+  const rows = sortRows(baseRows, s.key, s.dir).map((r) =>
+    "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td>" +
+    "<td>" + r.total + "</td>" +
+    '<td class="cp-win">' + r.v + "</td>" +
+    '<td class="cp-lose">' + r.d + "</td>" +
+    '<td class="cp-draw">' + r.e + "</td>" +
+    '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td></tr>"
+  ).join("");
+  const table = '<table class="cp-table"><thead><tr>' +
+    thSort("liste", "nom", listeSubMode === "archetype" ? "Archétype" : "Liste") +
+    thSort("liste", "total", "Parties") +
+    thSort("liste", "v", "V") +
+    thSort("liste", "d", "D") +
+    thSort("liste", "e", "É") +
+    thSort("liste", "rate", "Taux victoire") +
+    "</tr></thead><tbody>" + rows + "</tbody></table>";
+
+  return sub + note +
+    '<div class="cp-charts">' +
       '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
       '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
@@ -790,6 +1001,10 @@ function wireOnce() {
     const sb2 = e.target.closest(".cp-statbtn");
     if (sb2 && getApp().contains(sb2)) { statMode = sb2.dataset.stat; render(); return; }
 
+    // sous-mode de la dimension "Par liste"
+    const sub = e.target.closest(".cp-subbtn");
+    if (sub && getApp().contains(sub)) { listeSubMode = sub.dataset.listsub; render(); return; }
+
     // tri d'un tableau de stats (clic sur en-tête)
     const th = e.target.closest("[data-statsort]");
     if (th && getApp().contains(th)) {
@@ -797,6 +1012,16 @@ function wireOnce() {
       const s = statSort[dim];
       if (s.key === key) { s.dir = s.dir === "asc" ? "desc" : "asc"; }
       else { s.key = key; s.dir = "desc"; }
+      render();
+      return;
+    }
+
+    // tri de l'historique (clic sur en-tête)
+    const hth = e.target.closest("[data-histsort]");
+    if (hth && getApp().contains(hth)) {
+      const key = hth.dataset.histsort;
+      if (histSort.key === key) { histSort.dir = histSort.dir === "asc" ? "desc" : "asc"; }
+      else { histSort.key = key; histSort.dir = "desc"; }
       render();
       return;
     }
@@ -841,6 +1066,12 @@ function wireOnce() {
     if (e.target.id === "cp-stat-f-joueur")  { statFiltreJoueur = e.target.value; render(); return; }
     if (e.target.id === "cp-stat-f-faction") { statFiltreFaction = e.target.value; render(); return; }
 
+    // filtres de l'historique
+    if (e.target.id === "cp-hist-f-version")  { histFiltreVersion = e.target.value; render(); return; }
+    if (e.target.id === "cp-hist-f-scenario") { histFiltreScenario = e.target.value; render(); return; }
+    if (e.target.id === "cp-hist-f-joueur")   { histFiltreJoueur = e.target.value; render(); return; }
+    if (e.target.id === "cp-hist-f-faction")  { histFiltreFaction = e.target.value; render(); return; }
+
     // changement de peuple -> recharge le menu des listes de cette ligne
     const pe = e.target.closest(".cp-p-peuple");
     if (pe && getApp().contains(pe)) {
@@ -874,6 +1105,19 @@ function wireOnce() {
       }
       // "defaite" : on ne déduit rien (trop ambigu)
       return;
+    }
+  });
+
+  // Recherche dans l'historique (input). On re-render puis on restaure le focus
+  // et la position du curseur, sinon le champ perdrait le focus à chaque frappe.
+  document.addEventListener("input", (e) => {
+    if (!getApp()) return;
+    if (e.target.id === "cp-hist-search") {
+      histSearch = e.target.value;
+      const pos = e.target.selectionStart;
+      render();
+      const again = document.getElementById("cp-hist-search");
+      if (again) { again.focus(); try { again.setSelectionRange(pos, pos); } catch (x) {} }
     }
   });
 }
