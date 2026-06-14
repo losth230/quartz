@@ -31,6 +31,13 @@
       width: 100%; background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
       padding: 0.45em 0.6em; font-family: inherit; font-size: 0.9em; color: var(--dark);
     }
+    /* Filtres de l'historique : en ligne, largeur compacte (et non 100%) */
+    #cp-stats-app .cp-controls select {
+      width: auto; flex: 0 1 auto; min-width: 130px; max-width: 200px; font-size: 0.85em;
+    }
+    #cp-stats-app .cp-controls .cp-search {
+      width: auto; flex: 1 1 160px; min-width: 140px;
+    }
 
     /* Lignes de participants */
     .cp-part-row { display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; margin-bottom: 0.6em; }
