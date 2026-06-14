@@ -97,6 +97,7 @@ export default (() => {
             return resource
           }
         })}
+      <link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve />
       <script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-army-lists.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-bug-tracker.js" spa-preserve />
