@@ -7,10 +7,12 @@
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/auto/+esm";
-
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
+// ============================================================
+//  C&P — Résultats & Statistiques
+//  À placer dans : quartz/static/cp-stats.js
+//  Saisie de parties (multijoueur), historique, et stats croisées.
+//  Architecture par délégation sur document (robuste navigation SPA).
+// ============================================================
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -81,6 +83,7 @@ let statSort = {
   liste:       { key: "rate", dir: "desc" },
 };
 let listeSubMode = "individuelle";  // "individuelle" | "archetype"
+let chartMode = "taux";             // "taux" (barres) | "nuage" (taux vs pertes)
 // Historique : filtres + recherche + tri
 let histFiltreVersion = "", histFiltreScenario = "", histFiltreJoueur = "", histFiltreFaction = "";
 let histSearch = "";
@@ -569,6 +572,21 @@ function renderStats() {
     '<div><label>Faction</label><select id="cp-stat-f-faction">' + opt(factions, statFiltreFaction) + "</select></div>" +
     "</div>";
 
+  // Récap en tête : nombre de parties correspondant aux filtres actifs
+  const partiesFiltrees = statParties().filter((pa) => {
+    if (!statFiltreJoueur && !statFiltreFaction) return true;
+    const ps = partParts(pa.id);
+    if (statFiltreJoueur && !ps.some((p) => p.joueur === statFiltreJoueur)) return false;
+    if (statFiltreFaction && !ps.some((p) => p.peuple === statFiltreFaction)) return false;
+    return true;
+  });
+  const filtresActifs = statFiltreVersion || statFiltreJoueur || statFiltreFaction;
+  const recap = '<div class="cp-recap">' +
+    '<div class="cp-recap-item"><span class="cp-recap-num">' + partiesFiltrees.length + "</span>" +
+    '<span class="cp-recap-lbl">partie' + (partiesFiltrees.length > 1 ? "s" : "") +
+    (filtresActifs ? " (filtrées)" : "") + "</span></div>" +
+    "</div>";
+
   const dims = [
     ["peuple", "Par peuple"],
     ["joueur", "Par joueur"],
@@ -587,7 +605,15 @@ function renderStats() {
   else if (statMode === "scenario" || statMode === "deploiement") contenu = renderByPartieDim(statMode);
   else contenu = renderByParticipantDim(statMode);
 
-  return filtres + switcher + contenu + renderEvolution();
+  return filtres + recap + switcher + contenu + renderEvolution();
+}
+
+// Indice d'efficacité (relatif) : gagner en limitant les pertes.
+// Formule simple : taux de victoire (0-1) / pertes moyennes, remis à une échelle lisible.
+// Sert UNIQUEMENT à comparer les lignes entre elles, pas comme valeur absolue.
+function efficacite(rate, pertesMoy) {
+  if (pertesMoy == null || pertesMoy <= 0) return null;
+  return Math.round((rate / pertesMoy) * 1000) / 10; // une décimale
 }
 
 // Stats sur une dimension portée par la participation (peuple, joueur)
@@ -605,13 +631,11 @@ function renderByParticipantDim(dim) {
     if (p.pertes != null) { m.pertes += p.pertes; m.nPertes++; }
   });
   // Lignes-objets (clés alignées avec les data-statsort des en-têtes)
-  const baseRows = Object.entries(map).map(([key, m]) => ({
-    nom: key,
-    total: m.total,
-    v: m.v, d: m.d, e: m.e,
-    rate: m.total ? m.v / m.total : 0,
-    pertes: m.nPertes ? Math.round(m.pertes / m.nPertes) : null,
-  }));
+  const baseRows = Object.entries(map).map(([key, m]) => {
+    const rate = m.total ? m.v / m.total : 0;
+    const pertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : null;
+    return { nom: key, total: m.total, v: m.v, d: m.d, e: m.e, rate, pertes, eff: efficacite(rate, pertes) };
+  });
   if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
 
   // Graphiques : ordre fixe par taux de victoire décroissant (indépendant du tri du tableau)
@@ -619,12 +643,12 @@ function renderByParticipantDim(dim) {
   const labels = chartRows.map((r) => r.nom);
   const taux = chartRows.map((r) => Math.round(r.rate * 100));
   const repartition = chartRows.map((r) => r.total);
-  // Couleurs : par peuple (couleur de la faction) si dim=peuple,
-  // par faction dominante du joueur si dim=joueur.
+  // points pour le nuage taux (x) vs pertes (y) — seulement ceux qui ont des pertes
+  const scatter = chartRows.filter((r) => r.pertes != null).map((r) => ({ x: Math.round(r.rate * 100), y: r.pertes, label: r.nom }));
   let colors;
   if (dim === "peuple") colors = colorsForLabels(labels);
   else colors = colorsByFaction(labels, (j) => factionDominanteJoueur(j));
-  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, colors, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
+  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, colors, scatter, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
 
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
@@ -635,7 +659,8 @@ function renderByParticipantDim(dim) {
       '<td class="cp-lose">' + r.d + "</td>" +
       '<td class="cp-draw">' + r.e + "</td>" +
       '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
-      "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td></tr>";
+      "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td>" +
+      '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>";
   }).join("");
   const table = '<table class="cp-table"><thead><tr>' +
     thSort(dim, "nom", dim === "peuple" ? "Peuple" : "Joueur") +
@@ -645,14 +670,30 @@ function renderByParticipantDim(dim) {
     thSort(dim, "e", "É") +
     thSort(dim, "rate", "Taux victoire") +
     thSort(dim, "pertes", "Pertes moy.") +
+    thSort(dim, "eff", "Efficacité") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
 
+  return chartToggle() + chartsBlock(payload) + table;
+}
+
+// Bouton de bascule du graphique principal (taux de victoire / nuage taux vs pertes)
+function chartToggle() {
+  return '<div class="cp-substat">' +
+    '<button class="cp-subbtn' + (chartMode === "taux" ? " active" : "") + '" data-chartmode="taux">Taux de victoire</button>' +
+    '<button class="cp-subbtn' + (chartMode === "nuage" ? " active" : "") + '" data-chartmode="nuage">Nuage taux vs pertes</button>' +
+    "</div>";
+}
+
+// Bloc des deux graphiques (le principal bascule selon chartMode) + camembert
+function chartsBlock(payload) {
+  const principal = chartMode === "nuage"
+    ? '<div class="cp-chart-box"><h4>Taux de victoire vs pertes moyennes</h4><canvas id="cp-chart-scatter"></canvas></div>'
+    : '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>';
   return '<div class="cp-charts">' +
-      '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
+      principal +
       '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
-    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
-    table;
+    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>';
 }
 
 // Stats par liste d'armée : deux sous-modes (liste individuelle / archétype détecté)
@@ -680,12 +721,13 @@ function renderByListe() {
   const facCount = {}; // clé de groupe -> { faction: count } pour déterminer la couleur
   data.forEach((p) => {
     const key = groupKey(p);
-    if (!map[key]) { map[key] = { total: 0, v: 0, d: 0, e: 0 }; facCount[key] = {}; }
+    if (!map[key]) { map[key] = { total: 0, v: 0, d: 0, e: 0, pertes: 0, nPertes: 0 }; facCount[key] = {}; }
     const m = map[key];
     m.total++;
     if (p.resultat === "victoire") m.v++;
     else if (p.resultat === "egalite") m.e++;
     else m.d++;
+    if (p.pertes != null) { m.pertes += p.pertes; m.nPertes++; }
     // faction associée à cette participation : peuple du joueur (toujours présent)
     if (p.peuple) facCount[key][p.peuple] = (facCount[key][p.peuple] || 0) + 1;
   });
@@ -698,10 +740,11 @@ function renderByListe() {
     return best;
   }
 
-  const baseRows = Object.entries(map).map(([key, m]) => ({
-    nom: key, total: m.total, v: m.v, d: m.d, e: m.e,
-    rate: m.total ? m.v / m.total : 0,
-  }));
+  const baseRows = Object.entries(map).map(([key, m]) => {
+    const rate = m.total ? m.v / m.total : 0;
+    const pertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : null;
+    return { nom: key, total: m.total, v: m.v, d: m.d, e: m.e, rate, pertes, eff: efficacite(rate, pertes) };
+  });
 
   // Sélecteur de sous-mode
   const sub = '<div class="cp-substat">' +
@@ -719,11 +762,13 @@ function renderByListe() {
   const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
   const labels = chartRows.map((r) => r.nom);
   const colors = colorsByFaction(labels, (lbl) => groupFaction(lbl));
+  const scatter = chartRows.filter((r) => r.pertes != null).map((r) => ({ x: Math.round(r.rate * 100), y: r.pertes, label: r.nom }));
   const payload = encodeURIComponent(JSON.stringify({
     labels,
     taux: chartRows.map((r) => Math.round(r.rate * 100)),
     repartition: chartRows.map((r) => r.total),
     colors,
+    scatter,
     isPeuple: false,
   }));
 
@@ -735,7 +780,9 @@ function renderByListe() {
     '<td class="cp-win">' + r.v + "</td>" +
     '<td class="cp-lose">' + r.d + "</td>" +
     '<td class="cp-draw">' + r.e + "</td>" +
-    '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td></tr>"
+    '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
+    "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td>" +
+    '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>"
   ).join("");
   const table = '<table class="cp-table"><thead><tr>' +
     thSort("liste", "nom", listeSubMode === "archetype" ? "Archétype" : "Liste") +
@@ -744,15 +791,11 @@ function renderByListe() {
     thSort("liste", "d", "D") +
     thSort("liste", "e", "É") +
     thSort("liste", "rate", "Taux victoire") +
+    thSort("liste", "pertes", "Pertes moy.") +
+    thSort("liste", "eff", "Efficacité") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
 
-  return sub + note +
-    '<div class="cp-charts">' +
-      '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
-      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
-    "</div>" +
-    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
-    table;
+  return sub + note + chartToggle() + chartsBlock(payload) + table;
 }
 
 // Stats sur une dimension portée par la partie (scenario, deploiement)
@@ -998,6 +1041,33 @@ function drawCharts() {
           },
         }));
       }
+      // Nuage de points : taux de victoire (x) vs pertes moyennes (y)
+      const scat = document.getElementById("cp-chart-scatter");
+      if (scat && Array.isArray(d.scatter)) {
+        const pts = d.scatter.map((p) => ({ x: p.x, y: p.y, label: p.label }));
+        const ptColors = d.scatter.map((p) => {
+          const i = d.labels.indexOf(p.label);
+          return (Array.isArray(d.colors) && i >= 0) ? d.colors[i] : "#6b8cbe";
+        });
+        chartInstances.push(new Chart(scat, {
+          type: "scatter",
+          data: { datasets: [{ data: pts, backgroundColor: ptColors, pointRadius: 7, pointHoverRadius: 9 }] },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: { callbacks: { label: (ctx) => {
+                const r = ctx.raw;
+                return r.label + " — " + r.x + "% victoire, " + r.y + " pertes moy.";
+              } } },
+            },
+            scales: {
+              x: { title: { display: true, text: "Taux de victoire (%)" }, min: 0, max: 100 },
+              y: { title: { display: true, text: "Pertes moyennes" }, beginAtZero: true },
+            },
+          },
+        }));
+      }
       const pie = document.getElementById("cp-chart-pie");
       if (pie && d.repartition) {
         chartInstances.push(new Chart(pie, {
@@ -1049,7 +1119,11 @@ function wireOnce() {
 
     // sous-mode de la dimension "Par liste"
     const sub = e.target.closest(".cp-subbtn");
-    if (sub && getApp().contains(sub)) { listeSubMode = sub.dataset.listsub; render(); return; }
+    if (sub && getApp().contains(sub) && sub.dataset.listsub) { listeSubMode = sub.dataset.listsub; render(); return; }
+
+    // bascule du graphique principal (taux / nuage)
+    const cm = e.target.closest("[data-chartmode]");
+    if (cm && getApp().contains(cm)) { chartMode = cm.dataset.chartmode; render(); return; }
 
     // tri d'un tableau de stats (clic sur en-tête)
     const th = e.target.closest("[data-statsort]");

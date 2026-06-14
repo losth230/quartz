@@ -98,6 +98,18 @@
       gap: 0.8em; margin-bottom: 1em; padding-bottom: 0.8em; border-bottom: 1px solid var(--gray);
     }
 
+    /* Récap en tête */
+    .cp-recap { display: flex; gap: 1em; margin-bottom: 1em; flex-wrap: wrap; }
+    .cp-recap-item {
+      display: flex; flex-direction: column; align-items: center;
+      background: var(--lightgray); border: 1px solid var(--gray); border-radius: 4px;
+      padding: 0.5em 1.2em; min-width: 90px;
+    }
+    .cp-recap-num { font-size: 1.6em; font-weight: bold; color: var(--secondary); line-height: 1; }
+    .cp-recap-lbl { font-size: 0.78em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--gray); margin-top: 0.2em; }
+
+    .cp-c-eff { font-variant-numeric: tabular-nums; }
+
     /* Graphiques */
     .cp-charts {
       display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
