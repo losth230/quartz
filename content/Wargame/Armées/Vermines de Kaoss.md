@@ -334,6 +334,20 @@ ___
 ##### Équipement :
 - Poings-canon : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ---
+
+### Bélier Pestilentiel — 58 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Bélier | **5** | **4+** | **-** | **4+** | **7** | **7** | **5** | **6** | Machine |
+| **Mêlée:** | 12d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]*
+##### Règles spéciales :
+- Tourner la roue (1-3) : renforcement, la vitesse de ce modèle augmente de 1d6 par Scories dépensées (max 3d6). Cependant, le bélier perd 1 PV par résultat 6 obtenu.
+- Pestilence Toxique : les attaques en mêlée de cette unité infligent des dégâts bruts contre les cibles empoisonnées.
+---
+
 ### Bourreau à Roulis — 52 pts
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -354,7 +368,7 @@ ___
 | Cloche | **5** | **4+** | **-** | **5+** | **7** | **6** | **5** | **6** | Machine |
 | **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]].*
 ##### Règles spéciales :
 - Vent strident : le vent s’engouffrant dans la coche hurle, réduisant de 1 le moral des modèles ennemis à 12’’ ou moins.
 - Bouclier de scories (1) : pour le reste du tour, la cloche et tout modèle qu’elle a rejoint peuvent relancer leurs jets d’armure ayant obtenu 1.
