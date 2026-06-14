@@ -88,30 +88,7 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Dévoreur d’espoir : Vor’Thul gagne +1d6 lors de ses attaques en mêlée par marqueur Corruption que possède sa cible.
-
 ---
-
-<div class="legendary">
-
-### Véranthia la séductrice — 62 pts
-
-</div>
-
-|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|Véranthia|**6**|**4+**|**4+**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
-|**Mêlée:**|4d6||**Tir:**|-||||||
-
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Magie :
-- Véranthia est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
-##### Règles spéciales :
-- Jeu de séduction : Véranthia ne peut être attaquée que par des modèles *Corrompus.*
-- Contemplatrice : Véranthia n'est pas considérée comme un obstacle par les modèles non *Corrompus* et peut ainsi être traversée et ne bloque par les lignes de vue.
-- Donner les rênes : tant que Véranthia est en vie, votre adversaire génère 3 manœuvres au début de son tour. Chaque fois qu'un modèle *Corrompu* dépense 1 Manœuvre à 9'’ ou moins de Véranthia, la portée de toutes les compétences et sorts de celle-ci (dont Donner les rênes) augmente de 2’’ et elle peut *Corrompre* un modèle à 9’’ ou moins.
-
----
-
 
 <div class="legendary">
 
