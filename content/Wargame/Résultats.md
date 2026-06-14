@@ -75,6 +75,43 @@
     }
     .cp-statbtn:hover { background: var(--highlight); }
     .cp-statbtn.active { background: var(--secondary); color: var(--light); border-color: var(--secondary); }
+
+    /* Filtres de statistiques */
+    .cp-stat-filtres {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 0.8em; margin-bottom: 1em; padding-bottom: 0.8em; border-bottom: 1px solid var(--gray);
+    }
+
+    /* Graphiques */
+    .cp-charts {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.2em; margin: 1.2em 0;
+    }
+    .cp-chart-box {
+      background: var(--lightgray); border: 1px solid var(--gray); border-radius: 4px;
+      padding: 0.9em 1em;
+    }
+    .cp-chart-box h4 {
+      margin: 0 0 0.6em; font-variant: small-caps; letter-spacing: 0.04em;
+      color: var(--secondary); font-size: 0.9em;
+    }
+    .cp-chart-box canvas { max-height: 280px; }
+    .cp-chart-full { margin: 1.4em 0; }
+    .cp-chart-full canvas { max-height: 240px; }
+
+    /* Heatmap des matchups */
+    .cp-heat-wrap { overflow-x: auto; margin: 0.6em 0 1.2em; }
+    .cp-heat { border-collapse: collapse; font-size: 0.75em; }
+    .cp-heat th {
+      padding: 0.3em 0.5em; font-variant: small-caps; color: var(--secondary);
+      white-space: nowrap; text-align: center; font-weight: normal;
+    }
+    .cp-heat thead th { writing-mode: vertical-rl; transform: rotate(180deg); max-height: 90px; }
+    .cp-heat tbody th { text-align: right; }
+    .cp-heat td {
+      width: 2.6em; height: 2.6em; text-align: center; border: 1px solid var(--light);
+      color: #2b2520; font-variant-numeric: tabular-nums; font-size: 0.95em;
+    }
   </style>
 
   <h2>Résultats &amp; statistiques</h2>

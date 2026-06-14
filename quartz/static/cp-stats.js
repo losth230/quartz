@@ -22,6 +22,10 @@ let tab = "saisie";          // "saisie" | "historique" | "stats"
 let editingPartieId = null;  // id de la partie en cours d'édition (null = création)
 let editData = null;         // {partie, participations} à pré-remplir dans le formulaire
 let statMode = "peuple";     // dimension d'analyse des stats
+let statFiltreVersion = "";  // filtre version appliqué aux stats
+let statFiltreJoueur = "";    // filtre joueur
+let statFiltreFaction = "";   // filtre faction (peuple)
+let chartInstances = [];      // graphiques Chart.js actifs (à détruire avant re-render)
 let nbJoueurs = 2;           // nombre de lignes de participants dans le formulaire
 let wired = false;
  
@@ -71,7 +75,7 @@ function render() {
   });
   if (tab === "saisie") { main.innerHTML = renderSaisie(); applyEditData(); }
   else if (tab === "historique") main.innerHTML = renderHistorique();
-  else main.innerHTML = renderStats();
+  else { main.innerHTML = renderStats(); drawCharts(); }
   forceRepaint(app);
 }
  
@@ -363,32 +367,72 @@ async function deletePartie(id) {
 }
  
 // ---------- Onglet Stats ----------
+// Détruit les graphiques Chart.js existants avant un nouveau rendu
+function destroyCharts() {
+  chartInstances.forEach((c) => { try { c.destroy(); } catch (e) {} });
+  chartInstances = [];
+}
+ 
+// Renvoie les participations filtrées selon les filtres stats actifs.
+// Le filtre version porte sur la partie ; joueur et faction sur la participation.
+function statParticipations() {
+  const partieOk = {};
+  parties.forEach((pa) => {
+    partieOk[pa.id] = !statFiltreVersion || pa.version === statFiltreVersion;
+  });
+  return participations.filter((p) => {
+    if (!partieOk[p.partie_id]) return false;
+    if (statFiltreJoueur && p.joueur !== statFiltreJoueur) return false;
+    if (statFiltreFaction && p.peuple !== statFiltreFaction) return false;
+    return true;
+  });
+}
+// Parties filtrées (pour les calculs au niveau partie : matchups, répartition)
+function statParties() {
+  return parties.filter((pa) => !statFiltreVersion || pa.version === statFiltreVersion);
+}
+ 
 function renderStats() {
   if (!participations.length) return '<p class="cp-empty">Pas encore de données. Enregistre des parties pour voir les statistiques.</p>';
+ 
+  // Listes de valeurs pour les menus de filtre
+  const joueurs = [...new Set(participations.map((p) => p.joueur).filter(Boolean))].sort();
+  const versions = [...new Set(parties.map((p) => p.version).filter(Boolean))].sort();
+  const factions = [...new Set(participations.map((p) => p.peuple).filter(Boolean))].sort();
+ 
+  const opt = (list, current) => '<option value="">— tous —</option>' +
+    list.map((v) => '<option value="' + esc(v) + '"' + (v === current ? " selected" : "") + ">" + esc(v) + "</option>").join("");
+ 
+  const filtres = '<div class="cp-stat-filtres">' +
+    '<div><label>Version</label><select id="cp-stat-f-version">' + opt(versions, statFiltreVersion) + "</select></div>" +
+    '<div><label>Joueur</label><select id="cp-stat-f-joueur">' + opt(joueurs, statFiltreJoueur) + "</select></div>" +
+    '<div><label>Faction</label><select id="cp-stat-f-faction">' + opt(factions, statFiltreFaction) + "</select></div>" +
+    "</div>";
  
   const dims = [
     ["peuple", "Par peuple"],
     ["joueur", "Par joueur"],
     ["scenario", "Par scénario"],
     ["deploiement", "Par déploiement"],
-    ["matchup", "Matchups peuple vs peuple"],
+    ["matchup", "Matchups"],
   ];
   const switcher = '<div class="cp-statswitch">' +
     dims.map(([k, lbl]) => '<button class="cp-statbtn' + (statMode === k ? " active" : "") +
       '" data-stat="' + k + '">' + lbl + "</button>").join("") + "</div>";
  
-  let table;
-  if (statMode === "matchup") table = renderMatchups();
-  else if (statMode === "scenario" || statMode === "deploiement") table = renderByPartieDim(statMode);
-  else table = renderByParticipantDim(statMode); // peuple | joueur
+  let contenu;
+  if (statMode === "matchup") contenu = renderMatchups();
+  else if (statMode === "scenario" || statMode === "deploiement") contenu = renderByPartieDim(statMode);
+  else contenu = renderByParticipantDim(statMode);
  
-  return switcher + table;
+  return filtres + switcher + contenu + renderEvolution();
 }
  
 // Stats sur une dimension portée par la participation (peuple, joueur)
 function renderByParticipantDim(dim) {
+  const data = statParticipations();
   const map = {};
-  participations.forEach((p) => {
+  data.forEach((p) => {
     const key = p[dim] || "—";
     if (!map[key]) map[key] = { total: 0, v: 0, d: 0, e: 0, pertes: 0, nPertes: 0 };
     const m = map[key];
@@ -398,62 +442,132 @@ function renderByParticipantDim(dim) {
     else m.d++;
     if (p.pertes != null) { m.pertes += p.pertes; m.nPertes++; }
   });
-  const rows = Object.entries(map)
-    .sort((a, b) => (b[1].v / b[1].total) - (a[1].v / a[1].total))
-    .map(([key, m]) => {
-      const avgPertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : "—";
-      return "<tr><td class=\"cp-c-key\">" + esc(key) + "</td>" +
-        "<td>" + m.total + "</td>" +
-        '<td class="cp-win">' + m.v + "</td>" +
-        '<td class="cp-lose">' + m.d + "</td>" +
-        '<td class="cp-draw">' + m.e + "</td>" +
-        '<td class="cp-c-rate">' + pct(m.v, m.total) + "</td>" +
-        "<td>" + avgPertes + "</td></tr>";
-    }).join("");
-  return '<table class="cp-table"><thead><tr>' +
+  const entries = Object.entries(map).sort((a, b) => (b[1].v / b[1].total) - (a[1].v / a[1].total));
+  if (!entries.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
+ 
+  const rows = entries.map(([key, m]) => {
+    const avgPertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : "—";
+    return "<tr><td class=\"cp-c-key\">" + esc(key) + "</td>" +
+      "<td>" + m.total + "</td>" +
+      '<td class="cp-win">' + m.v + "</td>" +
+      '<td class="cp-lose">' + m.d + "</td>" +
+      '<td class="cp-draw">' + m.e + "</td>" +
+      '<td class="cp-c-rate">' + pct(m.v, m.total) + "</td>" +
+      "<td>" + avgPertes + "</td></tr>";
+  }).join("");
+  const table = '<table class="cp-table"><thead><tr>' +
     "<th>" + (dim === "peuple" ? "Peuple" : "Joueur") + "</th>" +
     "<th>Parties</th><th>V</th><th>D</th><th>É</th><th>Taux victoire</th><th>Pertes moy.</th>" +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
+ 
+  // Données pour graphiques : on garde l'ordre par taux de victoire
+  const labels = entries.map(([k]) => k);
+  const taux = entries.map(([, m]) => Math.round((m.v / m.total) * 100));
+  const repartition = entries.map(([, m]) => m.total);
+  // On stocke les données dans des attributs pour que drawCharts les lise après injection
+  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur" }));
+ 
+  return '<div class="cp-charts">' +
+      '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
+      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
+    "</div>" +
+    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
+    table;
 }
  
 // Stats sur une dimension portée par la partie (scenario, deploiement)
-// => on compte les parties, pas les participations
 function renderByPartieDim(dim) {
+  const data = statParties();
+  // si filtre joueur/faction actif, on restreint aux parties où ils apparaissent
+  let allowed = null;
+  if (statFiltreJoueur || statFiltreFaction) {
+    allowed = new Set(statParticipations().map((p) => p.partie_id));
+  }
   const map = {};
-  parties.forEach((pa) => {
+  data.forEach((pa) => {
+    if (allowed && !allowed.has(pa.id)) return;
     const key = pa[dim] || "—";
-    if (!map[key]) map[key] = 0;
-    map[key]++;
+    map[key] = (map[key] || 0) + 1;
   });
-  const rows = Object.entries(map)
-    .sort((a, b) => b[1] - a[1])
-    .map(([key, n]) => "<tr><td class=\"cp-c-key\">" + esc(key) + "</td><td>" + n + "</td></tr>")
-    .join("");
-  return '<table class="cp-table"><thead><tr><th>' +
+  const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
+ 
+  const rows = entries.map(([key, n]) => "<tr><td class=\"cp-c-key\">" + esc(key) + "</td><td>" + n + "</td></tr>").join("");
+  const table = '<table class="cp-table"><thead><tr><th>' +
     (dim === "scenario" ? "Scénario" : "Déploiement") +
     "</th><th>Parties jouées</th></tr></thead><tbody>" + rows + "</tbody></table>";
+ 
+  const payload = encodeURIComponent(JSON.stringify({
+    labels: entries.map(([k]) => k), repartition: entries.map(([, n]) => n), onlyPie: true,
+  }));
+  return '<div class="cp-charts">' +
+      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
+    "</div>" +
+    '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
+    table;
 }
  
-// Matchups : pour chaque paire de peuples ayant joué l'un contre l'autre
+// Matchups : heatmap peuple × peuple + table, sur les duels à 2 joueurs
 function renderMatchups() {
-  // On parcourt chaque partie à 2 participants (matchup classique)
-  const map = {}; // "A|B" -> {aWins, bWins, draws}
-  parties.forEach((pa) => {
+  const paList = statParties();
+  const allowed = (statFiltreJoueur || statFiltreFaction) ? new Set(statParticipations().map((p) => p.partie_id)) : null;
+ 
+  // map "A|B" (trié) -> {first, a, b, e}
+  const map = {};
+  // ensemble des peuples impliqués (pour la grille)
+  const peuplesSet = new Set();
+  paList.forEach((pa) => {
+    if (allowed && !allowed.has(pa.id)) return;
     const ps = partParts(pa.id);
-    if (ps.length !== 2) return; // matchups définis pour le duel
+    if (ps.length !== 2) return;
     const [x, y] = ps;
     const a = x.peuple, b = y.peuple;
     if (!a || !b) return;
+    peuplesSet.add(a); peuplesSet.add(b);
     const key = [a, b].sort().join("|");
-    const [first] = key.split("|");
+    const first = key.split("|")[0];
     if (!map[key]) map[key] = { first, a: 0, b: 0, e: 0 };
     const m = map[key];
     if (x.resultat === "egalite" || y.resultat === "egalite") { m.e++; return; }
-    const winnerPeuple = x.resultat === "victoire" ? a : b;
-    if (winnerPeuple === m.first) m.a++; else m.b++;
+    const winner = x.resultat === "victoire" ? a : b;
+    if (winner === m.first) m.a++; else m.b++;
   });
+ 
   const entries = Object.entries(map);
-  if (!entries.length) return '<p class="cp-empty">Aucun duel (2 joueurs) enregistré pour calculer des matchups.</p>';
+  if (!entries.length) return '<p class="cp-empty">Aucun duel (2 joueurs) enregistré pour ces filtres.</p>';
+ 
+  // ----- Heatmap -----
+  const peuples = [...peuplesSet].sort();
+  // tauxFor(ligne, colonne) = taux de victoire de "ligne" contre "colonne"
+  function cell(rowP, colP) {
+    if (rowP === colP) return { txt: "", bg: "var(--lightgray)", n: 0 };
+    const key = [rowP, colP].sort().join("|");
+    const m = map[key];
+    if (!m) return { txt: "·", bg: "transparent", n: 0 };
+    const total = m.a + m.b;
+    // victoires de rowP
+    const rowWins = (rowP === m.first) ? m.a : m.b;
+    if (total === 0) return { txt: "nul", bg: "transparent", n: m.e };
+    const t = Math.round((rowWins / total) * 100);
+    // couleur : rouge (0%) -> jaune (50%) -> vert (100%)
+    const hue = Math.round((t / 100) * 120); // 0=rouge,120=vert
+    return { txt: t + "%", bg: "hsl(" + hue + ", 55%, 75%)", n: total };
+  }
+  let heat = '<div class="cp-heat-wrap"><table class="cp-heat"><thead><tr><th></th>';
+  peuples.forEach((p) => { heat += '<th title="' + esc(p) + '">' + esc(p) + "</th>"; });
+  heat += "</tr></thead><tbody>";
+  peuples.forEach((rowP) => {
+    heat += '<tr><th title="' + esc(rowP) + '">' + esc(rowP) + "</th>";
+    peuples.forEach((colP) => {
+      const c = cell(rowP, colP);
+      const title = rowP + " vs " + colP + (c.n ? " (" + c.n + ")" : "");
+      heat += '<td style="background:' + c.bg + '" title="' + esc(title) + '">' + c.txt + "</td>";
+    });
+    heat += "</tr>";
+  });
+  heat += "</tbody></table></div>";
+ 
+  // ----- Table détaillée -----
   const rows = entries.sort((u, v) => (v[1].a + v[1].b + v[1].e) - (u[1].a + u[1].b + u[1].e))
     .map(([key, m]) => {
       const [a, b] = key.split("|");
@@ -463,9 +577,104 @@ function renderMatchups() {
         "<td>" + m.a + " – " + m.b + (m.e ? " (" + m.e + " nul" + (m.e > 1 ? "s" : "") + ")" : "") + "</td>" +
         '<td class="cp-c-rate">' + pct(m.a, m.a + m.b) + "</td></tr>";
     }).join("");
-  return '<table class="cp-table"><thead><tr><th>Matchup</th><th>Duels</th><th>Score</th><th>Taux (1er peuple)</th></tr></thead><tbody>' +
-    rows + "</tbody></table>" +
-    '<p class="cp-hint">Le « taux » correspond au premier peuple cité. Seuls les duels à 2 joueurs sont comptés ici.</p>';
+  const table = '<table class="cp-table"><thead><tr><th>Matchup</th><th>Duels</th><th>Score</th><th>Taux (1er)</th></tr></thead><tbody>' +
+    rows + "</tbody></table>";
+ 
+  return '<p class="cp-hint">Lecture de la heatmap : chaque case = taux de victoire du peuple en ligne contre le peuple en colonne. Vert = favorable, rouge = défavorable. Survole pour le nombre de duels.</p>' +
+    heat + table;
+}
+ 
+// Évolution temporelle par version (courbe) — graphique transverse affiché en bas
+function renderEvolution() {
+  // taux de victoire par version, pour la faction filtrée (ou globalement si aucune)
+  const versionsOrdre = refVersions.map((r) => r.nom);
+  const partieVersion = {};
+  parties.forEach((pa) => { partieVersion[pa.id] = pa.version; });
+  const acc = {}; // version -> {v, total}
+  participations.forEach((p) => {
+    if (statFiltreJoueur && p.joueur !== statFiltreJoueur) return;
+    if (statFiltreFaction && p.peuple !== statFiltreFaction) return;
+    const ver = partieVersion[p.partie_id];
+    if (!ver) return;
+    if (!acc[ver]) acc[ver] = { v: 0, total: 0 };
+    acc[ver].total++;
+    if (p.resultat === "victoire") acc[ver].v++;
+  });
+  const versionsPresentes = versionsOrdre.filter((v) => acc[v]);
+  if (versionsPresentes.length < 2) return ""; // pas assez de points pour une courbe
+  const payload = encodeURIComponent(JSON.stringify({
+    labels: versionsPresentes,
+    taux: versionsPresentes.map((v) => Math.round((acc[v].v / acc[v].total) * 100)),
+  }));
+  return '<div class="cp-chart-box cp-chart-full"><h4>Évolution du taux de victoire par version' +
+    (statFiltreFaction ? " — " + esc(statFiltreFaction) : "") + '</h4>' +
+    '<canvas id="cp-chart-line"></canvas>' +
+    '<div id="cp-line-data" data-payload="' + payload + '" hidden></div></div>';
+}
+ 
+ 
+// Palette pour camemberts (couleurs douces, lisibles en clair/sombre)
+const CHART_COLORS = [
+  "#6b8cbe", "#b58a4a", "#7fae6f", "#b56b6b", "#8a6bb5",
+  "#5fae9e", "#be9a5f", "#9ebe5f", "#be5f8a", "#6b9ebe",
+];
+ 
+// Lit la couleur de texte courante (pour que les graphiques suivent le thème)
+function chartTextColor() {
+  const c = getComputedStyle(document.body).getPropertyValue("--dark").trim();
+  return c || "#2b2520";
+}
+ 
+// Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
+// Appelée après chaque rendu de l'onglet stats.
+function drawCharts() {
+  destroyCharts();
+  const txt = chartTextColor();
+  Chart.defaults.color = txt;
+  Chart.defaults.font.family = "Georgia, serif";
+ 
+  // Barres + camembert (dimension peuple/joueur)
+  const dataEl = document.getElementById("cp-chart-data");
+  if (dataEl) {
+    let d;
+    try { d = JSON.parse(decodeURIComponent(dataEl.dataset.payload)); } catch (e) { d = null; }
+    if (d) {
+      const bars = document.getElementById("cp-chart-bars");
+      if (bars && d.taux) {
+        chartInstances.push(new Chart(bars, {
+          type: "bar",
+          data: { labels: d.labels, datasets: [{ label: "Taux de victoire (%)", data: d.taux, backgroundColor: "#7fae6f" }] },
+          options: {
+            indexAxis: "y", responsive: true, plugins: { legend: { display: false } },
+            scales: { x: { min: 0, max: 100, ticks: { callback: (v) => v + "%" } } },
+          },
+        }));
+      }
+      const pie = document.getElementById("cp-chart-pie");
+      if (pie && d.repartition) {
+        chartInstances.push(new Chart(pie, {
+          type: "doughnut",
+          data: { labels: d.labels, datasets: [{ data: d.repartition, backgroundColor: CHART_COLORS }] },
+          options: { responsive: true, plugins: { legend: { position: "right" } } },
+        }));
+      }
+    }
+  }
+ 
+  // Courbe d'évolution par version
+  const lineEl = document.getElementById("cp-line-data");
+  if (lineEl) {
+    let d;
+    try { d = JSON.parse(decodeURIComponent(lineEl.dataset.payload)); } catch (e) { d = null; }
+    const line = document.getElementById("cp-chart-line");
+    if (d && line) {
+      chartInstances.push(new Chart(line, {
+        type: "line",
+        data: { labels: d.labels, datasets: [{ label: "Taux de victoire (%)", data: d.taux, borderColor: "#6b8cbe", backgroundColor: "#6b8cbe33", tension: 0.25, fill: true }] },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { min: 0, max: 100, ticks: { callback: (v) => v + "%" } } } },
+      }));
+    }
+  }
 }
  
 // ---------- Câblage délégué (une fois) ----------
@@ -524,6 +733,11 @@ function wireOnce() {
   // Changements dans les menus de saisie
   document.addEventListener("change", (e) => {
     if (!getApp()) return;
+ 
+    // filtres de statistiques
+    if (e.target.id === "cp-stat-f-version") { statFiltreVersion = e.target.value; render(); return; }
+    if (e.target.id === "cp-stat-f-joueur")  { statFiltreJoueur = e.target.value; render(); return; }
+    if (e.target.id === "cp-stat-f-faction") { statFiltreFaction = e.target.value; render(); return; }
  
     // changement de peuple -> recharge le menu des listes de cette ligne
     const pe = e.target.closest(".cp-p-peuple");
