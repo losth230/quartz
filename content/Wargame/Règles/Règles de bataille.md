@@ -166,18 +166,16 @@ Un modèle activé et fatigué ne peut riposter.
 ### Jets de Moral :
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
-Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
-Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.
 #### Test de panique :
 Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :
 -2 si le modèle contient au moins 3 unités.
 -2 supplémentaires si le modèle contient au moins 5 figurines.  
 -1 si un Commandant ami se trouve 6'' ou moins.  
 +1 par marqueur Désorganisé sur le modèle.  
--1 si vous avez réussi une charge ce tour-ci.
-+1 si vous avez subi un charge ce tour-ci.
-+2 si vous avez remporté un duel.
--2 si vous avez perdu un duel.
+-1 si vous avez réussi une charge ce tour-ci.  
++1 si vous avez subi un charge ce tour-ci.  
++2 si vous avez remporté un duel.  
+-2 si vous avez perdu un duel.  
 Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
 Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute vers le bord de table le plus proche.
 ### Mouvements de poursuite.
