@@ -1,23 +1,45 @@
 
+Version A3.1
+
 <center><h2>Règles de Faction</h2></center>
 
+#### Chanson de Geste
+Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. La limite de commandants est de 1 par tranche de 50. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
+#### Fer de Lance
+Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. S'ils ont ainsi acheté une monture, ils peuvent également acheter l'équipement de la lance médiéval :  
+- Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Cheval | **7** | **4+** | **-** | **-** | **-** | **-** | **+1** | **-** |  |
+| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pégase | **7** | **4+** | **-** | **-** | **-** | **+1** | **+1** | **+1** | Bête |
+| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Règles spéciales :
+- Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+
+#### Faveur divine (1)
+Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel dé en un 6 (explosif).
+#### Vœu de silence
+Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
+#### Volonté de fer
+Lorsque qu’un modèle ami réussit un test de moral, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral (il peut la récupérer s’il réussit un test de moral plus tard).
 #### Serf et Chevaliers
 Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6’’ ou moins au lieu de la sienne.
-#### Fer de Lance
-Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. La limite de commandants est de 1 par tranche de 50.
-#### Faveur divine (1) :
-Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel dé en un 6 (explosif).
-#### Vœu de silence :
-Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
-#### Volonté de fer :
-Lorsque qu’un modèle ami réussit un test de moral, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral (il peut la récupérer s’il réussit un test de moral plus tard).
 
 ---
 
 <center><h2>Grandes Bannières</h2></center>
 
 Les différents royaumes libres se regroupent souvent autour d’un étendard commun. N'importe quel Chevalier peut posséder une bannière, Voici leurs différents effets :
-- **Bannière du Lion d’Acier (20 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d’avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
+- **Bannière du Lion d’Acier (15 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d’avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
 - **Bannière du Jugement de Fer (15 pts) :** *"La loi ne faiblit jamais. Les faibles, eux, s’effondrent."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (6)]], les modèles amis bénéficient d’[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], les modèles ennemis subissent un malus de -1 au Moral.
 - **Bannière de l’Eternelle Lumière (15 pts) :** *"L’ombre ne tombera jamais sur notre patrie tant que nous tiendrons la ligne."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], au début de chaque tour, les modèles amis bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 - **Bannières des Lames enchainées :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
@@ -49,7 +71,7 @@ Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualis
 #### Inquisition
 Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
 #### Ordre des Chevaliers
-Les modèles Chevaliers bénéficient de +1 Vitesse.
+Les modèles Chevalier ont +1d6 en mêlée.
 ## Royaume de Lun
 Lors de chaque phase d’initiative, vous générez 3 manœuvres.
 #### Palais des Légendes
@@ -63,9 +85,9 @@ Au début de chaque tour, désignez un modèle Chevalier et octroyez-lui Volont�
 #### Ordre des Chevaliers du Clair Obscur
 Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ## Royaume de Thoriath
-Au début de chaque tour, tous les modèles Paysan bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+Les modèles coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 6 pts).
 #### Duché de Boïtal
-Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1d6 en mêlée sur leurs montures.
+Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1 Vitesse.
 #### Duché de Fessac
 Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer une marche gratuite.
 
@@ -103,21 +125,27 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Nappe de brouillard (1) : une fois par partie, Allie se téléporte sur 6’’ et gagne 2 Egides. Elle est inciblable pour les attaques à distances et sorts pour le reste du tour.
 - Projection (1) : une fois par partie, après un mouvement de course, Allie se téléporte dans le dos d’un modèle ennemi qu’elle peut voir à 6’’ ou moins, cela compte comme une charge.
 ---
-### Comte — 31 pts
+### Baron — 19 pts
 
-| ⬜          | **Vit**         | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
+| 🟥          | **Vit**         | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | --------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Comte      | **5**           | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **3**  | **2**  | **2**  | Chevalier |
-| Cheval     | **7**           | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  |           |
-| Pégase     | **6**           | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  |           |
-| **Mêlée:** | 4d6 / 2d6 / 4d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
+| Baron      | **5**           | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Chevalier |
+| **Mêlée:** | 1d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]. / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Équipement :
-- Cheval (+6 pts) : confère Taille +1, Vit +1, PV +1 et la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]].
-- Pégase (+12 pts) : confère Taille +1, Vit +1, PV +2 et les règles spéciales [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] et [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].
 ##### Règles spéciales :
-- Attaque en piquée (1) : pégase uniquement, à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par modèle Chevalier ami en vie.
+---
+
+### Comte — 22 pts
+
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Comte | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
+| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Règles spéciales :
+- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par modèle Chevalier ami en vie.
 ---
 
 <div class="legendary">
@@ -142,7 +170,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 <div class="legendary">
 
-### Hegel — 32 pts
+### Hegel — 28 pts
 
 </div>
 
@@ -155,7 +183,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Équipement :
 - Pistolet : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
-- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Hegel, générez 2 Manœuvres.
+- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Hegel, volez 2 Manœuvres à votre adversaire.
 - Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 
@@ -199,7 +227,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 <div class="legendary">
 
-### Lenera — 36 pts
+### Lenera — 32 pts
 
 </div>
 
@@ -210,7 +238,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].*
 ##### Règles spéciales :
-- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Lenera, générez 2 Manœuvres.
+- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Lenera, volez 2 Manœuvres à votre adversaire.
 - Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 
@@ -268,7 +296,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Dualité : Lorsque Luxana lance un sort avec succès, elle déclenche à la fois l’attribut du Domaine de la Pureté et celui du domaine de la Lumière.
 ---
-### Sergent — 17 pts
+### Sergent — 16 pts
 
 | 🟥         | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -278,10 +306,29 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 *- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Cheval (+6 pts) : confère la règle [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] au Sergent, la monture Cheval et un bonus de +1 en taille.
 - Etendard : le Sergent peut porter une grande bannière, cependant son [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] est réduite de 3’’, et son coût de 3 pts.
 ##### Règles spéciales :
 - Formation défensive : au début de chaque tour, désignez un modèle ami à 9’’ ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+---
+
+<div class="legendary">
+
+
+### Sir Hugues le Preux — 22 pts
+
+</div>
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Hugues | **5** | **4+** | **-** | **4+** | **9** | **2** | **2** | **2** | Chevalier |
+| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.
+##### Règles spéciales :
+- Maître Palefrenier : l'attribution de monture à une unité via la règle Fer de Lance coûte 2 pts de moins lors de la création d'un bande.
+- Maitre cavalier : tout modèle rejoint par Hugues gagne la Règle Cavalier Expert [[Wargame/_Visualisation/Règles spéciales/Cavalier Expérimenté|Cavalier Expérimenté].
 ---
 
 <div class="legendary">
@@ -298,7 +345,6 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide]].*
 ##### Règles spéciales :
 - Imposition des mains : Lorsque vous activez cette unité, désignez un modèle ami à 9’’ ou moins qui récupèrent 1 PV.
-- Sanctification : ???
 ---
 ## Modèles de base
 ---
@@ -372,10 +418,12 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Inquisiteur | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
+| Inquisiteur | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **3** | Chevalier |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Chasseur de Dragon (+3 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
 ##### Règles spéciales :
 - Protection sacrée : Au début de chaque tour, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 - Vengeance : lors d’une attaque en mêlée, ce modèle peut dépenser une à plusieurs [[Wargame/_Visualisation/Règles spéciales/Egide|Egide]] et déclencher la règle Faveur Divine pour chaque [[Wargame/_Visualisation/Règles spéciales/Egide|Egide]] ainsi dépensée.
@@ -418,10 +466,10 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **9**                                                                            | **2**  | **2**  | **2**  | Sœur     |
+| Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **6+**                                                                          | **9**                                                                            | **2**  | **2**  | **2**  | Sœur     |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 
 ---
 ## Modèles de soutient
