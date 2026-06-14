@@ -328,7 +328,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.
 ##### Règles spéciales :
 - Maître Palefrenier : l'attribution de monture à une unité via la règle Fer de Lance coûte 2 pts de moins lors de la création d'un bande.
-- Maitre cavalier : tout modèle rejoint par Hugues gagne la Règle Cavalier Expert [[Wargame/_Visualisation/Règles spéciales/Cavalier Expérimenté|Cavalier Expérimenté].
+- Maitre cavalier : tout modèle rejoint par Hugues gagne la Règle Cavalier Expert [[Wargame/_Visualisation/Règles spéciales/Cavalier Expérimenté|Cavalier Expérimenté]].
 ---
 
 <div class="legendary">
