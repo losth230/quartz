@@ -254,7 +254,6 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Ambassadeur des abimes : une fois le déploiement terminé ou lors de son invocation, placez une Cité Engloutie à 6’’ ou moins du Tolgoth.
-- Si 
 - Evolution (6) : le Tolgoth se transforme en Shtethroth ou Scylax, il conserve ses blessures.
 ---
 
