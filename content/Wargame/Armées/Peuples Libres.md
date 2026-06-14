@@ -125,11 +125,11 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Nappe de brouillard (1) : une fois par partie, Allie se téléporte sur 6’’ et gagne 2 Egides. Elle est inciblable pour les attaques à distances et sorts pour le reste du tour.
 - Projection (1) : une fois par partie, après un mouvement de course, Allie se téléporte dans le dos d’un modèle ennemi qu’elle peut voir à 6’’ ou moins, cela compte comme une charge.
 ---
-### Baron — 19 pts
+### Baron — 18 pts
 
 | 🟥          | **Vit**         | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | --------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Baron      | **5**           | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Chevalier |
+| Baron      | **5**           | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Chevalier |
 | **Mêlée:** | 1d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
 ##### Règles spéciales :
@@ -140,10 +140,9 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Comte | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
+| Comte | **5** | **4+** | **-** | **4+** | **8** | **3** | **2** | **2** | Chevalier |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par modèle Chevalier ami en vie.
 ---
