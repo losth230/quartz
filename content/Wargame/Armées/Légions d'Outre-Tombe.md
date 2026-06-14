@@ -94,7 +94,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 - Premier Roi : Domblaʄ bénéficie d’un bonus de +2 sur ses résultats de combat.
 - Galanterie : Si Weißroth est présente, Domblaʄ coûte 12 pts de moins.
 ---
-### Geôlier — 34 pts
+### Geôlier — 31 pts
 
 | 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |     |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ------------- | --- |
@@ -124,6 +124,23 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 ##### Règles spéciales :
 - Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
 ---
+
+<div class="legendary">
+
+### Le Pourfendeur Noir — 64 pts
+
+</div>
+
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Pourfendeur | **-** | **4+** | **-** | **5+** | **10** | **8** | **4** | **6** | Ombre |
+| **Mêlée:** | 6d6 / 4d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Cavalier Expérimenté]] [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+
+##### Règles spéciales :
+- Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
+- Ombre invisible : au lieu de déployer ce moddèle normalement, déployez-le à l'endroit de votre choix sans que votre adversaire ne vous voit. Prenez-le en photo, et retirez-le. A la place de n'importe quelle activation, vous pouvez montrer la photo et déployer ce modèle à cet endroit. Il n'est pas marqué activé.
 
 <div class="legendary">
 

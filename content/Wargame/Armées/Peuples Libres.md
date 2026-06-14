@@ -26,7 +26,7 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
 #### Faveur divine (1)
-Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel dé en un 6 (explosif).
+Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel échec en un 6 (explosif).
 #### Vœu de silence
 Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
 #### Volonté de fer
@@ -165,7 +165,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Magie :
 - Le Grand Paladin est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Pureté et au Domaine de la Lumière.
 ##### Règles spéciales :
-- Préparer le rituel : Au début de chaque tour, désignez un modèle Paysan ou Sœur et octroyez-lui une marche gratuite.
+- Préparer le rituel : Au début de chaque tour, désignez un modèle Paysan ou Sœur à 6'' ou moins et octroyez-lui une marche gratuite.
 ---
 
 <div class="legendary">
@@ -176,7 +176,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Hegel      | **5**   | **4+**                                                                               | **3+**                                                                                  | **5+**                                                                          | **9**                                                                            | **3**  | **2**  | **4**  | Chevalier |
+| Hegel      | **5**   | **4+**                                                                               | **3+**                                                                                  | **5+**                                                                          | **9**                                                                            | **3**  | **2**  | **3**  | Chevalier |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | 4d6                                                                             |                                                                                  |        |        |        |           |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
@@ -250,7 +250,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**         |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------------- |
-| Loneline   | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Sœur - Chevalier |
+| Loneline   | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **4**  | Sœur - Chevalier |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |                  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -339,7 +339,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Tristan    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **4**  | Chevalier |
+| Tristan    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **3**  | Chevalier |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide]].*

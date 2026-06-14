@@ -152,7 +152,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
 | Prospecteur | **4**   | **4+** | **4+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
-| **Mêlée:** | 2d6     |        | **Tir:** | 3d6    |        |        |        |        |          |
+| **Mêlée:** | 2d6     |        | **Tir:** | 4d6    |        |        |        |        |          |
 
 *Tireur d’élite.*
 ##### Équipement :
@@ -355,7 +355,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ---
 ### Armurier — 22 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Armurier | **4** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
@@ -443,6 +443,8 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Règles spéciales :
 - Avatar enfoui : l’avatar n’est pas jouable tant qu’il n’a pas été forgé trois fois.
 - Canon des Titans : à la fin de chaque tour, vous pouvez désigner un modèle éligible pour une attaque de tir à 18’’ ou moins et résolvez une attaque de tir selon les règles suivantes : 4d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
+- Terrain : l'Avatar peut être déployé dans la zone de déploiement de votre choix, avant que le déploiement ne commence.
+
 ---
 ### Mine — 17 pts
 

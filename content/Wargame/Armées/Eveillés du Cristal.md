@@ -41,7 +41,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 
 </div>
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Keit | **-** | **4+** | **-** | **4+** | **9** | **6** | **3** | **6** | Eveillé |
 | Salgon | **6** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** |  |
@@ -55,7 +55,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 ---
 ### Prétorien — 44 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Prétorien | **5** | **4+** | **-** | **4+** | **8** | **4** | **2** | **5** | Eveillé |
 | **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
@@ -72,7 +72,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 
 </div>
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Luc | **5** | **5+** | **3+** | **5+** | **9** | **3** | **2** | **4** | Humain |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
@@ -92,7 +92,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 
 </div>
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Reliquaire | **5** | **4+** | **4+** | **4+** | **7** | **3** | **2** | **4** | Humain |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
@@ -189,7 +189,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 ---
 ### Ensorceleur — 18 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Ensorceleur | **5** | **4+** | **4+** | **4+** | **8** | **2** | **2** | **2** | Eveillé |
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
@@ -251,7 +251,7 @@ Portée 18’’, 12d6, [[Wargame/_Visualisation/Règles spéciales/Tir Indirect
 | **Mêlée:** | - |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Règles spéciales :
-- Terrain : le Grand Cristal meut être déployé dans la zone de déploiement de votre choix, avant que le déploiement ne commence.
+- Terrain : le Grand Cristal peut être déployé dans la zone de déploiement de votre choix, avant que le déploiement ne commence.
 - Résonnance : au début de chaque tour, désignez un modèle ami à 9’’ ou moins qui bénéficie de la règle Saillies de Cristal pour le reste du tour.
 - Amplificateur : un lanceur de sort ami bénéficie à 6’’ ou moins d’un Grand Cristal bénéficie d’un bonus de +2 au lancement de ses sorts (non cumulable).
 ---
