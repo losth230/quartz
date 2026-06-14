@@ -1,3 +1,5 @@
+##### Version : A3.2 
+
 <center><h2>Règles de Faction</h2></center>
 
 #### Amasser de Scories
