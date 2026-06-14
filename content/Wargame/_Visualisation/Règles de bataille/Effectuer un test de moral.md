@@ -1,5 +1,5 @@
 \Une fois une attaque de corps à corps effectuée il faut calculer le score de combat avec les modificateurs suivants :  
--2 si le modèle contient au moins 3 unités.
+-2 si le modèle contient au moins 3 unités.  
 -2 supplémentaires si le modèle contient au moins 5 figurines.  
 -1 si un Commandant ami se trouve 6'' ou moins.  
 +1 par marqueur Désorganisé sur le modèle.  

@@ -11,7 +11,6 @@ import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/auto/+esm";
 // ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
 const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
-// ⬆️⬆️ ----------------------------- ⬆️⬆️
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
@@ -620,7 +619,12 @@ function renderByParticipantDim(dim) {
   const labels = chartRows.map((r) => r.nom);
   const taux = chartRows.map((r) => Math.round(r.rate * 100));
   const repartition = chartRows.map((r) => r.total);
-  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
+  // Couleurs : par peuple (couleur de la faction) si dim=peuple,
+  // par faction dominante du joueur si dim=joueur.
+  let colors;
+  if (dim === "peuple") colors = colorsForLabels(labels);
+  else colors = colorsByFaction(labels, (j) => factionDominanteJoueur(j));
+  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, colors, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
 
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
@@ -673,15 +677,26 @@ function renderByListe() {
   }
 
   const map = {};
+  const facCount = {}; // clé de groupe -> { faction: count } pour déterminer la couleur
   data.forEach((p) => {
     const key = groupKey(p);
-    if (!map[key]) map[key] = { total: 0, v: 0, d: 0, e: 0 };
+    if (!map[key]) { map[key] = { total: 0, v: 0, d: 0, e: 0 }; facCount[key] = {}; }
     const m = map[key];
     m.total++;
     if (p.resultat === "victoire") m.v++;
     else if (p.resultat === "egalite") m.e++;
     else m.d++;
+    // faction associée à cette participation : peuple du joueur (toujours présent)
+    if (p.peuple) facCount[key][p.peuple] = (facCount[key][p.peuple] || 0) + 1;
   });
+
+  // faction dominante d'un groupe (pour la couleur)
+  function groupFaction(key) {
+    const c = facCount[key] || {};
+    let best = null, bestN = 0;
+    for (const [f, n] of Object.entries(c)) { if (n > bestN) { bestN = n; best = f; } }
+    return best;
+  }
 
   const baseRows = Object.entries(map).map(([key, m]) => ({
     nom: key, total: m.total, v: m.v, d: m.d, e: m.e,
@@ -702,10 +717,13 @@ function renderByListe() {
 
   // Graphiques (ordre fixe par taux décroissant)
   const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
+  const labels = chartRows.map((r) => r.nom);
+  const colors = colorsByFaction(labels, (lbl) => groupFaction(lbl));
   const payload = encodeURIComponent(JSON.stringify({
-    labels: chartRows.map((r) => r.nom),
+    labels,
     taux: chartRows.map((r) => Math.round(r.rate * 100)),
     repartition: chartRows.map((r) => r.total),
+    colors,
     isPeuple: false,
   }));
 
@@ -915,6 +933,30 @@ function colorsForLabels(labels) {
   return labels.map((l) => factionColor(l));
 }
 
+// Faction la plus jouée par un joueur (sur toutes ses participations).
+// Égalité -> première rencontrée. Aucun -> null.
+function factionDominanteJoueur(joueur) {
+  const cnt = {};
+  participations.forEach((p) => {
+    if (p.joueur !== joueur || !p.peuple) return;
+    cnt[p.peuple] = (cnt[p.peuple] || 0) + 1;
+  });
+  let best = null, bestN = 0;
+  for (const [peuple, n] of Object.entries(cnt)) {
+    if (n > bestN) { bestN = n; best = peuple; }
+  }
+  return best;
+}
+
+// Couleurs d'une liste de labels en passant par une fonction label -> faction.
+// Si la faction est introuvable, factionColor fournit un repli stable.
+function colorsByFaction(labels, labelToFaction) {
+  return labels.map((l) => {
+    const fac = labelToFaction(l);
+    return factionColor(fac || l); // si pas de faction, on hashe le label lui-même
+  });
+}
+
 // Lit la couleur de texte courante (pour que les graphiques suivent le thème)
 function chartTextColor() {
   const c = getComputedStyle(document.body).getPropertyValue("--dark").trim();
@@ -939,8 +981,12 @@ function drawCharts() {
     let d;
     try { d = JSON.parse(decodeURIComponent(dataEl.dataset.payload)); } catch (e) { d = null; }
     if (d) {
-      // Couleurs : par faction si on est sur la dimension "peuple", sinon palette indexée
-      const palette = d.isPeuple ? colorsForLabels(d.labels) : CHART_COLORS;
+      // Couleurs : priorité au tableau "colors" fourni par le rendu (par faction associée),
+      // sinon couleurs par faction si dimension peuple, sinon palette indexée.
+      let palette;
+      if (Array.isArray(d.colors) && d.colors.length) palette = d.colors;
+      else if (d.isPeuple) palette = colorsForLabels(d.labels);
+      else palette = CHART_COLORS;
       const bars = document.getElementById("cp-chart-bars");
       if (bars && d.taux) {
         chartInstances.push(new Chart(bars, {
