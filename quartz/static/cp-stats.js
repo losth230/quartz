@@ -12,21 +12,6 @@ const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 // ⬆️⬆️ ----------------------------- ⬆️⬆️
 
-// ============================================================
-//  C&P — Résultats & Statistiques
-//  À placer dans : quartz/static/cp-stats.js
-//  Saisie de parties (multijoueur), historique, et stats croisées.
-//  Architecture par délégation sur document (robuste navigation SPA).
-// ============================================================
-
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/auto/+esm";
-
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://TON-PROJET.supabase.co";
-const SUPABASE_ANON_KEY = "TA_CLE_ANON_PUBLIC";
-// ⬆️⬆️ ----------------------------- ⬆️⬆️
-
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // État module (survit aux nav)
