@@ -127,16 +127,17 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 
 <div class="legendary">
 
-### Le Pourfendeur Noir — 64 pts
+### Le Pourfendeur Noir — 54 pts
 
 </div>
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Pourfendeur | **-** | **4+** | **-** | **5+** | **10** | **8** | **4** | **6** | Ombre |
+| Destrier d'effroi | **8** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Ombre |
 | **Mêlée:** | 6d6 / 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Cavalier Expérimenté]] [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Cavalier Expérimenté]] [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 
 ##### Règles spéciales :
 - Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
