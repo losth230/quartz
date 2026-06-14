@@ -616,8 +616,8 @@ function renderEvolution() {
 
 // Palette pour camemberts (couleurs douces, lisibles en clair/sombre)
 const CHART_COLORS = [
-  "#6b8cbe", "#b58a4a", "#7fae6f", "#b56b6b", "#8a6bb5",
-  "#5fae9e", "#be9a5f", "#9ebe5f", "#be5f8a", "#6b9ebe",
+  "rgb(51, 250, 250)", "#b58a4a", "rgb(65,105,225)", "rgb(207,207,207)", "#c186ff", "#e3cd43", 
+  "#5fae9e", "#87009e", "#be5f8a", "#6b9ebe",
 ];
 
 // Lit la couleur de texte courante (pour que les graphiques suivent le thème)
