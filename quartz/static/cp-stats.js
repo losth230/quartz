@@ -27,6 +27,14 @@ let statFiltreVersion = "";  // filtre version appliqué aux stats
 let statFiltreJoueur = "";    // filtre joueur
 let statFiltreFaction = "";   // filtre faction (peuple)
 let chartInstances = [];      // graphiques Chart.js actifs (à détruire avant re-render)
+// Tri des tableaux de stats : une clé + un sens par dimension (chaque onglet garde son tri)
+let statSort = {
+  peuple:      { key: "rate", dir: "desc" },
+  joueur:      { key: "rate", dir: "desc" },
+  scenario:    { key: "n", dir: "desc" },
+  deploiement: { key: "n", dir: "desc" },
+  matchup:     { key: "total", dir: "desc" },
+};
 let nbJoueurs = 2;           // nombre de lignes de participants dans le formulaire
 let wired = false;
 
@@ -367,6 +375,35 @@ async function deletePartie(id) {
   tab = "historique"; render();
 }
 
+// Trie un tableau d'objets selon une clé et un sens. Gère nombres et chaînes.
+function sortRows(rows, key, dir) {
+  const sorted = [...rows].sort((a, b) => {
+    let va = a[key], vb = b[key];
+    if (typeof va === "number" && typeof vb === "number") {
+      // ordre numérique direct
+    } else {
+      va = (va ?? "").toString().toLowerCase();
+      vb = (vb ?? "").toString().toLowerCase();
+    }
+    if (va < vb) return dir === "asc" ? -1 : 1;
+    if (va > vb) return dir === "asc" ? 1 : -1;
+    return 0;
+  });
+  return sorted;
+}
+
+// Flèche de tri pour un en-tête, selon l'état de tri de la dimension courante
+function sortArrow(dim, key) {
+  const s = statSort[dim];
+  if (!s || s.key !== key) return '<span class="cp-sort"> </span>';
+  return '<span class="cp-sort">' + (s.dir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
+}
+
+// Construit un <th> triable
+function thSort(dim, key, label) {
+  return '<th data-statsort="' + dim + ":" + key + '">' + label + sortArrow(dim, key) + "</th>";
+}
+
 // ---------- Onglet Stats ----------
 // Détruit les graphiques Chart.js existants avant un nouveau rendu
 function destroyCharts() {
@@ -443,30 +480,43 @@ function renderByParticipantDim(dim) {
     else m.d++;
     if (p.pertes != null) { m.pertes += p.pertes; m.nPertes++; }
   });
-  const entries = Object.entries(map).sort((a, b) => (b[1].v / b[1].total) - (a[1].v / a[1].total));
-  if (!entries.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
+  // Lignes-objets (clés alignées avec les data-statsort des en-têtes)
+  const baseRows = Object.entries(map).map(([key, m]) => ({
+    nom: key,
+    total: m.total,
+    v: m.v, d: m.d, e: m.e,
+    rate: m.total ? m.v / m.total : 0,
+    pertes: m.nPertes ? Math.round(m.pertes / m.nPertes) : null,
+  }));
+  if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
 
-  const rows = entries.map(([key, m]) => {
-    const avgPertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : "—";
-    return "<tr><td class=\"cp-c-key\">" + esc(key) + "</td>" +
-      "<td>" + m.total + "</td>" +
-      '<td class="cp-win">' + m.v + "</td>" +
-      '<td class="cp-lose">' + m.d + "</td>" +
-      '<td class="cp-draw">' + m.e + "</td>" +
-      '<td class="cp-c-rate">' + pct(m.v, m.total) + "</td>" +
-      "<td>" + avgPertes + "</td></tr>";
+  // Graphiques : ordre fixe par taux de victoire décroissant (indépendant du tri du tableau)
+  const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
+  const labels = chartRows.map((r) => r.nom);
+  const taux = chartRows.map((r) => Math.round(r.rate * 100));
+  const repartition = chartRows.map((r) => r.total);
+  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
+
+  // Tableau : tri selon l'état de la dimension
+  const s = statSort[dim];
+  const rows = sortRows(baseRows, s.key, s.dir).map((r) => {
+    return "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td>" +
+      "<td>" + r.total + "</td>" +
+      '<td class="cp-win">' + r.v + "</td>" +
+      '<td class="cp-lose">' + r.d + "</td>" +
+      '<td class="cp-draw">' + r.e + "</td>" +
+      '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
+      "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td></tr>";
   }).join("");
   const table = '<table class="cp-table"><thead><tr>' +
-    "<th>" + (dim === "peuple" ? "Peuple" : "Joueur") + "</th>" +
-    "<th>Parties</th><th>V</th><th>D</th><th>É</th><th>Taux victoire</th><th>Pertes moy.</th>" +
+    thSort(dim, "nom", dim === "peuple" ? "Peuple" : "Joueur") +
+    thSort(dim, "total", "Parties") +
+    thSort(dim, "v", "V") +
+    thSort(dim, "d", "D") +
+    thSort(dim, "e", "É") +
+    thSort(dim, "rate", "Taux victoire") +
+    thSort(dim, "pertes", "Pertes moy.") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
-
-  // Données pour graphiques : on garde l'ordre par taux de victoire
-  const labels = entries.map(([k]) => k);
-  const taux = entries.map(([, m]) => Math.round((m.v / m.total) * 100));
-  const repartition = entries.map(([, m]) => m.total);
-  // On stocke les données dans des attributs pour que drawCharts les lise après injection
-  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
 
   return '<div class="cp-charts">' +
       '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
@@ -490,17 +540,24 @@ function renderByPartieDim(dim) {
     const key = pa[dim] || "—";
     map[key] = (map[key] || 0) + 1;
   });
-  const entries = Object.entries(map).sort((a, b) => b[1] - a[1]);
-  if (!entries.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
+  const baseRows = Object.entries(map).map(([key, n]) => ({ nom: key, n }));
+  if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
 
-  const rows = entries.map(([key, n]) => "<tr><td class=\"cp-c-key\">" + esc(key) + "</td><td>" + n + "</td></tr>").join("");
-  const table = '<table class="cp-table"><thead><tr><th>' +
-    (dim === "scenario" ? "Scénario" : "Déploiement") +
-    "</th><th>Parties jouées</th></tr></thead><tbody>" + rows + "</tbody></table>";
-
+  // Graphique : ordre fixe par fréquence décroissante
+  const chartRows = [...baseRows].sort((a, b) => b.n - a.n);
   const payload = encodeURIComponent(JSON.stringify({
-    labels: entries.map(([k]) => k), repartition: entries.map(([, n]) => n), onlyPie: true,
+    labels: chartRows.map((r) => r.nom), repartition: chartRows.map((r) => r.n), onlyPie: true,
   }));
+
+  // Tableau : tri selon l'état de la dimension
+  const s = statSort[dim];
+  const rows = sortRows(baseRows, s.key, s.dir)
+    .map((r) => "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td><td>" + r.n + "</td></tr>").join("");
+  const table = '<table class="cp-table"><thead><tr>' +
+    thSort(dim, "nom", dim === "scenario" ? "Scénario" : "Déploiement") +
+    thSort(dim, "n", "Parties jouées") +
+    "</tr></thead><tbody>" + rows + "</tbody></table>";
+
   return '<div class="cp-charts">' +
       '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
@@ -568,18 +625,29 @@ function renderMatchups() {
   });
   heat += "</tbody></table></div>";
 
-  // ----- Table détaillée -----
-  const rows = entries.sort((u, v) => (v[1].a + v[1].b + v[1].e) - (u[1].a + u[1].b + u[1].e))
-    .map(([key, m]) => {
-      const [a, b] = key.split("|");
-      const total = m.a + m.b + m.e;
-      return "<tr><td class=\"cp-c-key\">" + esc(a) + " vs " + esc(b) + "</td>" +
-        "<td>" + total + "</td>" +
-        "<td>" + m.a + " – " + m.b + (m.e ? " (" + m.e + " nul" + (m.e > 1 ? "s" : "") + ")" : "") + "</td>" +
-        '<td class="cp-c-rate">' + pct(m.a, m.a + m.b) + "</td></tr>";
-    }).join("");
-  const table = '<table class="cp-table"><thead><tr><th>Matchup</th><th>Duels</th><th>Score</th><th>Taux (1er)</th></tr></thead><tbody>' +
-    rows + "</tbody></table>";
+  // ----- Table détaillée (triable) -----
+  const baseRows = entries.map(([key, m]) => {
+    const [a, b] = key.split("|");
+    return {
+      matchup: a + " vs " + b,
+      total: m.a + m.b + m.e,
+      score: m.a + " – " + m.b + (m.e ? " (" + m.e + " nul" + (m.e > 1 ? "s" : "") + ")" : ""),
+      rate: (m.a + m.b) ? m.a / (m.a + m.b) : 0,
+    };
+  });
+  const s = statSort.matchup;
+  const rows = sortRows(baseRows, s.key, s.dir).map((r) =>
+    "<tr><td class=\"cp-c-key\">" + esc(r.matchup) + "</td>" +
+    "<td>" + r.total + "</td>" +
+    "<td>" + esc(r.score) + "</td>" +
+    '<td class="cp-c-rate">' + Math.round(r.rate * 100) + " %</td></tr>"
+  ).join("");
+  const table = '<table class="cp-table"><thead><tr>' +
+    thSort("matchup", "matchup", "Matchup") +
+    thSort("matchup", "total", "Duels") +
+    thSort("matchup", "score", "Score") +
+    thSort("matchup", "rate", "Taux (1er)") +
+    "</tr></thead><tbody>" + rows + "</tbody></table>";
 
   return '<p class="cp-hint">Lecture de la heatmap : chaque case = taux de victoire du peuple en ligne contre le peuple en colonne. Vert = favorable, rouge = défavorable. Survole pour le nombre de duels.</p>' +
     heat + table;
@@ -721,6 +789,17 @@ function wireOnce() {
     // switch de stats
     const sb2 = e.target.closest(".cp-statbtn");
     if (sb2 && getApp().contains(sb2)) { statMode = sb2.dataset.stat; render(); return; }
+
+    // tri d'un tableau de stats (clic sur en-tête)
+    const th = e.target.closest("[data-statsort]");
+    if (th && getApp().contains(th)) {
+      const [dim, key] = th.dataset.statsort.split(":");
+      const s = statSort[dim];
+      if (s.key === key) { s.dir = s.dir === "asc" ? "desc" : "asc"; }
+      else { s.key = key; s.dir = "desc"; }
+      render();
+      return;
+    }
 
     // ajouter un participant
     if (e.target.closest("#cp-add-participant")) {
