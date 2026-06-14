@@ -340,7 +340,7 @@ ___
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Bélier | **5** | **4+** | **-** | **4+** | **7** | **7** | **5** | **6** | Machine |
-| **Mêlée:** | 12d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 10d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]*
 ##### Règles spéciales :
