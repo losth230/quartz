@@ -124,7 +124,3 @@
 
   <div id="cp-stats-main"><p class="cp-empty">Chargement…</p></div>
 </div>
-
-
-
-test
