@@ -6,6 +6,7 @@
 // ============================================================
 
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/auto/+esm";
 
 // ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
 const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
