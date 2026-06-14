@@ -466,7 +466,7 @@ function renderByParticipantDim(dim) {
   const taux = entries.map(([, m]) => Math.round((m.v / m.total) * 100));
   const repartition = entries.map(([, m]) => m.total);
   // On stocke les données dans des attributs pour que drawCharts les lise après injection
-  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur" }));
+  const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
 
   return '<div class="cp-charts">' +
       '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>' +
@@ -616,9 +616,25 @@ function renderEvolution() {
 
 // Palette pour camemberts (couleurs douces, lisibles en clair/sombre)
 const CHART_COLORS = [
-  "rgb(51, 250, 250)", "#b58a4a", "rgb(65,105,225)", "rgb(207,207,207)", "#c186ff", "#e3cd43", 
-  "#5fae9e", "#87009e", "#be5f8a", "#6b9ebe",
+  "#6b8cbe", "#b58a4a", "#7fae6f", "#b56b6b", "#8a6bb5",
+  "#5fae9e", "#be9a5f", "#9ebe5f", "#be5f8a", "#6b9ebe",
 ];
+
+// Couleur d'une faction : d'abord celle définie dans ref_peuples (colonne couleur),
+// sinon repli déterministe sur la palette (pour ne jamais avoir de "trou").
+function factionColor(nom) {
+  const ref = refPeuples.find((p) => p.nom === nom);
+  if (ref && ref.couleur) return ref.couleur;
+  // repli stable : on hashe le nom pour piocher toujours la même couleur de secours
+  let h = 0;
+  for (let i = 0; i < (nom || "").length; i++) h = (h * 31 + nom.charCodeAt(i)) % CHART_COLORS.length;
+  return CHART_COLORS[h];
+}
+
+// Construit un tableau de couleurs aligné sur une liste de labels (factions)
+function colorsForLabels(labels) {
+  return labels.map((l) => factionColor(l));
+}
 
 // Lit la couleur de texte courante (pour que les graphiques suivent le thème)
 function chartTextColor() {
@@ -644,11 +660,13 @@ function drawCharts() {
     let d;
     try { d = JSON.parse(decodeURIComponent(dataEl.dataset.payload)); } catch (e) { d = null; }
     if (d) {
+      // Couleurs : par faction si on est sur la dimension "peuple", sinon palette indexée
+      const palette = d.isPeuple ? colorsForLabels(d.labels) : CHART_COLORS;
       const bars = document.getElementById("cp-chart-bars");
       if (bars && d.taux) {
         chartInstances.push(new Chart(bars, {
           type: "bar",
-          data: { labels: d.labels, datasets: [{ label: "Taux de victoire (%)", data: d.taux, backgroundColor: "#7fae6f" }] },
+          data: { labels: d.labels, datasets: [{ label: "Taux de victoire (%)", data: d.taux, backgroundColor: palette }] },
           options: {
             indexAxis: "y", responsive: true, plugins: { legend: { display: false } },
             scales: { x: { min: 0, max: 100, ticks: { callback: (v) => v + "%" } } },
@@ -659,7 +677,7 @@ function drawCharts() {
       if (pie && d.repartition) {
         chartInstances.push(new Chart(pie, {
           type: "doughnut",
-          data: { labels: d.labels, datasets: [{ data: d.repartition, backgroundColor: CHART_COLORS }] },
+          data: { labels: d.labels, datasets: [{ data: d.repartition, backgroundColor: palette }] },
           options: { responsive: true, plugins: { legend: { position: "right" } } },
         }));
       }
