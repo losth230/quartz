@@ -297,7 +297,7 @@ ___
 
 ---
 
-### Kuuh-Khaaa — 34 pts
+### Kuuh-Khaaa — 28 pts
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
@@ -307,7 +307,7 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furitf]].*
 ##### Magie :
 - Le Kuuh-Khaa est un lanceur de sorts de niveau 2 ayant accès au Domaine de la Corruption et au domaine des Ténèbres.
-- Rayon du vide (court, 9+, Projectile) : Portée (C : 9’’, L :15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Si la moindre touche est obtenue, la cible reçoit une *Corruption*.
+- Rayon du vide (court, 9+, Projectile) : Portée (C : 9’’, L :15’’), 3d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
 - Invocation de Kuuh-Khaa : une fois le déploiement terminé, placez une cité Englouti à 6'' ou plus de n'importe quel modèle adverse et déployez le Kuuh-Khaa dessus
 ---
@@ -316,7 +316,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Scylax|**6**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**14**|Primal|
+|Scylax|**6**|**4+**|**4+**|**4+**|**10**|**14**|**6**|**10**|Primal|
 |**Mêlée:**|10d6||**Tir:**|-||||||
 
 **[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]][[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -331,7 +331,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**16**|Primal|
+|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**16**|**6**|**8**|Primal|
 |**Mêlée:**|12d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
