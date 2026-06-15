@@ -12,8 +12,8 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 *Les Thraksans ont un lien particulier avec les Ténèbres.*
 Au début de chaque tour consultez la table ci-dessous pour savoir quel effet appliquer.  
 **Tour 1 :** Placez un marqueur Activé sur le modèle de votre choix.  
-**Tour 2 :** Placez une cité Englputie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.
-*Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
+**Tour 2 :** Placez une cité Englputie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.  
+**Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
 **Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
 **Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 13'' ou plus de tout modèle ennemi.
 
