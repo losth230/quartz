@@ -10,11 +10,11 @@ Les modèles amis à 9'' ou moins peuvent relancer leurs jets d'attaque en mêl�
 Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son Evolution.
 #### L'heure de la fin
 *Les Thraksans ont un lien particulier avec les Ténèbres.*
-Au début de chaque tour consultez la table ci-dessous pour savoir quel effet appliquer.
-**Tour 1 :** Placez un marqueur Activé sur le modèle de votre choix.
+Au début de chaque tour consultez la table ci-dessous pour savoir quel effet appliquer.  
+**Tour 1 :** Placez un marqueur Activé sur le modèle de votre choix.  
 **Tour 2 :** Placez une cité Englputie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.
-*Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.
-**Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.
+*Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
+**Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
 **Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 13'' ou plus de tout modèle ennemi.
 
 #### Soumission abyssale 
@@ -122,7 +122,7 @@ ___
 
 <div class="legendary">
 
-### Naar'Vaath l'usurpatrice — 104 pts
+### (old) Naar'Vaath l'usurpatrice — 104 pts
 
 </div>
 
@@ -136,6 +136,23 @@ ___
 ##### Règles spéciales :
 - Usurpatrice : ne déployez pas Naar’Vaath selon les règles de déploiement standard. A la place, une fois le déploiement terminé, désignez secrètement une unité adverse valant 50 pts ou moins dans laquelle Naar’Vaath est cachée. Durant la partie, au lieu d'une activation normale, vous pouvez retirer comme perte l'unité hôte et la remplacer par Naar'Vaath. Naar'Vaath obtient 5 Egides puis son tour se termine.
 ---
+
+<div class="legendary">
+
+### Naar'Vaath l'usurpatrice — 82 pts
+
+</div>
+
+|⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Naar'Vaath|**4**|**3+**|**-**|**5+**|**9**|**4**|**4**|**4**|Primal|
+|**Mêlée:**|6d6||**Tir:**|-||||||
+
+*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].*
+##### Magie :
+- Naar'Vaath est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
+##### Règles spéciales :
+- Renverser le cours : Si Naar'Vaath est présente dans votre liste, consultez la table des effets en remontant (du tour 5 au tour 1).
 
 ## Modèles de base
 
@@ -151,7 +168,7 @@ ___
 ##### Magie :
 - Association de cultistes : un modèle de Cultiste possède un niveau de lanceur de sort égal à son nombre d’unité de Cultiste.
 - Les Cultistes ont accès au Domaine de la Corruption et au domaine des Ténèbres.
-- Rituel d’invocation (long, 18+, projectile) : Ce sort nécessite au moins 3 Cultistes pour être lancé. S’il est lancé avec succès, retirez les cultistes et remplacez-les par un Cahlta ou un Tolgoth.
+- Rituel d’invocation (long, 18+, projectile) : Ce sort nécessite au moins 3 Cultistes pour être lancé. S’il est lancé avec succès, retirez les cultistes et remplacez-les par un Cahlta, un Emissaire ou un Tolgoth.
 ---
 
 ### Horreur Chasseresse — 22 pts
@@ -249,6 +266,20 @@ ___
 - Evolution (6) : le Cahlta se transforme en Shtethroth ou Scylax, il conserve ses blessures.
 ---
 
+### Emissaire — 72 pts
+
+||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
+|---|---|---|---|---|---|---|---|---|---|
+|Emissaire|**6**|**3+**|**-**|**5+**|**8**|**1**|**5**|**6**|Primal|
+|**Mêlée:**|10d6||**Tir:**|-||||||
+
+*[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (9)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+##### Règles spéciales :
+- Ombre invisible : au lieu de déployer l’Emissaire normalement, déployez-le à l’endroit de votre choix sans que votre adversaire ne vous voie, prenez-le en photo et retirez-le. A la place de n’importe quelle activation, vous pouvez montrer la photo et déployer l'Emissaire à cet endroit, il n’est pas marqué comme activé et peut librement agir.
+- Evolution (6) : l'Emissaire se transforme en Shtethroth ou Scylax, il conserve ses blessures.
+- Lorsque l'Emissaire est révélé ou Invoqué avant le tour 4, déclenchez votre effet de faction de début de tour.
+---
+
 ### Tolgoth — 72 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
@@ -264,18 +295,6 @@ ___
 
 ## Modèles Spéciaux
 
----
-
-### Emissaire — 64 pts
-
-||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
-|---|---|---|---|---|---|---|---|---|---|
-|**Mêlée:**|10d6||**Tir:**|-||||||
-
-*[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (8)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
-##### Règles spéciales :
-- Ombre invisible : au lieu de déployer l’Emissaire normalement, déployez-le à l’endroit de votre choix sans que votre adversaire ne vous voie, prenez-le en photo et retirez-le. A la place de n’importe quelle activation, vous pouvez montrer la photo et déployer l'Emissaire à cet endroit, il n’est pas marqué comme activé et peut librement agir.
-- Evolution (2) : retirez ce modèle du plateau et replacez-le à 6’’ ou moins. Cette compétence ne peut être utilisée plus de 2 fois par tour.
 ---
 
 ### Kuuh-Khaaa — 34 pts
