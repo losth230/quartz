@@ -12,16 +12,16 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Cheval | **7** | **4+** | **-** | **-** | **-** | **-** | **+1** | **-** |  |
-| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 0d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Pégase | **7** | **4+** | **-** | **-** | **-** | **+1** | **+1** | **+1** | Bête |
-| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]],[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
@@ -197,9 +197,9 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
 | Jeanne     | **-**     | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **10**                                                                           | **4**  | **3**  | **8**  | Chevalier |
 | Aurore     | **7**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Bête      |
-| **Mêlée:** | 4d6 / 2d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
+| **Mêlée:** | 4d6 / 0d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
-*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]],[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Oriflamme : Jeanne peut posséder une grande bannière. L’[[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de cette grande bannière est augmentée de 3’’.
 ##### Règles spéciales :
@@ -367,11 +367,11 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Chevaucheur | **-** | **4+** | **-** | **4+** | **8** | **3** | **3** | **3** | Chevalier |
 | Pégase | **7** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** |  |
-| **Mêlée:** | 2d6 / 3d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 2d6 / 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
-- Chevalier du roi (+4 pts) : confère +1d6 en mêlée au chevaucheur, sa valeur d’attaque en mêlée devient 3+.
+- Chevalier du roi (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]] au chevaucheur, sa valeur d’attaque en mêlée devient 3+.
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ---
