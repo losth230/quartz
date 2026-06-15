@@ -305,8 +305,9 @@ ___
 |**Mêlée:**|2d6||**Tir:**|5d6||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furitf]].*
-##### Équipement :
-- Rayon du vide : Portée (C : 9’’, L :15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Si la moindre touche est obtenue, la cible reçoit une *Corruption*.
+##### Magie :
+- Le Kuuh-Khaa est un lanceur de sorts de niveau 2 ayant accès au Domaine de la Corruption et au domaine des Ténèbres.
+- Rayon du vide (court, 9+, Projectile) : Portée (C : 9’’, L :15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Si la moindre touche est obtenue, la cible reçoit une *Corruption*.
 ##### Règles spéciales :
 - Invocation de Kuuh-Khaa : une fois le déploiement terminé, placez une cité Englouti à 6'' ou plus de n'importe quel modèle adverse et déployez le Kuuh-Khaa dessus
 ---
