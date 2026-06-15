@@ -5,17 +5,27 @@
 #### Corruption
 Lorsqu’un modèle ami *Corrompt,* désignez un modèle à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
 #### Cité engloutie
-Les modèles amis à 9'' ou moins peuvent relancer leurs jets d'attaque en mêlée et d'armure obtenant 1.
+Les modèles amis à 9'' ou moins peuvent relancer leurs jets d'attaque en mêlée et d'armure obtenant 1. Les lanceurs de sorts amis bénéficient de +2 à leurs jets de lancements de sorts par Cité Engloutie présente en jeu.
 #### Evolution (N)
 Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son Evolution.
+#### L'heure de la fin
+*Les Thraksans ont un lien particulier avec les Ténèbres.*
+Au début de chaque tour consultez la table ci-dessous pour savoir quel effet appliquer.
+**Tour 1 :** Placez un marqueur Activé sur le modèle de votre choix.
+**Tour 2 :** Placez une cité Englputie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.
+*Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.
+**Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.
+**Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 13'' ou plus de tout modèle ennemi.
 
+#### Soumission abyssale 
+Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que de masse, transformez chacune de ses unité en Profond sous votre contrôle.
 
 <center><h2>Domaines de Faction</h2></center> <center><h3>Domaine de la Corruption</h3></center>
 
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 12’’ ou moins du lanceur qui reçoit une *Corruption*.
 #### Niveau 1
 - **Dévoration d’esprit (court, 3+, projectile) :** Portée 12’’, la cible reçoit 2 marqueurs *Corruption*.
-- **Marquage d’âme (long, 12+, Projectile) :** Portée 18’’, la cible est marquée fatiguée.
+- **Invocation de Kuuh-Khaa (long, 17+, Projectile) :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité libre de votre choix et à 3'' ou plus de tout modèle ennemi et ajoutez-le à votre liste d’armée.
 #### Niveau 2
 - **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12’’ ou moins.
 - **Hantise (court, 14+, Projectile) :** Portée 9’’, force un modèle à effectuer un test de moral.
@@ -200,7 +210,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Corrupteur|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
+|Arhr'Wass|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Équipement :
@@ -211,7 +221,7 @@ ___
 - Les Arhr'Wass ont accès au Domaine de la Corruption et au domaine des Ténèbres.
 ---
 
-### Biovore — 56 pts
+### Biovore — 51 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
@@ -229,12 +239,12 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Cahlta|**4**|**5+**|**4+**|**4+**|**8**|**6**|**4**|**6**|Primal|
+|Cahlta|**4**|**5+**|**4+**|**4+**|**8**|**7**|**4**|**6**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
-- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+- Soumission : au début de chaque tour, le Cahlta peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, Corruption,*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]*.
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
 - Evolution (6) : le Cahlta se transforme en Shtethroth ou Scylax, il conserve ses blessures.
 ---
@@ -243,7 +253,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Tolgoth|**4**|**3+**|**5+**|**4+**|**8**|**6**|**4**|**6**|Primal|
+|Tolgoth|**4**|**3+**|**5+**|**4+**|**8**|**8**|**4**|**6**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
@@ -268,16 +278,16 @@ ___
 - Evolution (2) : retirez ce modèle du plateau et replacez-le à 6’’ ou moins. Cette compétence ne peut être utilisée plus de 2 fois par tour.
 ---
 
-### Kuuh-Khaa — 34 pts
+### Kuuh-Khaaa — 34 pts
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Mère|**4**|**6+**|**4+**|**5+**|**8**|**4**|**3**|**4**|Thraksan|
+|Kuuh-Khaa|**4**|**6+**|**4+**|**5+**|**8**|**4**|**3**|**4**|Thraksan|
 |**Mêlée:**|2d6||**Tir:**|5d6||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furitf]].*
 ##### Équipement :
-- Rayon du vide : Portée (C : 9’’, L :15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. SI la moindre touche est obtenue, la cible reçoit une *Corruption*.
+- Rayon du vide : Portée (C : 9’’, L :15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Si la moindre touche est obtenue, la cible reçoit une *Corruption*.
 ##### Règles spéciales :
 - Invocation de Kuuh-Khaa : une fois le déploiement terminé, placez une cité Englouti à 6'' ou plus de n'importe quel modèle adverse et déployez le Kuuh-Khaa dessus
 ---
@@ -286,28 +296,27 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Scylax|**5**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**12**|Primal|
-|**Mêlée:**|8d6||**Tir:**|-||||||
+|Scylax|**6**|**4+**|**4+**|**4+**|**10**|**12**|**6**|**14**|Primal|
+|**Mêlée:**|10d6||**Tir:**|-||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+**[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]][[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Chitine obscure : lorsque cette unité obtient un 6 sur un jet  d'armure après une attaque en mêlée, l'attaquant  subit une touche.
 - Profusion de tentacules : lorsque cette unité attaque en mêlée, elle gagne un bonus de d6 égal à la quantité d’unité au sein du modèle qu’elle attaque (max +6d6).
-- Souffle empoisonné : au début de chaque tour, le Scylax peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 5d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-- Venin scorpioïde : les résultats de 6+ obtenus lors d'attaques en mêlée infligent des dégâts bruts.
+- Crachat empoisonné : au début de chaque tour, le Scylax peut effectuer une attaque à distance selon les règles suivantes : Portée (C : 12’’, L : 18’’), 6d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], Corruption, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+- Venin scorpioïde : les résultats de 6+ obtenus lors d'attaques en mêlée infligent des dégâts bruts contre les cibles *Empoisonnées*.
 ---
 
 ### Shtethroth — 112 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**12**|Primal|
-|**Mêlée:**|8d6||**Tir:**|-||||||
+|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**12**|**6**|**16**|Primal|
+|**Mêlée:**|12d6||**Tir:**|-||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Dévoration : a la fin que chaque tour, désignez une unité ennemie de taille 2 ou moins engagée en mêlée avec cette unité et retirez là du jeu, elle est considérée comme perte. Le Shtethroth gagne alors 1 Corruption.
-- Bien nourri : ce modèle gagne un nombre de d6 en mêlée égal au nombre de corruptions qui l'affectent.
+- Bien nourri : ce modèle gagne *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (N)]]* où N est le nombre de corruptions qui l'affectent. Le Shtethroth peut dépasser la limite de *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]]* de cette manière.
 - Serviteur des abysses : à la fin de chaque tour, placez une Cité Engloutie à 9’’ ou moins de cette unité.
 ---
 
