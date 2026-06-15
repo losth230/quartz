@@ -939,7 +939,10 @@ function renderEvolution() {
     acc[ver].total++;
     if (p.resultat === "victoire") acc[ver].v++;
   });
-  const versionsPresentes = versionsOrdre.filter((v) => acc[v]);
+  // refVersions est trié par "ordre" décroissant (version récente en premier,
+  // pratique pour les menus de saisie). Pour la COURBE on veut l'ordre
+  // chronologique inverse : du plus ancien au plus récent.
+  const versionsPresentes = versionsOrdre.filter((v) => acc[v]).reverse();
   if (versionsPresentes.length < 2) return ""; // pas assez de points pour une courbe
   const payload = encodeURIComponent(JSON.stringify({
     labels: versionsPresentes,
