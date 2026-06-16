@@ -1080,32 +1080,45 @@ function chartTextColor() {
 // Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
 // Appelée après chaque rendu de l'onglet stats.
 // Plugin : affiche le compte au bout de chaque barre horizontale.
+// Plugin : affiche le compte au bout de chaque barre horizontale.
 function barCountPlugin(counts) {
   return {
     id: "barCount",
     afterDatasetsDraw(chart) {
       const { ctx } = chart;
       const meta = chart.getDatasetMeta(0);
+      
       ctx.save();
       ctx.font = "600 11px Georgia, serif";
-      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
+      
       meta.data.forEach((bar, i) => {
         const n = counts[i];
         if (n == null) return;
-        const txt = n;
+        
+        const txt = String(n);
         const barWidth = bar.x - bar.base;
+        
+        // 1. On définit les styles (blanc avec contour/ombre sombre)
         ctx.fillStyle = "#ffffff";
-        if (barWidth > 34) {
-          ctx.textAlign = "right";
-          ctx.fillText(txt, bar.x - 6, bar.y);
-        } else {
-          ctx.textAlign = "left";
-          ctx.fillText(txt, bar.x + 6, bar.y);
-        }
         ctx.strokeStyle = "rgba(0,0,0,0.35)";
         ctx.lineWidth = 3;
+        
+        // 2. On détermine la position X et l'alignement
+        let posX;
+        if (barWidth > 34) {
+          ctx.textAlign = "right";
+          posX = bar.x - 6;
+        } else {
+          ctx.textAlign = "left";
+          posX = bar.x + 6;
+        }
+        
+        // 3. On dessine d'abord le contour (l'ombre), puis le texte par-dessus
+        ctx.strokeText(txt, posX, bar.y);
+        ctx.fillText(txt, posX, bar.y);
       });
+      
       ctx.restore();
     },
   };
