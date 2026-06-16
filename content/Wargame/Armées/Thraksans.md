@@ -25,7 +25,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 12’’ ou moins du lanceur qui reçoit une *Corruption*.
 #### Niveau 1
 - **Dévoration d’esprit (court, 3+, projectile) :** Portée 12’’, la cible reçoit 2 marqueurs *Corruption*.
-- **Invocation de Kuuh-Khaa (long, 17+, Projectile) :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité libre de votre choix et à 3'' ou plus de tout modèle ennemi et ajoutez-le à votre liste d’armée.
+- **Invocation de Kuuh-Khaa (long, 17+, Projectile) :** Invoquez un Kuuh-Khaa à 3'' ou moins de la Cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi et ajoutez-le à votre liste d’armée.
 #### Niveau 2
 - **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12’’ ou moins.
 - **Hantise (court, 14+, Projectile) :** Portée 9’’, force un modèle à effectuer un test de moral.
@@ -92,7 +92,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Vor’Thul|**4**|**3+**|**-**|**4+**|**10**|**5**|**3**|**5**|Thraksan|
-|**Mêlée:**|4d6||**Tir:**|-||||||
+|**Mêlée:**|5d6||**Tir:**|-||||||
 
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
