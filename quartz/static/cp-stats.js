@@ -744,12 +744,19 @@ function chartToggle() {
  
 // Bloc des deux graphiques (le principal bascule selon chartMode) + camembert
 function chartsBlock(payload) {
+  // total d'observations = somme des répartitions (pour l'afficher sur les graphiques)
+  let n = 0;
+  try {
+    const d = JSON.parse(decodeURIComponent(payload));
+    if (Array.isArray(d.repartition)) n = d.repartition.reduce((a, b) => a + b, 0);
+  } catch (e) {}
+  const badge = '<span class="cp-chart-n">' + n + " donnée" + (n > 1 ? "s" : "") + "</span>";
   const principal = chartMode === "nuage"
-    ? '<div class="cp-chart-box"><h4>Taux de victoire vs pertes moyennes</h4><canvas id="cp-chart-scatter"></canvas></div>'
-    : '<div class="cp-chart-box"><h4>Taux de victoire</h4><canvas id="cp-chart-bars"></canvas></div>';
+    ? '<div class="cp-chart-box"><h4>Taux de victoire vs pertes moyennes ' + badge + '</h4><canvas id="cp-chart-scatter"></canvas></div>'
+    : '<div class="cp-chart-box"><h4>Taux de victoire ' + badge + '</h4><canvas id="cp-chart-bars"></canvas></div>';
   return '<div class="cp-charts">' +
       principal +
-      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
+      '<div class="cp-chart-box"><h4>Répartition des parties ' + badge + '</h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
     '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>';
 }
@@ -888,8 +895,9 @@ function renderByPartieDim(dim) {
     thSort(dim, "n", "Parties jouées") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
  
+  const totalP = baseRows.reduce((a, r) => a + r.n, 0);
   return '<div class="cp-charts">' +
-      '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
+      '<div class="cp-chart-box"><h4>Répartition des parties <span class="cp-chart-n">' + totalP + " partie" + (totalP > 1 ? "s" : "") + '</span></h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
     '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
     table;
@@ -1008,8 +1016,10 @@ function renderEvolution() {
     labels: versionsPresentes,
     taux: versionsPresentes.map((v) => Math.round((acc[v].v / acc[v].total) * 100)),
   }));
+  const totalEvo = versionsPresentes.reduce((a, v) => a + acc[v].total, 0);
   return '<div class="cp-chart-box cp-chart-full"><h4>Évolution du taux de victoire par version' +
-    (statFiltreFaction ? " — " + esc(statFiltreFaction) : "") + '</h4>' +
+    (statFiltreFaction ? " — " + esc(statFiltreFaction) : "") +
+    ' <span class="cp-chart-n">' + totalEvo + " donnée" + (totalEvo > 1 ? "s" : "") + '</span></h4>' +
     '<canvas id="cp-chart-line"></canvas>' +
     '<div id="cp-line-data" data-payload="' + payload + '" hidden></div></div>';
 }
