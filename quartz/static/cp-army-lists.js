@@ -1,30 +1,21 @@
 // ============================================================
-//  C&P — Listes d'armées (logique Supabase)
-//  Fichier servi tel quel par Quartz (pas de transformation Markdown).
+//  C&P — Listes d'armées
+//  Vues tableau (triable) / repliable + filtres + points + édition + suppression
 //  À placer dans : quartz/static/cp-army-lists.js
-//  Référencé depuis la page via :
-//    <script type="module" src="/static/cp-army-lists.js"></script>
 // ============================================================
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sb } from "/quartz/static/cp-supabase.js";
 
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
-// ⬆️⬆️ ----------------------------- ⬆️⬆️
-
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
- 
 function init() {
   const app = document.getElementById("cp-army-app");
   if (!app) return;
   if (app.dataset.cpInit === "1") return;
   app.dataset.cpInit = "1";
- 
+
   const $ = (id) => document.getElementById(id);
   const msg = $("cp-msg");
   const listsEl = $("cp-lists");
- 
+
   // État local
   let allLists = [];
   let refPeuples = [];         // factions de référence (ref_peuples)
@@ -35,32 +26,32 @@ function init() {
   let sortKey = "created_at";   // "title" | "faction" | "points" | "created_at"
   let sortDir = "desc";         // "asc" | "desc"
   let editingId = null;         // id de la liste en cours d'édition, ou null
- 
+
   function esc(s) {
     return (s || "").replace(/[&<>"']/g, (c) => ({
       "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
     }[c]));
   }
- 
+
   function frDate(iso) {
     return new Date(iso).toLocaleDateString("fr-FR", {
       day: "numeric", month: "short", year: "numeric",
     });
   }
- 
+
   // ---- Récupération ----
   async function loadRefPeuples() {
     const { data } = await sb.from("ref_peuples").select("nom").order("ordre");
     refPeuples = (data || []).map((r) => r.nom);
     fillFactionSelect();
   }
- 
+
   async function loadRefVersions() {
     const { data } = await sb.from("ref_versions").select("nom").order("ordre");
     refVersions = (data || []).map((r) => r.nom);
     fillVersionSelect();
   }
- 
+
   // Remplit le menu de SAISIE de la faction depuis ref_peuples
   function fillFactionSelect() {
     const sel = $("cp-faction");
@@ -70,7 +61,7 @@ function init() {
       refPeuples.map((nom) => '<option value="' + esc(nom) + '">' + esc(nom) + "</option>").join("");
     if ([...sel.options].some((o) => o.value === current)) sel.value = current;
   }
- 
+
   // Remplit le menu de SAISIE de la version depuis ref_versions
   function fillVersionSelect() {
     const sel = $("cp-version");
@@ -80,13 +71,13 @@ function init() {
       refVersions.map((nom) => '<option value="' + esc(nom) + '">' + esc(nom) + "</option>").join("");
     if ([...sel.options].some((o) => o.value === current)) sel.value = current;
   }
- 
+
   async function loadLists() {
     const { data, error } = await sb
       .from("army_lists")
       .select("*")
       .order("created_at", { ascending: false });
- 
+
     if (error) {
       listsEl.innerHTML = '<p class="cp-empty">Erreur de chargement : ' + esc(error.message) + "</p>";
       return;
@@ -95,7 +86,7 @@ function init() {
     rebuildFactionOptions();
     render();
   }
- 
+
   // ---- Suppression ----
   async function deleteList(id, label) {
     if (!confirm('Supprimer la liste « ' + label + ' » ? Cette action est définitive.')) return;
@@ -106,7 +97,7 @@ function init() {
     rebuildFactionOptions();
     render();
   }
- 
+
   // ---- Édition : charger une liste dans le formulaire ----
   function startEdit(id) {
     const l = allLists.find((x) => x.id === id);
@@ -125,7 +116,7 @@ function init() {
     msg.textContent = "";
     app.scrollIntoView({ behavior: "smooth", block: "start" });
   }
- 
+
   function cancelEdit() {
     editingId = null;
     $("cp-author").value = "";
@@ -138,7 +129,7 @@ function init() {
     $("cp-cancel-edit").style.display = "none";
     $("cp-form-mode").textContent = "";
   }
- 
+
   // ---- Filtres ----
   function rebuildFactionOptions() {
     const sel = $("cp-filter-faction");
@@ -150,7 +141,7 @@ function init() {
       factions.map((f) => '<option value="' + esc(f) + '">' + esc(f) + "</option>").join("");
     sel.value = factions.includes(current) ? current : "";
   }
- 
+
   function filtered() {
     const term = searchTerm.toLowerCase();
     let rows = allLists.filter((l) => {
@@ -173,7 +164,7 @@ function init() {
     });
     return rows;
   }
- 
+
   // ---- Rendu ----
   function render() {
     const rows = filtered();
@@ -190,7 +181,7 @@ function init() {
     if (view === "collapse") bindToggles();
     forceRepaint(app);
   }
- 
+
   // Force le navigateur à repeindre après injection (bug d'affichage post-nav SPA).
   function forceRepaint(el) {
     if (!el) return;
@@ -203,12 +194,12 @@ function init() {
       });
     });
   }
- 
+
   function arrow(key) {
     if (sortKey !== key) return '<span class="cp-sort"> </span>';
     return '<span class="cp-sort">' + (sortDir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
   }
- 
+
   function renderTable(rows) {
     const body = rows.map((l) => {
       const pts = (l.points ?? null) === null ? "—" : l.points;
@@ -237,7 +228,7 @@ function init() {
       "<th></th>" +
       "</tr></thead><tbody>" + body + "</tbody></table>";
   }
- 
+
   function renderCollapse(rows) {
     return rows.map((l) => {
       const fac = l.faction ? " — " + esc(l.faction) : "";
@@ -257,7 +248,7 @@ function init() {
       "</div>";
     }).join("");
   }
- 
+
   function bindActions() {
     listsEl.querySelectorAll(".cp-del").forEach((el) => {
       el.addEventListener("click", (e) => {
@@ -272,7 +263,7 @@ function init() {
       });
     });
   }
- 
+
   function bindSortHeaders() {
     listsEl.querySelectorAll("th[data-sort]").forEach((th) => {
       th.addEventListener("click", () => {
@@ -287,7 +278,7 @@ function init() {
       });
     });
   }
- 
+
   function bindToggles() {
     listsEl.querySelectorAll(".cp-coll-head").forEach((head) => {
       head.addEventListener("click", (e) => {
@@ -307,7 +298,7 @@ function init() {
       });
     });
   }
- 
+
   // En vue tableau : clic sur une ligne déplie le détail
   listsEl.addEventListener("click", (e) => {
     if (view !== "table") return;
@@ -321,7 +312,7 @@ function init() {
       detail.classList.toggle("open");
     }
   });
- 
+
   // ---- Contrôles (vue + filtres) ----
   $("cp-view-table").addEventListener("click", () => { view = "table"; updateViewButtons(); render(); });
   $("cp-view-collapse").addEventListener("click", () => { view = "collapse"; updateViewButtons(); render(); });
@@ -331,10 +322,10 @@ function init() {
   }
   $("cp-filter-faction").addEventListener("change", (e) => { factionFilter = e.target.value; render(); });
   $("cp-search").addEventListener("input", (e) => { searchTerm = e.target.value.trim(); render(); });
- 
+
   // ---- Annuler l'édition ----
   $("cp-cancel-edit").addEventListener("click", cancelEdit);
- 
+
   // ---- Publication / mise à jour ----
   $("cp-submit").addEventListener("click", async () => {
     const author = $("cp-author").value.trim() || "Anonyme";
@@ -344,7 +335,7 @@ function init() {
     const body = $("cp-body").value.trim();
     const ptsRaw = $("cp-points").value.trim();
     const points = ptsRaw === "" ? null : parseInt(ptsRaw, 10);
- 
+
     msg.className = "cp-msg";
     msg.textContent = "";
     if (!title || !body) {
@@ -357,10 +348,10 @@ function init() {
       msg.textContent = "Le coût en points doit être un nombre positif.";
       return;
     }
- 
+
     const btn = $("cp-submit");
     btn.disabled = true;
- 
+
     let error;
     if (editingId) {
       ({ error } = await sb.from("army_lists")
@@ -370,9 +361,9 @@ function init() {
       ({ error } = await sb.from("army_lists")
         .insert({ author, faction, version, title, body, points }));
     }
- 
+
     btn.disabled = false;
- 
+
     if (error) {
       msg.className = "cp-msg err";
       msg.textContent = (editingId ? "Échec de la mise à jour : " : "Échec de publication : ") + error.message;
@@ -383,13 +374,13 @@ function init() {
     cancelEdit();
     loadLists();
   });
- 
+
   updateViewButtons();
   loadRefPeuples();
   loadRefVersions();
   loadLists();
 }
- 
+
 // ---- Démarrage robuste ----
 // À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
 // pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
