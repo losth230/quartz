@@ -1,19 +1,12 @@
 // ============================================================
 //  C&P — Suivi des signalements (page de visualisation)
 //  À placer dans : quartz/static/cp-bug-tracker.js
-//  Affiche tous les signalements, vues tableau / repliable,
-//  filtres, et changement d'état (poste / en_cours / traite / refuse).
+//  Vues tableau / repliable, filtres, changement d'état,
+//  édition en ligne (auteur + description), fonds pastel par statut.
 // ============================================================
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sb } from "/quartz/static/cp-supabase.js";
 
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
-// ⬆️⬆️ ----------------------------- ⬆️⬆️
-
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
- 
 // Libellés + classes des états (la classe sert au badge, au select ET au fond de ligne)
 const STATUS = {
   poste:    { label: "Posté",      cls: "st-poste" },
@@ -22,7 +15,7 @@ const STATUS = {
   refuse:   { label: "Refusé",     cls: "st-refuse" },
 };
 const STATUS_KEYS = ["poste", "en_cours", "traite", "refuse"];
- 
+
 const TYPE = {
   bug:         { label: "Bug",          cls: "ty-bug" },
   equilibrage: { label: "Équilibrage",  cls: "ty-equilibrage" },
@@ -31,8 +24,8 @@ const TYPE = {
   autre:       { label: "Autre",        cls: "ty-autre" },
 };
 function typeInfo(t) { return TYPE[t] || { label: t || "—", cls: "" }; }
- 
- 
+
+
 // État global au module (survit aux nav, réinitialisé à chaque setup)
 let all = [];
 let view = "table";
@@ -43,10 +36,10 @@ let sortKey = "created_at";
 let sortDir = "desc";
 let editingId = null;
 let wired = false;   // les écouteurs délégués sur document ne sont posés qu'une fois
- 
+
 function getApp() { return document.getElementById("cp-bug-app"); }
 function getList() { return document.getElementById("cp-bug-list"); }
- 
+
 function esc(s) {
   return (s || "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -58,7 +51,7 @@ function frDate(iso) {
   });
 }
 function statusInfo(s) { return STATUS[s] || { label: s, cls: "" }; }
- 
+
 async function load() {
   const listsEl = getList();
   if (!listsEl) return;
@@ -73,7 +66,7 @@ async function load() {
   all = data || [];
   render();
 }
- 
+
 async function changeStatus(id, newStatus) {
   const { data, error } = await sb
     .from("bug_reports").update({ status: newStatus }).eq("id", id).select();
@@ -83,7 +76,7 @@ async function changeStatus(id, newStatus) {
   if (row) row.status = newStatus;
   render();
 }
- 
+
 async function saveEdit(id) {
   const authorEl = document.getElementById("cp-edit-author-" + id);
   const descEl = document.getElementById("cp-edit-desc-" + id);
@@ -99,7 +92,7 @@ async function saveEdit(id) {
   editingId = null;
   render();
 }
- 
+
 function filtered() {
   const term = searchTerm.toLowerCase();
   let rows = all.filter((r) => {
@@ -121,14 +114,14 @@ function filtered() {
   });
   return rows;
 }
- 
+
 function statusSelect(r) {
   const opts = STATUS_KEYS.map((k) =>
     '<option value="' + k + '"' + (k === r.status ? " selected" : "") + ">" + STATUS[k].label + "</option>"
   ).join("");
   return '<select class="cp-status-sel ' + statusInfo(r.status).cls + '" data-id="' + r.id + '">' + opts + "</select>";
 }
- 
+
 function editPanel(r) {
   return '<div class="cp-edit-panel">' +
     '<label>Auteur</label>' +
@@ -141,17 +134,17 @@ function editPanel(r) {
     '</div>' +
   '</div>';
 }
- 
+
 function arrow(key) {
   if (sortKey !== key) return '<span class="cp-sort"> </span>';
   return '<span class="cp-sort">' + (sortDir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
 }
- 
+
 function pageLink(r) {
   if (!r.page_url) return esc(r.page_title || "—");
   return '<a href="' + esc(r.page_url) + '" title="' + esc(r.page_url) + '">' + esc(r.page_title || r.page_url) + "</a>";
 }
- 
+
 function renderTable(rows) {
   const body = rows.map((r) => {
     const cls = statusInfo(r.status).cls;
@@ -179,7 +172,7 @@ function renderTable(rows) {
     "<th></th>" +
     "</tr></thead><tbody>" + body + "</tbody></table>";
 }
- 
+
 function renderCollapse(rows) {
   return rows.map((r) => {
     const si = statusInfo(r.status);
@@ -204,7 +197,7 @@ function renderCollapse(rows) {
     "</div>";
   }).join("");
 }
- 
+
 function render() {
   const listsEl = getList();
   if (!listsEl) return;
@@ -223,7 +216,7 @@ function render() {
   if (bc) bc.classList.toggle("active", view === "collapse");
   forceRepaint(getApp());
 }
- 
+
 // Force le navigateur à repeindre la zone après injection de contenu
 // (corrige un bug d'affichage post-navigation SPA Quartz).
 function forceRepaint(el) {
@@ -237,18 +230,18 @@ function forceRepaint(el) {
     });
   });
 }
- 
+
 // ---- Câblage unique par DÉLÉGATION sur document ----
 // Posé une seule fois pour toute la session ; survit aux navigations SPA
 // car document n'est jamais remplacé. On filtre par cible à l'exécution.
 function wireOnce() {
   if (wired) return;
   wired = true;
- 
+
   // Clics
   document.addEventListener("click", (e) => {
     if (!getApp()) return; // pas sur la page Signalements
- 
+
     const editBtn = e.target.closest(".cp-edit");
     if (editBtn && getApp().contains(editBtn)) {
       e.stopPropagation();
@@ -258,12 +251,12 @@ function wireOnce() {
     }
     const saveBtn = e.target.closest(".cp-edit-save");
     if (saveBtn && getApp().contains(saveBtn)) { e.stopPropagation(); saveEdit(saveBtn.dataset.id); return; }
- 
+
     const cancelBtn = e.target.closest(".cp-edit-cancel");
     if (cancelBtn && getApp().contains(cancelBtn)) { e.stopPropagation(); editingId = null; render(); return; }
- 
+
     if (e.target.closest(".cp-edit-panel")) { e.stopPropagation(); return; }
- 
+
     // En-têtes de tri
     const th = e.target.closest("th[data-sort]");
     if (th && getApp().contains(th)) {
@@ -273,13 +266,13 @@ function wireOnce() {
       render();
       return;
     }
- 
+
     // Boutons de vue
     const vt = e.target.closest("#cp-bug-view-table");
     if (vt) { view = "table"; render(); return; }
     const vc = e.target.closest("#cp-bug-view-collapse");
     if (vc) { view = "collapse"; render(); return; }
- 
+
     // Têtes repliables (vue collapse)
     const head = e.target.closest(".cp-coll-head");
     if (head && getApp().contains(head)) {
@@ -290,7 +283,7 @@ function wireOnce() {
       else { body.setAttribute("hidden", ""); head.setAttribute("aria-expanded", "false"); arrowEl.textContent = "\u25B8"; }
       return;
     }
- 
+
     // Clic sur une ligne de tableau -> déplie le détail
     if (view === "table") {
       if (e.target.closest(".cp-status-sel") || e.target.closest("a")) return;
@@ -301,7 +294,7 @@ function wireOnce() {
       }
     }
   });
- 
+
   // Changements (menus état + filtre + recherche)
   document.addEventListener("change", (e) => {
     if (!getApp()) return;
@@ -315,7 +308,7 @@ function wireOnce() {
     if (e.target.id === "cp-bug-search") { searchTerm = e.target.value.trim(); render(); }
   });
 }
- 
+
 // ---- Setup appelé à chaque affichage de page ----
 function setup() {
   if (!getApp()) return;          // pas la page Signalements
@@ -324,7 +317,7 @@ function setup() {
   editingId = null;
   load();                          // recharge et rend
 }
- 
+
 // ---- Démarrage robuste ----
 // À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
 // pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
@@ -348,4 +341,3 @@ if (document.readyState !== "loading") {
 }
 document.addEventListener("nav", bootstrap);   // relance la détection à chaque navigation
 window.addEventListener("pageshow", bootstrap);
- 
