@@ -1081,6 +1081,7 @@ function chartTextColor() {
 // Appelée après chaque rendu de l'onglet stats.
 // Plugin : affiche le compte au bout de chaque barre horizontale.
 // Plugin : affiche le compte au bout de chaque barre horizontale.
+// Plugin : affiche le compte au centre de chaque barre horizontale.
 function barCountPlugin(counts) {
   return {
     id: "barCount",
@@ -1091,30 +1092,22 @@ function barCountPlugin(counts) {
       ctx.save();
       ctx.font = "600 11px Georgia, serif";
       ctx.textBaseline = "middle";
+      ctx.textAlign = "center"; // Le texte est centré par défaut
       
       meta.data.forEach((bar, i) => {
         const n = counts[i];
         if (n == null) return;
         
         const txt = String(n);
-        const barWidth = bar.x - bar.base;
         
-        // 1. On définit les styles (blanc avec contour/ombre sombre)
+        // Calcul de la position X au centre exact de la barre
+        const posX = (bar.base + bar.x) / 2;
+        
         ctx.fillStyle = "#ffffff";
         ctx.strokeStyle = "rgba(0,0,0,0.35)";
         ctx.lineWidth = 3;
         
-        // 2. On détermine la position X et l'alignement
-        let posX;
-        if (barWidth > 34) {
-          ctx.textAlign = "right";
-          posX = bar.x - 6;
-        } else {
-          ctx.textAlign = "left";
-          posX = bar.x + 6;
-        }
-        
-        // 3. On dessine d'abord le contour (l'ombre), puis le texte par-dessus
+        // Dessin de l'ombre puis du texte
         ctx.strokeText(txt, posX, bar.y);
         ctx.fillText(txt, posX, bar.y);
       });
