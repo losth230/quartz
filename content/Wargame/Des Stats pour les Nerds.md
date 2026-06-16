@@ -108,6 +108,19 @@
     .cp-recap-num { font-size: 1.6em; font-weight: bold; color: var(--secondary); line-height: 1; }
     .cp-recap-lbl { font-size: 0.78em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--gray); margin-top: 0.2em; }
 
+    /* Encart de fiabilité statistique */
+    .cp-fiab {
+      border-left: 4px solid var(--tertiary); background: var(--lightgray);
+      border-radius: 0 4px 4px 0; padding: 0.8em 1em; margin-bottom: 1.2em;
+    }
+    .cp-fiab p { margin: 0 0 0.5em; font-size: 0.92em; line-height: 1.5; }
+    .cp-fiab p:last-child { margin-bottom: 0; }
+    .cp-fiab-proj { color: var(--secondary); }
+    .cp-fiab-alerte {
+      border-left-color: #b5824a;
+      background: color-mix(in srgb, #b5824a 10%, var(--lightgray));
+    }
+
     .cp-c-eff { font-variant-numeric: tabular-nums; }
 
     /* Graphiques */
