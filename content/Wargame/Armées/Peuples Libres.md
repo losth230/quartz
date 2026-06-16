@@ -204,7 +204,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Oriflamme : Jeanne peut posséder une grande bannière. L’[[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de cette grande bannière est augmentée de 3’’.
 ##### Règles spéciales :
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de pureté : les modèles adverses à 1’’ ou moins bénéficie d’un malus de -1 sur leurs jets d’attaque en mêlée.
-- Bouter l’ennemi (2) : à utiliser en début de tour, une seule fois par partie. Pour le reste du tour, les modèles Paysan à 8’’ ou moins bénéficie de +1d6 en mêlée et à distance, et peuvent immédiatement effectuer une action courte.
+- Bouter l’ennemi (2) : à utiliser en début de tour, une seule fois par partie. Pour le reste du tour, les modèles Paysan bénéficie de +1d6 en mêlée et à distance, et peuvent immédiatement effectuer une action courte.
 ---
 
 <div class="legendary">
@@ -431,7 +431,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Paysan | **5** | **5+** | **5+** | **6+** | **6** | **1** | **2** | **1** | Paysan |
-| **Mêlée:** | 2&d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
