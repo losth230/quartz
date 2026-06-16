@@ -5,14 +5,8 @@
 //  Architecture par délégation sur document (robuste navigation SPA).
 // ============================================================
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sb } from "/quartz/static/cp-supabase.js";
 import Chart from "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/auto/+esm";
-
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
-
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // État module (survit aux nav)
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [];
