@@ -136,6 +136,11 @@
       margin: 0 0 0.6em; font-variant: small-caps; letter-spacing: 0.04em;
       color: var(--secondary); font-size: 0.9em;
     }
+    .cp-chart-n {
+      font-variant: normal; font-size: 0.82em; font-weight: normal; letter-spacing: 0;
+      color: var(--gray); background: var(--light); border: 1px solid var(--gray);
+      border-radius: 999px; padding: 0.05em 0.5em; margin-left: 0.4em; white-space: nowrap;
+    }
     .cp-chart-box canvas { max-height: 280px; }
     .cp-chart-full { margin: 1.4em 0; }
     .cp-chart-full canvas { max-height: 240px; }
