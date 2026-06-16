@@ -13,12 +13,12 @@ const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
 
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
+ 
 // État module (survit aux nav)
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [];
 let parties = [], participations = [];
 let armyLists = [];          // listes d'armées disponibles (army_lists)
-
+ 
 // ============================================================
 //  Détection d'archétype de liste par mots-clés (APPROXIMATIF)
 //  Édite ce dictionnaire pour ajouter/affiner les archétypes.
@@ -37,11 +37,11 @@ const ARCHETYPES = {
 // Poids : une occurrence dans le titre vaut TITLE_WEIGHT, dans le corps BODY_WEIGHT
 const TITLE_WEIGHT = 5;
 const BODY_WEIGHT = 1;
-
+ 
 function normTxt(s) {
   return (s || "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
-
+ 
 // Détermine l'archétype d'une liste (objet army_lists) par score pondéré.
 function detectArchetype(list) {
   if (!list) return "Non catégorisé";
@@ -88,10 +88,10 @@ let histSearch = "";
 let histSort = { key: "date", dir: "desc" };
 let nbJoueurs = 2;           // nombre de lignes de participants dans le formulaire
 let wired = false;
-
+ 
 function getApp() { return document.getElementById("cp-stats-app"); }
 function $(id) { return document.getElementById(id); }
-
+ 
 function esc(s) {
   return (s || "").replace(/[&<>"']/g, (c) => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -101,7 +101,7 @@ function frDate(iso) {
   return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
 }
 function pct(n, d) { return d === 0 ? "—" : Math.round((n / d) * 100) + " %"; }
-
+ 
 async function loadAll() {
   const [rp, rs, rd, pa, pp, al, rv] = await Promise.all([
     sb.from("ref_peuples").select("*").order("ordre"),
@@ -121,7 +121,7 @@ async function loadAll() {
   refVersions = rv.data || [];
   render();
 }
-
+ 
 // ---------- Rendu général ----------
 function render() {
   const app = getApp();
@@ -138,7 +138,7 @@ function render() {
   else { main.innerHTML = renderStats(); drawCharts(); }
   forceRepaint(app);
 }
-
+ 
 // Force le navigateur à repeindre la zone après injection de contenu.
 // Corrige un bug d'affichage où, après une navigation SPA Quartz, le DOM
 // est à jour mais l'écran n'est pas rafraîchi tant qu'aucun événement
@@ -156,7 +156,7 @@ function forceRepaint(el) {
     });
   });
 }
-
+ 
 // ---------- Onglet Saisie ----------
 function optionsFrom(list) {
   return '<option value="">—</option>' +
@@ -168,7 +168,7 @@ function resultatOptions() {
     '<option value="defaite">Défaite</option>' +
     '<option value="egalite">Égalité</option>';
 }
-
+ 
 function participantRow(i) {
   return '<div class="cp-part-row" data-idx="' + i + '">' +
     '<span class="cp-part-num">J' + (i + 1) + '</span>' +
@@ -181,13 +181,13 @@ function participantRow(i) {
     (i >= 2 ? '<button class="cp-part-del" title="Retirer">\u2715</button>' : "") +
   "</div>";
 }
-
+ 
 // Normalisation tolérante pour comparer un peuple (ref) et une faction (texte libre)
 function normFaction(s) {
   return (s || "").toString().trim().toLowerCase()
     .normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // retire les accents
 }
-
+ 
 // Remplit le menu des listes d'une ligne, filtré par le peuple choisi.
 // Repli : si aucune liste ne correspond au peuple, on montre toutes les listes.
 function fillListeMenu(row) {
@@ -199,7 +199,7 @@ function fillListeMenu(row) {
   let note = "";
   if (peuple && matching.length === 0) { matching = armyLists; note = " (toutes — aucune ne correspond au peuple)"; }
   if (!peuple) matching = armyLists;
-
+ 
   const current = sel.value;
   sel.innerHTML = '<option value="">— archétype libre —</option>' +
     matching.map((l) => {
@@ -213,7 +213,7 @@ function fillListeMenu(row) {
   const hint = row.querySelector(".cp-liste-note");
   if (hint) hint.textContent = note;
 }
-
+ 
 function renderSaisie() {
   // En édition, on génère autant de lignes que de participants existants
   const nb = editData ? editData.participations.length : nbJoueurs;
@@ -238,7 +238,7 @@ function renderSaisie() {
     '<div class="cp-msg" id="cp-save-msg"></div>' +
   "</div>";
 }
-
+ 
 // Applique les valeurs de editData dans le formulaire (après rendu)
 function applyEditData() {
   if (!editData) return;
@@ -247,7 +247,7 @@ function applyEditData() {
   if ($("cp-f-scenario")) $("cp-f-scenario").value = pa.scenario || "";
   if ($("cp-f-deploiement")) $("cp-f-deploiement").value = pa.deploiement || "";
   if ($("cp-f-saisipar")) $("cp-f-saisipar").value = pa.saisi_par || "";
-
+ 
   const rows = [...document.querySelectorAll(".cp-part-row")];
   editData.participations.forEach((p, i) => {
     const row = rows[i];
@@ -267,16 +267,16 @@ function applyEditData() {
     row.querySelector(".cp-p-resultat").value = p.resultat || "";
   });
 }
-
+ 
 async function savePartie() {
   const msg = $("cp-save-msg");
   msg.className = "cp-msg"; msg.textContent = "";
-
+ 
   const version = $("cp-f-version").value.trim() || null;
   const scenario = $("cp-f-scenario").value || null;
   const deploiement = $("cp-f-deploiement").value || null;
   const saisi_par = $("cp-f-saisipar").value.trim() || "Anonyme";
-
+ 
   // collecte des participants
   const rows = [...document.querySelectorAll(".cp-part-row")];
   const parts = [];
@@ -306,10 +306,10 @@ async function savePartie() {
     msg.textContent = "Une partie nécessite au moins 2 participants.";
     return;
   }
-
+ 
   const btn = $("cp-save-partie");
   btn.disabled = true;
-
+ 
   let partieId;
   if (editingPartieId) {
     // --- MODE ÉDITION ---
@@ -346,7 +346,7 @@ async function savePartie() {
     }
     partieId = pData[0].id;
   }
-
+ 
   // insertion des participations (commun aux deux modes)
   const rowsToInsert = parts.map((p) => ({ ...p, partie_id: partieId }));
   const { error: ppErr } = await sb.from("participations").insert(rowsToInsert);
@@ -356,7 +356,7 @@ async function savePartie() {
     msg.textContent = "Échec (participations) : " + ppErr.message;
     return;
   }
-
+ 
   btn.disabled = false;
   const etaitEdition = !!editingPartieId;
   editingPartieId = null;
@@ -366,7 +366,7 @@ async function savePartie() {
   if (etaitEdition) { tab = "historique"; render(); }   // retour à l'historique après édition
   else { tab = "saisie"; render(); }                     // reste en saisie après création
 }
-
+ 
 // ---------- Onglet Historique ----------
 function partParts(partieId) {
   return participations.filter((p) => p.partie_id === partieId);
@@ -375,7 +375,7 @@ function renderHistorique() {
   if (!parties.length) return '<p class="cp-empty">Aucune partie enregistrée pour l\'instant.</p>';
   const listById = {};
   armyLists.forEach((l) => { listById[l.id] = l; });
-
+ 
   // Valeurs pour les menus de filtre
   const versions = [...new Set(parties.map((p) => p.version).filter(Boolean))].sort();
   const scenarios = [...new Set(parties.map((p) => p.scenario).filter(Boolean))].sort();
@@ -383,7 +383,7 @@ function renderHistorique() {
   const factions = [...new Set(participations.map((p) => p.peuple).filter(Boolean))].sort();
   const opt = (list, current) => '<option value="">— tous —</option>' +
     list.map((v) => '<option value="' + esc(v) + '"' + (v === current ? " selected" : "") + ">" + esc(v) + "</option>").join("");
-
+ 
   const filtres = '<div class="cp-controls">' +
     '<select id="cp-hist-f-version">' + ('<option value="">Toutes versions</option>' +
       versions.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreVersion ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
@@ -395,7 +395,7 @@ function renderHistorique() {
       factions.map((v) => '<option value="' + esc(v) + '"' + (v === histFiltreFaction ? " selected" : "") + ">" + esc(v) + "</option>").join("")) + "</select>" +
     '<input class="cp-search" id="cp-hist-search" type="text" placeholder="Rechercher..." value="' + esc(histSearch) + '" />' +
     "</div>";
-
+ 
   // Construction des lignes-objets (avec champs triables + texte pour recherche)
   const term = histSearch.trim().toLowerCase();
   let baseRows = parties.map((pa) => {
@@ -422,7 +422,7 @@ function renderHistorique() {
       _search: (pa.scenario + " " + (pa.version || "") + " " + oppositionTxt).toLowerCase(),
     };
   });
-
+ 
   // Filtres
   baseRows = baseRows.filter((r) => {
     if (histFiltreVersion && r.version !== histFiltreVersion) return false;
@@ -432,11 +432,11 @@ function renderHistorique() {
     if (term && !r._search.includes(term)) return false;
     return true;
   });
-
+ 
   if (!baseRows.length) {
     return filtres + '<p class="cp-empty">Aucune partie ne correspond à ces critères.</p>';
   }
-
+ 
   // Tri
   const rows = sortRows(baseRows, histSort.key, histSort.dir).map((r) =>
     '<tr data-partie="' + r.id + '">' +
@@ -450,7 +450,7 @@ function renderHistorique() {
       "</td>" +
     "</tr>"
   ).join("");
-
+ 
   const head = '<thead><tr>' +
     histTh("scenario", "Scénario") +
     histTh("version", "Version") +
@@ -458,11 +458,11 @@ function renderHistorique() {
     histTh("date", "Date") +
     "<th></th>" +
     "</tr></thead>";
-
+ 
   return filtres +
     '<table class="cp-table">' + head + "<tbody>" + rows + "</tbody></table>";
 }
-
+ 
 // En-tête triable pour l'historique
 function histTh(key, label) {
   const ar = histSort.key === key
@@ -470,7 +470,7 @@ function histTh(key, label) {
     : '<span class="cp-sort"> </span>';
   return '<th data-histsort="' + key + '">' + label + ar + "</th>";
 }
-
+ 
 function startEditPartie(id) {
   const pa = parties.find((x) => x.id === id);
   if (!pa) return;
@@ -482,14 +482,14 @@ function startEditPartie(id) {
   const app = getApp();
   if (app) app.scrollIntoView({ behavior: "smooth", block: "start" });
 }
-
+ 
 function cancelEditPartie() {
   editingPartieId = null;
   editData = null;
   nbJoueurs = 2;
   render();
 }
-
+ 
 async function deletePartie(id) {
   if (!confirm("Supprimer cette partie et ses résultats ? Action définitive.")) return;
   const { error } = await sb.from("parties").delete().eq("id", id);
@@ -497,7 +497,7 @@ async function deletePartie(id) {
   await loadAll();
   tab = "historique"; render();
 }
-
+ 
 // Trie un tableau d'objets selon une clé et un sens. Gère nombres et chaînes.
 function sortRows(rows, key, dir) {
   const sorted = [...rows].sort((a, b) => {
@@ -514,26 +514,43 @@ function sortRows(rows, key, dir) {
   });
   return sorted;
 }
-
+ 
 // Flèche de tri pour un en-tête, selon l'état de tri de la dimension courante
 function sortArrow(dim, key) {
   const s = statSort[dim];
   if (!s || s.key !== key) return '<span class="cp-sort"> </span>';
   return '<span class="cp-sort">' + (s.dir === "asc" ? "\u25B4" : "\u25BE") + "</span>";
 }
-
+ 
 // Construit un <th> triable
 function thSort(dim, key, label) {
   return '<th data-statsort="' + dim + ":" + key + '">' + label + sortArrow(dim, key) + "</th>";
 }
-
+ 
+// ============================================================
+//  Fiabilité statistique (formule de Cochran pour une proportion)
+//  Paramètres affichés et ajustables — base de la problématique PFE.
+//  n0 = Z² · p(1−p) / e²   (p = 0,5 = cas le plus conservateur)
+// ============================================================
+const STAT_CONFIANCE = 0.95;   // niveau de confiance visé
+const STAT_MARGE = 0.10;       // marge d'erreur visée (±10 %)
+const Z_PAR_CONFIANCE = { 0.90: 1.645, 0.95: 1.96, 0.99: 2.576 };
+ 
+// Taille d'échantillon nécessaire pour estimer une proportion
+// avec la marge et la confiance données (p=0,5, cas conservateur).
+function tailleEchantillonRequise(confiance = STAT_CONFIANCE, marge = STAT_MARGE) {
+  const z = Z_PAR_CONFIANCE[confiance] || 1.96;
+  const p = 0.5;
+  return Math.ceil((z * z * p * (1 - p)) / (marge * marge));
+}
+ 
 // ---------- Onglet Stats ----------
 // Détruit les graphiques Chart.js existants avant un nouveau rendu
 function destroyCharts() {
   chartInstances.forEach((c) => { try { c.destroy(); } catch (e) {} });
   chartInstances = [];
 }
-
+ 
 // Renvoie les participations filtrées selon les filtres stats actifs.
 // Le filtre version porte sur la partie ; joueur et faction sur la participation.
 function statParticipations() {
@@ -552,24 +569,24 @@ function statParticipations() {
 function statParties() {
   return parties.filter((pa) => !statFiltreVersion || pa.version === statFiltreVersion);
 }
-
+ 
 function renderStats() {
   if (!participations.length) return '<p class="cp-empty">Pas encore de données. Enregistre des parties pour voir les statistiques.</p>';
-
+ 
   // Listes de valeurs pour les menus de filtre
   const joueurs = [...new Set(participations.map((p) => p.joueur).filter(Boolean))].sort();
   const versions = [...new Set(parties.map((p) => p.version).filter(Boolean))].sort();
   const factions = [...new Set(participations.map((p) => p.peuple).filter(Boolean))].sort();
-
+ 
   const opt = (list, current) => '<option value="">— tous —</option>' +
     list.map((v) => '<option value="' + esc(v) + '"' + (v === current ? " selected" : "") + ">" + esc(v) + "</option>").join("");
-
+ 
   const filtres = '<div class="cp-stat-filtres">' +
     '<div><label>Version</label><select id="cp-stat-f-version">' + opt(versions, statFiltreVersion) + "</select></div>" +
     '<div><label>Joueur</label><select id="cp-stat-f-joueur">' + opt(joueurs, statFiltreJoueur) + "</select></div>" +
     '<div><label>Faction</label><select id="cp-stat-f-faction">' + opt(factions, statFiltreFaction) + "</select></div>" +
     "</div>";
-
+ 
   // Récap en tête : nombre de parties correspondant aux filtres actifs
   const partiesFiltrees = statParties().filter((pa) => {
     if (!statFiltreJoueur && !statFiltreFaction) return true;
@@ -579,12 +596,55 @@ function renderStats() {
     return true;
   });
   const filtresActifs = statFiltreVersion || statFiltreJoueur || statFiltreFaction;
+ 
+  // --- Analyse de fiabilité statistique ---
+  const seuil = tailleEchantillonRequise(); // parties nécessaires par catégorie
+  // nombre de participations par faction (= taille d'échantillon par faction)
+  const parFaction = {};
+  statParticipations().forEach((p) => {
+    if (!p.peuple) return;
+    parFaction[p.peuple] = (parFaction[p.peuple] || 0) + 1;
+  });
+  const factionsAvecData = Object.keys(parFaction).length;
+  const factionsFiables = Object.values(parFaction).filter((n) => n >= seuil).length;
+  const maxFaction = Object.values(parFaction).reduce((a, b) => Math.max(a, b), 0);
+ 
+  // Encart de synthèse : constat global honnête sur la fiabilité
+  const confPct = Math.round(STAT_CONFIANCE * 100);
+  const margePct = Math.round(STAT_MARGE * 100);
+  let constat;
+  if (!partiesFiltrees.length) {
+    constat = "Aucune donnée à analyser.";
+  } else if (factionsFiables === 0) {
+    constat = "À ce stade, <strong>aucune faction</strong> n'atteint le volume nécessaire pour des conclusions statistiquement fiables. " +
+      "Les taux affichés ci-dessous sont <strong>indicatifs</strong> et peuvent varier fortement avec quelques parties supplémentaires.";
+  } else {
+    constat = "<strong>" + factionsFiables + "</strong> faction(s) sur " + factionsAvecData +
+      " atteignent le seuil de fiabilité. Les autres restent indicatives.";
+  }
+  // Projection : combien de parties pour conclure
+  const manquePlusJoue = Math.max(0, seuil - maxFaction);
+  const projection = partiesFiltrees.length
+    ? "Pour estimer un taux de victoire à <strong>±" + margePct + " %</strong> près avec un niveau de confiance de <strong>" +
+      confPct + " %</strong>, il faut environ <strong>" + seuil + " parties par faction</strong> (formule de Cochran, p = 0,5). " +
+      "La faction la plus jouée en compte actuellement <strong>" + maxFaction + "</strong>" +
+      (manquePlusJoue > 0 ? " — il en manque encore ~<strong>" + manquePlusJoue + "</strong>." : ".")
+    : "";
+ 
   const recap = '<div class="cp-recap">' +
     '<div class="cp-recap-item"><span class="cp-recap-num">' + partiesFiltrees.length + "</span>" +
     '<span class="cp-recap-lbl">partie' + (partiesFiltrees.length > 1 ? "s" : "") +
     (filtresActifs ? " (filtrées)" : "") + "</span></div>" +
+    '<div class="cp-recap-item"><span class="cp-recap-num">' + seuil + "</span>" +
+    '<span class="cp-recap-lbl">seuil de fiabilité</span></div>' +
+    '<div class="cp-recap-item"><span class="cp-recap-num">' + factionsFiables + " / " + factionsAvecData + "</span>" +
+    '<span class="cp-recap-lbl">factions fiables</span></div>' +
+    "</div>" +
+    '<div class="cp-fiab' + (factionsFiables === 0 ? " cp-fiab-alerte" : "") + '">' +
+      "<p>" + constat + "</p>" +
+      (projection ? "<p class=\"cp-fiab-proj\">" + projection + "</p>" : "") +
     "</div>";
-
+ 
   const dims = [
     ["peuple", "Par peuple"],
     ["joueur", "Par joueur"],
@@ -596,16 +656,16 @@ function renderStats() {
   const switcher = '<div class="cp-statswitch">' +
     dims.map(([k, lbl]) => '<button class="cp-statbtn' + (statMode === k ? " active" : "") +
       '" data-stat="' + k + '">' + lbl + "</button>").join("") + "</div>";
-
+ 
   let contenu;
   if (statMode === "matchup") contenu = renderMatchups();
   else if (statMode === "liste") contenu = renderByListe();
   else if (statMode === "scenario" || statMode === "deploiement") contenu = renderByPartieDim(statMode);
   else contenu = renderByParticipantDim(statMode);
-
+ 
   return filtres + recap + switcher + contenu + renderEvolution();
 }
-
+ 
 // Indice d'efficacité (relatif) : gagner en limitant les pertes.
 // Formule simple : taux de victoire (0-1) / pertes moyennes, remis à une échelle lisible.
 // Sert UNIQUEMENT à comparer les lignes entre elles, pas comme valeur absolue.
@@ -613,7 +673,7 @@ function efficacite(rate, pertesMoy) {
   if (pertesMoy == null || pertesMoy <= 0) return null;
   return Math.round((rate / pertesMoy) * 1000) / 10; // une décimale
 }
-
+ 
 // Stats sur une dimension portée par la participation (peuple, joueur)
 function renderByParticipantDim(dim) {
   const data = statParticipations();
@@ -635,7 +695,7 @@ function renderByParticipantDim(dim) {
     return { nom: key, total: m.total, v: m.v, d: m.d, e: m.e, rate, pertes, eff: efficacite(rate, pertes) };
   });
   if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
-
+ 
   // Graphiques : ordre fixe par taux de victoire décroissant (indépendant du tri du tableau)
   const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
   const labels = chartRows.map((r) => r.nom);
@@ -647,7 +707,7 @@ function renderByParticipantDim(dim) {
   if (dim === "peuple") colors = colorsForLabels(labels);
   else colors = colorsByFaction(labels, (j) => factionDominanteJoueur(j));
   const payload = encodeURIComponent(JSON.stringify({ labels, taux, repartition, colors, scatter, dimLabel: dim === "peuple" ? "peuple" : "joueur", isPeuple: dim === "peuple" }));
-
+ 
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
   const rows = sortRows(baseRows, s.key, s.dir).map((r) => {
@@ -670,10 +730,10 @@ function renderByParticipantDim(dim) {
     thSort(dim, "pertes", "Pertes moy.") +
     thSort(dim, "eff", "Efficacité") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
-
+ 
   return chartToggle() + chartsBlock(payload) + table;
 }
-
+ 
 // Bouton de bascule du graphique principal (taux de victoire / nuage taux vs pertes)
 function chartToggle() {
   return '<div class="cp-substat">' +
@@ -681,7 +741,7 @@ function chartToggle() {
     '<button class="cp-subbtn' + (chartMode === "nuage" ? " active" : "") + '" data-chartmode="nuage">Nuage taux vs pertes</button>' +
     "</div>";
 }
-
+ 
 // Bloc des deux graphiques (le principal bascule selon chartMode) + camembert
 function chartsBlock(payload) {
   const principal = chartMode === "nuage"
@@ -693,13 +753,13 @@ function chartsBlock(payload) {
     "</div>" +
     '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>';
 }
-
+ 
 // Stats par liste d'armée : deux sous-modes (liste individuelle / archétype détecté)
 function renderByListe() {
   const listById = {};
   armyLists.forEach((l) => { listById[l.id] = l; });
   const data = statParticipations();
-
+ 
   // Clé de regroupement selon le sous-mode
   function groupKey(p) {
     const liste = p.army_list_id ? listById[p.army_list_id] : null;
@@ -714,7 +774,7 @@ function renderByListe() {
     if (p.archetype) return "« " + p.archetype + " » (libre)";
     return "Sans liste";
   }
-
+ 
   const map = {};
   const facCount = {}; // clé de groupe -> { faction: count } pour déterminer la couleur
   data.forEach((p) => {
@@ -729,7 +789,7 @@ function renderByListe() {
     // faction associée à cette participation : peuple du joueur (toujours présent)
     if (p.peuple) facCount[key][p.peuple] = (facCount[key][p.peuple] || 0) + 1;
   });
-
+ 
   // faction dominante d'un groupe (pour la couleur)
   function groupFaction(key) {
     const c = facCount[key] || {};
@@ -737,25 +797,25 @@ function renderByListe() {
     for (const [f, n] of Object.entries(c)) { if (n > bestN) { bestN = n; best = f; } }
     return best;
   }
-
+ 
   const baseRows = Object.entries(map).map(([key, m]) => {
     const rate = m.total ? m.v / m.total : 0;
     const pertes = m.nPertes ? Math.round(m.pertes / m.nPertes) : null;
     return { nom: key, total: m.total, v: m.v, d: m.d, e: m.e, rate, pertes, eff: efficacite(rate, pertes) };
   });
-
+ 
   // Sélecteur de sous-mode
   const sub = '<div class="cp-substat">' +
     '<button class="cp-subbtn' + (listeSubMode === "individuelle" ? " active" : "") + '" data-listsub="individuelle">Par liste</button>' +
     '<button class="cp-subbtn' + (listeSubMode === "archetype" ? " active" : "") + '" data-listsub="archetype">Par archétype détecté</button>' +
     "</div>";
-
+ 
   const note = listeSubMode === "archetype"
     ? '<p class="cp-hint">⚠ Regroupement approximatif par mots-clés (titre pondéré plus fort que le corps). Une liste non reconnue tombe dans « Non catégorisé ».</p>'
     : '<p class="cp-hint">Regroupement exact : chaque liste enregistrée + les archétypes libres.</p>';
-
+ 
   if (!baseRows.length) return sub + note + '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
-
+ 
   // Graphiques (ordre fixe par taux décroissant)
   const chartRows = [...baseRows].sort((a, b) => b.rate - a.rate);
   const labels = chartRows.map((r) => r.nom);
@@ -769,7 +829,7 @@ function renderByListe() {
     scatter,
     isPeuple: false,
   }));
-
+ 
   // Table triable
   const s = statSort.liste;
   const rows = sortRows(baseRows, s.key, s.dir).map((r) =>
@@ -792,10 +852,10 @@ function renderByListe() {
     thSort("liste", "pertes", "Pertes moy.") +
     thSort("liste", "eff", "Efficacité") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
-
+ 
   return sub + note + chartToggle() + chartsBlock(payload) + table;
 }
-
+ 
 // Stats sur une dimension portée par la partie (scenario, deploiement)
 function renderByPartieDim(dim) {
   const data = statParties();
@@ -812,13 +872,13 @@ function renderByPartieDim(dim) {
   });
   const baseRows = Object.entries(map).map(([key, n]) => ({ nom: key, n }));
   if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
-
+ 
   // Graphique : ordre fixe par fréquence décroissante
   const chartRows = [...baseRows].sort((a, b) => b.n - a.n);
   const payload = encodeURIComponent(JSON.stringify({
     labels: chartRows.map((r) => r.nom), repartition: chartRows.map((r) => r.n), onlyPie: true,
   }));
-
+ 
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
   const rows = sortRows(baseRows, s.key, s.dir)
@@ -827,19 +887,19 @@ function renderByPartieDim(dim) {
     thSort(dim, "nom", dim === "scenario" ? "Scénario" : "Déploiement") +
     thSort(dim, "n", "Parties jouées") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
-
+ 
   return '<div class="cp-charts">' +
       '<div class="cp-chart-box"><h4>Répartition des parties</h4><canvas id="cp-chart-pie"></canvas></div>' +
     "</div>" +
     '<div id="cp-chart-data" data-payload="' + payload + '" hidden></div>' +
     table;
 }
-
+ 
 // Matchups : heatmap peuple × peuple + table, sur les duels à 2 joueurs
 function renderMatchups() {
   const paList = statParties();
   const allowed = (statFiltreJoueur || statFiltreFaction) ? new Set(statParticipations().map((p) => p.partie_id)) : null;
-
+ 
   // map "A|B" (trié) -> {first, a, b, e}
   const map = {};
   // ensemble des peuples impliqués (pour la grille)
@@ -860,10 +920,10 @@ function renderMatchups() {
     const winner = x.resultat === "victoire" ? a : b;
     if (winner === m.first) m.a++; else m.b++;
   });
-
+ 
   const entries = Object.entries(map);
   if (!entries.length) return '<p class="cp-empty">Aucun duel (2 joueurs) enregistré pour ces filtres.</p>';
-
+ 
   // ----- Heatmap -----
   const peuples = [...peuplesSet].sort();
   // tauxFor(ligne, colonne) = taux de victoire de "ligne" contre "colonne"
@@ -894,7 +954,7 @@ function renderMatchups() {
     heat += "</tr>";
   });
   heat += "</tbody></table></div>";
-
+ 
   // ----- Table détaillée (triable) -----
   const baseRows = entries.map(([key, m]) => {
     const [a, b] = key.split("|");
@@ -918,11 +978,11 @@ function renderMatchups() {
     thSort("matchup", "score", "Score") +
     thSort("matchup", "rate", "Taux (1er)") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
-
+ 
   return '<p class="cp-hint">Lecture de la heatmap : chaque case = taux de victoire du peuple en ligne contre le peuple en colonne. Vert = favorable, rouge = défavorable. Survole pour le nombre de duels.</p>' +
     heat + table;
 }
-
+ 
 // Évolution temporelle par version (courbe) — graphique transverse affiché en bas
 function renderEvolution() {
   // taux de victoire par version, pour la faction filtrée (ou globalement si aucune)
@@ -953,14 +1013,14 @@ function renderEvolution() {
     '<canvas id="cp-chart-line"></canvas>' +
     '<div id="cp-line-data" data-payload="' + payload + '" hidden></div></div>';
 }
-
-
+ 
+ 
 // Palette pour camemberts (couleurs douces, lisibles en clair/sombre)
 const CHART_COLORS = [
   "#6b8cbe", "#b58a4a", "#7fae6f", "#b56b6b", "#8a6bb5",
   "#5fae9e", "#be9a5f", "#9ebe5f", "#be5f8a", "#6b9ebe",
 ];
-
+ 
 // Couleur d'une faction : d'abord celle définie dans ref_peuples (colonne couleur),
 // sinon repli déterministe sur la palette (pour ne jamais avoir de "trou").
 function factionColor(nom) {
@@ -971,12 +1031,12 @@ function factionColor(nom) {
   for (let i = 0; i < (nom || "").length; i++) h = (h * 31 + nom.charCodeAt(i)) % CHART_COLORS.length;
   return CHART_COLORS[h];
 }
-
+ 
 // Construit un tableau de couleurs aligné sur une liste de labels (factions)
 function colorsForLabels(labels) {
   return labels.map((l) => factionColor(l));
 }
-
+ 
 // Faction la plus jouée par un joueur (sur toutes ses participations).
 // Égalité -> première rencontrée. Aucun -> null.
 function factionDominanteJoueur(joueur) {
@@ -991,7 +1051,7 @@ function factionDominanteJoueur(joueur) {
   }
   return best;
 }
-
+ 
 // Couleurs d'une liste de labels en passant par une fonction label -> faction.
 // Si la faction est introuvable, factionColor fournit un repli stable.
 function colorsByFaction(labels, labelToFaction) {
@@ -1000,13 +1060,13 @@ function colorsByFaction(labels, labelToFaction) {
     return factionColor(fac || l); // si pas de faction, on hashe le label lui-même
   });
 }
-
+ 
 // Lit la couleur de texte courante (pour que les graphiques suivent le thème)
 function chartTextColor() {
   const c = getComputedStyle(document.body).getPropertyValue("--dark").trim();
   return c || "#2b2520";
 }
-
+ 
 // Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
 // Appelée après chaque rendu de l'onglet stats.
 function drawCharts() {
@@ -1018,7 +1078,7 @@ function drawCharts() {
   const txt = chartTextColor();
   Chart.defaults.color = txt;
   Chart.defaults.font.family = "Georgia, serif";
-
+ 
   // Barres + camembert (dimension peuple/joueur)
   const dataEl = document.getElementById("cp-chart-data");
   if (dataEl) {
@@ -1079,7 +1139,7 @@ function drawCharts() {
       }
     }
   }
-
+ 
   // Courbe d'évolution par version
   const lineEl = document.getElementById("cp-line-data");
   if (lineEl) {
@@ -1095,15 +1155,15 @@ function drawCharts() {
     }
   }
 }
-
+ 
 // ---------- Câblage délégué (une fois) ----------
 function wireOnce() {
   if (wired) return;
   wired = true;
-
+ 
   document.addEventListener("click", (e) => {
     if (!getApp()) return;
-
+ 
     // onglets
     const tabBtn = e.target.closest("[data-tab]");
     if (tabBtn && getApp().contains(tabBtn)) {
@@ -1113,19 +1173,19 @@ function wireOnce() {
       }
       tab = tabBtn.dataset.tab; render(); return;
     }
-
+ 
     // switch de stats
     const sb2 = e.target.closest(".cp-statbtn");
     if (sb2 && getApp().contains(sb2)) { statMode = sb2.dataset.stat; render(); return; }
-
+ 
     // sous-mode de la dimension "Par liste"
     const sub = e.target.closest(".cp-subbtn");
     if (sub && getApp().contains(sub) && sub.dataset.listsub) { listeSubMode = sub.dataset.listsub; render(); return; }
-
+ 
     // bascule du graphique principal (taux / nuage)
     const cm = e.target.closest("[data-chartmode]");
     if (cm && getApp().contains(cm)) { chartMode = cm.dataset.chartmode; render(); return; }
-
+ 
     // tri d'un tableau de stats (clic sur en-tête)
     const th = e.target.closest("[data-statsort]");
     if (th && getApp().contains(th)) {
@@ -1136,7 +1196,7 @@ function wireOnce() {
       render();
       return;
     }
-
+ 
     // tri de l'historique (clic sur en-tête)
     const hth = e.target.closest("[data-histsort]");
     if (hth && getApp().contains(hth)) {
@@ -1146,7 +1206,7 @@ function wireOnce() {
       render();
       return;
     }
-
+ 
     // ajouter un participant
     if (e.target.closest("#cp-add-participant")) {
       nbJoueurs++;
@@ -1162,37 +1222,37 @@ function wireOnce() {
       if (row) { row.remove(); nbJoueurs = Math.max(2, document.querySelectorAll(".cp-part-row").length); }
       return;
     }
-
+ 
     // enregistrer / mettre à jour
     if (e.target.closest("#cp-save-partie")) { savePartie(); return; }
-
+ 
     // annuler l'édition
     if (e.target.closest("#cp-cancel-edit")) { cancelEditPartie(); return; }
-
+ 
     // éditer une partie
     const editPa = e.target.closest(".cp-partie-edit");
     if (editPa && getApp().contains(editPa)) { startEditPartie(editPa.dataset.id); return; }
-
+ 
     // supprimer une partie
     const delPa = e.target.closest(".cp-partie-del");
     if (delPa && getApp().contains(delPa)) { deletePartie(delPa.dataset.id); return; }
   });
-
+ 
   // Changements dans les menus de saisie
   document.addEventListener("change", (e) => {
     if (!getApp()) return;
-
+ 
     // filtres de statistiques
     if (e.target.id === "cp-stat-f-version") { statFiltreVersion = e.target.value; render(); return; }
     if (e.target.id === "cp-stat-f-joueur")  { statFiltreJoueur = e.target.value; render(); return; }
     if (e.target.id === "cp-stat-f-faction") { statFiltreFaction = e.target.value; render(); return; }
-
+ 
     // filtres de l'historique
     if (e.target.id === "cp-hist-f-version")  { histFiltreVersion = e.target.value; render(); return; }
     if (e.target.id === "cp-hist-f-scenario") { histFiltreScenario = e.target.value; render(); return; }
     if (e.target.id === "cp-hist-f-joueur")   { histFiltreJoueur = e.target.value; render(); return; }
     if (e.target.id === "cp-hist-f-faction")  { histFiltreFaction = e.target.value; render(); return; }
-
+ 
     // changement de peuple -> recharge le menu des listes de cette ligne
     const pe = e.target.closest(".cp-p-peuple");
     if (pe && getApp().contains(pe)) {
@@ -1200,7 +1260,7 @@ function wireOnce() {
       if (row) fillListeMenu(row);
       return;
     }
-
+ 
     // choix d'une liste -> désactive l'archétype libre (et inversement)
     const li = e.target.closest(".cp-p-liste");
     if (li && getApp().contains(li)) {
@@ -1212,7 +1272,7 @@ function wireOnce() {
       }
       return;
     }
-
+ 
     // pré-remplissage intelligent des résultats
     const res = e.target.closest(".cp-p-resultat");
     if (res && getApp().contains(res)) {
@@ -1228,7 +1288,7 @@ function wireOnce() {
       return;
     }
   });
-
+ 
   // Recherche dans l'historique (input). On re-render puis on restaure le focus
   // et la position du curseur, sinon le champ perdrait le focus à chaque frappe.
   document.addEventListener("input", (e) => {
@@ -1242,19 +1302,19 @@ function wireOnce() {
     }
   });
 }
-
+ 
 // variante d'ajout qui n'efface pas le formulaire existant
 function participantRowKeepFocus(i) {
   return participantRow(i);
 }
-
+ 
 // ---------- Setup ----------
 function setup() {
   if (!getApp()) return;
   wireOnce();
   loadAll();
 }
-
+ 
 // ---- Démarrage robuste ----
 // À CHAQUE navigation (et au chargement), on tente de détecter le conteneur
 // pendant quelques secondes : Quartz peut émettre "nav" avant d'avoir injecté
@@ -1274,3 +1334,4 @@ if (document.readyState !== "loading") bootstrap();
 else document.addEventListener("DOMContentLoaded", bootstrap);
 document.addEventListener("nav", bootstrap);
 window.addEventListener("pageshow", bootstrap);
+ 
