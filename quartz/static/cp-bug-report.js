@@ -1,22 +1,14 @@
 // ============================================================
-//  C&P — Suivi des signalements (page de visualisation)
-//  À placer dans : quartz/static/cp-bug-tracker.js
-//  Affiche tous les signalements, vues tableau / repliable,
-//  filtres, et changement d'état (poste / en_cours / traite / refuse).
+//  C&P — Signalement de bug (bouton flottant global)
+//  À placer dans : quartz/static/cp-bug-report.js
+//  Chargé sur TOUTES les pages (voir instructions d'intégration).
 // ============================================================
 
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { sb } from "/quartz/static/cp-supabase.js";
 
-// ⬇️⬇️ REMPLACE CES DEUX VALEURS ⬇️⬇️
-const SUPABASE_URL = "https://kucgmmefluwmlobujanc.supabase.co";
-const SUPABASE_ANON_KEY = "sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R";
-// ⬆️⬆️ ----------------------------- ⬆️⬆️
+// URL de la page de suivi (adapte si tu la places ailleurs).
+const TRACKER_URL = "/quartz/Wargame/Signalements";
 
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
- 
-// URL de la page de suivi
-const TRACKER_URL = "/quartz/Retours";
- 
 function injectStyles() {
   if (document.getElementById("cp-bug-styles")) return;
   const css = `
@@ -86,14 +78,14 @@ function injectStyles() {
   style.textContent = css;
   document.head.appendChild(style);
 }
- 
+
 function buildUI() {
   const fab = document.createElement("button");
   fab.id = "cp-bug-fab";
   fab.title = "Signaler un problème sur cette page";
   fab.setAttribute("aria-label", "Signaler un problème");
   fab.textContent = "\u2691"; // ⚑
- 
+
   const overlay = document.createElement("div");
   overlay.id = "cp-bug-overlay";
   overlay.innerHTML = `
@@ -121,17 +113,17 @@ function buildUI() {
       <a id="cp-bug-link" href="${TRACKER_URL}">Voir tous les signalements →</a>
     </div>
   `;
- 
+
   document.body.appendChild(fab);
   document.body.appendChild(overlay);
   return { fab, overlay };
 }
- 
+
 function wire(fab, overlay) {
   const $ = (id) => document.getElementById(id);
   const msg = $("cp-bug-msg");
   const pageEl = $("cp-bug-page");
- 
+
   function currentPage() {
     return { url: window.location.href, title: document.title || window.location.pathname };
   }
@@ -144,20 +136,20 @@ function wire(fab, overlay) {
     $("cp-bug-name").focus();
   }
   function close() { overlay.classList.remove("open"); }
- 
+
   fab.addEventListener("click", open);
   $("cp-bug-cancel").addEventListener("click", close);
   overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && overlay.classList.contains("open")) close();
   });
- 
+
   $("cp-bug-send").addEventListener("click", async () => {
     const reporter = $("cp-bug-name").value.trim() || "Anonyme";
     const type = $("cp-bug-type").value;
     const description = $("cp-bug-desc").value.trim();
     const p = currentPage();
- 
+
     msg.className = "cp-bug-msg";
     if (!type) {
       msg.className = "cp-bug-msg err";
@@ -188,7 +180,7 @@ function wire(fab, overlay) {
     setTimeout(close, 1200);
   });
 }
- 
+
 function init() {
   // Le body peut ne pas être prêt si le script s'exécute trop tôt
   // (module dans le <head>). On reporte alors à plus tard.
@@ -201,7 +193,7 @@ function init() {
   const { fab, overlay } = buildUI();
   wire(fab, overlay);
 }
- 
+
 // Trois filets de sécurité pour ne jamais rater le bon moment :
 // 1) si le DOM est déjà prêt, on tente tout de suite ;
 // 2) sinon, au DOMContentLoaded ;
