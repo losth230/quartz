@@ -7,7 +7,7 @@
 Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. Les Peuples Libres n'ont pas de limite maximale de commandants. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
 #### Fer de Lance
 Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. S'ils ont ainsi acheté une monture, ils peuvent également acheter l'équipement de la lance médiéval :  
-- Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.
+- Lance de cavalerie (+1 pts) : cette unité bénéficie de +1d6 en mêlée si elle réussit une charge.
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -21,7 +21,7 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 | Pégase | **7** | **4+** | **-** | **-** | **-** | **+1** | **+1** | **+1** | Bête |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]],[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
@@ -126,7 +126,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 - Nappe de brouillard (1) : une fois par partie, Allie se téléporte sur 6’’ et gagne 2 Egides. Elle est inciblable pour les attaques à distances et sorts pour le reste du tour.
 - Projection (1) : une fois par partie, après un mouvement de course, Allie se téléporte dans le dos d’un modèle ennemi qu’elle peut voir à 6’’ ou moins, cela compte comme une charge.
 ---
-### Baron — 18 pts
+### Baron — 16 pts
 
 | 🟥          | **Vit**         | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | --------------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
@@ -134,18 +134,18 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 | **Mêlée:** | 1d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
 ##### Règles spéciales :
-- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par modèle Chevalier ami en vie.
+- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par unité Chevalier ami en vie.
 ---
 
 ### Comte — 22 pts
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Comte | **5** | **4+** | **-** | **4+** | **8** | **3** | **2** | **2** | Chevalier |
+| Comte | **5** | **4+** | **-** | **4+** | **9** | **3** | **2** | **2** | Chevalier |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Règles spéciales :
-- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par modèle Chevalier ami en vie.
+- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par unité Chevalier ami en vie.
 ---
 
 <div class="legendary">
@@ -296,17 +296,15 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 ##### Règles spéciales :
 - Dualité : Lorsque Luxana lance un sort avec succès, elle déclenche à la fois l’attribut du Domaine de la Pureté et celui du domaine de la Lumière.
 ---
-### Sergent — 16 pts
+### Sergent — 12 pts
 
 | 🟥         | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Sergent    | **5**     | **5+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **3**  | **2**  | **2**  | Paysan   |
-| Cheval     | **7**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Bête     |
-| **Mêlée:** | 3d6 / 2d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
+| Sergent    | **5**     | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Paysan   |
+| **Mêlée:** | 2d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Etendard : le Sergent peut porter une grande bannière, cependant son [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] est réduite de 3’’, et son coût de 3 pts.
+- Etendard : le Sergent peut porter une grande bannière.
 ##### Règles spéciales :
 - Formation défensive : au début de chaque tour, désignez un modèle ami à 9’’ ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 ---
