@@ -1079,7 +1079,7 @@ function chartTextColor() {
 
 // Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
 // Appelée après chaque rendu de l'onglet stats.
-// Plugin : affiche le compte (n=…) au bout de chaque barre horizontale.
+// Plugin : affiche le compte au bout de chaque barre horizontale.
 function barCountPlugin(counts) {
   return {
     id: "barCount",
@@ -1088,13 +1088,14 @@ function barCountPlugin(counts) {
       const meta = chart.getDatasetMeta(0);
       ctx.save();
       ctx.font = "600 11px Georgia, serif";
+      ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       meta.data.forEach((bar, i) => {
         const n = counts[i];
         if (n == null) return;
-        const txt = "n=" + n;
+        const txt = n;
         const barWidth = bar.x - bar.base;
-        ctx.fillStyle = "#3a332c";
+        ctx.fillStyle = "#ffffff";
         if (barWidth > 34) {
           ctx.textAlign = "right";
           ctx.fillText(txt, bar.x - 6, bar.y);
@@ -1102,6 +1103,8 @@ function barCountPlugin(counts) {
           ctx.textAlign = "left";
           ctx.fillText(txt, bar.x + 6, bar.y);
         }
+        ctx.strokeStyle = "rgba(0,0,0,0.35)";
+        ctx.lineWidth = 3;
       });
       ctx.restore();
     },
