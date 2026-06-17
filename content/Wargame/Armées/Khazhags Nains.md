@@ -325,12 +325,12 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Règles spéciales :
 - Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 6’’ ou plus de tout modèle adverse. Marquez-le ensuite activé.
 ---
-### Ranger — 15 pts
+### Ranger — 16 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Ranger | **5** | **4+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| Ranger | **5** | **5+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
+| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
