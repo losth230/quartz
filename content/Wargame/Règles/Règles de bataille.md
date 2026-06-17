@@ -65,6 +65,9 @@ Un bande doit comprendre au minimum 1 Commandant et 5 unités de Base. Une bande
 - 1 Commandant par tranche de 100 pts.
 - 1 soutien par tranche de 50 pts.
 - 1 Spécial par tranche de 150 pts.
+### Le Général : 
+Lors de la création d'une liste, chaque joueur choisi secrètement un Général parmi ses commandants. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour (voir phase d'Initiative).
+
 ---
 
 <center><h2>Déroulement d'une Partie</h2></center>
@@ -75,11 +78,12 @@ Pour bien débuter une partie Chasse & Pêche, il vous faut commencer par déter
 Une fois le scénario déterminé, chaque joueur lance 1d6, le plus gros résultat choisit sa zone de déploiement et y déploie son premier modèle. Les deux joueurs déploient ensuite leurs modèles tour à tour, jusqu'à ce que tous les modèles aient été déployé. Le joueur ayant fini son déploiement en premier choisira qui débutera son tour en premier.
 Après avoir mis en place votre champ de bataille et confectionné votre bande, vous êtes en mesure de jouer une partie Chasse et Pêche. Une telle partie se décompose en 5 tours, eux-mêmes se décomposant comme suit :
 #### Phase 1 : L'initiative :
-Lors de la phase d'initiative, les deux joueurs lancent leurs dés de Manœuvre. Ces dés sont représentés par des carrés rouges ou blancs les cartes de certaines unités, principalement celles des Commandants. Un joueur dont le Général est encore en vie peut relancer un dé à chaque tour, à commencer par celui qui a eu l'initiative au tour précédent.
+Lors de la phase d'initiative, les deux joueurs lancent leurs dés de Manœuvre. Ces dés sont représentés par des carrés rouges, blancs ou bleus sur les cartes de certaines unités, principalement celles des Commandants.  
+Rappel : un joueur dont le Général est encore en vie peut relancer un dé à chaque tour, à commencer par celui qui a eu l'initiative au tour précédent.  
 Le joueur ayant obtenu le plus petit score après relance décide quel joueur obtient l'initiative et activera en premier un modèle.
 #### Phase 2 : Effets de début de tour :
-Certaines règles ne se déclenchent qu'en début de tour. A commencer par le joueur qui a obtenu l'initiative qui résout un effet en premier. Les joueurs résolvent alors chacun leurs effets à tour de rôle dans l'ordre de leur choix.
-#### Phase 3 : Activer une unité :
+Certaines règles ne se déclenchent qu'en début de tour. A commencer par le joueur qui a obtenu l'initiative, les joueurs résolvent alors chacun leurs effets à tour de rôle dans l'ordre de leur choix.
+#### Phase 3 : Activer un modèle :
 Lorsqu'un joueur décide d'activer un de ses modèles, il peut effectuer au choix : deux actions courtes, ou une action longue. Un modèle ne peut effectuer deux fois la même action lors d'un tour. Voici la liste des actions possibles :
 - **Marche (court) :** le modèle effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*.
 - **Course (long) :** le modèle effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*. Si un modèle *engage* une autre unité par le biais d'une Course, il s'agit alors d'une charge, octroyant ainsi une action Mêlée gratuite au modèle ayant chargé. Une charge n'est valide (et donc n'octroie d'attaque gratuite) que si le modèle qui charge aperçoit le modèle chargé dans sa ligne de vue.
@@ -218,8 +222,9 @@ Lorsqu'un modèle est en déroute au début de son activation, il doit réussir 
 Si un modèle en déroute entre en contact avec un bord de table, il est retiré comme perte.
 ### Déroute d'une bande :
 Une bande est considérée en déroute dès lors qu'elle a perdu plus de 50% de ses modèles (comptés en points). Dans ce cas, chaque modèle (même engagé en mêlée) doit effectuer un test de déroute au début de chacune de ses activations. Si un modèle engagé en mêlée rate un test de déroute, il doit se désengager avant d'effectuer sa course.
-### Le Général : 
-Avant le début du premier tour, chaque joueur choisi secrètement un Général parmi ses commandants et héros de légende. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour.
+> ##### (Règles avancées) Invocations et déroute :
+> Les invocations sont ajoutées à votre liste d'armée, mais ne comptent pas dans la limite concernant les déroutes.
+*Par exemple, si vous avez une liste à 300 pts, votre bande est en déroute dès que vous avez moins de 150 pts restants sur la table. Les invocations vous permettent ainsi de tenir plus longtemps!*
 
 ---
 
