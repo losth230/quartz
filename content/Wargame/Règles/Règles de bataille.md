@@ -151,6 +151,7 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 +1 aux chances de toucher si la taille du tireur plus celle du potentiel terrain sur lequel il se situe dépasse de 3 ou plus celle de sa cible.
 +1 aux chances de toucher si la cible est de taille 4 ou plus.
 -1 aux chances de toucher si la LdV est au moins partiellement couverte.
+-1 aux chances de toucher si la cible est à longue portée.
 -1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Rechargez !
 *Par exemple : un Arquebusier nain tente de tirer sur un Kroxigor homme-lézard (eh oui ! parfois il faut tenter). L'Arquebusier possède 2d6 à distances, et malheureusement la LdV entre lui et le Kroxigor est obstruée par une barrière, lui faisant subir un malus de -1 à ses jets de touche. Comme l'Arquebusier se tient sur un terrain de taille 4, sa taille virtuelle est de 2 +4, soit 6, ce qui est supérieur de 3 à celle du Kroxigor qui est de 3. Le bonus et le malus s'annulent donc.*
 #### Tir de contre-charge :
@@ -164,6 +165,10 @@ Attention : une unité marquée activée ou engagée ne peut effectuer de tir de
 ### Attaques en mêlée :
 Un modèle en contact socle à socle avec un modèle ennemi peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l'intermédiaire d'une charge ou de l'action Mêlée.
 Un modèle doit nécessairement effectuer son attaque contre un modèle situé dans son arc avant et ne peut effectuer d'attaque contre un modèle ami ou allié. Un modèle effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.
+
+> ##### (Règles avancées) Tirer à courte ou longue portée :
+> Certains modèles ont deux règles de portée pour une attaque, notées C:N", L:M". Cela veut dire que les cibles à N" ou moins sont considérée à courte portée et celles entre N" et M" à longue portée.
+
 > ##### (Règles avancées) Attaquer en Troupe :
 > Lorsque des unités sont organisées en Troupe, seul le premier rang peut attaquer. Pour chaque unité présente au second rang, octroyez un bonus de +1d6 à l'unité du premier rang de votre choix.
 
