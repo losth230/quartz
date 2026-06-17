@@ -189,7 +189,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 <div class="legendary">
 
-### Jeanne — 42 pts
+### Jeanne — 48 pts
 
 </div>
 
@@ -201,7 +201,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]],[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Oriflamme : Jeanne peut posséder une grande bannière. L’[[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de cette grande bannière est augmentée de 3’’.
+- Oriflamme : Si Jeanne possède une grande bannière, l’[[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de cette grande bannière est augmentée de 3’’.
 ##### Règles spéciales :
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de pureté : les modèles adverses à 1’’ ou moins bénéficie d’un malus de -1 sur leurs jets d’attaque en mêlée.
 - Bouter l’ennemi (2) : à utiliser en début de tour, une seule fois par partie. Pour le reste du tour, les modèles Paysan bénéficie de +1d6 en mêlée et à distance, et peuvent immédiatement effectuer une action courte.

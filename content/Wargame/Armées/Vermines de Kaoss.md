@@ -372,7 +372,7 @@ ___
 ##### Règles spéciales :
 - Vent strident : le vent s’engouffrant dans la coche hurle, réduisant de 1 le moral des modèles ennemis à 12’’ ou moins.
 - Bouclier de scories (1) : pour le reste du tour, la cloche et tout modèle qu’elle a rejoint peuvent relancer leurs jets d’armure ayant obtenu 1.
-- Toujours plus de rats ! : au début de chaque tour jetez un dé, dont le résultat correspond au nombre de modèles à 6’’ ou moins dont vous pouvez déclencher la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]]. Si vous obtenez un résultat de 6 sur ce jet, la cloche perd 2 PV.
+- Toujours plus de rats ! : au début de chaque tour et à la fin de chaque tour, déclencher la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] d'un modèle ami à 6'' ou moins. De plus, les mèdles amis à 9'' ou moins bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération(+1)]]
 - Cloche de protection : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 

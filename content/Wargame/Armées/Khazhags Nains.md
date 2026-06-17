@@ -6,10 +6,10 @@
 Les nains n’oublient jamais une rancune envers un ennemi, et celle-ci ressurgit lorsqu’ils ont l’opportunité d’enfin affronter cet adversaire. La nature de la rancune dépend de la première unité morte d’une bataille : s’il s’agit d’une unité amie, les nains ont une rancune de Vengeance, s’il s’agit d’une unité ennemie, ils ont une rance de Protection.
 #### Rancune de Vengeance :
 - **Rang I (à la première unité amie tuée) :** toute votre armée peut relancer ses jets de touche ayant obtenu 1.  
-- **Rang II (Si votre armée est en déroute) :** Toute votre armée peut relancer tous ses jets de touche ratés.
+- **Rang II (Si votre armée est en déroute) :** toute votre armée bénéficie de +1 Vitesse.
 #### Rancune de Protection :
 - **Rang I (à la première unité ennemie tuée) :** toute votre armée peut relancer ses jets d’armure ayant obtenu 1.
-- **Rang II (Si l’armée ennemie est en déroute) :** Toute votre armée peut relancer tous ses jets d’armure ratés.
+- **Rang II (Si l’armée ennemie est en déroute) :** lorsque vous activez un modèle, il reçoit [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
 #### Être de Pierre :
 Lorsqu’un modèle Nain est affecté par un sort (ami, allié ou ennemi), jetez un dé, sur 5+ le sort n’a aucun effet.
 Vous ne pouvez cependant pas lancer de sorts : la magie c’est pour les faibles (ou ces connards d’elfes).
@@ -79,7 +79,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
-| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **3+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
+| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **34+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 6d6                                                                             |                                                                                  |        |        |        |            |
 
 *[[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
