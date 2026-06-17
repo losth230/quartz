@@ -29,14 +29,14 @@ Une bataille n'est jamais moins amusante lorsque l'on y ajoute du décor, n'hés
 - **Type** d'unité **:** certaines règles n'affectent que certains types d'unités.
 - **Valeur en points** de l'unité.
 - **Caractéristiques** de l'unité :
-> **Vit :** la vitesse, en pouces, de déplacement de l'unité. A moins que le contraire ne soit précisé, la vitesse d'une unité ne peut dépasser 9.
-> **Me :** la caractéristique de mêlée de l'unité. Pour réussir une touche en mêlée, la valeur du d6 doit être égale ou supérieure à cette valeur.
-> **Tir :** la caractéristique de tir de l'unité. Pour réussir une touche à distance, la valeur du d6 doit être égale ou supérieure à cette valeur. Une valeur de – signifie que l'unité ne peut effectuer d'attaque à distance.
-> **Ar :** caractéristique d'armure de l'unité. Pour réussir un jet d'armure, la valeur du d6 doit être égale ou supérieure à cette valeur.
-> **Mo :** caractéristique de moral de l'unité.
-> **PV :** le nombre de point de vie de l'unité.
-> **Ta :** la taille de l'unité.
-> **Ma :** la masse d'une unité.
+- **Vit :** la vitesse, en pouces, de déplacement de l'unité. A moins que le contraire ne soit précisé, la vitesse d'une unité ne peut dépasser 9.
+- **Me :** la caractéristique de mêlée de l'unité. Pour réussir une touche en mêlée, la valeur du d6 doit être égale ou supérieure à cette valeur.
+- **Tir :** la caractéristique de tir de l'unité. Pour réussir une touche à distance, la valeur du d6 doit être égale ou supérieure à cette valeur. Une valeur de – signifie que l'unité ne peut effectuer d'attaque à distance.
+- **Ar :** caractéristique d'armure de l'unité. Pour réussir un jet d'armure, la valeur du d6 doit être égale ou supérieure à cette valeur.
+- **Mo :** caractéristique de moral de l'unité.
+- **PV :** le nombre de point de vie de l'unité.
+- **Ta :** la taille de l'unité.
+- **Ma :** la masse d'une unité.
 - **Règles spéciales** communes à différentes unités.
 - **Equipements de l'unité :** certains équipements ont une valeur en points, ils sont optionnels mais vous devez les ajouter à la valeur en points de l'unité lorsque vous la recrutez si vous souhaitez bénéficier de leurs effets. Changer leur équipement revient à perdre les règles de l'ancien équipement. Par défaut, toutes les unités possèdent une arme de base, que ce soit une épée courte, une hachette, des griffes, des crocs ou simplement des poings.
 - **Règles spéciales** propres à l'unité : Certaines règles spéciales ont une valeur entre parenthèses, il s'agit de la quantité de Manœuvres que vous devez dépenser pour utiliser cette compétence.
@@ -154,11 +154,16 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 #### Tir de contre-charge :
 Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
 Attention : une unité marquée activée ou engagée ne peut effectuer de tir de contre-charge. De plus, un tir de contre-charge ne peut jamais bénéficier du bonus de LdV dégagée.
+> ##### (Règles avancées) Tirer sur un modèle dans un bâtiment :
+> Il est possible de tirer sur un modèle dans un bâtiment, (le bâtiment étant considéré comme l'adversaire). L'attaquant souffre alors d'un malus de -1 pour toucher lié à une ligne de vue partiellement couverte et le défenseur d'un bonus de +1 à l'armure lié à la défense d'obstacle.
 ### Attaques en mêlée :
 Un modèle en contact socle à socle avec un modèle ennemi peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l'intermédiaire d'une charge ou de l'action Mêlée.
 Un modèle doit nécessairement effectuer son attaque contre un modèle situé dans son arc avant et ne peut effectuer d'attaque contre un modèle ami ou allié. Un modèle effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.
-##### (Règles avancées) Demander un duel.
-Si deux modèles s'affrontent avec en leur sein un Commandant, un joueur peut demander le commandant adverse en duel. son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat. Si deux unités prennent part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle. Le vainqueur du duel peut voler un point de Manœuvre à son adversaire.
+> ##### (Règles avancées) Demander un duel.
+> Si deux modèles s'affrontent avec en leur sein un Commandant, un joueur peut demander le commandant adverse en duel. son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat. Si deux unités prennent part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle. Le vainqueur du duel peut voler un point de Manœuvre à son adversaire.
+
+> ##### (Règles avancées) Attaquer un modèle dans un bâtiment :
+> Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
 #### Effectuer une attaque en mêlée :
 Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque en mêlée en prenant en compte les modificateurs suivants :
 -1 aux chances de toucher si le défenseur se situe derrière un obstacle.
@@ -191,8 +196,6 @@ Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un
 *Isabeau Lumièrepure, Abbesse de Lun.*
 ### Combats et bâtiments :
 Chaque bâtiment peut accueillir une masse maximale d'unités, un modèle de masse supérieure à la capacité du bâtiment ne peut y entrer. Un modèle ne peut entrer et sortir d'un bâtiment au même tour.
-##### Attaquer un modèle dans un bâtiment :
-Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
 
 ---
 
