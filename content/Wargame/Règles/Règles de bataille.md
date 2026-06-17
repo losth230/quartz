@@ -85,9 +85,10 @@ Lorsqu'un joueur décide d'activer un de ses modèles, il peut effectuer au choi
 - **Course (long) :** le modèle effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*. Si un modèle *engage* une autre unité par le biais d'une Course, il s'agit alors d'une charge, octroyant ainsi une action Mêlée gratuite au modèle ayant chargé. Une charge n'est valide (et donc n'octroie d'attaque gratuite) que si le modèle qui charge aperçoit le modèle chargé dans sa ligne de vue.
 - **Tir (court) :** le modèle effectue une attaque à distance contre un modèle ennemie à portée.
 - **Mêlée (court) :** le modèle effectue une attaque au corps-à-corps contre le modèle ennemi avec lequel il est engagé.
-- **Préparation (long) :** l'unité se prépare à recevoir une attaque et augmente sa valeur d'armure de 1 pour le reste du tour. Ainsi, une caractéristique d'armure de 5+ devient 4+ pour le reste du tour.
-- **Se désengager (long) :** un modèle *engagé* en mêlée qui souhaite se désengager doit effectuer un jet d'armure non modifié par masse des modèles avec lequel il est engagé ou perdre 1 PV par jet d'armure raté. Si elle est encore en vie, elle effectue l'action Course.
-Une fois qu'un joueur a terminé une activation, il doit mettre un marqueur activé sur son modèle, puis c'est au tour de son adversaire de réaliser une activation, et ainsi de suite jusqu'à ce qu'ils aient tous les deux activés tous leurs modèles. Un joueur ne peut passer son tour et doit nécessairement activer un modèle, même s'il ne fait rien, et ne peut activer de modèle déjà marqué comme activé.
+- **Préparation (long) :** le modèle se prépare à recevoir une attaque et reçoit Egide (1).
+- **Se désengager (long) :** un modèle *engagé* en mêlée qui souhaite se désengager doit effectuer un jet d'armure non modifié par masse des modèles l'engageant dans leur arc avant ou perdre 1 PV par jet d'armure raté. S'il est encore en vie, il effectue l'action Course.
+- **Se reposer (court) : :** le modèle peut retirer un marqueur *Fatigue* ou *Désorganisé* qui l'affecte.  
+Une fois qu'un joueur a terminé une activation, il doit mettre un marqueur *Activé* sur son modèle, puis c'est au tour de son adversaire de réaliser une activation, et ainsi de suite jusqu'à ce qu'ils aient tous les deux activés tous leurs modèles. Un joueur ne peut passer son tour et doit nécessairement activer un modèle, même s'il ne fait rien, et ne peut activer de modèle déjà marqué comme activé.
 #### Phase 4 : Effets de fin de tour :
 Une fois que les deux joueurs ont tous les deux finis d'activer tous leurs modèles, ils doivent résoudre la fin du tour comme suit :
 1 : résoudre tous les effets ayant lieu en fin de tour. Ceux-ci peuvent être propre à certains modèles, à des sorts ou des règles de faction.
@@ -95,8 +96,8 @@ Une fois que les deux joueurs ont tous les deux finis d'activer tous leurs modè
 3 : dépenser des manœuvres pour retirer des marqueurs de fatigue aux modèles qui se sont fatigués durant le tour.
 4 : perdre les dés de magie et les manœuvres restantes, ils ne sont pas conservés pour le tour suivant.
 ### La fatigue :
-Lors d'une activation, un modèle peut choisir de se fatiguer pour gagner une action courte supplémentaire. Cette action doit impérativement être prise à la suite des deux actions courte ou à l'action longue résultant de l'activation standard du modèle (un modèle peut ainsi effectuer une action longue puis une action courte lors d'une fatigue, mais pas l'inverse). Ajoutez le marqueur *fatigue* avant la résolution de l'action courte bonus.
-Un modèle étant fatigué, souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 en vitesse.
+Lors d'une activation, un modèle peut choisir de se fatiguer pour gagner une action courte supplémentaire. Cette action doit impérativement être prise à la suite des deux actions courte ou à l'action longue résultant de l'activation standard du modèle (un modèle peut ainsi effectuer une action longue puis une action courte lors d'une fatigue, mais pas l'inverse).   Ajoutez le marqueur *Fatigue* avant la résolution de l'action courte bonus.
+Un modèle fatigué souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 en vitesse.
 ### Engager :
 Un modèle est considéré Engagé en mêlée lorsqu'il se trouve en contact socle à socle avec un ou plusieurs modèles ennemis. Lorsqu'un modèle se déplace pour engager un modèle ennemi, placez-les le plus possible en contact et centrés l'un par rapport à l'autre, quitte à devoir pivoter légèrement le modèle ennemi. Un modèle engagé en mêlée ne peut effectuer d'autre action que Mêlée ou Se désengager. Un modèle en déroute ne peut engager, mais peut être engagée.
 Si un modèle désire engager un modèle situé derrière un obstacle, placez-le au plus près du modèle ennemi, les deux modèles sont considérés engagés s'ils se trouvent à 1'' ou moins l'un de l'autre.
@@ -114,7 +115,7 @@ Le terrain peut affecter le déplacement, si un modèle se trouve en contact ave
 > ##### (Règles avancées) Déplacement en Troupe :
 > Une Troupe (ou modèle composé de plusieurs unités) peut effectuer un pivot sur son centre en dépensant 2'' et réorganiser la largeur de son front et sa profondeur.
 #### Escalade :
-Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le mot-clé Bête ne peuvent grimper. A moins qu'il ne s'agisse d'une échelle ou similaire. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.
+Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le mot-clé Bête ne peuvent escalader. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.
 Une distance d'escalade inférieure à la taille d'un modèle n'est pas considérée comme faisant partie de son mouvement.
 #### Chuter :
 Un modèle est considéré comme en chute s'il descend une distance supérieure à sa taille, et subit N touches avec Force dévastatrice (N) où N est la différence de taille entre la hauteur du décor et celle du modèle. S'il perd le moindre Point de Vie, il est marqué désorganisé.
@@ -126,7 +127,7 @@ Un modèle peut également parcourir une distance horizontale entre deux décors
 Tous les modèles ne possèdent que deux faces : une face avant et une face arrière.
 #### Lignes de Vues :
 Pour savoir si un modèle possède une ligne de vue sur une cible, il suffit de voir s'il est possible de tracer une ligne imaginaire entre le modèle et sa cible.
-Si la base du modèle peut entièrement voir la base de la cible, alors la LdV est dégagée.
+Si la base du modèle peut voir plus de 50€ la base de la cible, alors la LdV est dégagée.
 Si un obstacle existe entre le modèle et sa cible, mais que celle-ci reste visible, la LdV est partiellement dégagée.
 Si le modèle ne peut voir sa cible, la LdV est obstruée.
 Les autres modèles, le décor et les objectifs sont tous considérés comme des obstacles. Un modèle créant un obstacle de la surface de son socle et d'une hauteur égale à sa taille. Par exemple, un modèle de taille 2 sera considéré comme un obstacle de taille 2.
@@ -140,7 +141,7 @@ Petit point vocabulaire : dans C&P est désigné comme touche une attaque ayant 
 
 ### Les 6 explosifs :
 Lors d'attaque à distance, en mêlée ou lors de jets d'armure, il arrive que certains combattants se montrent d'une vaillance sans faille. Afin de représenter ceci, les résultats naturels de 6 sur ces jets sont toujours une réussite, et impliquent un dé supplémentaire (si ceux-ci obtiennent un 6 naturel, il est également explosif).
-*Par exemple* *: une unité d'Infanterie Skink des Hommes-Lézards subit 3 touches lors d'une attaque à distance, aie. Par miracle, les jets d'armure du joueur Hommes-Lézards sont 4, 6 et 6. Il y a donc deux jets de dé qui ont réussi, et même qui sont explosifs, il peut donc ajouter deux autres dés à son jet et obtient 2 et 5. Le 5 étant un succès, il cumule au total 3 succès, aucune blessure n'est donc infligée à l'Infanterie Skink.*
+*Par exemple : une unité d'Infanterie Skink des Hommes-Lézards subit 3 touches lors d'une attaque à distance, aie. Par miracle, les jets d'armure du joueur Hommes-Lézards sont 4, 6 et 6. Il y a donc deux jets de dé qui ont réussi, et même qui sont explosifs, il peut donc ajouter deux autres dés à son jet et obtient 2 et 5. Le 5 étant un succès, il cumule au total 3 succès, aucune blessure n'est donc infligée à l'Infanterie Skink.*
 Rappel : si un 6 naturel est toujours une réussite, un 1 naturel est toujours un échec (après potentielle relance).
 ### Attaques à distance :
 Dans la majorité des cas, les attaques à distance ont lieu lorsqu'un modèle effectue l'action Tir. Un modèle effectuant une telle attaque doit choisir une de ses armes à distance (et donc en posséder une) puis une cible à portée de l'arme et dont la LdV est au moins partiellement dégagée. Un modèle ne peut effectuer d'attaque à distance si sa caractéristique de tir est '-'.
@@ -155,11 +156,17 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 #### Tir de contre-charge :
 Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
 Attention : une unité marquée activée ou engagée ne peut effectuer de tir de contre-charge. De plus, un tir de contre-charge ne peut jamais bénéficier du bonus de LdV dégagée.
+> ##### (Règles avancées) Tirer en Troupe :
+> Lorsque des unités sont organisées en Troupe, seuls les 2 premiers rangs peuvent tirer. 
+
 > ##### (Règles avancées) Tirer sur un modèle dans un bâtiment :
 > Il est possible de tirer sur un modèle dans un bâtiment, (le bâtiment étant considéré comme l'adversaire). L'attaquant souffre alors d'un malus de -1 pour toucher lié à une ligne de vue partiellement couverte et le défenseur d'un bonus de +1 à l'armure lié à la défense d'obstacle.
 ### Attaques en mêlée :
 Un modèle en contact socle à socle avec un modèle ennemi peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l'intermédiaire d'une charge ou de l'action Mêlée.
 Un modèle doit nécessairement effectuer son attaque contre un modèle situé dans son arc avant et ne peut effectuer d'attaque contre un modèle ami ou allié. Un modèle effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.
+> ##### (Règles avancées) Attaquer en Troupe :
+> Lorsque des unités sont organisées en Troupe, seul le premier rang peut attaquer. Pour chaque unité présente au second rang, octroyez un bonus de +1d6 à l'unité du premier rang de votre choix.
+
 > ##### (Règles avancées) Demander un duel.
 > Si deux modèles s'affrontent avec en leur sein un Commandant, n'importe quel joueur peut demander le commandant adverse en duel. Son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat. Si deux commandants prennent ainsi part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle. Le vainqueur du duel (celui ayant infligé le plus de blessures) peut voler un point de Manœuvre à son adversaire.
 
@@ -174,8 +181,7 @@ Lorsqu'un modèle subit une touche, il peut faire un jet d'armure. Pour cela il 
 -1 aux jets d'armure si l'attaque provient de l'arrière du modèle.
 -1 aux jets d'amure par marqueur Désorganisation.
 ### Riposte :
-Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi, ceci ne compte pas comme l'activation du joueur. Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
-Un modèle activé et fatigué ne peut riposter.
+Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter contre le modèle à l'origine de l'attaque. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi et ceci ne compte pas comme l'activation du joueur. Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
 ### Jets de Moral :
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
