@@ -56,6 +56,7 @@ Dans Chasse & Pêche, les figurines de votre bande sont rangées en trois catég
 A tout moment lors d'une activation, une unité peut échanger de place avec une autre au sein du modèle.
 ### Amis, alliés et ennemis :
 Le terme ami désigne l'ensemble des unités que vous contrôlez, allié désigne l'ensemble des unités de vos alliés si vous jouez dans un format autre que le 1v1 et ennemi désigne l'ensemble des unités de votre ou vos adversaires.
+
 ---
 
 <center><h2>Création d'une bande</h2></center>
