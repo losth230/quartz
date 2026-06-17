@@ -111,8 +111,8 @@ Vous avez généré des points de manœuvre lors de l'initiative, ceux-ci peuven
 Les combattants peuvent se déplacer à travers le champ de bataille lors des actions de Marche ou Course. Chaque modèle possède une valeur de vitesse propre, et ne peut se déplacer d'une distance supérieure à cette valeur. Un modèle peut se déplacer dans la direction de son choix et pivoter à volonté. Un modèle ne peut jamais se déplacer d'une distance supérieure à sa valeur de vitesse (ou deux fois sa vitesse lors d'une course).
 A moins de vouloir engager, un modèle ne peut se déplacer à moins de 1'' d'un autre et ne peux se déplacer à travers un autre model, même ami.
 Le terrain peut affecter le déplacement, si un modèle se trouve en contact avec un décors, il doit s'aligner avec lui.
-##### (Règles avancées) Déplacement en Troupe :
-Une Troupe (ou modèle composé de plusieurs unités) peut effectuer un pivot sur son centre en dépensant 2'' et réorganiser la largeur de son front et sa profondeur.
+> ##### (Règles avancées) Déplacement en Troupe :
+> Une Troupe (ou modèle composé de plusieurs unités) peut effectuer un pivot sur son centre en dépensant 2'' et réorganiser la largeur de son front et sa profondeur.
 #### Escalade :
 Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le mot-clé Bête ne peuvent grimper. A moins qu'il ne s'agisse d'une échelle ou similaire. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.
 Une distance d'escalade inférieure à la taille d'un modèle n'est pas considérée comme faisant partie de son mouvement.
@@ -123,7 +123,7 @@ Une distance verticale égale ou inférieure à la taille d'un modèle n'est pas
 Un modèle peut également parcourir une distance horizontale entre deux décors d'une distance égale à sa taille, qui compte comme faisant partie de son mouvement. Si la distance est supérieure à la taille du modèle, celui-ci chute (voir paragraphe précédent).
 ### Lignes de vue (LdV) :
 #### Orientation des modèles :
-> Tous les modèles ne possèdent que deux faces : une face avant et une face arrière.
+Tous les modèles ne possèdent que deux faces : une face avant et une face arrière.
 #### Lignes de Vues :
 Pour savoir si un modèle possède une ligne de vue sur une cible, il suffit de voir s'il est possible de tracer une ligne imaginaire entre le modèle et sa cible.
 Si la base du modèle peut entièrement voir la base de la cible, alors la LdV est dégagée.
