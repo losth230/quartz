@@ -40,7 +40,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Ambassadeur|**4**|**3+**|**-**|**4+**|**10**|**3**|**2**|**5**|Thraksan|
+|Ambassadeur|**4**|**5+**|**4+**|**5+**|**10**|**3**|**2**|**5**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
@@ -66,7 +66,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 ##### Règles spéciales :
 - Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
 - Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
-- Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Cités libres présentent en jeu. Gnûl gagne également 1d6 en mêlée par cité libre en jeu.
+- Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Cités Englouties présentent en jeu. Gnûl gagne également 1d6 en mêlée par cité libre en jeu.
 
 ---
 ### Mère de couvée — 32 pts
@@ -116,7 +116,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 - Véranthia est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
 - Parasitage : Au début de chaque tour, vous pouvez désigner une unité amie à laquelle Véranthia s'accroche et lui octroyer 1 *Corruption*. Tant que Véranthia est attachée, elle ne peut être attaquée d'aucune sorte et n'est jamais engagée en mêlée. L'attache se brise si l'unité amie hôte est retirée du jeu.
-- Créatrice de magie : tous les ajoutent 1 dé à leur réserve de magie tant que Véranthia est en vie. L'unité hôte bénéficie d'un bonus de +2 au lorsqu'elle tente de lancer un sort.
+- Créatrice de magie : tous les joueurs ajoutent 1 dé à leur réserve de magie tant que Véranthia est en vie. L'unité hôte bénéficie d'un bonus de +2 au lorsqu'elle tente de lancer un sort.
 - Donner les rênes : tant que Véranthia est en vie, votre adversaire génère 3 manœuvres au début de son tour. Chaque fois qu'un modèle *Corrompu* dépense 1 Manœuvre à 12'’ ou moins de Véranthia, elle peut *Corrompre* un modèle à 9’’ ou moins.
 ___
 
@@ -152,7 +152,7 @@ ___
 ##### Magie :
 - Naar'Vaath est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
-- Renverser le cours : Si Naar'Vaath est présente dans votre liste, consultez la table des effets en remontant (du tour 5 au tour 1).
+- Renverser le cours : Si Naar'Vaath est présente dans votre liste, appliquez les effets de la table de l'heure de la fin en remontant (du tour 5 au tour 1).
 
 ## Modèles de base
 
@@ -246,7 +246,7 @@ ___
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
 
 ##### Équipement :
-- Mortier : Portée 12-28’’, Anti-Infanterie, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], Rechargez.
+- Mortier : Portée 12-28’’, Anti-Infanterie, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
 - Pilonnage : un modèle touché par un tir de Biovore perd 1 Vit pour le reste du tour par touche subie.
 - Pluie de feu : ce modèle gagne +1d6 par marqueur Corruption qu’il possède.
