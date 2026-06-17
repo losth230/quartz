@@ -26,7 +26,7 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
 #### Faveur divine (1)
-Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel échec en un 6 (explosif).
+Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
 #### Vœu de silence
 Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
 #### Volonté de fer
