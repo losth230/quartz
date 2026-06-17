@@ -208,13 +208,48 @@ function fillListeMenu(row) {
   if (hint) hint.textContent = note;
 }
 
+// Tirage aléatoire d'un scénario + un déploiement (indépendants).
+// Affiche nom + image (si image_url renseignée dans la table de référence).
+function doTirage() {
+  const box = $("cp-tirage-result");
+  if (!box) return;
+  if (!refScenarios.length || !refDeploiements.length) {
+    box.innerHTML = '<p class="cp-empty">Référentiel scénarios/déploiements vide.</p>';
+    return;
+  }
+  const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
+  const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
+  box.innerHTML =
+    '<div class="cp-tirage-grid">' +
+      tirageCard("Scénario", sc) +
+      tirageCard("Déploiement", dp) +
+    "</div>";
+}
+function tirageCard(titre, item) {
+  const img = item.image_url
+    ? '<img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" />'
+    : '<div class="cp-tirage-noimg">—</div>';
+  return '<div class="cp-tirage-card">' +
+    '<div class="cp-tirage-label">' + titre + "</div>" +
+    img +
+    '<div class="cp-tirage-nom">' + esc(item.nom) + "</div>" +
+  "</div>";
+}
+
 function renderSaisie() {
   // En édition, on génère autant de lignes que de participants existants
   const nb = editData ? editData.participations.length : nbJoueurs;
   let rows = "";
   for (let i = 0; i < nb; i++) rows += participantRow(i);
   const enEdition = !!editingPartieId;
-  return '<div class="cp-card">' +
+  const tirage = enEdition ? "" :
+    '<div class="cp-card cp-tirage">' +
+      '<div class="cp-tirage-head">' +
+        '<button class="cp-btn" id="cp-tirage-btn">\u{1F3B2} Tirer un scénario + déploiement</button>' +
+      "</div>" +
+      '<div id="cp-tirage-result"></div>' +
+    "</div>";
+  return tirage + '<div class="cp-card">' +
     (enEdition ? '<div class="cp-form-mode" id="cp-edit-banner">Modification d\'une partie</div>' : "") +
     '<div class="cp-form-grid">' +
       '<div><label>Version</label><select id="cp-f-version">' + optionsFrom(refVersions) + "</select></div>" +
@@ -1071,10 +1106,6 @@ function chartTextColor() {
   return c || "#2b2520";
 }
 
-// Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
-// Appelée après chaque rendu de l'onglet stats.
-// Plugin : affiche le compte au bout de chaque barre horizontale.
-// Plugin : affiche le compte au bout de chaque barre horizontale.
 // Plugin : affiche le compte au centre de chaque barre horizontale.
 function barCountPlugin(counts) {
   return {
@@ -1082,30 +1113,30 @@ function barCountPlugin(counts) {
     afterDatasetsDraw(chart) {
       const { ctx } = chart;
       const meta = chart.getDatasetMeta(0);
-      
+
       ctx.save();
       ctx.font = "600 11px Georgia, serif";
       ctx.textBaseline = "middle";
       ctx.textAlign = "center"; // Le texte est centré par défaut
-      
+
       meta.data.forEach((bar, i) => {
         const n = counts[i];
         if (n == null) return;
-        
+
         const txt = String(n);
-        
+
         // Calcul de la position X au centre exact de la barre
         const posX = (bar.base + bar.x) / 2;
-        
+
         ctx.fillStyle = "#ffffff";
         ctx.strokeStyle = "rgba(0,0,0,0.35)";
         ctx.lineWidth = 3;
-        
+
         // Dessin de l'ombre puis du texte
         ctx.strokeText(txt, posX, bar.y);
         ctx.fillText(txt, posX, bar.y);
       });
-      
+
       ctx.restore();
     },
   };
@@ -1304,6 +1335,9 @@ function wireOnce() {
 
     // enregistrer / mettre à jour
     if (e.target.closest("#cp-save-partie")) { savePartie(); return; }
+
+    // tirage aléatoire scénario + déploiement
+    if (e.target.closest("#cp-tirage-btn")) { doTirage(); return; }
 
     // annuler l'édition
     if (e.target.closest("#cp-cancel-edit")) { cancelEditPartie(); return; }

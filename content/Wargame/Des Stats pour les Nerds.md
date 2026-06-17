@@ -21,6 +21,17 @@
 
     /* Carte formulaire */
     .cp-card { background: var(--lightgray); border: 1px solid var(--gray); border-radius: 4px; padding: 1.2em 1.4em; }
+
+    /* Tirage aléatoire */
+    .cp-tirage { margin-bottom: 1.2em; }
+    .cp-tirage-head { display: flex; justify-content: center; }
+    .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; }
+    .cp-tirage-card { text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
+    .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
+    .cp-tirage-img { max-width: 100%; max-height: 200px; border-radius: 3px; display: block; margin: 0 auto 0.5em; }
+    .cp-tirage-noimg { height: 80px; display: flex; align-items: center; justify-content: center; color: var(--gray); font-size: 1.5em; }
+    .cp-tirage-nom { font-weight: bold; color: var(--dark); }
+    @media (max-width: 500px) { .cp-tirage-grid { grid-template-columns: 1fr; } }
     .cp-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8em; margin-bottom: 1em; }
     #cp-stats-app label {
       display: block; font-variant: small-caps; font-size: 0.8em; letter-spacing: 0.05em;
