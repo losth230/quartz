@@ -382,7 +382,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
-- Arc long : Portée 12’’.
+- Arc long : Portée (C : 9’’, L : 15’’)
 ##### Règles spéciales :
 - Flèches en vrai-argent (1) : à utiliser avant une attaque de tir pour conférer [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ---
@@ -435,7 +435,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 ##### Équipement :
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
-- Arc court (+2 pts) : Portée 12’’.
+- Arc court (+2 pts) : Portée (C : 9’’, L : 15’’).
 - Bouclier (+1 pts) : l’armure de cette unité devient 5+.
 ---
 ### Milice civile — 9 pts
