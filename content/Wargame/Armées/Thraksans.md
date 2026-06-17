@@ -15,7 +15,7 @@ Au début de chaque tour consultez la table ci-dessous pour savoir quel effet ap
 **Tour 2 :** Placez une cité Engloutie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.  
 **Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
 **Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
-**Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 3'' ou plus de tout modèle ennemi.
+**Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 12'' ou plus de tout modèle ennemi.
 
 #### Soumission abyssale 
 Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que de masse, transformez chacune de ses unité en Profond sous votre contrôle.
