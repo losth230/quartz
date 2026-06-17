@@ -277,7 +277,7 @@ Affinité Chamanique (12)
 
 ##### Équipement :
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
-- Arc court (+1 pts) : Portée (C : 12’’).
+- Arc court (+1 pts) : Portée (C : 9’’, L : 15’’)
 
 ---
 ### Gobelin sur araignée — 14 pts

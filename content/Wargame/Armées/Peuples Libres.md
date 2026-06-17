@@ -26,7 +26,7 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
 #### Faveur divine (1)
-Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer n’importe quel échec en un 6 (explosif).
+Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
 #### Vœu de silence
 Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
 #### Volonté de fer
@@ -382,7 +382,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
-- Arc long : Portée 12’’.
+- Arc long : Portée (C : 9’’, L : 15’’)
 ##### Règles spéciales :
 - Flèches en vrai-argent (1) : à utiliser avant une attaque de tir pour conférer [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ---
@@ -435,7 +435,7 @@ Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer u
 
 ##### Équipement :
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
-- Arc court (+2 pts) : Portée 12’’.
+- Arc court (+2 pts) : Portée (C : 9’’, L : 15’’).
 - Bouclier (+1 pts) : l’armure de cette unité devient 5+.
 ---
 ### Milice civile — 9 pts

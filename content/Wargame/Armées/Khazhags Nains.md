@@ -79,7 +79,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
-| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **34+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
+| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 6d6                                                                             |                                                                                  |        |        |        |            |
 
 *[[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
@@ -88,7 +88,8 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
 - Chef de la brigade anti nuisibles : à la fin de chaque tour, Gortrek peut donner une dynamite à percussions à un modèle ami à 9’’ ou moins ou à lui-même.
-- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée).
+- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 6’’ ou plus de tout modèle adverse.
+- Fabrique de lampes à huile : Gortrek et tout modèle de mineur qu'il intègre n’est pas marqué activé quand il réalise une Progression souterraine, mais ne peut être activé via une action anticipée.
 ---
 ### Grand ingénieur — 34 pts
 
@@ -322,14 +323,14 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Foreuse : (+6 pts) : Portée (C : 6’’, L : 9’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 - Instrument de géomètre (+3 pts) : ce modèle n’est pas marqué activé quand il réalise une Progression souterraine, mais ne peut être activé via une action anticipée.
 ##### Règles spéciales :
-- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse. Marquez-le ensuite activé.
+- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 6’’ ou plus de tout modèle adverse. Marquez-le ensuite activé.
 ---
-### Ranger — 15 pts
+### Ranger — 16 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Ranger | **5** | **4+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| Ranger | **5** | **5+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
+| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
@@ -372,7 +373,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Canon | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
-| **Mêlée:** | 1d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
+| **Mêlée:** | 3d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
 ##### Équipement :
 - Canon : Portée (C : 15’’, L : 24’’) [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], Tir long.
