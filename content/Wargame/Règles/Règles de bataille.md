@@ -151,12 +151,12 @@ Rappel : si un 6 naturel est toujours une réussite, un 1 naturel est toujours u
 Dans la majorité des cas, les attaques à distance ont lieu lorsqu'un modèle effectue l'action Tir. Un modèle effectuant une telle attaque doit choisir une de ses armes à distance (et donc en posséder une) puis une cible à portée de l'arme et dont la LdV est au moins partiellement dégagée. Un modèle ne peut effectuer d'attaque à distance si sa caractéristique de tir est '-'.
 Un modèle ne peut effectuer d'attaque à distance contre une cible engagée ou contre un modèle ami ou allié.
 #### Effectuer une attaque à distance :
-Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque à distances en prenant en compte les modificateurs suivants :
-+1 aux chances de toucher si la taille du tireur plus celle du potentiel terrain sur lequel il se situe dépasse de 3 ou plus celle de sa cible.
-+1 aux chances de toucher si la cible est de taille 4 ou plus.
--1 aux chances de toucher si la LdV est au moins partiellement couverte.
--1 aux chances de toucher si la cible est à longue portée.
--1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Rechargez !
+Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque à distances en prenant en compte les modificateurs suivants :  
++1 aux chances de toucher si la taille du tireur plus celle du potentiel terrain sur lequel il se situe dépasse de 3 ou plus celle de sa cible.  
++1 aux chances de toucher si la cible est de taille 4 ou plus.  
+-1 aux chances de toucher si la LdV est au moins partiellement couverte.  
+-1 aux chances de toucher si la cible est à longue portée.  
+-1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Tir Long.  
 *Par exemple : un Arquebusier nain tente de tirer sur un Kroxigor homme-lézard (eh oui ! parfois il faut tenter). L'Arquebusier possède 2d6 à distances, et malheureusement la LdV entre lui et le Kroxigor est obstruée par une barrière, lui faisant subir un malus de -1 à ses jets de touche. Comme l'Arquebusier se tient sur un terrain de taille 4, sa taille virtuelle est de 2 +4, soit 6, ce qui est supérieur de 3 à celle du Kroxigor qui est de 3. Le bonus et le malus s'annulent donc.*
 #### Tir de contre-charge :
 Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
@@ -182,21 +182,21 @@ Un modèle doit nécessairement effectuer son attaque contre un modèle situé d
 > ##### (Règles avancées) Attaquer un modèle dans un bâtiment :
 > Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
 #### Effectuer une attaque en mêlée :
-Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque en mêlée en prenant en compte les modificateurs suivants :
--1 aux chances de toucher si le défenseur se situe derrière un obstacle.
--1 aux chances de toucher par marqueur Fatigue.
+Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque en mêlée en prenant en compte les modificateurs suivants :  
+-1 aux chances de toucher si le défenseur se situe derrière un obstacle.  
+-1 aux chances de toucher par marqueur Fatigue.  
 ### Jets d'armure :
-Lorsqu'un modèle subit une touche, il peut faire un jet d'armure. Pour cela il jette un nombre de d6 égal au nombre de touches subies selon modificateurs suivants :
--1 aux jets d'armure si l'attaque provient de l'arrière du modèle.
--1 aux jets d'amure par marqueur Désorganisation.
+Lorsqu'un modèle subit une touche, il peut faire un jet d'armure. Pour cela il jette un nombre de d6 égal au nombre de touches subies selon modificateurs suivants :  
+-1 aux jets d'armure si l'attaque provient de l'arrière du modèle.  
+-1 aux jets d'amure par marqueur Désorganisation.  
 ### Riposte :
 Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter contre le modèle à l'origine de l'attaque. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi et ceci ne compte pas comme l'activation du joueur. Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
 ### Jets de Moral :
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
 #### Test de panique :
-Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :
--2 si le modèle contient au moins 3 unités.
+Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :  
+-2 si le modèle contient au moins 3 unités.  
 -2 supplémentaires si le modèle contient au moins 5 figurines.  
 -1 si un Commandant ami se trouve 6'' ou moins.  
 +1 par marqueur Désorganisé sur le modèle.  
@@ -204,7 +204,7 @@ Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un mo
 +1 si vous avez subi un charge ce tour-ci.  
 +2 si vous avez remporté un duel.  
 -2 si vous avez perdu un duel.  
-Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.
+Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.  
 Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute vers le bord de table le plus proche.
 ### Mouvements de poursuite.
 Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
