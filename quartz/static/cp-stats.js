@@ -163,6 +163,31 @@ function resultatOptions() {
     '<option value="egalite">Égalité</option>';
 }
 
+// Composant d'étoiles cliquables (1-5), optionnel.
+// La note courante est stockée dans data-note sur le conteneur (0 = non noté).
+// `cls` distingue scénario/déploiement pour la collecte.
+function starRating(cls, label, note) {
+  const n = note || 0;
+  let stars = "";
+  for (let s = 1; s <= 5; s++) {
+    stars += '<span class="cp-star' + (s <= n ? " on" : "") + '" data-val="' + s + '">\u2605</span>';
+  }
+  return '<div class="cp-rating ' + cls + '" data-note="' + n + '">' +
+    '<span class="cp-rating-lbl">' + label + "</span>" +
+    '<span class="cp-stars">' + stars + "</span>" +
+    '<span class="cp-star-clear" title="Effacer la note">\u2715</span>' +
+  "</div>";
+}
+
+// Applique une note (0-5) à un widget d'étoiles : maj data-note + visuel.
+function setRating(rating, val) {
+  if (!rating) return;
+  rating.dataset.note = String(val);
+  [...rating.querySelectorAll(".cp-star")].forEach((s) => {
+    s.classList.toggle("on", parseInt(s.dataset.val, 10) <= val);
+  });
+}
+
 function participantRow(i) {
   return '<div class="cp-part-row" data-idx="' + i + '">' +
     '<span class="cp-part-num">J' + (i + 1) + '</span>' +
@@ -173,6 +198,10 @@ function participantRow(i) {
     '<input class="cp-p-pertes" type="number" min="0" placeholder="Pertes" />' +
     '<select class="cp-p-resultat">' + resultatOptions() + "</select>" +
     (i >= 2 ? '<button class="cp-part-del" title="Retirer">\u2715</button>' : "") +
+    '<div class="cp-part-notes">' +
+      starRating("cp-note-scenario", "Scénario", 0) +
+      starRating("cp-note-deploiement", "Déploiement", 0) +
+    "</div>" +
   "</div>";
 }
 
@@ -260,6 +289,8 @@ function renderSaisie() {
     '<label class="cp-section-label">Participants</label>' +
     '<div id="cp-participants">' + rows + "</div>" +
     '<button class="cp-btn-ghost" id="cp-add-participant">+ Ajouter un joueur</button>' +
+    '<label class="cp-section-label">Commentaire sur la partie (optionnel)</label>' +
+    '<textarea id="cp-f-commentaire" class="cp-textarea" placeholder="Un mot sur cette partie : ambiance, équilibre, moment marquant..."></textarea>' +
     '<div class="cp-form-actions">' +
       '<button class="cp-btn" id="cp-save-partie">' + (enEdition ? "Mettre à jour" : "Enregistrer la partie") + "</button>" +
       (enEdition ? '<button class="cp-btn ghost" id="cp-cancel-edit">Annuler</button>' : "") +
@@ -276,6 +307,7 @@ function applyEditData() {
   if ($("cp-f-scenario")) $("cp-f-scenario").value = pa.scenario || "";
   if ($("cp-f-deploiement")) $("cp-f-deploiement").value = pa.deploiement || "";
   if ($("cp-f-saisipar")) $("cp-f-saisipar").value = pa.saisi_par || "";
+  if ($("cp-f-commentaire")) $("cp-f-commentaire").value = pa.commentaire || "";
 
   const rows = [...document.querySelectorAll(".cp-part-row")];
   editData.participations.forEach((p, i) => {
@@ -294,6 +326,9 @@ function applyEditData() {
     }
     if (p.pertes != null) row.querySelector(".cp-p-pertes").value = p.pertes;
     row.querySelector(".cp-p-resultat").value = p.resultat || "";
+    // restaure les notes en étoiles
+    if (p.note_scenario) setRating(row.querySelector(".cp-note-scenario"), p.note_scenario);
+    if (p.note_deploiement) setRating(row.querySelector(".cp-note-deploiement"), p.note_deploiement);
   });
 }
 
@@ -305,6 +340,7 @@ async function savePartie() {
   const scenario = $("cp-f-scenario").value || null;
   const deploiement = $("cp-f-deploiement").value || null;
   const saisi_par = $("cp-f-saisipar").value.trim() || "Anonyme";
+  const commentaire = $("cp-f-commentaire") ? ($("cp-f-commentaire").value.trim() || null) : null;
 
   // collecte des participants
   const rows = [...document.querySelectorAll(".cp-part-row")];
@@ -317,6 +353,10 @@ async function savePartie() {
     const pertes = pertesRaw === "" ? null : parseInt(pertesRaw, 10);
     const resultat = r.querySelector(".cp-p-resultat").value;
     const army_list_id = r.querySelector(".cp-p-liste").value || null;
+    const noteScEl = r.querySelector(".cp-note-scenario");
+    const noteDpEl = r.querySelector(".cp-note-deploiement");
+    const note_scenario = noteScEl && +noteScEl.dataset.note ? +noteScEl.dataset.note : null;
+    const note_deploiement = noteDpEl && +noteDpEl.dataset.note ? +noteDpEl.dataset.note : null;
     if (!joueur && !peuple) continue; // ligne vide ignorée
     if (!joueur || !peuple) {
       msg.className = "cp-msg err";
@@ -328,7 +368,7 @@ async function savePartie() {
       msg.textContent = "Indique le résultat de chaque participant (victoire, défaite ou égalité).";
       return;
     }
-    parts.push({ joueur, peuple, archetype, pertes, resultat, army_list_id });
+    parts.push({ joueur, peuple, archetype, pertes, resultat, army_list_id, note_scenario, note_deploiement });
   }
   if (parts.length < 2) {
     msg.className = "cp-msg err";
@@ -344,7 +384,7 @@ async function savePartie() {
     // --- MODE ÉDITION ---
     // 1) mettre à jour le contexte de la partie
     const { error: upErr } = await sb.from("parties")
-      .update({ version, scenario, deploiement, saisi_par })
+      .update({ version, scenario, deploiement, saisi_par, commentaire })
       .eq("id", editingPartieId);
     if (upErr) {
       btn.disabled = false;
@@ -365,7 +405,7 @@ async function savePartie() {
     // --- MODE CRÉATION ---
     const { data: pData, error: pErr } = await sb
       .from("parties")
-      .insert({ version, scenario, deploiement, saisi_par })
+      .insert({ version, scenario, deploiement, saisi_par, commentaire })
       .select();
     if (pErr || !pData || !pData.length) {
       btn.disabled = false;
@@ -410,8 +450,6 @@ function renderHistorique() {
   const scenarios = [...new Set(parties.map((p) => p.scenario).filter(Boolean))].sort();
   const joueurs = [...new Set(participations.map((p) => p.joueur).filter(Boolean))].sort();
   const factions = [...new Set(participations.map((p) => p.peuple).filter(Boolean))].sort();
-  const opt = (list, current) => '<option value="">— tous —</option>' +
-    list.map((v) => '<option value="' + esc(v) + '"' + (v === current ? " selected" : "") + ">" + esc(v) + "</option>").join("");
 
   const filtres = '<div class="cp-controls">' +
     '<select id="cp-hist-f-version">' + ('<option value="">Toutes versions</option>' +
@@ -443,6 +481,7 @@ function renderHistorique() {
       version: pa.version || "—",
       opposition: oppositionTxt,            // pour tri/recherche
       campsHtml,                             // pour affichage
+      commentaire: pa.commentaire || "",
       nbjoueurs: ps.length,
       date: new Date(pa.created_at).getTime(),
       dateAffichee: frDate(pa.created_at),
@@ -471,7 +510,9 @@ function renderHistorique() {
     '<tr data-partie="' + r.id + '">' +
       "<td>" + esc(r.scenario) + "</td>" +
       "<td>" + esc(r.version) + "</td>" +
-      "<td>" + r.campsHtml + "</td>" +
+      "<td>" + r.campsHtml +
+        (r.commentaire ? ' <span class="cp-comment-icon" title="' + esc(r.commentaire) + '">\u{1F4AC}</span>' : "") +
+      "</td>" +
       '<td class="cp-c-date">' + r.dateAffichee + "</td>" +
       '<td class="cp-c-act">' +
         '<button class="cp-partie-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' +
@@ -900,13 +941,32 @@ function renderByPartieDim(dim) {
   if (statFiltreJoueur || statFiltreFaction) {
     allowed = new Set(statParticipations().map((p) => p.partie_id));
   }
+  // champ de note correspondant à la dimension
+  const noteField = dim === "scenario" ? "note_scenario" : "note_deploiement";
+  // valeur de la dimension (scénario/déploiement) pour chaque partie
+  const valParPartie = {};
+  data.forEach((pa) => { valParPartie[pa.id] = pa[dim] || "—"; });
+
   const map = {};
   data.forEach((pa) => {
     if (allowed && !allowed.has(pa.id)) return;
     const key = pa[dim] || "—";
-    map[key] = (map[key] || 0) + 1;
+    if (!map[key]) map[key] = { n: 0, noteSum: 0, noteCount: 0 };
+    map[key].n++;
   });
-  const baseRows = Object.entries(map).map(([key, n]) => ({ nom: key, n }));
+  // agrège les notes depuis les participations
+  participations.forEach((p) => {
+    const key = valParPartie[p.partie_id];
+    if (key == null || !map[key]) return;
+    const note = p[noteField];
+    if (note != null) { map[key].noteSum += note; map[key].noteCount++; }
+  });
+
+  const baseRows = Object.entries(map).map(([key, m]) => ({
+    nom: key, n: m.n,
+    note: m.noteCount ? Math.round((m.noteSum / m.noteCount) * 10) / 10 : null,
+    noteCount: m.noteCount,
+  }));
   if (!baseRows.length) return '<p class="cp-empty">Aucune donnée pour ces filtres.</p>';
 
   // Graphique : ordre fixe par fréquence décroissante
@@ -918,10 +978,12 @@ function renderByPartieDim(dim) {
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
   const rows = sortRows(baseRows, s.key, s.dir)
-    .map((r) => "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td><td>" + r.n + "</td></tr>").join("");
+    .map((r) => "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td><td>" + r.n + "</td>" +
+      '<td class="cp-c-note">' + (r.note == null ? "—" : "\u2605 " + r.note + ' <span class="cp-note-count">(' + r.noteCount + ")</span>") + "</td></tr>").join("");
   const table = '<table class="cp-table"><thead><tr>' +
     thSort(dim, "nom", dim === "scenario" ? "Scénario" : "Déploiement") +
     thSort(dim, "n", "Parties jouées") +
+    thSort(dim, "note", "Note moy.") +
     "</tr></thead><tbody>" + rows + "</tbody></table>";
 
   const totalP = baseRows.reduce((a, r) => a + r.n, 0);
@@ -1106,6 +1168,8 @@ function chartTextColor() {
   return c || "#2b2520";
 }
 
+// Instancie les graphiques Chart.js à partir des payloads injectés dans le DOM.
+// Appelée après chaque rendu de l'onglet stats.
 // Plugin : affiche le compte au centre de chaque barre horizontale.
 function barCountPlugin(counts) {
   return {
@@ -1338,6 +1402,21 @@ function wireOnce() {
 
     // tirage aléatoire scénario + déploiement
     if (e.target.closest("#cp-tirage-btn")) { doTirage(); return; }
+
+    // clic sur une étoile de notation
+    const star = e.target.closest(".cp-star");
+    if (star && getApp().contains(star)) {
+      const rating = star.closest(".cp-rating");
+      const val = parseInt(star.dataset.val, 10);
+      setRating(rating, val);
+      return;
+    }
+    // effacer une note
+    const clr = e.target.closest(".cp-star-clear");
+    if (clr && getApp().contains(clr)) {
+      setRating(clr.closest(".cp-rating"), 0);
+      return;
+    }
 
     // annuler l'édition
     if (e.target.closest("#cp-cancel-edit")) { cancelEditPartie(); return; }
