@@ -73,32 +73,30 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 <div class="legendary">
 
-### Gortrek l’Abatteur — 52 pts
+### Gortrek l’Abatteur — 44 pts
 
 </div>
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
-| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Nain, Mine |
-| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 6d6                                                                             |                                                                                  |        |        |        |            |
+| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 5d6                                                                             |                                                                                  |        |        |        |            | 
 
-*[[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Égide|Égide (1)]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]].*
 ##### Équipement :
-- Lance – torpilles : Portée (C : 9’’, L :12’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (3)]].
+- Lance – torpilles : Portée (C : 9’’, L : 12’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (3)]].
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
-- Chef de la brigade anti nuisibles : à la fin de chaque tour, Gortrek peut donner une dynamite à percussions à un modèle ami à 9’’ ou moins ou à lui-même.
-- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 6’’ ou plus de tout modèle adverse.
-- Fabrique de lampes à huile : Gortrek et tout modèle de mineur qu'il intègre n’est pas marqué activé quand il réalise une Progression souterraine, mais ne peut être activé via une action anticipée.
+- Fabrique de lampes à huile : Gortrek et tout modèle de mineur qu'il intègre n’est pas marqué activé quand il réalise une [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]], mais ne peut être activé via une action anticipée.
 ---
-### Grand ingénieur — 34 pts
+
+### Grand ingénieur — 33 pts
 
 | ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Ingénieur   | **4**   | **4+** | **4+**    | **3+** | **9**  | **4**  | **2**  | **4**  | Nain     |
-| **Mêlée:** | 2d6     |        | **Tir:** | 3d6    |        |        |        |        |          |
+| Ingénieur   | **4**   | **4+** | **3+**    | **4+** | **9**  | **3**  | **2**  | **4**  | Nain     |
+| **Mêlée:** | 2d6     |        | **Tir:** | 4d6    |        |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
 - Fusil long : Portée (C : 15’’, L : 21’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], Tir long.
 ##### Règles spéciales :
