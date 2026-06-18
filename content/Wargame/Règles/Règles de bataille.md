@@ -195,17 +195,27 @@ Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter con
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
 #### Test de panique :
-Les tests de paniques peuvent s'effectuer dans deux situations : lorsqu'un un modèle ami est mis en déroute à moins de 6'' d'un de vos modèles, ou lorsqu'un modèle perd 25% de ses PV restants à la suite d'une attaque à distance. Un test de panique s'effectue avec les modificateurs suivants :  
--2 si le modèle contient au moins 3 unités.  
--2 supplémentaires si le modèle contient au moins 5 figurines.  
--1 si un Commandant ami se trouve 6'' ou moins.  
-+1 par marqueur Désorganisé sur le modèle.  
--1 si vous avez réussi une charge ce tour-ci.  
-+1 si vous avez subi un charge ce tour-ci.  
+Un test e Panique peut s'effectuer dans 3 cas de figure :
+- Un modèle perd un corps à corps.
+- Un modèle perd au moins 25% de ses PV restants (autrement que lors d'un corps à corps).
+- Un modèle à 6' ou moins est complètement détruit.
+
+Lorsqu'un modèle doit effectuer un test de Panique, regardez la valeur de moral du modèle et ajoutez les modificateurs suivants :  
++2 si le modèle contient au moins 3 unités.  
++1 supplémentaires si le modèle contient au moins 5 unités.  
++1 supplémentaires si le modèle contient au moins 8 unités.  
++1 supplémentaires si le modèle contient au moins 12 unités.  
++1 si un Commandant ami se trouve 6'' ou moins.  
+-1 par marqueur Désorganisé sur le modèle.  
++1 si vous avez réussi une charge ce tour-ci.  
+-1 si vous avez subi un charge ce tour-ci.  
 +2 si vous avez remporté un duel.  
 -2 si vous avez perdu un duel.  
-Jetez ensuite 2d6 et ajoutez-y le résultat ci-dessus, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute), un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.  
-Si le modèle est ainsi mis en déroute, il effectue un mouvement de déroute vers le bord de table le plus proche.
+
+
+Jetez ensuite 2d6, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute).  
+Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.  
+> Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.
 ### Mouvements de poursuite.
 Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
 *Au cœur de la bataille, le rugissement des trébuchets et le sifflement des flèches créent un tourbillon chaotique. Soudain, mes camarades et moi sommes pris dans une étreinte de terreur alors qu'une troupe de Revenants fonce droit sur nous. Les ordres deviennent inaudibles, la fumée trouble notre vision, et l'ennemi semble surgir de tous les côtés. Mes jambes s'alourdissent, le poids de l'incertitude écrase mon esprit, et la cohésion de notre troupe se délite. La peur m'envahit, une sensation viscérale qui étouffe la bravoure. Mes camarades d'armes deviennent des silhouettes floues dans la brume de la panique, et la tentation de la fuite devient irrésistible. Mes jambes, autrefois fermes, tremblent sous le poids de l'effroi. Dans cet abîme de désarroi, la nécessité de la survie prévaut, et je succombe à l'instinct primal de la fuite, de me soustraire à la furie du conflit. La déroute devient ma seule voie, un retrait précipité dans l'espoir fragile de voir un autre jour, une honte future .*
