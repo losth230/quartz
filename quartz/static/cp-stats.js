@@ -255,9 +255,18 @@ function doTirage() {
     "</div>";
 }
 function tirageCard(titre, item) {
+  // Blason SVG affiché quand aucune image n'est fournie (net, suit le thème).
+  const blason = '<div class="cp-tirage-noimg">' +
+    '<svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
+      '<path d="M32 2 L60 12 V36 C60 54 48 64 32 70 C16 64 4 54 4 36 V12 Z" ' +
+        'fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" opacity="0.5"/>' +
+      '<path d="M32 14 L32 52 M18 26 L46 26" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
+      '<circle cx="32" cy="26" r="5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
+    "</svg>" +
+  "</div>";
   const img = item.image_url
-    ? '<img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" />'
-    : '<div class="cp-tirage-noimg">—</div>';
+    ? '<div class="cp-tirage-imgwrap"><img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" /></div>'
+    : '<div class="cp-tirage-imgwrap">' + blason + "</div>";
   // Détails optionnels (mise en place / objectif) : présents seulement sur les scénarios.
   // nl2br : on échappe puis on convertit les retours à la ligne en <br>.
   const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
