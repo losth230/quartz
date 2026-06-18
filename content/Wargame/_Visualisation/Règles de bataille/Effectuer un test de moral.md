@@ -1,4 +1,4 @@
-Lorsqu'un modèle doit effectuer un test de Panique, jetez 2d6 et ajoutez les modificateurs suivants :
+Lorsqu'un modèle doit effectuer un test de Panique, jetez 2d6 et ajoutez les modificateurs suivants :  
 -2 si le modèle contient au moins 3 unités.  
 -1 supplémentaires si le modèle contient au moins 5 unités.  
 -1 supplémentaires si le modèle contient au moins 8 unités.  
