@@ -72,18 +72,18 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaule auque
 Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
 #### Ordre des Chevaliers
 Les modèles Chevalier ont +1d6 en mêlée.
-#### Duché
-Au début de chaque tour, désignez un modèle adverse comme Hérétique, les modèles Chevaliers peuvent relancer leurs attaques en mêlée ratées contre ce modèle pour le reste du tour.
+#### Duché de Skoïda
+Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] réparties comme vous le souhaitez entre vos modèles Chevaliers.
 ## Royaume de Lun
-Lors de chaque phase d’initiative, vous générez 3 manœuvres.
+Votre général génère 1 dé de Manœuvre supplémentaire
 #### Palais des Légendes
-Lorsqu’un modèle utilise Faveur Divine, il gagne [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
 #### Inquisition
 Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
 ## Empire de Seth
 Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 #### Duché d’Hydrac
-Au début de chaque tour, désignez un modèle Chevalier et octroyez-lui Volonté de Fer.
+Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
 #### Ordre des Chevaliers du Clair Obscur
 Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ## Royaume de Thoriath
@@ -92,6 +92,12 @@ Les modèles coûtent 1 pts de moins lors de la création d'un bande (pour un mi
 Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1 Vitesse.
 #### Duché de Fessac
 Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer une marche gratuite.
+## Temple d'Ishtar
+Lorsqu'un modèle Sœur utilisé Faveur divine lors d'une attaque en mêlée, elle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] pour le reste de l'attaque.
+#### Monastère de la Busquette
+Lorsqu'un de vos modèle lance un sort, il déclenche l'attribut du domaine de la pureté (s'il lançait un sort du domaine de la pureté, il peut déclencher l'attribut 2 fois).
+#### Abatiale d'Hazard
+Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
 
 ---
 ## Commandants
