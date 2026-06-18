@@ -1,4 +1,4 @@
-##### Version : A3.2 
+##### Version : A3.3 
  
  <center><h2>Règles de Faction</h2></center>
  
@@ -40,7 +40,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Ambassadeur|**4**|**5+**|**4+**|**5+**|**10**|**3**|**2**|**5**|Thraksan|
+|Ambassadeur|**4**|**5+**|**4+**|**5+**|**8**|**3**|**2**|**5**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
@@ -73,7 +73,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Mère|**4**|**3+**|**-**|**4+**|**10**|**4**|**2**|**5**|Thraksan|
+|Mère|**4**|**3+**|**-**|**4+**|**9**|**4**|**2**|**5**|Thraksan|
 |**Mêlée:**|4d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -128,7 +128,7 @@ ___
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Naar'Vaath|**4**|**3+**|**-**|**5+**|**9**|**4**|**4**|**4**|Primal|
+|Naar'Vaath|**4**|**3+**|**-**|**5+**|**10**|**4**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].*
@@ -145,7 +145,7 @@ ___
 
 |⬜|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Naar'Vaath|**4**|**3+**|**-**|**5+**|**9**|**4**|**4**|**4**|Primal|
+|Naar'Vaath|**4**|**3+**|**-**|**5+**|**10**|**4**|**4**|**4**|Primal|
 |**Mêlée:**|6d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].*
@@ -162,7 +162,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Cultiste|**5**|**6+**|**5+**|**6+**|**7**|**1**|**2**|**2**|Humain|
+|Cultiste|**5**|**6+**|**5+**|**6+**|**5**|**1**|**2**|**2**|Humain|
 |**Mêlée:**|2d6||**Tir:**|-||||||
 
 ##### Magie :
@@ -187,7 +187,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Profond|**5**|**5+**|**-**|**6+**|**7**|**2**|**2**|**2**|Thraksan|
+|Profond|**5**|**5+**|**-**|**6+**|**5**|**2**|**2**|**2**|Thraksan|
 |**Mêlée:**|2d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -200,18 +200,18 @@ ___
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
 |Ver|**6**|**5+**|**4+**|**5+**|**8**|**4**|**3**|**3**|Thraksan|
-|**Mêlée:**|3d6||**Tir:**|3d6||||||
+|**Mêlée:**|3d6||**Tir:**|2d6||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]].*
 ##### Équipement :
-- Crachat : portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], souffle.
+- Crachat : portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Souffle|Souffle]].
 ---
 
 ### Eventreur — 26 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Eventreur|**4**|**3+**|**-**|**5+**|**9**|**3**|**3**|**2**|Thraksan|
+|Eventreur|**4**|**3+**|**-**|**5+**|**8**|**3**|**3**|**2**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
@@ -227,7 +227,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Arhr'Wass|**4**|**6+**|**5+**|**5+**|**9**|**2**|**2**|**3**|Thraksan|
+|Arhr'Wass|**4**|**6+**|**5+**|**5+**|**8**|**2**|**2**|**3**|Thraksan|
 |**Mêlée:**|3d6||**Tir:**|-||||||
 
 ##### Équipement :
@@ -301,7 +301,7 @@ ___
 
 |🟥|**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Kuuh-Khaa|**4**|**6+**|**4+**|**5+**|**8**|**4**|**3**|**4**|Thraksan|
+|Kuuh-Khaa|**4**|**6+**|**4+**|**5+**|**7**|**4**|**3**|**4**|Thraksan|
 |**Mêlée:**|2d6||**Tir:**|5d6||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furitf]].*
@@ -316,7 +316,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Scylax|**6**|**4+**|**4+**|**4+**|**10**|**14**|**6**|**10**|Primal|
+|Scylax|**6**|**4+**|**4+**|**4+**|**9**|**14**|**6**|**10**|Primal|
 |**Mêlée:**|10d6||**Tir:**|-||||||
 
 **[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]][[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -331,7 +331,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Shtethroth|**5**|**3+**|**-**|**4+**|**10**|**16**|**6**|**8**|Primal|
+|Shtethroth|**5**|**3+**|**-**|**4+**|**9**|**16**|**6**|**8**|Primal|
 |**Mêlée:**|12d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
@@ -351,11 +351,11 @@ ___
 |Soleil|**-**|**-**|**3+**|**5+**|**-**|**8**|**4**|**4**|Météo|
 |**Mêlée:**|-||**Tir:**|-||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]]. [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].*
 ##### Magie :
 - Le Soleil Pourpre est un lanceur de sorts de niveau 6 ayant accès au Domaine de la Corruption et au Domaine des Ténèbres.
 ##### Règles spéciales :
-- Eclipse : ne déployez pas ce modèle normalement, à la place, déployez-le au centre de la table avant le début du déploiement. Le Soleil Pourpre agit comme une Météo, qui annule toutes les autres Météos.
+- Eclipse : le Soleil Pourpre agit comme une Météo, qui annule toutes les autres Météos.
 - La menace venant du ciel : le Soleil Pourpre ne peut être engagé en mêlée que par des modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]], et peut lancer des sorts même s’il est engagé en mêlée.
 - Absorption totale : chaque fois qu'un sort est lancé dans la partie, ajoutez 1 marqueur Corruption au Soleil Pourpre. La portée de tous les sorts et attributs de magie lancés par le Soleil Pourpre sont augmentés de 1’’ par marqueur Corruption.
 ---
