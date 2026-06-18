@@ -387,7 +387,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 | Eclaireuse | **5** | **6+** | **3+** | **5+** | **8** | **2** | **2** | **2** | Sœur |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
 - Arc long : Portée (C : 9’’, L : 15’’)
 ##### Règles spéciales :
@@ -454,7 +454,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 ##### Équipement :
 - Vouge (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] et +1d6 contre les modèles de Taille 3 ou plus.
-- Arbalète (+2 pts) : Portée 12’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Arbalète (+2 pts) : Portée (C : 12’’, L : 18’’). [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ---
 ### Protecteur — 19 pts
 
@@ -469,7 +469,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 ---
 ### Sœur du couvent — 13 pts
 
-| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+|          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
 | Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **6+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Sœur     |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
