@@ -13,4 +13,4 @@ Lorsqu'un modèle doit effectuer un test de Panique, regardez la valeur de moral
 
 Jetez ensuite 2d6, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute).  
 Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.  
-> Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un échec, un résultat de 6 et 6 sera toujours un succès.  
+> Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.  
