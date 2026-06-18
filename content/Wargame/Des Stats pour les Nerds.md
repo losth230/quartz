@@ -22,6 +22,30 @@
     /* Carte formulaire */
     .cp-card { background: var(--lightgray); border: 1px solid var(--gray); border-radius: 4px; padding: 1.2em 1.4em; }
 
+    /* Notation par étoiles */
+    .cp-part-notes { display: flex; flex-wrap: wrap; gap: 1.2em; width: 100%; margin-top: 0.5em; padding-top: 0.5em; border-top: 1px dashed var(--gray); }
+    .cp-rating { display: flex; align-items: center; gap: 0.4em; }
+    .cp-rating-lbl { font-size: 0.8em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--secondary); }
+    .cp-stars { display: inline-flex; }
+    .cp-star { cursor: pointer; font-size: 1.2em; color: var(--gray); transition: color 0.1s; line-height: 1; }
+    .cp-star:hover { color: #d4a017; }
+    .cp-star.on { color: #e0a82e; }
+    .cp-star-clear { cursor: pointer; font-size: 0.75em; color: var(--gray); margin-left: 0.2em; opacity: 0.6; }
+    .cp-star-clear:hover { opacity: 1; color: #c0563f; }
+
+    /* Zone de commentaire */
+    .cp-textarea {
+      width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical;
+      background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
+      padding: 0.5em 0.65em; font-family: inherit; font-size: 0.9em; color: var(--dark); line-height: 1.5;
+    }
+
+    /* Icône commentaire dans l'historique */
+    .cp-comment-icon { cursor: help; font-size: 0.85em; opacity: 0.7; }
+    .cp-comment-icon:hover { opacity: 1; }
+    .cp-c-note { white-space: nowrap; }
+    .cp-note-count { color: var(--gray); font-size: 0.85em; }
+
     /* Tirage aléatoire */
     .cp-tirage { margin-bottom: 1.2em; }
     .cp-tirage-head { display: flex; justify-content: center; }
