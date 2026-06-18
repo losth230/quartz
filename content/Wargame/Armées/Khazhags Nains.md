@@ -38,14 +38,14 @@ Lors de la création d’une armée Naines, vous pouvez runer vos modèles. Chaq
 - **Rune explosive (+5 pts, machine uniquement)** : si la machine est détruite, désignez un modèle ennemi à 3’’ ou moins qui subit 5d6 touches.
 ---
 
-<center><h2>Grandes Bannières</h2></center>
+<center><h2>Bannières</h2></center>
 
-Les grandes bannières se réunissent autour des grandes bannières de leurs clans, voici les grandes bannières possibles :
-- **Bannière du clan (10 pts) :** Les modèles amis à 12’’ ou moins de cette grande bannière bénéficient de +1 à leurs jets de moral.
-- **Bannière d’hardiesse (10 pts) :** Les modèles amis à 12’’ ou moins de cette grande bannière n’ont pas à effectuer de test de déroute.
-- **Bannière d’antimagie (15 pts) :** La règle êtres de pierre des modèles amis à 12’’ ou moins de cette grande bannière se déclenche sur 4+ au lieu de 5+.
-- **Bannières Feu-de-Forge (20 pts) :** Les modèles adverses à 8’’ ou moins ne peuvent récupérer de PV.
-- **Etendard de patiente (20 pts) :** chaque fois qu’un évènement de fin de tour se déclenche, mettez une Manœuvre de côté pour le prochain tour.
+Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'importe quelle Unité au sein d'une Troupe peut porter une bannière. Voici les grandes bannières possibles :
+- **Bannière du Khaghag (5 pts) :** Le modèles bénéficie de +1 à ses jets de moral.
+- **Bannière d’hardiesse (5 pts) :** Le modèle n’est pas affecté par la déroute de la bande.
+- **Bannière d’antimagie (5 pts) :** La règle êtres de pierre de ce modèl se déclenche sur 4+ au lieu de 5+.
+- **Bannières Feu-de-Forge (5 pts) :** Le modèle gagne [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
+- **Etendard de patiente (5 pts) :** Si ce modèle contrôle un objectif en début de tour, générez 1 Manœuvre.
 ---
 
 ## Commandants
@@ -145,6 +145,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Équipement :
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
 - Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Grande bannière : ce modèle peut posséder une bannière, plutôt que d'affecter le modèle, elle affecte tous les modèles alliés à 9" ou moins.
 ##### Règles spéciales :
 - Ruse du Vieux Sage : au début de chaque tour, désignez un modèle ami à 9" ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide(1)]].
 ---
@@ -381,7 +382,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Grincheur | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
+| Canon | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
 | **Mêlée:** | 3d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
@@ -415,18 +416,6 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 ##### Règles spéciales :
 - Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]], non cumulable.
 - Puissance de la mine : les modèles amis de type Mine à 6’’ ou moins bénéficient de +1 Vit et +1 Moral, non cumulable.
----
-### Thane — 16 pts
-
-| 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Thane       | **4**   | **4+** | **-**     | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
-| **Mêlée:** | 2d6     |        | **Tir:** | -      |        |        |        |        |          |
-
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-##### Équipement :
-- Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
-- Grande bannière : ce modèle peut posséder une grande bannière.
 ---
 ## Modèles Spéciaux
 
