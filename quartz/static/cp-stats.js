@@ -262,8 +262,9 @@ function tirageCard(titre, item) {
   // nl2br : on échappe puis on convertit les retours à la ligne en <br>.
   const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
   let details = "";
-  if (item.mise_en_place || item.objectif) {
+  if (item.description || item.mise_en_place || item.objectif) {
     details = '<div class="cp-tirage-details">' +
+      (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
       (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
       (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
     "</div>";
