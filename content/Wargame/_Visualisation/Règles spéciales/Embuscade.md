@@ -1,0 +1,1 @@
+Ne déployez pas un modèle avec cette règle lors de la phase de déploiement. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à plus de N" de tout modèle adverse. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activé).
