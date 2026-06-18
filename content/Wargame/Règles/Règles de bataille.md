@@ -161,6 +161,9 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 #### Tir de contre-charge :
 Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
 Attention : une unité marquée activée ou engagée ne peut effectuer de tir de contre-charge. De plus, un tir de contre-charge ne peut jamais bénéficier du bonus de LdV dégagée.
+> ##### (Règles avancées) Tirer à courte ou longue portée :
+> Certains modèles ont deux règles de portée pour une attaque, notées C:N", L:M". Cela veut dire que les cibles à N" ou moins sont considérée à courte portée et celles entre N" et M" à longue portée.
+
 > ##### (Règles avancées) Tirer en Troupe :
 > Lorsque des unités sont organisées en Troupe, seuls les 2 premiers rangs peuvent tirer. 
 
@@ -169,10 +172,6 @@ Attention : une unité marquée activée ou engagée ne peut effectuer de tir de
 ### Attaques en mêlée :
 Un modèle en contact socle à socle avec un modèle ennemi peut effectuer une attaque en mêlée, dans la majorité des cas il le fera via l'intermédiaire d'une charge ou de l'action Mêlée.
 Un modèle doit nécessairement effectuer son attaque contre un modèle situé dans son arc avant et ne peut effectuer d'attaque contre un modèle ami ou allié. Un modèle effectuant une attaque en mêlée à le droit de pivoter avant son attaque, mais pas après.
-
-> ##### (Règles avancées) Tirer à courte ou longue portée :
-> Certains modèles ont deux règles de portée pour une attaque, notées C:N", L:M". Cela veut dire que les cibles à N" ou moins sont considérée à courte portée et celles entre N" et M" à longue portée.
-
 > ##### (Règles avancées) Attaquer en Troupe :
 > Lorsque des unités sont organisées en Troupe, seul le premier rang peut attaquer. Pour chaque unité présente au second rang, octroyez un bonus de +1d6 à l'unité du premier rang de votre choix.
 
@@ -195,7 +194,7 @@ Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter con
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
 #### Test de panique :
-Un test e Panique peut s'effectuer dans 3 cas de figure :
+Un test de Panique peut s'effectuer dans 3 cas de figure :
 - Un modèle perd un corps à corps.
 - Un modèle perd au moins 25% de ses PV restants (autrement que lors d'un corps à corps).
 - Un modèle à 6' ou moins est complètement détruit.
@@ -214,7 +213,7 @@ Lorsqu'un modèle doit effectuer un test de Panique, regardez la valeur de moral
 
 
 Jetez ensuite 2d6, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute).  
-Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.  
+Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures et reçoit un marqueur *désorganisé*.  
 > Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.
 ### Mouvements de poursuite.
 Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
