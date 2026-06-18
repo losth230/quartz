@@ -83,7 +83,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 5d6                                                                             |                                                                                  |        |        |        |            | 
 
-*[[Wargame/_Visualisation/Règles spéciales/Égide|Égide (1)]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]].*
+*[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]].*
 ##### Équipement :
 - Lance – torpilles : Portée (C : 9’’, L : 12’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (3)]].
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
@@ -146,7 +146,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
 - Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
-- Ruse du Vieux Sage : au début de chaque tour, désignez un modèle ami à 9" ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Égide|Égide(1)]].
+- Ruse du Vieux Sage : au début de chaque tour, désignez un modèle ami à 9" ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide(1)]].
 ---
 ### Prospecteur — 30 pts
 
@@ -205,10 +205,9 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Arquebusier | **4** | **5+** | **4+** | **5+** | **7** | **2** | **2** | **1** | Nain |
+| Arquebusier | **4** | **5+** | **3+** | **5+** | **7** | **2** | **2** | **1** | Nain |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*Tireur d’élite.*
 ##### Équipement :
 - Arquebuse : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], Tir long.
 ---
@@ -296,7 +295,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Bouclier (+2 pts) : l’armure de cette unité devient 4+.
 - Arme lourde (+3 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
-- C’était mieux avant : cette unité n’a jamais à effectuer de jet de Panique et ne souffre jamais de malus au moral.
+- C’était mieux avant : cette unité n’a jamais à effectuer de jet de Panique.
 ---
 ### Martelier — 17 pts
 
@@ -316,24 +315,22 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | Mineur | **4** | **4+** | **5+** | **5+** | **6** | **1** | **2** | **1** | Nain |
 | **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Dynamite (+3 pts) : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 3d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Foreuse : (+6 pts) : Portée (C : 6’’, L : 9’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
-- Instrument de géomètre (+3 pts) : ce modèle n’est pas marqué activé quand il réalise une Progression souterraine, mais ne peut être activé via une action anticipée.
-##### Règles spéciales :
-- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 6’’ ou plus de tout modèle adverse. Marquez-le ensuite activé.
+- Instrument de géomètre (+3 pts) : ce modèle n’est pas marqué activé quand il réalise une [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]], mais ne peut être activé via une action anticipée.
 ---
 ### Ranger — 16 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Ranger | **5** | **5+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Nain |
-| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
+| Ranger | **5** | **5+** | **4+** | **5+** | **7** | **2** | **2** | **2** | Nain |
+| **Mêlée:** | 2d6 |  | **Tir:** | 4d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]].*
 ##### Équipement :
-- Arbalète légère : Portée (C : 9’’, L : 15’’).
+- Arbalète légère : Portée (C : 9’’, L : 12’’).
 
 ---
 ## Modèles de soutient
@@ -384,23 +381,24 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Grincheur | **4** | **6+** | **4+** | **5+** | **7** | **2** | **2** | **4** | Machine |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| Grincheur | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
+| **Mêlée:** | 3d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
-- Canon à flammes : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Souffle|Souffle]].
+- Canon à flammes : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Souffle|Souffle]].
 ##### Règles spéciales :
-- Surcharge (1) : ajoutez 1d6 au prochain tir de ce modèle, puis marquez-le fatiguée.
+- Surcharge (1) : ajoutez [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]] au prochain tir de ce modèle, puis marquez-le fatiguée.
+- Vue partagée : Le canon peut utiliser la ligne de vue de n’importe quel Autogyre ou Autobombardier à 6’’ ou moins au lieu de la sienne.
 ---
 ### Canon à mitraille — 39 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Canon | **4** | **6+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Machine |
-| **Mêlée:** | 1d6 |  | **Tir:** | voir ci-dessous |  |  |  |  |  |
+| **Mêlée:** | 3d6 |  | **Tir:** | voir ci-dessous |  |  |  |  |  |
 
 ##### Équipement :
-- Canon à mitraille : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], Tir long.
+- Canon à mitraille : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], Tir long.
 ##### Règles spéciales :
 - Canon à mitraille : lorsque cette unité effectue une attaque de tir, jetez 2d6, il s’agit du nombre de tirs qu’elle effectue. Si vous obtenez au moins deux résultats de 6, le canon s’enraille et ne tire pas.
 - Surcharge (1) : jetez 1d6 supplémentaire pour déterminer le nombre de tir qu’effectue cette unité, puis marquez-là fatiguée.
@@ -413,9 +411,9 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | Chariot     | **4**   | **6+** | **4+**    | **5+** | **7**  | **2**  | **2**  | **2**  | Machine, Mine |
 | **Mêlée:** | 2d6     |        | **Tir:** | 3d6    |        |        |        |        |               |
 
+*[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]]*
 ##### Règles spéciales :
 - Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]], non cumulable.
-- Progression souterraine : ne déployez pas ce modèle et mettez-le de côté. A la place d’une activation normale, vous pouvez décider de le déployer n’importe où à 3’’ ou plus de tout modèle adverse. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée).
 - Puissance de la mine : les modèles amis de type Mine à 6’’ ou moins bénéficient de +1 Vit et +1 Moral, non cumulable.
 ---
 ### Thane — 16 pts
@@ -440,11 +438,10 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | Avatar | **5** | **4+** | **4+** | **3+** | **6+** | **8** | **5** | **6** | Machine |
 | **Mêlée:** | 8d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
 - Avatar enfoui : l’avatar n’est pas jouable tant qu’il n’a pas été forgé trois fois.
 - Canon des Titans : à la fin de chaque tour, vous pouvez désigner un modèle éligible pour une attaque de tir à 18’’ ou moins et résolvez une attaque de tir selon les règles suivantes : 4d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
-- Terrain : l'Avatar peut être déployé dans la zone de déploiement de votre choix, avant que le déploiement ne commence.
 
 ---
 ### Mine — 17 pts
