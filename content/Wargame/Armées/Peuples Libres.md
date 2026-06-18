@@ -105,7 +105,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Abbesse    | **5**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **10**                                                                           | **3**  | **2**  | **4**  | Sœur     |
+| Abbesse    | **5**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                           | **3**  | **2**  | **4**  | Sœur     |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -122,7 +122,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Allie      | **5**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **3**  | **2**  | **5**  | Sœur     |
+| Allie      | **5**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **9**                                                                           | **3**  | **2**  | **5**  | Sœur     |
 | **Mêlée:** | 6d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
@@ -148,7 +148,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Comte | **5** | **4+** | **-** | **4+** | **9** | **3** | **2** | **2** | Chevalier |
+| Comte | **5** | **4+** | **-** | **4+** | **8** | **3** | **2** | **2** | Chevalier |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Règles spéciales :
@@ -274,7 +274,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**         |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------------- |
-| Losette    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Sœur - Chevalier |
+| Losette    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **10**                                                                            | **4**  | **2**  | **5**  | Sœur - Chevalier |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |                  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -307,7 +307,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | 🟥         | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Sergent    | **5**     | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Paysan   |
+| Sergent    | **5**     | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Paysan   |
 | **Mêlée:** | 2d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Équipement :
@@ -325,7 +325,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Hugues | **5** | **4+** | **-** | **4+** | **9** | **2** | **2** | **2** | Chevalier |
+| Hugues | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *- /[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -344,7 +344,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Tristan    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **3**  | Chevalier |
+| Tristan    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **3**  | **2**  | **3**  | Chevalier |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide]].*
@@ -357,7 +357,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Assassine | **5** | **4+** | **-** | **6+** | **9** | **2** | **2** | **2** | Sœur |
+| Assassine | **5** | **4+** | **-** | **6+** | **7** | **2** | **2** | **2** | Sœur |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
@@ -370,7 +370,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Chevaucheur | **-** | **4+** | **-** | **4+** | **8** | **3** | **3** | **3** | Chevalier |
+| Chevaucheur | **-** | **4+** | **-** | **4+** | **7** | **3** | **3** | **3** | Chevalier |
 | Pégase | **7** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** |  |
 | **Mêlée:** | 2d6 / 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
@@ -384,7 +384,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Eclaireuse | **5** | **6+** | **3+** | **5+** | **8** | **2** | **2** | **2** | Sœur |
+| Eclaireuse | **5** | **6+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Sœur |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
@@ -397,7 +397,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Fanatique | **5** | **6+** | **-** | **5+** | **9** | **2** | **2** | **2** | Paysan |
+| Fanatique | **5** | **6+** | **-** | **5+** | **6** | **2** | **2** | **2** | Paysan |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Équipement :
@@ -409,7 +409,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Gendarme | **-** | **5+** | **-** | **5+** | **7** | **2** | **3** | **2** | Paysan |
+| Gendarme | **-** | **5+** | **-** | **5+** | **6** | **2** | **3** | **2** | Paysan |
 | Cheval | **7** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Bête |
 | **Mêlée:** | 2d6 / 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
@@ -423,7 +423,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Inquisiteur | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **3** | Chevalier |
+| Inquisiteur | **5** | **4+** | **-** | **4+** | **7** | **2** | **2** | **3** | Chevalier |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -437,7 +437,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Paysan | **5** | **5+** | **5+** | **6+** | **6** | **1** | **2** | **1** | Paysan |
+| Paysan | **5** | **5+** | **5+** | **6+** | **4** | **1** | **2** | **1** | Paysan |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
@@ -449,7 +449,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Milicien | **5** | **4+** | **4+** | **5+** | **7** | **2** | **2** | **2** | Paysan |
+| Milicien | **5** | **4+** | **4+** | **5+** | **5** | **2** | **2** | **2** | Paysan |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
@@ -460,7 +460,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Paladin | **5** | **4+** | **-** | **4+** | **9** | **2** | **2** | **2** | Chevalier |
+| Paladin | **5** | **4+** | **-** | **4+** | **7** | **2** | **2** | **2** | Chevalier |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -471,7 +471,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **6+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Sœur     |
+| Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **6+**                                                                          | **6**                                                                            | **2**  | **2**  | **2**  | Sœur     |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
@@ -483,7 +483,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Fanatique | **3** | **6+** | **5+** | **5+** | **7** | **4** | **4** | **3** | Paysan |
+| Fanatique | **3** | **6+** | **5+** | **5+** | **6** | **4** | **4** | **3** | Paysan |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Équipement :
@@ -501,7 +501,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Trébuchet | **3** | **6+** | **5+** | **5+** | **7** | **4** | **4** | **4** | Machine/Paysan |
+| Trébuchet | **3** | **6+** | **5+** | **5+** | **6** | **4** | **4** | **4** | Machine/Paysan |
 | **Mêlée:** | 3d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
 ##### Équipement :
