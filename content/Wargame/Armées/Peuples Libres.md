@@ -43,7 +43,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 - **Bannière du Lion d’Acier (15 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d’avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
 - **Bannière du Jugement de Fer (15 pts) :** *"La loi ne faiblit jamais. Les faibles, eux, s’effondrent."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (6)]], les modèles amis bénéficient d’[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], les modèles ennemis subissent un malus de -1 au Moral.
 - **Bannière de l’Eternelle Lumière (10 pts) :** *"L’ombre ne tombera jamais sur notre patrie tant que nous tiendrons la ligne."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], au début de chaque tour, les modèles amis bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
-- **Bannières des Lames enchainées :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
+- **Bannières des Lames enchainées (10 pts) :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
 - **Bannière d’Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
 - **Bannière des Vétérans d’Innsmouth (10 pts) :** *"La peur est pour ceux qui n’ont jamais vu l’horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s’ils ont perdu au moins 1 PV ou une unité.
 - **Bannière des Chevaliers du Clair-Obscur (20 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
@@ -67,6 +67,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 
 <center><h2>Royaumes et Ordres</h2></center>
 
+Lors de la création d'une bande des Peuples Libres, choisissez un Royaule auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.
 ## Royaume de Til Armen
 Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
 #### Inquisition
