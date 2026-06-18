@@ -59,7 +59,11 @@
     .cp-tirage-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray); }
     .cp-tirage-noimg svg { width: 72px; height: 81px; }
     .cp-tirage-nom { font-weight: bold; color: var(--dark); }
-    .cp-tirage-details { margin-top: 0.7em; text-align: left; border-top: 1px dashed var(--gray); padding-top: 0.6em; }
+    .cp-tirage-details {
+      margin-top: 1em; text-align: left;
+      border: 1px solid var(--gray); border-radius: 4px; background: var(--light);
+      padding: 1em 1.2em;
+    }
     .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
     .cp-tirage-detail { margin-bottom: 0.6em; }
     .cp-tirage-detail:last-child { margin-bottom: 0; }
