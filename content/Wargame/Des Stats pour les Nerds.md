@@ -49,11 +49,15 @@
     /* Tirage aléatoire */
     .cp-tirage { margin-bottom: 1.2em; }
     .cp-tirage-head { display: flex; justify-content: center; }
-    .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; }
-    .cp-tirage-card { text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
+    /* align-items: stretch (défaut) => les deux cartes prennent la hauteur de la plus grande */
+    .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; align-items: stretch; }
+    .cp-tirage-card { display: flex; flex-direction: column; text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
     .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
-    .cp-tirage-img { max-width: 100%; max-height: 200px; border-radius: 3px; display: block; margin: 0 auto 0.5em; }
-    .cp-tirage-noimg { height: 80px; display: flex; align-items: center; justify-content: center; color: var(--gray); font-size: 1.5em; }
+    /* Cadre image de hauteur fixe : aligne les deux colonnes, que l'image existe ou non */
+    .cp-tirage-imgwrap { height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em; }
+    .cp-tirage-img { max-width: 100%; max-height: 210px; border-radius: 3px; display: block; }
+    .cp-tirage-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray); }
+    .cp-tirage-noimg svg { width: 72px; height: 81px; }
     .cp-tirage-nom { font-weight: bold; color: var(--dark); }
     .cp-tirage-details { margin-top: 0.7em; text-align: left; border-top: 1px dashed var(--gray); padding-top: 0.6em; }
     .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
