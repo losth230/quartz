@@ -47,6 +47,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - **Bannières Feu-de-Forge (20 pts) :** Les modèles adverses à 8’’ ou moins ne peuvent récupérer de PV.
 - **Etendard de patiente (20 pts) :** chaque fois qu’un évènement de fin de tour se déclenche, mettez une Manœuvre de côté pour le prochain tour.
 ---
+
 ## Commandants
 
 ---
@@ -133,19 +134,19 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / - .*
 
 ---
-### Vieux Sage — 32 pts
+### Vieux Sage — 28 pts
 
 | 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Sage        | **4**   | **4+** | **-**     | **4+** | **8**  | **2**  | **2**  | **4**  | Nain     |
+| Sage        | **4**   | **4+** | **-**     | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée:** | 3d6     |        | **Tir:** | -      |        |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]].*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Bouclier (+4 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
-- Arme lourde (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Bouclier (+2 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
+- Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
-- Ruse du Vieux Sage (1) : utilisable une seule fois par tour après avoir été ciblé par une attaque en mêlée, votre adversaire doit relancer tous ses jets réussis.
+- Ruse du Vieux Sage : au début de chaque tour, désignez un modèle ami à 9" ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Égide|Égide(1)]].
 ---
 ### Prospecteur — 30 pts
 
@@ -173,9 +174,9 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 | Vor’ Jin    | **5**   | **4+** | **3+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée:** | 2d6     |        | **Tir:** | 4d6    |        |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].*
 ##### Équipement :
-- Fusil : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], Tir long.
+- Fusil : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
 - Plus vite ! : au début de chaque tour, désignez un modèle à 12’’ ou moins avec une règle se déclenchant en début ou fin de tour et déclenchez-là gratuitement.
@@ -196,7 +197,7 @@ Les grandes bannières se réunissent autour des grandes bannières de leurs cla
 - Canon à percussion : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]].
 ##### Règles spéciales :
 - Bombardement : utilisable une seule fois par partie. Les bombes peuvent être lâchées sur un modèle survolé par l’Autogyre au cours d’un mouvement, réalisez alors une attaque de tir selon la règle suivante : 3d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-- Vue du ciel : l’Autogyre octroie un bonus de +1 au toucher lorsque des unités amies tirent sur des unités se situant à 6’’ ou moins du Gyrocoptère.
+- Vue du ciel : l’Autogyre octroie un bonus de +1 au toucher lorsque des modèles amis tirent sur des modèles se situant à 6’’ ou moins de l'Autogyre.
 - Surcharge moteur (1) : ce modèle gagne +2 Vitesse pour ce tour.
 - Plateforme de tir : l’action de tir est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
 ---
