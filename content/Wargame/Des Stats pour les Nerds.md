@@ -56,6 +56,7 @@
     .cp-tirage-noimg { height: 80px; display: flex; align-items: center; justify-content: center; color: var(--gray); font-size: 1.5em; }
     .cp-tirage-nom { font-weight: bold; color: var(--dark); }
     .cp-tirage-details { margin-top: 0.7em; text-align: left; border-top: 1px dashed var(--gray); padding-top: 0.6em; }
+    .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
     .cp-tirage-detail { margin-bottom: 0.6em; }
     .cp-tirage-detail:last-child { margin-bottom: 0; }
     .cp-tirage-detail-lbl { display: block; font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.75em; color: var(--secondary); margin-bottom: 0.15em; }
