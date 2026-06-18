@@ -70,16 +70,16 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 Lors de la création d'une bande des Peuples Libres, choisissez un Royaule auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.
 ## Royaume de Til Armen
 Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
-#### Inquisition
-Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
 #### Ordre des Chevaliers
 Les modèles Chevalier ont +1d6 en mêlée.
+#### Duché
+Au début de chaque tour, désignez un modèle adverse comme Hérétique, les modèles Chevaliers peuvent relancer leurs attaques en mêlée ratées contre ce modèle pour le reste du tour.
 ## Royaume de Lun
 Lors de chaque phase d’initiative, vous générez 3 manœuvres.
 #### Palais des Légendes
 Lorsqu’un modèle utilise Faveur Divine, il gagne [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
-#### Ordre des Paladins
-Au début de chaque tour, désignez un modèle adverse comme Hérétique, les modèles Chevaliers peuvent relancer leurs attaques en mêlée ratées contre ce modèle pour le reste du tour.
+#### Inquisition
+Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
 ## Empire de Seth
 Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 #### Duché d’Hydrac
