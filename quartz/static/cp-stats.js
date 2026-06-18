@@ -252,8 +252,21 @@ function doTirage() {
     '<div class="cp-tirage-grid">' +
       tirageCard("Scénario", sc) +
       tirageCard("Déploiement", dp) +
-    "</div>";
+    "</div>" +
+    tirageDetails(sc);
 }
+
+// Bloc de texte pleine largeur sous les deux cartes (détails du scénario tiré).
+function tirageDetails(item) {
+  if (!item.description && !item.mise_en_place && !item.objectif) return "";
+  const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
+  return '<div class="cp-tirage-details">' +
+    (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
+    (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
+    (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
+  "</div>";
+}
+
 function tirageCard(titre, item) {
   // Blason SVG affiché quand aucune image n'est fournie (net, suit le thème).
   const blason = '<div class="cp-tirage-noimg">' +
@@ -267,22 +280,10 @@ function tirageCard(titre, item) {
   const img = item.image_url
     ? '<div class="cp-tirage-imgwrap"><img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" /></div>'
     : '<div class="cp-tirage-imgwrap">' + blason + "</div>";
-  // Détails optionnels (mise en place / objectif) : présents seulement sur les scénarios.
-  // nl2br : on échappe puis on convertit les retours à la ligne en <br>.
-  const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
-  let details = "";
-  if (item.description || item.mise_en_place || item.objectif) {
-    details = '<div class="cp-tirage-details">' +
-      (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
-      (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
-      (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
-    "</div>";
-  }
   return '<div class="cp-tirage-card">' +
     '<div class="cp-tirage-label">' + titre + "</div>" +
     img +
     '<div class="cp-tirage-nom">' + esc(item.nom) + "</div>" +
-    details +
   "</div>";
 }
 
