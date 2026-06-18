@@ -1,1 +1,2 @@
-Lorsqu'un modèle possédant cette règle attaque, si la moindre touche est obtenue, sa cible est marquée *enflammée.* Un modèle *enflammé* perd 1 PV à la fin de chaque tour et ne peut plus bénéficier de la règle Régénération (N). Un modèle peut dépenser une action courte pour enlever un marqueur *enflammé*.
+Lorsqu'un modèle possédant cette règle attaque, si la moindre touche est obtenue, sa cible est marquée *enflammée.* Un modèle *enflammé* ne peut plus bénéficier de la règle Régénération (N).  
+Un modèle peut dépenser une action courte pour enlever un marqueur *enflammé*.
