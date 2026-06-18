@@ -96,7 +96,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Meneur     | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **6**                                                                            | **4**  | **2**  | **3**  | Rat      |
+| Meneur     | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **7**                                                                            | **4**  | **2**  | **3**  | Rat      |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -176,7 +176,7 @@ ___
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Levée | **5** | **5+** | **-** | **6+** | **5** | **1** | **2** | **1** | Vermine |
+| Levée | **5** | **5+** | **-** | **6+** | **4** | **1** | **2** | **1** | Vermine |
 | **Mêlée:** | 1d6 |  | **Tir:** |  |  |  |  |  |  |
 
 ##### Équipement :
@@ -200,7 +200,7 @@ ___
 | Long-tireur | **5** | **6+** | **3+** | **6+** | **5** | **2** | **2** | **2** | Vermine |
 | **Mêlée:** | 1d6 |  | **Tir:** | 1d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]].*
 ##### Équipement :
 - Fusil long : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 - Réservoir à peste (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] sur les attaques du Fusil long.
@@ -230,7 +230,7 @@ ___
 
 |             | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Porte-peste | **5**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Vermine  |
+| Porte-peste | **5**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **6**                                                                            | **2**  | **2**  | **2**  | Vermine  |
 | **Mêlée:**  | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -255,7 +255,7 @@ ___
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Vétéran | **5** | **4+** | **-** | **5+** | **7** | **2** | **2** | **2** | Vermine |
+| Vétéran | **5** | **4+** | **-** | **5+** | **6** | **2** | **2** | **2** | Vermine |
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]].*
@@ -365,7 +365,7 @@ ___
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Cloche | **5** | **4+** | **-** | **5+** | **7** | **6** | **5** | **6** | Machine |
+| Cloche | **5** | **4+** | **-** | **5+** | **6** | **6** | **5** | **6** | Machine |
 | **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]].*
@@ -396,7 +396,7 @@ ___
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Roue | **Spé** | **4+** | **-** | **5+** | **7** | **6** | **3** | **6** | Machine |
+| Roue | **Spé** | **4+** | **-** | **5+** | **6** | **6** | **3** | **6** | Machine |
 | **Mêlée:** | Voir ci-dessous |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -424,7 +424,7 @@ ___
 | Tunnel | **-** | **-** | **-** | **-** | **-** | **-** | **-** | **-** | Terrain |
 | **Mêlée:** | - |  | **Tir:** | - |  |  |  |  |  |
 
+[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]]
 ##### Règles spéciales :
-- Terrain : le Tunnel peut être déployé dans la zone de déploiement de votre choix, avant que le déploiement ne commence.
 - Arrivée surprise : au lieu de déployer vos modèles en avant-garde, vous pouvez les mettre de côté. A la place d’une activation normale, vous pouvez décider d’en déployer un entièrement à 6’’ ou moins d’un Tunnel. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée). Si le modèle apparait engagé en mêlée avec un modèle ennemi, il s’agit d’une charge.
 ---
