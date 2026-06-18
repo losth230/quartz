@@ -438,6 +438,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 | Mine       | **-**   | **-**                                                                                | **-**                                                                                   | **2+**                                                                          | **-**                                                                            | **7**  | **4**  | **6**  | Terrain  |
 | **Mêlée:** | -       |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]].*
 ##### Règles spéciales :
 - Financer la guerre : si un modèle nain est présent à 6’’ ou moins au début du tour, générez 1 Manœuvre. S’il s’agit d’un mineur, générez 1 Manœuvre supplémentaire.
 - Avancée des grottes : les modèles de type Mine à 9’’ ou moins bénéficient de +1 à Vit et +1 à leurs jets d’attaque en mêlée et à distance.
