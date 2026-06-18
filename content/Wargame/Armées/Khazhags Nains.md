@@ -80,7 +80,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
-| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
+| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **3+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 5d6                                                                             |                                                                                  |        |        |        |            | 
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]].*
@@ -153,10 +153,9 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Prospecteur | **4**   | **4+** | **4+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
+| Prospecteur | **4**   | **4+** | **3+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée:** | 2d6     |        | **Tir:** | 4d6    |        |        |        |        |          |
 
-*Tireur d’élite.*
 ##### Équipement :
 - Pistolet lourd : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Dynamite à percussions : action courte, utilisable une seule fois par partie, cette unité effectue une attaque à distance selon les règles suivantes : Portée 9’’, 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
@@ -192,7 +191,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 | Autogyre | **6** | **6+** | **4+** | **5+** | **7** | **3** | **3** | **4** | Nain, Machine |
 | **Mêlée:** | 1d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Plateforme de Tir|Plateforme de Tir]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
 - Canon long : Portée 15’’.
 - Canon à percussion : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]].
@@ -200,7 +199,6 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 - Bombardement : utilisable une seule fois par partie. Les bombes peuvent être lâchées sur un modèle survolé par l’Autogyre au cours d’un mouvement, réalisez alors une attaque de tir selon la règle suivante : 3d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Vue du ciel : l’Autogyre octroie un bonus de +1 au toucher lorsque des modèles amis tirent sur des modèles se situant à 6’’ ou moins de l'Autogyre.
 - Surcharge moteur (1) : ce modèle gagne +2 Vitesse pour ce tour.
-- Plateforme de tir : l’action de tir est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
 ---
 ### Arquebusier — 14 pts
 
@@ -344,22 +342,22 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 | Autobombardier | **6** | **6+** | **4+** | **5+** | **7** | **5** | **3** | **4** | Nain, Machine |
 | **Mêlée:** | 1d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Plateforme de Tir|Plateforme de Tir]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
 - Canon : Portée (C : 12’’).
 ##### Règles spéciales :
-- Bombardement massif : les bombes peuvent être lâchées sur une unité survolée par le Gyrocoptère au cours d’un mouvement avec la règle suivante : 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+- Bombardement massif : des bombes peuvent être lâchées sur un modèle survolée par l'Autobombardier au cours d’un mouvement avec la règle suivante : 5d6, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 - Surcharge moteur (1) : cette unité gagne +2 Vitesse pour ce tour.
-- Plateforme de tir : l’action de tir est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
 ---
 ### Armurier — 22 pts
 
 | 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Armurier | **4** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Nain |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| Armurier | **4** | **5+** | **4+** | **4+** | **8** | **2** | **2** | **2** | Nain |
+| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Pistolet lourd : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
 - Renforcement : au prix d’une action courte, vous pouvez renforcer un modèle Nain ami à 6’’ ou moins avec l’une des améliorations suivantes :
   - Arme fracassante : pour le reste de la partie, le modèle ami gagne la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]. Forge.
@@ -405,16 +403,16 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 - Surcharge (1) : jetez 1d6 supplémentaire pour déterminer le nombre de tir qu’effectue cette unité, puis marquez-là fatiguée.
 - Vue partagée : Le canon peut utiliser la ligne de vue de n’importe quel Autogyre ou Autobombardier à 6’’ ou moins au lieu de la sienne.
 ---
-### Chariot de mine — 21 pts
+### Chariot de mine — 14 pts
 
 | 🟥          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**      |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | ------------- |
-| Chariot     | **4**   | **6+** | **4+**    | **5+** | **7**  | **2**  | **2**  | **2**  | Machine, Mine |
-| **Mêlée:** | 2d6     |        | **Tir:** | 3d6    |        |        |        |        |               |
+| Chariot     | **4**   | **6+** | **-**    | **5+** | **7**  | **2**  | **2**  | **2**  | Machine, Mine |
+| **Mêlée:** | 2d6     |        | **Tir:** | -    |        |        |        |        |               |
 
 *[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]]*
 ##### Règles spéciales :
-- Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]], non cumulable.
+- Puissance de la mine (1) : à utiliser lorsqu’un modèle à 9’’ ou moins effectue une attaque en mêlée ou à distance pour lui conférer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]].
 - Puissance de la mine : les modèles amis de type Mine à 6’’ ou moins bénéficient de +1 Vit et +1 Moral, non cumulable.
 ---
 ## Modèles Spéciaux
