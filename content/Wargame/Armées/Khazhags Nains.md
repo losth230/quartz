@@ -95,7 +95,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | ------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Ingénieur   | **4**   | **4+** | **3+**    | **4+** | **9**  | **3**  | **2**  | **4**  | Nain     |
+| Ingénieur   | **4**   | **4+** | **3+**    | **4+** | **8**  | **3**  | **2**  | **4**  | Nain     |
 | **Mêlée:** | 2d6     |        | **Tir:** | 4d6    |        |        |        |        |          |
 
 ##### Équipement :
@@ -214,7 +214,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Brise fer | **4** | **4+** | **4+** | **3+** | **9** | **2** | **2** | **2** | Nain |
+| Brise fer | **4** | **4+** | **4+** | **3+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée:** | 3d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].*
@@ -246,7 +246,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 |             | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ----------- | --------- | ------ | --------- | ------ | ------ | ------ | ------ | ------ | -------- |
-| Eperon      | **-**     | **4+** | **-**     | **4+** | **9**  | **3**  | **2**  | **2**  | Nain     |
+| Eperon      | **-**     | **4+** | **-**     | **4+** | **8**  | **3**  | **2**  | **2**  | Nain     |
 | Bélier      | **5**     | **4+** | **-**     | **-**  | **-**  | **-**  | **-**  | **-**  | Bête     |
 | **Mêlée:** | 2d6 / 2d6 |        | **Tir:** | -      |        |        |        |        |          |
 
@@ -262,7 +262,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Garde      | **4**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Nain     |
+| Garde      | **4**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **2**  | **2**  | **2**  | Nain     |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 *[[Wargame/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge Dévastatrice]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].*
@@ -287,7 +287,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Grincheur | **4** | **4+** | **-** | **5+** | **9** | **2** | **2** | **2** | Nain |
+| Grincheur | **4** | **4+** | **-** | **5+** | **8** | **2** | **2** | **2** | Nain |
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Équipement :
@@ -353,7 +353,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Armurier | **4** | **5+** | **4+** | **4+** | **8** | **2** | **2** | **2** | Nain |
+| Armurier | **4** | **5+** | **4+** | **4+** | **7** | **2** | **2** | **2** | Nain |
 | **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
 ##### Équipement :
@@ -435,7 +435,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Mine       | **-**   | **-**                                                                                | **-**                                                                                   | **1+**                                                                          | **-**                                                                            | **7**  | **4**  | **6**  | Terrain  |
+| Mine       | **-**   | **-**                                                                                | **-**                                                                                   | **2+**                                                                          | **-**                                                                            | **7**  | **4**  | **6**  | Terrain  |
 | **Mêlée:** | -       |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
 ##### Règles spéciales :
