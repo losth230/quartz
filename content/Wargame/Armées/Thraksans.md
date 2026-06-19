@@ -6,7 +6,7 @@
 #### Corruption
 Lorsqu’un modèle ami *Corrompt,* désignez un modèle à 9’’ ou moins qui reçoit un marqueur *Corruption.* Un modèle ennemi souffre d’un malus de -1 Moral par *marqueur* Corruption.
 #### Cité engloutie
-Les modèles amis à 9'' ou moins peuvent relancer leurs jets d'attaque en mêlée et d'armure obtenant 1. Les lanceurs de sorts amis bénéficient de +2 à leurs jets de lancements de sorts par Cité Engloutie présente en jeu.
+Les modèles amis à 6" ou moins peuvent relancer leurs jets d'attaque en mêlée et d'armure obtenant 1. Les lanceurs de sorts amis bénéficient de +1 à leurs jets de lancements de sorts par Cité Engloutie présente en jeu.
 #### Evolution (N)
 Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son Evolution.
 #### L'heure de la fin
@@ -14,9 +14,9 @@ Lorsqu’un modèle avec Evolution ami possède N *Corruptions*, déclenchez son
 Au début de chaque tour consultez la table ci-dessous pour savoir quel effet appliquer.  
 **Tour 1 :** Placez un marqueur Activé sur le modèle de votre choix.  
 **Tour 2 :** Placez une cité Engloutie à l'endroit de votre choix OU placez un marqueur *Corruption* sur le modèle de votre choix.  
-**Tour 3 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
-**Tour 4 :** Invoquez un Kuuh-Khaa à 3'' ou moins de la cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
-**Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3'' ou moins d'une cité Engloutie et à 12'' ou plus de tout modèle ennemi.
+**Tour 3 :** Invoquez un Kuuh-Khaa à 3" ou moins de la cité Engloutie de votre choix et à 12" ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
+**Tour 4 :** Invoquez un Kuuh-Khaa à 3" ou moins de la cité Engloutie de votre choix et à 12" ou plus de tout modèle ennemi. OU, Placez trois marqueurs *Corruption* réparties comme vous le souhaitez entre les modèles de votre choix.  
+**Tour 5 :** Invoquez un Cahlta ou un Tolgoth à 3" ou moins d'une cité Engloutie et à 12" ou plus de tout modèle ennemi.
 
 #### Soumission abyssale 
 Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que de masse, transformez chacune de ses unité en Profond sous votre contrôle.
@@ -25,13 +25,13 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 
 **Attribut :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 12’’ ou moins du lanceur qui reçoit une *Corruption*.
 #### Niveau 1
-- **Dévoration d’esprit (court, 3+, projectile) :** Portée 12’’, la cible reçoit 2 marqueurs *Corruption*.
-- **Invocation de Kuuh-Khaa (long, 17+, Projectile) :** Invoquez un Kuuh-Khaa à 3'' ou moins de la Cité Engloutie de votre choix et à 3'' ou plus de tout modèle ennemi et ajoutez-le à votre liste d’armée.
+- **Dévoration d’esprit (court, 3+, projectile) :** Portée 12", la cible reçoit 2 marqueurs *Corruption*.
+- **Invocation de Kuuh-Khaa (long, 17+, Projectile) :** Invoquez un Kuuh-Khaa à 3" ou moins de la Cité Engloutie de votre choix et à 3" ou plus de tout modèle ennemi et ajoutez-le à votre liste d’armée.
 #### Niveau 2
-- **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12’’ ou moins.
-- **Hantise (court, 14+, Projectile) :** Portée 9’’, force un modèle à effectuer un test de moral.
+- **Porte des Abysses (long, 9+) :** Placez une Cité engloutie à 12" ou moins.
+- **Hantise (court, 14+, Projectile) :** Portée 9", force un modèle à effectuer un test de moral.
 #### Niveau 3
-- **Corruption supérieure (long, 18+, projectile) :** Portée 18’’, Corrompt 3 fois. Ce sort se relance ensuite une nouvelle fois depuis la cible.
+- **Corruption supérieure (long, 18+, projectile) :** Portée 18", Corrompt 3 fois. Ce sort se relance ensuite une nouvelle fois depuis la cible.
 
 ---
 
@@ -257,7 +257,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Cahlta|**4**|**5+**|**4+**|**4+**|**8**|**7**|**4**|**6**|Primal|
+|Cahlta|**4**|**5+**|**4+**|**4+**|**8**|**7**|**4**|**7**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -271,21 +271,20 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Emissaire|**6**|**3+**|**-**|**5+**|**8**|**1**|**5**|**6**|Primal|
+|Emissaire|**6**|**3+**|**-**|**5+**|**8**|**1**|**5**|**7**|Primal|
 |**Mêlée:**|10d6||**Tir:**|-||||||
 
-*[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (9)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade(6)]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (8)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
-- Ombre invisible : au lieu de déployer l’Emissaire normalement, déployez-le à l’endroit de votre choix sans que votre adversaire ne vous voie, prenez-le en photo et retirez-le. A la place de n’importe quelle activation, vous pouvez montrer la photo et déployer l'Emissaire à cet endroit, il n’est pas marqué comme activé et peut librement agir.
 - Evolution (6) : l'Emissaire se transforme en Shtethroth ou Scylax, il conserve ses blessures.
-- Lorsque l'Emissaire est révélé ou Invoqué avant le tour 4, déclenchez votre effet de faction de début de tour.
+- Lorsque l'Emissaire est révélé ou Invoqué, déclenchez votre effet de faction de début de tour. Cette règle ne peut être déclenchée qu'une seule fois par tour, quel que soit le nombre d'Emissaires que vous avez.
 ---
 
 ### Tolgoth — 72 pts
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Tolgoth|**4**|**3+**|**5+**|**4+**|**8**|**8**|**4**|**6**|Primal|
+|Tolgoth|**4**|**3+**|**5+**|**4+**|**8**|**8**|**4**|**7**|Primal|
 |**Mêlée:**|8d6||**Tir:**|-||||||
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
@@ -317,7 +316,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Scylax|**6**|**4+**|**4+**|**4+**|**9**|**14**|**6**|**10**|Primal|
+|Scylax|**6**|**4+**|**4+**|**4+**|**9**|**14**|**6**|**12**|Primal|
 |**Mêlée:**|10d6||**Tir:**|-||||||
 
 **[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]][[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
@@ -332,7 +331,7 @@ ___
 
 ||**Vit**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée|Me]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance|Tir]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure|Ar]]**|**[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral|Mo]]**|**PV**|**Ta**|**Ma**|**Type**|
 |---|---|---|---|---|---|---|---|---|---|
-|Shtethroth|**5**|**3+**|**-**|**4+**|**9**|**16**|**6**|**8**|Primal|
+|Shtethroth|**5**|**3+**|**-**|**4+**|**9**|**16**|**6**|**12**|Primal|
 |**Mêlée:**|12d6||**Tir:**|-||||||
 
 ##### Règles spéciales :
