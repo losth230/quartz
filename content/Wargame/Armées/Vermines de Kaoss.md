@@ -192,10 +192,9 @@ ___
 
 *[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 ##### Équipement :
-- petit pistoleg : Portée (C : 6’’, L : 12’’), [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].
-##### Règles spéciales :
-- Venus des bas-fonds : ne déployez pas cette unité, à la place, lors de la création de votre liste d’armée, désignez un modèle Vermine amie dans laquelle elle est cachée. Dès que l’unité hôte est engagée en mêlée, déployez le modèle Bagarreur à 6’’ ou moins, s’ils se retrouve en mêlée il ne bénéficie pas du bonus de charge.
+- petit pistole : Portée (C : 6’’, L : 12’’), [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].
 ---
+
 ### Long-tireur — 14 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
