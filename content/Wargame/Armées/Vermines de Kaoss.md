@@ -183,7 +183,19 @@ ___
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
 - Bouclier (+1 pts) : l’armure de ce modèle passe à 5+.
 ---
-### Bagarreur des égouts — 13 pts
+### Bagarreur des bas-fonds — spécial pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Bagarreur | **-** | **-** | **-** | **-** | **-** | **-** | **-** | **-** | Vermine |
+| **Mêlée:** | - |  | **Tir:** | - |  |  |  |  |  |
+
+##### Règles spéciales :
+- Camouflage parfait : lors de la création de votre bande, placez ce modèle dans un modèle Vermine de masse similaire ou moins. Lorsque le modèle hôte charge ou se fait charger, ajoutez autant d'unités au modèle que vous n'y avez placé de bagarreur.
+- Acheter le camouflage : le prix de cette unité est égal à 4x la masse d'une unité de la Troupe au sein de laquelle elle se cache.
+---
+
+### Harceleur des ombres — 13 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
