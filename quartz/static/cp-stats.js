@@ -237,70 +237,13 @@ function fillListeMenu(row) {
   if (hint) hint.textContent = note;
 }
 
-// Tirage aléatoire d'un scénario + un déploiement (indépendants).
-// Affiche nom + image (si image_url renseignée dans la table de référence).
-function doTirage() {
-  const box = $("cp-tirage-result");
-  if (!box) return;
-  if (!refScenarios.length || !refDeploiements.length) {
-    box.innerHTML = '<p class="cp-empty">Référentiel scénarios/déploiements vide.</p>';
-    return;
-  }
-  const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
-  const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
-  box.innerHTML =
-    '<div class="cp-tirage-grid">' +
-      tirageCard("Scénario", sc) +
-      tirageCard("Déploiement", dp) +
-    "</div>" +
-    tirageDetails(sc);
-}
-
-// Bloc de texte pleine largeur sous les deux cartes (détails du scénario tiré).
-function tirageDetails(item) {
-  if (!item.description && !item.mise_en_place && !item.objectif) return "";
-  const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
-  return '<div class="cp-tirage-details">' +
-    (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
-    (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
-    (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
-  "</div>";
-}
-
-function tirageCard(titre, item) {
-  // Blason SVG affiché quand aucune image n'est fournie (net, suit le thème).
-  const blason = '<div class="cp-tirage-noimg">' +
-    '<svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<path d="M32 2 L60 12 V36 C60 54 48 64 32 70 C16 64 4 54 4 36 V12 Z" ' +
-        'fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" opacity="0.5"/>' +
-      '<path d="M32 14 L32 52 M18 26 L46 26" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-      '<circle cx="32" cy="26" r="5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-    "</svg>" +
-  "</div>";
-  const img = item.image_url
-    ? '<div class="cp-tirage-imgwrap"><img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" /></div>'
-    : '<div class="cp-tirage-imgwrap">' + blason + "</div>";
-  return '<div class="cp-tirage-card">' +
-    '<div class="cp-tirage-label">' + titre + "</div>" +
-    img +
-    '<div class="cp-tirage-nom">' + esc(item.nom) + "</div>" +
-  "</div>";
-}
-
 function renderSaisie() {
   // En édition, on génère autant de lignes que de participants existants
   const nb = editData ? editData.participations.length : nbJoueurs;
   let rows = "";
   for (let i = 0; i < nb; i++) rows += participantRow(i);
   const enEdition = !!editingPartieId;
-  const tirage = enEdition ? "" :
-    '<div class="cp-card cp-tirage">' +
-      '<div class="cp-tirage-head">' +
-        '<button class="cp-btn" id="cp-tirage-btn">\u{1F3B2} Tirer un scénario + déploiement</button>' +
-      "</div>" +
-      '<div id="cp-tirage-result"></div>' +
-    "</div>";
-  return tirage + '<div class="cp-card">' +
+  return '<div class="cp-card">' +
     (enEdition ? '<div class="cp-form-mode" id="cp-edit-banner">Modification d\'une partie</div>' : "") +
     '<div class="cp-form-grid">' +
       '<div><label>Version</label><select id="cp-f-version">' + optionsFrom(refVersions) + "</select></div>" +
@@ -1421,9 +1364,6 @@ function wireOnce() {
 
     // enregistrer / mettre à jour
     if (e.target.closest("#cp-save-partie")) { savePartie(); return; }
-
-    // tirage aléatoire scénario + déploiement
-    if (e.target.closest("#cp-tirage-btn")) { doTirage(); return; }
 
     // clic sur une étoile de notation
     const star = e.target.closest(".cp-star");
