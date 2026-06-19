@@ -46,30 +46,6 @@
     .cp-c-note { white-space: nowrap; }
     .cp-note-count { color: var(--gray); font-size: 0.85em; }
 
-    /* Tirage aléatoire */
-    .cp-tirage { margin-bottom: 1.2em; }
-    .cp-tirage-head { display: flex; justify-content: center; }
-    /* align-items: stretch (défaut) => les deux cartes prennent la hauteur de la plus grande */
-    .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; align-items: stretch; }
-    .cp-tirage-card { display: flex; flex-direction: column; text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
-    .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
-    /* Cadre image de hauteur fixe : aligne les deux colonnes, que l'image existe ou non */
-    .cp-tirage-imgwrap { height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em; }
-    .cp-tirage-img { max-width: 100%; max-height: 210px; border-radius: 3px; display: block; }
-    .cp-tirage-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray); }
-    .cp-tirage-noimg svg { width: 72px; height: 81px; }
-    .cp-tirage-nom { font-weight: bold; color: var(--dark); }
-    .cp-tirage-details {
-      margin-top: 1em; text-align: left;
-      border: 1px solid var(--gray); border-radius: 4px; background: var(--light);
-      padding: 1em 1.2em;
-    }
-    .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
-    .cp-tirage-detail { margin-bottom: 0.6em; }
-    .cp-tirage-detail:last-child { margin-bottom: 0; }
-    .cp-tirage-detail-lbl { display: block; font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.75em; color: var(--secondary); margin-bottom: 0.15em; }
-    .cp-tirage-detail p { margin: 0; font-size: 0.88em; line-height: 1.45; color: var(--dark); }
-    @media (max-width: 500px) { .cp-tirage-grid { grid-template-columns: 1fr; } }
     .cp-form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 0.8em; margin-bottom: 1em; }
     #cp-stats-app label {
       display: block; font-variant: small-caps; font-size: 0.8em; letter-spacing: 0.05em;
