@@ -14,14 +14,15 @@ Que vous soyez un vétéran chevronné des wargames ou un nouveau venu cherchant
 S'il arrive que vous ne compreniez pas une règle, que vous ne soyez pas sûr de comment l'appliquer ou quoi que ce soit d'autre, la meilleure solution est d'en discuter avec les autres joueurs. Chasse & Pêche est votre jeu, à vous de l'adapter selon vos envies afin d'avoir la meilleure expérience possible.
 ### Le matériel d'un.e chef.fe de guerre :
 #### Les dés :
-Chasse & Pêche se joue essentiellement avec des d6 (dés à 6 faces) Nous vous recommandons donc de vous munir d'une vingtaine de d6. Certaines règles vous demanderont de lancer 2d6, 3d6 ou même davantage, jetez alors autant de dés que nécessaires. *Par exemple, si une règle vous demande de lancer 3d6, vous devrez lancer 3 dés à 6 faces.* Notez que des règles peuvent vous demander de relancer des dés, cependant, aucun dé ne peut être relancé plus d'une fois.
-Certaines règles peuvent venir modifier les lancer d'un dé, par exemple, un modificateur de +1 implique que vous devez ajouter 1 au score obtenu par chacun de vos dés (plusieurs modificateurs peuvent être cumulés).
+Chasse & Pêche se joue essentiellement avec des d6 (dés à 6 faces) Nous vous recommandons donc de vous munir d'une vingtaine de d6. Certaines règles vous demanderont de lancer 2d6, 3d6 ou même davantage, jetez alors autant de dés que nécessaires. *Par exemple, si une règle vous demande de lancer 3d6, vous devrez lancer 3 dés à 6 faces.* 
+> Notez que des règles peuvent vous demander de relancer des dés, cependant, aucun dé ne peut être relancé plus d'une fois.
+Certaines règles peuvent venir modifier les lancer d'un dé, par exemple, un modificateur de +1 implique que vous devez ajouter 1 au score obtenu par chacun de vos dés (plusieurs modificateurs peuvent être cumulés). *Par exemple, Justine effectue une action de Tir avec une valeur de 5+. Elle possède un bonus de +1 (peut-être parce qu'elle est en hauteur ?) et lance un dé, le résultat obtenu étant 4, avec le bonus de +1 le jet est donc une réussite).
 #### Le mètre-ruban :
 Pour jouer à Chasse & Pêche, vous devrez également vous munir d'un mètre-ruban afin de mesurer les distances, celles-ci sont toutes exprimées en pouces, notées ''. Vous pouvez mesurer les distances à tout moment durant la partie.
 #### Les figurines :
 Vous devrez également vous munir de figurines pour représenter votre bande, Chasse et Pêche n'ayant pas de gamme dédiée, à vous de vous faire plaisir et de laisser parler votre création !
 #### Le terrain :
-Une bataille n'est jamais moins amusante lorsque l'on y ajoute du décor, n'hésitez donc pas à créer des tables variées, la taille que nous recommandons est de 46'' x 64'' pour des bandes allant de 150 à 400 points.
+Une bataille n'est jamais moins amusante lorsque l'on y ajoute du décor, n'hésitez donc pas à créer des tables variées, la taille que nous recommandons est de 36" x 42" pour des bandes allant de 150 à 400 points.
 **Vous voilà fin prêt, Général.**
 #### Profile d'unité : 
 - **Nom** de l'unité.
@@ -61,12 +62,19 @@ Le terme ami désigne l'ensemble des unités que vous contrôlez, allié désign
 
 <center><h2>Création d'une bande</h2></center>
 
+### Les types d'unités :
+Il existe plusieurs types d'unités, qui sont détaillés ci-dessous :
+- Commandants : les commandants représentent la chaîne de direction de votre bande. Lors de la création d'une liste, chaque joueur choisi secrètement un Général parmi ses commandants. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour (cf. phase d'Initiative).
+- Base : les unités de base forment la base de toute armée, et les seules à pouvoir former des Troupes.
+- Soutient : Les unités de soutient apportent des bonus uniques à votre bande.
+- Spéciaux : Les modèles spéciaux sont des unités rares et cher, mais très puissantes. Vous pouvez en posséder une par tranche de 150 pts dans votre bande.
+### Créer une bande
 Un bande doit comprendre au minimum 1 Commandant et 5 unités de Base. Une bande peut également inclure :
 - 1 Commandant par tranche de 100 pts.
 - 1 soutien par tranche de 50 pts.
 - 1 Spécial par tranche de 150 pts.
-### Le Général : 
-Lors de la création d'une liste, chaque joueur choisi secrètement un Général parmi ses commandants. Tant que celui-ci est vivant, son propriétaire peut relancer un dé de manœuvre par tour (voir phase d'Initiative).
+### Les untés nommées : 
+Certaines unités on un nom écrit en or, ce sont des unités légendaires, ce qui veut dire qu'elles ne peuvent apparaitre qu'une seule fois par bande.
 
 ---
 
@@ -85,25 +93,26 @@ Le joueur ayant obtenu le plus petit score après relance décide quel joueur ob
 Certaines règles ne se déclenchent qu'en début de tour. A commencer par le joueur qui a obtenu l'initiative, les joueurs résolvent alors chacun leurs effets à tour de rôle dans l'ordre de leur choix.
 #### Phase 3 : Activer un modèle :
 Lorsqu'un joueur décide d'activer un de ses modèles, il peut effectuer au choix : deux actions courtes, ou une action longue. Un modèle ne peut effectuer deux fois la même action lors d'un tour. Voici la liste des actions possibles :
-- **Marche (court) :** le modèle effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*.
-- **Course (long) :** le modèle effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*. Si un modèle *engage* une autre unité par le biais d'une Course, il s'agit alors d'une charge, octroyant ainsi une action Mêlée gratuite au modèle ayant chargé. Une charge n'est valide (et donc n'octroie d'attaque gratuite) que si le modèle qui charge aperçoit le modèle chargé dans sa ligne de vue.
+- **Marche (court) :** l'unité effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*. Un modèle ne peut engager un autre que s'il possède assez de distance pour se retrouver socle à socle avec lui.
+- **Course (long) :** l'unité effectue un mouvement d'une distance égale ou inférieure à sa caractéristique de vitesse, dans n'importe quelle direction mais ne peut entrer à moins de 1'' d'un modèle ennemi, à moins de l'*engager*. Un modèle ne peut engager un autre que s'il possède assez de distance pour se retrouver socle à socle avec lui. Si un modèle *engage* une autre par le biais d'une Course, il s'agit alors d'une charge, octroyant ainsi une action Mêlée gratuite au modèle ayant chargé. Une charge n'est valide (et donc n'octroie d'attaque gratuite) que si le modèle qui charge aperçoit le modèle chargé dans sa ligne de vue.
 - **Tir (court) :** le modèle effectue une attaque à distance contre un modèle ennemie à portée.
 - **Mêlée (court) :** le modèle effectue une attaque au corps-à-corps contre le modèle ennemi avec lequel il est engagé.
 - **Préparation (long) :** le modèle se prépare à recevoir une attaque et reçoit Egide (1).
 - **Se désengager (long) :** un modèle *engagé* en mêlée qui souhaite se désengager doit effectuer un jet d'armure non modifié par masse des modèles l'engageant dans leur arc avant ou perdre 1 PV par jet d'armure raté. S'il est encore en vie, il effectue l'action Course.
 - **Se reposer (court) : :** le modèle peut retirer un marqueur *Fatigue* ou *Désorganisé* qui l'affecte.  
 Une fois qu'un joueur a terminé une activation, il doit mettre un marqueur *Activé* sur son modèle, puis c'est au tour de son adversaire de réaliser une activation, et ainsi de suite jusqu'à ce qu'ils aient tous les deux activés tous leurs modèles. Un joueur ne peut passer son tour et doit nécessairement activer un modèle, même s'il ne fait rien, et ne peut activer de modèle déjà marqué comme activé.
+> #####
 #### Phase 4 : Effets de fin de tour :
-Une fois que les deux joueurs ont tous les deux finis d'activer tous leurs modèles, ils doivent résoudre la fin du tour comme suit :
-1 : résoudre tous les effets ayant lieu en fin de tour. Ceux-ci peuvent être propre à certains modèles, à des sorts ou des règles de faction.
-2 : retirer un marqueur fatigue aux modèles en ayant déjà eu au début du tour et retirer tous les marqueurs Activé et effets de sorts n'ayant plus lieu.
-3 : dépenser des manœuvres pour retirer des marqueurs de fatigue aux modèles qui se sont fatigués durant le tour.
-4 : perdre les dés de magie et les manœuvres restantes, ils ne sont pas conservés pour le tour suivant.
+Une fois que les deux joueurs ont tous les deux finis d'activer tous leurs modèles, ils doivent résoudre la fin du tour comme suit :  
+1 : Résoudre tous les effets ayant lieu en fin de tour. Ceux-ci peuvent être propre à certains modèles, à des sorts ou des règles de faction.  
+2 : Retirer tous les marqueurs Activé et effets de sorts n'ayant plus lieu.  
+3 : Dépenser des manœuvres pour retirer des marqueurs de fatigue aux modèles qui se sont fatigués durant le tour.  
+4 : Perdre les dés de magie et les manœuvres restantes, ils ne sont pas conservés pour le tour suivant.  
 ### La fatigue :
 Lors d'une activation, un modèle peut choisir de se fatiguer pour gagner une action courte supplémentaire. Cette action doit impérativement être prise à la suite des deux actions courte ou à l'action longue résultant de l'activation standard du modèle (un modèle peut ainsi effectuer une action longue puis une action courte lors d'une fatigue, mais pas l'inverse).   Ajoutez le marqueur *Fatigue* avant la résolution de l'action courte bonus.
-Un modèle fatigué souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 en vitesse.
+Un modèle fatigué souffre d'un malus de -1 à ses jets d'attaque en mêlée et à distance ainsi qu'un malus de -1 lorsqu'il tente de lancer un sort et -1 en vitesse.
 ### Engager :
-Un modèle est considéré Engagé en mêlée lorsqu'il se trouve en contact socle à socle avec un ou plusieurs modèles ennemis. Lorsqu'un modèle se déplace pour engager un modèle ennemi, placez-les le plus possible en contact et centrés l'un par rapport à l'autre, quitte à devoir pivoter légèrement le modèle ennemi. Un modèle engagé en mêlée ne peut effectuer d'autre action que Mêlée ou Se désengager. Un modèle en déroute ne peut engager, mais peut être engagée.
+Un modèle est considéré Engagé en mêlée lorsqu'il se trouve à 1" ou moins d'un ou plusieurs modèles ennemis. Lorsqu'un modèle se déplace pour engager un modèle ennemi, placez-les le plus possible en contact et centrés l'un par rapport à l'autre, quitte à devoir déplacer  le modèle ennemi. Un modèle engagé en mêlée ne peut effectuer d'autre action que Mêlée ou Se désengager. Un modèle en déroute ne peut engager, mais peut être engagée.
 Si un modèle désire engager un modèle situé derrière un obstacle, placez-le au plus près du modèle ennemi, les deux modèles sont considérés engagés s'ils se trouvent à 1'' ou moins l'un de l'autre.
 ### Les Manœuvres :
 Vous avez généré des points de manœuvre lors de l'initiative, ceux-ci peuvent être dépensés afin de réaliser des actions spéciales. Voici la liste des différentes manœuvres avec leur coût :
@@ -113,13 +122,13 @@ Vous avez généré des points de manœuvre lors de l'initiative, ceux-ci peuven
 - **Sprint (2) :** à utiliser lors de l'activation d'un modèle pour ajouter 1 à sa valeur de vitesse, celle-ci peut atteindre 10 via l'utilisation de cette règle.
 - **Action spéciale d'unité (N) :** à utiliser pour réaliser une action spéciale d'unité décrite sur la fiche d'unité.
 ### Les mouvements :
-Les combattants peuvent se déplacer à travers le champ de bataille lors des actions de Marche ou Course. Chaque modèle possède une valeur de vitesse propre, et ne peut se déplacer d'une distance supérieure à cette valeur. Un modèle peut se déplacer dans la direction de son choix et pivoter à volonté. Un modèle ne peut jamais se déplacer d'une distance supérieure à sa valeur de vitesse (ou deux fois sa vitesse lors d'une course).
-A moins de vouloir engager, un modèle ne peut se déplacer à moins de 1'' d'un autre et ne peux se déplacer à travers un autre model, même ami.
+Les combattants peuvent se déplacer à travers le champ de bataille lors des actions de Marche ou Course. Chaque unité possède une valeur de vitesse propre, et ne peut se déplacer d'une distance supérieure à cette valeur. Une unité peut se déplacer dans la direction de son choix et pivoter à volonté. Une unité ne peut jamais se déplacer d'une distance supérieure à sa valeur de vitesse (ou deux fois sa vitesse lors d'une course).
+A moins de vouloir engager, une unité ne peut se déplacer à moins de 1'' d'un autre et ne peux se déplacer à travers une autre unité, même amie.
 Le terrain peut affecter le déplacement, si un modèle se trouve en contact avec un décors, il doit s'aligner avec lui.
 > ##### (Règles avancées) Déplacement en Troupe :
-> Une Troupe (ou modèle composé de plusieurs unités) peut effectuer un pivot sur son centre en dépensant 2'' et réorganiser la largeur de son front et sa profondeur.
+> Contrairement à une Unité, une Troupe (ou modèle composé de plusieurs unités) ne peut pivoter à l'infini. A la place, elle peut effectuer un pivot sur son centre en dépensant 2'' et/ou réorganiser la largeur de son front et sa profondeur.
 #### Escalade :
-Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le mot-clé Bête ne peuvent escalader. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.
+Les modèles peuvent escalader tous les obstacles, en comptant la distance verticale comme faisant partie intégrante de leur mouvement, mais ne peuvent s'arrêter à mi-chemin en hauteur. Les modèles ayant la règle spéciale Cavalerie ou possédant le type Bête ne peuvent escalader. Une charge incluant une escalade n'est pas considérée comme valide, et n'octroie donc aucune action de mêlée gratuite.  
 Une distance d'escalade inférieure à la taille d'un modèle n'est pas considérée comme faisant partie de son mouvement.
 #### Chuter :
 Un modèle est considéré comme en chute s'il descend une distance supérieure à sa taille, et subit N touches avec Force dévastatrice (N) où N est la différence de taille entre la hauteur du décor et celle du modèle. S'il perd le moindre Point de Vie, il est marqué désorganisé.
@@ -131,7 +140,7 @@ Un modèle peut également parcourir une distance horizontale entre deux décors
 Tous les modèles ne possèdent que deux faces : une face avant et une face arrière.
 #### Lignes de Vues :
 Pour savoir si un modèle possède une ligne de vue sur une cible, il suffit de voir s'il est possible de tracer une ligne imaginaire entre le modèle et sa cible.
-Si la base du modèle peut voir plus de 50€ la base de la cible, alors la LdV est dégagée.
+Si la base du modèle peut voir plus de 50% la base de la cible, alors la LdV est dégagée.
 Si un obstacle existe entre le modèle et sa cible, mais que celle-ci reste visible, la LdV est partiellement dégagée.
 Si le modèle ne peut voir sa cible, la LdV est obstruée.
 Les autres modèles, le décor et les objectifs sont tous considérés comme des obstacles. Un modèle créant un obstacle de la surface de son socle et d'une hauteur égale à sa taille. Par exemple, un modèle de taille 2 sera considéré comme un obstacle de taille 2.
@@ -159,8 +168,8 @@ Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nom
 -1 aux chances de toucher s'il s'agit d'un tir de contre-charge. Et -1 supplémentaire si l'unité qui tire possède la règle Tir Long.  
 *Par exemple : un Arquebusier nain tente de tirer sur un Kroxigor homme-lézard (eh oui ! parfois il faut tenter). L'Arquebusier possède 2d6 à distances, et malheureusement la LdV entre lui et le Kroxigor est obstruée par une barrière, lui faisant subir un malus de -1 à ses jets de touche. Comme l'Arquebusier se tient sur un terrain de taille 4, sa taille virtuelle est de 2 +4, soit 6, ce qui est supérieur de 3 à celle du Kroxigor qui est de 3. Le bonus et le malus s'annulent donc.*
 #### Tir de contre-charge :
-Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.
-Attention : une unité marquée activée ou engagée ne peut effectuer de tir de contre-charge. De plus, un tir de contre-charge ne peut jamais bénéficier du bonus de LdV dégagée.
+Un modèle possédant une arme à distance se faisant engager en mêlée par un modèle située à 2'' ou plus d'elle peut effectuer une attaque à distance sur celui-ci, avant que la charge ne soit résolue. Marquez ensuite l'unité ayant tiré comme activée. Une unité ayant effectué un tir de contre-charge ne pourra riposter en mêlée contre l'unité sur laquelle elle a tiré.  
+Attention : une unité marquée engagée ne peut effectuer de tir de contre-charge. De plus, un tir de contre-charge est toujours considéré comme ayant une LdV dégagée (le tireur attend le moment propice).
 > ##### (Règles avancées) Tirer à courte ou longue portée :
 > Certains modèles ont deux règles de portée pour une attaque, notées C:N", L:M". Cela veut dire que les cibles à N" ou moins sont considérée à courte portée et celles entre N" et M" à longue portée.
 
@@ -176,10 +185,11 @@ Un modèle doit nécessairement effectuer son attaque contre un modèle situé d
 > Lorsque des unités sont organisées en Troupe, seul le premier rang peut attaquer. Pour chaque unité présente au second rang, octroyez un bonus de +1d6 à l'unité du premier rang de votre choix.
 
 > ##### (Règles avancées) Demander un duel.
-> Si deux modèles s'affrontent avec en leur sein un Commandant, n'importe quel joueur peut demander le commandant adverse en duel. Son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat. Si deux commandants prennent ainsi part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle. Le vainqueur du duel (celui ayant infligé le plus de blessures) peut voler un point de Manœuvre à son adversaire.
+> Si deux modèles s'affrontent avec en leur sein au moins un commandant, n'importe quel joueur peut demander le commandant adverse en duel. Son adversaire peut refuser le duel, mais ne pourra alors pas participer au combat (le commandant ayant demandé le duel pourra bien sûr participer), ou accepter le duel avec le commandant de son choix au sein du modèle. Si deux commandants prennent ainsi part à un duel, les dégâts éxédentaires ne peuvent ruisseler sur le reste du modèle.  
+> Le vainqueur du duel (celui ayant infligé le plus de blessures) peut voler un point de Manœuvre à son adversaire.
 
 > ##### (Règles avancées) Attaquer un modèle dans un bâtiment :
-> Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
+> Il est possible d'attaquer un modèle dans un bâtiment avec une charge normale (le bâtiment étant considéré comme l'adversaire). L'attaquant choisi alors des unités dont la somme de la masse est inférieure ou égale à la capacité du bâtiment (cf bâtiments) et résout son attaque, les unités de 2e rang peuvent toujours conférer leur bonus de +1d6. Si l'attaquant gagne, il peut occuper le bâtiment.
 #### Effectuer une attaque en mêlée :
 Une fois sa cible désignée, l'attaquant lance un nombre de d6 égal à son nombre d'attaque en mêlée en prenant en compte les modificateurs suivants :  
 -1 aux chances de toucher si le défenseur se situe derrière un obstacle.  
@@ -189,7 +199,7 @@ Lorsqu'un modèle subit une touche, il peut faire un jet d'armure. Pour cela il 
 -1 aux jets d'armure si l'attaque provient de l'arrière du modèle.  
 -1 aux jets d'amure par marqueur Désorganisation.  
 ### Riposte :
-Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter contre le modèle à l'origine de l'attaque. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi et ceci ne compte pas comme l'activation du joueur. Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
+Un modèle ayant subi une attaque en mêlée et ayant survécu peut riposter contre le modèle à l'origine de l'attaque. Dans ce cas, il effectue à son tour une attaque en mêlée, juste après celle qu'il a subi et ceci ne compte pas pour le joueur comme étant son activation (il doit donc activer un modèle comme il aurait normalement dû le faire à son tour de jeu). Une fois la riposte effectuée, le modèle est marqué activé ou fatigué s'il était déjà activé. Il est impossible de riposter sur une riposte.
 ### Jets de Moral :
 #### Résolution des corps-à-corps :
 Une fois une attaque de corps à corps effectuée (et les potentielles ripostes), le camp ayant subi le plus de blessures doit effectuer un test de panique.
@@ -215,12 +225,13 @@ Lorsqu'un modèle doit effectuer un test de Panique, regardez la valeur de moral
 Jetez ensuite 2d6, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute).  
 Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures et reçoit un marqueur *désorganisé*.  
 > Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.
-### Mouvements de poursuite.
-Un modèle ayant éliminé tous les modèles engagés avec lui peut effectuer un mouvement de 1'' et pivoter comme bon lui semble, mais ne peut entrer à moins de 1'' d'un modèle ennemi.
+#### Pousser le front.
+Un joueur ayant perdu une mêlée mais réussi son test de Panique doit reculer son modèle d'une distance égale à la différence de blessure entre les deux camps (maximum 3"). Son adversaire peut alors au choix : rester sur place, ou pousser le front et engager de nouveau le modèle ayant reculé.
 *Au cœur de la bataille, le rugissement des trébuchets et le sifflement des flèches créent un tourbillon chaotique. Soudain, mes camarades et moi sommes pris dans une étreinte de terreur alors qu'une troupe de Revenants fonce droit sur nous. Les ordres deviennent inaudibles, la fumée trouble notre vision, et l'ennemi semble surgir de tous les côtés. Mes jambes s'alourdissent, le poids de l'incertitude écrase mon esprit, et la cohésion de notre troupe se délite. La peur m'envahit, une sensation viscérale qui étouffe la bravoure. Mes camarades d'armes deviennent des silhouettes floues dans la brume de la panique, et la tentation de la fuite devient irrésistible. Mes jambes, autrefois fermes, tremblent sous le poids de l'effroi. Dans cet abîme de désarroi, la nécessité de la survie prévaut, et je succombe à l'instinct primal de la fuite, de me soustraire à la furie du conflit. La déroute devient ma seule voie, un retrait précipité dans l'espoir fragile de voir un autre jour, une honte future .*
 *Isabeau Lumièrepure, Abbesse de Lun.*
 ### Combats et bâtiments :
-Chaque bâtiment peut accueillir une masse maximale d'unités, un modèle de masse supérieure à la capacité du bâtiment ne peut y entrer. Un modèle ne peut entrer et sortir d'un bâtiment au même tour.
+Chaque bâtiment possède une capacité et une taille pour accueillir une masse maximale d'unités, un modèle de masse supérieure à la capacité du bâtiment ne peut y entrer. Un modèle ne peut entrer et sortir d'un bâtiment au même tour. La capacité et la taille d'un bâtiment doivent être déterminées par les joueurs lors de la mise en place du décors.  
+*Par exemple un bâtiment de taille 2 et de capacité 10 pourra acceuillir 5 Arquebusiers des Khagzhags Nains).*
 
 ---
 
@@ -298,17 +309,6 @@ Lorsqu'une troupe attaque, seul le premier rang peut attaquer. Les unités du se
 Si une troupe arrive en contact avec un modèle d'une masse trois fois inférieure à la sienne, alors le modèle est détruit sans gêner l'avancée de la troupe.
 #### Les Troupes Extraordinaires :
 Nous appelons une troupe extraordinaire un modèle composé d'une troupe et d'une à plusieurs unités de Commandants, Soutient ou modèles Spéciaux. Lors d'une activation, de telles unités peuvent joindre ou quitter la troupe extraordinaire.
-### Les types d'unités :
-Il existe plusieurs types d'unités, qui sont détaillés ci-dessous :
-#### Commandants :
-Les commandants représentent la chaîne de direction de votre bande. Vous devez au minimum posséder un Commandant. Attention, les commandants nommés, par exemple Kiggit Œil de Lynx, ne peuvent apparaitre qu'une seule fois par bande.
-#### Base :
-Les unités de base forment la base de toute armée, et les seules à pouvoir former des Troupes. Vous devez posséder au moins 3 modèles de base par tranche de 100 pts dans votre bande.
-#### Soutient :
-Les unités de soutient apportent des bonus uniques à votre bande, vous pouvez en posséder une par tranche de 50 pts dans votre bande.
-#### Spéciaux :
-Les modèles spéciaux sont des unités rares et chères, mais très puissantes. Vous pouvez en posséder une par tranche de 150 pts dans votre bande.
-
 
 ---
 
