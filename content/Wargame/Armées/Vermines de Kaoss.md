@@ -402,7 +402,7 @@ ___
 | Expérience | **5** | **4+** | **-** | **5+** | **7** | **8** | **4** | **7** | Rat |
 | **Mêlée:** | Spé |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (4)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (4)]].*
 ##### Règles spéciales :
 - Veines surchargées : si ce modèle doit Régénérer mais qu’il a atteint son maximum de PV, alors ses PV max augmentent de la valeur de la [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 - En pleine forme : la valeur en mêlée est d’un nombre de d6 égal à ses PV restants.
