@@ -14,8 +14,7 @@ const EDGE_URL = "https://kucgmmefluwmlobujanc.supabase.co/functions/v1/generer-
 let refPeuples = [];
 let nbCamps = 2;
 let wired = false;
-let loading = false;
-
+ 
 function getApp() { return document.getElementById("cp-intro-app"); }
 function $(id) { return document.getElementById(id); }
 function esc(s) {
@@ -23,18 +22,18 @@ function esc(s) {
     "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
   }[c]));
 }
-
+ 
 async function loadRefs() {
   const rp = await sb.from("ref_peuples").select("nom").order("ordre");
   refPeuples = rp.data || [];
   render();
 }
-
+ 
 function peupleOptions() {
   return '<option value="">— faction —</option>' +
     refPeuples.map((p) => '<option value="' + esc(p.nom) + '">' + esc(p.nom) + "</option>").join("");
 }
-
+ 
 function campRow(i) {
   return '<div class="cp-intro-camp" data-idx="' + i + '">' +
     '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
@@ -43,13 +42,13 @@ function campRow(i) {
     (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
   "</div>";
 }
-
+ 
 function render() {
   const app = getApp();
   if (!app) return;
   let camps = "";
   for (let i = 0; i < nbCamps; i++) camps += campRow(i);
-
+ 
   app.innerHTML =
     '<div class="cp-card">' +
       '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance. ' +
@@ -60,18 +59,17 @@ function render() {
       '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
       '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
       '<div class="cp-form-actions">' +
-        '<button class="cp-btn" id="cp-intro-gen"' + (loading ? " disabled" : "") + ">" +
-          (loading ? "Génération en cours\u2026" : "\u2728 Générer l'introduction") + "</button>" +
+        '<button class="cp-btn" id="cp-intro-gen">\u2728 Générer l\'introduction</button>' +
       "</div>" +
       '<div class="cp-msg" id="cp-intro-msg"></div>' +
       '<div id="cp-intro-result"></div>' +
     "</div>";
 }
-
+ 
 async function generer() {
   const msg = $("cp-intro-msg");
   msg.className = "cp-msg"; msg.textContent = "";
-
+ 
   // Collecte des camps
   const rows = [...document.querySelectorAll(".cp-intro-camp")];
   const joueurs = [], factions = [];
@@ -86,12 +84,16 @@ async function generer() {
     return;
   }
   const ambiance = $("cp-intro-ambiance").value.trim();
-
-  loading = true; render();
-  // re-render a recréé le DOM : on réaffiche un état d'attente dans le résultat
+  const msgEl = $("cp-intro-msg");
+  if (msgEl) { msgEl.className = "cp-msg"; msgEl.textContent = ""; }
+ 
+  // On ne re-render PAS (sinon les champs saisis seraient effacés).
+  // On manipule directement le bouton et la zone de résultat.
+  const btn = $("cp-intro-gen");
+  if (btn) { btn.disabled = true; btn.textContent = "Génération en cours\u2026"; }
   const res = $("cp-intro-result");
   if (res) res.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
-
+ 
   try {
     const r = await fetch(EDGE_URL, {
       method: "POST",
@@ -99,16 +101,15 @@ async function generer() {
       body: JSON.stringify({ joueurs, factions, ambiance }),
     });
     const data = await r.json();
-    loading = false; render();
+    if (btn) { btn.disabled = false; btn.textContent = "\u2728 Générer l'introduction"; }
     if (!r.ok || data.error) {
       const m = $("cp-intro-msg");
-      m.className = "cp-msg err";
-      m.textContent = "Échec de la génération : " + (data.error || r.status);
+      if (m) { m.className = "cp-msg err"; m.textContent = "Échec de la génération : " + (data.error || r.status); }
+      if (res) res.innerHTML = "";
       return;
     }
-    const out = $("cp-intro-result");
-    if (out) {
-      out.innerHTML =
+    if (res) {
+      res.innerHTML =
         '<div class="cp-intro-texte">' +
           '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
           '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
@@ -116,16 +117,17 @@ async function generer() {
         "</div>";
     }
   } catch (e) {
-    loading = false; render();
+    if (btn) { btn.disabled = false; btn.textContent = "\u2728 Générer l'introduction"; }
     const m = $("cp-intro-msg");
     if (m) { m.className = "cp-msg err"; m.textContent = "Erreur réseau : " + e.message; }
+    if (res) res.innerHTML = "";
   }
 }
-
+ 
 function wireOnce() {
   if (wired) return;
   wired = true;
-
+ 
   document.addEventListener("click", (e) => {
     if (!getApp()) return;
     if (e.target.closest("#cp-intro-gen")) { generer(); return; }
@@ -143,13 +145,13 @@ function wireOnce() {
     }
   });
 }
-
+ 
 function setup() {
   if (!getApp()) return;
   wireOnce();
   loadRefs();
 }
-
+ 
 // Démarrage robuste (navigation SPA Quartz)
 let bootTimer = null;
 function bootstrap() {
