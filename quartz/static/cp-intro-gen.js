@@ -7,10 +7,11 @@
 //  Conteneur attendu sur la page : <div id="cp-intro-app"></div>
 // ============================================================
 
-import { sb } from "/quartz/static/cp-supabase.js";
+import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
 
-// URL de la fonction Edge. REMPLACE <TON-PROJET> par la ref de ton projet Supabase.
-const EDGE_URL = "https://TON-PROJET.supabase.co/functions/v1/generer-intro";
+// URL de la fonction Edge, construite à partir de l'URL du projet partagée
+// (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
+const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [];
 let nbCamps = 2;
