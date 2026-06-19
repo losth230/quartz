@@ -10,7 +10,7 @@ Lorsqu'un modèle doit effectuer un test de Panique, regardez la valeur de moral
 +2 si vous avez remporté un duel.  
 -2 si vous avez perdu un duel.  
 
-
 Jetez ensuite 2d6, si le résultat est supérieur à la valeur de moral du modèle, celui-ci est mis en Déroute (voir Déroute).  
 Le modèle ainsi mis en déroute effectue un mouvement de déroute, dos au modèle lui ayant infligé le plus de blessures.  
-> Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.  
+> Attention : Un résultat de 1 et 1 sur les dés 6 est toujours un succès et un résultat de 6 et 6 sera toujours un échec.
+> Un joueur ayant perdu une mêlée mais réussi son test de Panique doit reculer son modèle d'une distance égale à la différence de blessure entre les deux camps (maximum 3"). Son adversaire peut alors au choix : rester sur place, ou pousser le front et engager de nouveau le modèle ayant reculé.
