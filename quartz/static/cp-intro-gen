@@ -1,0 +1,168 @@
+// ============================================================
+//  C&P — Générateur d'introduction narrative (LLM)
+//  À placer dans : quartz/static/cp-intro-gen.js
+//  Saisie des camps + ambiance -> appel Edge Function -> texte d'intro.
+//  Conteneur attendu sur la page : <div id="cp-intro-app"></div>
+// ============================================================
+
+import { sb } from "/quartz/static/cp-supabase.js";
+
+// URL de la fonction Edge. REMPLACE <TON-PROJET> par la ref de ton projet Supabase.
+// (visible dans l'URL de ton client : https://<TON-PROJET>.supabase.co)
+const EDGE_URL = "https://TON-PROJET.supabase.co/functions/v1/generer-intro";
+
+let refPeuples = [];
+let nbCamps = 2;
+let wired = false;
+let loading = false;
+
+function getApp() { return document.getElementById("cp-intro-app"); }
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return (s || "").replace(/[&<>"']/g, (c) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+async function loadRefs() {
+  const rp = await sb.from("ref_peuples").select("nom").order("ordre");
+  refPeuples = rp.data || [];
+  render();
+}
+
+function peupleOptions() {
+  return '<option value="">— faction —</option>' +
+    refPeuples.map((p) => '<option value="' + esc(p.nom) + '">' + esc(p.nom) + "</option>").join("");
+}
+
+function campRow(i) {
+  return '<div class="cp-intro-camp" data-idx="' + i + '">' +
+    '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
+    '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
+    '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
+    (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
+  "</div>";
+}
+
+function render() {
+  const app = getApp();
+  if (!app) return;
+  let camps = "";
+  for (let i = 0; i < nbCamps; i++) camps += campRow(i);
+
+  app.innerHTML =
+    '<div class="cp-card">' +
+      '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance. ' +
+        "Le générateur produira une courte introduction narrative pour ta bataille.</p>" +
+      '<label class="cp-section-label">Forces en présence</label>' +
+      '<div id="cp-intro-camps">' + camps + "</div>" +
+      '<button class="cp-btn-ghost" id="cp-intro-add">+ Ajouter un camp</button>' +
+      '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
+      '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
+      '<div class="cp-form-actions">' +
+        '<button class="cp-btn" id="cp-intro-gen"' + (loading ? " disabled" : "") + ">" +
+          (loading ? "Génération en cours\u2026" : "\u2728 Générer l'introduction") + "</button>" +
+      "</div>" +
+      '<div class="cp-msg" id="cp-intro-msg"></div>' +
+      '<div id="cp-intro-result"></div>' +
+    "</div>";
+}
+
+async function generer() {
+  const msg = $("cp-intro-msg");
+  msg.className = "cp-msg"; msg.textContent = "";
+
+  // Collecte des camps
+  const rows = [...document.querySelectorAll(".cp-intro-camp")];
+  const joueurs = [], factions = [];
+  rows.forEach((r) => {
+    const j = r.querySelector(".cp-intro-joueur").value.trim();
+    const f = r.querySelector(".cp-intro-faction").value;
+    if (f) { factions.push(f); joueurs.push(j); }
+  });
+  if (factions.length < 2) {
+    msg.className = "cp-msg err";
+    msg.textContent = "Choisis au moins deux factions.";
+    return;
+  }
+  const ambiance = $("cp-intro-ambiance").value.trim();
+
+  loading = true; render();
+  // re-render a recréé le DOM : on réaffiche un état d'attente dans le résultat
+  const res = $("cp-intro-result");
+  if (res) res.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
+
+  try {
+    const r = await fetch(EDGE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ joueurs, factions, ambiance }),
+    });
+    const data = await r.json();
+    loading = false; render();
+    if (!r.ok || data.error) {
+      const m = $("cp-intro-msg");
+      m.className = "cp-msg err";
+      m.textContent = "Échec de la génération : " + (data.error || r.status);
+      return;
+    }
+    const out = $("cp-intro-result");
+    if (out) {
+      out.innerHTML =
+        '<div class="cp-intro-texte">' +
+          '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
+          '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
+            " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
+        "</div>";
+    }
+  } catch (e) {
+    loading = false; render();
+    const m = $("cp-intro-msg");
+    if (m) { m.className = "cp-msg err"; m.textContent = "Erreur réseau : " + e.message; }
+  }
+}
+
+function wireOnce() {
+  if (wired) return;
+  wired = true;
+
+  document.addEventListener("click", (e) => {
+    if (!getApp()) return;
+    if (e.target.closest("#cp-intro-gen")) { generer(); return; }
+    if (e.target.closest("#cp-intro-add")) {
+      nbCamps++;
+      const cont = $("cp-intro-camps");
+      if (cont) cont.insertAdjacentHTML("beforeend", campRow(nbCamps - 1));
+      return;
+    }
+    const del = e.target.closest(".cp-intro-camp-del");
+    if (del && getApp().contains(del)) {
+      const row = del.closest(".cp-intro-camp");
+      if (row) { row.remove(); nbCamps = Math.max(2, document.querySelectorAll(".cp-intro-camp").length); }
+      return;
+    }
+  });
+}
+
+function setup() {
+  if (!getApp()) return;
+  wireOnce();
+  loadRefs();
+}
+
+// Démarrage robuste (navigation SPA Quartz)
+let bootTimer = null;
+function bootstrap() {
+  if (bootTimer) clearInterval(bootTimer);
+  let tries = 0;
+  if (getApp()) { setup(); return; }
+  bootTimer = setInterval(() => {
+    tries++;
+    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
+    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; }
+  }, 100);
+}
+if (document.readyState !== "loading") bootstrap();
+else document.addEventListener("DOMContentLoaded", bootstrap);
+document.addEventListener("nav", bootstrap);
+window.addEventListener("pageshow", bootstrap);
