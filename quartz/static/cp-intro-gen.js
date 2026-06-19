@@ -57,46 +57,103 @@ function render() {
   for (let i = 0; i < nbCamps; i++) camps += campRow(i);
 
   app.innerHTML =
-    // --- Bloc tirage ---
-    '<div class="cp-card cp-tirage">' +
-      '<div class="cp-tirage-head">' +
-        '<button class="cp-btn" id="cp-tirage-btn">\u{1F3B2} Tirer un scénario + déploiement</button>' +
-      "</div>" +
-      '<div id="cp-tirage-result"></div>' +
-    "</div>" +
-    // --- Bloc génération d'intro ---
     '<div class="cp-card">' +
-      '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance. ' +
-        "Le générateur produira une courte introduction narrative pour ta bataille.</p>" +
+      '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance, ' +
+        "puis prépare la bataille : un scénario et un déploiement seront tirés, " +
+        "et une introduction narrative sera générée.</p>" +
       '<label class="cp-section-label">Forces en présence</label>' +
       '<div id="cp-intro-camps">' + camps + "</div>" +
       '<button class="cp-btn-ghost" id="cp-intro-add">+ Ajouter un camp</button>' +
       '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
       '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
       '<div class="cp-form-actions">' +
-        '<button class="cp-btn" id="cp-intro-gen">\u2728 Générer l\'introduction</button>' +
+        '<button class="cp-btn cp-btn-big" id="cp-prepare-btn">\u2694\uFE0F Préparer la bataille</button>' +
       "</div>" +
       '<div class="cp-msg" id="cp-intro-msg"></div>' +
-      '<div id="cp-intro-result"></div>' +
-    "</div>";
+    "</div>" +
+    // zone de résultats : tirage puis intro (remplie par prepareBataille)
+    '<div id="cp-tirage-result"></div>' +
+    '<div id="cp-intro-result"></div>';
 }
 
-// ---------- Tirage ----------
-function doTirage() {
-  const box = $("cp-tirage-result");
-  if (!box) return;
-  if (!refScenarios.length || !refDeploiements.length) {
-    box.innerHTML = '<p class="cp-empty">Référentiel scénarios/déploiements vide.</p>';
+// ---------- Préparation complète : tirage + intro ----------
+async function prepareBataille() {
+  const msgEl = $("cp-intro-msg");
+  if (msgEl) { msgEl.className = "cp-msg"; msgEl.textContent = ""; }
+
+  // 1) Collecte des camps (nécessaires pour l'intro)
+  const rows = [...document.querySelectorAll(".cp-intro-camp")];
+  const joueurs = [], factions = [];
+  rows.forEach((r) => {
+    const j = r.querySelector(".cp-intro-joueur").value.trim();
+    const f = r.querySelector(".cp-intro-faction").value;
+    if (f) { factions.push(f); joueurs.push(j); }
+  });
+  if (factions.length < 2) {
+    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Choisis au moins deux factions avant de préparer la bataille."; }
     return;
   }
+  if (!refScenarios.length || !refDeploiements.length) {
+    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Référentiel scénarios/déploiements vide."; }
+    return;
+  }
+  const ambiance = $("cp-intro-ambiance").value.trim();
+
+  // 2) Tirage scénario + déploiement
   const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
   const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
-  box.innerHTML =
-    '<div class="cp-tirage-grid">' +
-      tirageCard("Scénario", sc) +
-      tirageCard("Déploiement", dp) +
-    "</div>" +
-    tirageDetails(sc);
+  const tBox = $("cp-tirage-result");
+  if (tBox) {
+    tBox.innerHTML =
+      '<div class="cp-card">' +
+        '<div class="cp-tirage-grid">' +
+          tirageCard("Scénario", sc) +
+          tirageCard("Déploiement", dp) +
+        "</div>" +
+        tirageDetails(sc) +
+      "</div>";
+  }
+
+  // 3) Génération de l'intro, en passant l'ambiance du scénario tiré
+  const descriptions = {};
+  factions.forEach((f) => {
+    const ref = refPeuples.find((p) => p.nom === f);
+    if (ref && ref.description) descriptions[f] = ref.description;
+  });
+  // ambiance du scénario = sa description narrative (PAS ses règles)
+  const scenarioAmbiance = sc.description || "";
+
+  const btn = $("cp-prepare-btn");
+  if (btn) { btn.disabled = true; btn.textContent = "Préparation en cours\u2026"; }
+  const res = $("cp-intro-result");
+  if (res) res.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
+
+  try {
+    const r = await fetch(EDGE_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ joueurs, factions, ambiance, descriptions, scenarioNom: sc.nom, scenarioAmbiance }),
+    });
+    const data = await r.json();
+    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
+    if (!r.ok || data.error) {
+      if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Échec de la génération : " + (data.error || r.status); }
+      if (res) res.innerHTML = "";
+      return;
+    }
+    if (res) {
+      res.innerHTML =
+        '<div class="cp-intro-texte">' +
+          '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
+          '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
+            " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
+        "</div>";
+    }
+  } catch (e) {
+    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
+    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Erreur réseau : " + e.message; }
+    if (res) res.innerHTML = "";
+  }
 }
 
 function tirageDetails(item) {
@@ -128,65 +185,6 @@ function tirageCard(titre, item) {
   "</div>";
 }
 
-// ---------- Génération d'intro ----------
-async function generer() {
-  const msgEl = $("cp-intro-msg");
-  if (msgEl) { msgEl.className = "cp-msg"; msgEl.textContent = ""; }
-
-  const rows = [...document.querySelectorAll(".cp-intro-camp")];
-  const joueurs = [], factions = [];
-  rows.forEach((r) => {
-    const j = r.querySelector(".cp-intro-joueur").value.trim();
-    const f = r.querySelector(".cp-intro-faction").value;
-    if (f) { factions.push(f); joueurs.push(j); }
-  });
-  if (factions.length < 2) {
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Choisis au moins deux factions."; }
-    return;
-  }
-  const ambiance = $("cp-intro-ambiance").value.trim();
-
-  // descriptions des factions choisies (lore) -> envoyées au prompt
-  const descriptions = {};
-  factions.forEach((f) => {
-    const ref = refPeuples.find((p) => p.nom === f);
-    if (ref && ref.description) descriptions[f] = ref.description;
-  });
-
-  // Pas de re-render (préserve les champs). On manipule bouton + zone résultat.
-  const btn = $("cp-intro-gen");
-  if (btn) { btn.disabled = true; btn.textContent = "Génération en cours\u2026"; }
-  const res = $("cp-intro-result");
-  if (res) res.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
-
-  try {
-    const r = await fetch(EDGE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ joueurs, factions, ambiance, descriptions }),
-    });
-    const data = await r.json();
-    if (btn) { btn.disabled = false; btn.textContent = "\u2728 Générer l'introduction"; }
-    if (!r.ok || data.error) {
-      if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Échec de la génération : " + (data.error || r.status); }
-      if (res) res.innerHTML = "";
-      return;
-    }
-    if (res) {
-      res.innerHTML =
-        '<div class="cp-intro-texte">' +
-          '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
-          '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
-            " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
-        "</div>";
-    }
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.textContent = "\u2728 Générer l'introduction"; }
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Erreur réseau : " + e.message; }
-    if (res) res.innerHTML = "";
-  }
-}
-
 // ---------- Câblage ----------
 function wireOnce() {
   if (wired) return;
@@ -194,8 +192,7 @@ function wireOnce() {
 
   document.addEventListener("click", (e) => {
     if (!getApp()) return;
-    if (e.target.closest("#cp-tirage-btn")) { doTirage(); return; }
-    if (e.target.closest("#cp-intro-gen")) { generer(); return; }
+    if (e.target.closest("#cp-prepare-btn")) { prepareBataille(); return; }
     if (e.target.closest("#cp-intro-add")) {
       nbCamps++;
       const cont = $("cp-intro-camps");
