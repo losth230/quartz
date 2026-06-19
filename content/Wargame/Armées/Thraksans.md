@@ -140,7 +140,7 @@ ___
 
 <div class="legendary">
 
-### Naar'Vaath l'usurpatrice — 82 pts
+### Naar'Vaath l'usurpatrice — 86 pts
 
 </div>
 
