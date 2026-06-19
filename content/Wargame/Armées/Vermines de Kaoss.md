@@ -50,7 +50,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 <div class="legendary">
 
-### Docteur Skritzz — 36 pts
+### Docteur Skritzz — 39 pts
 
 </div>
 
@@ -70,7 +70,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
   - 5 : Le modèle ciblé bénéficie de +1d6 à ses attaques en mêlée et à distance.
   - 6 : L’armure du modèle devient 2+.
 - Ramasser ce qui brille : au début de chaque tour, gagnez 1 scorie.
-- Rats-zombis du Docteur Skritzz : au début du premier tour, désignez un modèle Vermine ami. Pour le reste de la partie, chaque fois qu’il bénéficie de la règle spéciale Régénération (X), il récupère 1 PV supplémentaire. A la fin de chaque tour, ce modèle perd 1d3 PV.
+- Rats-zombis du Docteur Skritzz : au début du premier tour, désignez un modèle Vermine ami. Pour le reste de la partie, chaque fois qu’il bénéficie de la règle spéciale Régénération (X), il récupère 1 PV supplémentaire.
 ---
 
 <div class="legendary">
@@ -183,13 +183,16 @@ ___
 - Lance (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
 - Bouclier (+1 pts) : l’armure de ce modèle passe à 5+.
 ---
-### Bagarreur des bas-fonds — 13 pts
+### Bagarreur des égouts — 13 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Bagarreur | **5** | **4+** | **-** | **5+** | **5** | **1** | **2** | **2** | Vermine |
-| **Mêlée:** | 3d6 |  | **Tir:** |  |  |  |  |  |  |
+| Bagarreur | **6** | **5+** | **4+** | **5+** | **5** | **2** | **2** | **2** | Vermine |
+| **Mêlée:** | 2d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
 
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Équipement :
+- petit pistoleg : Portée (C : 6’’, L : 12’’), [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]].
 ##### Règles spéciales :
 - Venus des bas-fonds : ne déployez pas cette unité, à la place, lors de la création de votre liste d’armée, désignez un modèle Vermine amie dans laquelle elle est cachée. Dès que l’unité hôte est engagée en mêlée, déployez le modèle Bagarreur à 6’’ ou moins, s’ils se retrouve en mêlée il ne bénéficie pas du bonus de charge.
 ---
