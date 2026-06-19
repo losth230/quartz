@@ -20,6 +20,7 @@ title: Préparer une bataille
   }
   #cp-intro-app .cp-btn:hover { opacity: 0.9; }
   #cp-intro-app .cp-btn:disabled { opacity: 0.5; cursor: wait; }
+  #cp-intro-app .cp-btn-big { font-size: 1.05em; padding: 0.7em 1.6em; }
   #cp-intro-app .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 1em; align-items: stretch; }
   #cp-intro-app .cp-tirage-card { display: flex; flex-direction: column; text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
   #cp-intro-app .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
