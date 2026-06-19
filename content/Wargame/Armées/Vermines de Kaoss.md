@@ -92,6 +92,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 - Rapportez-moi ça : au début de chaque tour, désignez un modèle ami à 9’’ ou moins qui peut effectuer une marche gratuite.
 - Sacrifier le fou : si le Petit roi est réduit à 0 PV, il peut faire détonner son Fou piégé. Il s’agit d’une attaque à distance contre une ennemi situé à 3’’ ou moins selon les règles suivantes : 6d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (3)]]. Une fois cette attaque résolue, placez le Petit roi sans son fou à 6’’ ou moins. Le Petit roi ainsi redéployé possède 1 seul PV et cette règle ne peut plus se déclencher.
 ---
+
 ### Meneur — 34 pts
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -214,7 +215,7 @@ ___
 | Long-tireur | **5** | **6+** | **3+** | **6+** | **5** | **2** | **2** | **2** | Vermine |
 | **Mêlée:** | 1d6 |  | **Tir:** | 1d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]].*
 ##### Équipement :
 - Fusil long : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 - Réservoir à peste (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] sur les attaques du Fusil long.
