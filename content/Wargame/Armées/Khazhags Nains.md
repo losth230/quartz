@@ -270,6 +270,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 - Runes d'antimagie (+1 pts) : si ce modèle est ciblé par une attaque à distance de sort, son armure passe à 3+ le temps du sort et ne peut être modifiée d'aucune façon.
 ##### Règles spéciales :
 - Dernier Défenseur : Si cette unité se retrouve à 9’’ ou moins d’un Commandant (ami, allié ou ennemi), elle gagne +1d6 en mêlée.
+- Gardien du roi : ce modèle peut lancer et accepter des duels comme si c'était un commandant.
 ---
 ### Guerrier du clan — 6 pts
 
