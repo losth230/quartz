@@ -241,6 +241,7 @@ ___
   - Surcharge du générateur : l’unité consomme 1 scorie pour bénéficier d’un bonus de +1 en Vit et +1 sur ses jets d’attaque en mêlée pour le reste du tour.
 - Veines chargées de scories : lorsque ce modèle Régénère, doublez sa règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 ---
+
 ### Porte-peste — 16 pts
 
 |             | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -266,7 +267,7 @@ ___
 - Surcharge de scories : lorsque cette unité est tuée, gagnez 2 Scories.
 - Force décuplée (1) : le rat mutant gagne [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ---
-### Vétéran — 13 pts
+### Vétéran — 14 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
