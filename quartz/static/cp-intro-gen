@@ -9,7 +9,7 @@ import { sb } from "/quartz/static/cp-supabase.js";
 
 // URL de la fonction Edge. REMPLACE <TON-PROJET> par la ref de ton projet Supabase.
 // (visible dans l'URL de ton client : https://<TON-PROJET>.supabase.co)
-const EDGE_URL = "https://TON-PROJET.supabase.co/functions/v1/generer-intro";
+const EDGE_URL = "https://kucgmmefluwmlobujanc.supabase.co/functions/v1/generer-intro";
 
 let refPeuples = [];
 let nbCamps = 2;
