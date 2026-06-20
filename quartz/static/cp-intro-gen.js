@@ -1,233 +1,115 @@
-// ============================================================
-//  C&P — Préparer une bataille
-//  À placer dans : quartz/static/cp-intro-gen.js
-//  Deux outils sur une page :
-//   1) Tirage aléatoire scénario + déploiement (avec images/détails)
-//   2) Génération d'une introduction narrative par LLM (Edge Function)
-//  Conteneur attendu sur la page : <div id="cp-intro-app"></div>
-// ============================================================
+/* ============================================================
+   C&P — Page "Préparer une bataille" (cp-intro-gen)
+   À placer dans : quartz/static/cp-intro-gen.css
+   Chargé via Head.tsx : <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
+   Styles scopés sous #cp-intro-app (tirage + génération d'intro).
+   ============================================================ */
 
-import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
+#cp-intro-app .cp-card {
+  background: var(--lightgray); border: 1px solid var(--gray);
+  border-radius: 4px; padding: 1.2em 1.4em; margin-bottom: 1.2em;
+}
+#cp-intro-app .cp-empty { color: var(--gray); font-style: italic; }
 
-// URL de la fonction Edge, construite à partir de l'URL du projet partagée
-// (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
-const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
-
-let refPeuples = [], refScenarios = [], refDeploiements = [];
-let nbCamps = 2;
-let wired = false;
-
-function getApp() { return document.getElementById("cp-intro-app"); }
-function $(id) { return document.getElementById(id); }
-function esc(s) {
-  return (s || "").replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  }[c]));
+/* ---- Boutons ---- */
+#cp-intro-app .cp-btn {
+  background: var(--secondary); color: var(--light); border: 1px solid var(--secondary);
+  border-radius: 3px; padding: 0.5em 1.2em; font-family: inherit; font-variant: small-caps;
+  letter-spacing: 0.05em; cursor: pointer; font-size: 0.95em;
+}
+#cp-intro-app .cp-btn:hover { opacity: 0.9; }
+#cp-intro-app .cp-btn:disabled { opacity: 0.5; cursor: wait; }
+#cp-intro-app .cp-btn-big { font-size: 1.05em; padding: 0.7em 1.6em; }
+#cp-intro-app .cp-btn-ghost {
+  background: transparent; border: 1px dashed var(--gray); border-radius: 3px;
+  padding: 0.35em 0.8em; font-family: inherit; font-size: 0.85em; color: var(--secondary);
+  cursor: pointer; margin-top: 0.2em;
 }
 
-async function loadRefs() {
-  const [rp, rs, rd] = await Promise.all([
-    sb.from("ref_peuples").select("*").order("ordre"),
-    sb.from("ref_scenarios").select("*").order("ordre"),
-    sb.from("ref_deploiements").select("*").order("ordre"),
-  ]);
-  refPeuples = rp.data || [];
-  refScenarios = rs.data || [];
-  refDeploiements = rd.data || [];
-  render();
+/* ---- Tirage ---- */
+#cp-intro-app .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 0.2em; align-items: stretch; }
+#cp-intro-app .cp-tirage-card { display: flex; flex-direction: column; text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
+#cp-intro-app .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
+#cp-intro-app .cp-tirage-imgwrap { height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em; }
+#cp-intro-app .cp-tirage-img { max-width: 100%; max-height: 210px; border-radius: 3px; display: block; }
+#cp-intro-app .cp-tirage-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray); }
+#cp-intro-app .cp-tirage-noimg svg { width: 72px; height: 81px; }
+#cp-intro-app .cp-tirage-nom { font-weight: bold; color: var(--dark); }
+
+/* ---- Animation de révélation du tirage ---- */
+/* État initial "voilé" : la carte est légèrement plus basse, floutée, transparente. */
+#cp-intro-app .cp-reveal { opacity: 0; transform: translateY(14px); filter: blur(6px); }
+/* Dans la grille, le conteneur reveal doit transmettre l'étirement à la carte interne. */
+#cp-intro-app .cp-tirage-grid > .cp-reveal { display: flex; }
+#cp-intro-app .cp-tirage-grid > .cp-reveal > .cp-tirage-card { flex: 1; }
+/* Quand la classe .cp-revealed est ajoutée, la carte se révèle en douceur. */
+#cp-intro-app .cp-reveal.cp-revealed {
+  opacity: 1; transform: translateY(0); filter: blur(0);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.7s ease;
+}
+/* Bandeau de suspense affiché pendant le brassage, avant la révélation. */
+#cp-intro-app .cp-tirage-suspense {
+  text-align: center; padding: 1.4em 0; color: var(--secondary);
+  font-variant: small-caps; letter-spacing: 0.08em; font-size: 1em;
+}
+#cp-intro-app .cp-tirage-suspense .cp-dot { animation: cp-blink 1.2s infinite both; }
+#cp-intro-app .cp-tirage-suspense .cp-dot:nth-child(2) { animation-delay: 0.2s; }
+#cp-intro-app .cp-tirage-suspense .cp-dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes cp-blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
+/* Respecte la préférence système "réduire les animations". */
+@media (prefers-reduced-motion: reduce) {
+  #cp-intro-app .cp-reveal { opacity: 1; transform: none; filter: none; }
+  #cp-intro-app .cp-reveal.cp-revealed { transition: none; }
+}
+#cp-intro-app .cp-tirage-details {
+  margin-top: 1em; text-align: left;
+  border: 1px solid var(--gray); border-radius: 4px; background: var(--light);
+  padding: 1em 1.2em;
+}
+#cp-intro-app .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
+#cp-intro-app .cp-tirage-detail { margin-bottom: 0.6em; }
+#cp-intro-app .cp-tirage-detail:last-child { margin-bottom: 0; }
+#cp-intro-app .cp-tirage-detail-lbl { display: block; font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.75em; color: var(--secondary); margin-bottom: 0.15em; }
+#cp-intro-app .cp-tirage-detail p { margin: 0; font-size: 0.88em; line-height: 1.45; color: var(--dark); }
+
+/* ---- Génération d'intro ---- */
+#cp-intro-app .cp-intro-hint { font-size: 0.9em; color: var(--secondary); margin: 0 0 1em; line-height: 1.5; }
+#cp-intro-app .cp-section-label {
+  display: block; font-variant: small-caps; letter-spacing: 0.05em;
+  font-size: 0.82em; color: var(--secondary); margin: 1em 0 0.4em;
+}
+#cp-intro-app .cp-intro-camp { display: flex; align-items: center; gap: 0.5em; margin-bottom: 0.5em; }
+#cp-intro-app .cp-intro-campnum {
+  font-variant: small-caps; font-size: 0.8em; color: var(--secondary);
+  min-width: 4.5em; flex-shrink: 0;
+}
+#cp-intro-app input, #cp-intro-app select {
+  background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
+  padding: 0.45em 0.6em; font-family: inherit; font-size: 0.9em; color: var(--dark);
+}
+#cp-intro-app .cp-intro-joueur { flex: 1; min-width: 0; }
+#cp-intro-app .cp-intro-faction { flex: 1; min-width: 0; }
+#cp-intro-app .cp-intro-ambiance { width: 100%; box-sizing: border-box; }
+#cp-intro-app .cp-intro-camp-del {
+  background: transparent; border: none; color: var(--gray); cursor: pointer;
+  font-size: 1em; padding: 0.2em 0.4em;
+}
+#cp-intro-app .cp-intro-camp-del:hover { color: #c0563f; }
+#cp-intro-app .cp-form-actions { margin-top: 1.2em; }
+#cp-intro-app .cp-msg { margin-top: 0.7em; font-size: 0.88em; min-height: 1.1em; }
+#cp-intro-app .cp-msg.err { color: #c0563f; }
+#cp-intro-app .cp-intro-loading { font-style: italic; color: var(--secondary); margin-top: 1em; }
+#cp-intro-app .cp-intro-texte {
+  margin-top: 1.2em; border-left: 4px solid var(--tertiary); background: var(--light);
+  border-radius: 0 4px 4px 0; padding: 1em 1.3em;
+}
+#cp-intro-app .cp-intro-texte-corps {
+  font-family: Spectral, Georgia, serif; font-style: italic; font-size: 1.05em;
+  line-height: 1.6; color: var(--dark);
+}
+#cp-intro-app .cp-intro-meta {
+  margin-top: 0.8em; font-size: 0.75em; font-style: normal; color: var(--gray);
+  border-top: 1px dashed var(--gray); padding-top: 0.5em;
 }
 
-function peupleOptions() {
-  return '<option value="">— faction —</option>' +
-    refPeuples.map((p) => '<option value="' + esc(p.nom) + '">' + esc(p.nom) + "</option>").join("");
-}
-
-function campRow(i) {
-  return '<div class="cp-intro-camp" data-idx="' + i + '">' +
-    '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
-    '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
-    '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
-    (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
-  "</div>";
-}
-
-function render() {
-  const app = getApp();
-  if (!app) return;
-  let camps = "";
-  for (let i = 0; i < nbCamps; i++) camps += campRow(i);
-
-  app.innerHTML =
-    '<div class="cp-card">' +
-      '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance, ' +
-        "puis prépare la bataille : un scénario et un déploiement seront tirés, " +
-        "et une introduction narrative sera générée.</p>" +
-      '<label class="cp-section-label">Forces en présence</label>' +
-      '<div id="cp-intro-camps">' + camps + "</div>" +
-      '<button class="cp-btn-ghost" id="cp-intro-add">+ Ajouter un camp</button>' +
-      '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
-      '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
-      '<div class="cp-form-actions">' +
-        '<button class="cp-btn cp-btn-big" id="cp-prepare-btn">\u2694\uFE0F Préparer la bataille</button>' +
-      "</div>" +
-      '<div class="cp-msg" id="cp-intro-msg"></div>' +
-    "</div>" +
-    // zone de résultats : tirage puis intro (remplie par prepareBataille)
-    '<div id="cp-tirage-result"></div>' +
-    '<div id="cp-intro-result"></div>';
-}
-
-// ---------- Préparation complète : tirage + intro ----------
-async function prepareBataille() {
-  const msgEl = $("cp-intro-msg");
-  if (msgEl) { msgEl.className = "cp-msg"; msgEl.textContent = ""; }
-
-  // 1) Collecte des camps (nécessaires pour l'intro)
-  const rows = [...document.querySelectorAll(".cp-intro-camp")];
-  const joueurs = [], factions = [];
-  rows.forEach((r) => {
-    const j = r.querySelector(".cp-intro-joueur").value.trim();
-    const f = r.querySelector(".cp-intro-faction").value;
-    if (f) { factions.push(f); joueurs.push(j); }
-  });
-  if (factions.length < 2) {
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Choisis au moins deux factions avant de préparer la bataille."; }
-    return;
-  }
-  if (!refScenarios.length || !refDeploiements.length) {
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Référentiel scénarios/déploiements vide."; }
-    return;
-  }
-  const ambiance = $("cp-intro-ambiance").value.trim();
-
-  // 2) Tirage scénario + déploiement
-  const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
-  const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
-  const tBox = $("cp-tirage-result");
-  if (tBox) {
-    tBox.innerHTML =
-      '<div class="cp-card">' +
-        '<div class="cp-tirage-grid">' +
-          tirageCard("Scénario", sc) +
-          tirageCard("Déploiement", dp) +
-        "</div>" +
-        tirageDetails(sc) +
-      "</div>";
-  }
-
-  // 3) Génération de l'intro, en passant l'ambiance du scénario tiré
-  const descriptions = {};
-  factions.forEach((f) => {
-    const ref = refPeuples.find((p) => p.nom === f);
-    if (ref && ref.description) descriptions[f] = ref.description;
-  });
-  // ambiance du scénario = sa description narrative (PAS ses règles)
-  const scenarioAmbiance = sc.description || "";
-
-  const btn = $("cp-prepare-btn");
-  if (btn) { btn.disabled = true; btn.textContent = "Préparation en cours\u2026"; }
-  const res = $("cp-intro-result");
-  if (res) res.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
-
-  try {
-    const r = await fetch(EDGE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ joueurs, factions, ambiance, descriptions, scenarioNom: sc.nom, scenarioAmbiance }),
-    });
-    const data = await r.json();
-    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
-    if (!r.ok || data.error) {
-      if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Échec de la génération : " + (data.error || r.status); }
-      if (res) res.innerHTML = "";
-      return;
-    }
-    if (res) {
-      res.innerHTML =
-        '<div class="cp-intro-texte">' +
-          '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
-          '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
-            " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
-        "</div>";
-    }
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Erreur réseau : " + e.message; }
-    if (res) res.innerHTML = "";
-  }
-}
-
-function tirageDetails(item) {
-  if (!item.description && !item.mise_en_place && !item.objectif) return "";
-  const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
-  return '<div class="cp-tirage-details">' +
-    (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
-    (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
-    (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
-  "</div>";
-}
-
-function tirageCard(titre, item) {
-  const blason = '<div class="cp-tirage-noimg">' +
-    '<svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<path d="M32 2 L60 12 V36 C60 54 48 64 32 70 C16 64 4 54 4 36 V12 Z" ' +
-        'fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" opacity="0.5"/>' +
-      '<path d="M32 14 L32 52 M18 26 L46 26" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-      '<circle cx="32" cy="26" r="5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-    "</svg>" +
-  "</div>";
-  const img = item.image_url
-    ? '<div class="cp-tirage-imgwrap"><img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" /></div>'
-    : '<div class="cp-tirage-imgwrap">' + blason + "</div>";
-  return '<div class="cp-tirage-card">' +
-    '<div class="cp-tirage-label">' + titre + "</div>" +
-    img +
-    '<div class="cp-tirage-nom">' + esc(item.nom) + "</div>" +
-  "</div>";
-}
-
-// ---------- Câblage ----------
-function wireOnce() {
-  if (wired) return;
-  wired = true;
-
-  document.addEventListener("click", (e) => {
-    if (!getApp()) return;
-    if (e.target.closest("#cp-prepare-btn")) { prepareBataille(); return; }
-    if (e.target.closest("#cp-intro-add")) {
-      nbCamps++;
-      const cont = $("cp-intro-camps");
-      if (cont) cont.insertAdjacentHTML("beforeend", campRow(nbCamps - 1));
-      return;
-    }
-    const del = e.target.closest(".cp-intro-camp-del");
-    if (del && getApp().contains(del)) {
-      const row = del.closest(".cp-intro-camp");
-      if (row) { row.remove(); nbCamps = Math.max(2, document.querySelectorAll(".cp-intro-camp").length); }
-      return;
-    }
-  });
-}
-
-function setup() {
-  if (!getApp()) return;
-  wireOnce();
-  loadRefs();
-}
-
-// Démarrage robuste (navigation SPA Quartz)
-let bootTimer = null;
-function bootstrap() {
-  if (bootTimer) clearInterval(bootTimer);
-  let tries = 0;
-  if (getApp()) { setup(); return; }
-  bootTimer = setInterval(() => {
-    tries++;
-    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
-    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; }
-  }, 100);
-}
-if (document.readyState !== "loading") bootstrap();
-else document.addEventListener("DOMContentLoaded", bootstrap);
-document.addEventListener("nav", bootstrap);
-window.addEventListener("pageshow", bootstrap);
+@media (max-width: 500px) { #cp-intro-app .cp-tirage-grid { grid-template-columns: 1fr; } }
