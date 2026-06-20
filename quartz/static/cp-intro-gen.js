@@ -16,7 +16,7 @@ const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 // URL de la page Résultats (pour rediriger après enregistrement d'une partie).
 // ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
+const RESULTATS_URL = "/quartz/Wargame/Resultats";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
@@ -37,7 +37,7 @@ async function loadRefs() {
     sb.from("ref_scenarios").select("*").order("ordre"),
     sb.from("ref_deploiements").select("*").order("ordre"),
     sb.from("ref_versions").select("*").order("ordre"),
-    sb.from("army_lists").select("id, title, faction, author, points"),
+    sb.from("army_lists").select("id, title, faction, author, points, body"),
   ]);
   refPeuples = rp.data || [];
   refScenarios = rs.data || [];
@@ -54,11 +54,40 @@ function peupleOptions() {
 
 function campRow(i) {
   return '<div class="cp-intro-camp" data-idx="' + i + '">' +
-    '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
-    '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
-    '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
-    (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
+    '<div class="cp-intro-camp-main">' +
+      '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
+      '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
+      '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
+      (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
+    "</div>" +
+    '<div class="cp-intro-camp-liste">' +
+      '<select class="cp-intro-liste"><option value="">— liste d\'armée (optionnel) —</option></select>' +
+      '<button class="cp-intro-liste-libre-btn" type="button" title="Saisir une liste à la main">\u270E saisie libre</button>' +
+      '<textarea class="cp-intro-liste-libre" placeholder="Colle ou saisis ta liste d\'armée ici (unités, commandants...)" hidden></textarea>' +
+    "</div>" +
   "</div>";
+}
+
+// Remplit le menu des listes d'un camp, filtré par la faction choisie.
+function fillCampListe(camp) {
+  const sel = camp.querySelector(".cp-intro-liste");
+  const faction = camp.querySelector(".cp-intro-faction").value;
+  if (!sel) return;
+  const nf = normFaction(faction);
+  let matching = faction ? armyLists.filter((l) => normFaction(l.faction) === nf) : [];
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— liste d\'armée (optionnel) —</option>' +
+    matching.map((l) => {
+      const pts = l.points != null ? " (" + l.points + " pts)" : "";
+      const auth = l.author ? " · " + l.author : "";
+      return '<option value="' + l.id + '">' + esc(l.title) + pts + auth + "</option>";
+    }).join("");
+  if ([...sel.options].some((o) => o.value === current)) sel.value = current;
+}
+
+// Normalisation tolérante faction/peuple (accents, casse)
+function normFaction(s) {
+  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 }
 
 function render() {
@@ -95,11 +124,24 @@ async function prepareBataille() {
 
   // 1) Collecte des camps (nécessaires pour l'intro)
   const rows = [...document.querySelectorAll(".cp-intro-camp")];
-  const joueurs = [], factions = [];
+  const joueurs = [], factions = [], listes = [];
+  const LISTE_MAX = 1500; // garde-fou : taille max du corps de liste envoyé au LLM
   rows.forEach((r) => {
     const j = r.querySelector(".cp-intro-joueur").value.trim();
     const f = r.querySelector(".cp-intro-faction").value;
-    if (f) { factions.push(f); joueurs.push(j); }
+    if (!f) return;
+    factions.push(f); joueurs.push(j);
+    // liste : soit saisie libre (textarea visible), soit liste choisie (son body)
+    const ta = r.querySelector(".cp-intro-liste-libre");
+    const sel = r.querySelector(".cp-intro-liste");
+    let listeTxt = "";
+    if (ta && !ta.hidden && ta.value.trim()) {
+      listeTxt = ta.value.trim();
+    } else if (sel && sel.value) {
+      const found = armyLists.find((l) => l.id === sel.value);
+      if (found && found.body) listeTxt = found.body;
+    }
+    listes.push(listeTxt ? listeTxt.slice(0, LISTE_MAX) : "");
   });
   if (factions.length < 2) {
     if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Choisis au moins deux factions avant de préparer la bataille."; }
@@ -177,7 +219,7 @@ async function prepareBataille() {
     const r = await fetch(EDGE_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ joueurs, factions, ambiance, descriptions, scenarioNom: sc.nom, scenarioAmbiance }),
+      body: JSON.stringify({ joueurs, factions, listes, ambiance, descriptions, scenarioNom: sc.nom, scenarioAmbiance }),
     });
     const data = await r.json();
     if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
@@ -282,6 +324,32 @@ function wireOnce() {
     if (del && getApp().contains(del)) {
       const row = del.closest(".cp-intro-camp");
       if (row) { row.remove(); nbCamps = Math.max(2, document.querySelectorAll(".cp-intro-camp").length); }
+      return;
+    }
+    // bascule saisie libre de liste
+    const libreBtn = e.target.closest(".cp-intro-liste-libre-btn");
+    if (libreBtn && getApp().contains(libreBtn)) {
+      const camp = libreBtn.closest(".cp-intro-camp");
+      const ta = camp.querySelector(".cp-intro-liste-libre");
+      const sel = camp.querySelector(".cp-intro-liste");
+      const showing = !ta.hidden;
+      if (showing) {
+        ta.hidden = true; sel.disabled = false; libreBtn.textContent = "\u270E saisie libre";
+      } else {
+        ta.hidden = false; sel.value = ""; sel.disabled = true; libreBtn.textContent = "\u2630 choisir une liste";
+        ta.focus();
+      }
+      return;
+    }
+  });
+
+  // changement de faction -> recharge le menu listes du camp
+  document.addEventListener("change", (e) => {
+    if (!getApp()) return;
+    const fac = e.target.closest(".cp-intro-faction");
+    if (fac && getApp().contains(fac)) {
+      const camp = fac.closest(".cp-intro-camp");
+      if (camp) fillCampListe(camp);
       return;
     }
   });
