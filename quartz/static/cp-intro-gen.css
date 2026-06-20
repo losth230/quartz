@@ -95,7 +95,8 @@
   font-size: 1em; padding: 0.2em 0.4em;
 }
 #cp-intro-app .cp-intro-camp-del:hover { color: #c0563f; }
-#cp-intro-app .cp-form-actions { margin-top: 1.2em; }
+#cp-intro-app .cp-form-actions { margin-top: 1.2em; display: flex; flex-wrap: wrap; gap: 0.6em; align-items: center; }
+#cp-intro-app .cp-btn.ghost { background: transparent; color: var(--secondary); }
 #cp-intro-app .cp-msg { margin-top: 0.7em; font-size: 0.88em; min-height: 1.1em; }
 #cp-intro-app .cp-msg.err { color: #c0563f; }
 #cp-intro-app .cp-intro-loading { font-style: italic; color: var(--secondary); margin-top: 1em; }
@@ -111,6 +112,5 @@
   margin-top: 0.8em; font-size: 0.75em; font-style: normal; color: var(--gray);
   border-top: 1px dashed var(--gray); padding-top: 0.5em;
 }
-#cp-intro-app .cp-intro-actions { margin-top: 1em; display: flex; justify-content: center; }
 
 @media (max-width: 500px) { #cp-intro-app .cp-tirage-grid { grid-template-columns: 1fr; } }
