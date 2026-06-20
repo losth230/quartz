@@ -50,7 +50,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 <div class="legendary">
 
-### Docteur Skritzz — 42 pts
+### Docteur Molluskus — 42 pts
 
 </div>
 
