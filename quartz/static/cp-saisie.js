@@ -121,12 +121,14 @@ function renderModal() {
     '<div id="cp-participants">' + rows + "</div>" +
     '<button class="cp-btn-ghost" id="cp-add-participant">+ Ajouter un joueur</button>' +
     '<label class="cp-section-label">Commentaire sur la partie (optionnel)</label>' +
-    '<textarea id="cp-f-commentaire" class="cp-textarea" placeholder="Un mot sur cette partie : ambiance, équilibre, moment marquant..."></textarea>' +
+    '<textarea id="cp-f-commentaire" class="cp-textarea" placeholder="Un mot sur cette partie : ambiance, équilibre, moment marquant..."></textarea>';
+
+  const footer =
+    '<div class="cp-msg" id="cp-save-msg"></div>' +
     '<div class="cp-form-actions">' +
       '<button class="cp-btn" id="cp-save-partie">' + (enEdition ? "Mettre à jour" : "Enregistrer la partie") + "</button>" +
       '<button class="cp-btn ghost" id="cp-saisie-cancel">Annuler</button>' +
-    "</div>" +
-    '<div class="cp-msg" id="cp-save-msg"></div>';
+    "</div>";
 
   let overlay = document.getElementById("cp-saisie-overlay");
   if (!overlay) {
@@ -141,6 +143,7 @@ function renderModal() {
         '<button class="cp-saisie-close" id="cp-saisie-x" title="Fermer">\u2715</button>' +
       "</div>" +
       '<div class="cp-saisie-body">' + form + "</div>" +
+      '<div class="cp-saisie-footer">' + footer + "</div>" +
     "</div>";
   overlay.classList.add("open");
   document.body.classList.add("cp-saisie-lock");
