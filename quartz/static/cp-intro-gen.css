@@ -1,116 +1,138 @@
 /* ============================================================
-   C&P — Page "Préparer une bataille" (cp-intro-gen)
-   À placer dans : quartz/static/cp-intro-gen.css
-   Chargé via Head.tsx : <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
-   Styles scopés sous #cp-intro-app (tirage + génération d'intro).
+   C&P — Modale de saisie partagée (cp-saisie)
+   À placer dans : quartz/static/cp-saisie.css
+   Chargé via Head.tsx : <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
    ============================================================ */
 
-#cp-intro-app .cp-card {
-  background: var(--lightgray); border: 1px solid var(--gray);
-  border-radius: 4px; padding: 1.2em 1.4em; margin-bottom: 1.2em;
+/* Overlay sombre plein écran */
+#cp-saisie-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, 0.55);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 4vh 1rem; overflow-y: auto;
 }
-#cp-intro-app .cp-empty { color: var(--gray); font-style: italic; }
+#cp-saisie-overlay.open { display: flex; }
+body.cp-saisie-lock { overflow: hidden; }
 
-/* ---- Boutons ---- */
-#cp-intro-app .cp-btn {
-  background: var(--secondary); color: var(--light); border: 1px solid var(--secondary);
-  border-radius: 3px; padding: 0.5em 1.2em; font-family: inherit; font-variant: small-caps;
-  letter-spacing: 0.05em; cursor: pointer; font-size: 0.95em;
+/* Panneau central : colonne flex (header / corps défilant / footer collant) */
+#cp-saisie-overlay .cp-saisie-panel {
+  background: var(--light); color: var(--dark);
+  border: 1px solid var(--gray); border-radius: 6px;
+  width: 100%; max-width: 780px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: flex; flex-direction: column; max-height: 92vh;
+  animation: cp-saisie-in 0.25s ease;
 }
-#cp-intro-app .cp-btn:hover { opacity: 0.9; }
-#cp-intro-app .cp-btn:disabled { opacity: 0.5; cursor: wait; }
-#cp-intro-app .cp-btn-big { font-size: 1.05em; padding: 0.7em 1.6em; }
-#cp-intro-app .cp-btn-ghost {
+@keyframes cp-saisie-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  #cp-saisie-overlay .cp-saisie-panel { animation: none; }
+}
+
+#cp-saisie-overlay .cp-saisie-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9em 1.2em; border-bottom: 1px solid var(--lightgray); flex-shrink: 0;
+}
+#cp-saisie-overlay .cp-saisie-title {
+  font-variant: small-caps; letter-spacing: 0.05em; font-weight: bold;
+  color: var(--secondary); font-size: 1.1em;
+}
+#cp-saisie-overlay .cp-saisie-close {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 1.2em; color: var(--gray); padding: 0.2em 0.4em;
+}
+#cp-saisie-overlay .cp-saisie-close:hover { color: #c0563f; }
+/* Corps : seule zone qui défile */
+#cp-saisie-overlay .cp-saisie-body { padding: 1.2em; overflow-y: auto; flex: 1 1 auto; }
+/* Footer collant : toujours visible en bas */
+#cp-saisie-overlay .cp-saisie-footer {
+  flex-shrink: 0; padding: 0.9em 1.2em;
+  border-top: 1px solid var(--lightgray); background: var(--lightgray);
+  border-radius: 0 0 6px 6px;
+}
+
+/* ---- Formulaire (repris de l'onglet Saisie, scopé à la modale) ---- */
+#cp-saisie-overlay .cp-form-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8em; margin-bottom: 1em;
+}
+#cp-saisie-overlay label { display: block; font-size: 0.78em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--secondary); margin-bottom: 0.2em; }
+#cp-saisie-overlay input, #cp-saisie-overlay select, #cp-saisie-overlay textarea {
+  background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
+  padding: 0.45em 0.6em; font-family: inherit; font-size: 0.9em; color: var(--dark);
+  width: 100%; box-sizing: border-box;
+}
+#cp-saisie-overlay .cp-section-label {
+  display: block; font-variant: small-caps; letter-spacing: 0.05em;
+  font-size: 0.82em; color: var(--secondary); margin: 1.1em 0 0.4em; font-weight: bold;
+}
+/* Carte par participant : bloc distinct et aéré, champs en grille nette */
+#cp-saisie-overlay .cp-part-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 0.6em 0.7em; align-items: center;
+  padding: 0.9em 1em; margin-bottom: 0.8em;
+  border: 1px solid var(--gray); border-radius: 5px; background: var(--light);
+}
+#cp-saisie-overlay .cp-part-num {
+  grid-column: 1 / -1;
+  font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em;
+  font-weight: bold; color: var(--secondary);
+}
+#cp-saisie-overlay .cp-p-joueur { grid-column: 1 / 2; }
+#cp-saisie-overlay .cp-p-peuple { grid-column: 2 / 3; }
+#cp-saisie-overlay .cp-p-liste { grid-column: 3 / 4; }
+#cp-saisie-overlay .cp-p-archetype { grid-column: 1 / 2; }
+#cp-saisie-overlay .cp-p-pertes { grid-column: 2 / 3; }
+#cp-saisie-overlay .cp-p-resultat { grid-column: 3 / 4; }
+/* le bouton supprimer se place en haut à droite de la carte */
+#cp-saisie-overlay .cp-part-row { position: relative; }
+#cp-saisie-overlay .cp-part-del {
+  position: absolute; top: 0.6em; right: 0.7em;
+  background: transparent; border: none; color: var(--gray); cursor: pointer; font-size: 0.95em;
+}
+#cp-saisie-overlay .cp-part-del:hover { color: #c0563f; }
+
+/* Notation par étoiles : sur sa propre ligne, pleine largeur */
+#cp-saisie-overlay .cp-part-notes {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; gap: 1.4em;
+  margin-top: 0.2em; padding-top: 0.7em; border-top: 1px dashed var(--lightgray);
+}
+#cp-saisie-overlay .cp-rating { display: flex; align-items: center; gap: 0.4em; }
+#cp-saisie-overlay .cp-rating-lbl { font-size: 0.8em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--secondary); }
+#cp-saisie-overlay .cp-stars { display: inline-flex; }
+#cp-saisie-overlay .cp-star { cursor: pointer; font-size: 1.2em; color: var(--gray); transition: color 0.1s; line-height: 1; }
+#cp-saisie-overlay .cp-star:hover { color: #d4a017; }
+#cp-saisie-overlay .cp-star.on { color: #e0a82e; }
+#cp-saisie-overlay .cp-star-clear { cursor: pointer; font-size: 0.75em; color: var(--gray); margin-left: 0.2em; opacity: 0.6; }
+#cp-saisie-overlay .cp-star-clear:hover { opacity: 1; color: #c0563f; }
+
+#cp-saisie-overlay .cp-textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
+#cp-saisie-overlay .cp-btn-ghost {
   background: transparent; border: 1px dashed var(--gray); border-radius: 3px;
   padding: 0.35em 0.8em; font-family: inherit; font-size: 0.85em; color: var(--secondary);
   cursor: pointer; margin-top: 0.2em;
 }
+#cp-saisie-overlay .cp-form-actions { display: flex; gap: 0.6em; }
+#cp-saisie-overlay .cp-btn {
+  background: var(--secondary); color: var(--light); border: 1px solid var(--secondary);
+  border-radius: 3px; padding: 0.5em 1.2em; font-family: inherit; font-variant: small-caps;
+  letter-spacing: 0.05em; cursor: pointer; font-size: 0.95em;
+}
+#cp-saisie-overlay .cp-btn:hover { opacity: 0.9; }
+#cp-saisie-overlay .cp-btn:disabled { opacity: 0.5; cursor: wait; }
+#cp-saisie-overlay .cp-btn.ghost { background: transparent; color: var(--secondary); }
+#cp-saisie-overlay .cp-msg { margin: 0 0 0.5em; font-size: 0.88em; min-height: 0; }
+#cp-saisie-overlay .cp-msg:empty { display: none; }
+#cp-saisie-overlay .cp-msg.err { color: #c0563f; }
 
-/* ---- Tirage ---- */
-#cp-intro-app .cp-tirage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 0.2em; align-items: stretch; }
-#cp-intro-app .cp-tirage-card { display: flex; flex-direction: column; text-align: center; border: 1px solid var(--gray); border-radius: 4px; padding: 0.8em; background: var(--light); }
-#cp-intro-app .cp-tirage-label { font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em; color: var(--secondary); margin-bottom: 0.5em; }
-#cp-intro-app .cp-tirage-imgwrap { height: 210px; display: flex; align-items: center; justify-content: center; margin-bottom: 0.5em; }
-#cp-intro-app .cp-tirage-img { max-width: 100%; max-height: 210px; border-radius: 3px; display: block; }
-#cp-intro-app .cp-tirage-noimg { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: var(--gray); }
-#cp-intro-app .cp-tirage-noimg svg { width: 72px; height: 81px; }
-#cp-intro-app .cp-tirage-nom { font-weight: bold; color: var(--dark); }
-
-/* ---- Animation de révélation du tirage ---- */
-/* État initial "voilé" : la carte est légèrement plus basse, floutée, transparente. */
-#cp-intro-app .cp-reveal { opacity: 0; transform: translateY(14px); filter: blur(6px); }
-/* Dans la grille, le conteneur reveal doit transmettre l'étirement à la carte interne. */
-#cp-intro-app .cp-tirage-grid > .cp-reveal { display: flex; }
-#cp-intro-app .cp-tirage-grid > .cp-reveal > .cp-tirage-card { flex: 1; }
-/* Quand la classe .cp-revealed est ajoutée, la carte se révèle en douceur. */
-#cp-intro-app .cp-reveal.cp-revealed {
-  opacity: 1; transform: translateY(0); filter: blur(0);
-  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), filter 0.7s ease;
+/* Responsive : sur écran étroit, les champs du participant passent en pleine largeur */
+@media (max-width: 560px) {
+  #cp-saisie-overlay .cp-part-row { grid-template-columns: 1fr; }
+  #cp-saisie-overlay .cp-p-joueur,
+  #cp-saisie-overlay .cp-p-peuple,
+  #cp-saisie-overlay .cp-p-liste,
+  #cp-saisie-overlay .cp-p-archetype,
+  #cp-saisie-overlay .cp-p-pertes,
+  #cp-saisie-overlay .cp-p-resultat { grid-column: 1 / -1; }
+  #cp-saisie-overlay .cp-form-grid { grid-template-columns: 1fr 1fr; }
 }
-/* Bandeau de suspense affiché pendant le brassage, avant la révélation. */
-#cp-intro-app .cp-tirage-suspense {
-  text-align: center; padding: 1.4em 0; color: var(--secondary);
-  font-variant: small-caps; letter-spacing: 0.08em; font-size: 1em;
-}
-#cp-intro-app .cp-tirage-suspense .cp-dot { animation: cp-blink 1.2s infinite both; }
-#cp-intro-app .cp-tirage-suspense .cp-dot:nth-child(2) { animation-delay: 0.2s; }
-#cp-intro-app .cp-tirage-suspense .cp-dot:nth-child(3) { animation-delay: 0.4s; }
-@keyframes cp-blink { 0%, 80%, 100% { opacity: 0.25; } 40% { opacity: 1; } }
-/* Respecte la préférence système "réduire les animations". */
-@media (prefers-reduced-motion: reduce) {
-  #cp-intro-app .cp-reveal { opacity: 1; transform: none; filter: none; }
-  #cp-intro-app .cp-reveal.cp-revealed { transition: none; }
-}
-#cp-intro-app .cp-tirage-details {
-  margin-top: 1em; text-align: left;
-  border: 1px solid var(--gray); border-radius: 4px; background: var(--light);
-  padding: 1em 1.2em;
-}
-#cp-intro-app .cp-tirage-desc { margin: 0 0 0.7em; font-size: 0.88em; line-height: 1.45; font-style: italic; color: var(--secondary); }
-#cp-intro-app .cp-tirage-detail { margin-bottom: 0.6em; }
-#cp-intro-app .cp-tirage-detail:last-child { margin-bottom: 0; }
-#cp-intro-app .cp-tirage-detail-lbl { display: block; font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.75em; color: var(--secondary); margin-bottom: 0.15em; }
-#cp-intro-app .cp-tirage-detail p { margin: 0; font-size: 0.88em; line-height: 1.45; color: var(--dark); }
-
-/* ---- Génération d'intro ---- */
-#cp-intro-app .cp-intro-hint { font-size: 0.9em; color: var(--secondary); margin: 0 0 1em; line-height: 1.5; }
-#cp-intro-app .cp-section-label {
-  display: block; font-variant: small-caps; letter-spacing: 0.05em;
-  font-size: 0.82em; color: var(--secondary); margin: 1em 0 0.4em;
-}
-#cp-intro-app .cp-intro-camp { display: flex; align-items: center; gap: 0.5em; margin-bottom: 0.5em; }
-#cp-intro-app .cp-intro-campnum {
-  font-variant: small-caps; font-size: 0.8em; color: var(--secondary);
-  min-width: 4.5em; flex-shrink: 0;
-}
-#cp-intro-app input, #cp-intro-app select {
-  background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
-  padding: 0.45em 0.6em; font-family: inherit; font-size: 0.9em; color: var(--dark);
-}
-#cp-intro-app .cp-intro-joueur { flex: 1; min-width: 0; }
-#cp-intro-app .cp-intro-faction { flex: 1; min-width: 0; }
-#cp-intro-app .cp-intro-ambiance { width: 100%; box-sizing: border-box; }
-#cp-intro-app .cp-intro-camp-del {
-  background: transparent; border: none; color: var(--gray); cursor: pointer;
-  font-size: 1em; padding: 0.2em 0.4em;
-}
-#cp-intro-app .cp-intro-camp-del:hover { color: #c0563f; }
-#cp-intro-app .cp-form-actions { margin-top: 1.2em; }
-#cp-intro-app .cp-msg { margin-top: 0.7em; font-size: 0.88em; min-height: 1.1em; }
-#cp-intro-app .cp-msg.err { color: #c0563f; }
-#cp-intro-app .cp-intro-loading { font-style: italic; color: var(--secondary); margin-top: 1em; }
-#cp-intro-app .cp-intro-texte {
-  margin-top: 1.2em; border-left: 4px solid var(--tertiary); background: var(--light);
-  border-radius: 0 4px 4px 0; padding: 1em 1.3em;
-}
-#cp-intro-app .cp-intro-texte-corps {
-  font-family: Spectral, Georgia, serif; font-style: italic; font-size: 1.05em;
-  line-height: 1.6; color: var(--dark);
-}
-#cp-intro-app .cp-intro-meta {
-  margin-top: 0.8em; font-size: 0.75em; font-style: normal; color: var(--gray);
-  border-top: 1px dashed var(--gray); padding-top: 0.5em;
-}
-#cp-intro-app .cp-intro-actions { margin-top: 1em; display: flex; justify-content: center; }
-
-@media (max-width: 500px) { #cp-intro-app .cp-tirage-grid { grid-template-columns: 1fr; } }
