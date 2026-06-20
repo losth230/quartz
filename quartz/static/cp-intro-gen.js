@@ -8,15 +8,20 @@
 // ============================================================
 
 import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
+import "/quartz/static/cp-saisie.js";
 
 // URL de la fonction Edge, construite à partir de l'URL du projet partagée
 // (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
 const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
+
+// URL de la page Résultats (pour rediriger après enregistrement d'une partie).
+// ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
 const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
 
-let refPeuples = [], refScenarios = [], refDeploiements = [];
+let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
 let wired = false;
+let dernierTirage = null; // { scenario, deploiement, camps } du dernier tirage, pour la saisie
 
 function getApp() { return document.getElementById("cp-intro-app"); }
 function $(id) { return document.getElementById(id); }
@@ -27,14 +32,18 @@ function esc(s) {
 }
 
 async function loadRefs() {
-  const [rp, rs, rd] = await Promise.all([
+  const [rp, rs, rd, rv, al] = await Promise.all([
     sb.from("ref_peuples").select("*").order("ordre"),
     sb.from("ref_scenarios").select("*").order("ordre"),
     sb.from("ref_deploiements").select("*").order("ordre"),
+    sb.from("ref_versions").select("*").order("ordre"),
+    sb.from("army_lists").select("id, title, faction, author, points"),
   ]);
   refPeuples = rp.data || [];
   refScenarios = rs.data || [];
   refDeploiements = rd.data || [];
+  refVersions = rv.data || [];
+  armyLists = al.data || [];
   render();
 }
 
@@ -106,6 +115,12 @@ async function prepareBataille() {
   const REVEAL_TOTAL = 2000; // durée approximative de la mise en scène du tirage (ms)
   const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
   const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
+  // Mémorise le contexte tiré pour pré-remplir la saisie du résultat
+  dernierTirage = {
+    scenario: sc.nom,
+    deploiement: dp.nom,
+    camps: factions.map((f, i) => ({ joueur: joueurs[i] || "", faction: f })),
+  };
   const tBox = $("cp-tirage-result");
   if (tBox) {
     // a) bandeau de suspense (brassage)
@@ -180,6 +195,9 @@ async function prepareBataille() {
           '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
           '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
             " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
+        "</div>" +
+        '<div class="cp-intro-actions">' +
+          '<button class="cp-btn" id="cp-enregistrer-resultat">\u{1F4DD} Enregistrer le résultat de cette partie</button>' +
         "</div>";
       // déclenche le fondu d'apparition du texte
       const t = res.querySelector(".cp-intro-texte");
@@ -221,6 +239,19 @@ function tirageCard(titre, item) {
   "</div>";
 }
 
+// Ouvre la modale de saisie, pré-remplie avec le dernier tirage.
+function ouvrirSaisieResultat() {
+  if (!window.cpSaisie) { console.error("[cp-intro] module cp-saisie non chargé"); return; }
+  window.cpSaisie.open({
+    refs: { refPeuples, refScenarios, refDeploiements, refVersions, armyLists },
+    prefill: dernierTirage || {},
+    onSaved: () => {
+      // après enregistrement réussi : redirection vers l'historique des résultats
+      window.location.href = RESULTATS_URL;
+    },
+  });
+}
+
 // ---------- Câblage ----------
 function wireOnce() {
   if (wired) return;
@@ -229,6 +260,7 @@ function wireOnce() {
   document.addEventListener("click", (e) => {
     if (!getApp()) return;
     if (e.target.closest("#cp-prepare-btn")) { prepareBataille(); return; }
+    if (e.target.closest("#cp-enregistrer-resultat")) { ouvrirSaisieResultat(); return; }
     if (e.target.closest("#cp-intro-add")) {
       nbCamps++;
       const cont = $("cp-intro-camps");
