@@ -16,7 +16,7 @@ const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 // URL de la page Résultats (pour rediriger après enregistrement d'une partie).
 // ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
+const RESULTATS_URL = "/quartz/Wargame/Resultats";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
@@ -79,6 +79,7 @@ function render() {
       '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
       '<div class="cp-form-actions">' +
         '<button class="cp-btn cp-btn-big" id="cp-prepare-btn">\u2694\uFE0F Préparer la bataille</button>' +
+        '<button class="cp-btn ghost" id="cp-enregistrer-resultat">\u{1F4DD} Enregistrer un résultat</button>' +
       "</div>" +
       '<div class="cp-msg" id="cp-intro-msg"></div>' +
     "</div>" +
@@ -195,9 +196,6 @@ async function prepareBataille() {
           '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
           '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
             " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
-        "</div>" +
-        '<div class="cp-intro-actions">' +
-          '<button class="cp-btn" id="cp-enregistrer-resultat">\u{1F4DD} Enregistrer le résultat de cette partie</button>' +
         "</div>";
       // déclenche le fondu d'apparition du texte
       const t = res.querySelector(".cp-intro-texte");
@@ -239,16 +237,29 @@ function tirageCard(titre, item) {
   "</div>";
 }
 
-// Ouvre la modale de saisie, pré-remplie avec le dernier tirage.
+// Ouvre la modale de saisie, pré-remplie avec ce qui est disponible :
+// le tirage s'il a eu lieu, sinon les factions saisies dans le formulaire, sinon rien.
 function ouvrirSaisieResultat() {
   if (!window.cpSaisie) { console.error("[cp-intro] module cp-saisie non chargé"); return; }
+  let prefill = {};
+  if (dernierTirage) {
+    // un tirage a eu lieu : on pré-remplit tout (scénario, déploiement, camps)
+    prefill = dernierTirage;
+  } else {
+    // pas de tirage : on récupère au moins les camps saisis dans le formulaire
+    const rows = [...document.querySelectorAll(".cp-intro-camp")];
+    const camps = [];
+    rows.forEach((r) => {
+      const joueur = r.querySelector(".cp-intro-joueur").value.trim();
+      const faction = r.querySelector(".cp-intro-faction").value;
+      if (faction || joueur) camps.push({ joueur, faction });
+    });
+    if (camps.length) prefill.camps = camps;
+  }
   window.cpSaisie.open({
     refs: { refPeuples, refScenarios, refDeploiements, refVersions, armyLists },
-    prefill: dernierTirage || {},
-    onSaved: () => {
-      // après enregistrement réussi : redirection vers l'historique des résultats
-      window.location.href = RESULTATS_URL;
-    },
+    prefill,
+    onSaved: () => { window.location.href = RESULTATS_URL; },
   });
 }
 
