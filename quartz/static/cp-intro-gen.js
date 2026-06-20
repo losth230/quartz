@@ -16,7 +16,7 @@ const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 // URL de la page Résultats (pour rediriger après enregistrement d'une partie).
 // ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Resultats";
+const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
