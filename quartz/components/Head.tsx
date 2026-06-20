@@ -105,6 +105,7 @@ export default (() => {
       <script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-bug-report.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
+      <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
       </head>
     )
   }
