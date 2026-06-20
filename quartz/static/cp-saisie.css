@@ -20,7 +20,7 @@ body.cp-saisie-lock { overflow: hidden; }
   border: 1px solid var(--gray); border-radius: 6px;
   width: 100%; max-width: 780px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
   display: flex; flex-direction: column; max-height: 92vh;
-  animation: cp-saisie-in 0.25s ease;
+  animation: cp-saisie-in 0.5s ease;
 }
 @keyframes cp-saisie-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
 @media (prefers-reduced-motion: reduce) {
