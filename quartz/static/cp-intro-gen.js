@@ -12,6 +12,7 @@ import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
 // URL de la fonction Edge, construite à partir de l'URL du projet partagée
 // (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
 const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
+const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [];
 let nbCamps = 2;
