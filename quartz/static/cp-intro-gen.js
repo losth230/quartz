@@ -16,7 +16,7 @@ const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 // URL de la page Résultats (pour rediriger après enregistrement d'une partie).
 // ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Resultats";
+const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
@@ -58,13 +58,11 @@ function campRow(i) {
       '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
       '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
       '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
-      (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer">\u2715</button>' : "") +
+      '<select class="cp-intro-liste"><option value="">— liste (optionnel) —</option></select>' +
+      '<button class="cp-intro-liste-libre-btn" type="button" title="Saisir une liste à la main">\u270E</button>' +
+      (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer le camp">\u2715</button>' : "") +
     "</div>" +
-    '<div class="cp-intro-camp-liste">' +
-      '<select class="cp-intro-liste"><option value="">— liste d\'armée (optionnel) —</option></select>' +
-      '<button class="cp-intro-liste-libre-btn" type="button" title="Saisir une liste à la main">\u270E saisie libre</button>' +
-      '<textarea class="cp-intro-liste-libre" placeholder="Colle ou saisis ta liste d\'armée ici (unités, commandants...)" hidden></textarea>' +
-    "</div>" +
+    '<textarea class="cp-intro-liste-libre" placeholder="Colle ou saisis ta liste d\'armée ici (unités, commandants...)" hidden></textarea>' +
   "</div>";
 }
 
@@ -334,9 +332,9 @@ function wireOnce() {
       const sel = camp.querySelector(".cp-intro-liste");
       const showing = !ta.hidden;
       if (showing) {
-        ta.hidden = true; sel.disabled = false; libreBtn.textContent = "\u270E saisie libre";
+        ta.hidden = true; sel.disabled = false; libreBtn.textContent = "\u270E"; libreBtn.title = "Saisir une liste à la main";
       } else {
-        ta.hidden = false; sel.value = ""; sel.disabled = true; libreBtn.textContent = "\u2630 choisir une liste";
+        ta.hidden = false; sel.value = ""; sel.disabled = true; libreBtn.textContent = "\u2630"; libreBtn.title = "Revenir au menu des listes";
         ta.focus();
       }
       return;
