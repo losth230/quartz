@@ -9,6 +9,7 @@
 
 import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
 import "/quartz/static/cp-saisie.js";
+import { genererTerrain, rendreTerrainSVG, TYPES_TERRAIN } from "/quartz/static/cp-terrain.js";
 
 // URL de la fonction Edge, construite à partir de l'URL du projet partagée
 // (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
@@ -16,7 +17,7 @@ const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
 
 // URL de la page Résultats (pour rediriger après enregistrement d'une partie).
 // ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Des Stats pour les Nerds";
+const RESULTATS_URL = "/quartz/Wargame/Resultats";
 
 let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
 let nbCamps = 2;
@@ -156,10 +157,13 @@ async function prepareBataille() {
   const REVEAL_TOTAL = 2000; // durée approximative de la mise en scène du tirage (ms)
   const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
   const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
+  // Génère un terrain de bataille (grille 10×14, équilibré par symétrie 180°)
+  const terrain = genererTerrain({ cols: 10, rows: 14, couverture: 0.25 });
   // Mémorise le contexte tiré pour pré-remplir la saisie du résultat
   dernierTirage = {
     scenario: sc.nom,
     deploiement: dp.nom,
+    terrainSeed: terrain.seed,
     camps: factions.map((f, i) => ({ joueur: joueurs[i] || "", faction: f })),
   };
   const tBox = $("cp-tirage-result");
@@ -183,13 +187,15 @@ async function prepareBataille() {
             '<div class="cp-reveal" id="cp-reveal-dp">' + tirageCard("Déploiement", dp) + "</div>" +
           "</div>" +
           '<div class="cp-reveal" id="cp-reveal-det">' + tirageDetails(sc) + "</div>" +
+          '<div class="cp-reveal" id="cp-reveal-terrain">' + terrainBloc(terrain) + "</div>" +
         "</div>";
-      // c) révélation décalée : scénario, puis déploiement, puis détails
+      // c) révélation décalée : scénario, puis déploiement, puis détails, puis terrain
       requestAnimationFrame(() => {
-        const elSc = $("cp-reveal-sc"), elDp = $("cp-reveal-dp"), elDet = $("cp-reveal-det");
+        const elSc = $("cp-reveal-sc"), elDp = $("cp-reveal-dp"), elDet = $("cp-reveal-det"), elTer = $("cp-reveal-terrain");
         if (elSc) setTimeout(() => elSc.classList.add("cp-revealed"), 60);
         if (elDp) setTimeout(() => elDp.classList.add("cp-revealed"), 360);
         if (elDet) setTimeout(() => elDet.classList.add("cp-revealed"), 660);
+        if (elTer) setTimeout(() => elTer.classList.add("cp-revealed"), 960);
       });
     }, 1100);
   }
@@ -255,6 +261,30 @@ function tirageDetails(item) {
     (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
     (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
     (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
+  "</div>";
+}
+
+// Bloc terrain : titre, plan SVG, légende des types présents, et métriques.
+function terrainBloc(terrain) {
+  const svg = rendreTerrainSVG(terrain, { tailleCase: 26 });
+  // légende : uniquement les types réellement présents
+  const presents = Object.keys(terrain.metriques.parType);
+  const legende = presents.map((t) =>
+    '<span class="cp-terrain-leg-item">' +
+      '<span class="cp-terrain-leg-pastille" style="background:' + TYPES_TERRAIN[t].couleur + '"></span>' +
+      esc(TYPES_TERRAIN[t].libelle) +
+    "</span>"
+  ).join("");
+  const couv = Math.round(terrain.metriques.couverture * 100);
+  return '<div class="cp-terrain">' +
+    '<div class="cp-terrain-head">' +
+      '<span class="cp-terrain-titre">Terrain de bataille</span>' +
+      '<span class="cp-terrain-sub">' + terrain.cols + "×" + terrain.rows + " · couverture " + couv + "% · équilibré (symétrie 180°)</span>" +
+    "</div>" +
+    '<div class="cp-terrain-plan">' + svg + "</div>" +
+    '<div class="cp-terrain-legende">' + legende +
+      '<span class="cp-terrain-leg-zones">Bandes : déploiements des deux camps</span>' +
+    "</div>" +
   "</div>";
 }
 
