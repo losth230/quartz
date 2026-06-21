@@ -89,10 +89,15 @@ export const DEPLOIEMENTS_MAP = {
   // "Diagonale": "5",
 };
 
+// Résolution de la clé de déploiement.
+// PRIORITÉ au nom affiché (dp.nom = "1".."6"), identifiant fiable montré dans
+// la carte « Déploiement ». L'image_url n'est qu'un ultime recours.
 function extraireCle(nom, img) {
-  let m = (img || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
-  m = (nom || "").toString().match(/^\s*([1-6])\s*$/); if (m) return m[1];
-  m = (nom || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
+  nom = (nom || "").toString().trim();
+  if (DEPLOIEMENTS_MAP[nom]) return DEPLOIEMENTS_MAP[nom]; // 1) override explicite
+  if (DEPLOIEMENTS[nom]) return nom;                       // 2) le nom EST déjà la clé ("1".."6")
+  let m = nom.match(/([1-6])/); if (m) return m[1];        // 3) un chiffre 1-6 dans le nom
+  m = (img || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1]; // 4) dernier recours
   return null;
 }
 
@@ -100,8 +105,8 @@ function extraireCle(nom, img) {
 export function zonesDeploiement(dep, cols = 14, rows = 10) {
   const nom = typeof dep === "string" ? dep : (dep && dep.nom) || "";
   const img = (dep && dep.image_url) || "";
-  let cle = DEPLOIEMENTS_MAP[nom] || extraireCle(nom, img);
-  if (!cle || !DEPLOIEMENTS[cle]) cle = "2";
+  let cle = extraireCle(nom, img);
+  if (!cle || !DEPLOIEMENTS[cle]) cle = "1";
   const def = DEPLOIEMENTS[cle];
   const { zoneA, zoneB } = def.zones(cols, rows);
   return { cle, libelle: def.libelle, zoneA, zoneB };
