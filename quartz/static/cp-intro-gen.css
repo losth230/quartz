@@ -132,3 +132,15 @@
 }
 
 @media (max-width: 500px) { #cp-intro-app .cp-tirage-grid { grid-template-columns: 1fr; } }
+
+/* ---- Bloc terrain de bataille ---- */
+#cp-intro-app .cp-terrain { margin-top: 1.1em; }
+#cp-intro-app .cp-terrain-head { display: flex; align-items: baseline; gap: 0.6em; flex-wrap: wrap; margin-bottom: 0.5em; }
+#cp-intro-app .cp-terrain-titre { font-variant: small-caps; letter-spacing: 0.06em; font-weight: bold; color: var(--secondary); font-size: 1.02em; }
+#cp-intro-app .cp-terrain-sub { font-size: 0.78em; color: var(--gray); }
+#cp-intro-app .cp-terrain-plan { max-width: 420px; margin: 0 auto; }
+#cp-intro-app .cp-terrain-svg { display: block; border-radius: 3px; }
+#cp-intro-app .cp-terrain-legende { display: flex; flex-wrap: wrap; gap: 0.5em 1em; justify-content: center; margin-top: 0.6em; font-size: 0.8em; color: var(--dark); }
+#cp-intro-app .cp-terrain-leg-item { display: inline-flex; align-items: center; gap: 0.35em; }
+#cp-intro-app .cp-terrain-leg-pastille { width: 0.85em; height: 0.85em; border-radius: 2px; display: inline-block; border: 1px solid rgba(0,0,0,0.15); }
+#cp-intro-app .cp-terrain-leg-zones { color: var(--gray); font-style: italic; }
