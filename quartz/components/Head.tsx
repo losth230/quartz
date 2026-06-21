@@ -103,6 +103,7 @@ export default (() => {
       <script type="module" src="/quartz/static/cp-bug-tracker.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-stats.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve />
+      <link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-bug-report.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
