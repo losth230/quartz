@@ -72,8 +72,8 @@ export const DEPLOIEMENTS = {
 //      À COMPLÉTER avec tes déploiements pour que le terrain corresponde
 //      au déploiement tiré. Toute valeur inconnue retombe sur "bordsCourts". ----
 export const DEPLOIEMENTS_MAP = {
-  // "Affrontement frontal": "bordsCourts",
-  // "Front élargi":         "bordsLongs",
+  "Affrontement frontal": "bordsCourts",
+  "Front élargi":         "bordsLongs",
   // "Diagonale":            "diagonale",
   // "Quartiers":            "quartiers",
 };
