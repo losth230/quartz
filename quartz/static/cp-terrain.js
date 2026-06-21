@@ -33,56 +33,96 @@ export const BIOMES = {
   mixte:    { libelle: "Mixte",    arbres: [6, 10],  murets: [1, 3], surelevations: [1, 2], batiments: [1, 2] },
 };
 
-// ---- Patrons de déploiement (en données). Chaque fonction renvoie les
-//      cellules des deux camps. Tous sont symétriques par rotation 180°. ----
+// ---- Patrons de déploiement (en données), conformes aux 6 déploiements du jeu.
+//      Grille 14 colonnes × 10 lignes. Tous symétriques par rotation 180°.
+//      Chaque entrée : { libelle, zones(cols, rows) -> { zoneA:[[r,c]], zoneB:[[r,c]] } }.
 export const DEPLOIEMENTS = {
-  bordsCourts(cols, rows, dz = 3) {
-    const A = [], B = [];
-    for (let r = 0; r < dz; r++) for (let c = 0; c < cols; c++) A.push([r, c]);
-    for (let r = rows - dz; r < rows; r++) for (let c = 0; c < cols; c++) B.push([r, c]);
-    return { zoneA: A, zoneB: B };
+  // 1 — Bandes verticales (colonnes 2-3 vs 10-11)
+  "1": {
+    libelle: "Bandes verticales",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let r = 0; r < rows; r++) { A.push([r, 2], [r, 3]); B.push([r, 10], [r, 11]); }
+      return { zoneA: A, zoneB: B };
+    },
   },
-  bordsLongs(cols, rows, dz = 2) {
-    const A = [], B = [];
-    for (let r = 0; r < rows; r++) for (let c = 0; c < dz; c++) A.push([r, c]);
-    for (let r = 0; r < rows; r++) for (let c = cols - dz; c < cols; c++) B.push([r, c]);
-    return { zoneA: A, zoneB: B };
+  // 2 — Bords courts (2 lignes haut/bas, pleine largeur)
+  "2": {
+    libelle: "Bords courts",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let c = 0; c < cols; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+      return { zoneA: A, zoneB: B };
+    },
   },
-  diagonale(cols, rows) {
-    // Triangles de coins opposés (haut-gauche / bas-droite), symétriques 180°.
-    const A = [], B = [];
-    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-      const d = c / (cols - 1) + r / (rows - 1); // 0..2
-      if (d <= 0.85) A.push([r, c]);
-      else if (d >= 1.15) B.push([r, c]);
-    }
-    return { zoneA: A, zoneB: B };
+  // 3 — Bords courts resserrés (2 lignes haut/bas, colonnes 2..11)
+  "3": {
+    libelle: "Bords courts resserrés",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let c = 2; c <= 11; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+      return { zoneA: A, zoneB: B };
+    },
   },
-  quartiers(cols, rows) {
-    // Quart haut-gauche vs quart bas-droite.
-    const A = [], B = [];
-    const hr = Math.floor(rows / 2), hc = Math.floor(cols / 2);
-    for (let r = 0; r < hr; r++) for (let c = 0; c < hc; c++) A.push([r, c]);
-    for (let r = rows - hr; r < rows; r++) for (let c = cols - hc; c < cols; c++) B.push([r, c]);
-    return { zoneA: A, zoneB: B };
+  // 4 — Bords courts dédoublés (2 lignes haut/bas, blocs colonnes 1-4 et 9-12)
+  "4": {
+    libelle: "Bords courts dédoublés",
+    zones(cols, rows) {
+      const A = [], B = [];
+      [1, 2, 3, 4, 9, 10, 11, 12].forEach((c) => { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); });
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 5 — Diagonale (escalier coin haut-gauche / bas-droite)
+  "5": {
+    libelle: "Diagonale",
+    zones(cols, rows) {
+      const A = [];
+      for (let r = 0; r < rows; r++) {
+        const lo = Math.max(0, 4 - r), hi = Math.min(cols - 1, 6 - r);
+        for (let c = lo; c <= hi; c++) A.push([r, c]);
+      }
+      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 6 — Coins étendus (ligne du haut pleine + moitié gauche des 2 lignes suivantes)
+  "6": {
+    libelle: "Coins étendus",
+    zones(cols, rows) {
+      const A = [];
+      for (let c = 0; c < cols; c++) A.push([0, c]);
+      for (let r = 1; r <= 2; r++) for (let c = 0; c <= 5; c++) A.push([r, c]);
+      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+      return { zoneA: A, zoneB: B };
+    },
   },
 };
 
-// ---- Correspondance nom de déploiement (en base) -> patron.
-//      À COMPLÉTER avec tes déploiements pour que le terrain corresponde
-//      au déploiement tiré. Toute valeur inconnue retombe sur "bordsCourts". ----
+// ---- Correspondance explicite (optionnelle) nom de déploiement -> clé "1".."6".
+//      Si vide, le résolveur déduit la clé du numéro présent dans le nom ou l'image_url
+//      (ex. "deploiement_4.png" -> "4"). À défaut, retombe sur "2" (bords courts).
 export const DEPLOIEMENTS_MAP = {
-  "Affrontement frontal": "bordsCourts",
-  "Front élargi":         "bordsLongs",
-  // "Diagonale":            "diagonale",
-  // "Quartiers":            "quartiers",
+  // "Affrontement frontal": "2",
+  // "Diagonale": "5",
 };
 
-export function zonesDeploiement(nom, cols = 10, rows = 14) {
-  const cle = (nom && DEPLOIEMENTS_MAP[nom]) || "bordsCourts";
-  const fn = DEPLOIEMENTS[cle] || DEPLOIEMENTS.bordsCourts;
-  const { zoneA, zoneB } = fn(cols, rows);
-  return { cle, zoneA, zoneB };
+function extraireCle(nom, img) {
+  let m = (img || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
+  m = (nom || "").toString().match(/^\s*([1-6])\s*$/); if (m) return m[1];
+  m = (nom || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
+  return null;
+}
+
+// dep : soit le nom (string), soit l'enregistrement { nom, image_url }.
+export function zonesDeploiement(dep, cols = 14, rows = 10) {
+  const nom = typeof dep === "string" ? dep : (dep && dep.nom) || "";
+  const img = (dep && dep.image_url) || "";
+  let cle = DEPLOIEMENTS_MAP[nom] || extraireCle(nom, img);
+  if (!cle || !DEPLOIEMENTS[cle]) cle = "2";
+  const def = DEPLOIEMENTS[cle];
+  const { zoneA, zoneB } = def.zones(cols, rows);
+  return { cle, libelle: def.libelle, zoneA, zoneB };
 }
 
 // ---- PRNG reproductible ----
@@ -99,8 +139,8 @@ function mulberry32(a) {
 //  Génération
 // ============================================================
 export function genererTerrain(opts = {}) {
-  const cols = opts.cols || 10;
-  const rows = opts.rows || 14;
+  const cols = opts.cols || 14;
+  const rows = opts.rows || 10;
   const biome = BIOMES[opts.biome] ? opts.biome : "mixte";
   const seed = opts.seed != null ? opts.seed : (Math.random() * 1e9) | 0;
   const cfg = BIOMES[biome];
