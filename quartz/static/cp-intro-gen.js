@@ -1,421 +1,336 @@
 // ============================================================
-//  C&P — Préparer une bataille
-//  À placer dans : quartz/static/cp-intro-gen.js
-//  Deux outils sur une page :
-//   1) Tirage aléatoire scénario + déploiement (avec images/détails)
-//   2) Génération d'une introduction narrative par LLM (Edge Function)
-//  Conteneur attendu sur la page : <div id="cp-intro-app"></div>
+//  C&P — Générateur procédural de terrain de bataille (v2)
+//  À placer dans : quartz/static/cp-terrain.js
+//
+//  Modèle d'éléments :
+//   - arbres        : points (centre de tuile OU croisement de 4 tuiles)
+//   - murets        : segments d'un sommet à un autre (diagonale possible)
+//   - surélévations : blocs 2×2 cases
+//   - bâtiments     : blocs 2×2 cases
+//
+//  Équité garantie par construction (symétrie de rotation 180°).
+//  Zones de déploiement définies EN DONNÉES (patrons nommés), pas par
+//  lecture d'image. Le générateur évite d'encombrer ces zones.
+//
+//  Biomes (paramètre de génération) : foret, plaine, village, vallonne, mixte.
+//
+//  Module PUR (aucun accès au DOM) : génération + rendu SVG testables.
+//
+//  API :
+//   zonesDeploiement(nom, cols, rows) -> { cle, zoneA:[[r,c]], zoneB:[[r,c]] }
+//   genererTerrain({cols,rows,biome,deploiement,seed}) -> terrain
+//   rendreTerrainSVG(terrain, {tailleCase}) -> string
+//   BIOMES, DEPLOIEMENTS, DEPLOIEMENTS_MAP
 // ============================================================
 
-import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
-import "/quartz/static/cp-saisie.js";
-import { genererTerrain, rendreTerrainSVG, BIOMES, zonesDeploiement } from "/quartz/static/cp-terrain.js";
+// ---- Biomes : intervalles [min,max] d'éléments générés sur la MOITIÉ haute
+//      (puis doublés par symétrie). Ajuste l'ambiance de la table. ----
+export const BIOMES = {
+  foret:    { libelle: "Forêt",    arbres: [10, 16], murets: [0, 1], surelevations: [0, 1], batiments: [0, 0] },
+  plaine:   { libelle: "Plaine",   arbres: [3, 6],   murets: [0, 2], surelevations: [0, 1], batiments: [0, 0] },
+  village:  { libelle: "Village",  arbres: [3, 6],   murets: [3, 5], surelevations: [0, 1], batiments: [2, 3] },
+  vallonne: { libelle: "Vallonné", arbres: [4, 8],   murets: [0, 1], surelevations: [2, 3], batiments: [0, 1] },
+  mixte:    { libelle: "Mixte",    arbres: [6, 10],  murets: [1, 3], surelevations: [1, 2], batiments: [1, 2] },
+};
 
-// URL de la fonction Edge, construite à partir de l'URL du projet partagée
-// (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
-const EDGE_URL = supabaseUrl + "/functions/v1/generer-intro";
-
-// URL de la page Résultats (pour rediriger après enregistrement d'une partie).
-// ⬇️ Vérifie/ajuste ce chemin selon l'emplacement réel de ta page Résultats.
-const RESULTATS_URL = "/quartz/Wargame/Resultats";
-
-let refPeuples = [], refScenarios = [], refDeploiements = [], refVersions = [], armyLists = [];
-let nbCamps = 2;
-let wired = false;
-let dernierTirage = null; // { scenario, deploiement, camps } du dernier tirage, pour la saisie
-
-function getApp() { return document.getElementById("cp-intro-app"); }
-function $(id) { return document.getElementById(id); }
-function esc(s) {
-  return (s || "").replace(/[&<>"']/g, (c) => ({
-    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
-  }[c]));
-}
-
-async function loadRefs() {
-  const [rp, rs, rd, rv, al] = await Promise.all([
-    sb.from("ref_peuples").select("*").order("ordre"),
-    sb.from("ref_scenarios").select("*").order("ordre"),
-    sb.from("ref_deploiements").select("*").order("ordre"),
-    sb.from("ref_versions").select("*").order("ordre"),
-    sb.from("army_lists").select("id, title, faction, author, points, body"),
-  ]);
-  refPeuples = rp.data || [];
-  refScenarios = rs.data || [];
-  refDeploiements = rd.data || [];
-  refVersions = rv.data || [];
-  armyLists = al.data || [];
-  render();
-}
-
-function peupleOptions() {
-  return '<option value="">— faction —</option>' +
-    refPeuples.map((p) => '<option value="' + esc(p.nom) + '">' + esc(p.nom) + "</option>").join("");
-}
-
-function campRow(i) {
-  return '<div class="cp-intro-camp" data-idx="' + i + '">' +
-    '<div class="cp-intro-camp-main">' +
-      '<span class="cp-intro-campnum">Camp ' + (i + 1) + "</span>" +
-      '<input class="cp-intro-joueur" placeholder="Joueur (optionnel)" />' +
-      '<select class="cp-intro-faction">' + peupleOptions() + "</select>" +
-      '<select class="cp-intro-liste"><option value="">— liste (optionnel) —</option></select>' +
-      '<button class="cp-intro-liste-libre-btn" type="button" title="Saisir une liste à la main">\u270E</button>' +
-      (i >= 2 ? '<button class="cp-intro-camp-del" title="Retirer le camp">\u2715</button>' : "") +
-    "</div>" +
-    '<textarea class="cp-intro-liste-libre" placeholder="Colle ou saisis ta liste d\'armée ici (unités, commandants...)" hidden></textarea>' +
-  "</div>";
-}
-
-// Remplit le menu des listes d'un camp, filtré par la faction choisie.
-function fillCampListe(camp) {
-  const sel = camp.querySelector(".cp-intro-liste");
-  const faction = camp.querySelector(".cp-intro-faction").value;
-  if (!sel) return;
-  const nf = normFaction(faction);
-  let matching = faction ? armyLists.filter((l) => normFaction(l.faction) === nf) : [];
-  const current = sel.value;
-  sel.innerHTML = '<option value="">— liste d\'armée (optionnel) —</option>' +
-    matching.map((l) => {
-      const pts = l.points != null ? " (" + l.points + " pts)" : "";
-      const auth = l.author ? " · " + l.author : "";
-      return '<option value="' + l.id + '">' + esc(l.title) + pts + auth + "</option>";
-    }).join("");
-  if ([...sel.options].some((o) => o.value === current)) sel.value = current;
-}
-
-// Normalisation tolérante faction/peuple (accents, casse)
-function normFaction(s) {
-  return (s || "").toString().trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-}
-
-function render() {
-  const app = getApp();
-  if (!app) return;
-  let camps = "";
-  for (let i = 0; i < nbCamps; i++) camps += campRow(i);
-
-  app.innerHTML =
-    '<div class="cp-card">' +
-      '<p class="cp-intro-hint">Renseigne les forces en présence et, si tu veux, une ambiance, ' +
-        "puis prépare la bataille : un scénario et un déploiement seront tirés, " +
-        "et une introduction narrative sera générée.</p>" +
-      '<label class="cp-section-label">Forces en présence</label>' +
-      '<div id="cp-intro-camps">' + camps + "</div>" +
-      '<button class="cp-btn-ghost" id="cp-intro-add">+ Ajouter un camp</button>' +
-      '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
-      '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
-      '<label class="cp-section-label">Type de terrain</label>' +
-      '<select id="cp-intro-biome" class="cp-intro-biome">' +
-        Object.keys(BIOMES).map((k) =>
-          '<option value="' + k + '"' + (k === "mixte" ? " selected" : "") + ">" + esc(BIOMES[k].libelle) + "</option>"
-        ).join("") +
-      "</select>" +
-      '<div class="cp-form-actions">' +
-        '<button class="cp-btn cp-btn-big" id="cp-prepare-btn">\u2694\uFE0F Préparer la bataille</button>' +
-        '<button class="cp-btn ghost" id="cp-enregistrer-resultat">\u{1F4DD} Enregistrer un résultat</button>' +
-      "</div>" +
-      '<div class="cp-msg" id="cp-intro-msg"></div>' +
-    "</div>" +
-    // zone de résultats : tirage puis intro (remplie par prepareBataille)
-    '<div id="cp-tirage-result"></div>' +
-    '<div id="cp-intro-result"></div>';
-}
-
-// ---------- Préparation complète : tirage + intro ----------
-async function prepareBataille() {
-  const msgEl = $("cp-intro-msg");
-  if (msgEl) { msgEl.className = "cp-msg"; msgEl.textContent = ""; }
-
-  // 1) Collecte des camps (nécessaires pour l'intro)
-  const rows = [...document.querySelectorAll(".cp-intro-camp")];
-  const joueurs = [], factions = [], listes = [];
-  const LISTE_MAX = 1500; // garde-fou : taille max du corps de liste envoyé au LLM
-  rows.forEach((r) => {
-    const j = r.querySelector(".cp-intro-joueur").value.trim();
-    const f = r.querySelector(".cp-intro-faction").value;
-    if (!f) return;
-    factions.push(f); joueurs.push(j);
-    // liste : soit saisie libre (textarea visible), soit liste choisie (son body)
-    const ta = r.querySelector(".cp-intro-liste-libre");
-    const sel = r.querySelector(".cp-intro-liste");
-    let listeTxt = "";
-    if (ta && !ta.hidden && ta.value.trim()) {
-      listeTxt = ta.value.trim();
-    } else if (sel && sel.value) {
-      const found = armyLists.find((l) => l.id === sel.value);
-      if (found && found.body) listeTxt = found.body;
-    }
-    listes.push(listeTxt ? listeTxt.slice(0, LISTE_MAX) : "");
-  });
-  if (factions.length < 2) {
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Choisis au moins deux factions avant de préparer la bataille."; }
-    return;
-  }
-  if (!refScenarios.length || !refDeploiements.length) {
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Référentiel scénarios/déploiements vide."; }
-    return;
-  }
-  const ambiance = $("cp-intro-ambiance").value.trim();
-
-  // 2) Tirage scénario + déploiement, avec mise en scène (suspense puis révélation)
-  const tStart = Date.now();
-  const REVEAL_TOTAL = 2000; // durée approximative de la mise en scène du tirage (ms)
-  const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
-  const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
-  // Terrain de bataille : biome choisi + zones de déploiement (données) du déploiement tiré
-  const biome = ($("cp-intro-biome") && $("cp-intro-biome").value) || "mixte";
-  const zonesDep = zonesDeploiement(dp.nom, 10, 14);
-  const terrain = genererTerrain({ cols: 10, rows: 14, biome, deploiement: zonesDep });
-  // Mémorise le contexte tiré pour pré-remplir la saisie du résultat
-  dernierTirage = {
-    scenario: sc.nom,
-    deploiement: dp.nom,
-    terrainSeed: terrain.seed,
-    terrainBiome: biome,
-    camps: factions.map((f, i) => ({ joueur: joueurs[i] || "", faction: f })),
-  };
-  const tBox = $("cp-tirage-result");
-  if (tBox) {
-    // a) bandeau de suspense (brassage)
-    tBox.innerHTML =
-      '<div class="cp-card">' +
-        '<div class="cp-tirage-suspense">Le sort en décide' +
-          '<span class="cp-dot">.</span><span class="cp-dot">.</span><span class="cp-dot">.</span>' +
-        "</div>" +
-      "</div>";
-
-    // b) après un court suspense, on injecte les cartes en état "voilé"
-    setTimeout(() => {
-      const box = $("cp-tirage-result");
-      if (!box) return;
-      box.innerHTML =
-        '<div class="cp-card">' +
-          '<div class="cp-tirage-grid">' +
-            '<div class="cp-reveal" id="cp-reveal-sc">' + tirageCard("Scénario", sc) + "</div>" +
-            '<div class="cp-reveal" id="cp-reveal-dp">' + tirageCard("Déploiement", dp) + "</div>" +
-          "</div>" +
-          '<div class="cp-reveal" id="cp-reveal-det">' + tirageDetails(sc) + "</div>" +
-          '<div class="cp-reveal" id="cp-reveal-terrain">' + terrainBloc(terrain) + "</div>" +
-        "</div>";
-      // c) révélation décalée : scénario, puis déploiement, puis détails, puis terrain
-      requestAnimationFrame(() => {
-        const elSc = $("cp-reveal-sc"), elDp = $("cp-reveal-dp"), elDet = $("cp-reveal-det"), elTer = $("cp-reveal-terrain");
-        if (elSc) setTimeout(() => elSc.classList.add("cp-revealed"), 60);
-        if (elDp) setTimeout(() => elDp.classList.add("cp-revealed"), 360);
-        if (elDet) setTimeout(() => elDet.classList.add("cp-revealed"), 660);
-        if (elTer) setTimeout(() => elTer.classList.add("cp-revealed"), 960);
-      });
-    }, 1100);
-  }
-
-  // 3) Génération de l'intro, en passant l'ambiance du scénario tiré
-  const descriptions = {};
-  factions.forEach((f) => {
-    const ref = refPeuples.find((p) => p.nom === f);
-    if (ref && ref.description) descriptions[f] = ref.description;
-  });
-  // ambiance du scénario = sa description narrative (PAS ses règles)
-  const scenarioAmbiance = sc.description || "";
-
-  const btn = $("cp-prepare-btn");
-  if (btn) { btn.disabled = true; btn.textContent = "Préparation en cours\u2026"; }
-  const res = $("cp-intro-result");
-  if (res) res.innerHTML = ""; // l'intro ne se montrera qu'après la révélation du tirage
-  // message "le barde compose" affiché une fois les cartes révélées
-  setTimeout(() => {
-    const r2 = $("cp-intro-result");
-    if (r2 && !r2.innerHTML) r2.innerHTML = '<p class="cp-intro-loading">Le barde compose votre légende\u2026</p>';
-  }, REVEAL_TOTAL);
-
-  try {
-    const r = await fetch(EDGE_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ joueurs, factions, listes, ambiance, descriptions, scenarioNom: sc.nom, scenarioAmbiance }),
-    });
-    const data = await r.json();
-    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
-    if (!r.ok || data.error) {
-      if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Échec de la génération : " + (data.error || r.status); }
-      if (res) res.innerHTML = "";
-      return;
-    }
-    // On attend que la mise en scène du tirage soit terminée avant de révéler le texte,
-    // pour respecter l'enchaînement : on découvre le terrain, puis l'histoire.
-    const reste = REVEAL_TOTAL - (Date.now() - tStart);
-    if (reste > 0) await new Promise((ok) => setTimeout(ok, reste));
-    if (res) {
-      res.innerHTML =
-        '<div class="cp-intro-texte cp-reveal">' +
-          '<div class="cp-intro-texte-corps">' + esc(data.texte).replace(/\n/g, "<br>") + "</div>" +
-          '<div class="cp-intro-meta">Généré par ' + esc(data.provider || "IA") +
-            " \u00b7 prototype \u2014 le texte peut varier à chaque essai</div>" +
-        "</div>";
-      // déclenche le fondu d'apparition du texte
-      const t = res.querySelector(".cp-intro-texte");
-      if (t) requestAnimationFrame(() => setTimeout(() => t.classList.add("cp-revealed"), 30));
-    }
-  } catch (e) {
-    if (btn) { btn.disabled = false; btn.textContent = "\u2694\uFE0F Préparer la bataille"; }
-    if (msgEl) { msgEl.className = "cp-msg err"; msgEl.textContent = "Erreur réseau : " + e.message; }
-    if (res) res.innerHTML = "";
-  }
-}
-
-function tirageDetails(item) {
-  if (!item.description && !item.mise_en_place && !item.objectif) return "";
-  const nl2br = (s) => esc(s).replace(/\n/g, "<br>");
-  return '<div class="cp-tirage-details">' +
-    (item.description ? '<p class="cp-tirage-desc">' + nl2br(item.description) + "</p>" : "") +
-    (item.mise_en_place ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Mise en place</span><p>' + nl2br(item.mise_en_place) + "</p></div>" : "") +
-    (item.objectif ? '<div class="cp-tirage-detail"><span class="cp-tirage-detail-lbl">Objectif</span><p>' + nl2br(item.objectif) + "</p></div>" : "") +
-  "</div>";
-}
-
-// Bloc terrain : titre, plan SVG, légende des éléments présents, et métriques.
-function terrainBloc(terrain) {
-  const svg = rendreTerrainSVG(terrain, { tailleCase: 28 });
-  const m = terrain.metriques;
-  // légende : éléments réellement présents
-  const items = [];
-  if (m.nbArbres) items.push(["#4f7050", "Arbres"]);
-  if (m.nbMurets) items.push(["#5f564d", "Murets"]);
-  if (m.nbSurelevations) items.push(["#9a7b4f", "Surélévations"]);
-  if (m.nbBatiments) items.push(["#9a8f84", "Bâtiments"]);
-  const legende = items.map(([col, lbl]) =>
-    '<span class="cp-terrain-leg-item">' +
-      '<span class="cp-terrain-leg-pastille" style="background:' + col + '"></span>' + lbl +
-    "</span>"
-  ).join("");
-  const bioLbl = (BIOMES[terrain.biome] && BIOMES[terrain.biome].libelle) || terrain.biome;
-  return '<div class="cp-terrain">' +
-    '<div class="cp-terrain-head">' +
-      '<span class="cp-terrain-titre">Terrain de bataille</span>' +
-      '<span class="cp-terrain-sub">' + terrain.cols + "×" + terrain.rows + " · " + esc(bioLbl) +
-        " · équilibré (symétrie 180°)</span>" +
-    "</div>" +
-    '<div class="cp-terrain-plan">' + svg + "</div>" +
-    '<div class="cp-terrain-legende">' + legende +
-      '<span class="cp-terrain-leg-zones">Bandes : déploiements des deux camps</span>' +
-    "</div>" +
-  "</div>";
-}
-
-function tirageCard(titre, item) {
-  const blason = '<div class="cp-tirage-noimg">' +
-    '<svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">' +
-      '<path d="M32 2 L60 12 V36 C60 54 48 64 32 70 C16 64 4 54 4 36 V12 Z" ' +
-        'fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" opacity="0.5"/>' +
-      '<path d="M32 14 L32 52 M18 26 L46 26" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-      '<circle cx="32" cy="26" r="5" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"/>' +
-    "</svg>" +
-  "</div>";
-  const img = item.image_url
-    ? '<div class="cp-tirage-imgwrap"><img class="cp-tirage-img" src="' + esc(item.image_url) + '" alt="' + esc(item.nom) + '" loading="lazy" /></div>'
-    : '<div class="cp-tirage-imgwrap">' + blason + "</div>";
-  return '<div class="cp-tirage-card">' +
-    '<div class="cp-tirage-label">' + titre + "</div>" +
-    img +
-    '<div class="cp-tirage-nom">' + esc(item.nom) + "</div>" +
-  "</div>";
-}
-
-// Ouvre la modale de saisie, pré-remplie avec ce qui est disponible :
-// le tirage s'il a eu lieu, sinon les factions saisies dans le formulaire, sinon rien.
-function ouvrirSaisieResultat() {
-  if (!window.cpSaisie) { console.error("[cp-intro] module cp-saisie non chargé"); return; }
-  let prefill = {};
-  if (dernierTirage) {
-    // un tirage a eu lieu : on pré-remplit tout (scénario, déploiement, camps)
-    prefill = dernierTirage;
-  } else {
-    // pas de tirage : on récupère au moins les camps saisis dans le formulaire
-    const rows = [...document.querySelectorAll(".cp-intro-camp")];
-    const camps = [];
-    rows.forEach((r) => {
-      const joueur = r.querySelector(".cp-intro-joueur").value.trim();
-      const faction = r.querySelector(".cp-intro-faction").value;
-      if (faction || joueur) camps.push({ joueur, faction });
-    });
-    if (camps.length) prefill.camps = camps;
-  }
-  window.cpSaisie.open({
-    refs: { refPeuples, refScenarios, refDeploiements, refVersions, armyLists },
-    prefill,
-    onSaved: () => { window.location.href = RESULTATS_URL; },
-  });
-}
-
-// ---------- Câblage ----------
-function wireOnce() {
-  if (wired) return;
-  wired = true;
-
-  document.addEventListener("click", (e) => {
-    if (!getApp()) return;
-    if (e.target.closest("#cp-prepare-btn")) { prepareBataille(); return; }
-    if (e.target.closest("#cp-enregistrer-resultat")) { ouvrirSaisieResultat(); return; }
-    if (e.target.closest("#cp-intro-add")) {
-      nbCamps++;
-      const cont = $("cp-intro-camps");
-      if (cont) cont.insertAdjacentHTML("beforeend", campRow(nbCamps - 1));
-      return;
-    }
-    const del = e.target.closest(".cp-intro-camp-del");
-    if (del && getApp().contains(del)) {
-      const row = del.closest(".cp-intro-camp");
-      if (row) { row.remove(); nbCamps = Math.max(2, document.querySelectorAll(".cp-intro-camp").length); }
-      return;
-    }
-    // bascule saisie libre de liste
-    const libreBtn = e.target.closest(".cp-intro-liste-libre-btn");
-    if (libreBtn && getApp().contains(libreBtn)) {
-      const camp = libreBtn.closest(".cp-intro-camp");
-      const ta = camp.querySelector(".cp-intro-liste-libre");
-      const sel = camp.querySelector(".cp-intro-liste");
-      const showing = !ta.hidden;
-      if (showing) {
-        ta.hidden = true; sel.disabled = false; libreBtn.textContent = "\u270E"; libreBtn.title = "Saisir une liste à la main";
-      } else {
-        ta.hidden = false; sel.value = ""; sel.disabled = true; libreBtn.textContent = "\u2630"; libreBtn.title = "Revenir au menu des listes";
-        ta.focus();
+// ---- Patrons de déploiement (en données), conformes aux 6 déploiements du jeu.
+//      Grille 14 colonnes × 10 lignes. Tous symétriques par rotation 180°.
+//      Chaque entrée : { libelle, zones(cols, rows) -> { zoneA:[[r,c]], zoneB:[[r,c]] } }.
+export const DEPLOIEMENTS = {
+  // 1 — Bandes verticales (colonnes 2-3 vs 10-11)
+  "1": {
+    libelle: "Bandes verticales",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let r = 0; r < rows; r++) { A.push([r, 2], [r, 3]); B.push([r, 10], [r, 11]); }
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 2 — Bords courts (2 lignes haut/bas, pleine largeur)
+  "2": {
+    libelle: "Bords courts",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let c = 0; c < cols; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 3 — Bords courts resserrés (2 lignes haut/bas, colonnes 2..11)
+  "3": {
+    libelle: "Bords courts resserrés",
+    zones(cols, rows) {
+      const A = [], B = [];
+      for (let c = 2; c <= 11; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 4 — Bords courts dédoublés (2 lignes haut/bas, blocs colonnes 1-4 et 9-12)
+  "4": {
+    libelle: "Bords courts dédoublés",
+    zones(cols, rows) {
+      const A = [], B = [];
+      [1, 2, 3, 4, 9, 10, 11, 12].forEach((c) => { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); });
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 5 — Diagonale (escalier coin haut-gauche / bas-droite)
+  "5": {
+    libelle: "Diagonale",
+    zones(cols, rows) {
+      const A = [];
+      for (let r = 0; r < rows; r++) {
+        const lo = Math.max(0, 4 - r), hi = Math.min(cols - 1, 6 - r);
+        for (let c = lo; c <= hi; c++) A.push([r, c]);
       }
-      return;
+      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+      return { zoneA: A, zoneB: B };
+    },
+  },
+  // 6 — Coins étendus (ligne du haut pleine + moitié gauche des 2 lignes suivantes)
+  "6": {
+    libelle: "Coins étendus",
+    zones(cols, rows) {
+      const A = [];
+      for (let c = 0; c < cols; c++) A.push([0, c]);
+      for (let r = 1; r <= 2; r++) for (let c = 0; c <= 5; c++) A.push([r, c]);
+      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+      return { zoneA: A, zoneB: B };
+    },
+  },
+};
+
+// ---- Correspondance explicite (optionnelle) nom de déploiement -> clé "1".."6".
+//      Si vide, le résolveur déduit la clé du numéro présent dans le nom ou l'image_url
+//      (ex. "deploiement_4.png" -> "4"). À défaut, retombe sur "2" (bords courts).
+export const DEPLOIEMENTS_MAP = {
+  // "Affrontement frontal": "2",
+  // "Diagonale": "5",
+};
+
+function extraireCle(nom, img) {
+  let m = (img || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
+  m = (nom || "").toString().match(/^\s*([1-6])\s*$/); if (m) return m[1];
+  m = (nom || "").match(/deploiement[_\- ]?([1-6])/i); if (m) return m[1];
+  return null;
+}
+
+// dep : soit le nom (string), soit l'enregistrement { nom, image_url }.
+export function zonesDeploiement(dep, cols = 14, rows = 10) {
+  const nom = typeof dep === "string" ? dep : (dep && dep.nom) || "";
+  const img = (dep && dep.image_url) || "";
+  let cle = DEPLOIEMENTS_MAP[nom] || extraireCle(nom, img);
+  if (!cle || !DEPLOIEMENTS[cle]) cle = "2";
+  const def = DEPLOIEMENTS[cle];
+  const { zoneA, zoneB } = def.zones(cols, rows);
+  return { cle, libelle: def.libelle, zoneA, zoneB };
+}
+
+// ---- PRNG reproductible ----
+function mulberry32(a) {
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ============================================================
+//  Génération
+// ============================================================
+export function genererTerrain(opts = {}) {
+  const cols = opts.cols || 14;
+  const rows = opts.rows || 10;
+  const biome = BIOMES[opts.biome] ? opts.biome : "mixte";
+  const seed = opts.seed != null ? opts.seed : (Math.random() * 1e9) | 0;
+  const cfg = BIOMES[biome];
+  const rng = mulberry32(seed);
+  const ri = (a, b) => a + Math.floor(rng() * (b - a + 1));
+
+  const half = Math.floor(rows / 2);
+
+  // Déploiement (données) : ensemble des cellules à garder dégagées des blocs.
+  const dep = opts.deploiement && opts.deploiement.zoneA
+    ? opts.deploiement
+    : zonesDeploiement(null, cols, rows);
+  const depSet = new Set();
+  [...dep.zoneA, ...dep.zoneB].forEach(([r, c]) => depSet.add(r + "," + c));
+
+  const occ = Array.from({ length: rows }, () => Array(cols).fill(false)); // cases prises par des blocs
+  const cellLibre = (r, c) =>
+    r >= 0 && r < rows && c >= 0 && c < cols && !occ[r][c] && !depSet.has(r + "," + c);
+  const blocLibre = (r, c) =>
+    r >= 0 && r <= half - 2 && c >= 0 && c <= cols - 2 &&
+    cellLibre(r, c) && cellLibre(r + 1, c) && cellLibre(r, c + 1) && cellLibre(r + 1, c + 1);
+  const marquerBloc = (r, c) => { occ[r][c] = occ[r + 1][c] = occ[r][c + 1] = occ[r + 1][c + 1] = true; };
+
+  const batiments = [], surelevations = [], arbres = [], murets = [];
+
+  // 1) Bâtiments (2×2)
+  let nb = ri(cfg.batiments[0], cfg.batiments[1]);
+  for (let i = 0, g = 0; i < nb && g < 60; g++) {
+    const r = ri(0, half - 2), c = ri(0, cols - 2);
+    if (!blocLibre(r, c)) continue;
+    marquerBloc(r, c); batiments.push({ r, c }); i++;
+  }
+  // 2) Surélévations (2×2)
+  let ns = ri(cfg.surelevations[0], cfg.surelevations[1]);
+  for (let i = 0, g = 0; i < ns && g < 60; g++) {
+    const r = ri(0, half - 2), c = ri(0, cols - 2);
+    if (!blocLibre(r, c)) continue;
+    marquerBloc(r, c); surelevations.push({ r, c }); i++;
+  }
+  // 3) Arbres (points : centre de tuile ou croisement de 4 tuiles)
+  let na = ri(cfg.arbres[0], cfg.arbres[1]);
+  const dist2 = (a, b) => (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
+  for (let i = 0, g = 0; i < na && g < na * 12 + 40; g++) {
+    const centre = rng() < 0.5;
+    let pt;
+    if (centre) {
+      const r = ri(0, half - 1), c = ri(0, cols - 1);
+      if (!cellLibre(r, c)) continue;
+      pt = { x: c + 0.5, y: r + 0.5, v: false };
+    } else {
+      // croisement : sommet interne (1..cols-1, 1..half-1)
+      const vc = ri(1, cols - 1), vr = ri(1, half - 1);
+      // au moins une des 4 cases autour doit être libre (pas en plein bloc)
+      const autour = [[vr - 1, vc - 1], [vr - 1, vc], [vr, vc - 1], [vr, vc]];
+      if (!autour.some(([rr, cc]) => cellLibre(rr, cc))) continue;
+      pt = { x: vc, y: vr, v: true };
     }
+    if (arbres.some((a) => dist2(a, pt) < 0.7)) continue; // espacement
+    arbres.push(pt); i++;
+  }
+  // 4) Murets (chaînes de 1 à 2 segments entre sommets, diagonale possible)
+  const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+  let nm = ri(cfg.murets[0], cfg.murets[1]);
+  for (let i = 0, g = 0; i < nm && g < nm * 12 + 40; g++) {
+    let vx = ri(1, cols - 1), vy = ri(1, half - 1);
+    const len = ri(1, 2);
+    const segs = [];
+    let ok = true;
+    for (let k = 0; k < len; k++) {
+      const [dc, dr] = DIRS[Math.floor(rng() * DIRS.length)];
+      const nx = vx + dc, ny = vy + dr;
+      if (nx < 0 || nx > cols || ny < 0 || ny > half - 1) { ok = false; break; }
+      // la cellule sous le milieu du segment ne doit pas être en zone de déploiement
+      const mr = Math.floor((vy + ny) / 2 - 0.0001), mc = Math.floor((vx + nx) / 2 - 0.0001);
+      if (depSet.has(Math.max(0, mr) + "," + Math.max(0, mc))) { ok = false; break; }
+      segs.push({ x1: vx, y1: vy, x2: nx, y2: ny });
+      vx = nx; vy = ny;
+    }
+    if (!ok || !segs.length) continue;
+    segs.forEach((s) => murets.push(s)); i++;
+  }
+
+  // ---- Symétrie 180° : on duplique la moitié haute vers le bas ----
+  const mp = (x, y) => ({ x: cols - x, y: rows - y });
+  const arbresF = arbres.concat(arbres.map((a) => ({ ...mp(a.x, a.y), v: a.v })));
+  // murets : dédup pour éviter qu'un segment sur l'axe se recopie sur lui-même
+  const keyW = (s) => {
+    const a = [s.x1, s.y1], b = [s.x2, s.y2];
+    const [p, q] = (a[0] < b[0] || (a[0] === b[0] && a[1] <= b[1])) ? [a, b] : [b, a];
+    return p[0] + ":" + p[1] + ":" + q[0] + ":" + q[1];
+  };
+  const muretsF = []; const vus = new Set();
+  murets.concat(murets.map((s) => {
+    const p1 = mp(s.x1, s.y1), p2 = mp(s.x2, s.y2);
+    return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y };
+  })).forEach((s) => { const k = keyW(s); if (!vus.has(k)) { vus.add(k); muretsF.push(s); } });
+  const surF = surelevations.concat(surelevations.map((b) => ({ r: rows - 2 - b.r, c: cols - 2 - b.c })));
+  const batF = batiments.concat(batiments.map((b) => ({ r: rows - 2 - b.r, c: cols - 2 - b.c })));
+
+  const metriques = {
+    biome,
+    nbArbres: arbresF.length,
+    nbMurets: muretsF.length,
+    nbSurelevations: surF.length,
+    nbBatiments: batF.length,
+    couvertureBlocs: ((surF.length + batF.length) * 4) / (rows * cols),
+    equilibre: "symétrie 180° (équité garantie par construction)",
+  };
+
+  return {
+    cols, rows, biome, seed,
+    deploiement: dep,
+    arbres: arbresF, murets: muretsF, surelevations: surF, batiments: batF,
+    metriques,
+  };
+}
+
+// ============================================================
+//  Rendu SVG (chaîne, sans DOM)
+// ============================================================
+function dessinArbre(px, py, s) {
+  const f1 = "#4f7050", f2 = "#456448", f3 = "#577a59", tr = "#6b4f3a";
+  return (
+    `<rect x="${px - s * 0.05}" y="${py + s * 0.12}" width="${s * 0.1}" height="${s * 0.2}" fill="${tr}"/>` +
+    `<circle cx="${px - s * 0.15}" cy="${py + s * 0.04}" r="${s * 0.2}" fill="${f2}"/>` +
+    `<circle cx="${px + s * 0.15}" cy="${py + s * 0.04}" r="${s * 0.2}" fill="${f3}"/>` +
+    `<circle cx="${px}" cy="${py - s * 0.1}" r="${s * 0.24}" fill="${f1}"/>`
+  );
+}
+function dessinSurelevation(x, y, w, h) {
+  const fill = "#9a7b4f", st = "#75592f";
+  const cx = x + w / 2;
+  return (
+    `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="3" fill="${fill}" fill-opacity="0.85" stroke="${st}" stroke-width="1.4"/>` +
+    `<path d="M${x + w * 0.18} ${y + h * 0.6} Q${cx} ${y + h * 0.3} ${x + w * 0.82} ${y + h * 0.6}" fill="none" stroke="${st}" stroke-opacity="0.6" stroke-width="${w * 0.04}"/>` +
+    `<path d="M${x + w * 0.3} ${y + h * 0.78} Q${cx} ${y + h * 0.52} ${x + w * 0.7} ${y + h * 0.78}" fill="none" stroke="${st}" stroke-opacity="0.5" stroke-width="${w * 0.035}"/>`
+  );
+}
+function dessinBatiment(x, y, w, h) {
+  const mur = "#9a8f84", toit = "#6e4b3a", st = "#4f4640";
+  const inset = w * 0.12;
+  const bx = x + inset, by = y + h * 0.34, bw = w - inset * 2, bh = h - h * 0.34 - inset;
+  return (
+    // toit
+    `<path d="M${x + inset * 0.6} ${y + h * 0.4} L${x + w / 2} ${y + inset} L${x + w - inset * 0.6} ${y + h * 0.4} Z" fill="${toit}" stroke="${st}" stroke-width="1"/>` +
+    // corps
+    `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="${mur}" stroke="${st}" stroke-width="1"/>` +
+    // porte + fenêtre
+    `<rect x="${bx + bw * 0.4}" y="${by + bh * 0.45}" width="${bw * 0.2}" height="${bh * 0.55}" fill="${st}"/>` +
+    `<rect x="${bx + bw * 0.12}" y="${by + bh * 0.2}" width="${bw * 0.18}" height="${bh * 0.25}" fill="${st}"/>` +
+    `<rect x="${bx + bw * 0.7}" y="${by + bh * 0.2}" width="${bw * 0.18}" height="${bh * 0.25}" fill="${st}"/>`
+  );
+}
+
+export function rendreTerrainSVG(terrain, opts = {}) {
+  const s = opts.tailleCase || 26;
+  const { cols, rows, deploiement, arbres, murets, surelevations, batiments } = terrain;
+  const W = cols * s, H = rows * s;
+  let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" class="cp-terrain-svg" role="img" aria-label="Terrain de bataille généré">`;
+
+  // Fond
+  svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="var(--lightgray, #e8e4da)"/>`;
+
+  // Zones de déploiement (données)
+  const drawZone = (cells, color) =>
+    cells.map(([r, c]) => `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="${color}"/>`).join("");
+  svg += drawZone(deploiement.zoneA, "rgba(46,116,181,0.16)");
+  svg += drawZone(deploiement.zoneB, "rgba(176,86,63,0.16)");
+
+  // Grille
+  let lignes = "";
+  for (let c = 0; c <= cols; c++) lignes += `<line x1="${c * s}" y1="0" x2="${c * s}" y2="${H}"/>`;
+  for (let r = 0; r <= rows; r++) lignes += `<line x1="0" y1="${r * s}" x2="${W}" y2="${r * s}"/>`;
+  svg += `<g stroke="var(--gray, #b8b0a0)" stroke-width="0.5" stroke-opacity="0.5">${lignes}</g>`;
+
+  // Surélévations puis bâtiments (blocs 2×2)
+  surelevations.forEach((b) => { svg += dessinSurelevation(b.c * s, b.r * s, 2 * s, 2 * s); });
+  batiments.forEach((b) => { svg += dessinBatiment(b.c * s, b.r * s, 2 * s, 2 * s); });
+
+  // Murets (segments, diagonale possible)
+  murets.forEach((m) => {
+    svg += `<line x1="${m.x1 * s}" y1="${m.y1 * s}" x2="${m.x2 * s}" y2="${m.y2 * s}" stroke="#5f564d" stroke-width="${s * 0.2}" stroke-linecap="round"/>`;
+    svg += `<line x1="${m.x1 * s}" y1="${m.y1 * s}" x2="${m.x2 * s}" y2="${m.y2 * s}" stroke="#9a8f84" stroke-width="${s * 0.08}" stroke-linecap="round"/>`;
   });
 
-  // changement de faction -> recharge le menu listes du camp
-  document.addEventListener("change", (e) => {
-    if (!getApp()) return;
-    const fac = e.target.closest(".cp-intro-faction");
-    if (fac && getApp().contains(fac)) {
-      const camp = fac.closest(".cp-intro-camp");
-      if (camp) fillCampListe(camp);
-      return;
-    }
-  });
-}
+  // Arbres (points)
+  arbres.forEach((a) => { svg += dessinArbre(a.x * s, a.y * s, s); });
 
-function setup() {
-  if (!getApp()) return;
-  wireOnce();
-  loadRefs();
+  // Liserés de déploiement (cadre fin autour des cellules de zone)
+  const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" fill="none" stroke="var(--gray, #b8b0a0)" stroke-width="1"/>`;
+  svg += frame + `</svg>`;
+  return svg;
 }
-
-// Démarrage robuste (navigation SPA Quartz)
-let bootTimer = null;
-function bootstrap() {
-  if (bootTimer) clearInterval(bootTimer);
-  let tries = 0;
-  if (getApp()) { setup(); return; }
-  bootTimer = setInterval(() => {
-    tries++;
-    if (getApp()) { clearInterval(bootTimer); bootTimer = null; setup(); }
-    else if (tries > 50) { clearInterval(bootTimer); bootTimer = null; }
-  }, 100);
-}
-if (document.readyState !== "loading") bootstrap();
-else document.addEventListener("DOMContentLoaded", bootstrap);
-document.addEventListener("nav", bootstrap);
-window.addEventListener("pageshow", bootstrap);
