@@ -9,7 +9,7 @@
 
 import { sb, supabaseUrl } from "/quartz/static/cp-supabase.js";
 import "/quartz/static/cp-saisie.js";
-import { genererTerrain, rendreTerrainSVG, TYPES_TERRAIN } from "/quartz/static/cp-terrain.js";
+import { genererTerrain, rendreTerrainSVG, BIOMES, zonesDeploiement } from "/quartz/static/cp-terrain.js";
 
 // URL de la fonction Edge, construite à partir de l'URL du projet partagée
 // (définie une seule fois dans cp-supabase.js) — rien à remplacer ici.
@@ -105,6 +105,12 @@ function render() {
       '<button class="cp-btn-ghost" id="cp-intro-add">+ Ajouter un camp</button>' +
       '<label class="cp-section-label">Ambiance / thème (optionnel)</label>' +
       '<input id="cp-intro-ambiance" class="cp-intro-ambiance" placeholder="Ex. : siège hivernal, vengeance, brume maudite..." />' +
+      '<label class="cp-section-label">Type de terrain</label>' +
+      '<select id="cp-intro-biome" class="cp-intro-biome">' +
+        Object.keys(BIOMES).map((k) =>
+          '<option value="' + k + '"' + (k === "mixte" ? " selected" : "") + ">" + esc(BIOMES[k].libelle) + "</option>"
+        ).join("") +
+      "</select>" +
       '<div class="cp-form-actions">' +
         '<button class="cp-btn cp-btn-big" id="cp-prepare-btn">\u2694\uFE0F Préparer la bataille</button>' +
         '<button class="cp-btn ghost" id="cp-enregistrer-resultat">\u{1F4DD} Enregistrer un résultat</button>' +
@@ -157,13 +163,16 @@ async function prepareBataille() {
   const REVEAL_TOTAL = 2000; // durée approximative de la mise en scène du tirage (ms)
   const sc = refScenarios[Math.floor(Math.random() * refScenarios.length)];
   const dp = refDeploiements[Math.floor(Math.random() * refDeploiements.length)];
-  // Génère un terrain de bataille (grille 10×14, équilibré par symétrie 180°)
-  const terrain = genererTerrain({ cols: 10, rows: 14, couverture: 0.25 });
+  // Terrain de bataille : biome choisi + zones de déploiement (données) du déploiement tiré
+  const biome = ($("cp-intro-biome") && $("cp-intro-biome").value) || "mixte";
+  const zonesDep = zonesDeploiement(dp.nom, 10, 14);
+  const terrain = genererTerrain({ cols: 10, rows: 14, biome, deploiement: zonesDep });
   // Mémorise le contexte tiré pour pré-remplir la saisie du résultat
   dernierTirage = {
     scenario: sc.nom,
     deploiement: dp.nom,
     terrainSeed: terrain.seed,
+    terrainBiome: biome,
     camps: factions.map((f, i) => ({ joueur: joueurs[i] || "", faction: f })),
   };
   const tBox = $("cp-tirage-result");
@@ -264,22 +273,27 @@ function tirageDetails(item) {
   "</div>";
 }
 
-// Bloc terrain : titre, plan SVG, légende des types présents, et métriques.
+// Bloc terrain : titre, plan SVG, légende des éléments présents, et métriques.
 function terrainBloc(terrain) {
-  const svg = rendreTerrainSVG(terrain, { tailleCase: 26 });
-  // légende : uniquement les types réellement présents
-  const presents = Object.keys(terrain.metriques.parType);
-  const legende = presents.map((t) =>
+  const svg = rendreTerrainSVG(terrain, { tailleCase: 28 });
+  const m = terrain.metriques;
+  // légende : éléments réellement présents
+  const items = [];
+  if (m.nbArbres) items.push(["#4f7050", "Arbres"]);
+  if (m.nbMurets) items.push(["#5f564d", "Murets"]);
+  if (m.nbSurelevations) items.push(["#9a7b4f", "Surélévations"]);
+  if (m.nbBatiments) items.push(["#9a8f84", "Bâtiments"]);
+  const legende = items.map(([col, lbl]) =>
     '<span class="cp-terrain-leg-item">' +
-      '<span class="cp-terrain-leg-pastille" style="background:' + TYPES_TERRAIN[t].couleur + '"></span>' +
-      esc(TYPES_TERRAIN[t].libelle) +
+      '<span class="cp-terrain-leg-pastille" style="background:' + col + '"></span>' + lbl +
     "</span>"
   ).join("");
-  const couv = Math.round(terrain.metriques.couverture * 100);
+  const bioLbl = (BIOMES[terrain.biome] && BIOMES[terrain.biome].libelle) || terrain.biome;
   return '<div class="cp-terrain">' +
     '<div class="cp-terrain-head">' +
       '<span class="cp-terrain-titre">Terrain de bataille</span>' +
-      '<span class="cp-terrain-sub">' + terrain.cols + "×" + terrain.rows + " · couverture " + couv + "% · équilibré (symétrie 180°)</span>" +
+      '<span class="cp-terrain-sub">' + terrain.cols + "×" + terrain.rows + " · " + esc(bioLbl) +
+        " · équilibré (symétrie 180°)</span>" +
     "</div>" +
     '<div class="cp-terrain-plan">' + svg + "</div>" +
     '<div class="cp-terrain-legende">' + legende +
