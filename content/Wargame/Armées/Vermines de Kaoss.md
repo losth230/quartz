@@ -36,7 +36,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Assassin | **5** | **3+** | **-** | **6+** | **7** | **3** | **2** | **4** | Rat |
+| Assassin | **5** | **3+** | **-** | **6+** | **7** | **3** | **2** | **5** | Rat |
 | **Mêlée:** | 7d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
@@ -56,7 +56,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Skritzz | **5** | **5+** | **3+** | **5+** | **8** | **3** | **2** | **1** | Rat |
+| Skritzz | **5** | **5+** | **3+** | **5+** | **8** | **3** | **2** | **4** | Rat |
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Magie :
