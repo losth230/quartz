@@ -108,6 +108,7 @@
 #cp-intro-app .cp-intro-joueur { flex: 1; min-width: 0; }
 #cp-intro-app .cp-intro-faction { flex: 1; min-width: 0; }
 #cp-intro-app .cp-intro-ambiance { width: 100%; box-sizing: border-box; }
+#cp-intro-app .cp-intro-biome { width: 100%; box-sizing: border-box; }
 #cp-intro-app .cp-intro-camp-del {
   background: transparent; border: none; color: var(--gray); cursor: pointer;
   font-size: 1em; padding: 0.2em 0.4em;
