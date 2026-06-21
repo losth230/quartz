@@ -1,33 +1,91 @@
 // ============================================================
-//  C&P — Générateur procédural de terrain de bataille
+//  C&P — Générateur procédural de terrain de bataille (v2)
 //  À placer dans : quartz/static/cp-terrain.js
 //
-//  Génère un champ de bataille sur une grille carrée (par défaut 10×14),
-//  ÉQUILIBRÉ PAR CONSTRUCTION via une symétrie de rotation à 180° :
-//  le terrain est généré sur la moitié haute, puis recopié par rotation
-//  centrale sur la moitié basse. Chaque camp fait donc face à une
-//  configuration rigoureusement équivalente.
+//  Modèle d'éléments :
+//   - arbres        : points (centre de tuile OU croisement de 4 tuiles)
+//   - murets        : segments d'un sommet à un autre (diagonale possible)
+//   - surélévations : blocs 2×2 cases
+//   - bâtiments     : blocs 2×2 cases
 //
-//  Module PUR (aucun accès au DOM) : la génération et le rendu SVG sont
-//  des fonctions sans effet de bord, donc testables et réutilisables.
+//  Équité garantie par construction (symétrie de rotation 180°).
+//  Zones de déploiement définies EN DONNÉES (patrons nommés), pas par
+//  lecture d'image. Le générateur évite d'encombrer ces zones.
 //
-//  API publique :
-//    genererTerrain({ cols, rows, couverture, seed }) -> { cols, rows, dz, grille, seed, metriques }
-//    rendreTerrainSVG(terrain, { tailleCase }) -> string (SVG)
-//    TYPES_TERRAIN -> métadonnées des types (libellé, couleur)
+//  Biomes (paramètre de génération) : foret, plaine, village, vallonne, mixte.
+//
+//  Module PUR (aucun accès au DOM) : génération + rendu SVG testables.
+//
+//  API :
+//   zonesDeploiement(nom, cols, rows) -> { cle, zoneA:[[r,c]], zoneB:[[r,c]] }
+//   genererTerrain({cols,rows,biome,deploiement,seed}) -> terrain
+//   rendreTerrainSVG(terrain, {tailleCase}) -> string
+//   BIOMES, DEPLOIEMENTS, DEPLOIEMENTS_MAP
 // ============================================================
 
-// ---- Types de terrain (génériques) ----
-export const TYPES_TERRAIN = {
-  foret:     { libelle: "Forêt",            couleur: "#4f7050", poids: 3, tailleMin: 3, tailleMax: 6 },
-  colline:   { libelle: "Colline",          couleur: "#9a7b4f", poids: 2, tailleMin: 2, tailleMax: 4 },
-  eau:       { libelle: "Eau",              couleur: "#3f7d96", poids: 2, tailleMin: 3, tailleMax: 7 },
-  ruines:    { libelle: "Ruines",           couleur: "#8a8079", poids: 2, tailleMin: 2, tailleMax: 4 },
-  difficile: { libelle: "Terrain difficile",couleur: "#7d6a82", poids: 2, tailleMin: 2, tailleMax: 5 },
+// ---- Biomes : intervalles [min,max] d'éléments générés sur la MOITIÉ haute
+//      (puis doublés par symétrie). Ajuste l'ambiance de la table. ----
+export const BIOMES = {
+  foret:    { libelle: "Forêt",    arbres: [10, 16], murets: [0, 1], surelevations: [0, 1], batiments: [0, 0] },
+  plaine:   { libelle: "Plaine",   arbres: [3, 6],   murets: [0, 2], surelevations: [0, 1], batiments: [0, 0] },
+  village:  { libelle: "Village",  arbres: [3, 6],   murets: [3, 5], surelevations: [0, 1], batiments: [2, 3] },
+  vallonne: { libelle: "Vallonné", arbres: [4, 8],   murets: [0, 1], surelevations: [2, 3], batiments: [0, 1] },
+  mixte:    { libelle: "Mixte",    arbres: [6, 10],  murets: [1, 3], surelevations: [1, 2], batiments: [1, 2] },
 };
 
-// ---- Générateur pseudo-aléatoire reproductible (mulberry32) ----
-// Un même seed redonne exactement le même terrain (utile pour rejouer / mémoriser).
+// ---- Patrons de déploiement (en données). Chaque fonction renvoie les
+//      cellules des deux camps. Tous sont symétriques par rotation 180°. ----
+export const DEPLOIEMENTS = {
+  bordsCourts(cols, rows, dz = 3) {
+    const A = [], B = [];
+    for (let r = 0; r < dz; r++) for (let c = 0; c < cols; c++) A.push([r, c]);
+    for (let r = rows - dz; r < rows; r++) for (let c = 0; c < cols; c++) B.push([r, c]);
+    return { zoneA: A, zoneB: B };
+  },
+  bordsLongs(cols, rows, dz = 2) {
+    const A = [], B = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < dz; c++) A.push([r, c]);
+    for (let r = 0; r < rows; r++) for (let c = cols - dz; c < cols; c++) B.push([r, c]);
+    return { zoneA: A, zoneB: B };
+  },
+  diagonale(cols, rows) {
+    // Triangles de coins opposés (haut-gauche / bas-droite), symétriques 180°.
+    const A = [], B = [];
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const d = c / (cols - 1) + r / (rows - 1); // 0..2
+      if (d <= 0.85) A.push([r, c]);
+      else if (d >= 1.15) B.push([r, c]);
+    }
+    return { zoneA: A, zoneB: B };
+  },
+  quartiers(cols, rows) {
+    // Quart haut-gauche vs quart bas-droite.
+    const A = [], B = [];
+    const hr = Math.floor(rows / 2), hc = Math.floor(cols / 2);
+    for (let r = 0; r < hr; r++) for (let c = 0; c < hc; c++) A.push([r, c]);
+    for (let r = rows - hr; r < rows; r++) for (let c = cols - hc; c < cols; c++) B.push([r, c]);
+    return { zoneA: A, zoneB: B };
+  },
+};
+
+// ---- Correspondance nom de déploiement (en base) -> patron.
+//      À COMPLÉTER avec tes déploiements pour que le terrain corresponde
+//      au déploiement tiré. Toute valeur inconnue retombe sur "bordsCourts". ----
+export const DEPLOIEMENTS_MAP = {
+  // "Affrontement frontal": "bordsCourts",
+  // "Front élargi":         "bordsLongs",
+  // "Diagonale":            "diagonale",
+  // "Quartiers":            "quartiers",
+};
+
+export function zonesDeploiement(nom, cols = 10, rows = 14) {
+  const cle = (nom && DEPLOIEMENTS_MAP[nom]) || "bordsCourts";
+  const fn = DEPLOIEMENTS[cle] || DEPLOIEMENTS.bordsCourts;
+  const { zoneA, zoneB } = fn(cols, rows);
+  return { cle, zoneA, zoneB };
+}
+
+// ---- PRNG reproductible ----
 function mulberry32(a) {
   return function () {
     a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -43,184 +101,196 @@ function mulberry32(a) {
 export function genererTerrain(opts = {}) {
   const cols = opts.cols || 10;
   const rows = opts.rows || 14;
-  const couverture = opts.couverture != null ? opts.couverture : 0.25; // part visée de cases de terrain
+  const biome = BIOMES[opts.biome] ? opts.biome : "mixte";
   const seed = opts.seed != null ? opts.seed : (Math.random() * 1e9) | 0;
+  const cfg = BIOMES[biome];
   const rng = mulberry32(seed);
+  const ri = (a, b) => a + Math.floor(rng() * (b - a + 1));
 
-  const grille = Array.from({ length: rows }, () => Array(cols).fill(null));
-  const half = Math.floor(rows / 2);                 // on génère sur rows 0..half-1, puis on mirroir
-  const dz = rows <= 12 ? 2 : 3;                      // profondeur des zones de déploiement (haut/bas)
-  const typeList = Object.keys(TYPES_TERRAIN);
+  const half = Math.floor(rows / 2);
 
-  function pickType() {
-    const total = typeList.reduce((s, t) => s + TYPES_TERRAIN[t].poids, 0);
-    let x = rng() * total;
-    for (const t of typeList) { x -= TYPES_TERRAIN[t].poids; if (x <= 0) return t; }
-    return typeList[0];
+  // Déploiement (données) : ensemble des cellules à garder dégagées des blocs.
+  const dep = opts.deploiement && opts.deploiement.zoneA
+    ? opts.deploiement
+    : zonesDeploiement(null, cols, rows);
+  const depSet = new Set();
+  [...dep.zoneA, ...dep.zoneB].forEach(([r, c]) => depSet.add(r + "," + c));
+
+  const occ = Array.from({ length: rows }, () => Array(cols).fill(false)); // cases prises par des blocs
+  const cellLibre = (r, c) =>
+    r >= 0 && r < rows && c >= 0 && c < cols && !occ[r][c] && !depSet.has(r + "," + c);
+  const blocLibre = (r, c) =>
+    r >= 0 && r <= half - 2 && c >= 0 && c <= cols - 2 &&
+    cellLibre(r, c) && cellLibre(r + 1, c) && cellLibre(r, c + 1) && cellLibre(r + 1, c + 1);
+  const marquerBloc = (r, c) => { occ[r][c] = occ[r + 1][c] = occ[r][c + 1] = occ[r + 1][c + 1] = true; };
+
+  const batiments = [], surelevations = [], arbres = [], murets = [];
+
+  // 1) Bâtiments (2×2)
+  let nb = ri(cfg.batiments[0], cfg.batiments[1]);
+  for (let i = 0, g = 0; i < nb && g < 60; g++) {
+    const r = ri(0, half - 2), c = ri(0, cols - 2);
+    if (!blocLibre(r, c)) continue;
+    marquerBloc(r, c); batiments.push({ r, c }); i++;
   }
-  // Distance min à une case de même type déjà posée (évite l'agglutination)
-  function tropProche(r, c, type, dmin) {
-    for (let rr = Math.max(0, r - dmin); rr <= Math.min(half - 1, r + dmin); rr++)
-      for (let cc = Math.max(0, c - dmin); cc <= Math.min(cols - 1, c + dmin); cc++)
-        if (grille[rr][cc] === type) return true;
-    return false;
+  // 2) Surélévations (2×2)
+  let ns = ri(cfg.surelevations[0], cfg.surelevations[1]);
+  for (let i = 0, g = 0; i < ns && g < 60; g++) {
+    const r = ri(0, half - 2), c = ri(0, cols - 2);
+    if (!blocLibre(r, c)) continue;
+    marquerBloc(r, c); surelevations.push({ r, c }); i++;
   }
-
-  const cibleHaut = Math.round((couverture * rows * cols) / 2); // cases de terrain visées sur la moitié haute
-  const maxFeatures = 9;
-  let posees = 0, features = 0, garde = 0;
-
-  while (posees < cibleHaut && features < maxFeatures && garde++ < 300) {
-    const type = pickType();
-    // Choix d'une graine dans la moitié haute, en évitant la toute dernière ligne (bord arrière)
-    const sr = 1 + Math.floor(rng() * (half - 1));   // 1..half-1
-    const sc = Math.floor(rng() * cols);
-    if (grille[sr][sc] !== null) continue;
-    if (tropProche(sr, sc, type, 2)) continue;       // espacement entre clusters de même type
-
-    // Croissance d'un amas organique à partir de la graine
-    const tMin = TYPES_TERRAIN[type].tailleMin, tMax = TYPES_TERRAIN[type].tailleMax;
-    const taille = tMin + Math.floor(rng() * (tMax - tMin + 1));
-    const cells = [[sr, sc]];
-    grille[sr][sc] = type;
-    let ajout = 1, essais = 0;
-
-    // L'eau s'allonge (rivière/ruisseau) : on biaise sa croissance sur un axe
-    const axeEau = rng() < 0.5 ? "h" : "v";
-    const dirs4 = [[-1, 0], [1, 0], [0, -1], [0, 1]];
-    const dirsEau = axeEau === "h"
-      ? [[0, -1], [0, 1], [0, -1], [0, 1], [-1, 0], [1, 0]]
-      : [[-1, 0], [1, 0], [-1, 0], [1, 0], [0, -1], [0, 1]];
-
-    while (ajout < taille && essais++ < taille * 10) {
-      const [br, bc] = cells[Math.floor(rng() * cells.length)];
-      const dirs = type === "eau" ? dirsEau : dirs4;
-      const [dr, dc] = dirs[Math.floor(rng() * dirs.length)];
-      const nr = br + dr, nc = bc + dc;
-      if (nr >= 0 && nr < half && nc >= 0 && nc < cols && grille[nr][nc] === null) {
-        grille[nr][nc] = type; cells.push([nr, nc]); ajout++;
-      }
+  // 3) Arbres (points : centre de tuile ou croisement de 4 tuiles)
+  let na = ri(cfg.arbres[0], cfg.arbres[1]);
+  const dist2 = (a, b) => (a.x - b.x) ** 2 + (a.y - b.y) ** 2;
+  for (let i = 0, g = 0; i < na && g < na * 12 + 40; g++) {
+    const centre = rng() < 0.5;
+    let pt;
+    if (centre) {
+      const r = ri(0, half - 1), c = ri(0, cols - 1);
+      if (!cellLibre(r, c)) continue;
+      pt = { x: c + 0.5, y: r + 0.5, v: false };
+    } else {
+      // croisement : sommet interne (1..cols-1, 1..half-1)
+      const vc = ri(1, cols - 1), vr = ri(1, half - 1);
+      // au moins une des 4 cases autour doit être libre (pas en plein bloc)
+      const autour = [[vr - 1, vc - 1], [vr - 1, vc], [vr, vc - 1], [vr, vc]];
+      if (!autour.some(([rr, cc]) => cellLibre(rr, cc))) continue;
+      pt = { x: vc, y: vr, v: true };
     }
-    posees += ajout; features++;
+    if (arbres.some((a) => dist2(a, pt) < 0.7)) continue; // espacement
+    arbres.push(pt); i++;
   }
-
-  // ---- Symétrie de rotation à 180° : (r,c) -> (rows-1-r, cols-1-c) ----
-  for (let r = 0; r < half; r++)
-    for (let c = 0; c < cols; c++)
-      if (grille[r][c]) grille[rows - 1 - r][cols - 1 - c] = grille[r][c];
-
-  // ---- Dégagement des zones de déploiement (symétrique) ----
-  // On garantit qu'au moins ~60 % de chaque zone de déploiement reste praticable.
-  function clairsDeZone(r0, r1) {
-    let libres = 0, total = 0;
-    for (let r = r0; r <= r1; r++) for (let c = 0; c < cols; c++) { total++; if (!grille[r][c]) libres++; }
-    return libres / total;
-  }
-  // zone haute = rows 0..dz-1 ; on retire des cases (et leur miroir) tant que < 0.6
-  let secu = 0;
-  while (clairsDeZone(0, dz - 1) < 0.6 && secu++ < 100) {
-    // trouve une case de terrain dans la zone haute et la retire avec son miroir
-    let fait = false;
-    for (let r = 0; r < dz && !fait; r++) for (let c = 0; c < cols && !fait; c++) {
-      if (grille[r][c]) {
-        grille[r][c] = null;
-        grille[rows - 1 - r][cols - 1 - c] = null;
-        fait = true;
-      }
+  // 4) Murets (chaînes de 1 à 2 segments entre sommets, diagonale possible)
+  const DIRS = [[-1, 0], [1, 0], [0, -1], [0, 1], [-1, -1], [-1, 1], [1, -1], [1, 1]];
+  let nm = ri(cfg.murets[0], cfg.murets[1]);
+  for (let i = 0, g = 0; i < nm && g < nm * 12 + 40; g++) {
+    let vx = ri(1, cols - 1), vy = ri(1, half - 1);
+    const len = ri(1, 2);
+    const segs = [];
+    let ok = true;
+    for (let k = 0; k < len; k++) {
+      const [dc, dr] = DIRS[Math.floor(rng() * DIRS.length)];
+      const nx = vx + dc, ny = vy + dr;
+      if (nx < 0 || nx > cols || ny < 0 || ny > half - 1) { ok = false; break; }
+      // la cellule sous le milieu du segment ne doit pas être en zone de déploiement
+      const mr = Math.floor((vy + ny) / 2 - 0.0001), mc = Math.floor((vx + nx) / 2 - 0.0001);
+      if (depSet.has(Math.max(0, mr) + "," + Math.max(0, mc))) { ok = false; break; }
+      segs.push({ x1: vx, y1: vy, x2: nx, y2: ny });
+      vx = nx; vy = ny;
     }
-    if (!fait) break;
+    if (!ok || !segs.length) continue;
+    segs.forEach((s) => murets.push(s)); i++;
   }
 
-  // ---- Métriques (rendent l'ingénierie visible) ----
-  let terrain = 0; const parType = {};
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    const t = grille[r][c];
-    if (t) { terrain++; parType[t] = (parType[t] || 0) + 1; }
-  }
-  const tiers = Math.floor(rows / 3);
-  let centre = 0, centreTotal = 0;
-  for (let r = tiers; r < rows - tiers; r++) for (let c = 0; c < cols; c++) { centreTotal++; if (grille[r][c]) centre++; }
+  // ---- Symétrie 180° : on duplique la moitié haute vers le bas ----
+  const mp = (x, y) => ({ x: cols - x, y: rows - y });
+  const arbresF = arbres.concat(arbres.map((a) => ({ ...mp(a.x, a.y), v: a.v })));
+  // murets : dédup pour éviter qu'un segment sur l'axe se recopie sur lui-même
+  const keyW = (s) => {
+    const a = [s.x1, s.y1], b = [s.x2, s.y2];
+    const [p, q] = (a[0] < b[0] || (a[0] === b[0] && a[1] <= b[1])) ? [a, b] : [b, a];
+    return p[0] + ":" + p[1] + ":" + q[0] + ":" + q[1];
+  };
+  const muretsF = []; const vus = new Set();
+  murets.concat(murets.map((s) => {
+    const p1 = mp(s.x1, s.y1), p2 = mp(s.x2, s.y2);
+    return { x1: p1.x, y1: p1.y, x2: p2.x, y2: p2.y };
+  })).forEach((s) => { const k = keyW(s); if (!vus.has(k)) { vus.add(k); muretsF.push(s); } });
+  const surF = surelevations.concat(surelevations.map((b) => ({ r: rows - 2 - b.r, c: cols - 2 - b.c })));
+  const batF = batiments.concat(batiments.map((b) => ({ r: rows - 2 - b.r, c: cols - 2 - b.c })));
 
   const metriques = {
-    couverture: terrain / (rows * cols),
-    parType,
-    couvertureCentre: centreTotal ? centre / centreTotal : 0,
-    clairsDeploiement: clairsDeZone(0, dz - 1),
+    biome,
+    nbArbres: arbresF.length,
+    nbMurets: muretsF.length,
+    nbSurelevations: surF.length,
+    nbBatiments: batF.length,
+    couvertureBlocs: ((surF.length + batF.length) * 4) / (rows * cols),
     equilibre: "symétrie 180° (équité garantie par construction)",
   };
 
-  return { cols, rows, dz, grille, seed, metriques };
+  return {
+    cols, rows, biome, seed,
+    deploiement: dep,
+    arbres: arbresF, murets: muretsF, surelevations: surF, batiments: batF,
+    metriques,
+  };
 }
 
 // ============================================================
-//  Rendu SVG (chaîne de caractères, sans DOM)
+//  Rendu SVG (chaîne, sans DOM)
 // ============================================================
-function iconeCase(type, x, y, s) {
-  const cx = x + s / 2, cy = y + s / 2;
-  const sombre = "rgba(0,0,0,0.28)", clair = "rgba(255,255,255,0.30)";
-  switch (type) {
-    case "foret": {
-      // quelques sapins (triangles)
-      const tri = (tx, ty, h) =>
-        `<path d="M${tx} ${ty} L${tx - h * 0.5} ${ty + h} L${tx + h * 0.5} ${ty + h} Z" fill="${sombre}"/>`;
-      return tri(cx - s * 0.18, y + s * 0.22, s * 0.34) + tri(cx + s * 0.18, y + s * 0.3, s * 0.3) + tri(cx, y + s * 0.34, s * 0.36);
-    }
-    case "colline":
-      // arcs concentriques (courbes de niveau)
-      return `<path d="M${x + s * 0.2} ${y + s * 0.66} Q${cx} ${y + s * 0.28} ${x + s * 0.8} ${y + s * 0.66}" fill="none" stroke="${sombre}" stroke-width="${s * 0.07}"/>` +
-             `<path d="M${x + s * 0.34} ${y + s * 0.72} Q${cx} ${y + s * 0.46} ${x + s * 0.66} ${y + s * 0.72}" fill="none" stroke="${sombre}" stroke-width="${s * 0.06}"/>`;
-    case "eau":
-      // lignes ondulées
-      return `<path d="M${x + s * 0.15} ${cy - s * 0.12} q${s * 0.17} ${-s * 0.12} ${s * 0.35} 0 q${s * 0.17} ${s * 0.12} ${s * 0.35} 0" fill="none" stroke="${clair}" stroke-width="${s * 0.07}"/>` +
-             `<path d="M${x + s * 0.15} ${cy + s * 0.14} q${s * 0.17} ${-s * 0.12} ${s * 0.35} 0 q${s * 0.17} ${s * 0.12} ${s * 0.35} 0" fill="none" stroke="${clair}" stroke-width="${s * 0.07}"/>`;
-    case "ruines": {
-      // murs brisés (petits rectangles)
-      const r = (rx, ry, rw, rh) => `<rect x="${rx}" y="${ry}" width="${rw}" height="${rh}" fill="${sombre}"/>`;
-      return r(x + s * 0.24, y + s * 0.42, s * 0.16, s * 0.3) + r(x + s * 0.46, y + s * 0.3, s * 0.14, s * 0.42) + r(x + s * 0.64, y + s * 0.5, s * 0.13, s * 0.22);
-    }
-    case "difficile": {
-      // semis de points
-      const d = (dx, dy) => `<circle cx="${dx}" cy="${dy}" r="${s * 0.05}" fill="${sombre}"/>`;
-      return d(cx - s * 0.2, cy - s * 0.15) + d(cx + s * 0.18, cy - s * 0.1) + d(cx - s * 0.05, cy + s * 0.18) + d(cx + s * 0.22, cy + s * 0.16) + d(cx - s * 0.24, cy + s * 0.05);
-    }
-    default: return "";
-  }
+function dessinArbre(px, py, s) {
+  const f1 = "#4f7050", f2 = "#456448", f3 = "#577a59", tr = "#6b4f3a";
+  return (
+    `<rect x="${px - s * 0.05}" y="${py + s * 0.12}" width="${s * 0.1}" height="${s * 0.2}" fill="${tr}"/>` +
+    `<circle cx="${px - s * 0.15}" cy="${py + s * 0.04}" r="${s * 0.2}" fill="${f2}"/>` +
+    `<circle cx="${px + s * 0.15}" cy="${py + s * 0.04}" r="${s * 0.2}" fill="${f3}"/>` +
+    `<circle cx="${px}" cy="${py - s * 0.1}" r="${s * 0.24}" fill="${f1}"/>`
+  );
+}
+function dessinSurelevation(x, y, w, h) {
+  const fill = "#9a7b4f", st = "#75592f";
+  const cx = x + w / 2;
+  return (
+    `<rect x="${x + 1}" y="${y + 1}" width="${w - 2}" height="${h - 2}" rx="3" fill="${fill}" fill-opacity="0.85" stroke="${st}" stroke-width="1.4"/>` +
+    `<path d="M${x + w * 0.18} ${y + h * 0.6} Q${cx} ${y + h * 0.3} ${x + w * 0.82} ${y + h * 0.6}" fill="none" stroke="${st}" stroke-opacity="0.6" stroke-width="${w * 0.04}"/>` +
+    `<path d="M${x + w * 0.3} ${y + h * 0.78} Q${cx} ${y + h * 0.52} ${x + w * 0.7} ${y + h * 0.78}" fill="none" stroke="${st}" stroke-opacity="0.5" stroke-width="${w * 0.035}"/>`
+  );
+}
+function dessinBatiment(x, y, w, h) {
+  const mur = "#9a8f84", toit = "#6e4b3a", st = "#4f4640";
+  const inset = w * 0.12;
+  const bx = x + inset, by = y + h * 0.34, bw = w - inset * 2, bh = h - h * 0.34 - inset;
+  return (
+    // toit
+    `<path d="M${x + inset * 0.6} ${y + h * 0.4} L${x + w / 2} ${y + inset} L${x + w - inset * 0.6} ${y + h * 0.4} Z" fill="${toit}" stroke="${st}" stroke-width="1"/>` +
+    // corps
+    `<rect x="${bx}" y="${by}" width="${bw}" height="${bh}" fill="${mur}" stroke="${st}" stroke-width="1"/>` +
+    // porte + fenêtre
+    `<rect x="${bx + bw * 0.4}" y="${by + bh * 0.45}" width="${bw * 0.2}" height="${bh * 0.55}" fill="${st}"/>` +
+    `<rect x="${bx + bw * 0.12}" y="${by + bh * 0.2}" width="${bw * 0.18}" height="${bh * 0.25}" fill="${st}"/>` +
+    `<rect x="${bx + bw * 0.7}" y="${by + bh * 0.2}" width="${bw * 0.18}" height="${bh * 0.25}" fill="${st}"/>`
+  );
 }
 
 export function rendreTerrainSVG(terrain, opts = {}) {
   const s = opts.tailleCase || 26;
-  const { cols, rows, dz, grille } = terrain;
+  const { cols, rows, deploiement, arbres, murets, surelevations, batiments } = terrain;
   const W = cols * s, H = rows * s;
   let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" xmlns="http://www.w3.org/2000/svg" class="cp-terrain-svg" role="img" aria-label="Terrain de bataille généré">`;
 
-  // Fond du plateau
+  // Fond
   svg += `<rect x="0" y="0" width="${W}" height="${H}" fill="var(--lightgray, #e8e4da)"/>`;
 
-  // Bandes de déploiement (haut = camp 1, bas = camp 2)
-  svg += `<rect x="0" y="0" width="${W}" height="${dz * s}" fill="rgba(46,116,181,0.10)"/>`;
-  svg += `<rect x="0" y="${H - dz * s}" width="${W}" height="${dz * s}" fill="rgba(176,86,63,0.10)"/>`;
+  // Zones de déploiement (données)
+  const drawZone = (cells, color) =>
+    cells.map(([r, c]) => `<rect x="${c * s}" y="${r * s}" width="${s}" height="${s}" fill="${color}"/>`).join("");
+  svg += drawZone(deploiement.zoneA, "rgba(46,116,181,0.16)");
+  svg += drawZone(deploiement.zoneB, "rgba(176,86,63,0.16)");
 
-  // Cases de terrain
-  for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    const t = grille[r][c];
-    if (!t) continue;
-    const x = c * s, y = r * s;
-    svg += `<rect x="${x}" y="${y}" width="${s}" height="${s}" fill="${TYPES_TERRAIN[t].couleur}" fill-opacity="0.92"/>`;
-    svg += iconeCase(t, x, y, s);
-  }
-
-  // Grille (lignes fines)
+  // Grille
   let lignes = "";
   for (let c = 0; c <= cols; c++) lignes += `<line x1="${c * s}" y1="0" x2="${c * s}" y2="${H}"/>`;
   for (let r = 0; r <= rows; r++) lignes += `<line x1="0" y1="${r * s}" x2="${W}" y2="${r * s}"/>`;
   svg += `<g stroke="var(--gray, #b8b0a0)" stroke-width="0.5" stroke-opacity="0.5">${lignes}</g>`;
 
-  // Liserés des zones de déploiement
-  svg += `<line x1="0" y1="${dz * s}" x2="${W}" y2="${dz * s}" stroke="rgba(46,116,181,0.55)" stroke-width="1.4" stroke-dasharray="4 3"/>`;
-  svg += `<line x1="0" y1="${H - dz * s}" x2="${W}" y2="${H - dz * s}" stroke="rgba(176,86,63,0.55)" stroke-width="1.4" stroke-dasharray="4 3"/>`;
+  // Surélévations puis bâtiments (blocs 2×2)
+  surelevations.forEach((b) => { svg += dessinSurelevation(b.c * s, b.r * s, 2 * s, 2 * s); });
+  batiments.forEach((b) => { svg += dessinBatiment(b.c * s, b.r * s, 2 * s, 2 * s); });
 
-  // Cadre
-  svg += `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" fill="none" stroke="var(--gray, #b8b0a0)" stroke-width="1"/>`;
-  svg += `</svg>`;
+  // Murets (segments, diagonale possible)
+  murets.forEach((m) => {
+    svg += `<line x1="${m.x1 * s}" y1="${m.y1 * s}" x2="${m.x2 * s}" y2="${m.y2 * s}" stroke="#5f564d" stroke-width="${s * 0.2}" stroke-linecap="round"/>`;
+    svg += `<line x1="${m.x1 * s}" y1="${m.y1 * s}" x2="${m.x2 * s}" y2="${m.y2 * s}" stroke="#9a8f84" stroke-width="${s * 0.08}" stroke-linecap="round"/>`;
+  });
+
+  // Arbres (points)
+  arbres.forEach((a) => { svg += dessinArbre(a.x * s, a.y * s, s); });
+
+  // Liserés de déploiement (cadre fin autour des cellules de zone)
+  const frame = `<rect x="0.5" y="0.5" width="${W - 1}" height="${H - 1}" fill="none" stroke="var(--gray, #b8b0a0)" stroke-width="1"/>`;
+  svg += frame + `</svg>`;
   return svg;
 }
