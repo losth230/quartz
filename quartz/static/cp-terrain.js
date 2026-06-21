@@ -37,66 +37,48 @@ export const BIOMES = {
 //      Grille 14 colonnes × 10 lignes. Tous symétriques par rotation 180°.
 //      Chaque entrée : { libelle, zones(cols, rows) -> { zoneA:[[r,c]], zoneB:[[r,c]] } }.
 export const DEPLOIEMENTS = {
-  // 1 — Bandes verticales (colonnes 2-3 vs 10-11)
-  "1": {
-    libelle: "Bandes verticales",
-    zones(cols, rows) {
-      const A = [], B = [];
-      for (let r = 0; r < rows; r++) { A.push([r, 2], [r, 3]); B.push([r, 10], [r, 11]); }
-      return { zoneA: A, zoneB: B };
-    },
-  },
-  // 2 — Bords courts (2 lignes haut/bas, pleine largeur)
-  "2": {
-    libelle: "Bords courts",
-    zones(cols, rows) {
-      const A = [], B = [];
-      for (let c = 0; c < cols; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
-      return { zoneA: A, zoneB: B };
-    },
-  },
-  // 3 — Bords courts resserrés (2 lignes haut/bas, colonnes 2..11)
-  "3": {
-    libelle: "Bords courts resserrés",
-    zones(cols, rows) {
-      const A = [], B = [];
-      for (let c = 2; c <= 11; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
-      return { zoneA: A, zoneB: B };
-    },
-  },
-  // 4 — Bords courts dédoublés (2 lignes haut/bas, blocs colonnes 1-4 et 9-12)
-  "4": {
-    libelle: "Bords courts dédoublés",
-    zones(cols, rows) {
-      const A = [], B = [];
-      [1, 2, 3, 4, 9, 10, 11, 12].forEach((c) => { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); });
-      return { zoneA: A, zoneB: B };
-    },
-  },
-  // 5 — Diagonale (escalier coin haut-gauche / bas-droite)
-  "5": {
-    libelle: "Diagonale",
-    zones(cols, rows) {
-      const A = [];
-      for (let r = 0; r < rows; r++) {
-        const lo = Math.max(0, 4 - r), hi = Math.min(cols - 1, 6 - r);
-        for (let c = lo; c <= hi; c++) A.push([r, c]);
-      }
-      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
-      return { zoneA: A, zoneB: B };
-    },
-  },
-  // 6 — Coins étendus (ligne du haut pleine + moitié gauche des 2 lignes suivantes)
-  "6": {
-    libelle: "Coins étendus",
-    zones(cols, rows) {
-      const A = [];
-      for (let c = 0; c < cols; c++) A.push([0, c]);
-      for (let r = 1; r <= 2; r++) for (let c = 0; c <= 5; c++) A.push([r, c]);
-      const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
-      return { zoneA: A, zoneB: B };
-    },
-  },
+  // deploiement_1.png — Bords courts (2 lignes haut/bas, pleine largeur)
+  "1": { libelle: "Bords courts", zones(cols, rows) {
+    const A = [], B = [];
+    for (let c = 0; c < cols; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+    return { zoneA: A, zoneB: B };
+  } },
+  // deploiement_2.png — Bords courts resserrés (colonnes 2..11)
+  "2": { libelle: "Bords courts resserrés", zones(cols, rows) {
+    const A = [], B = [];
+    for (let c = 2; c <= 11; c++) { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); }
+    return { zoneA: A, zoneB: B };
+  } },
+  // deploiement_3.png — Bords courts dédoublés (colonnes 1-4 et 9-12)
+  "3": { libelle: "Bords courts dédoublés", zones(cols, rows) {
+    const A = [], B = [];
+    [1, 2, 3, 4, 9, 10, 11, 12].forEach((c) => { A.push([0, c], [1, c]); B.push([rows - 2, c], [rows - 1, c]); });
+    return { zoneA: A, zoneB: B };
+  } },
+  // deploiement_4.png — Diagonale (escalier coin haut-gauche / bas-droite)
+  "4": { libelle: "Diagonale", zones(cols, rows) {
+    const A = [];
+    for (let r = 0; r < rows; r++) {
+      const lo = Math.max(0, 4 - r), hi = Math.min(cols - 1, 6 - r);
+      for (let c = lo; c <= hi; c++) A.push([r, c]);
+    }
+    const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+    return { zoneA: A, zoneB: B };
+  } },
+  // deploiement_5.png — Coins étendus (ligne haut pleine + moitié gauche des 2 lignes suivantes)
+  "5": { libelle: "Coins étendus", zones(cols, rows) {
+    const A = [];
+    for (let c = 0; c < cols; c++) A.push([0, c]);
+    for (let r = 1; r <= 2; r++) for (let c = 0; c <= 5; c++) A.push([r, c]);
+    const B = A.map(([r, c]) => [rows - 1 - r, cols - 1 - c]);
+    return { zoneA: A, zoneB: B };
+  } },
+  // deploiement_6.png — Bandes verticales (colonnes 2-3 vs 10-11)
+  "6": { libelle: "Bandes verticales", zones(cols, rows) {
+    const A = [], B = [];
+    for (let r = 0; r < rows; r++) { A.push([r, 2], [r, 3]); B.push([r, 10], [r, 11]); }
+    return { zoneA: A, zoneB: B };
+  } },
 };
 
 // ---- Correspondance explicite (optionnelle) nom de déploiement -> clé "1".."6".
