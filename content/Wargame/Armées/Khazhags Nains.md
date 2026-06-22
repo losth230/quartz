@@ -361,8 +361,8 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 - Pistolet lourd : Portée (C : 9’’, L : 15’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ##### Règles spéciales :
 - Renforcement : au prix d’une action courte, vous pouvez renforcer un modèle Nain ami à 6’’ ou moins avec l’une des améliorations suivantes :
-  - Arme fracassante : pour le reste de la partie, le modèle ami gagne la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]. Forge.
-  - Armure impénétrable : pour le reste de la partie, le modèle ami gagne [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] en début de tour. Forge.
+  - Arme fracassante : pour le reste du tour, le modèle ami gagne +1d6 en mêlée. Forge.
+  - Armure impénétrable : le modèle ami gagne [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]]. Forge.
 ---
 ### Canon — 36 pts
 
