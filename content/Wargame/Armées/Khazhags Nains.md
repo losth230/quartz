@@ -80,7 +80,7 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**   |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ---------- |
-| Gortrek    | **4**   | **4+**                                                                               | **4+**                                                                                  | **3+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
+| Gortrek    | **4**   | **4+**                                                                               | **3+**                                                                                  | **4+**                                                                          | **9**                                                                            | **3**  | **2**  | **5**  | Nain, Mine |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 5d6                                                                             |                                                                                  |        |        |        |            | 
 
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade (6)]].*
@@ -276,13 +276,13 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Guerrier   | **4**   | **5+**                                                                               | **5+**                                                                                  | **5+**                                                                          | **6**                                                                            | **1**  | **2**  | **1**  | Nain     |
-| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 2d6                                                                             |                                                                                  |        |        |        |          |
+| Guerrier   | **4**   | **4+**                                                                               | **4+**                                                                                  | **5+**                                                                          | **6**                                                                            | **1**  | **2**  | **1**  | Nain     |
+| **Mêlée:** | 1d6     |                                                                                      | **Tir:**                                                                                | 1d6                                                                             |                                                                                  |        |        |        |          |
 
 ##### Équipement :
 - Bouclier (+1 pts) : l’armure de cette unité devient 4+.
-- Arme lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
-- Arbalète légère (+3 pts) : Portée (C : 9’’, L : 15’’).
+- Arme lourde (+1 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Arbalète légère (+2 pts) : Portée (C : 9’’, L : 15’’).
 ---
 ### Grincheur — 13 pts
 
