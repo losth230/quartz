@@ -11,9 +11,8 @@ Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Vi
 Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche. La règle Masse Ecrasante se déclenche sur un nombre 5 fois supérieur au lieu d’un nombre 3 fois supérieur.
 #### Invasion sans fin :
 Vos modèles de type Vermine bénéficient de la règle Régénération (X), dépendant de sa masse originale. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
-**Modèles de masse 5-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
-**Modèles de masse 11-15 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
-**Modèles de masse 16+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (3)]].
+**Modèles de masse 1-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
+**Modèles de masse 11+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
 
 ---
 
@@ -50,7 +49,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 
 <div class="legendary">
 
-### Docteur Molluskus — 42 pts
+### Docteur Molluskus — 46 pts
 
 </div>
 
@@ -223,24 +222,6 @@ ___
 - Tir précis : ce modèle ne souffre jamais du malus de ligne de vue non dégagée.
 - Tir longue portée (1-3) : renforcement, à utiliser lors d’une attaque de tir. Pour chaque scorie dépensée, ajoutez 1d6 à la portée de l’arme, mais pour chaque résultat naturel de 6, l’arme s’enraille et le tireur perd 1 PV.
 ---
-### Mutation colossale — 46 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Mutation | **5** | **4+** | **-** | **4+** | **7** | **5** | **4** | **4** | Vermine |
-| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
-
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-##### Équipement :
-- Faux rotatives (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
-- Poings épineux (+4 pts) : confère +1d6 en mêlée.
-##### Règles spéciales :
-- Générateur à scories : lorsque vous activez ce modèle, déterminez l’état de son générateur :
-  - Au repos : l’unité génère 1 scorie mais souffre d’un malus de -1 en Vit et de -1 sur ses jets d’attaque en mêlée pour le reste du tour.
-  - Fonctionnement normal : aucune modification.
-  - Surcharge du générateur : l’unité consomme 1 scorie pour bénéficier d’un bonus de +1 en Vit et +1 sur ses jets d’attaque en mêlée pour le reste du tour.
-- Veines chargées de scories : lorsque ce modèle Régénère, doublez sa règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
----
 
 ### Porte-peste — 16 pts
 
@@ -253,30 +234,29 @@ ___
 ##### Équipement :
 - Fléau enflammée (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 ##### Règles spéciales :
-- Exploiter les faiblesses : si ce modèle attaque un modèle empoisonné, ses résultats d’attaque obtenant 5+ infligent  des dégâts bruts.
+- Exploiter les faiblesses : si ce modèle attaque un modèle empoisonné, ses résultats d’attaque obtenant 5+ infligent des dégâts bruts.
 ---
 ### Rat mutant — 21 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Mutant | **5** | **4+** | **5+** | **5+** | **6** | **4** | **3** | **4** | Vermine |
-| **Mêlée:** | 3d6 |  | **Tir:** |  |  |  |  |  |  |
+| Mutant | **6** | **4+** | **5+** | **5+** | **6** | **4** | **4** | **4** | Vermine |
+| **Mêlée:** | 4d6 |  | **Tir:** |  |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-##### Règles spéciales :
-- Surcharge de scories : lorsque cette unité est tuée, gagnez 2 Scories.
-- Force décuplée (1) : le rat mutant gagne [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+
 ---
-### Vétéran — 14 pts
+
+### Vétéran — 16 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Vétéran | **5** | **4+** | **-** | **5+** | **6** | **2** | **2** | **2** | Vermine |
-| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+| Vétéran | **5** | **3+** | **-** | **4+** | **6** | **2** | **2** | **2** | Vermine |
+| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]].*
 ##### Équipement :
-- Bouclier (+2 pts) : l’armure de ce modèle passe à 4+.
+- Bouclier (+2 pts) : l’armure de ce modèle passe à 3+.
+- Hallebarde (+2 pts) : confère +1d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice(+1)]] contre les modèles de taille 3+.
 ---
 ### Mort sur roue — 24 pts
 
@@ -317,6 +297,22 @@ ___
 - Recalibrage ! : utilisable une fois par tour lorsqu’un modèle ami à 12’’ ou moins dépense des scories pour une action de renforcement. La machine ciblée peut rajouter 1d6 à son renforcement, si le dé obtient un 6, cela ne compte pas pour les potentiels effets négatifs liés au renforcement.
 - Ramasser ce qui reste : lorsqu’une machine est détruite à 9’’ ou moins du Machiniste, générez 2 Scories.
 ---
+
+### Mutation colossale — 32 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Mutation | **5** | **4+** | **-** | **4+** | **7** | **4** | **4** | **4** | Rat |
+| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Faux rotatives (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Poings épineux (+2 pts) : confère +1d6 en mêlée.
+##### Règles spéciales :
+- Générateur à scories : les modèles de type Vermine à 6" ou moins bénéricient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération(+1]].
+---
+
 ### Technomage — 15 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -338,17 +334,6 @@ ___
 - Plateforme de tir (si monture Abominable) : l’action de tir / Magie du Technomage est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
 ---
 ## Modèles Spéciaux
----
-### Abomination — 46 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Abomination | **5** | **4+** | **4+** | **4+** | **7** | **7** | **4** | **4** | Rat |
-| **Mêlée:** | 5d6 |  | **Tir:** | 5d6 |  |  |  |  |  |
-
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].*
-##### Équipement :
-- Poings-canon : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ---
 
 ### Bélier Pestilentiel — 58 pts
@@ -394,7 +379,7 @@ ___
 
 <div class="legendary">
 
-### Formidable Expérience — 62 pts
+### Formidable Expérience — 64 pts
 
 </div>
 
