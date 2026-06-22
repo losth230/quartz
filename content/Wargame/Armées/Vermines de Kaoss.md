@@ -59,7 +59,7 @@ Vos modèles de type Vermine bénéficient de la règle Régénération (X), dé
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Magie :
-- Skritzz est un lanceur de sorts de niveau 4 ayant accès au Domaine des égouts et au Domaine des racines.
+- Molluskus est un lanceur de sorts de niveau 4 ayant accès au Domaine des égouts et au Domaine des racines.
 ##### Règles spéciales :
 - Formidable Invention : au début de chaque tour, désignez un modèle Rat ou Vermine à 9’’ ou moins qui servira de sujet de test et jetez 1d6 pour lui octroyer une Formidable Invention aléatoire qui dure pour le reste du tour :
   - 1 : La Formidable Invention a échoué, rien ne se passe.
@@ -172,7 +172,7 @@ ___
 ---
 ## Modèles de base
 ---
-### Basse levée du clan — 4 pts
+### Basse levée du clan — 5 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
