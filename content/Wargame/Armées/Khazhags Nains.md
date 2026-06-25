@@ -40,7 +40,7 @@ Lors de la création d’une armée Naines, vous pouvez runer vos modèles. Chaq
 
 <center><h2>Bannières</h2></center>
 
-Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'importe quelle Unité au sein d'une Troupe peut porter une bannière. Voici les grandes bannières possibles :
+Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'importe quelle Unité de base peut porter une bannière. Voici les grandes bannières possibles :
 - **Bannière du Khaghag (5 pts) :** Le modèles bénéficie de +1 à ses jets de moral.
 - **Bannière d’hardiesse (5 pts) :** Le modèle n’est pas affecté par la déroute de la bande.
 - **Bannière d’antimagie (5 pts) :** La règle êtres de pierre de ce modèl se déclenche sur 4+ au lieu de 5+.
