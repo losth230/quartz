@@ -131,7 +131,11 @@ function libelleOptions(entry) {
   const parts = [];
   u.options.forEach((o, i) => {
     if (o.t === "opt") { if ((entry.opts || []).includes(i)) parts.push(o.nom); }
-    else if (o.t === "choix") { const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut; parts.push(o.choix[ci].nom); }
+    else if (o.t === "choix") {
+      const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
+      const nom = o.choix[ci].nom;
+      if (nom !== "Aucune") parts.push(nom); // « Aucune » = pas de sélection -> rien dans le texte
+    }
   });
   return parts.join(", ");
 }
