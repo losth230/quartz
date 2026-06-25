@@ -238,13 +238,17 @@ function ligneEntree(e) {
   let opts = "";
   if (chips.length) opts += '<div class="cp-ab-additifs">' + chips.join("") + "</div>";
   if (choix.length) opts += '<div class="cp-ab-choixs">' + choix.join("") + "</div>";
-  return '<div class="cp-ab-entry" data-uid="' + e.uid + '">' +
+  const collapsed = !!e.collapsed;
+  const resume = collapsed ? esc(libelleOptions(e)) : "";
+  return '<div class="cp-ab-entry' + (collapsed ? " cp-ab-collapsed" : "") + '" data-uid="' + e.uid + '">' +
     '<div class="cp-ab-entry-head">' +
+      '<span class="cp-ab-chevron">' + (opts ? (collapsed ? "\u25B8" : "\u25BE") : "") + "</span>" +
       '<span class="cp-ab-cat cp-ab-cat-' + u.categorie + '">' + esc(cat ? cat.label : "") + "</span>" +
       '<span class="cp-ab-nom">' + esc(u.nom) + "</span>" +
+      '<span class="cp-ab-resume">' + resume + "</span>" +
       '<span class="cp-ab-qty"><input type="number" min="1" step="1" class="cp-ab-qtyn" value="' + (e.qty || 1) + '"></span>' +
       '<span class="cp-ab-sub">' + coutEntry(e) + " pts</span>" +
-      '<button class="cp-ab-del" title="Retirer">✕</button>' +
+      '<button class="cp-ab-del" title="Retirer">\u2715</button>' +
     "</div>" +
     (opts ? '<div class="cp-ab-opts">' + opts + "</div>" : "") +
   "</div>";
@@ -347,6 +351,14 @@ function wireOnce() {
     if (del) {
       const card = del.closest(".cp-ab-entry");
       if (card) { state.entries = state.entries.filter((x) => String(x.uid) !== card.dataset.uid); render(); }
+      return;
+    }
+    // Repli/dépli : clic sur l'entête, sauf sur la quantité ou le bouton ✕
+    const head = e.target.closest(".cp-ab-entry-head");
+    if (head && !e.target.closest(".cp-ab-qty")) {
+      const card = head.closest(".cp-ab-entry");
+      const en = card && entryByUid(card.dataset.uid);
+      if (en) { en.collapsed = !en.collapsed; render(); }
     }
   });
 
