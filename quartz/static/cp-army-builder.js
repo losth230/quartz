@@ -210,21 +210,30 @@ function optionSelect() {
 function ligneEntree(e) {
   const u = uOf(e); if (!u) return "";
   const cat = CATS.find((c) => c.id === u.categorie);
-  let optsHtml = "";
+  const chips = [], choix = [];
   (u.options || []).forEach((o, i) => {
     if (o.t === "opt") {
       const on = (e.opts || []).includes(i);
-      optsHtml += '<label class="cp-ab-opt"><input type="checkbox" data-opt="' + i + '"' + (on ? " checked" : "") + "> " + esc(o.nom) + " (+" + o.cout + ")</label>";
+      chips.push('<label class="cp-ab-chip' + (on ? " on" : "") + '">' +
+        '<input type="checkbox" data-opt="' + i + '"' + (on ? " checked" : "") + ">" +
+        '<span class="cp-ab-chipnom">' + esc(o.nom) + "</span>" +
+        '<span class="cp-ab-chipcout">+' + o.cout + "</span></label>");
     } else if (o.t === "choix") {
       const sel = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
-      optsHtml += '<label class="cp-ab-opt cp-ab-choix">' + esc(o.nom) + ' <select data-choix="' + i + '">' +
-        o.choix.map((ch, ci) => '<option value="' + ci + '"' + (ci === sel ? " selected" : "") + ">" + esc(ch.nom) + (ch.cout ? " (+" + ch.cout + ")" : "") + "</option>").join("") +
-        "</select></label>";
+      choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">' + esc(o.nom) + "</span>" +
+        '<select data-choix="' + i + '">' +
+        o.choix.map((ch, ci) => '<option value="' + ci + '"' + (ci === sel ? " selected" : "") + ">" +
+          esc(ch.nom) + (ch.cout ? " (+" + ch.cout + ")" : "") + "</option>").join("") +
+        "</select></div>");
     }
   });
-  const manuel = (u.points == null)
-    ? '<label class="cp-ab-opt">Coût unitaire <input type="number" min="0" step="1" class="cp-ab-manuel" value="' + (e.manuel || 0) + '" title="' + esc(u.special_note || "") + '"></label>'
-    : "";
+  if (u.points == null) {
+    choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">Coût unitaire</span>' +
+      '<input type="number" min="0" step="1" class="cp-ab-manuel" value="' + (e.manuel || 0) + '" title="' + esc(u.special_note || "") + '"></div>');
+  }
+  let opts = "";
+  if (chips.length) opts += '<div class="cp-ab-additifs">' + chips.join("") + "</div>";
+  if (choix.length) opts += '<div class="cp-ab-choixs">' + choix.join("") + "</div>";
   return '<div class="cp-ab-entry" data-uid="' + e.uid + '">' +
     '<div class="cp-ab-entry-head">' +
       '<span class="cp-ab-cat cp-ab-cat-' + u.categorie + '">' + esc(cat ? cat.label : "") + "</span>" +
@@ -233,7 +242,7 @@ function ligneEntree(e) {
       '<span class="cp-ab-sub">' + coutEntry(e) + " pts</span>" +
       '<button class="cp-ab-del" title="Retirer">✕</button>' +
     "</div>" +
-    (optsHtml || manuel ? '<div class="cp-ab-opts">' + manuel + optsHtml + "</div>" : "") +
+    (opts ? '<div class="cp-ab-opts">' + opts + "</div>" : "") +
   "</div>";
 }
 
