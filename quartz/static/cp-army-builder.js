@@ -111,6 +111,18 @@ function validation(state) {
   if (parCat.soutien > maxSout) items.push("Trop de Soutiens : " + parCat.soutien + " pour " + maxSout + " autorisé(s) (1 / " + REGLES.ptsParSoutien + " pts).");
   if (parCat.special > maxSpe) items.push("Trop de Spéciaux : " + parCat.special + " pour " + maxSpe + " autorisé(s) (1 / " + REGLES.ptsParSpecial + " pts).");
   if (state.target && total > state.target) items.push("Dépassement : " + total + " pts > cible " + state.target + " pts.");
+  // Personnages légendaires : 1 seul exemplaire par liste
+  const legCount = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.legendaire) legCount[u.id] = (legCount[u.id] || 0) + (Number(e.qty) || 0);
+  });
+  Object.keys(legCount).forEach((id) => {
+    if (legCount[id] > 1) {
+      const u = R.byId[id];
+      items.push("« " + u.nom + " » est légendaire : 1 seul par liste (actuel : " + legCount[id] + ").");
+    }
+  });
   return { total, parCat, maxCmd, maxSout, maxSpe, items, valide: items.length === 0 };
 }
 
