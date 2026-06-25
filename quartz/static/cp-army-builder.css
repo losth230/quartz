@@ -41,7 +41,14 @@
 #cp-army-app .cp-ab-entry { border: 1px solid var(--gray); border-radius: 6px; background: var(--light); overflow: hidden; }
 #cp-army-app .cp-ab-entry-head {
   display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; padding: 0.5em 0.7em;
+  cursor: pointer; user-select: none;
 }
+#cp-army-app .cp-ab-chevron { flex: 0 0 auto; width: 0.9em; text-align: center; color: var(--gray); font-size: 0.8em; }
+#cp-army-app .cp-ab-resume {
+  flex: 1 1 auto; min-width: 0; color: var(--gray); font-size: 0.82em; font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#cp-army-app .cp-ab-collapsed .cp-ab-opts { display: none; }
 #cp-army-app .cp-ab-cat {
   font-variant: small-caps; font-size: 0.7em; letter-spacing: 0.04em; color: var(--light);
   border-radius: 3px; padding: 0.1em 0.5em; white-space: nowrap;
@@ -50,7 +57,7 @@
 #cp-army-app .cp-ab-cat-base { background: #5e7c9c; }
 #cp-army-app .cp-ab-cat-soutien { background: #5e9c7c; }
 #cp-army-app .cp-ab-cat-special { background: #9c7c5e; }
-#cp-army-app .cp-ab-nom { font-weight: bold; color: var(--dark); flex: 1 1 auto; }
+#cp-army-app .cp-ab-nom { font-weight: bold; color: var(--dark); flex: 0 0 auto; }
 #cp-army-app .cp-ab-qty input { width: 3.6em; }
 #cp-army-app .cp-ab-sub {
   font-variant-numeric: tabular-nums; color: var(--secondary); font-size: 0.9em; min-width: 4em; text-align: right;
