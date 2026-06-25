@@ -148,18 +148,35 @@ function genererTexte(state) {
 // ============================================================
 //  Intégration DOM
 // ============================================================
-const state = { actif: false, factionActive: null, target: 0, entries: [], seq: 1, pris: false };
+const state = { actif: false, factionActive: null, target: 0, entries: [], seq: 1, pris: false, freeText: "" };
+
+// Séparateur entre la liste générée par le builder et le texte libre de l'utilisateur,
+// écrit dans le MÊME champ #cp-body (celui utilisé par les factions sans données).
+const SEP = "\n\n———— Texte libre (modifiable) ————\n";
 
 function $(id) { return document.getElementById(id); }
 function esc(s) {
   return (s || "").toString().replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
 
+// Corps complet écrit dans #cp-body : liste structurée + repère + texte libre.
+function genererCorps() {
+  return genererTexte(state) + SEP + (state.freeText || "");
+}
+// Récupère le texte libre saisi par l'utilisateur sous le repère.
+function capturerFreeText() {
+  const body = $("cp-body");
+  if (!body) return;
+  const v = body.value || "";
+  const idx = v.indexOf(SEP);
+  state.freeText = (idx >= 0) ? v.slice(idx + SEP.length) : v;
+}
+
 function sync() {
-  if (!state.pris) return; // ne pas écraser une liste existante tant que rien n'est construit
+  if (!state.pris) return; // ne pas écraser le champ tant que rien n'est construit
   const body = $("cp-body"), points = $("cp-points");
   const v = validation(state);
-  if (body) { body.value = genererTexte(state); body.dispatchEvent(new Event("input", { bubbles: true })); }
+  if (body) { body.value = genererCorps(); body.dispatchEvent(new Event("input", { bubbles: true })); }
   if (points) { points.value = v.total; points.dispatchEvent(new Event("input", { bubbles: true })); }
 }
 
@@ -236,31 +253,30 @@ function ajouter(unitId) {
 }
 function entryByUid(uid) { return state.entries.find((e) => String(e.uid) === String(uid)); }
 
-function masquerTextarea(masquer) {
-  const body = $("cp-body");
-  const lbl = document.querySelector('label[for="cp-body"]');
-  if (body) body.style.display = masquer ? "none" : "";
-  if (lbl) lbl.style.display = masquer ? "none" : "";
-}
-
 function activer(faction) {
   state.actif = true;
   state.factionActive = faction;
   state.entries = [];
   state.pris = false;
-  masquerTextarea(true);
   const body = $("cp-body");
+  // Récupère le texte libre éventuellement présent (liste existante ou saisie manuelle) :
+  // tout ce qui suit le repère, ou tout le contenu s'il n'y a pas de repère.
+  if (body) {
+    const v = body.value || "";
+    const idx = v.indexOf(SEP);
+    state.freeText = (idx >= 0) ? v.slice(idx + SEP.length) : v;
+  } else {
+    state.freeText = "";
+  }
+  // Injecte le constructeur AU-DESSUS du textarea existant, qui reste visible et éditable.
   if (body && !$("cp-ab-host")) {
-    const l = document.createElement("label");
-    l.id = "cp-ab-label";
-    l.textContent = "Liste (constructeur — " + faction + ")";
     const host = document.createElement("div");
-    host.id = "cp-ab-host"; host.className = "cp-ab";
-    body.parentNode.insertBefore(l, body.nextSibling);
-    body.parentNode.insertBefore(host, l.nextSibling);
+    host.id = "cp-ab-host";
+    host.className = "cp-ab";
+    const ancre = document.querySelector('label[for="cp-body"]') || body;
+    ancre.parentNode.insertBefore(host, ancre);
   } else if ($("cp-ab-host")) {
     $("cp-ab-host").style.display = "";
-    const l = $("cp-ab-label"); if (l) { l.style.display = ""; l.textContent = "Liste (constructeur — " + faction + ")"; }
   }
   render();
 }
@@ -269,9 +285,8 @@ function desactiver() {
   if (!state.actif) return;
   state.actif = false;
   state.factionActive = null;
-  masquerTextarea(false);
   const host = $("cp-ab-host"); if (host) host.style.display = "none";
-  const l = $("cp-ab-label"); if (l) l.style.display = "none";
+  // #cp-body n'est jamais masqué : il redevient un simple champ de texte libre.
 }
 
 async function appliquerVisibilite() {
@@ -327,6 +342,13 @@ function wireOnce() {
     if (e.target.dataset.choix != null) {
       const i = parseInt(e.target.dataset.choix, 10); en.choix = en.choix || {}; en.choix[i] = parseInt(e.target.value, 10) || 0; render();
     }
+  });
+
+  // Texte libre saisi directement dans #cp-body (sous le repère) : on le mémorise
+  // pour le préserver lors des régénérations du builder.
+  document.addEventListener("input", (e) => {
+    if (!state.actif) return;
+    if (e.target.id === "cp-body") capturerFreeText();
   });
 }
 
