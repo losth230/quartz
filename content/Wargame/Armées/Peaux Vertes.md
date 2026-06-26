@@ -325,7 +325,7 @@ Affinité Chamanique (12)
 - Arme lourde (+3 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 - Lance sinistre (+2 pts) : remplace [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]] par [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
 - Marque de Magmadon (+1 pt) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
-- Zimmortels de Slaig (+4 pts) : la caractéristique de mêlée de cette unité devient 3+. La caractéristique de PV de cette unité devient 3.
+- Zimmortels de Slaig (+7 pts) : la caractéristique de mêlée de cette unité devient 3+. La caractéristique de PV de cette unité devient 3, et sa Masse devient 3.
 ##### Règles spéciales :
 - Déchus : si l’affinité de votre bande est Occulte, cette unité inflige 1 Blessure à l’attaquant si elle est tuée en mêlée
 
