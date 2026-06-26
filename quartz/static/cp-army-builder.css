@@ -113,3 +113,15 @@
   margin: 0; padding: 0.5em 0.8em; border-radius: 4px; font-size: 0.9em;
   color: #3a8a4a; border-left: 4px solid #3a8a4a; background: color-mix(in srgb, #3a8a4a 8%, var(--light));
 }
+
+/* Choix d'armée : Royaume → Ordre */
+#cp-army-app .cp-ab-roy {
+  display: flex; flex-wrap: wrap; gap: 0.5em 1.2em; align-items: center;
+  padding: 0.5em 0.2em 0.7em; margin-bottom: 0.3em;
+  border-bottom: 1px solid var(--lightgray);
+}
+#cp-army-app .cp-ab-roylbl {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.82em; color: var(--secondary);
+}
+#cp-army-app .cp-ab-roylbl select { font-variant: normal; letter-spacing: 0; min-width: 12em; }
