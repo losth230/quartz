@@ -97,13 +97,30 @@ async function chargerRoster(faction) {
 //  Logique pure (utilise le roster courant R)
 // ============================================================
 function uOf(entry) { return R.byId[entry.unitId]; }
+// Réductions de coût conditionnelles : { groupe: montant } selon les unités présentes
+// (ex. Sir Hugues le Preux présent -> groupe "Monture" -2). Présence binaire, pas de cumul.
+function reductionsGroupe() {
+  const red = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.reduit_groupe && (Number(e.qty) || 0) > 0) {
+      red[u.reduit_groupe] = Math.max(red[u.reduit_groupe] || 0, u.reduit_montant || 0);
+    }
+  });
+  return red;
+}
 function coutOptions(u, entry) {
   // Retourne { modele, unite } : options par modèle (× quantité) vs par unité (une fois, ex. bannière)
+  const red = reductionsGroupe();
   let modele = 0, unite = 0;
   (u.options || []).forEach((o, i) => {
     let c = 0;
     if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = o.cout; }
-    else if (o.t === "choix") { const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut; c = o.choix[ci].cout; }
+    else if (o.t === "choix") {
+      const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
+      c = o.choix[ci].cout;
+      if (red[o.nom]) c = Math.max(0, c - red[o.nom]); // réduction conditionnelle sur ce groupe
+    }
     if (o.parUnite) unite += c; else modele += c;
   });
   return { modele, unite };
