@@ -144,7 +144,7 @@ Affinité Chamanique (12)
 
 <div class="legendary">
 
-### Grushek Kinoeil — 44 pts
+### Grushek Kinoeil — 46 pts
 
 </div>
 
@@ -229,14 +229,14 @@ Affinité Chamanique (12)
 ## Modèles de base
 
 ---
-### Abatteur — 18 pts
+### Abatteur — 22 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Abatteur | **5** | **4+** | **4+** | **4+** | **7** | **2** | **2** | **2** | Orque |
+| Abatteur | **5** | **4+** | **3+** | **4+** | **7** | **2** | **2** | **2** | Orque |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*Affinité Occulte (1), [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*Affinité Occulte (1), [[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
 - Arbalète lourde : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 
