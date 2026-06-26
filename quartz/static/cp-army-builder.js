@@ -34,9 +34,30 @@ const REGLES = {
   ptsParSpecial: 150,
 };
 
+// Exceptions de composition propres à certaines factions (dérogent aux règles communes).
+// Peuples Libres / Fer de Lance : pas de limite maximale de commandants.
+const REGLES_FACTION = {
+  "Peuples Libres": { cmdIllimite: true },
+};
+function reglesActives() {
+  return Object.assign({}, REGLES, REGLES_FACTION[R.faction] || {});
+}
+
 // ---- Roster courant + cache par faction ----
-let R = { faction: null, unites: [], byId: {} };
+let R = { faction: null, unites: [], byId: {}, sf: [] };
 const cacheRoster = {};
+
+// Choix d'armée hiérarchique générique (Royaume→Ordre, Clan→…). Libellés pilotés par les données.
+function sfLabel1() { return (R.sf && R.sf[0] && R.sf[0].niveau1_label) || ""; }
+function sfLabel2() { return (R.sf && R.sf[0] && R.sf[0].niveau2_label) || ""; }
+function niv1Liste() {
+  const seen = [];
+  (R.sf || []).forEach((r) => { if (!seen.includes(r.niveau1)) seen.push(r.niveau1); });
+  return seen;
+}
+function niv2De(n1) {
+  return (R.sf || []).filter((r) => r.niveau1 === n1 && r.niveau2).map((r) => r.niveau2);
+}
 
 async function chargerRoster(faction) {
   if (cacheRoster[faction]) return cacheRoster[faction];
@@ -65,6 +86,9 @@ async function chargerRoster(faction) {
     });
     roster = { faction, unites, byId };
   }
+  // Choix d'armée (Royaume→Ordre, Clan→…). Table optionnelle : si absente, liste vide.
+  const { data: sf } = await sb.from("ref_sous_factions").select("*").eq("faction", faction).order("tri");
+  roster.sf = sf || [];
   cacheRoster[faction] = roster;
   return roster;
 }
@@ -100,16 +124,17 @@ function totaux(state) {
 }
 
 function validation(state) {
+  const r = reglesActives();
   const { total, parCat } = totaux(state);
-  const maxCmd = Math.floor(total / REGLES.ptsParCommandant);
-  const maxSout = Math.floor(total / REGLES.ptsParSoutien);
-  const maxSpe = Math.floor(total / REGLES.ptsParSpecial);
+  const maxCmd = Math.floor(total / r.ptsParCommandant);
+  const maxSout = Math.floor(total / r.ptsParSoutien);
+  const maxSpe = Math.floor(total / r.ptsParSpecial);
   const items = [];
-  if (parCat.commandant < REGLES.minCommandant) items.push("Au moins " + REGLES.minCommandant + " Commandant requis.");
-  if (parCat.base < REGLES.minBase) items.push("Au moins " + REGLES.minBase + " unités de Base requises (actuel : " + parCat.base + ").");
-  if (parCat.commandant > maxCmd) items.push("Trop de Commandants : " + parCat.commandant + " pour " + maxCmd + " autorisé(s) (1 / " + REGLES.ptsParCommandant + " pts).");
-  if (parCat.soutien > maxSout) items.push("Trop de Soutiens : " + parCat.soutien + " pour " + maxSout + " autorisé(s) (1 / " + REGLES.ptsParSoutien + " pts).");
-  if (parCat.special > maxSpe) items.push("Trop de Spéciaux : " + parCat.special + " pour " + maxSpe + " autorisé(s) (1 / " + REGLES.ptsParSpecial + " pts).");
+  if (parCat.commandant < r.minCommandant) items.push("Au moins " + r.minCommandant + " Commandant requis.");
+  if (parCat.base < r.minBase) items.push("Au moins " + r.minBase + " unités de Base requises (actuel : " + parCat.base + ").");
+  if (!r.cmdIllimite && parCat.commandant > maxCmd) items.push("Trop de Commandants : " + parCat.commandant + " pour " + maxCmd + " autorisé(s) (1 / " + r.ptsParCommandant + " pts).");
+  if (parCat.soutien > maxSout) items.push("Trop de Soutiens : " + parCat.soutien + " pour " + maxSout + " autorisé(s) (1 / " + r.ptsParSoutien + " pts).");
+  if (parCat.special > maxSpe) items.push("Trop de Spéciaux : " + parCat.special + " pour " + maxSpe + " autorisé(s) (1 / " + r.ptsParSpecial + " pts).");
   if (state.target && total > state.target) items.push("Dépassement : " + total + " pts > cible " + state.target + " pts.");
   // Personnages légendaires : 1 seul exemplaire par liste
   const legCount = {};
@@ -143,7 +168,9 @@ function libelleOptions(entry) {
 function genererTexte(state) {
   const v = validation(state);
   const lignes = [];
-  lignes.push(R.faction + " — " + v.total + " pts" + (state.target ? " / " + state.target : ""), "");
+  lignes.push(R.faction + " — " + v.total + " pts" + (state.target ? " / " + state.target : ""));
+  if (state.niv1) lignes.push(sfLabel1() + " : " + state.niv1 + (state.niv2 ? " — " + state.niv2 : ""));
+  lignes.push("");
   CATS.forEach((cat) => {
     const es = state.entries.filter((e) => { const u = uOf(e); return u && u.categorie === cat.id; });
     if (!es.length) return;
@@ -164,7 +191,7 @@ function genererTexte(state) {
 // ============================================================
 //  Intégration DOM
 // ============================================================
-const state = { actif: false, factionActive: null, target: 0, entries: [], seq: 1, pris: false, freeText: "" };
+const state = { actif: false, factionActive: null, target: 0, entries: [], seq: 1, pris: false, freeText: "", niv1: "", niv2: "" };
 
 // Séparateur entre la liste générée par le builder et le texte libre de l'utilisateur,
 // écrit dans le MÊME champ #cp-body (celui utilisé par les factions sans données).
@@ -262,6 +289,18 @@ function render() {
   const warns = v.items.length
     ? '<div class="cp-ab-warns"><strong>Liste invalide :</strong><ul>' + v.items.map((m) => "<li>" + esc(m) + "</li>").join("") + "</ul></div>"
     : '<p class="cp-ab-ok">✓ Composition valide.</p>';
+  const sfBloc = (R.sf || []).length
+    ? '<div class="cp-ab-roy">' +
+        '<label class="cp-ab-roylbl">' + esc(sfLabel1()) + ' <select id="cp-ab-niv1">' +
+          niv1Liste().map((n) => '<option value="' + esc(n) + '"' + (n === state.niv1 ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
+        "</select></label>" +
+        (sfLabel2()
+          ? '<label class="cp-ab-roylbl">' + esc(sfLabel2()) + ' <select id="cp-ab-niv2">' +
+              niv2De(state.niv1).map((o) => '<option value="' + esc(o) + '"' + (o === state.niv2 ? " selected" : "") + ">" + esc(o) + "</option>").join("") +
+            "</select></label>"
+          : "") +
+      "</div>"
+    : "";
   host.innerHTML =
     '<div class="cp-ab-bar">' +
       '<div class="cp-ab-add">' + optionSelect() + '<button class="cp-ab-addbtn" id="cp-ab-add">+ Ajouter</button></div>' +
@@ -270,6 +309,7 @@ function render() {
         '<span class="cp-ab-totalnum' + (v.valide ? "" : " cp-ab-bad") + '">' + v.total + (state.target ? " / " + state.target : "") + " pts</span>" +
       "</div>" +
     "</div>" +
+    sfBloc +
     '<div class="cp-ab-entries">' + entries + "</div>" + warns;
   sync();
 }
@@ -287,6 +327,11 @@ function activer(faction) {
   state.factionActive = faction;
   state.entries = [];
   state.pris = false;
+  // Choix d'armée par défaut (premier de chaque niveau) si la faction en propose
+  if ((R.sf || []).length) {
+    state.niv1 = niv1Liste()[0] || "";
+    state.niv2 = niv2De(state.niv1)[0] || "";
+  } else { state.niv1 = ""; state.niv2 = ""; }
   const body = $("cp-body");
   // Récupère le texte libre éventuellement présent (liste existante ou saisie manuelle) :
   // tout ce qui suit le repère, ou tout le contenu s'il n'y a pas de repère.
@@ -366,6 +411,8 @@ function wireOnce() {
     if (e.target.id === "cp-faction") { lastFaction = e.target.value; appliquerVisibilite(); return; }
     if (!state.actif) return;
     if (e.target.id === "cp-ab-target") { state.target = Math.max(0, parseInt(e.target.value, 10) || 0); render(); return; }
+    if (e.target.id === "cp-ab-niv1") { state.niv1 = e.target.value; state.niv2 = niv2De(state.niv1)[0] || ""; render(); return; }
+    if (e.target.id === "cp-ab-niv2") { state.niv2 = e.target.value; render(); return; }
     const card = e.target.closest(".cp-ab-entry");
     if (!card) return;
     const en = entryByUid(card.dataset.uid); if (!en) return;
