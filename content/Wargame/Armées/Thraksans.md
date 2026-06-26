@@ -67,7 +67,7 @@ Si un modèle adverse se retrouve avec davantage de marqueurs *Corruption* que d
 ##### Règles spéciales :
 - Terreur indicible : les modèles adverses à 6’’ ou moins de Gnûl souffrent d’un malus de -3 Moral.
 - Seigneur des abysses : au début de chaque tour, placez une Cité Engloutie à 12’’ ou moins de Gnûl.
-- Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Cités Englouties présentent en jeu. Gnûl gagne également 1d6 en mêlée par cité libre en jeu.
+- Faim insatiable : Gnûl possède la règle Régénération (N) où N est le nombre de Cités Englouties présentent en jeu. Gnûl gagne également 1d6 en mêlée par Cité Engloutie en jeu.
 
 ---
 ### Mère de couvée — 32 pts
