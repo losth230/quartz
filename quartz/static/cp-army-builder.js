@@ -74,13 +74,13 @@ async function chargerRoster(faction) {
       const u = byId[eq.unite_id];
       if (!u) return;
       if (eq.groupe) { (u._grp[eq.groupe] = u._grp[eq.groupe] || []).push(eq); }
-      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout }); }
+      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, parUnite: !!eq.par_unite }); }
     });
     unites.forEach((u) => {
       Object.keys(u._grp).forEach((gn) => {
         const list = u._grp[gn];
         let def = list.findIndex((x) => x.defaut); if (def < 0) def = 0;
-        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout })), defaut: def });
+        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout })), defaut: def, parUnite: !!list[0].par_unite });
       });
       delete u._grp;
     });
@@ -98,12 +98,15 @@ async function chargerRoster(faction) {
 // ============================================================
 function uOf(entry) { return R.byId[entry.unitId]; }
 function coutOptions(u, entry) {
-  let c = 0;
+  // Retourne { modele, unite } : options par modèle (× quantité) vs par unité (une fois, ex. bannière)
+  let modele = 0, unite = 0;
   (u.options || []).forEach((o, i) => {
-    if (o.t === "opt") { if ((entry.opts || []).includes(i)) c += o.cout; }
-    else if (o.t === "choix") { const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut; c += o.choix[ci].cout; }
+    let c = 0;
+    if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = o.cout; }
+    else if (o.t === "choix") { const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut; c = o.choix[ci].cout; }
+    if (o.parUnite) unite += c; else modele += c;
   });
-  return c;
+  return { modele, unite };
 }
 // Modificateur de coût par modèle apporté par le niveau1 choisi (ex. Thoriath : -1, plancher 6)
 function coutModeleMod() {
@@ -112,14 +115,20 @@ function coutModeleMod() {
     ? { delta: row.cout_modele_delta, min: row.cout_modele_min || 0 }
     : { delta: 0, min: 0 };
 }
+// Coût d'un seul modèle (base + options par modèle), réduction de royaume appliquée au total du modèle
 function coutUnitaire(entry) {
   const u = uOf(entry); if (!u) return 0;
-  let base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
+  const base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
+  let perModel = base + coutOptions(u, entry).modele;
   const mod = coutModeleMod();
-  if (mod.delta) base = Math.max(mod.min, base - mod.delta); // réduction appliquée à la base, par modèle
-  return base + coutOptions(u, entry);
+  if (mod.delta) perModel = Math.max(mod.min, perModel - mod.delta);
+  return perModel;
 }
-function coutEntry(entry) { return coutUnitaire(entry) * (Number(entry.qty) || 0); }
+// Coût total d'une entrée : coût par modèle × quantité + options par unité (comptées une fois)
+function coutEntry(entry) {
+  const u = uOf(entry); if (!u) return 0;
+  return coutUnitaire(entry) * (Number(entry.qty) || 0) + coutOptions(u, entry).unite;
+}
 
 function totaux(state) {
   let total = 0;
