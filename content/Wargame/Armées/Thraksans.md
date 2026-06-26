@@ -247,7 +247,7 @@ ___
 |**Mêlée:**|3d6||**Tir:**|3d6||||||
 
 ##### Équipement :
-- Mortier : Portée 12-28’’, Anti-Infanterie, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Mortier : Portée 12-28’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
 - Pilonnage : un modèle touché par un tir de Biovore perd 1 Vit pour le reste du tour par touche subie.
 - Pluie de feu : ce modèle gagne +1d6 par marqueur Corruption qu’il possède.
