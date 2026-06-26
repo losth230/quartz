@@ -105,9 +105,18 @@ function coutOptions(u, entry) {
   });
   return c;
 }
+// Modificateur de coût par modèle apporté par le niveau1 choisi (ex. Thoriath : -1, plancher 6)
+function coutModeleMod() {
+  const row = (R.sf || []).find((r) => r.niveau1 === state.niv1);
+  return row && row.cout_modele_delta
+    ? { delta: row.cout_modele_delta, min: row.cout_modele_min || 0 }
+    : { delta: 0, min: 0 };
+}
 function coutUnitaire(entry) {
   const u = uOf(entry); if (!u) return 0;
-  const base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
+  let base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
+  const mod = coutModeleMod();
+  if (mod.delta) base = Math.max(mod.min, base - mod.delta); // réduction appliquée à la base, par modèle
   return base + coutOptions(u, entry);
 }
 function coutEntry(entry) { return coutUnitaire(entry) * (Number(entry.qty) || 0); }
