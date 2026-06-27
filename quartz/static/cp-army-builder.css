@@ -125,3 +125,6 @@
   font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.82em; color: var(--secondary);
 }
 #cp-army-app .cp-ab-roylbl select { font-variant: normal; letter-spacing: 0; min-width: 12em; }
+
+/* Marqueur d'option unique par armée (ex. Chevalier du Clair-Obscur) */
+.cp-ab-chipuniq { font-size: 0.78em; opacity: 0.6; font-weight: normal; }
