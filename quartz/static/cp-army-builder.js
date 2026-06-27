@@ -74,7 +74,7 @@ async function chargerRoster(faction) {
       const u = byId[eq.unite_id];
       if (!u) return;
       if (eq.groupe) { (u._grp[eq.groupe] = u._grp[eq.groupe] || []).push(eq); }
-      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, parUnite: !!eq.par_unite }); }
+      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee }); }
     });
     unites.forEach((u) => {
       Object.keys(u._grp).forEach((gn) => {
@@ -97,6 +97,10 @@ async function chargerRoster(faction) {
 //  Logique pure (utilise le roster courant R)
 // ============================================================
 function uOf(entry) { return R.byId[entry.unitId]; }
+// Une unité de ce nom est-elle présente (quantité > 0) dans l'armée ?
+function unitePresente(nom) {
+  return state.entries.some((e) => { const u = uOf(e); return u && u.nom === nom && (Number(e.qty) || 0) > 0; });
+}
 // Réductions de coût conditionnelles : { groupe: montant } selon les unités présentes
 // (ex. Sir Hugues le Preux présent -> groupe "Monture" -2). Présence binaire, pas de cumul.
 function reductionsGroupe() {
@@ -114,6 +118,7 @@ function coutOptions(u, entry) {
   const red = reductionsGroupe();
   let modele = 0, unite = 0;
   (u.options || []).forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return; // option inactive sans son unité requise
     let c = 0;
     if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = o.cout; }
     else if (o.t === "choix") {
@@ -183,6 +188,19 @@ function validation(state) {
       items.push("« " + u.nom + " » est légendaire : 1 seul par liste (actuel : " + legCount[id] + ").");
     }
   });
+  // Options « unique par armée » (ex. Chevalier du Clair-Obscur) : un seul modèle peut la prendre
+  const uniq = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e); if (!u) return;
+    (u.options || []).forEach((o, i) => {
+      if (o.t === "opt" && o.uniqueArmee && !(o.requiertUnite && !unitePresente(o.requiertUnite)) && (e.opts || []).includes(i)) {
+        uniq[o.nom] = (uniq[o.nom] || 0) + 1;
+      }
+    });
+  });
+  Object.keys(uniq).forEach((nom) => {
+    if (uniq[nom] > 1) items.push("« " + nom + " » : un seul modèle de l'armée peut le prendre (actuel : " + uniq[nom] + ").");
+  });
   return { total, parCat, maxCmd, maxSout, maxSpe, items, valide: items.length === 0 };
 }
 
@@ -190,6 +208,7 @@ function libelleOptions(entry) {
   const u = uOf(entry); if (!u || !u.options) return "";
   const parts = [];
   u.options.forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return;
     if (o.t === "opt") { if ((entry.opts || []).includes(i)) parts.push(o.nom); }
     else if (o.t === "choix") {
       const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
@@ -278,11 +297,13 @@ function ligneEntree(e) {
   const cat = CATS.find((c) => c.id === u.categorie);
   const chips = [], choix = [];
   (u.options || []).forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return; // option masquée sans son unité requise
     if (o.t === "opt") {
       const on = (e.opts || []).includes(i);
+      const sufx = o.uniqueArmee ? ' <span class="cp-ab-chipuniq">(1/armée)</span>' : "";
       chips.push('<label class="cp-ab-chip' + (on ? " on" : "") + '">' +
         '<input type="checkbox" data-opt="' + i + '"' + (on ? " checked" : "") + ">" +
-        '<span class="cp-ab-chipnom">' + esc(o.nom) + "</span>" +
+        '<span class="cp-ab-chipnom">' + esc(o.nom) + sufx + "</span>" +
         '<span class="cp-ab-chipcout">+' + o.cout + "</span></label>");
     } else if (o.t === "choix") {
       const sel = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
