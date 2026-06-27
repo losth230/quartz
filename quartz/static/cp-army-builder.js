@@ -74,13 +74,13 @@ async function chargerRoster(faction) {
       const u = byId[eq.unite_id];
       if (!u) return;
       if (eq.groupe) { (u._grp[eq.groupe] = u._grp[eq.groupe] || []).push(eq); }
-      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee }); }
+      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, coutMasse: eq.cout_masse || 0, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee }); }
     });
     unites.forEach((u) => {
       Object.keys(u._grp).forEach((gn) => {
         const list = u._grp[gn];
         let def = list.findIndex((x) => x.defaut); if (def < 0) def = 0;
-        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout })), defaut: def, parUnite: !!list[0].par_unite });
+        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout, coutMasse: x.cout_masse || 0 })), defaut: def, parUnite: !!list[0].par_unite });
       });
       delete u._grp;
     });
@@ -113,6 +113,8 @@ function reductionsGroupe() {
   });
   return red;
 }
+// Coût effectif d'une option : base + multiplicateur × Masse de l'unité
+function valOpt(u, cout, coutMasse) { return (cout || 0) + (coutMasse || 0) * (u.masse || 0); }
 function coutOptions(u, entry) {
   // Retourne { modele, unite } : options par modèle (× quantité) vs par unité (une fois, ex. bannière)
   const red = reductionsGroupe();
@@ -120,10 +122,11 @@ function coutOptions(u, entry) {
   (u.options || []).forEach((o, i) => {
     if (o.requiertUnite && !unitePresente(o.requiertUnite)) return; // option inactive sans son unité requise
     let c = 0;
-    if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = o.cout; }
+    if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = valOpt(u, o.cout, o.coutMasse); }
     else if (o.t === "choix") {
       const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
-      c = o.choix[ci].cout;
+      const ch = o.choix[ci];
+      c = valOpt(u, ch.cout, ch.coutMasse);
       if (red[o.nom]) c = Math.max(0, c - red[o.nom]); // réduction conditionnelle sur ce groupe
     }
     if (o.parUnite) unite += c; else modele += c;
@@ -304,13 +307,13 @@ function ligneEntree(e) {
       chips.push('<label class="cp-ab-chip' + (on ? " on" : "") + '">' +
         '<input type="checkbox" data-opt="' + i + '"' + (on ? " checked" : "") + ">" +
         '<span class="cp-ab-chipnom">' + esc(o.nom) + sufx + "</span>" +
-        '<span class="cp-ab-chipcout">+' + o.cout + "</span></label>");
+        '<span class="cp-ab-chipcout">+' + valOpt(u, o.cout, o.coutMasse) + "</span></label>");
     } else if (o.t === "choix") {
       const sel = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
       choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">' + esc(o.nom) + "</span>" +
         '<select data-choix="' + i + '">' +
-        o.choix.map((ch, ci) => '<option value="' + ci + '"' + (ci === sel ? " selected" : "") + ">" +
-          esc(ch.nom) + (ch.cout ? " (+" + ch.cout + ")" : "") + "</option>").join("") +
+        o.choix.map((ch, ci) => { const cv = valOpt(u, ch.cout, ch.coutMasse); return '<option value="' + ci + '"' + (ci === sel ? " selected" : "") + ">" +
+          esc(ch.nom) + (cv ? " (+" + cv + ")" : "") + "</option>"; }).join("") +
         "</select></div>");
     }
   });
