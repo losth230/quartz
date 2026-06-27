@@ -93,7 +93,7 @@ Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spécial
 #### Duché de Fessac
 Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer une marche gratuite.
 ## Temple d'Ishtar
-Lorsqu'un modèle Sœur utilisé Faveur divine lors d'une attaque en mêlée, elle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] pour le reste de l'attaque.
+Lorsqu'un modèle Sœur utilisé Faveur divine lors d'une attaque en mêlée ou à distance, elle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
 #### Monastère de la Busquette
 Lorsqu'un de vos modèle lance un sort, il déclenche l'attribut du domaine de la pureté (s'il lançait un sort du domaine de la pureté, il peut déclencher l'attribut 2 fois).
 #### Abatiale d'Hazard
@@ -387,7 +387,7 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 | Eclaireuse | **5** | **6+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Sœur |
 | **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Guide|Guide]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 ##### Équipement :
 - Arc long : Portée (C : 9’’, L : 15’’)
 ##### Règles spéciales :
