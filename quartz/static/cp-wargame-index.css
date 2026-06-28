@@ -1,0 +1,51 @@
+/* ============================================================
+   Index Wargame — grille de "cartes à jouer"
+   À charger globalement via Head.tsx (comme les autres cp-*.css).
+   Tout est préfixé .cp-wg-hub pour ne rien affecter ailleurs.
+   ============================================================ */
+
+.cp-wg-hub { margin: 0.5rem 0 1.5rem; }
+
+.cp-wg-hub .cp-wg-head {
+  display: flex; align-items: baseline; gap: 0.6rem; flex-wrap: wrap;
+  padding-bottom: 0.5rem; margin-bottom: 1.1rem;
+  border-bottom: 1px solid var(--lightgray);
+}
+.cp-wg-hub .cp-wg-title {
+  font-family: var(--headerFont); font-size: 1.05rem; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--dark); margin: 0;
+}
+.cp-wg-hub .cp-wg-ver {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;
+  color: var(--light); background: var(--secondary);
+  padding: 0.12rem 0.5rem; border-radius: 999px;
+}
+.cp-wg-hub .cp-wg-tag { color: var(--gray); font-size: 0.85rem; font-style: italic; margin-left: auto; }
+
+.cp-wg-hub .cp-wg-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;
+}
+
+/* La "carte à jouer" : portrait, contenu centré, double cadre */
+.cp-wg-hub .cp-wg-card {
+  display: flex; flex-direction: column; align-items: center; text-align: center;
+  position: relative; padding: 1.25rem 0.8rem 1.05rem; min-height: 218px;
+  border-radius: 10px; background: var(--light); border: 1px solid var(--lightgray);
+  text-decoration: none; transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+}
+.cp-wg-hub .cp-wg-card::before {
+  content: ""; position: absolute; inset: 6px; border: 1px solid var(--lightgray);
+  border-radius: 7px; pointer-events: none; opacity: 0.55; transition: border-color .15s ease;
+}
+.cp-wg-hub .cp-wg-card:hover {
+  transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.14); border-color: var(--secondary);
+}
+.cp-wg-hub .cp-wg-card:hover::before { border-color: var(--secondary); }
+
+.cp-wg-hub .cp-wg-ic { color: var(--secondary); margin: 0.4rem 0 0; }
+.cp-wg-hub .cp-wg-rule { width: 34px; height: 1px; background: var(--secondary); opacity: 0.3; margin: 0.65rem 0 0.55rem; }
+.cp-wg-hub .cp-wg-ct {
+  font-family: var(--headerFont); font-weight: 700; font-size: 1rem;
+  color: var(--secondary); margin: 0 0 0.4rem;
+}
+.cp-wg-hub .cp-wg-cd { font-size: 0.8rem; line-height: 1.4; color: var(--darkgray); margin: 0; }
