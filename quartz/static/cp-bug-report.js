@@ -7,7 +7,7 @@
 import { sb } from "/quartz/static/cp-supabase.js";
 
 // URL de la page de suivi (adapte si tu la places ailleurs).
-const TRACKER_URL = "Retours";
+const TRACKER_URL = "/quartz/Retours";
 
 // Le CSS du bouton flottant est désormais dans /quartz/static/cp-bug-report.css
 // (chargé globalement via Head.tsx).
