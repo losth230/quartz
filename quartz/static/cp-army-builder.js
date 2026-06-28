@@ -74,13 +74,13 @@ async function chargerRoster(faction) {
       const u = byId[eq.unite_id];
       if (!u) return;
       if (eq.groupe) { (u._grp[eq.groupe] = u._grp[eq.groupe] || []).push(eq); }
-      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, coutMasse: eq.cout_masse || 0, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee }); }
+      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, coutMasse: eq.cout_masse || 0, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee, affiniteType: eq.affinite_type || null, affiniteValeur: eq.affinite_valeur || 0 }); }
     });
     unites.forEach((u) => {
       Object.keys(u._grp).forEach((gn) => {
         const list = u._grp[gn];
         let def = list.findIndex((x) => x.defaut); if (def < 0) def = 0;
-        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout, coutMasse: x.cout_masse || 0 })), defaut: def, parUnite: !!list[0].par_unite });
+        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout, coutMasse: x.cout_masse || 0, affiniteType: x.affinite_type || null, affiniteValeur: x.affinite_valeur || 0 })), defaut: def, parUnite: !!list[0].par_unite });
       });
       delete u._grp;
     });
@@ -348,8 +348,19 @@ function affinites() {
   let occulte = 0, chamanique = 0;
   const add = (type, val) => { if (type === "occulte") occulte += val; else if (type === "chamanique") chamanique += val; };
   state.entries.forEach((e) => {
-    const u = uOf(e);
-    if (u && u.affinite_type) add(u.affinite_type, (u.affinite_valeur || 0) * (Number(e.qty) || 0));
+    const u = uOf(e); if (!u) return;
+    const qty = Number(e.qty) || 0;
+    if (u.affinite_type) add(u.affinite_type, (u.affinite_valeur || 0) * qty);
+    (u.options || []).forEach((o, i) => {
+      if (o.requiertUnite && !unitePresente(o.requiertUnite)) return;
+      if (o.t === "opt") {
+        if ((e.opts || []).includes(i) && o.affiniteType) add(o.affiniteType, (o.affiniteValeur || 0) * qty);
+      } else if (o.t === "choix") {
+        const ci = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
+        const ch = o.choix[ci];
+        if (ch.affiniteType) add(ch.affiniteType, (ch.affiniteValeur || 0) * qty);
+      }
+    });
   });
   const clan = (R.sf || []).find((r) => r.niveau1 === state.niv1);
   if (clan && clan.affinite_type) add(clan.affinite_type, clan.affinite_valeur || 0);
