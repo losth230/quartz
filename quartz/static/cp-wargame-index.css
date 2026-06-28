@@ -49,3 +49,7 @@
   color: var(--secondary); margin: 0 0 0.4rem;
 }
 .cp-wg-hub .cp-wg-cd { font-size: 0.8rem; line-height: 1.4; color: var(--darkgray); margin: 0; }
+
+/* Masque le listing automatique de dossier de Quartz (« X éléments sous ce dossier » + la liste).
+   Scopé à cette page seulement, grâce à la présence du marqueur .cp-wg-hub. */
+body:has(.cp-wg-hub) .page-listing { display: none; }
