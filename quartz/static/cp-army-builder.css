@@ -128,3 +128,30 @@
 
 /* Marqueur d'option unique par armée (ex. Chevalier du Clair-Obscur) */
 .cp-ab-chipuniq { font-size: 0.78em; opacity: 0.6; font-weight: normal; }
+
+/* Panneau d'affinité Occultisme / Chamanisme (Peaux-Vertes) */
+.cp-ab-affinite {
+  margin: 0.6rem 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--lightgray);
+  border-left: 4px solid var(--gray);
+  border-radius: 6px;
+  background: var(--light);
+}
+.cp-ab-affinite.occ { border-left-color: var(--secondary); }
+.cp-ab-affinite.cha { border-left-color: #2f7d52; }
+.cp-ab-affinite.eq  { border-left-color: var(--tertiary); }
+.cp-ab-aff-totaux {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.9em;
+}
+.cp-ab-aff-occ b, .cp-ab-aff-cha b { font-size: 1.15em; }
+.cp-ab-aff-occ b { color: var(--secondary); }
+.cp-ab-aff-cha b { color: #2f7d52; }
+.cp-ab-aff-verdict {
+  margin-top: 0.3rem;
+  font-size: 0.85em;
+  color: var(--darkgray);
+  font-style: italic;
+}
