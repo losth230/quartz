@@ -109,6 +109,7 @@ export default (() => {
       <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-army-builder.css" spa-preserve />
+      <link rel="stylesheet" href="/quartz/static/cp-wargame-index.css" spa-preserve />
       </head>
     )
   }
