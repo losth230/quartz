@@ -340,6 +340,47 @@ function ligneEntree(e) {
   "</div>";
 }
 
+// ---- Affinité Occultisme / Chamanisme (Peaux-Vertes) : panneau d'information ----
+function factionAAffinite() {
+  return (R.unites || []).some((u) => u.affinite_type) || (R.sf || []).some((r) => r.affinite_type);
+}
+function affinites() {
+  let occulte = 0, chamanique = 0;
+  const add = (type, val) => { if (type === "occulte") occulte += val; else if (type === "chamanique") chamanique += val; };
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.affinite_type) add(u.affinite_type, (u.affinite_valeur || 0) * (Number(e.qty) || 0));
+  });
+  const clan = (R.sf || []).find((r) => r.niveau1 === state.niv1);
+  if (clan && clan.affinite_type) add(clan.affinite_type, clan.affinite_valeur || 0);
+  return { occulte, chamanique };
+}
+function affiniteVerdict(occ, cha) {
+  if (occ === 0 && cha === 0) return { texte: "Aucune affinité pour l'instant", classe: "" };
+  if (occ === cha) return { texte: "Équilibre — relance des 1 en attaque et armure", classe: "eq" };
+  const type = occ > cha ? "Occulte" : "Chamanique";
+  const dom = Math.max(occ, cha);
+  const classe = occ > cha ? "occ" : "cha";
+  if (dom < 5) return { texte: "Tendance " + type + " — Rang I à 5", classe };
+  const seuils = [5, 10, 15, 20, 25];
+  let rang = 0; seuils.forEach((s, i) => { if (dom >= s) rang = i + 1; });
+  const roman = ["", "I", "II", "III", "IV", "V"][rang];
+  const suite = rang < 5 ? " · Rang " + ["", "II", "III", "IV", "V"][rang] + " à " + seuils[rang] : " · max";
+  return { texte: "Affinité " + type + " — Rang " + roman + suite, classe };
+}
+function affinitePanel() {
+  if (!factionAAffinite()) return "";
+  const { occulte, chamanique } = affinites();
+  const v = affiniteVerdict(occulte, chamanique);
+  return '<div class="cp-ab-affinite ' + v.classe + '">' +
+    '<div class="cp-ab-aff-totaux">' +
+      '<span class="cp-ab-aff-occ">Occultisme <b>' + occulte + "</b></span>" +
+      '<span class="cp-ab-aff-cha">Chamanisme <b>' + chamanique + "</b></span>" +
+    "</div>" +
+    '<div class="cp-ab-aff-verdict">' + esc(v.texte) + "</div>" +
+  "</div>";
+}
+
 function render() {
   const host = $("cp-ab-host");
   if (!host) return;
@@ -369,6 +410,7 @@ function render() {
       "</div>" +
     "</div>" +
     sfBloc +
+    affinitePanel() +
     '<div class="cp-ab-entries">' + entries + "</div>" + warns;
   sync();
 }
