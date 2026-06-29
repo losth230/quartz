@@ -55,7 +55,7 @@
       <p class="cp-wg-ct">Des Stats pour les Nerds</p>
       <p class="cp-wg-cd">Envie de vous améliorer ? Vous trouverez ici toutes les parties jouées avec différents graphiques de performances.</p>
     </a>
-    <a class="cp-wg-card" href="/Wargame/Des-Stats-pour-les-Nerds">
+    <a class="cp-wg-card" href="/Wargame/Générateur-de-carte">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="18" cy="18" r="14" opacity="0.85"/>
         <ellipse cx="18" cy="18" rx="6" ry="14" opacity="0.55"/>
@@ -67,4 +67,6 @@
       <p class="cp-wg-cd">Pour lancer votre première campagne dès demain !</p>
     </a>
   </div>
+
+  <div id="cp-actus" data-dossier="Wargame" data-limite="5"></div>
 </div>

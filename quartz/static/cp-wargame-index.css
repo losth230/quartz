@@ -23,8 +23,10 @@
 .cp-wg-hub .cp-wg-tag { color: var(--gray); font-size: 0.85rem; font-style: italic; margin-left: auto; }
 
 .cp-wg-hub .cp-wg-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem;
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem;
 }
+@media (max-width: 680px) { .cp-wg-hub .cp-wg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 430px) { .cp-wg-hub .cp-wg-grid { grid-template-columns: 1fr; } }
 
 /* La "carte à jouer" : portrait, contenu centré, double cadre */
 .cp-wg-hub .cp-wg-card {
@@ -53,3 +55,35 @@
 /* Masque le listing automatique de dossier de Quartz (« X éléments sous ce dossier » + la liste).
    Scopé à cette page seulement, grâce à la présence du marqueur .cp-wg-hub. */
 body:has(.cp-wg-hub) .page-listing { display: none; }
+
+/* ---- Fil d'actualités (#cp-actus, rempli par cp-actus.js) ---- */
+.cp-wg-hub #cp-actus { margin-top: 1.7rem; }
+.cp-wg-hub .cp-actus-head {
+  font-family: var(--headerFont); font-weight: 700; font-size: 1.05rem;
+  letter-spacing: 0.04em; text-transform: uppercase; color: var(--dark);
+  margin: 0 0 0.7rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--lightgray);
+}
+.cp-wg-hub .cp-actus-list { list-style: none; margin: 0; padding: 0; }
+.cp-wg-hub .cp-actu {
+  display: flex; gap: 0.9rem; padding: 0.7rem 0; border-bottom: 1px solid var(--lightgray);
+}
+.cp-wg-hub .cp-actu:last-child { border-bottom: none; }
+.cp-wg-hub .cp-actu-date {
+  flex: 0 0 auto; min-width: 6.5rem; font-size: 0.78rem; color: var(--gray); padding-top: 0.15rem;
+}
+.cp-wg-hub .cp-actu-corps { flex: 1 1 auto; min-width: 0; }
+.cp-wg-hub .cp-actu-cat {
+  display: inline-block; font-size: 0.66rem; font-weight: 700; letter-spacing: 0.04em;
+  text-transform: uppercase; color: var(--secondary); border: 1px solid var(--lightgray);
+  border-radius: 999px; padding: 0.05rem 0.45rem; margin-right: 0.5rem; vertical-align: middle;
+}
+.cp-wg-hub .cp-actu-titre { font-weight: 700; color: var(--secondary); text-decoration: none; }
+.cp-wg-hub a.cp-actu-titre:hover { text-decoration: underline; }
+.cp-wg-hub .cp-actu-desc { margin: 0.2rem 0 0; font-size: 0.85rem; line-height: 1.4; color: var(--darkgray); }
+.cp-wg-hub .cp-actus-loading, .cp-wg-hub .cp-actus-err {
+  font-size: 0.85rem; color: var(--gray); font-style: italic;
+}
+@media (max-width: 430px) {
+  .cp-wg-hub .cp-actu { flex-direction: column; gap: 0.15rem; }
+  .cp-wg-hub .cp-actu-date { min-width: 0; }
+}
