@@ -19,7 +19,7 @@ cssclasses:
   </div>
 
   <div class="cp-cp-grid">
-    <a class="cp-wg-card" href="/Règles">
+    <a class="cp-wg-card" href="/JdR">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
         <path d="M 18 4 L 30 11 L 30 25 L 18 32 L 6 25 L 6 11 Z" opacity="0.85"/>
         <path d="M 18 13 L 11 23 L 25 23 Z" opacity="0.85"/>
