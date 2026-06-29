@@ -23,7 +23,7 @@
 .cp-wg-hub .cp-wg-tag { color: var(--gray); font-size: 0.85rem; font-style: italic; margin-left: auto; }
 
 .cp-wg-hub .cp-wg-grid {
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.8rem;
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0.8rem;
 }
 @media (max-width: 680px) { .cp-wg-hub .cp-wg-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 430px) { .cp-wg-hub .cp-wg-grid { grid-template-columns: 1fr; } }
