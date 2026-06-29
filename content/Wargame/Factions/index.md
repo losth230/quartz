@@ -1,7 +1,7 @@
 <div class="cp-wg-hub">
   <div class="cp-wg-head">
     <span class="cp-wg-title">Factions</span>
-    <span class="cp-wg-ver">A3.2 test3</span>
+    <span class="cp-wg-ver">A3.2</span>
     <span class="cp-wg-tag">Chasse &amp; Pêche</span>
   </div>
 
