@@ -1,8 +1,8 @@
 <div class="cp-wg-hub">
   <div class="cp-wg-head">
     <span class="cp-wg-title">Wargame</span>
-    <span class="cp-wg-ver">A3.1</span>
-    <span class="cp-wg-tag">Chasse &amp; Pêche — univers tactique</span>
+    <span class="cp-wg-ver">A3.2</span>
+    <span class="cp-wg-tag">Chasse &amp; Pêche</span>
   </div>
 
   <div class="cp-wg-grid">
