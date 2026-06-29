@@ -1,11 +1,11 @@
 <div class="cp-wg-hub">
   <div class="cp-wg-head">
     <span class="cp-wg-title">Factions</span>
-    <span class="cp-wg-ver">A3.2 test2</span>
+    <span class="cp-wg-ver">A3.2 test3</span>
     <span class="cp-wg-tag">Chasse &amp; Pêche</span>
   </div>
 
-  <div class="cp-wg-grid">
+  <div class="cp-fa-grid">
     <a class="cp-wg-card" href="/Wargame/Factions/Elfes-d'Or">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <!-- Contours de l'elfe et des oreilles -->
