@@ -1,10 +1,3 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-<meta name="theme-color" content="#1a1410">
-<title>Générateur de carte 4X — Hexagonale</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
@@ -2627,4 +2620,529 @@ function buildResourceControls() {
           <div class="field">
             <label>Taille</label>
             <input type="range" id="res-${slug}-size" min="${RES_PARAM_SPECS.size.min}" max="${RES_PARAM_SPECS.size.max}" value="${defs.size}">
-            <span class="value
+            <span class="value" id="res-${slug}-size-v">${RES_PARAM_SPECS.size.fmt(defs.size)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    // Enregistrer les specs pour ces 3 sliders
+    for (const pkey of ['density', 'prox', 'size']) {
+      const id = `res-${slug}-${pkey}`;
+      PARAM_SPECS[id] = { fmt: RES_PARAM_SPECS[pkey].fmt, conv: RES_PARAM_SPECS[pkey].conv, resKey: res, pKey: pkey };
+    }
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// PARAMÈTRES — affichage et conversion
+// ============================================================
+const PARAM_SPECS = {
+  // élévation
+  'e-cont':    { fmt: v => v,                     conv: v => v / 100 },
+  'e-scale':   { fmt: v => v,                     conv: v => v / 100 },
+  'e-compact': { fmt: v => v + '%',               conv: v => v / 100 },
+  'e-oct':     { fmt: v => v,                     conv: v => v       },
+  'e-pers':    { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  'e-edge':    { fmt: v => v + '%',               conv: v => v / 100 },
+  'e-islands': { fmt: v => v + '%',               conv: v => v / 100 },
+  // humidité
+  'h-scale':   { fmt: v => v,                     conv: v => v / 100 },
+  'h-oct':     { fmt: v => v,                     conv: v => v       },
+  'h-pers':    { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  'h-cont':    { fmt: v => v + '%',               conv: v => v / 100 },
+  // température
+  't-lat':     { fmt: v => (v / 100).toFixed(2), conv: v => v / 100 },
+  't-scale':   { fmt: v => v,                     conv: v => v / 100 },
+  't-noise':   { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  't-alt':     { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  // événements
+  'evt-volcan':  { fmt: v => v + '%', conv: v => v / 100 },
+  'evt-river':   { fmt: v => v + '%', conv: v => v / 100 },
+  'evt-riverlen': { fmt: v => v, conv: v => v }
+  // Les paramètres par-ressource ('res-<slug>-*') sont ajoutés dynamiquement
+  // par buildResourceControls() ci-dessous.
+};
+
+// Formatters pour les paramètres de ressources (tous identiques)
+const RES_PARAM_SPECS = {
+  density: { fmt: v => (v / 10).toFixed(1) + '%', conv: v => v / 1000, min: 0,  max: 80, def: 20 },
+  prox:    { fmt: v => v + '%',                    conv: v => v / 100,  min: 0,  max: 95, def: 55 },
+  size:    { fmt: v => v,                          conv: v => v,        min: 1,  max: 12, def: 5  }
+};
+
+// Slugify : 'Bétail' → 'betail'
+function slugify(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function getParams() {
+  const read = (id) => PARAM_SPECS[id].conv(+document.getElementById(id).value);
+  const res = {};
+  for (const resName of Object.keys(RES_DEFAULTS)) {
+    const slug = slugify(resName);
+    res[resName] = {
+      density: read(`res-${slug}-density`),
+      prox:    read(`res-${slug}-prox`),
+      size:    read(`res-${slug}-size`)
+    };
+  }
+  const readInt = (id) => parseInt(document.getElementById(id).value, 10) || 0;
+  const caps = {
+    'Plaine':   readInt('cap-plaine'),
+    'Forêt':    readInt('cap-foret'),
+    'Désert':   readInt('cap-desert'),
+    'Marais':   readInt('cap-marais'),
+    'Montagne': readInt('cap-montagne'),
+    'Océan':    readInt('cap-ocean'),
+    'Neige':    readInt('cap-neige')
+  };
+  const surroundSame = parseInt(document.getElementById('c-surround-same').value, 10) || 0;
+  const surroundAny  = parseInt(document.getElementById('c-surround-any').value, 10) || 0;
+  return {
+    elev: {
+      cont: read('e-cont'), scale: read('e-scale'), compact: read('e-compact'),
+      oct: read('e-oct'), pers: read('e-pers'),
+      edge: read('e-edge'), islands: read('e-islands')
+    },
+    humid: {
+      scale: read('h-scale'), oct: read('h-oct'),
+      pers: read('h-pers'), cont: read('h-cont')
+    },
+    temp: {
+      lat: read('t-lat'), scale: read('t-scale'),
+      noise: read('t-noise'), alt: read('t-alt')
+    },
+    poles: document.getElementById('t-poles').value || 'ns',
+    biomeOrder: document.getElementById('biome-order').value || 'ETH',
+    adjacency: {
+      enabled: document.getElementById('adj-enabled').checked,
+      rules: getAdjacencyRules()
+    },
+    res,
+    evt: {
+      volcan: read('evt-volcan'),
+      river:  read('evt-river'),
+      riverLen: read('evt-riverlen')
+    },
+    constraints: { caps, surroundSame, surroundAny }
+  };
+}
+
+function updateParamLabels() {
+  for (const id in PARAM_SPECS) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const lbl = document.getElementById(id + '-v');
+    if (lbl) lbl.textContent = PARAM_SPECS[id].fmt(+el.value);
+  }
+}
+
+// Mapping groupe → préfixe d'id (sauf 'res' qui est géré à part)
+const GROUP_PREFIX = {
+  elev:  'e-',
+  humid: 'h-',
+  temp:  't-',
+  evt:   'evt-'
+};
+
+function resetGroup(group) {
+  if (group === 'res') {
+    for (const resName of Object.keys(RES_DEFAULTS)) resetResource(resName);
+    return;
+  }
+  if (group === 'adjacency') {
+    resetAdjacency();
+    return;
+  }
+  if (group === 'rivers') {
+    document.getElementById('evt-river').value = DEFAULTS.evt.river;
+    document.getElementById('evt-riverlen').value = DEFAULTS.evt.riverlen;
+    updateParamLabels();
+    return;
+  }
+  if (group === 'constraints') {
+    const d = DEFAULTS.constraints;
+    document.getElementById('c-surround-same').value = d.surroundSame;
+    document.getElementById('c-surround-any').value  = d.surroundAny;
+    document.getElementById('cap-plaine').value   = d['cap-plaine'];
+    document.getElementById('cap-foret').value    = d['cap-foret'];
+    document.getElementById('cap-desert').value   = d['cap-desert'];
+    document.getElementById('cap-marais').value   = d['cap-marais'];
+    document.getElementById('cap-montagne').value = d['cap-montagne'];
+    document.getElementById('cap-ocean').value    = d['cap-ocean'];
+    document.getElementById('cap-neige').value    = d['cap-neige'];
+    return;
+  }
+  const g = DEFAULTS[group];
+  const prefix = GROUP_PREFIX[group];
+  for (const key of Object.keys(g)) {
+    const id = prefix + key;
+    const el = document.getElementById(id);
+    if (el) el.value = g[key];
+  }
+  updateParamLabels();
+}
+
+function resetResource(resName) {
+  const slug = slugify(resName);
+  const defs = RES_DEFAULTS[resName];
+  for (const pkey of ['density', 'prox', 'size']) {
+    const el = document.getElementById(`res-${slug}-${pkey}`);
+    if (el) el.value = defs[pkey];
+  }
+  updateParamLabels();
+}
+
+// ============================================================
+// UI
+// ============================================================
+function updateTileCount() {
+  const N = +document.getElementById('radius').value;
+  const total = 3 * N * N + 3 * N + 1;
+  document.getElementById('tile-count').textContent = total;
+  document.getElementById('radius-v').textContent = N;
+}
+
+function computeHex(N) {
+  const maxW = window.innerWidth - 40;
+  const maxH = window.innerHeight - 40;
+  const sizeByW = maxW / (3 * N * SQRT3);
+  const sizeByH = maxH / (3 * N);
+  return Math.max(10, Math.min(32, Math.floor(Math.min(sizeByW, sizeByH) * 1.4)));
+}
+
+function regenerate(resetView = true) {
+  const seed = document.getElementById('seed').value || 'grimoire';
+  const N = Math.max(10, Math.min(18, +document.getElementById('radius').value));
+  const sea = +document.getElementById('sealevel').value / 100;
+  const mountains = +document.getElementById('mountains').value / 100;
+  const noiseType = document.getElementById('noise-type').value;
+  HEX = computeHex(N);
+  const all = getParams();
+  map = generateMap(N, seed, { sea, mountains, noiseType, ...all });
+  // Réappliquer le placement joueurs sur la nouvelle carte
+  applyPlayers();
+  // Mettre à jour le compteur de biomes
+  updateBiomeCounts();
+  if (resetView) fitView();
+  selected = null;
+  infoEl.classList.remove('visible');
+  render();
+}
+
+// Compteur de biomes visible sous le total de tuiles, mis à jour après
+// chaque régénération.
+function updateBiomeCounts() {
+  const el = document.getElementById('biome-counts');
+  if (!map || !map.biome) {
+    el.style.display = 'none';
+    return;
+  }
+  const counts = {};
+  for (const b of map.biome) counts[b] = (counts[b] || 0) + 1;
+  // Ordre fixe : Océan en premier, puis terrestres dans l'ordre Plaine → ...
+  const order = ['Océan', 'Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne', 'Neige', 'Volcan'];
+  let html = '';
+  for (const b of order) {
+    const c = counts[b] || 0;
+    if (c === 0) continue;
+    const color = BIOMES[b].color;
+    html += `<div style="display:flex;justify-content:space-between;gap:8px;">
+      <span><span style="display:inline-block;width:9px;height:9px;background:${color};border:1px solid #000;vertical-align:middle;margin-right:4px;"></span>${b}</span>
+      <span style="color:var(--accent);font-weight:bold;">${c}</span>
+    </div>`;
+  }
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+// Seed dédiée au placement joueurs : ne change qu'en cas de clic 🎲
+// (initialisée à une valeur aléatoire au chargement).
+let playerSeed = 'p' + Math.floor(Math.random() * 1000000);
+
+function applyPlayers() {
+  if (!map) return;
+  const count = parseInt(document.getElementById('players').value, 10) || 0;
+  const spread = document.getElementById('player-spread').value || 'far';
+  const minDist     = parseInt(document.getElementById('player-dist').value, 10)    || 5;
+  const edgeMargin  = parseInt(document.getElementById('player-edge').value, 10)    || 0;
+  const centerMargin= parseInt(document.getElementById('player-center').value, 10)  || 0;
+  const minContinent= parseInt(document.getElementById('player-cont').value, 10)    || 0;
+  const inspectRadius = parseInt(document.getElementById('player-inspect').value, 10) || 3;
+  const required = [];
+  if (document.getElementById('req-foret').checked)    required.push('Forêt');
+  if (document.getElementById('req-montagne').checked) required.push('Montagne');
+  if (document.getElementById('req-desert').checked)   required.push('Désert');
+  placePlayers(map, {
+    count, spread, seedStr: playerSeed,
+    minDist, edgeMargin, centerMargin,
+    minContinent, inspectRadius, required
+  });
+  // Afficher / masquer l'avertissement
+  const warnEl = document.getElementById('warning');
+  if (map.playerWarning) {
+    warnEl.textContent = '⚠ ' + map.playerWarning;
+    warnEl.classList.add('visible');
+  } else {
+    warnEl.classList.remove('visible');
+  }
+}
+
+let regenTimer = null;
+function scheduleRegen() {
+  clearTimeout(regenTimer);
+  regenTimer = setTimeout(() => regenerate(false), 80);
+}
+
+// Génération d'une graine aléatoire lisible (mots évoquant un grimoire médiéval)
+function randomSeed() {
+  const prefixes = ['aer', 'bel', 'cor', 'dra', 'eld', 'fer', 'gol', 'har', 'ith', 'jor',
+                    'kar', 'lun', 'mor', 'nar', 'ost', 'pyr', 'quer', 'ryn', 'sol', 'tor',
+                    'umb', 'val', 'wyr', 'xar', 'yth', 'zel', 'bran', 'cal', 'dun', 'ever'];
+  const suffixes = ['arn', 'beth', 'dell', 'faen', 'gorn', 'heim', 'iril', 'kast', 'lain',
+                    'mere', 'nord', 'olin', 'peth', 'quel', 'raven', 'stan', 'thir', 'ulm',
+                    'varn', 'weald', 'ynth', 'zur', 'moor', 'fell', 'vale', 'wyn', 'dor'];
+  const rand = Math.random;
+  const a = prefixes[Math.floor(rand() * prefixes.length)];
+  const b = suffixes[Math.floor(rand() * suffixes.length)];
+  return a + b;
+}
+
+// Construction des sliders par ressource (doit être fait avant d'attacher
+// les event listeners sur ces éléments)
+buildResourceControls();
+// Construction des règles d'adjacence (idem)
+buildAdjacencyControls();
+
+// Bouton Générer : nouvelle graine aléatoire + régénération complète
+document.getElementById('regen').addEventListener('click', () => {
+  document.getElementById('seed').value = randomSeed();
+  regenerate(true);
+});
+// Entrée dans le champ seed : régénère avec la graine saisie (sans la modifier)
+document.getElementById('seed').addEventListener('keydown', e => { if (e.key === 'Enter') regenerate(true); });
+document.getElementById('noise-type').addEventListener('change', () => regenerate(true));
+document.getElementById('radius').addEventListener('input', updateTileCount);
+document.getElementById('radius').addEventListener('change', () => regenerate(true));
+
+// --- Sélecteur de type de carte (presets)
+// Ignore les events déclenchés par le preset lui-même (sinon on basculerait
+// immédiatement sur "Personnalisé")
+let applyingPreset = false;
+
+function applyPreset(name) {
+  const preset = MAP_PRESETS[name];
+  if (!preset) return;
+  applyingPreset = true;
+  try {
+    for (const [id, value] of Object.entries(preset)) {
+      const el = document.getElementById(id);
+      if (el) el.value = value;
+    }
+    updateParamLabels();
+    // Rafraîchir les libellés des sliders classiques (non-PARAM_SPECS)
+    document.getElementById('sealevel-v').textContent =
+      document.getElementById('sealevel').value + '%';
+    document.getElementById('mountains-v').textContent =
+      document.getElementById('mountains').value + '%';
+  } finally {
+    applyingPreset = false;
+  }
+  scheduleRegen();
+}
+
+document.getElementById('map-type').addEventListener('change', e => {
+  if (e.target.value === 'custom') return; // juste marquer comme personnalisé
+  applyPreset(e.target.value);
+});
+
+// Quand l'utilisateur touche un slider de géographie manuellement, bascule
+// sur "Personnalisé" pour être honnête sur ce qui est affiché
+const GEO_PARAM_IDS = ['sealevel', 'e-cont', 'e-scale', 'e-compact', 'e-edge', 'e-pers'];
+function markCustomOnUserEdit(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    if (applyingPreset) return;
+    document.getElementById('map-type').value = 'custom';
+  });
+}
+GEO_PARAM_IDS.forEach(markCustomOnUserEdit);
+
+['sealevel', 'mountains'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', e => {
+    document.getElementById(id + '-v').textContent = e.target.value + '%';
+    scheduleRegen();
+  });
+});
+
+Object.keys(PARAM_SPECS).forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    updateParamLabels();
+    scheduleRegen();
+  });
+});
+
+// Sélecteur Pôles (climat)
+document.getElementById('t-poles').addEventListener('change', scheduleRegen);
+// Sélecteur d'ordre des critères de biomes
+document.getElementById('biome-order').addEventListener('change', scheduleRegen);
+
+// Règles d'adjacence : checkbox et tous les selects
+document.getElementById('adj-enabled').addEventListener('change', scheduleRegen);
+document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+  el.addEventListener('change', scheduleRegen);
+});
+
+// Contrôles de contraintes (select + inputs number)
+['c-surround-same', 'c-surround-any', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean', 'cap-neige'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', scheduleRegen);
+  el.addEventListener('change', scheduleRegen);
+});
+
+// Champ joueurs : pas besoin de régénérer la carte, juste replacer les joueurs
+function rerollPlayersAndRender() {
+  applyPlayers();
+  render();
+}
+document.getElementById('players').addEventListener('input', rerollPlayersAndRender);
+document.getElementById('players').addEventListener('change', rerollPlayersAndRender);
+document.getElementById('player-spread').addEventListener('change', rerollPlayersAndRender);
+
+// Sliders joueurs : mettre à jour libellé puis re-placer
+function bindPlayerSlider(id, fmt) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const lbl = document.getElementById(id + '-v');
+  el.addEventListener('input', () => {
+    if (lbl) lbl.textContent = fmt(+el.value);
+    rerollPlayersAndRender();
+  });
+}
+bindPlayerSlider('player-dist',    v => v);
+bindPlayerSlider('player-edge',    v => v);
+bindPlayerSlider('player-center',  v => v);
+bindPlayerSlider('player-cont',    v => v);
+bindPlayerSlider('player-inspect', v => v);
+
+['req-foret', 'req-montagne', 'req-desert'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('change', rerollPlayersAndRender);
+});
+
+// Bouton 🎲 : nouvelle seed de placement → nouveau tirage
+document.getElementById('reroll-players').addEventListener('click', () => {
+  playerSeed = randomSeed();
+  rerollPlayersAndRender();
+});
+
+document.getElementById('lay-rivers').addEventListener('change', e => { layers.rivers = e.target.checked; render(); });
+document.getElementById('lay-resources').addEventListener('change', e => { layers.resources = e.target.checked; render(); });
+document.getElementById('lay-grid').addEventListener('change', e => { layers.grid = e.target.checked; render(); });
+document.getElementById('lay-legend').addEventListener('change', e => {
+  document.getElementById('legend').classList.toggle('visible', e.target.checked);
+});
+
+document.getElementById('toggle-controls').addEventListener('click', () => {
+  const c = document.getElementById('controls');
+  c.classList.toggle('collapsed');
+  document.getElementById('chevron').textContent = c.classList.contains('collapsed') ? '▸' : '▾';
+});
+
+document.querySelectorAll('.subhead[data-toggle]').forEach(h => {
+  h.addEventListener('click', (e) => {
+    if (e.target.classList.contains('reset-btn')) return;
+    const id = h.dataset.toggle;
+    const g = document.getElementById(id);
+    const collapsed = g.classList.toggle('collapsed');
+    const arrow = collapsed ? '▸' : '▾';
+    const span = h.querySelector('span');
+    span.textContent = arrow + ' ' + span.textContent.replace(/^[▸▾]\s*/, '');
+  });
+});
+
+document.querySelectorAll('.reset-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (btn.dataset.resetRes) {
+      resetResource(btn.dataset.resetRes);
+    } else {
+      resetGroup(btn.dataset.reset);
+    }
+    scheduleRegen();
+  });
+});
+
+document.getElementById('export').addEventListener('click', () => {
+  if (!map) return;
+  const savedHex = HEX;
+  HEX = 28;
+  const b = mapBounds();
+  const padding = 24;
+  const off = document.createElement('canvas');
+  off.width = Math.ceil(b.w + padding * 2);
+  off.height = Math.ceil(b.h + padding * 2);
+  const oc = off.getContext('2d');
+  const bgColor = getComputedStyle(document.body).getPropertyValue('--map-bg').trim() || '#0a0704';
+  oc.fillStyle = bgColor;
+  oc.fillRect(0, 0, off.width, off.height);
+  oc.translate(padding - b.minX, padding - b.minY);
+  renderToContext(oc);
+  HEX = savedHex;
+  off.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `carte-${document.getElementById('seed').value || 'grimoire'}-r${map.N}.png`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }, 'image/png');
+});
+
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  fitView();
+  render();
+});
+
+resizeCanvas();
+renderLegend();
+updateTileCount();
+updateParamLabels();
+
+// --- Thème clair/sombre (persistant via localStorage)
+function applyTheme(theme) {
+  document.body.classList.remove('dark', 'light');
+  document.body.classList.add(theme);
+  const btn = document.getElementById('theme-toggle');
+  // ☾ lune = on est en sombre et on peut passer en clair ; ☀ soleil = l'inverse
+  btn.textContent = (theme === 'dark') ? '☀' : '☾';
+  btn.title = (theme === 'dark') ? 'Passer en thème clair' : 'Passer en thème sombre';
+  try { localStorage.setItem('grimoire-theme', theme); } catch (_) {}
+}
+let currentTheme = 'dark';
+try {
+  const saved = localStorage.getItem('grimoire-theme');
+  if (saved === 'light' || saved === 'dark') currentTheme = saved;
+} catch (_) {}
+applyTheme(currentTheme);
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+  applyTheme(currentTheme);
+});
+
+regenerate(true);
+
+setTimeout(() => {
+  document.getElementById('hint').style.opacity = '0';
+}, 5000);
+
+</script>
