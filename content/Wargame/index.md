@@ -34,7 +34,7 @@
       <p class="cp-wg-ct">Listes d'armées</p>
       <p class="cp-wg-cd">Les bandes y sont composées, validées et partagées.</p>
     </a>
-    <a class="cp-wg-card" href="/Wargame/Préparer-une-bataille">
+    <a class="cp-wg-card" href="/Wargame/Générateur-de-partie">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="18" cy="18" r="10.5" opacity="0.85"/>
         <circle cx="18" cy="18" r="3.5" opacity="0.55"/>
