@@ -6,15 +6,6 @@
   </div>
 
   <div class="cp-wg-grid">
-    <a class="cp-wg-card" href="/Wargame/Armées">
-      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M18 3 L31 8 V19 C31 28 25 33 18 35.5 C11 33 5 28 5 19 V8 Z" opacity="0.85"/>
-        <path d="M13.5 14.5 L22.5 23 M22.5 14.5 L13.5 23" stroke-width="1.8" opacity="0.55"/>
-      </svg>
-      <div class="cp-wg-rule"></div>
-      <p class="cp-wg-ct">Armées</p>
-      <p class="cp-wg-cd">Les factions y sont présentées, avec leurs unités et leurs règles spéciales.</p>
-    </a>
     <a class="cp-wg-card" href="/Wargame/Règles">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M5 9 C10 6.5 14.5 7 18 9.5 C21.5 7 26 6.5 31 9 V27 C26 24.5 21.5 25 18 27.5 C14.5 25 10 24.5 5 27 Z" opacity="0.85"/>
@@ -22,7 +13,16 @@
       </svg>
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Règles</p>
-      <p class="cp-wg-cd">Le système de jeu y est détaillé : déplacement, combat et magie.</p>
+      <p class="cp-wg-cd">Vous débutez ? apprenez les règles : déplacement, combat et magie.</p>
+    </a>
+    <a class="cp-wg-card" href="/Wargame/Armées">
+      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M18 3 L31 8 V19 C31 28 25 33 18 35.5 C11 33 5 28 5 19 V8 Z" opacity="0.85"/>
+        <path d="M13.5 14.5 L22.5 23 M22.5 14.5 L13.5 23" stroke-width="1.8" opacity="0.55"/>
+      </svg>
+      <div class="cp-wg-rule"></div>
+      <p class="cp-wg-ct">Factions</p>
+      <p class="cp-wg-cd">Présentation des différentes factions, avec leurs unités et leurs règles spéciales.</p>
     </a>
     <a class="cp-wg-card" href="/Wargame/Listes-d'armées">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -32,7 +32,7 @@
       </svg>
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Listes d'armées</p>
-      <p class="cp-wg-cd">Les bandes y sont composées, validées et partagées.</p>
+      <p class="cp-wg-cd">L'outils pour créer et partager vos listes d'armées.</p>
     </a>
     <a class="cp-wg-card" href="/Wargame/Générateur-de-partie">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -42,7 +42,7 @@
       </svg>
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Préparer une bataille</p>
-      <p class="cp-wg-cd">Scénarios, terrain et déploiements y sont tirés au sort.</p>
+      <p class="cp-wg-cd">Le générateur de partie rapide pour gagner du temps de mise en place.</p>
     </a>
     <a class="cp-wg-card" href="/Wargame/Des-Stats-pour-les-Nerds">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -53,7 +53,18 @@
       </svg>
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Des Stats pour les Nerds</p>
-      <p class="cp-wg-cd">Les parties jouées y sont enregistrées et analysées.</p>
+      <p class="cp-wg-cd">Envie de vous améliorer ? Vous trouverez ici toutes les parties jouées avec différents graphiques de performances.</p>
+    </a>
+    <a class="cp-wg-card" href="/Wargame/Des-Stats-pour-les-Nerds">
+      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="18" cy="18" r="14" opacity="0.85"/>
+        <ellipse cx="18" cy="18" rx="6" ry="14" opacity="0.55"/>
+        <line x1="18" y1="4" x2="18" y2="32" opacity="0.55"/>
+        <line x1="4" y1="18" x2="32" y2="18" opacity="0.55"/>
+      </svg>
+      <div class="cp-wg-rule"></div>
+      <p class="cp-wg-ct">Générateur de carte</p>
+      <p class="cp-wg-cd">Pour lancer votre première campagne dès demain !</p>
     </a>
   </div>
 </div>

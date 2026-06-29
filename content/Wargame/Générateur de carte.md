@@ -288,9 +288,6 @@
   #theme-toggle:hover { transform: scale(1.08); }
   #theme-toggle:active { transform: scale(0.95); }
 </style>
-</head>
-<body>
-
 <canvas id="map"></canvas>
 
 <div id="info" class="panel"></div>
