@@ -395,17 +395,21 @@ function affinites() {
   if (clan && clan.affinite_type) add(clan.affinite_type, clan.affinite_valeur || 0);
   return { occulte, chamanique };
 }
+// Occultisme et Chamanisme sont OPPOSÉS sur un même axe : seul l'écart (net) compte.
+//  |écart| ≤ 5  => Équilibre.
+//  Au-delà, la tendance penche du côté dominant et le rang dépend de l'écart :
+//  Rang I : 6–10, II : 11–15, III : 16–20, IV : 21–25, V : 26+.
 function affiniteVerdict(occ, cha) {
   if (occ === 0 && cha === 0) return { texte: "Aucune affinité pour l'instant", classe: "" };
-  if (occ === cha) return { texte: "Équilibre — relance des 1 en attaque et armure", classe: "eq" };
-  const type = occ > cha ? "Occulte" : "Chamanique";
-  const dom = Math.max(occ, cha);
-  const classe = occ > cha ? "occ" : "cha";
-  if (dom < 5) return { texte: "Tendance " + type + " — Rang I à 5", classe };
+  const net = occ - cha;
+  const ecart = Math.abs(net);
+  if (ecart <= 5) return { texte: "Équilibre (écart " + ecart + ") — relance des 1 en attaque et armure", classe: "eq" };
+  const type = net > 0 ? "Occulte" : "Chamanique";
+  const classe = net > 0 ? "occ" : "cha";
   const seuils = [5, 10, 15, 20, 25];
-  let rang = 0; seuils.forEach((s, i) => { if (dom >= s) rang = i + 1; });
+  let rang = 0; seuils.forEach((s) => { if (ecart > s) rang = Math.min(5, rang + 1); });
   const roman = ["", "I", "II", "III", "IV", "V"][rang];
-  const suite = rang < 5 ? " · Rang " + ["", "II", "III", "IV", "V"][rang] + " à " + seuils[rang] : " · max";
+  const suite = rang < 5 ? " · Rang " + ["", "II", "III", "IV", "V"][rang] + " à un écart de " + (seuils[rang] + 1) : " · max";
   return { texte: "Affinité " + type + " — Rang " + roman + suite, classe };
 }
 function affinitePanel() {
