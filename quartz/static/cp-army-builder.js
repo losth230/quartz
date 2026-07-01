@@ -624,12 +624,32 @@ function bootstrap() {
 }
 
 let pollTimer = null;
+// Détecte qu'une liste structurée externe a remplacé le corps (cas de l'édition)
+// et reconstruit le constructeur en conséquence. Sûr : après réimport, sync() réécrit
+// le corps à l'identique, donc la comparaison se stabilise (pas de boucle).
+function reimporterSiCorpsRemplace() {
+  if (!state.actif) return;
+  const body = $("cp-body"); if (!body) return;
+  const v = body.value || "";
+  const idx = v.indexOf(SEP);
+  const struct = idx >= 0 ? v.slice(0, idx) : "";
+  if (!struct) return;
+  if (struct.trim() === genererTexte(state).trim()) return; // déjà synchronisé
+  state.entries = [];
+  if ((R.sf || []).length) { state.niv1 = niv1Liste()[0] || ""; state.niv2 = niv2De(state.niv1)[0] || ""; }
+  else { state.niv1 = ""; state.niv2 = ""; }
+  state.freeText = idx >= 0 ? v.slice(idx + SEP.length) : "";
+  importerTexte(struct);
+  render();
+}
+
 function startPoll() {
   if (pollTimer) clearInterval(pollTimer);
   pollTimer = setInterval(() => {
     const fac = $("cp-faction");
     if (!fac) return;
-    if (fac.value !== lastFaction) { lastFaction = fac.value; appliquerVisibilite(); }
+    if (fac.value !== lastFaction) { lastFaction = fac.value; appliquerVisibilite(); return; }
+    reimporterSiCorpsRemplace();
   }, 400);
 }
 
