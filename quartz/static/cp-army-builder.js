@@ -272,13 +272,33 @@ function esc(s) {
 function genererCorps() {
   return genererTexte(state) + SEP + (state.freeText || "");
 }
+// Coupe le corps en { struct, free } de façon ROBUSTE :
+//  - repère exact si présent ;
+//  - sinon première ligne « Texte libre » (variantes de tirets / anciennes versions) ;
+//  - sinon, si le corps contient « Total : » (signature d'une liste générée), tout le
+//    corps est la partie structurée (le parseur s'arrête de toute façon à « Total : ») ;
+//  - sinon, texte libre manuel (préservé, aucun import).
+function couperCorps(v) {
+  v = v || "";
+  const i = v.indexOf(SEP);
+  if (i >= 0) return { struct: v.slice(0, i), free: v.slice(i + SEP.length) };
+  const lignes = v.split("\n");
+  for (let k = 0; k < lignes.length; k++) {
+    if (/Texte libre/.test(lignes[k])) {
+      return { struct: lignes.slice(0, k).join("\n"), free: lignes.slice(k + 1).join("\n") };
+    }
+  }
+  if (/^\s*Total\s*:/m.test(v)) return { struct: v, free: "" };
+  return { struct: "", free: v };
+}
+// Normalise un nom d'unité pour la correspondance (accents composés, espaces multiples).
+function normNom(s) { return (s || "").toString().normalize("NFC").trim().replace(/\s+/g, " "); }
+
 // Récupère le texte libre saisi par l'utilisateur sous le repère.
 function capturerFreeText() {
   const body = $("cp-body");
   if (!body) return;
-  const v = body.value || "";
-  const idx = v.indexOf(SEP);
-  state.freeText = (idx >= 0) ? v.slice(idx + SEP.length) : v;
+  state.freeText = couperCorps(body.value || "").free;
 }
 
 function sync() {
@@ -448,7 +468,7 @@ function entryByUid(uid) { return state.entries.find((e) => String(e.uid) === St
 function importerTexte(bloc) {
   state.entries = [];
   const parNom = {};
-  (R.unites || []).forEach((u) => { parNom[u.nom] = u; });
+  (R.unites || []).forEach((u) => { parNom[normNom(u.nom)] = u; });
   const label1 = (R.sf || []).length ? sfLabel1() : null;
   const lignes = (bloc || "").split("\n");
   for (let k = 0; k < lignes.length; k++) {
@@ -466,7 +486,7 @@ function importerTexte(bloc) {
     // Ligne d'unité : « - [N×] Nom [+ opt, opt] — P pts »
     const m = l.match(/^-\s+(?:(\d+)×\s+)?(.+?)(?:\s+\+\s+(.+?))?\s+—\s+\d+\s*pts$/);
     if (!m) continue;
-    const u = parNom[(m[2] || "").trim()];
+    const u = parNom[normNom(m[2])];
     if (!u) continue;
     const optNoms = (m[3] || "").split(",").map((s) => s.trim()).filter(Boolean);
     const entry = { uid: state.seq++, unitId: u.id, qty: Math.max(1, parseInt(m[1], 10) || 1), opts: [], choix: {}, manuel: 0, collapsed: true };
@@ -493,17 +513,12 @@ function activer(faction) {
     state.niv2 = niv2De(state.niv1)[0] || "";
   } else { state.niv1 = ""; state.niv2 = ""; }
   const body = $("cp-body");
-  // Récupère le texte libre éventuellement présent (liste existante ou saisie manuelle) :
-  // tout ce qui suit le repère, ou tout le contenu s'il n'y a pas de repère.
+  // Récupère le texte libre éventuel + reconstruit les unités d'une liste éditée,
+  // en repérant le séparateur de façon tolérante (couperCorps).
   if (body) {
-    const v = body.value || "";
-    const idx = v.indexOf(SEP);
-    if (idx >= 0) {
-      state.freeText = v.slice(idx + SEP.length);
-      importerTexte(v.slice(0, idx)); // reconstruit les unités d'une liste éditée
-    } else {
-      state.freeText = v;
-    }
+    const { struct, free } = couperCorps(body.value || "");
+    state.freeText = free;
+    if (struct.trim()) importerTexte(struct);
   } else {
     state.freeText = "";
   }
@@ -630,15 +645,13 @@ let pollTimer = null;
 function reimporterSiCorpsRemplace() {
   if (!state.actif) return;
   const body = $("cp-body"); if (!body) return;
-  const v = body.value || "";
-  const idx = v.indexOf(SEP);
-  const struct = idx >= 0 ? v.slice(0, idx) : "";
-  if (!struct) return;
+  const { struct, free } = couperCorps(body.value || "");
+  if (!struct.trim()) return;
   if (struct.trim() === genererTexte(state).trim()) return; // déjà synchronisé
   state.entries = [];
   if ((R.sf || []).length) { state.niv1 = niv1Liste()[0] || ""; state.niv2 = niv2De(state.niv1)[0] || ""; }
   else { state.niv1 = ""; state.niv2 = ""; }
-  state.freeText = idx >= 0 ? v.slice(idx + SEP.length) : "";
+  state.freeText = free;
   importerTexte(struct);
   render();
 }
