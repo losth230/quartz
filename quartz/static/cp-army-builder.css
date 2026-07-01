@@ -272,10 +272,12 @@ function esc(s) {
 function genererCorps() {
   return genererTexte(state) + SEP + (state.freeText || "");
 }
-// Coupe le corps en { struct, free } de façon TOLÉRANTE :
-//  - d'abord le repère exact ;
-//  - sinon la première ligne contenant « Texte libre » (variantes de tirets / anciennes versions) ;
-//  - sinon aucun repère -> tout est texte libre (liste manuelle préservée, pas d'import).
+// Coupe le corps en { struct, free } de façon ROBUSTE :
+//  - repère exact si présent ;
+//  - sinon première ligne « Texte libre » (variantes de tirets / anciennes versions) ;
+//  - sinon, si le corps contient « Total : » (signature d'une liste générée), tout le
+//    corps est la partie structurée (le parseur s'arrête de toute façon à « Total : ») ;
+//  - sinon, texte libre manuel (préservé, aucun import).
 function couperCorps(v) {
   v = v || "";
   const i = v.indexOf(SEP);
@@ -286,6 +288,7 @@ function couperCorps(v) {
       return { struct: lignes.slice(0, k).join("\n"), free: lignes.slice(k + 1).join("\n") };
     }
   }
+  if (/^\s*Total\s*:/m.test(v)) return { struct: v, free: "" };
   return { struct: "", free: v };
 }
 // Normalise un nom d'unité pour la correspondance (accents composés, espaces multiples).
