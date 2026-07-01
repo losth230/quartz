@@ -169,9 +169,13 @@ function totaux(state) {
 function validation(state) {
   const r = reglesActives();
   const { total, parCat } = totaux(state);
-  const maxCmd = Math.floor(total / r.ptsParCommandant);
-  const maxSout = Math.floor(total / r.ptsParSoutien);
-  const maxSpe = Math.floor(total / r.ptsParSpecial);
+  // Les créneaux (commandant/soutien/spécial) dépendent de la TAILLE de l'armée
+  // (cible si renseignée, sinon total courant), à raison d'un créneau par tranche ENTAMÉE.
+  // Ex. spécial (1/150) : 1 entre 1 et 150, 2 entre 151 et 300, 3 entre 301 et 450…
+  const taille = (state.target && state.target > 0) ? state.target : total;
+  const maxCmd = Math.ceil(taille / r.ptsParCommandant);
+  const maxSout = Math.ceil(taille / r.ptsParSoutien);
+  const maxSpe = Math.ceil(taille / r.ptsParSpecial);
   const items = [];
   if (parCat.commandant < r.minCommandant) items.push("Au moins " + r.minCommandant + " Commandant requis.");
   if (parCat.base < r.minBase) items.push("Au moins " + r.minBase + " unités de Base requises (actuel : " + parCat.base + ").");
@@ -227,6 +231,11 @@ function genererTexte(state) {
   const lignes = [];
   lignes.push(R.faction + " — " + v.total + " pts" + (state.target ? " / " + state.target : ""));
   if (state.niv1) lignes.push(sfLabel1() + " : " + state.niv1 + (state.niv2 ? " — " + state.niv2 : ""));
+  if (factionAAffinite()) {
+    const a = affinites();
+    const va = affiniteVerdict(a.occulte, a.chamanique);
+    lignes.push("Affinité : Occultisme " + a.occulte + " / Chamanisme " + a.chamanique + " — " + va.texte);
+  }
   lignes.push("");
   CATS.forEach((cat) => {
     const es = state.entries.filter((e) => { const u = uOf(e); return u && u.categorie === cat.id; });
@@ -434,6 +443,45 @@ function ajouter(unitId) {
 }
 function entryByUid(uid) { return state.entries.find((e) => String(e.uid) === String(uid)); }
 
+// Reconstruit state.entries + niv1/niv2 depuis le bloc structuré d'une liste générée
+// (round-trip pour l'édition). Nécessite que le roster (R) soit déjà chargé.
+function importerTexte(bloc) {
+  state.entries = [];
+  const parNom = {};
+  (R.unites || []).forEach((u) => { parNom[u.nom] = u; });
+  const label1 = (R.sf || []).length ? sfLabel1() : null;
+  const lignes = (bloc || "").split("\n");
+  for (let k = 0; k < lignes.length; k++) {
+    const l = lignes[k].trim();
+    if (!l) continue;
+    if (l.indexOf("Total :") === 0) break; // fin de la liste structurée
+    // Ligne de sous-faction : « Clan : X » ou « Royaume : X — Y »
+    if (label1 && l.indexOf(label1 + " :") === 0) {
+      const reste = l.slice((label1 + " :").length).trim();
+      const sep = reste.indexOf(" — ");
+      state.niv1 = (sep < 0 ? reste : reste.slice(0, sep)).trim();
+      state.niv2 = (sep < 0 ? "" : reste.slice(sep + 3)).trim();
+      continue;
+    }
+    // Ligne d'unité : « - [N×] Nom [+ opt, opt] — P pts »
+    const m = l.match(/^-\s+(?:(\d+)×\s+)?(.+?)(?:\s+\+\s+(.+?))?\s+—\s+\d+\s*pts$/);
+    if (!m) continue;
+    const u = parNom[(m[2] || "").trim()];
+    if (!u) continue;
+    const optNoms = (m[3] || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const entry = { uid: state.seq++, unitId: u.id, qty: Math.max(1, parseInt(m[1], 10) || 1), opts: [], choix: {}, manuel: 0, collapsed: true };
+    (u.options || []).forEach((o, i) => {
+      if (o.t === "opt") { if (optNoms.includes(o.nom)) entry.opts.push(i); }
+      else if (o.t === "choix") {
+        const ci = o.choix.findIndex((c) => c.nom !== "Aucune" && optNoms.includes(c.nom));
+        if (ci >= 0) entry.choix[i] = ci;
+      }
+    });
+    state.entries.push(entry);
+  }
+  if (state.entries.length) state.pris = true;
+}
+
 function activer(faction) {
   state.actif = true;
   state.factionActive = faction;
@@ -450,7 +498,12 @@ function activer(faction) {
   if (body) {
     const v = body.value || "";
     const idx = v.indexOf(SEP);
-    state.freeText = (idx >= 0) ? v.slice(idx + SEP.length) : v;
+    if (idx >= 0) {
+      state.freeText = v.slice(idx + SEP.length);
+      importerTexte(v.slice(0, idx)); // reconstruit les unités d'une liste éditée
+    } else {
+      state.freeText = v;
+    }
   } else {
     state.freeText = "";
   }
@@ -545,6 +598,21 @@ function wireOnce() {
   document.addEventListener("input", (e) => {
     if (!state.actif) return;
     if (e.target.id === "cp-body") capturerFreeText();
+  });
+
+  // Édition d'une liste : cp-army-lists.js déclenche cet événement après avoir rempli
+  // le formulaire. On (re)charge le roster puis on réimporte, même si la faction est
+  // déjà active (ce que le poll ne referait pas).
+  document.addEventListener("cp-list-edit", async (e) => {
+    const fac = $("cp-faction");
+    const faction = (e.detail && e.detail.faction) || (fac && fac.value) || "";
+    lastFaction = faction;
+    if (!faction) { desactiver(); return; }
+    let roster;
+    try { roster = await chargerRoster(faction); } catch (err) { console.error("[cp-builder] édition:", err); return; }
+    if (fac && fac.value !== faction) return;
+    R = roster;
+    if (roster.unites.length) activer(faction); else desactiver();
   });
 }
 
