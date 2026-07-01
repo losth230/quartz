@@ -114,6 +114,8 @@ function init() {
     $("cp-form-mode").textContent = "Modification de : " + (l.title || "");
     msg.className = "cp-msg";
     msg.textContent = "";
+    // Indique au constructeur de recharger le roster et de réimporter la liste éditée.
+    document.dispatchEvent(new CustomEvent("cp-list-edit", { detail: { faction: l.faction || "" } }));
     app.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
