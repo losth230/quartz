@@ -104,7 +104,7 @@ export default (() => {
       <script type="module" src="/quartz/static/cp-stats.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-actus.js" spa-preserve />
-      <script type="module" src="/quartz/static/cp-army-builder.js" spa-preserve />
+      <script type="module" src="/quartz/static/cp-army-builder.js?v=3" spa-preserve />
       
       <link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve />
