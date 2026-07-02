@@ -45,6 +45,49 @@ const IDENTITE = [
   ["yeux", "Yeux"], ["cheveux", "Cheveux"],
 ];
 
+/* ------------------------------------------------------------
+   Icônes SVG inline — currentColor partout, donc elles suivent
+   automatiquement la couleur d'encre du thème (clair/sombre).
+------------------------------------------------------------ */
+const ICONES = {
+  // Icônes de catégorie, affichées dans les bandeaux Physique/Mental/Social
+  physique: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6.5 10.2V7.6a1.9 1.9 0 1 1 3.8 0v2M10.3 9.6V6.4a1.9 1.9 0 1 1 3.8 0v3.4M14.1 10V7.6a1.7 1.7 0 1 1 3.4 0V13a4.6 4.6 0 0 1-4.6 4.6h-1.8A4.6 4.6 0 0 1 7 15.1L5.3 11.9c-.4-.8 0-1.7.9-2 .7-.2 1.4.1 1.8.8l.7 1.2"/>
+  </svg>`,
+  mental: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 3 2.7 19.2h18.6L12 3Z"/>
+    <circle cx="12" cy="14.4" r="2.4"/>
+    <circle cx="12" cy="14.4" r=".5" fill="currentColor" stroke="none"/>
+  </svg>`,
+  social: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 6.5h12.5a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8H10l-3.6 2.7v-2.7H4a1.8 1.8 0 0 1-1.8-1.8V8.3A1.8 1.8 0 0 1 4 6.5Z"/>
+    <path d="M6.5 10.3h8M6.5 13h5.2"/>
+  </svg>`,
+  // Filigranes en fond des sections équipement / capacités
+  armes: `<svg class="jdr-filigrane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3 21 12.5 11.5M14 10l6.5-6.5.9 2.6L19 8.5l-2.6-.9L14 10Z"/>
+    <path d="M21 21 11.5 11.5M10 14l-6.5 6.5-.9-2.6L5 15.5l2.6.9L10 14Z"/>
+  </svg>`,
+  capacites: `<svg class="jdr-filigrane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 2.5c.9 3 2 4.6 4.7 5.7-2.7 1.1-3.8 2.7-4.7 5.7-.9-3-2-4.6-4.7-5.7 2.7-1.1 3.8-2.7 4.7-5.7Z"/>
+    <path d="M18.5 14.5c.5 1.7 1.1 2.6 2.7 3.2-1.6.6-2.2 1.5-2.7 3.2-.5-1.7-1.1-2.6-2.7-3.2 1.6-.6 2.2-1.5 2.7-3.2Z"/>
+  </svg>`,
+  magie: `<svg class="jdr-filigrane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 2 5 8.5 12 22l7-13.5L12 2Z"/>
+    <path d="M5 8.5h14M9 8.5 12 2l3 6.5M9.5 8.5 12 22M14.5 8.5 12 22"/>
+  </svg>`,
+  inventaire: `<svg class="jdr-filigrane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M8 8V6.5a4 4 0 0 1 8 0V8"/>
+    <path d="M5.5 8h13l1 12.5a1.6 1.6 0 0 1-1.6 1.5H6.1A1.6 1.6 0 0 1 4.5 20.5L5.5 8Z"/>
+  </svg>`,
+  // Ornement de coin, réutilisé aux 4 angles de la fiche via des rotations CSS
+  coin: `<svg class="jdr-coin" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+    <path d="M2 14V2h12"/>
+    <path d="M2 2q11 0 11 11"/>
+    <circle cx="13.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>
+  </svg>`,
+};
+
 function defaultDonnees() {
   const comps = {};
   for (const cat of Object.keys(COMPETENCES)) {
@@ -318,7 +361,7 @@ function renderCompetences(catKey, catLabel) {
   const insuffisant = total < SEUIL_MIN_ARBRE;
   return `
     <section class="jdr-bloc jdr-attributs">
-      <div class="jdr-bandeau">${catLabel}</div>
+      <div class="jdr-bandeau">${ICONES[catKey]}<span>${catLabel}</span></div>
       <div class="jdr-de${insuffisant ? " jdr-de-insuffisant" : ""}"
            data-de-badge="${catKey}"
            title="${insuffisant ? `Minimum ${SEUIL_MIN_ARBRE} niveaux requis dans cet arbre` : "Nombre de dés = somme des niveaux"}">
@@ -340,7 +383,8 @@ function renderArmes() {
       <td class="jdr-centre"><button class="jdr-btn-icone" data-action="retirer-arme" title="Retirer">×</button></td>
     </tr>`).join("");
   return `
-    <section class="jdr-bloc">
+    <section class="jdr-bloc jdr-bloc-filigrane">
+      <div class="jdr-filigrane">${ICONES.armes}</div>
       <div class="jdr-bandeau">Armes</div>
       <table class="jdr-table-armes">
         <thead><tr><th>Arme</th><th>Maniement</th><th>Attaques</th><th>Propriétés</th><th></th></tr></thead>
@@ -389,54 +433,64 @@ function renderFiche() {
       </div>
     </div>
 
-    <div class="jdr-entete-fiche">
-      <div class="jdr-entete-gauche">
-        <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}" aria-label="Nom du personnage">
-        <div class="jdr-niveau-talents">
-          <label>Niveau <input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
-          <label>Talents <input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
-        </div>
-      </div>
-      <div class="jdr-jauges">
-        <div class="jdr-coeur" title="Points de vie">
-          <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
-        </div>
-        <div class="jdr-fiole" title="Réserve de magie">
-          <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}" aria-label="Réserve de magie" placeholder="7d6">
-        </div>
-      </div>
-      <section class="jdr-bloc jdr-identite">
-        ${identite}
-      </section>
-    </div>
+    <div class="jdr-cadre">
+      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-hg"')}
+      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-hd"')}
+      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-bg"')}
+      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-bd"')}
 
-    <div class="jdr-rang-fanions">${fanions}</div>
-
-    <div class="jdr-grille-attributs">
-      ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
-    </div>
-
-    <div class="jdr-grille-bas">
-      <div class="jdr-colonne">
-        ${renderArmes()}
-        <section class="jdr-bloc">
-          <div class="jdr-bandeau">Capacités</div>
-          <textarea data-champ="capacites" rows="7">${esc(d.capacites)}</textarea>
+      <div class="jdr-entete-fiche">
+        <div class="jdr-entete-gauche">
+          <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}" aria-label="Nom du personnage">
+          <div class="jdr-niveau-talents">
+            <label>Niveau <input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
+            <label>Talents <input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+          </div>
+        </div>
+        <div class="jdr-jauges">
+          <div class="jdr-coeur" title="Points de vie">
+            <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+          </div>
+          <div class="jdr-fiole" title="Réserve de magie">
+            <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}" aria-label="Réserve de magie" placeholder="7d6">
+          </div>
+        </div>
+        <section class="jdr-bloc jdr-identite">
+          ${identite}
         </section>
       </div>
-      <div class="jdr-colonne">
-        <section class="jdr-bloc">
-          <div class="jdr-bandeau">Domaines de magie</div>
-          ${magie}
-        </section>
-        <section class="jdr-bloc">
-          <div class="jdr-bandeau">Inventaire</div>
-          <label class="jdr-id-ligne jdr-florins">
-            <span>Florins</span>
-            <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
-          </label>
-          <textarea data-champ="inventaire" rows="9">${esc(d.inventaire)}</textarea>
-        </section>
+
+      <div class="jdr-rang-fanions">${fanions}</div>
+
+      <div class="jdr-grille-attributs">
+        ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
+      </div>
+
+      <div class="jdr-grille-bas">
+        <div class="jdr-colonne">
+          ${renderArmes()}
+          <section class="jdr-bloc jdr-bloc-filigrane">
+            <div class="jdr-filigrane">${ICONES.capacites}</div>
+            <div class="jdr-bandeau">Capacités</div>
+            <textarea data-champ="capacites" rows="7">${esc(d.capacites)}</textarea>
+          </section>
+        </div>
+        <div class="jdr-colonne">
+          <section class="jdr-bloc jdr-bloc-filigrane">
+            <div class="jdr-filigrane">${ICONES.magie}</div>
+            <div class="jdr-bandeau">Domaines de magie</div>
+            ${magie}
+          </section>
+          <section class="jdr-bloc jdr-bloc-filigrane">
+            <div class="jdr-filigrane">${ICONES.inventaire}</div>
+            <div class="jdr-bandeau">Inventaire</div>
+            <label class="jdr-id-ligne jdr-florins">
+              <span>Florins</span>
+              <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
+            </label>
+            <textarea data-champ="inventaire" rows="9">${esc(d.inventaire)}</textarea>
+          </section>
+        </div>
       </div>
     </div>`;
 }
