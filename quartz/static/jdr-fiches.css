@@ -29,8 +29,12 @@
 .jdr-btn-danger:hover { background: var(--jdr-accent); color: var(--jdr-papier); }
 .jdr-btn-icone {
   border: none; background: none; color: var(--jdr-accent);
-  font-size: 1.1rem; cursor: pointer; line-height: 1;
+  font-size: 1rem; line-height: 1; cursor: pointer;
+  width: 1.7em; height: 1.7em; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  transition: background .15s;
 }
+.jdr-btn-icone:hover { background: color-mix(in srgb, var(--jdr-accent) 16%, transparent); }
 
 /* ---- vue liste ---- */
 .jdr-entete-liste { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
@@ -137,8 +141,8 @@
 }
 .jdr-fanion-corps {
   border: 1.5px solid var(--jdr-encre-forte); border-top: none;
-  clip-path: polygon(0 0, 100% 0, 100% 78%, 50% 100%, 0 78%);
-  padding: .7em 0 1.5em; background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
+  border-radius: 0 0 6px 6px;
+  padding: .6em 0; background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
 }
 .jdr-fanion-corps input {
   width: 70%; text-align: center; font-size: 1.15rem; font-weight: 700;
@@ -169,13 +173,20 @@
 .jdr-comp-seuil { text-align: center; font-weight: 700; font-size: .85rem; }
 
 /* armes */
-.jdr-table-armes { width: 100%; border-collapse: collapse; font-size: .88rem; margin-bottom: .6rem; }
+.jdr-table-armes { width: 100%; border-collapse: collapse; font-size: .88rem; margin-bottom: .7rem; }
 .jdr-table-armes th {
-  background: var(--jdr-bandeau); color: var(--jdr-papier);
-  font-family: var(--jdr-police-titre); font-weight: 600; padding: .3em .5em; text-align: left;
+  text-align: left; font-family: var(--jdr-police-titre); font-weight: 600;
+  font-size: .74rem; letter-spacing: .05em; text-transform: uppercase;
+  color: var(--jdr-encre-forte); opacity: .75;
+  padding: 0 .5em .4em; border-bottom: 2px solid var(--jdr-bandeau);
 }
-.jdr-table-armes td { border: 1px solid var(--jdr-ligne); padding: .15em .3em; }
-.jdr-table-armes input { width: 100%; border: none; background: transparent; color: var(--jdr-encre); }
+.jdr-table-armes td { padding: .3em .5em; border-bottom: 1px solid var(--jdr-ligne); }
+.jdr-table-armes tbody tr:hover td { background: color-mix(in srgb, var(--jdr-ligne) 40%, transparent); }
+.jdr-table-armes input {
+  width: 100%; border: none; background: transparent; color: var(--jdr-encre); padding: .1em .15em;
+}
+.jdr-table-armes input:focus-visible { outline: none; border-bottom: 1.5px solid var(--jdr-accent); }
+.jdr-table-armes .jdr-centre { text-align: center; }
 
 /* colonne basse */
 .jdr-grille-bas { display: grid; grid-template-columns: 3fr 2fr; gap: 1rem; margin-top: 1rem; }
