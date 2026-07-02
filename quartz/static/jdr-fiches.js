@@ -511,7 +511,15 @@ function attacherEvenements(root) {
     majEtatBarre();
   });
 
-  // Garde-fou avant fermeture d'onglet
+  // Garde-fou avant fermeture d'onglet — posé une seule fois, hors de
+  // attacherEvenements, car le module n'est chargé qu'une fois par
+  // Quartz (spa-preserve) même si init() s'exécute à chaque navigation.
+}
+
+let beforeUnloadArme = false;
+function armerGardeFou() {
+  if (beforeUnloadArme) return;
+  beforeUnloadArme = true;
   window.addEventListener("beforeunload", (e) => {
     if (state.dirty) {
       e.preventDefault();
@@ -522,19 +530,25 @@ function attacherEvenements(root) {
 
 /* ------------------------------------------------------------
    Démarrage
+   Quartz utilise une navigation SPA : ce module n'est chargé
+   qu'une fois (spa-preserve), donc on ne peut pas se fier au
+   seul DOMContentLoaded. Quartz émet un événement "nav" sur
+   `document` à chaque changement de page (y compris le tout
+   premier chargement) : c'est le bon endroit pour (ré)agir.
 ------------------------------------------------------------ */
 function init() {
   const root = document.getElementById("jdr-fiches-app");
-  if (!root) {
-    console.error("jdr-fiches : élément #jdr-fiches-app introuvable.");
-    return;
-  }
+  if (!root) return; // pas sur la page des fiches, rien à faire
+
+  armerGardeFou();
+  // Réinitialise l'état à chaque arrivée sur la page (ex. retour
+  // depuis une autre page du site sans rechargement complet).
+  state.view = "liste";
+  state.courant = null;
+  state.dirty = false;
+
   attacherEvenements(root);
   chargerListe();
 }
 
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", init);
-} else {
-  init();
-}
+document.addEventListener("nav", init);
