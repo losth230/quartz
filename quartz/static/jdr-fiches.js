@@ -80,12 +80,6 @@ const ICONES = {
     <path d="M8 8V6.5a4 4 0 0 1 8 0V8"/>
     <path d="M5.5 8h13l1 12.5a1.6 1.6 0 0 1-1.6 1.5H6.1A1.6 1.6 0 0 1 4.5 20.5L5.5 8Z"/>
   </svg>`,
-  // Ornement de coin, réutilisé aux 4 angles de la fiche via des rotations CSS
-  coin: `<svg class="jdr-coin" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
-    <path d="M2 14V2h12"/>
-    <path d="M2 2q11 0 11 11"/>
-    <circle cx="13.5" cy="13.5" r="1.3" fill="currentColor" stroke="none"/>
-  </svg>`,
 };
 
 function defaultDonnees() {
@@ -434,10 +428,6 @@ function renderFiche() {
     </div>
 
     <div class="jdr-cadre">
-      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-hg"')}
-      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-hd"')}
-      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-bg"')}
-      ${ICONES.coin.replace('class="jdr-coin"', 'class="jdr-coin jdr-coin-bd"')}
 
       <div class="jdr-entete-fiche">
         <div class="jdr-entete-gauche">
