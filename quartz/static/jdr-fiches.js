@@ -100,6 +100,17 @@ function seuil(niv) {
   return Math.max(2, 6 - n) + "+";
 }
 
+/* Nombre de dés d'un arbre = somme des niveaux de ses compétences.
+   Règle : chaque arbre (physique/mental/social) doit totaliser au
+   moins 2 niveaux répartis entre ses compétences. */
+function sommeArbre(catKey) {
+  const comp = state.courant?.donnees?.competences?.[catKey];
+  if (!comp) return 0;
+  return Object.values(comp).reduce((tot, n) => tot + (parseInt(n, 10) || 0), 0);
+}
+
+const SEUIL_MIN_ARBRE = 2;
+
 /* ------------------------------------------------------------
    État
 ------------------------------------------------------------ */
@@ -227,13 +238,13 @@ function lireFicheDepuisDom() {
   d.armure = val("[data-champ='armure']").trim();
   for (const [k] of IDENTITE) d.identite[k] = val(`[data-identite='${k}']`).trim();
   for (const cat of Object.keys(COMPETENCES)) {
-    d.des[cat] = val(`[data-de='${cat}']`).trim();
     for (const c of COMPETENCES[cat]) {
       const input = root.querySelector(
         `[data-comp='${cat}'][data-nom='${CSS.escape(c)}']`
       );
       d.competences[cat][c] = input ? parseInt(input.value, 10) || 0 : 0;
     }
+    d.des[cat] = sommeArbre(cat) + "d6";
   }
   d.armes = [...root.querySelectorAll("[data-arme-ligne]")].map((tr) => ({
     nom: tr.querySelector("[data-arme='nom']").value.trim(),
@@ -303,12 +314,15 @@ function renderCompetences(catKey, catLabel) {
         <span class="jdr-comp-nom">${esc(c)}</span>
       </div>`;
   }).join("");
+  const total = sommeArbre(catKey);
+  const insuffisant = total < SEUIL_MIN_ARBRE;
   return `
     <section class="jdr-bloc jdr-attributs">
       <div class="jdr-bandeau">${catLabel}</div>
-      <div class="jdr-de">
-        <input type="text" data-de="${catKey}" value="${esc(d.des[catKey])}"
-               aria-label="Dé ${catLabel}">
+      <div class="jdr-de${insuffisant ? " jdr-de-insuffisant" : ""}"
+           data-de-badge="${catKey}"
+           title="${insuffisant ? `Minimum ${SEUIL_MIN_ARBRE} niveaux requis dans cet arbre` : "Nombre de dés = somme des niveaux"}">
+        ${total}d6
       </div>
       <div class="jdr-comp-entetes"><span>Niv</span><span>Seuil</span><span></span></div>
       ${lignes}
@@ -503,10 +517,27 @@ function attacherEvenements(root) {
   root.addEventListener("input", (e) => {
     if (state.view !== "fiche") return;
     state.dirty = true;
-    // Seuil recalculé en direct quand un niveau de compétence change
     if (e.target.matches("[data-comp]")) {
+      const cat = e.target.dataset.comp;
+      const nom = e.target.dataset.nom;
+      const niv = parseInt(e.target.value, 10) || 0;
+
+      // Seuil recalculé en direct pour la compétence modifiée
       const span = e.target.parentElement.querySelector("[data-seuil]");
-      if (span) span.textContent = seuil(e.target.value);
+      if (span) span.textContent = seuil(niv);
+
+      // État synchronisé avant de recalculer la somme de l'arbre
+      state.courant.donnees.competences[cat][nom] = niv;
+      const total = sommeArbre(cat);
+      const insuffisant = total < SEUIL_MIN_ARBRE;
+      const badge = root.querySelector(`[data-de-badge='${cat}']`);
+      if (badge) {
+        badge.textContent = `${total}d6`;
+        badge.classList.toggle("jdr-de-insuffisant", insuffisant);
+        badge.title = insuffisant
+          ? `Minimum ${SEUIL_MIN_ARBRE} niveaux requis dans cet arbre`
+          : "Nombre de dés = somme des niveaux";
+      }
     }
     majEtatBarre();
   });
