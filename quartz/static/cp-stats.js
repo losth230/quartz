@@ -117,9 +117,33 @@ async function loadAll() {
 }
 
 // ---------- Rendu général ----------
+// Styles des lignes dépliables (détail des confrontations). Injectés ici pour éviter
+// de modifier cp-common.css (un seul fichier à déployer, pas de cache CSS à gérer).
+function injecterStylesDetail() {
+  if (document.getElementById("cp-stats-detail-css")) return;
+  const st = document.createElement("style");
+  st.id = "cp-stats-detail-css";
+  st.textContent =
+    ".cp-table .cp-row-exp { cursor: pointer; }" +
+    ".cp-table .cp-row-exp:hover { background: rgba(127,127,127,0.10); }" +
+    ".cp-table .cp-row-open { background: rgba(127,127,127,0.07); }" +
+    ".cp-table .cp-exp-ch { display: inline-block; width: 1em; color: var(--gray); font-size: 0.8em; }" +
+    ".cp-table .cp-row-detail > td { padding: 0.45em 0.9em 0.7em 2.4em; background: rgba(127,127,127,0.05); font-size: 0.92em; }" +
+    ".cp-det-grid { display: flex; flex-wrap: wrap; gap: 0.4em 1.3em; }" +
+    ".cp-det-item { display: flex; gap: 0.55em; align-items: baseline; }" +
+    ".cp-det-vs { color: var(--darkgray); font-weight: 600; }" +
+    ".cp-det-res { color: var(--gray); white-space: nowrap; }" +
+    ".cp-det-res .cp-win { color: #3c8a4e; }" +
+    ".cp-det-res .cp-lose { color: #b3453b; }" +
+    ".cp-det-res .cp-draw { color: var(--gray); }" +
+    ".cp-det-empty { color: var(--gray); font-style: italic; }";
+  document.head.appendChild(st);
+}
+
 function render() {
   const app = getApp();
   if (!app) return;
+  injecterStylesDetail();
   const main = $("cp-stats-main");
   if (!main) return;
   // onglets actifs
@@ -709,6 +733,42 @@ function efficacite(rate, pertesMoy) {
   return Math.round((rate / pertesMoy) * 1000) / 10; // une décimale
 }
 
+// Détail des confrontations d'un ensemble de participations (une ligne de tableau) :
+// agrégé par peuple ADVERSE = les autres participants de la même partie.
+function detailConfrontations(mine) {
+  const vs = {};
+  mine.forEach((p) => {
+    participations.forEach((o) => {
+      if (o === p || o.partie_id !== p.partie_id) return;
+      const k = o.peuple || "—";
+      if (!vs[k]) vs[k] = { v: 0, d: 0, e: 0, total: 0 };
+      vs[k].total++;
+      if (p.resultat === "victoire") vs[k].v++;
+      else if (p.resultat === "egalite") vs[k].e++;
+      else vs[k].d++;
+    });
+  });
+  return Object.entries(vs)
+    .map(([peuple, m]) => ({ peuple, v: m.v, d: m.d, e: m.e, total: m.total }))
+    .sort((a, b) => b.total - a.total || b.v - a.v);
+}
+
+// Ligne de détail dépliable (masquée par défaut), insérée juste après la ligne cliquable.
+function ligneDetail(mine, colspan) {
+  const conf = detailConfrontations(mine);
+  let corps;
+  if (!conf.length) corps = '<span class="cp-det-empty">Aucun adversaire enregistré.</span>';
+  else corps = '<div class="cp-det-grid">' + conf.map((c) => {
+    const parts = [];
+    if (c.v) parts.push('<span class="cp-win">' + c.v + " V</span>");
+    if (c.d) parts.push('<span class="cp-lose">' + c.d + " D</span>");
+    if (c.e) parts.push('<span class="cp-draw">' + c.e + " É</span>");
+    return '<div class="cp-det-item"><span class="cp-det-vs">vs ' + esc(c.peuple) + "</span>" +
+      '<span class="cp-det-res">' + parts.join(" · ") + "</span></div>";
+  }).join("") + "</div>";
+  return '<tr class="cp-row-detail" hidden><td colspan="' + colspan + '">' + corps + "</td></tr>";
+}
+
 // Stats sur une dimension portée par la participation (peuple, joueur)
 function renderByParticipantDim(dim) {
   const data = statParticipations();
@@ -746,14 +806,16 @@ function renderByParticipantDim(dim) {
   // Tableau : tri selon l'état de la dimension
   const s = statSort[dim];
   const rows = sortRows(baseRows, s.key, s.dir).map((r) => {
-    return "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td>" +
+    const mine = data.filter((p) => (p[dim] || "—") === r.nom);
+    return "<tr class=\"cp-row-exp\"><td class=\"cp-c-key\"><span class=\"cp-exp-ch\">\u25B8</span> " + esc(r.nom) + "</td>" +
       "<td>" + r.total + "</td>" +
       '<td class="cp-win">' + r.v + "</td>" +
       '<td class="cp-lose">' + r.d + "</td>" +
       '<td class="cp-draw">' + r.e + "</td>" +
       '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
       "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td>" +
-      '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>";
+      '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>" +
+      ligneDetail(mine, 8);
   }).join("");
   const table = '<table class="cp-table"><thead><tr>' +
     thSort(dim, "nom", dim === "peuple" ? "Peuple" : "Joueur") +
@@ -874,16 +936,18 @@ function renderByListe() {
 
   // Table triable
   const s = statSort.liste;
-  const rows = sortRows(baseRows, s.key, s.dir).map((r) =>
-    "<tr><td class=\"cp-c-key\">" + esc(r.nom) + "</td>" +
-    "<td>" + r.total + "</td>" +
-    '<td class="cp-win">' + r.v + "</td>" +
-    '<td class="cp-lose">' + r.d + "</td>" +
-    '<td class="cp-draw">' + r.e + "</td>" +
-    '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
-    "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td>" +
-    '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>"
-  ).join("");
+  const rows = sortRows(baseRows, s.key, s.dir).map((r) => {
+    const mine = data.filter((p) => groupKey(p) === r.nom);
+    return "<tr class=\"cp-row-exp\"><td class=\"cp-c-key\"><span class=\"cp-exp-ch\">\u25B8</span> " + esc(r.nom) + "</td>" +
+      "<td>" + r.total + "</td>" +
+      '<td class="cp-win">' + r.v + "</td>" +
+      '<td class="cp-lose">' + r.d + "</td>" +
+      '<td class="cp-draw">' + r.e + "</td>" +
+      '<td class="cp-c-rate">' + pct(r.v, r.total) + "</td>" +
+      "<td>" + (r.pertes == null ? "—" : r.pertes) + "</td>" +
+      '<td class="cp-c-eff">' + (r.eff == null ? "—" : r.eff) + "</td></tr>" +
+      ligneDetail(mine, 8);
+  }).join("");
   const table = '<table class="cp-table"><thead><tr>' +
     thSort("liste", "nom", listeSubMode === "archetype" ? "Archétype" : "Liste") +
     thSort("liste", "total", "Parties") +
@@ -1333,6 +1397,20 @@ function wireOnce() {
       if (s.key === key) { s.dir = s.dir === "asc" ? "desc" : "asc"; }
       else { s.key = key; s.dir = "desc"; }
       render();
+      return;
+    }
+
+    // dépli/repli d'une ligne de tableau de stats -> détail des confrontations
+    const expRow = e.target.closest(".cp-row-exp");
+    if (expRow && getApp().contains(expRow)) {
+      const detail = expRow.nextElementSibling;
+      if (detail && detail.classList.contains("cp-row-detail")) {
+        const ouvrir = detail.hasAttribute("hidden");
+        if (ouvrir) detail.removeAttribute("hidden"); else detail.setAttribute("hidden", "");
+        expRow.classList.toggle("cp-row-open", ouvrir);
+        const ch = expRow.querySelector(".cp-exp-ch");
+        if (ch) ch.textContent = ouvrir ? "\u25BE" : "\u25B8";
+      }
       return;
     }
 
