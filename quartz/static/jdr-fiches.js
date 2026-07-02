@@ -381,6 +381,10 @@ function renderArmes() {
       <div class="jdr-filigrane">${ICONES.armes}</div>
       <div class="jdr-bandeau">Armes</div>
       <table class="jdr-table-armes">
+        <colgroup>
+          <col style="width:24%"><col style="width:16%"><col style="width:16%">
+          <col style="width:38%"><col style="width:6%">
+        </colgroup>
         <thead><tr><th>Arme</th><th>Maniement</th><th>Attaques</th><th>Propriétés</th><th></th></tr></thead>
         <tbody id="jdr-armes-corps">${lignes}</tbody>
       </table>
