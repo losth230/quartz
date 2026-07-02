@@ -72,24 +72,14 @@
 .jdr-icone { width: 15px; height: 15px; flex: none; }
 
 /* filigranes décoratifs en fond des sections équipement/capacités/magie/inventaire */
-.jdr-bloc-filigrane { overflow: hidden; }
 .jdr-filigrane {
-  position: absolute; z-index: -1; bottom: -6px; right: -6px;
-  width: 92px; height: 92px; color: var(--jdr-encre-forte); opacity: .07;
+  position: absolute; z-index: -1; bottom: .5rem; right: .6rem;
+  width: 76px; height: 76px; color: var(--jdr-encre-forte); opacity: .16;
   pointer-events: none;
 }
 .jdr-filigrane-svg { width: 100%; height: 100%; }
 
-/* cadre général de la fiche + ornements de coin façon grimoire */
-.jdr-cadre { position: relative; padding: .6rem .2rem .2rem; }
-.jdr-coin {
-  position: absolute; width: 26px; height: 26px;
-  color: var(--jdr-encre-forte); opacity: .5; pointer-events: none;
-}
-.jdr-coin-hg { top: -2px; left: -2px; }
-.jdr-coin-hd { top: -2px; right: -2px; transform: scaleX(-1); }
-.jdr-coin-bg { bottom: -2px; left: -2px; transform: scaleY(-1); }
-.jdr-coin-bd { bottom: -2px; right: -2px; transform: scale(-1, -1); }
+.jdr-cadre { position: relative; }
 
 /* ---- entête de fiche ---- */
 .jdr-entete-fiche {
