@@ -71,7 +71,7 @@
 
 /* ---- entête de fiche ---- */
 .jdr-entete-fiche {
-  display: grid; grid-template-columns: 1fr auto auto; gap: 1rem;
+  display: grid; grid-template-columns: 1fr auto minmax(0, 320px); gap: 1rem;
   align-items: start; margin-bottom: 1rem;
 }
 .jdr-nom {
@@ -107,10 +107,13 @@
 .jdr-fiole input { width: 3.6em; }
 
 /* identité */
-.jdr-identite { display: grid; grid-template-columns: 1fr 1fr; gap: .15rem .9rem; min-width: 300px; padding-top: .6rem; }
-.jdr-id-ligne { display: flex; align-items: center; gap: .5em; font-size: .85rem; }
-.jdr-id-ligne span { font-weight: 700; min-width: 5.2em; }
-.jdr-id-ligne input { flex: 1; min-width: 0; }
+.jdr-identite {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .15rem .9rem;
+  width: 100%; box-sizing: border-box; padding-top: .6rem;
+}
+.jdr-id-ligne { display: flex; align-items: center; gap: .5em; font-size: .85rem; min-width: 0; }
+.jdr-id-ligne span { font-weight: 700; min-width: 5.2em; flex: none; }
+.jdr-id-ligne input { flex: 1 1 0; min-width: 0; width: 100%; box-sizing: border-box; }
 
 /* fanions de stats (signature de la fiche papier) */
 .jdr-rang-fanions { display: flex; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
@@ -132,11 +135,15 @@
 
 /* attributs + compétences */
 .jdr-grille-attributs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-.jdr-de { position: absolute; top: .4rem; right: .8rem; }
-.jdr-de input {
+.jdr-de {
+  position: absolute; top: .4rem; right: .8rem;
   width: 4em; text-align: center; font-weight: 700; font-size: 1.05rem;
-  border: 1.5px solid var(--jdr-encre-forte); border-radius: 4px; background: transparent;
-  color: var(--jdr-encre-forte);
+  border: 1.5px solid var(--jdr-encre-forte); border-radius: 4px;
+  color: var(--jdr-encre-forte); padding: .15em 0;
+  cursor: default; user-select: none;
+}
+.jdr-de-insuffisant {
+  border-color: var(--jdr-accent); color: var(--jdr-accent);
 }
 .jdr-comp-entetes {
   display: grid; grid-template-columns: 3em 3em 1fr; gap: .4em;
