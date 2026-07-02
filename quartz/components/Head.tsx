@@ -105,6 +105,7 @@ export default (() => {
       <script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-actus.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-army-builder.js?v=3" spa-preserve />
+      <script type="module" src="/quartz/static/jdr-fiches.js" spa-preserve />
       
       <link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve />
@@ -113,6 +114,7 @@ export default (() => {
       <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-army-builder.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-wargame-index.css" spa-preserve />
+      <link rel="stylesheet" href="/quartz/static/jdr-fiches.css" spa-preserve />
       </head>
     )
   }
