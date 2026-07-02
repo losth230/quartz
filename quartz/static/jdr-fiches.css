@@ -64,10 +64,32 @@
   padding: 0 .9rem .9rem; margin-bottom: 1rem; position: relative;
 }
 .jdr-bandeau {
-  display: inline-block; background: var(--jdr-bandeau); color: var(--jdr-papier);
+  display: inline-flex; align-items: center; gap: .45em;
+  background: var(--jdr-bandeau); color: var(--jdr-papier);
   font-family: var(--jdr-police-titre); font-size: .95rem; letter-spacing: .04em;
   padding: .25em 1.1em; margin: -1px 0 .7rem; border-radius: 0 0 6px 6px;
 }
+.jdr-icone { width: 15px; height: 15px; flex: none; }
+
+/* filigranes décoratifs en fond des sections équipement/capacités/magie/inventaire */
+.jdr-bloc-filigrane { overflow: hidden; }
+.jdr-filigrane {
+  position: absolute; z-index: -1; bottom: -6px; right: -6px;
+  width: 92px; height: 92px; color: var(--jdr-encre-forte); opacity: .07;
+  pointer-events: none;
+}
+.jdr-filigrane-svg { width: 100%; height: 100%; }
+
+/* cadre général de la fiche + ornements de coin façon grimoire */
+.jdr-cadre { position: relative; padding: .6rem .2rem .2rem; }
+.jdr-coin {
+  position: absolute; width: 26px; height: 26px;
+  color: var(--jdr-encre-forte); opacity: .5; pointer-events: none;
+}
+.jdr-coin-hg { top: -2px; left: -2px; }
+.jdr-coin-hd { top: -2px; right: -2px; transform: scaleX(-1); }
+.jdr-coin-bg { bottom: -2px; left: -2px; transform: scaleY(-1); }
+.jdr-coin-bd { bottom: -2px; right: -2px; transform: scale(-1, -1); }
 
 /* ---- entête de fiche ---- */
 .jdr-entete-fiche {
