@@ -115,7 +115,15 @@ function filtered() {
   return rows;
 }
 
+function estAdmin() {
+  return !!(window.cpAuth && window.cpAuth.isAdmin && window.cpAuth.isAdmin());
+}
 function statusSelect(r) {
+  // Résolution réservée à l'admin (aligné sur le RLS) : les autres voient l'état en lecture seule.
+  if (!estAdmin()) {
+    const si = statusInfo(r.status);
+    return '<span class="cp-badge ' + si.cls + '">' + esc(si.label) + "</span>";
+  }
   const opts = STATUS_KEYS.map((k) =>
     '<option value="' + k + '"' + (k === r.status ? " selected" : "") + ">" + STATUS[k].label + "</option>"
   ).join("");
@@ -158,11 +166,11 @@ function renderTable(rows) {
       '<td class="cp-c-page">' + pageLink(r) + "</td>" +
       '<td>' + esc(r.reporter) + "</td>" +
       '<td class="cp-c-date">' + frDate(r.created_at) + "</td>" +
-      '<td class="cp-c-act"><button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button></td>' +
+      '<td class="cp-c-act">' + (estAdmin() ? '<button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' : "") + "</td>" +
       "</tr>" +
       editingRow;
   }).join("");
-  return '<p class="cp-hint">Astuce : tape une ligne pour lire le détail, le crayon pour modifier, le menu pour changer l\'état.</p>' +
+  return '<p class="cp-hint">Astuce : tape une ligne pour lire le détail' + (estAdmin() ? ", le crayon pour modifier, le menu pour changer l\'état." : ".") + "</p>" +
     '<table class="cp-table"><thead><tr>' +
     '<th data-sort="status">État' + arrow("status") + "</th>" +
     '<th data-sort="type">Type' + arrow("type") + "</th>" +
@@ -183,7 +191,7 @@ function renderCollapse(rows) {
         '<div class="cp-coll-foot">' +
           '<span class="cp-coll-pagelink">' + pageLink(r) + "</span>" +
           '<span class="cp-coll-status">État : ' + statusSelect(r) + "</span>" +
-          '<button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' +
+          (estAdmin() ? '<button class="cp-edit" data-id="' + r.id + '" title="Modifier">\u270E</button>' : "") +
         "</div>";
     return '<div class="cp-coll cp-row-' + si.cls + '" data-rowid="' + r.id + '">' +
       '<div class="cp-coll-head" data-collhead="' + r.id + '" aria-expanded="' + (editingId === r.id ? "true" : "false") + '">' +
@@ -340,4 +348,5 @@ if (document.readyState !== "loading") {
   document.addEventListener("DOMContentLoaded", bootstrap);
 }
 document.addEventListener("nav", bootstrap);   // relance la détection à chaque navigation
+document.addEventListener("cp-auth", () => { if (getApp()) render(); }); // affiche/masque les contrôles admin
 window.addEventListener("pageshow", bootstrap);
