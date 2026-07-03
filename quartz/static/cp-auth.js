@@ -66,8 +66,8 @@ function renderWidget() {
   if (user) {
     const nom = (profile && profile.pseudo) || user.email || "Compte";
     el.innerHTML =
-      '<span class="cp-auth-pseudo">' + esc(nom) +
-        (window.cpAuth.isAdmin() ? ' <span class="cp-auth-admin">admin</span>' : "") + "</span>" +
+      '<button class="cp-auth-pseudo" id="cp-auth-compte" title="Mon compte">' + esc(nom) +
+        (window.cpAuth.isAdmin() ? ' <span class="cp-auth-admin">admin</span>' : "") + "</button>" +
       '<button class="cp-auth-btn" id="cp-auth-logout">Déconnexion</button>';
   } else {
     el.innerHTML = '<button class="cp-auth-btn" id="cp-auth-login">Se connecter</button>';
@@ -79,14 +79,16 @@ function renderWidget() {
 // ============================================================
 let modalMode = "login"; // "login" | "signup"
 
-function ouvrirModal() {
+function ouvrirOverlay(html) {
   fermerModal();
   const ov = document.createElement("div");
   ov.id = "cp-auth-ov";
   ov.className = "cp-auth-ov";
-  ov.innerHTML = corpsModal();
+  ov.innerHTML = html;
   document.body.appendChild(ov);
 }
+function ouvrirModal() { modalMode = "login"; ouvrirOverlay(corpsModal()); }
+function ouvrirCompte() { ouvrirOverlay(corpsCompte()); }
 function fermerModal() {
   const ov = document.getElementById("cp-auth-ov");
   if (ov) ov.remove();
@@ -162,6 +164,63 @@ function traduire(m) {
   return m;
 }
 
+// ---- Panneau « Mon compte » + revendication des anciennes données ----
+function corpsCompte() {
+  const p = profile || {};
+  const email = (user && user.email) || "—";
+  const pseudo = p.pseudo || "";
+  return '<div class="cp-auth-modal">' +
+    '<button class="cp-auth-x" id="cp-auth-close" title="Fermer">\u2715</button>' +
+    '<h3 class="cp-auth-h">Mon compte</h3>' +
+    '<div class="cp-auth-info">' +
+      '<div><span>Pseudo</span><b>' + esc(pseudo || "—") + "</b></div>" +
+      '<div><span>Email</span><b>' + esc(email) + "</b></div>" +
+      '<div><span>Rôle</span><b>' + esc(p.role || "user") + "</b></div>" +
+    "</div>" +
+    '<div class="cp-auth-claim">' +
+      "<h4>Anciennes données</h4>" +
+      '<p>Rattache à ton compte les listes et parties saisies sous « ' + esc(pseudo) + ' » avant que tu aies un compte.</p>' +
+      '<div class="cp-auth-msg" id="cp-auth-claimmsg"></div>' +
+      '<button class="cp-auth-submit" id="cp-auth-claim">Rechercher mes données</button>' +
+    "</div>" +
+    '<button class="cp-auth-btn cp-auth-logout2" id="cp-auth-logout">Déconnexion</button>' +
+  "</div>";
+}
+function claimMsg(txt, cls) {
+  const m = document.getElementById("cp-auth-claimmsg");
+  if (m) { m.textContent = txt || ""; m.className = "cp-auth-msg" + (cls ? " " + cls : ""); }
+}
+// Étape 1 : prévisualise le nombre de lignes rattachables, puis bascule le bouton en confirmation.
+async function chercherClaim() {
+  const pseudo = (profile && profile.pseudo) || null;
+  const btn = document.getElementById("cp-auth-claim");
+  if (!pseudo) { claimMsg("Ton profil n'a pas de pseudo.", "err"); return; }
+  claimMsg("Recherche…");
+  try {
+    const [lists, parts] = await Promise.all([
+      sb.from("army_lists").select("id", { count: "exact", head: true }).is("owner_id", null).ilike("author", pseudo),
+      sb.from("parties").select("id", { count: "exact", head: true }).is("owner_id", null).ilike("saisi_par", pseudo),
+    ]);
+    const nL = lists.count || 0, nP = parts.count || 0;
+    if (!nL && !nP) { claimMsg("Aucune donnée à rattacher sous « " + pseudo + " »."); if (btn) btn.remove(); return; }
+    claimMsg(nL + " liste(s) et " + nP + " partie(s) trouvée(s) sous « " + pseudo + " ».", "ok");
+    if (btn) { btn.id = "cp-auth-claim-confirm"; btn.textContent = "Confirmer le rattachement"; }
+  } catch (e) { claimMsg("Erreur : " + (e.message || e), "err"); }
+}
+// Étape 2 : exécute le rattachement côté serveur (fonction sécurisée claim_my_rows).
+async function confirmerClaim() {
+  const btn = document.getElementById("cp-auth-claim-confirm");
+  if (btn) btn.disabled = true;
+  claimMsg("Rattachement…");
+  try {
+    const { data, error } = await sb.rpc("claim_my_rows");
+    if (error) throw error;
+    const r = data || {};
+    claimMsg("Rattaché : " + (r.lists || 0) + " liste(s), " + (r.parties || 0) + " partie(s).", "ok");
+    if (btn) btn.remove();
+  } catch (e) { if (btn) btn.disabled = false; claimMsg("Erreur : " + (e.message || e), "err"); }
+}
+
 // ============================================================
 //  Câblage
 // ============================================================
@@ -171,10 +230,13 @@ function wireOnce() {
 
   document.addEventListener("click", (e) => {
     if (e.target.closest("#cp-auth-login")) { ouvrirModal(); return; }
-    if (e.target.closest("#cp-auth-logout")) { faireLogout(); return; }
+    if (e.target.closest("#cp-auth-compte")) { ouvrirCompte(); return; }
+    if (e.target.closest("#cp-auth-logout")) { faireLogout(); fermerModal(); return; }
     if (e.target.closest("#cp-auth-close")) { fermerModal(); return; }
     if (e.target.id === "cp-auth-ov") { fermerModal(); return; } // clic sur le fond
     if (e.target.closest("#cp-auth-discord")) { faireDiscord(); return; }
+    if (e.target.closest("#cp-auth-claim")) { chercherClaim(); return; }
+    if (e.target.closest("#cp-auth-claim-confirm")) { confirmerClaim(); return; }
     const tab = e.target.closest(".cp-auth-tab");
     if (tab) { modalMode = tab.dataset.mode; const ov = document.getElementById("cp-auth-ov"); if (ov) ov.innerHTML = corpsModal(); return; }
     if (e.target.closest("#cp-auth-submit")) { (modalMode === "login" ? faireLogin() : faireSignup()); return; }
@@ -206,7 +268,8 @@ function injecterStyles() {
     ".cp-auth-float{position:fixed;top:.6rem;right:.6rem;z-index:900;display:flex;align-items:center;gap:.5rem;" +
       "background:var(--light);border:1px solid var(--lightgray);border-radius:999px;padding:.25rem .35rem .25rem .7rem;" +
       "font-size:.82rem;box-shadow:0 1px 4px rgba(0,0,0,.12)}" +
-    ".cp-auth-pseudo{color:var(--darkgray);font-weight:600;white-space:nowrap}" +
+    ".cp-auth-pseudo{cursor:pointer;background:none;border:none;font:inherit;padding:0;color:var(--darkgray);font-weight:600;white-space:nowrap}" +
+    ".cp-auth-pseudo:hover{text-decoration:underline}" +
     ".cp-auth-admin{font-size:.62rem;text-transform:uppercase;letter-spacing:.04em;color:var(--secondary);" +
       "border:1px solid var(--secondary);border-radius:999px;padding:0 .35em;margin-left:.15em}" +
     ".cp-auth-btn{cursor:pointer;border:1px solid var(--secondary);background:var(--secondary);color:var(--light);" +
@@ -234,7 +297,16 @@ function injecterStyles() {
     ".cp-auth-msg.err{color:#b3453b}.cp-auth-msg.ok{color:#3c8a4e}" +
     ".cp-auth-submit{cursor:pointer;border:1px solid var(--secondary);background:var(--secondary);color:var(--light);" +
       "border-radius:6px;padding:.55rem;font-family:inherit;font-size:.9rem;font-weight:600}" +
-    ".cp-auth-submit:hover{opacity:.9}";
+    ".cp-auth-submit:hover{opacity:.9}" +
+    ".cp-auth-h{margin:0 0 .8rem;font-size:1rem;color:var(--dark)}" +
+    ".cp-auth-info{display:flex;flex-direction:column;gap:.35rem;font-size:.85rem;margin-bottom:1rem}" +
+    ".cp-auth-info>div{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--lightgray);padding-bottom:.3rem}" +
+    ".cp-auth-info span{color:var(--gray)}.cp-auth-info b{color:var(--darkgray);font-weight:600;text-align:right;word-break:break-all}" +
+    ".cp-auth-claim{border:1px solid var(--lightgray);border-radius:8px;padding:.8rem;margin-bottom:1rem}" +
+    ".cp-auth-claim h4{margin:0 0 .4rem;font-size:.85rem;color:var(--secondary)}" +
+    ".cp-auth-claim p{margin:0 0 .6rem;font-size:.8rem;color:var(--darkgray);line-height:1.4}" +
+    ".cp-auth-claim .cp-auth-submit{width:100%}" +
+    ".cp-auth-logout2{width:100%}";
   document.head.appendChild(st);
 }
 
@@ -250,4 +322,3 @@ function bootstrap() {
 if (document.readyState !== "loading") bootstrap();
 else document.addEventListener("DOMContentLoaded", bootstrap);
 document.addEventListener("nav", () => { injecterStyles(); ensureMount(); renderWidget(); });
-
