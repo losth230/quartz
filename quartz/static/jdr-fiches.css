@@ -65,7 +65,7 @@
 .jdr-bloc {
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
   background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
-  padding: 0 .9rem .9rem; margin-bottom: 1rem; position: relative;
+  padding: 0 .9rem .9rem; margin-bottom: .8rem; position: relative;
 }
 .jdr-bandeau {
   display: inline-flex; align-items: center; gap: .45em;
@@ -87,8 +87,9 @@
 
 /* ---- entête de fiche ---- */
 .jdr-entete-fiche {
-  display: grid; grid-template-columns: auto 1fr auto minmax(0, 320px); gap: 1rem;
-  align-items: start; margin-bottom: 1rem;
+  display: grid; grid-template-columns: auto minmax(190px, 240px) auto minmax(0, 320px);
+  gap: .7rem;
+  align-items: start; margin-bottom: .8rem;
 }
 /* portrait */
 .jdr-portrait {
@@ -155,7 +156,7 @@
 .jdr-id-ligne input { flex: 1 1 0; min-width: 0; width: 100%; box-sizing: border-box; }
 
 /* fanions de stats (signature de la fiche papier) */
-.jdr-rang-fanions { display: flex; gap: 1rem; margin-bottom: 1.2rem; flex-wrap: wrap; }
+.jdr-rang-fanions { display: flex; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
 .jdr-fanion { width: 108px; text-align: center; }
 .jdr-fanion-titre {
   background: var(--jdr-bandeau); color: var(--jdr-papier);
