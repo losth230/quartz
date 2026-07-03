@@ -80,6 +80,30 @@ const ICONES = {
     <path d="M8 8V6.5a4 4 0 0 1 8 0V8"/>
     <path d="M5.5 8h13l1 12.5a1.6 1.6 0 0 1-1.6 1.5H6.1A1.6 1.6 0 0 1 4.5 20.5L5.5 8Z"/>
   </svg>`,
+  // Icône placeholder du portrait (avant upload)
+  portrait: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <rect x="3.5" y="4.5" width="17" height="14" rx="1.6"/>
+    <circle cx="9" cy="10" r="1.6"/>
+    <path d="M4 16.5 8.5 12l3 3 3.5-4L20 15.5"/>
+  </svg>`,
+  // Icône de bandeau pour la section Valeurs
+  valeurs: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="8.2"/>
+    <path d="M12 7.2 13.4 12 12 16.8 10.6 12 12 7.2Z" fill="currentColor" stroke="none"/>
+  </svg>`,
+  histoire: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M12 5.5c-1.8-1.3-4-1.8-6.2-1.5v13c2.2-.3 4.4.2 6.2 1.5 1.8-1.3 4-1.8 6.2-1.5v-13c-2.2-.3-4.4.2-6.2 1.5Z"/>
+    <path d="M12 5.5v13"/>
+  </svg>`,
+  description: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="8.3" r="3.3"/>
+    <path d="M5 19.5c1.2-3.4 4-5 7-5s5.8 1.6 7 5"/>
+  </svg>`,
+  notes: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M4 20 14.5 9.5"/>
+    <path d="M13 7l4 4-1.8 1.8-4-4L13 7Z"/>
+    <path d="M4 20l1-4.2 3.2 3.2L4 20Z"/>
+  </svg>`,
 };
 
 function defaultDonnees() {
@@ -97,14 +121,19 @@ function defaultDonnees() {
     melee: "",
     tir: "",
     armure: "",
+    portrait: "",
     identite: Object.fromEntries(IDENTITE.map(([k]) => [k, ""])),
     des: { physique: "3d6", mental: "3d6", social: "3d6" },
+    valeurs: [],
     competences: comps,
     armes: [],
     domaines_magie: ["", "", ""],
     capacites: "",
     inventaire: "",
     florins: 0,
+    histoire: "",
+    description_physique: "",
+    notes: "",
   };
 }
 
@@ -124,6 +153,7 @@ function normaliseDonnees(d) {
     };
   }
   out.armes = Array.isArray(d.armes) ? d.armes : [];
+  out.valeurs = Array.isArray(d.valeurs) ? d.valeurs : [];
   out.domaines_magie = Array.isArray(d.domaines_magie)
     ? [0, 1, 2].map((i) => d.domaines_magie[i] || "")
     : ["", "", ""];
@@ -178,6 +208,41 @@ function dateFr(iso) {
   } catch {
     return "";
   }
+}
+
+/* Redimensionne et recompresse une image côté client avant stockage
+   en base64 dans le JSONB — évite d'alourdir la table Supabase avec
+   des photos brutes (souvent plusieurs Mo sur téléphone). */
+function comprimerImage(fichier, tailleMax = 480, qualite = 0.75) {
+  return new Promise((resolve, reject) => {
+    const lecteur = new FileReader();
+    lecteur.onerror = () => reject(new Error("lecture du fichier impossible"));
+    lecteur.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error("fichier image invalide"));
+      img.onload = () => {
+        let { width, height } = img;
+        if (width >= height && width > tailleMax) {
+          height = Math.round(height * (tailleMax / width));
+          width = tailleMax;
+        } else if (height > width && height > tailleMax) {
+          width = Math.round(width * (tailleMax / height));
+          height = tailleMax;
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        // Fond blanc : les PNG/portraits à transparence ne virent pas noir en JPEG
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, width, height);
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL("image/jpeg", qualite));
+      };
+      img.src = lecteur.result;
+    };
+    lecteur.readAsDataURL(fichier);
+  });
 }
 
 /* ------------------------------------------------------------
@@ -289,10 +354,17 @@ function lireFicheDepuisDom() {
     attaques: tr.querySelector("[data-arme='attaques']").value.trim(),
     proprietes: tr.querySelector("[data-arme='proprietes']").value.trim(),
   })).filter((a) => a.nom || a.maniement || a.attaques || a.proprietes);
+  d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")].map((tr) => ({
+    nom: tr.querySelector("[data-valeur='nom']").value.trim(),
+    points: parseInt(tr.querySelector("[data-valeur='points']").value, 10) || 0,
+  })).filter((v) => v.nom || v.points);
   d.domaines_magie = [0, 1, 2].map((i) => val(`[data-magie='${i}']`).trim());
   d.capacites = val("[data-champ='capacites']");
   d.inventaire = val("[data-champ='inventaire']");
   d.florins = num("[data-champ='florins']");
+  d.histoire = val("[data-champ='histoire']");
+  d.description_physique = val("[data-champ='description_physique']");
+  d.notes = val("[data-champ='notes']");
 }
 
 /* ------------------------------------------------------------
@@ -366,6 +438,29 @@ function renderCompetences(catKey, catLabel) {
     </section>`;
 }
 
+/* Table "Valeurs" : liste libre nom + points, même interaction que
+   les armes (ajout/suppression de lignes). Réutilise le style visuel
+   .jdr-table-armes (lignes soulignées) qui n'est pas spécifique aux armes. */
+function renderValeurs() {
+  const valeurs = state.courant.donnees.valeurs;
+  const lignes = (valeurs.length ? valeurs : [{}]).map((v) => `
+    <tr data-valeur-ligne>
+      <td><input type="text" data-valeur="nom" value="${esc(v.nom || "")}" placeholder="Nom de la valeur"></td>
+      <td><input type="number" data-valeur="points" value="${v.points || v.points === 0 ? v.points : ""}" min="0"></td>
+      <td class="jdr-centre"><button class="jdr-btn-icone" data-action="retirer-valeur" title="Retirer">×</button></td>
+    </tr>`).join("");
+  return `
+    <section class="jdr-bloc">
+      <div class="jdr-bandeau">${ICONES.valeurs}<span>Valeurs</span></div>
+      <table class="jdr-table-armes">
+        <colgroup><col style="width:70%"><col style="width:24%"><col style="width:6%"></colgroup>
+        <thead><tr><th>Valeur</th><th>Points</th><th></th></tr></thead>
+        <tbody id="jdr-valeurs-corps">${lignes}</tbody>
+      </table>
+      <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-valeur">+ Ajouter une valeur</button>
+    </section>`;
+}
+
 function renderArmes() {
   const armes = state.courant.donnees.armes;
   const lignes = (armes.length ? armes : [{}]).map((a) => `
@@ -434,6 +529,15 @@ function renderFiche() {
     <div class="jdr-cadre">
 
       <div class="jdr-entete-fiche">
+        <div class="jdr-portrait" data-action="portrait-clic" title="Cliquer pour changer le portrait">
+          ${
+            d.portrait
+              ? `<img src="${esc(d.portrait)}" alt="Portrait de ${esc(p.nom)}">
+                 <button type="button" class="jdr-portrait-suppr" data-action="portrait-suppr" title="Retirer le portrait">×</button>`
+              : `<div class="jdr-portrait-vide">${ICONES.portrait}<span>Portrait</span></div>`
+          }
+          <input type="file" accept="image/*" class="jdr-portrait-input" data-champ="portrait-fichier" hidden>
+        </div>
         <div class="jdr-entete-gauche">
           <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}" aria-label="Nom du personnage">
           <div class="jdr-niveau-talents">
@@ -455,6 +559,8 @@ function renderFiche() {
       </div>
 
       <div class="jdr-rang-fanions">${fanions}</div>
+
+      ${renderValeurs()}
 
       <div class="jdr-grille-attributs">
         ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
@@ -483,6 +589,23 @@ function renderFiche() {
               <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
             </label>
             <textarea data-champ="inventaire" rows="9">${esc(d.inventaire)}</textarea>
+          </section>
+        </div>
+      </div>
+
+      <div class="jdr-grille-recit">
+        <section class="jdr-bloc">
+          <div class="jdr-bandeau">${ICONES.histoire}<span>Histoire</span></div>
+          <textarea data-champ="histoire" rows="6">${esc(d.histoire)}</textarea>
+        </section>
+        <div class="jdr-colonne">
+          <section class="jdr-bloc">
+            <div class="jdr-bandeau">${ICONES.description}<span>Description physique</span></div>
+            <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
+          </section>
+          <section class="jdr-bloc">
+            <div class="jdr-bandeau">${ICONES.notes}<span>Notes</span></div>
+            <textarea data-champ="notes" rows="5">${esc(d.notes)}</textarea>
           </section>
         </div>
       </div>
@@ -558,6 +681,58 @@ function attacherEvenements(root) {
         }
         break;
       }
+      case "ajouter-valeur": {
+        lireFicheDepuisDom();
+        state.courant.donnees.valeurs.push({ nom: "", points: 0 });
+        state.dirty = true;
+        render();
+        break;
+      }
+      case "retirer-valeur": {
+        const tr = e.target.closest("[data-valeur-ligne]");
+        if (tr) {
+          tr.remove();
+          lireFicheDepuisDom();
+          state.dirty = true;
+          render();
+        }
+        break;
+      }
+      case "portrait-clic":
+        root.querySelector("[data-champ='portrait-fichier']")?.click();
+        break;
+      case "portrait-suppr": {
+        lireFicheDepuisDom();
+        state.courant.donnees.portrait = "";
+        state.dirty = true;
+        render();
+        break;
+      }
+    }
+  });
+
+  // Upload de portrait : compression côté client avant stockage
+  root.addEventListener("change", async (e) => {
+    if (!e.target.matches("[data-champ='portrait-fichier']")) return;
+    const fichier = e.target.files && e.target.files[0];
+    e.target.value = ""; // permet de re-choisir le même fichier ensuite
+    if (!fichier) return;
+    if (!fichier.type.startsWith("image/")) {
+      alert("Merci de choisir un fichier image.");
+      return;
+    }
+    if (fichier.size > 15 * 1024 * 1024) {
+      alert("Image trop volumineuse (max 15 Mo avant compression).");
+      return;
+    }
+    try {
+      const dataUrl = await comprimerImage(fichier);
+      lireFicheDepuisDom();
+      state.courant.donnees.portrait = dataUrl;
+      state.dirty = true;
+      render();
+    } catch (err) {
+      alert("Impossible de traiter cette image : " + err.message);
     }
   });
 
