@@ -179,6 +179,11 @@ function sommeArbre(catKey) {
 
 const SEUIL_MIN_ARBRE = 2;
 
+// Section "Valeurs" (idéaux + points de valeur) : masquée pour l'instant,
+// le temps de finaliser la mécanique. Le code et les données existants
+// restent intacts — repasse à `true` pour la réafficher.
+const AFFICHER_VALEURS = false;
+
 /* ------------------------------------------------------------
    État
 ------------------------------------------------------------ */
@@ -355,10 +360,14 @@ function lireFicheDepuisDom() {
     attaques: tr.querySelector("[data-arme='attaques']").value.trim(),
     proprietes: tr.querySelector("[data-arme='proprietes']").value.trim(),
   })).filter((a) => a.nom || a.maniement || a.attaques || a.proprietes);
-  d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")].map((tr) => ({
-    nom: tr.querySelector("[data-valeur='nom']").value.trim(),
-  })).filter((v) => v.nom);
-  d.points_valeur = num("[data-champ='points_valeur']");
+  if (AFFICHER_VALEURS) {
+    d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")].map((tr) => ({
+      nom: tr.querySelector("[data-valeur='nom']").value.trim(),
+    })).filter((v) => v.nom);
+    d.points_valeur = num("[data-champ='points_valeur']");
+  }
+  // Si masquée, d.valeurs / d.points_valeur restent tels quels en mémoire
+  // (pas de champ dans le DOM à relire) — rien n'est perdu à l'enregistrement.
   d.domaines_magie = [0, 1, 2].map((i) => val(`[data-magie='${i}']`).trim());
   d.capacites = val("[data-champ='capacites']");
   d.inventaire = val("[data-champ='inventaire']");
@@ -572,7 +581,7 @@ function renderFiche() {
 
       <div class="jdr-rang-fanions">${fanions}</div>
 
-      ${renderValeurs()}
+      ${AFFICHER_VALEURS ? renderValeurs() : ""}
 
       <div class="jdr-grille-attributs">
         ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
