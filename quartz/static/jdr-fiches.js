@@ -125,6 +125,7 @@ function defaultDonnees() {
     identite: Object.fromEntries(IDENTITE.map(([k]) => [k, ""])),
     des: { physique: "3d6", mental: "3d6", social: "3d6" },
     valeurs: [],
+    points_valeur: 0,
     competences: comps,
     armes: [],
     domaines_magie: ["", "", ""],
@@ -356,8 +357,8 @@ function lireFicheDepuisDom() {
   })).filter((a) => a.nom || a.maniement || a.attaques || a.proprietes);
   d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")].map((tr) => ({
     nom: tr.querySelector("[data-valeur='nom']").value.trim(),
-    points: parseInt(tr.querySelector("[data-valeur='points']").value, 10) || 0,
-  })).filter((v) => v.nom || v.points);
+  })).filter((v) => v.nom);
+  d.points_valeur = num("[data-champ='points_valeur']");
   d.domaines_magie = [0, 1, 2].map((i) => val(`[data-magie='${i}']`).trim());
   d.capacites = val("[data-champ='capacites']");
   d.inventaire = val("[data-champ='inventaire']");
@@ -438,23 +439,34 @@ function renderCompetences(catKey, catLabel) {
     </section>`;
 }
 
-/* Table "Valeurs" : liste libre nom + points, même interaction que
-   les armes (ajout/suppression de lignes). Réutilise le style visuel
-   .jdr-table-armes (lignes soulignées) qui n'est pas spécifique aux armes. */
+/* Section "Valeurs" : les idéaux du personnage (Honnêteté, Justice,
+   Don de soi…) sont une liste libre sans score individuel — comme les
+   armes pour l'interaction (ajout/suppression de lignes), mais une
+   seule colonne. Les "points de valeur" sont un compteur global unique,
+   gagné en jouant ses idéaux et dépensé pour un bonus en jeu (mécanique
+   proche de l'Inspiration D&D, mais cumulable). */
 function renderValeurs() {
-  const valeurs = state.courant.donnees.valeurs;
+  const d = state.courant.donnees;
+  const valeurs = d.valeurs;
   const lignes = (valeurs.length ? valeurs : [{}]).map((v) => `
     <tr data-valeur-ligne>
-      <td><input type="text" data-valeur="nom" value="${esc(v.nom || "")}" placeholder="Nom de la valeur"></td>
-      <td><input type="number" data-valeur="points" value="${v.points || v.points === 0 ? v.points : ""}" min="0"></td>
+      <td><input type="text" data-valeur="nom" value="${esc(v.nom || "")}" placeholder="Honnêteté, Justice, Don de soi…"></td>
       <td class="jdr-centre"><button class="jdr-btn-icone" data-action="retirer-valeur" title="Retirer">×</button></td>
     </tr>`).join("");
   return `
     <section class="jdr-bloc">
       <div class="jdr-bandeau">${ICONES.valeurs}<span>Valeurs</span></div>
+      <label class="jdr-id-ligne jdr-compteur-valeur">
+        <span>Points de valeur</span>
+        <span class="jdr-stepper">
+          <button type="button" class="jdr-btn-icone" data-action="valeur-moins" title="Dépenser 1 point">−</button>
+          <input type="number" min="0" data-champ="points_valeur" value="${d.points_valeur || ""}">
+          <button type="button" class="jdr-btn-icone" data-action="valeur-plus" title="Gagner 1 point">+</button>
+        </span>
+      </label>
       <table class="jdr-table-armes">
-        <colgroup><col style="width:70%"><col style="width:24%"><col style="width:6%"></colgroup>
-        <thead><tr><th>Valeur</th><th>Points</th><th></th></tr></thead>
+        <colgroup><col style="width:94%"><col style="width:6%"></colgroup>
+        <thead><tr><th>Idéal</th><th></th></tr></thead>
         <tbody id="jdr-valeurs-corps">${lignes}</tbody>
       </table>
       <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-valeur">+ Ajouter une valeur</button>
@@ -683,7 +695,7 @@ function attacherEvenements(root) {
       }
       case "ajouter-valeur": {
         lireFicheDepuisDom();
-        state.courant.donnees.valeurs.push({ nom: "", points: 0 });
+        state.courant.donnees.valeurs.push({ nom: "" });
         state.dirty = true;
         render();
         break;
@@ -696,6 +708,20 @@ function attacherEvenements(root) {
           state.dirty = true;
           render();
         }
+        break;
+      }
+      case "valeur-plus": {
+        lireFicheDepuisDom();
+        state.courant.donnees.points_valeur = (state.courant.donnees.points_valeur || 0) + 1;
+        state.dirty = true;
+        render();
+        break;
+      }
+      case "valeur-moins": {
+        lireFicheDepuisDom();
+        state.courant.donnees.points_valeur = Math.max(0, (state.courant.donnees.points_valeur || 0) - 1);
+        state.dirty = true;
+        render();
         break;
       }
       case "portrait-clic":
