@@ -330,7 +330,10 @@ function init() {
 
   // ---- Publication / mise à jour ----
   $("cp-submit").addEventListener("click", async () => {
-    const author = $("cp-author").value.trim() || "Anonyme";
+    const cpUser = (window.cpAuth && window.cpAuth.user && window.cpAuth.user()) || null;
+    const uid = cpUser ? cpUser.id : null;
+    const pseudo = (window.cpAuth && window.cpAuth.pseudo && window.cpAuth.pseudo()) || null;
+    const author = $("cp-author").value.trim() || pseudo || "Anonyme";
     const faction = $("cp-faction").value.trim() || null;
     const version = $("cp-version").value.trim() || null;
     const title = $("cp-title").value.trim();
@@ -361,7 +364,7 @@ function init() {
         .eq("id", editingId));
     } else {
       ({ error } = await sb.from("army_lists")
-        .insert({ author, faction, version, title, body, points }));
+        .insert({ author, faction, version, title, body, points, owner_id: uid }));
     }
 
     btn.disabled = false;
