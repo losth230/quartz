@@ -250,3 +250,4 @@ function bootstrap() {
 if (document.readyState !== "loading") bootstrap();
 else document.addEventListener("DOMContentLoaded", bootstrap);
 document.addEventListener("nav", () => { injecterStyles(); ensureMount(); renderWidget(); });
+
