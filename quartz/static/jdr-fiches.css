@@ -216,6 +216,12 @@
 .jdr-florins { margin-bottom: .5rem; }
 .jdr-florins input { max-width: 6em; }
 
+/* compteur points de valeur */
+.jdr-compteur-valeur { margin-bottom: .7rem; }
+.jdr-stepper { display: inline-flex; align-items: center; gap: .35em; }
+.jdr-stepper input { width: 3.2em; text-align: center; }
+.jdr-stepper .jdr-btn-icone { border: 1px solid var(--jdr-ligne); }
+
 /* histoire / description physique / notes */
 .jdr-grille-recit { display: grid; grid-template-columns: 3fr 2fr; gap: 1rem; margin-top: 1rem; }
 
@@ -246,4 +252,3 @@
 @media (prefers-reduced-motion: reduce) {
   #jdr-fiches-app * { transition: none !important; }
 }
-
