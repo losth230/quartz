@@ -87,9 +87,32 @@
 
 /* ---- entête de fiche ---- */
 .jdr-entete-fiche {
-  display: grid; grid-template-columns: 1fr auto minmax(0, 320px); gap: 1rem;
+  display: grid; grid-template-columns: auto 1fr auto minmax(0, 320px); gap: 1rem;
   align-items: start; margin-bottom: 1rem;
 }
+/* portrait */
+.jdr-portrait {
+  position: relative; width: 84px; height: 84px; flex: none;
+  border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
+  overflow: hidden; cursor: pointer;
+  background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
+  display: grid; place-items: center;
+}
+.jdr-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.jdr-portrait-vide {
+  display: flex; flex-direction: column; align-items: center; gap: .3em;
+  color: var(--jdr-encre-forte); opacity: .5; font-size: .62rem; text-align: center; padding: .3em;
+}
+.jdr-portrait-vide svg { width: 22px; height: 22px; }
+.jdr-portrait-suppr {
+  position: absolute; top: 3px; right: 3px; width: 1.5em; height: 1.5em;
+  border-radius: 50%; border: none;
+  background: color-mix(in srgb, var(--jdr-papier) 80%, transparent);
+  color: var(--jdr-accent); font-size: .85rem; line-height: 1; cursor: pointer;
+  display: grid; place-items: center;
+}
+.jdr-portrait-suppr:hover { background: var(--jdr-accent); color: var(--jdr-papier); }
+
 .jdr-nom {
   width: 100%; font-family: var(--jdr-police-titre); font-size: 1.7rem; font-weight: 700;
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
@@ -193,6 +216,9 @@
 .jdr-florins { margin-bottom: .5rem; }
 .jdr-florins input { max-width: 6em; }
 
+/* histoire / description physique / notes */
+.jdr-grille-recit { display: grid; grid-template-columns: 3fr 2fr; gap: 1rem; margin-top: 1rem; }
+
 /* champs génériques */
 #jdr-fiches-app input, #jdr-fiches-app textarea {
   font-family: var(--jdr-police-corps); font-size: inherit;
@@ -209,10 +235,11 @@
 
 /* responsive */
 @media (max-width: 820px) {
-  .jdr-entete-fiche { grid-template-columns: 1fr; }
-  .jdr-identite { min-width: 0; }
+  .jdr-entete-fiche { grid-template-columns: auto 1fr; }
+  .jdr-identite { min-width: 0; grid-column: 1 / -1; }
   .jdr-grille-attributs { grid-template-columns: 1fr; }
   .jdr-grille-bas { grid-template-columns: 1fr; }
+  .jdr-grille-recit { grid-template-columns: 1fr; }
   .jdr-cell-date { display: none; }
   .jdr-table-liste th:last-child { display: none; }
 }
