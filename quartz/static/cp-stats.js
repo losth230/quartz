@@ -328,7 +328,10 @@ async function savePartie() {
   const version = $("cp-f-version").value.trim() || null;
   const scenario = $("cp-f-scenario").value || null;
   const deploiement = $("cp-f-deploiement").value || null;
-  const saisi_par = $("cp-f-saisipar").value.trim() || "Anonyme";
+  const cpUser = (window.cpAuth && window.cpAuth.user && window.cpAuth.user()) || null;
+  const uid = cpUser ? cpUser.id : null;
+  const pseudo = (window.cpAuth && window.cpAuth.pseudo && window.cpAuth.pseudo()) || null;
+  const saisi_par = $("cp-f-saisipar").value.trim() || pseudo || "Anonyme";
   const commentaire = $("cp-f-commentaire") ? ($("cp-f-commentaire").value.trim() || null) : null;
 
   // collecte des participants
@@ -394,7 +397,7 @@ async function savePartie() {
     // --- MODE CRÉATION ---
     const { data: pData, error: pErr } = await sb
       .from("parties")
-      .insert({ version, scenario, deploiement, saisi_par, commentaire })
+      .insert({ version, scenario, deploiement, saisi_par, commentaire, owner_id: uid })
       .select();
     if (pErr || !pData || !pData.length) {
       btn.disabled = false;
