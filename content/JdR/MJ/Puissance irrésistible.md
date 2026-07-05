@@ -1,43 +1,52 @@
-Lorsqu'un sort est lancé avec **Puissance Irrésistible** (double 6), le sort réussit automatiquement (quelle que soit la valeur de lancement du sort) mais le lanceur doit lancer 1d66 pour connaître l'effet supplémentaire :
+---
+title: Puissance Irrésistible (MJ)
+---
 
-**11** – Une aura de lumière émane du lanceur pendant 1d6 jours. 
-**12** – Le lanceur peut parler et comprendre toutes les langues pendant 1d6 heures.
-**13** – Le lanceur ne peut plus lire ni écrire pendant 1d6 heures.
-**14** – Le lanceur et les créatures pouvant l'entendre à 6'' ou moins tombent par terre et se tordent de rire pendant 1d6 tours.
-**15** – Pendant 1d6 heures, chaque fois que le lanceur lance un sort, il lance à la place un autre sort de même niveau.
-**16** – Le lanceur est projeté 1d6 mètres en arrière par la force du sort et tombe au sol.
+> [!warning] Réservé au MJ
+> Cette page ne doit pas être accessible aux joueurs.
 
-**21** – Un œil spectral pousse au milieu du front du lanceur.  
-**22** – Le lanceur rajeunit de 1d6 années.
-**23** – Le lanceur vieillit de 1d6 années.  
-**24** – Le lanceur change de sexe.  
-**25** – La couleur de peau du lanceur change.
-**26** – La couleur des yeux du lanceur change.
+Si le jet de lancement d'un sort obtient au moins **deux résultats de 6**, le sort est lancé automatiquement — mais à trop puiser dans des forces qu'il ne maîtrise pas, le lanceur attise la colère des dieux. Le MJ lance 2d6, lus comme un résultat D66, ou choisit directement l'entrée la plus pertinente.
 
-**31** – Le lanceur subit un choc mental, il perd autant de PV qu'il ne possède de niveaux.
-**32** – Le lanceur subit un choc mental, il perd autant de dés de sa réserve de magie qu'il ne possède de niveaux.
-**33** – Les yeux du porteur pleurent du sang chaque fois qu'il fait appel à la magie jusqu'au prochain repos.
-**34** – Lorsque le lanceur voyage, un serviteur spectral le suit en frappant deux noix de coco ensemble, de façon à imiter le bruit de sabots.
-**35** – Deux pouces poussent dans l'une des mains du lanceur.
-**36** – Le lanceur est dégouté par un type de créature (jeunes, vieux, hommes, femmes, etc... Le MD choisit en fonction de la situation).
-
-**41** – La bouche du lanceur est en feu, chaque fois qu'il essaye de parler, il lance le sort Trait de Feu (domaine du cataclysme) pendant 1d6 heures.
-**42** – Le lanceur grossit de 1d6 kg à chaque sort qu'il lance.
-**43** – Le lanceur maigrit de 1d6 kg à chaque sort qu'il lance.
-**44** – Le lanceur ne peut plus mentir pendant 1d6 heures.
-**45** – Le lanceur peut détecter l'invisible pendant 1d6 heures.
-**46** – Quels que soient les vêtements que porte le lanceur, ils deviennent les habits de l'empereur : le lanceur pense toujours être habillé mais tout le monde le voit nu. Dure 1d6 jours.
-
-**51** – Une créature aléatoire de deux fois le niveau du Lanceur apparait à proximité (le MD choisit son attitude : agressive, passive, etc...)
-**52** – Le lanceur devient étonnamment triste chaque fois qu'il aperçoit quelque chose de spécifique (au choix du DM : un pissenlit, un enfant, un florin…)
-**53** – Le lanceur à la phobie des tavernes.
-**54** – Le lanceur est persuadé d'être contrôlé par un dieu jouant à un jeu de rôle avec ses amis dieux.
-**55** – Le race du lanceur change.
-**56** – Chaque fois que le lanceur dit un mot avec la lettre X, il lance Trait de Feu (Cataclysme) en ligne droite.
-
-**61** – Le corps du lanceur agit comme un puissant aimant, attirant tous les objets métalliques pendant 1d6 heures.
-**62** – Lorsque le lanceur marche, les plantes autour de lui fanent.
-**63** – Le lanceur obtient une vision d'un futur potentiel.
-**64** – Le lanceur et tout ceux qui le connaissent oublient son nom.
-**65** – Lorsque vous marchez, vous criez aléatoirement une insulte.  
-**66** – Un petit garçon fantomatique suit le lanceur et critique chacune de ses décisions.
+Tous les effets ci-dessous sont **définitifs**, à moins qu'une intrigue ne vienne un jour les défaire.
+## 11-16
+- **11** — Une aura de lumière ténue émane désormais en permanence du lanceur. Impossible pour lui de se cacher dans l'obscurité.
+- **12** — Le lanceur parle et comprend désormais toutes les langues, en permanence.
+- **13** — Le lanceur ne sait plus ni lire, ni écrire. Définitivement.
+- **14** — Le lanceur porte désormais une vulnérabilité magique au rire : chaque fois qu'il canalise à nouveau de la magie, lui et les créatures à 6" ou moins qui l'entendent tombent au sol, pris d'un rire incontrôlable, pendant 1d6 tours.
+- **15** — La magie du lanceur devient définitivement instable : chaque sort qu'il lance produit désormais un effet sensiblement différent de celui qu'il avait décrit — au MJ de décider dans quelle mesure.
+- **16** — À chaque sort qu'il lance désormais, la décharge magique le projette 1d6 mètres en arrière et le fait tomber au sol.
+## 21-26
+- **21** — Un œil spectral pousse au milieu du front du lanceur.
+- **22** — Le lanceur rajeunit de 1d6 années.
+- **23** — Le lanceur vieillit de 1d6 années.
+- **24** — Le lanceur change de sexe.
+- **25** — La couleur de peau du lanceur change.
+- **26** — La couleur des yeux du lanceur change.
+## 31-36
+- **31** — Le lanceur subit un choc mental : il perd immédiatement autant de PV qu'il possède de niveaux.
+- **32** — Le lanceur subit un choc mental : sa réserve maximale de magie est réduite de façon permanente d'un nombre de dés égal à son niveau.
+- **33** — Les yeux du lanceur pleurent du sang chaque fois qu'il fait appel à la magie, pour toujours.
+- **34** — Lorsque le lanceur voyage, un serviteur spectral le suit désormais en permanence, frappant deux noix de coco ensemble pour imiter le bruit de sabots.
+- **35** — Deux pouces poussent dans l'une des mains du lanceur.
+- **36** — Le lanceur est dégoûté en permanence par un type de créature (jeunes, vieux, hommes, femmes, etc. — le MJ choisit selon la situation).
+## 41-46
+- **41** — La bouche du lanceur reste embrasée en permanence : chaque fois qu'il essaie de parler, des flammes jaillissent de sa bouche en ligne droite, infligeant les dégâts d'une attaque de feu à quiconque se trouve sur la trajectoire.
+- **42** — Le lanceur grossit de 1d6 kg à chaque sort qu'il lance, pour toujours.
+- **43** — Le lanceur maigrit de 1d6 kg à chaque sort qu'il lance, pour toujours.
+- **44** — Le lanceur ne peut plus jamais mentir.
+- **45** — Le lanceur peut désormais détecter l'invisible en permanence.
+- **46** — Quels que soient les vêtements que porte le lanceur, ils deviennent les habits de l'empereur : il se croit toujours habillé, mais tout le monde le voit nu. Cette illusion ne se dissipe jamais.
+## 51-56
+- **51** — Une créature aléatoire de deux fois le niveau du lanceur apparaît à proximité (le MJ choisit son attitude) et se met en tête de le suivre où qu'il aille, désormais.
+- **52** — Le lanceur devient durablement triste chaque fois qu'il aperçoit quelque chose de spécifique (au choix du MJ : un pissenlit, un enfant, un florin…).
+- **53** — Le lanceur développe une phobie des tavernes.
+- **54** — Le lanceur est persuadé d'être contrôlé par un dieu jouant à un jeu de rôle avec ses amis dieux.
+- **55** — La race du lanceur change.
+- **56** — Chaque fois que le lanceur prononce un mot contenant la lettre X, des flammes jaillissent de sa bouche en ligne droite, pour toujours.
+## 61-66
+- **61** — Le corps du lanceur agit désormais en permanence comme un puissant aimant, attirant tout objet métallique à proximité.
+- **62** — Lorsque le lanceur marche, les plantes autour de lui fanent, pour toujours.
+- **63** — Le lanceur obtient une vision d'un futur potentiel.
+- **64** — Le lanceur, et tous ceux qui le connaissent, oublient définitivement son nom.
+- **65** — Lorsque le lanceur marche, il crie aléatoirement une insulte, désormais et pour toujours.
+- **66** — Un petit garçon fantomatique suit le lanceur en permanence et critique chacune de ses décisions.
