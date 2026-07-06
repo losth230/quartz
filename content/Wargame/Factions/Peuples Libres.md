@@ -1,4 +1,3 @@
-<img width="1514" height="273" alt="image" src="https://github.com/user-attachments/assets/61002fd2-64b6-4df0-ac03-8a3520f526e2" />
 ##### Version : A3.3 
 
 <center><h2>Règles de Faction</h2></center>
@@ -26,11 +25,11 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 #### Féodalité
 Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
 
-#### Vœu de silence
-Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
 #### Volonté de fer
 Lorsque qu’un modèle ami réussit un test de moral, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral (il peut la récupérer s’il réussit un test de moral plus tard).
 
+
+(A enlever ?) **Vœu de silence :** Au début de chaque tour, si un modèle Sœur se trouve à 12’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale. Si un modèle Sœur se trouve à la place à 12’’ ou moins d'un modèle générant des dés de Manœuvre, il peut lui voler un de ses dés de Manœuvre et l'ajouter à votre réserve.
 
 ---
 
@@ -97,11 +96,13 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 - **Le devoir du paysan :** Les unités Paysans coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 5 pts).
 - **En rangs serrés :** Un modèle à 4'' ou moins d'un autre modèle ami gagne +1 en Moral et bénéficie d'un bonus de +1 sur ses jets d'armure.
 ## Temple d'Ishtar
-Lorsqu'un modèle Sœur utilisé Faveur divine lors d'une attaque en mêlée ou à distance, elle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
+- **Ferveur martiale :** Lorsqu'un modèle Sœur un Manœuvre pour s'octroyer un dé lors d'une attaque en mêlée ou à distance, il bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
+- **Juger les hérétiques :** Lorsqu'un modèle ami attaque un modèle activé, il bénéficie d'un bonus de +1 pour toucher.
 #### Monastère de la Busquette
-Lorsqu'un de vos modèle lance un sort, il déclenche l'attribut du domaine de la pureté (s'il lançait un sort du domaine de la pureté, il peut déclencher l'attribut 2 fois).
+- **Clairvoyance (5) :** Lorsqu'un modèle se fait attaquer, conférez-lui [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours En Premier|/Frappe Toujours En Premier]].
+- 
 #### Abatiale d'Hazard
-Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
+- **Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
 
 ---
 ## Commandants
