@@ -145,17 +145,8 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 | Baron      | **5**           | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Chevalier |
 | **Mêlée:** | 1d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |           |
 
-##### Règles spéciales :
-- Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par unité Chevalier ami en vie.
----
-
-### Comte — 22 pts
-
-| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Comte | **5** | **4+** | **-** | **4+** | **8** | **3** | **2** | **2** | Chevalier |
-| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
-
+##### Équipement :
+- Compte : le Baron génère un dé de Manœuvre blanc plutôt qu'un dé rouge.
 ##### Règles spéciales :
 - Organisateur de tournoi  : le Baron bénéficie d'un bonus de +1d6 en mêlée par unité Chevalier ami en vie.
 ---
