@@ -130,7 +130,7 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 | Allie      | **5**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **9**                                                                           | **3**  | **2**  | **5**  | Sœur     |
 | **Mêlée:** | 6d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+*[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 ##### Équipement :
 - Kama : les attaques de ce modèle obtenant un résultat pair infligent une blessure sans possibilité d’armure, même si elles ne devaient pas normalement toucher.
 - Kunai : vous pouvez annuler les attaques de ce modèle obtenant un résultat impair considéré comme touche pour octroyer une [[Wargame/_Visualisation/Règles spéciales/Egide|Egide]] par attaque ainsi annulée.
@@ -370,6 +370,7 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 - Lame d’assassin : les attaques de ce modèle obtenant un résultat impair considéré comme touche infligent des dégâts bruts.
 ##### Règles spéciales :
 - Assassinat : si cette unité attaque une cible de dos et après avoir résolu les touches, vous pouvez transformer une de ses touches impaires en touche pair.
+- Nappe de brouillard (1) : une fois par partie, ce modèle devient inciblable pour les attaques à distances et sorts pour le reste du tour.
 ---
 ### Basiléen — 16 pts
 
