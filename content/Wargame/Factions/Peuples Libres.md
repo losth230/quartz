@@ -365,16 +365,16 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ---
 ### Basiléen — 16 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Basiléen | **5** | **6+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Sœur |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+| Basiléen | **5** | **3+** | **-** | **4+** | **9** | **4** | **2** | **4** | Chevalier |
+| **Mêlée:** | 6d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]*
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]**
 ##### Équipement :
-- Arc long : Portée (C : 9’’, L : 15’’)
+- Armure en Forgelumière : l'armure de ce modèle ne peut être réduit d'aucune raison que ce soit. De plus, cette unité peut effectuer des jets d'armures normaux contres les dégâts bruts.
 ##### Règles spéciales :
-- Flèches en vrai-argent (1) : à utiliser avant une attaque de tir pour conférer [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+- Garde du Palais : la [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]] de ce modèle est égale au nombre de points de Manœuvre qu'il a dépensé durant ce tour (max [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]]).
 ---
 ### Chevaucheur de Pégase — 26 pts
 
