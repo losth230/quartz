@@ -96,14 +96,14 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 - **Le devoir du paysan :** Les unités Paysans coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 5 pts).
 - **En rangs serrés :** Un modèle à 4'' ou moins d'un autre modèle ami gagne +1 en Moral et bénéficie d'un bonus de +1 sur ses jets d'armure.
 ## Temple d'Ishtar
-- **Ferveur martiale :** Lorsqu'un modèle Sœur un Manœuvre pour s'octroyer un dé lors d'une attaque en mêlée ou à distance, il bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
-- **Juger les hérétiques :** Lorsqu'un modèle ami attaque un modèle activé, il bénéficie d'un bonus de +1 pour toucher.
+- **Ferveur martiale :** Lorsqu'un modèle Sœur dépense une Manœuvre pour s'octroyer un dé lors d'une attaque en mêlée ou à distance, il bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
+- **Anathème :** Lorsqu'un modèle Sœur attaque un modèle activé, il bénéficie d'un bonus de +1 pour toucher.
 #### Monastère de la Busquette
-- **Clairvoyance (5) :** Lorsqu'un modèle se fait attaquer, conférez-lui [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours En Premier|/Frappe Toujours En Premier]].
-- 
+- **Croisade (1) :** Lorsqu'un modèle Sœur a effectué une attaque à distance ou en mêlée (et après une potentielle riposte), octroyez-lui une marche gratuite.
+- **Epiphanie :** Au début de chaque tour, désignez un modèle Sœur et faites-lui effectuer une marche gratuite.
 #### Abatiale d'Hazard
-- **Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
-
+- **Assomption (3) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
+- **L'heure de la prière :** Lors de la pahse d'initiative, vous pouvez déclarez une prière. Dans ce cas tous vos modèles Sœurs bénéficient de [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie (1)]] et vous générez 2 Manœuvres supplémentaire. Cependant, votre adversaire doit activer 2 modèles à la suite au lieu d'un lors de sa première activation du tour.
 ---
 ## Commandants
 ### Abbesse — 44 pts
