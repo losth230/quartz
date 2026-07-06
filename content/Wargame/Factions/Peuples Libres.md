@@ -358,18 +358,18 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ---
 ## Modèles de base
 ---
-### Assassine — 24 pts
+### Assassine — 21 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+|🟥  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Assassine | **5** | **4+** | **-** | **6+** | **7** | **2** | **2** | **2** | Sœur |
-| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+*[[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 ##### Équipement :
-- Lame d’assassin : les attaques de ce modèle obtenant un résultat impair considéré comme touche infligent une blessure sans possibilité d’armure.
+- Lame d’assassin : les attaques de ce modèle obtenant un résultat impair considéré comme touche infligent des dégâts bruts.
 ##### Règles spéciales :
-- Assassinat : si ce modèle attaque une cible de dos et après avoir résolu les touches, vous pouvez soit transformer une de ses touches impaires en touche pair, soit lui conférer la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
+- Assassinat : si cette unité attaque une cible de dos et après avoir résolu les touches, vous pouvez transformer une de ses touches impaires en touche pair.
 ---
 ### Basiléen — 16 pts
 
@@ -485,9 +485,9 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ##### Règles spéciales :
 - Ardent défenseur : ce modèle commence avec la volonté de fer.
 ---
-### Sœur du couvent — 13 pts
+### Sœur du couvent — 14 pts
 
-|          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
 | Sœur       | **5**   | **4+**                                                                               | **-**                                                                                   | **6+**                                                                          | **6**                                                                            | **2**  | **2**  | **2**  | Sœur     |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
