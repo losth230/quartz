@@ -103,7 +103,7 @@ Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 - **Epiphanie :** Au début de chaque tour, désignez un modèle Sœur et faites-lui effectuer une marche gratuite.
 #### Abatiale d'Hazard
 - **Assomption (3) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
-- **L'heure de la prière :** Lors de la pahse d'initiative, vous pouvez déclarez une prière. Dans ce cas tous vos modèles Sœurs bénéficient de [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie (1)]] et vous générez 2 Manœuvres supplémentaire. Cependant, votre adversaire doit activer 2 modèles à la suite au lieu d'un lors de sa première activation du tour.
+- **L'heure de la prière :** Lors de la phase d'initiative, vous pouvez déclarer une prière. Dans ce cas tous vos modèles Sœurs bénéficient de [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie (1)]] et vous générez 2 Manœuvres supplémentaires. Cependant, votre adversaire doit activer 2 modèles à la suite au lieu d'un lors de sa première activation du tour.
 ---
 ## Commandants
 ### Abbesse — 44 pts
