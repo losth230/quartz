@@ -1,10 +1,8 @@
-
+<img width="1514" height="273" alt="image" src="https://github.com/user-attachments/assets/61002fd2-64b6-4df0-ac03-8a3520f526e2" />
 ##### Version : A3.3 
 
 <center><h2>Règles de Faction</h2></center>
 
-#### Chanson de Geste
-Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. Les Peuples Libres n'ont pas de limite maximale de commandants. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
 #### Fer de Lance
 Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. S'ils ont ainsi acheté une monture, ils peuvent également acheter l'équipement de la lance médiéval :  
 - Lance de cavalerie (+1 pts) : cette unité bénéficie de +1d6 en mêlée si elle réussit une charge.
@@ -25,14 +23,14 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
-#### Faveur divine (1)
-Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
+#### Féodalité
+Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
+
 #### Vœu de silence
 Au début de chaque tour, si une unité Sœur se trouve à 9’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale.
 #### Volonté de fer
 Lorsque qu’un modèle ami réussit un test de moral, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral (il peut la récupérer s’il réussit un test de moral plus tard).
-#### Serf et Chevaliers
-Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6’’ ou moins au lieu de la sienne.
+
 
 ---
 
@@ -75,11 +73,14 @@ Les modèles Chevalier ont +1d6 en mêlée.
 #### Duché de Skoïda
 Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] réparties comme vous le souhaitez entre vos modèles Chevaliers.
 ## Royaume de Lun
-Votre général génère 1 dé de Manœuvre supplémentaire
+- **Faveur divine (1) :** Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
+- **L'art de la guerre :** Votre général génère 1 dé de Manœuvre blanc supplémentaire
 #### Palais des Légendes
-Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
+- **Miracle (1) :** A utiliser en plus de Faveur divine pour transformer deux échecs en deux 6 (explosifs).
+- **Bouclier saint :** Lo
 #### Inquisition
-Lorsque qu’un de vos modèles lance un sort avec succès, vous gagnez 1 Manœuvre.
+- **Personne n'attend l'Inquisition :** Une fois le déploiement terminé, retirez 2 modèles de votre table et redéployez-les avec la règle [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
+- **Strategos :** Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
 ## Empire de Seth
 Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 #### Duché d’Hydrac
@@ -87,11 +88,14 @@ Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
 #### Ordre des Chevaliers du Clair Obscur
 Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
 ## Royaume de Thoriath
-Les modèles coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 6 pts).
+- **Conscription :** Les unités coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 6 pts).
+- **Serf et Chevaliers :** Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6’’ ou moins au lieu de la sienne.
 #### Duché de Boïtal
-Vos modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1 Vitesse.
+- **Chanson de Geste :** Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.
+- **Grande chevauchée :** Les modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1 Vitesse.
 #### Duché de Fessac
-Une fois par partie, au début du tour, les modèles Paysans peuvent effectuer une marche gratuite.
+- **Le devoir du paysan :** Les unités Paysans coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 5 pts).
+- **En rangs serrés :** Un modèle à 4'' ou moins d'un autre modèle ami gagne +1 en Moral et bénéficie d'un bonus de +1 sur ses jets d'armure.
 ## Temple d'Ishtar
 Lorsqu'un modèle Sœur utilisé Faveur divine lors d'une attaque en mêlée ou à distance, elle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
 #### Monastère de la Busquette
@@ -365,6 +369,19 @@ Une fois par partie, vous pouvez retirer le marqueur *Activé* d'un modèle Sœu
 - Lame d’assassin : les attaques de ce modèle obtenant un résultat impair considéré comme touche infligent une blessure sans possibilité d’armure.
 ##### Règles spéciales :
 - Assassinat : si ce modèle attaque une cible de dos et après avoir résolu les touches, vous pouvez soit transformer une de ses touches impaires en touche pair, soit lui conférer la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
+---
+### Basiléen — 16 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Basiléen | **5** | **6+** | **3+** | **5+** | **7** | **2** | **2** | **2** | Sœur |
+| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]*
+##### Équipement :
+- Arc long : Portée (C : 9’’, L : 15’’)
+##### Règles spéciales :
+- Flèches en vrai-argent (1) : à utiliser avant une attaque de tir pour conférer [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
 ---
 ### Chevaucheur de Pégase — 26 pts
 
