@@ -2,6 +2,9 @@
 
 <center><h2>Règles de Faction</h2></center>
 
+#### Féodalité
+Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
+
 #### Fer de Lance
 Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. S'ils ont ainsi acheté une monture, ils peuvent également acheter l'équipement de la lance médiéval :  
 - Lance de cavalerie (+1 pts) : cette unité bénéficie de +1d6 en mêlée si elle réussit une charge.
@@ -21,9 +24,6 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
-
-#### Féodalité
-Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
 
 (A enlever ?) **Vœu de silence :** Au début de chaque tour, si un modèle Sœur se trouve à 12’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale. Si un modèle Sœur se trouve à la place à 12’’ ou moins d'un modèle générant des dés de Manœuvre, il peut lui voler un de ses dés de Manœuvre et l'ajouter à votre réserve.
 
@@ -83,7 +83,7 @@ Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales
 - **Divine Onction :** Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
 #### Ordre des Chevaliers du Clair Obscur
 - **Œil pour œil :** Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
-- **Loi du Talion :** Lorsqu'un modèle 
+- **Loi du Talion :** lorsqu’un modèle doit effectuer un test de Panique, il peut annuler son test de Panique en dépensant unréussissant une charge sur un modèle ennemi à portée.
 ## Royaume de Thoriath
 - **Conscription :** Les unités coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 6 pts).
 - **Serf et Chevaliers :** Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6’’ ou moins au lieu de la sienne.
