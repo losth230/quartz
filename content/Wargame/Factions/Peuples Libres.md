@@ -25,10 +25,6 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 #### Féodalité
 Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
 
-#### Volonté de fer
-Lorsque qu’un modèle ami réussit un test de moral, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral (il peut la récupérer s’il réussit un test de moral plus tard).
-
-
 (A enlever ?) **Vœu de silence :** Au début de chaque tour, si un modèle Sœur se trouve à 12’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale. Si un modèle Sœur se trouve à la place à 12’’ ou moins d'un modèle générant des dés de Manœuvre, il peut lui voler un de ses dés de Manœuvre et l'ajouter à votre réserve.
 
 ---
@@ -81,11 +77,13 @@ Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales
 - **Personne n'attend l'Inquisition :** Une fois le déploiement terminé, retirez 2 modèles de votre table et redéployez-les avec la règle [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
 - **Strategos :** Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
 ## Empire de Seth
-Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
+- **Volonté de fer :** Lorsque qu’un modèle ami perd au moins 1 PV, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral.
+- **
 #### Duché d’Hydrac
-Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
+- **Divine Onction :** Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
 #### Ordre des Chevaliers du Clair Obscur
-Les modèles avec Volonté de Fer bénéficient de +1 Vitesse.
+- **Œil pour œil :** Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
+- **Loi du Talion :** Lorsqu'un modèle 
 ## Royaume de Thoriath
 - **Conscription :** Les unités coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 6 pts).
 - **Serf et Chevaliers :** Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6’’ ou moins au lieu de la sienne.
