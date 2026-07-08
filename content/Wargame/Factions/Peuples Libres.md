@@ -78,9 +78,10 @@ Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales
 - **Strategos :** Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
 ## Empire de Seth
 - **Volonté de fer :** Lorsque qu’un modèle ami perd au moins 1 PV, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral.
-- **
+- **Désert des lames :** Les modèles Chevalier bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
 #### Duché d’Hydrac
 - **Divine Onction :** Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
+- **Bouclier vengeur :** Les modèles avec la volonté de fer peuvent la défausser pour s'octroyer un bonus de +1 le temps d'un jet.
 #### Ordre des Chevaliers du Clair Obscur
 - **Œil pour œil :** Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 - **Loi du Talion :** lorsqu’un modèle doit effectuer un test de Panique, il peut annuler son test de Panique en dépensant unréussissant une charge sur un modèle ennemi à portée.
