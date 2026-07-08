@@ -48,7 +48,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 
 **Attribut : purification :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 9’’ ou moins du lanceur et retirez-lui le marqueur de votre choix, autre qu’un marqueur activation.
 #### Niveau 1
-- **Bouclier saint (court, 3+, amélioration) :** Portée 12’’, confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].
+- **Bouclier saint (court, 3+, amélioration) :** Portée 12’’, confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]]. 
 - **Mot de silence (court, 7+, malédiction) :** Portée 12’, cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
 #### Niveau 2
 - **Lumière bénie (long, 9+, amélioration) :** Portée 12’’. La prochaine fois que la cible de ce sort subit des touches d’une attaque en mêlée ou à distance, l’attaquant doit relancer tous ses jets ayant obtenu une touche.
@@ -60,11 +60,13 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 
 <center><h2>Royaumes et Ordres</h2></center>
 
-Lors de la création d'une bande des Peuples Libres, choisissez un Royaule auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.
+Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.
 ## Royaume de Til Armen
-Les modèles Chevaliers bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
+- **La Tour Blanche :** Au début de chaque tour, octroyez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] à chacun de vos modèles chevalier.
+- **Mythes et légendes :** Les unités chevalier bénéficient de +1d6 en mêlée.
 #### Ordre des Chevaliers
-Les modèles Chevalier ont +1d6 en mêlée.
+- **Serment de la Quête :** Au début de chaque tour, si vous possédez plus de points de victoire que votre adversaire, vos modèlez chevaliers peuvent faire exploser leurs 5 naturels comme si c'étaient des 6.
+- **Offrande rituelle (5) :** générez 1 point de victoire.
 #### Duché de Skoïda
 Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] réparties comme vous le souhaitez entre vos modèles Chevaliers.
 ## Royaume de Lun
