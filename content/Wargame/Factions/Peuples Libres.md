@@ -81,7 +81,7 @@ Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales
 - **Désert des lames :** Les modèles Chevalier bénéficient de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]].
 #### Duché d’Hydrac
 - **Divine Onction :** Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
-- **Bouclier vengeur :** Les modèles avec la volonté de fer peuvent la défausser pour s'octroyer un bonus de +1 le temps d'un jet.
+- **Dernier rempart :** Les modèles peuvent cumuler la volonté de fer. Ainsi, un modèle avec 2 volontés de fer pourra relancer les jets d'armure ayant obtenu 1 et 2. Un modèle ne peut gagner plus de 1 volonté de fer par tour.
 #### Ordre des Chevaliers du Clair Obscur
 - **Œil pour œil :** Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 - **Loi du Talion :** lorsqu’un modèle doit effectuer un test de Panique, il peut annuler son test de Panique en dépensant unréussissant une charge sur un modèle ennemi à portée.
