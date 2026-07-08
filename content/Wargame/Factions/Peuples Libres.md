@@ -65,10 +65,11 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **La Tour Blanche :** Au début de chaque tour, octroyez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] à chacun de vos modèles chevalier.
 - **Mythes et légendes :** Les unités chevalier bénéficient de +1d6 en mêlée.
 #### Ordre des Chevaliers
-- **Serment de la Quête :** Au début de chaque tour, si vous possédez plus de points de victoire que votre adversaire, vos modèlez chevaliers peuvent faire exploser leurs 5 naturels comme si c'étaient des 6.
-- **Offrande rituelle (5) :** générez 1 point de victoire.
+- **Serment de la Quête :** Au début de chaque tour, si vous possédez plus de points de victoire que votre adversaire, vos modèles chevaliers peuvent faire exploser leurs 5 naturels comme si c'étaient des 6.
+- **Offrande rituelle (4) :** Action courte utilisable par n'importe quel modèle chevalier non engagé en mêlée pour générer 1 point de victoire. Utilisable une seule fois par tour.
 #### Duché de Skoïda
-Au début de chaque tour, octroyez 2 [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] réparties comme vous le souhaitez entre vos modèles Chevaliers.
+- **Académie de magie :** Vos lanceurs de sorts ont un bonus de +1 au lancements de leurs sorts par [[Wargame/_Visualisation/Règles spéciales/Egide|Egide]] présents sur vos modèles.
+- **Bouclier saint (1) :** A utiliser en début de tour pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] à un modèle (utilisable au maximum une fois par modèle).
 ## Royaume de Lun
 - **Faveur divine (1) :** Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
 - **L'art de la guerre :** Votre général génère 1 dé de Manœuvre blanc supplémentaire
