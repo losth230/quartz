@@ -640,7 +640,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
    Royaume sur une ligne, ses bonus dessous, puis les deux
    Ordres/Duchés côte à côte en colonnes distinctes.
    ============================================================ */
-
 .cp-royaume {
   border: 1px solid var(--lightgray);
   border-radius: 8px;
@@ -648,7 +647,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
   margin: 1.4rem 0;
   background: color-mix(in srgb, var(--light) 92%, var(--gray));
 }
-
 /* --- Bandeau : nom du royaume, sur une seule ligne --- */
 .cp-royaume > h2,
 .cp-roy-nom {
@@ -662,12 +660,10 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
 /* --- Bonus du royaume, juste en dessous, pleine largeur --- */
 .cp-roy-bonus { margin: 0 0 1rem; }
 .cp-roy-bonus ul { margin: 0; padding-left: 1.1rem; }
 .cp-roy-bonus li { margin: 0.25rem 0; }
-
 /* --- Les deux Ordres / Duchés, en colonnes distinctes --- */
 .cp-roy-ordres {
   display: grid;
@@ -691,10 +687,10 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
   color: var(--tertiary);
   font-variant: small-caps;
   letter-spacing: 0.02em;
+  text-align: center;
 }
 .cp-ordre ul { margin: 0; padding-left: 1.1rem; }
 .cp-ordre li { margin: 0.3rem 0; line-height: 1.45; }
-
 /* --- Mobile : les colonnes s'empilent --- */
 @media (max-width: 700px) {
   .cp-roy-ordres { grid-template-columns: 1fr; }
