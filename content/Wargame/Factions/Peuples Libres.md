@@ -39,7 +39,7 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 - **Bannières des Lames enchainées (10 pts) :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
 - **Bannière d’Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
 - **Bannière des Vétérans d’Innsmouth (10 pts) :** *"La peur est pour ceux qui n’ont jamais vu l’horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s’ils ont perdu au moins 1 PV ou une unité.
-- **Bannière des Chevaliers du Clair-Obscur (20 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+- **Bannière des Chevaliers du Notan (20 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
 ---
 
 <center><h2>Domaines de Faction</h2></center>
@@ -72,10 +72,10 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Bouclier saint (1) :** A utiliser en début de tour pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] à un modèle (utilisable au maximum une fois par modèle).
 ## Royaume de Lun
 - **Faveur divine (1) :** Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.
-- **L'art de la guerre :** Votre général génère 1 dé de Manœuvre blanc supplémentaire
+- **L'art de la guerre :** Votre général génère 1 dé de Manœuvre blanc supplémentaire.
 #### Palais des Légendes
-- **Miracle (1) :** A utiliser en plus de Faveur divine pour transformer deux échecs en deux 6 (explosifs).
-- **Bouclier saint :** Lo
+- **Miracle (1) :** A utiliser en plus de Faveur divine pour transformer un échecs en un 6 (explosifs).
+- **Main Divine :** Les comandants bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
 #### Inquisition
 - **Personne n'attend l'Inquisition :** Une fois le déploiement terminé, retirez 2 modèles de votre table et redéployez-les avec la règle [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
 - **Strategos :** Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d'initiative.
@@ -85,7 +85,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 #### Duché d’Hydrac
 - **Divine Onction :** Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.
 - **Dernier rempart :** Les modèles peuvent cumuler la volonté de fer. Ainsi, un modèle avec 2 volontés de fer pourra relancer les jets d'armure ayant obtenu 1 et 2. Un modèle ne peut gagner plus de 1 volonté de fer par tour.
-#### Ordre des Chevaliers du Clair Obscur
+#### Ordre des Chevaliers du Notan
 - **Œil pour œil :** Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.
 - **Loi du Talion :** lorsqu’un modèle doit effectuer un test de Panique, il peut annuler son test de Panique en dépensant unréussissant une charge sur un modèle ennemi à portée.
 ## Royaume de Thoriath
@@ -261,7 +261,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Ardent défenseur : Loneline commence avec la partie avec la Volonté de Fer.
-- Chevalière de Sang : Si Losette est présente, Loneline est considérée comme un Chevalier du Clair-Obscur (voir Losette).
+- Chevalière du Notan : Loneline est considérée comme un Chevalier du Notan (voir Losette).
 ---
 
 <div class="legendary">
@@ -278,8 +278,8 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Règles spéciales :
 - Ardent défenseur : Losette commence avec la partie avec la Volonté de Fer. Si Losette est déployée au sein d’un modèle, celui-ci bénéficie également de la Volonté de Fer.
-- Chevalière de Sang : Losette est considérée comme un Chevalier du Clair-Obscur. Les Chevaliers du Clair-Obscur bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.
-- Première Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers du Clair-Obscur.
+- Chevalière du Notan : Losette est considérée comme un Chevalier du Notan. Les Chevaliers du Notan bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.
+- Dernière Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers du Notan.
 ---
 
 <div class="legendary">
@@ -372,7 +372,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 | Basiléen | **5** | **3+** | **-** | **4+** | **9** | **4** | **2** | **4** | Chevalier |
 | **Mêlée:** | 6d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]**
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]*
 ##### Équipement :
 - Armure en Forgelumière : l'armure de ce modèle ne peut être réduit d'aucune raison que ce soit. De plus, cette unité peut effectuer des jets d'armures normaux contres les dégâts bruts.
 ##### Règles spéciales :
