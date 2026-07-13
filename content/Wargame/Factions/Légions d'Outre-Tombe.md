@@ -227,7 +227,7 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 
 ---
-### Cavalier de l’effroi — 21 pts
+### Nuckelavee — 21 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
