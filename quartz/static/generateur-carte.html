@@ -656,6 +656,7 @@
     </div>
 
     <button class="small" id="export">📷 Export PNG</button>
+    <button class="small" id="pick-tile">🎯 Tirer une case</button>
   </div>
 </div>
 
@@ -3142,4 +3143,19 @@ setTimeout(() => {
   document.getElementById('hint').style.opacity = '0';
 }, 5000);
 
+
+ // Tire une case au hasard : sélection + infos + recentrage de la vue.
+function pickRandomTile() {
+  if (!map || !map.tiles.length) return;
+  const idx = Math.floor(Math.random() * map.tiles.length);
+  selected = idx;
+  const t = map.tiles[idx];
+  const { x, y } = axialToPixel(t.q, t.r);
+  view.x = window.innerWidth / 2 - x * view.scale;
+  view.y = window.innerHeight / 2 - y * view.scale;
+  showInfo(idx);
+  render();
+}
+document.getElementById('pick-tile').addEventListener('click', pickRandomTile);
+ 
 </script>
