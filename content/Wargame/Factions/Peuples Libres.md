@@ -1,4 +1,4 @@
-##### Version : A3.3 
+##### Version : A3.5.0 
 
 <center><h2>Règles de Faction</h2></center>
 
@@ -31,47 +31,25 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 
 <center><h2>Grandes Bannières</h2></center>
 
-Les différents royaumes libres se regroupent souvent autour d’un étendard commun. N'importe quel Chevalier peut posséder une bannière, Voici leurs différents effets :
-- **Bannière de la tour d'Ishtar (15 pts) :** *"Chargez ! Nous sommes invincibles !"* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles ami à portée de cette bannière bénéficient d'un bonus de +1 à leurs jets d'armure contre les attaques à distance.
-- **Bannière du Lion d’Acier (15 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d’avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
-- **Bannière du Jugement de Fer (15 pts) :** *"La loi ne faiblit jamais. Les faibles, eux, s’effondrent."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (6)]], les modèles amis bénéficient d’[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], les modèles ennemis subissent un malus de -1 au Moral.
-- **Bannière de l’Eternelle Lumière (10 pts) :** *"L’ombre ne tombera jamais sur notre patrie tant que nous tiendrons la ligne."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], au début de chaque tour, les modèles amis bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
-- **Bannières des Lames enchainées (10 pts) :** Les modèles adverses à 12’’ ou moins ne peuvent récupérer de PV.
-- **Bannière d’Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
-- **Bannière des Vétérans d’Innsmouth (10 pts) :** *"La peur est pour ceux qui n’ont jamais vu l’horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s’ils ont perdu au moins 1 PV ou une unité.
-- **Bannière des Chevaliers du Notan (20 pts) :** *"Nous sommes ceux que l’on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu’un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
----
-
-<center><h2>Domaines de Faction</h2></center>
-
-<center><h3>Domaine de la Pureté</h3></center>
-
-**Attribut : purification :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 9’’ ou moins du lanceur et retirez-lui le marqueur de votre choix, autre qu’un marqueur activation.
-#### Niveau 1
-- **Bouclier saint (court, 3+, amélioration) :** Portée 12’’, confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]]. 
-- **Mot de silence (court, 7+, malédiction) :** Portée 12’, cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
-#### Niveau 2
-- **Lumière bénie (long, 9+, amélioration) :** Portée 12’’. La prochaine fois que la cible de ce sort subit des touches d’une attaque en mêlée ou à distance, l’attaquant doit relancer tous ses jets ayant obtenu une touche.
-- **Courroux divin (court, 10+, amélioration) :** Ce sort cible le lanceur et est utilisable en mêlée. Jusqu’à la fin du tour, le lanceur bénéficie de *[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]* ainsi qu’un bonus de +1 sur ses jets d’attaque en mêlée.
-→ Version renforcée (1) : ce sort peut être lancé sans dépenser d’action.
-#### Niveau 3
-- **Mot sacré : sanctification (long, 18+) :** Bénie toutes les unités amies à 12’’ ou moins du lanceur. Jusqu’à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
----
-
-<center><h2>Grandes Bannières</h2></center>
-
 Les différents royaumes libres se regroupent souvent autour d'un étendard commun. N'importe quel Chevalier peut posséder une bannière, Voici leurs différents effets :
 
 <div class="cp-encadre">
 
-- **Bannière de la tour d'Ishtar (15 pts) :** *"Chargez ! Nous sommes invincibles !"* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles ami à portée de cette bannière bénéficient d'un bonus de +1 à leurs jets d'armure contre les attaques à distance.
-- **Bannière du Lion d'Acier (15 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d'avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
-- **Bannière du Jugement de Fer (15 pts) :** *"La loi ne faiblit jamais. Les faibles, eux, s'effondrent."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (6)]], les modèles amis bénéficient d'[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], les modèles ennemis subissent un malus de -1 au Moral.
-- **Bannière de l'Eternelle Lumière (10 pts) :** *"L'ombre ne tombera jamais sur notre patrie tant que nous tiendrons la ligne."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], au début de chaque tour, les modèles amis bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
-- **Bannières des Lames enchainées (10 pts) :** Les modèles adverses à 12'' ou moins ne peuvent récupérer de PV.
-- **Bannière d'Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
-- **Bannière des Vétérans d'Innsmouth (10 pts) :** *"La peur est pour ceux qui n'ont jamais vu l'horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s'ils ont perdu au moins 1 PV ou une unité.
-- **Bannière des Chevaliers du Notan (20 pts) :** *"Nous sommes ceux que l'on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu'un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+- **Etendard de Til Armen (20 pts) :** Au début de chaque tour, octroyez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] aux modèles amis à 15'' ou  moins.
+- **Bannière de la Quête (15 pts) :** Si vous possédez plus de points de victoire que votre adversaire, vos modèles chevaliers à  9'' ou moins peuvent faire exploser leurs 5 naturels comme si c’étaient des 6.
+- **Bannière de Skoïda (5 pts) :** Au début de chaque tour, désignez un modèle ami à 9'' ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+- **Etendard de Lun (5 pts) :** Le porteur de cette bannière génère un dé de Manœuvre blanc supplémentaire.
+- **Bannière des Légendes (10 pts) :** Les modèles amis à 9'' ou moins bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
+- **Bannière de l'Inquisition (5 pts) :** Tant que le porteur de cette bannière est en vie, vous pouvez relancer un dé de Manœuvre au début de chaque phase d'initiative.
+- **Etendard de Seth (15 pts)** : Les modèles amis à 15' ou moins bénéficient de [[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptables]].
+- **Bannière d'Hydrac (10 pts)** : Un modèle avec cette bannière commence la partie avec la Volonté de Fer (cf Seth).
+- **Bannière du Notan (15 pts)** : Lorsqu'un modèle ami rate un test de Panique à 9'' ou moins, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+- **Etendard de Thoriath (10 pts)** : Lorsqu'un modèle à 15'' ou moins  doit effectuer un test de Panique, il peut utiliser le moral de ce modèle à la place.
+- **Bannière de Boïtal (10 pts)** : Les modèles amis avec la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] à 9'' ou  moins bénéficient de +1 Vitesse.
+- **Bannière de Fessac (10 pts)** : Les modèles amis à 9'' ou moins bénéficient de +1 Moral.
+- **Etendard d'Ishtar (15 pts)** : Lorsqu'un modèle ami à 15'' ou moins attaque, il peut ajouter 1 dé à son total de dés.
+- **Bannière de la Busquette (20 pts) :** Au début de chaque tour, désignez un modèle à  9'' ou moins et octroyez-lui une marche gratuite.
+- **Bannière d'Hazard (10 pts) :** Au début  de chaque tour, désignez un modèle à 9'' ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]]
 
 </div>
 
@@ -91,12 +69,12 @@ Les différents royaumes libres se regroupent souvent autour d'un étendard comm
 <div class="cp-sorts">
 <div class="cp-sort">
 
-##### Bouclier saint** *(court, 3+, amélioration)*
+##### Bouclier saint *(court, 3+, amélioration)*
 Portée 12'', confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].
 </div>
 <div class="cp-sort">
 
-##### Mot de silence** *(court, 7+, malédiction)*
+##### Mot de silence *(court, 7+, malédiction)*
 Portée 12', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
 </div>
 </div>
@@ -106,7 +84,7 @@ Portée 12', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper
 ### Niveau 2
 <div class="cp-sorts">
 <div class="cp-sort">
-
+   
 ##### Lumière bénie *(long, 9+, amélioration)*
 Portée 12''. La prochaine fois que la cible de ce sort subit des touches d'une attaque en mêlée ou à distance, l'attaquant doit relancer tous ses jets ayant obtenu une touche.
 </div>
@@ -652,6 +630,17 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Vouge (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] et +1d6 contre les modèles de Taille 3 ou plus.
 - Arbalète (+2 pts) : Portée (C : 12’’, L : 18’’). [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ---
+### Paladin — 24 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Paladin | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
+| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].*
+##### Magie :
+- Les Paladins ont accès au Domaine de la Pureté et au domaine de la Lumière, leur niveau est égal au nombre d'unités au sein du modèle (max. niveau 4).
+---
 ### Protecteur — 19 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -682,7 +671,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Fanatique | **3** | **6+** | **5+** | **5+** | **6** | **4** | **4** | **3** | Paysan |
+| Clerc | **3** | **6+** | **5+** | **5+** | **6** | **4** | **4** | **3** | Paysan |
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Équipement :
@@ -693,6 +682,21 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Les Clercs ont accès au Domaine de la Pureté et au domaine de la Lumière.
 ##### Règles spéciales :
 - Imposition des mains : au début de chaque tour, octroyez une [[Wargame/_Visualisation/Règles spéciales/Egide|Egide]] à un modèle ami à 9’’ ou moins.
+---
+### Religieuse — 15 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Religieuse | **3** | **6+** | **5+** | **5+** | **6** | **4** | **4** | **3** | Sœur |
+| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Équipement :
+- Novice (par défaut) : lanceur de sorts de niveau 1
+- Nonne (+5 pts) : lanceur de sorts de niveau 2.
+- Mère (+11 pts) : lanceur de sorts de niveau 3.
+##### Magie :
+- Les Religieuses ont accès au Domaine de la Pureté et au domaine de la Lumière.
 ---
 ## Modèles Spéciaux
 ---
