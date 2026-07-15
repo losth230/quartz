@@ -55,7 +55,6 @@ Les différents royaumes libres se regroupent souvent autour d'un étendard comm
 
 ---
 
-<center><h2>Domaines de Faction</h2></center>
 <div class="cp-domaine">
    
 ## Domaine de la Pureté
