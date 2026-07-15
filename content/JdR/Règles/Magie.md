@@ -25,7 +25,6 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 ---
 
 ### Domaine de la Lumière
- 
 - **Écoles principales** : Construction, Altération.  
 - **Passif** : un maître de la Lumière et les alliés à 3m ou moins bénéficient de +1 Armure tant qu'ils se trouvent en pleine lumière (jour, feu, ou lumière magique).  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature alliée à 9" ou moins et lui conférer Égide (1).  
@@ -34,7 +33,6 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 Le rapport à la lumière a été profondément bouleversé lors de la création de Lun par celui qui deviendra plus tard le Dieu Dragon Bahamutt. Les clercs et paladins qui en maîtrisent le domaine sont généralement membres d'institutions religieuses officielles, formés dans des ordres stricts. Il est à noter que d'autres peuples, tels que les hommes-lézards, continuent de vénérer la lumière et le soleil tels qu'ils l'étaient à la fondation des âges — une pratique plus brute, moins raffinée, mais tout aussi puissante.
  
 ### Domaine de la Pureté
- 
 - **Écoles principales** : Altération, Destruction.  
 - **Passif** : un maître de la Pureté impose un test de Volonté à quiconque tente de lui lancer un sort d'un domaine impur (Tombe, Ténèbres…).  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui retirer un état de son choix, autre qu'un marqueur d'activation.  
@@ -43,7 +41,6 @@ Le rapport à la lumière a été profondément bouleversé lors de la création
 Ses praticiens croient que le monde tend naturellement vers le chaos et la corruption, et que leur rôle est d'en retarder l'avancée. Souvent affiliés à des ordres de justice ou à des institutions religieuses liées à Bahamutt, les mages de la Pureté sont aussi bien des guérisseurs spirituels que des inquisiteurs redoutables. Leur domaine est dual : ils protègent leurs alliés avec la même précision qu'ils affaiblissent leurs ennemis, et la ligne entre bénédiction et malédiction n'est souvent qu'une question de cible.
  
 ### Domaine de la Tombe
- 
 - **Écoles principales** : Invocation, Construction.  
 - **Passif** : un maître de la Tombe bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque créature Cadavérique ou cadavre à 12" ou moins.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature Cadavérique à 9" ou moins, qui effectue immédiatement un déplacement de 3".  
@@ -52,7 +49,6 @@ Ses praticiens croient que le monde tend naturellement vers le chaos et la corru
 La magie de la Tombe est la plus vieille de toutes : depuis que les premiers humains ont enterré leurs morts, certains ont cherché à leur parler, puis à les rappeler. Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
  
 ### Domaine des Astres
- 
 - **Écoles principales** : Destruction, Invocation.  
 - **Passif** : un maître des Astres bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, la nuit, à la belle étoile.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé en dépensant au moins 1 dé de magie, le lanceur récupère 1 dé dans sa réserve.  
@@ -69,7 +65,6 @@ Les mages des Astres lisent l'avenir dans le mouvement des étoiles et canalisen
 Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseaux volants ou des druides des cimes qui ont appris à lire l'air comme d'autres lisent des livres. Dans les armées, les mages des Cieux sont redoutés pour leur capacité à rompre les formations adverses — une poussée de vent bien placée peut ouvrir une brèche dans laquelle toute une cavalerie s'engouffre. Leur force est le contrôle de l'espace : pas seulement frapper, mais dicter où chacun se trouve.
  
 ### Domaine des Racines
- 
 - **Écoles principales** : Altération, Construction.  
 - **Passif** : un maître des Racines bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il est lui-même Fatigué.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui infliger l'état Fatigué.  
