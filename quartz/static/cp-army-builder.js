@@ -89,6 +89,13 @@ async function chargerRoster(faction) {
   // Choix d'armée (Royaume→Ordre, Clan→…). Table optionnelle : si absente, liste vide.
   const { data: sf } = await sb.from("ref_sous_factions").select("*").eq("faction", faction).order("tri");
   roster.sf = sf || [];
+  // Règles de coût fines (Royaume/Ordre/type de modèle). Table optionnelle.
+  let couts = [];
+  try {
+    const { data } = await sb.from("ref_sf_couts").select("*").eq("faction", faction).order("ordre");
+    couts = data || [];
+  } catch (e) { couts = []; }
+  roster.couts = couts;
   cacheRoster[faction] = roster;
   return roster;
 }
@@ -134,19 +141,37 @@ function coutOptions(u, entry) {
   return { modele, unite };
 }
 // Modificateur de coût par modèle apporté par le niveau1 choisi (ex. Thoriath : -1, plancher 6)
-function coutModeleMod() {
-  const row = (R.sf || []).find((r) => r.niveau1 === state.niv1);
-  return row && row.cout_modele_delta
-    ? { delta: row.cout_modele_delta, min: row.cout_modele_min || 0 }
-    : { delta: 0, min: 0 };
+// Le modèle possède-t-il ce type de jeu ? (type_modele : 'Sœur|Chevalier', 'Machine|Paysan'…)
+function estDuType(u, type) {
+  if (!type) return true;
+  return String(u.type_modele || "").split("|").map((s) => s.trim()).includes(type);
 }
-// Coût d'un seul modèle (base + options par modèle), réduction de royaume appliquée au total du modèle
+// Règles de réduction de coût applicables au choix d'armée courant, dans l'ordre.
+// Deux sources cumulables :
+//  - ref_sous_factions.cout_modele_delta (héritage : tout le Royaume, tous les types)
+//  - ref_sf_couts (fin : Royaume + Ordre éventuel + type éventuel)
+function reglesCout() {
+  const out = [];
+  const row = (R.sf || []).find((r) => r.niveau1 === state.niv1);
+  if (row && row.cout_modele_delta) {
+    out.push({ type: null, delta: row.cout_modele_delta, min: row.cout_modele_min || 0 });
+  }
+  (R.couts || []).forEach((c) => {
+    if (c.niveau1 !== state.niv1) return;
+    if (c.niveau2 && c.niveau2 !== state.niv2) return; // règle propre à un Ordre
+    if (c.delta) out.push({ type: c.type_modele || null, delta: c.delta, min: c.cout_min || 0 });
+  });
+  return out;
+}
+// Coût d'un seul modèle (base + options par modèle), réductions du choix d'armée appliquées ensuite
 function coutUnitaire(entry) {
   const u = uOf(entry); if (!u) return 0;
   const base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
   let perModel = base + coutOptions(u, entry).modele;
-  const mod = coutModeleMod();
-  if (mod.delta) perModel = Math.max(mod.min, perModel - mod.delta);
+  reglesCout().forEach((r) => {
+    if (!estDuType(u, r.type)) return;
+    perModel = Math.max(r.min, perModel - r.delta);
+  });
   return perModel;
 }
 // Coût total d'une entrée : coût par modèle × quantité + options par unité (comptées une fois)
