@@ -58,6 +58,80 @@ Les différents royaumes libres se regroupent souvent autour d’un étendard co
 - **Mot sacré : sanctification (long, 18+) :** Bénie toutes les unités amies à 12’’ ou moins du lanceur. Jusqu’à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ---
 
+<center><h2>Grandes Bannières</h2></center>
+
+Les différents royaumes libres se regroupent souvent autour d'un étendard commun. N'importe quel Chevalier peut posséder une bannière, Voici leurs différents effets :
+
+<div class="cp-encadre">
+
+- **Bannière de la tour d'Ishtar (15 pts) :** *"Chargez ! Nous sommes invincibles !"* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles ami à portée de cette bannière bénéficient d'un bonus de +1 à leurs jets d'armure contre les attaques à distance.
+- **Bannière du Lion d'Acier (15 pts) :** *"Sous cette bannière, aucun homme ne fuit avant d'avoir versé son dernier sang."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (12)]], les modèles amis peuvent relancer les jets de moral ayant obtenu 5 et 6. Si elles bénéficient de Volonté de Fer, elles peuvent la défausser pour réussir automatiquement un test de moral.
+- **Bannière du Jugement de Fer (15 pts) :** *"La loi ne faiblit jamais. Les faibles, eux, s'effondrent."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (6)]], les modèles amis bénéficient d'[[Wargame/_Visualisation/Règles spéciales/Indomptable|Indomptable]], les modèles ennemis subissent un malus de -1 au Moral.
+- **Bannière de l'Eternelle Lumière (10 pts) :** *"L'ombre ne tombera jamais sur notre patrie tant que nous tiendrons la ligne."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], au début de chaque tour, les modèles amis bénéficient de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+- **Bannières des Lames enchainées (10 pts) :** Les modèles adverses à 12'' ou moins ne peuvent récupérer de PV.
+- **Bannière d'Autorité (5 pts) :** *"Nous avons juré de respecter la loi sacrée. Vous ne pouvez que plier ou mourir."* Le porteur de cette bannière génère 1 Manœuvre au début de chaque tour, et commence la partie avec la Volonté de Fer.
+- **Bannière des Vétérans d'Innsmouth (10 pts) :** *"La peur est pour ceux qui n'ont jamais vu l'horreur de près."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], les modèles amis bénéficie de +1d6 en mêlée s'ils ont perdu au moins 1 PV ou une unité.
+- **Bannière des Chevaliers du Notan (20 pts) :** *"Nous sommes ceux que l'on croyait morts."* [[Wargame/_Visualisation/Règles spéciales/Aura|Aura (9)]], lorsqu'un modèle ami rate un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.
+
+</div>
+
+---
+
+<center><h2>Domaines de Faction</h2></center>
+<div class="cp-domaine">
+   
+## Domaine de la Pureté
+<div class="cp-attribut">
+
+**Attribut : purification :** Lorsqu'un sort de ce domaine est lancé, désignez un modèle à 9'' ou moins du lanceur et retirez-lui le marqueur de votre choix, autre qu'un marqueur activation.
+</div>
+<div class="cp-niveau">
+
+### Niveau 1
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Bouclier saint** *(court, 3+, amélioration)*
+Portée 12'', confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].
+</div>
+<div class="cp-sort">
+
+##### Mot de silence** *(court, 7+, malédiction)*
+Portée 12', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
+</div>
+</div>
+</div>
+<div class="cp-niveau">
+
+### Niveau 2
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Lumière bénie *(long, 9+, amélioration)*
+Portée 12''. La prochaine fois que la cible de ce sort subit des touches d'une attaque en mêlée ou à distance, l'attaquant doit relancer tous ses jets ayant obtenu une touche.
+</div>
+<div class="cp-sort">
+
+##### Courroux divin *(court, 10+, amélioration)*
+Ce sort cible le lanceur et est utilisable en mêlée. Jusqu'à la fin du tour, le lanceur bénéficie de *[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]* ainsi qu'un bonus de +1 sur ses jets d'attaque en mêlée.  
+→ **Version renforcée (1) :** ce sort peut être lancé sans dépenser d'action.
+</div>
+</div>
+</div>
+<div class="cp-niveau">
+
+### Niveau 3
+<div class="cp-sorts">
+<div class="cp-sort">
+
+#### Mot sacré : sanctification *(long, 18+)*
+Bénie toutes les unités amies à 12'' ou moins du lanceur. Jusqu'à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+</div>
+</div>
+</div>
+</div>
+
+
 <center><h2>Royaumes et Ordres</h2></center>
 
 Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.
@@ -698,5 +772,103 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 @media (max-width: 700px) {
   .cp-roy-ordres { grid-template-columns: 1fr; }
   .cp-royaume > h2, .cp-roy-nom { white-space: normal; }
+}
+
+/* ============================================================
+   Bannières & Domaines de magie — mise en page
+   ============================================================ */
+
+/* ---- Encadré simple (bannières) : une seule colonne ---- */
+.cp-encadre {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-encadre ul { margin: 0; padding-left: 1.1rem; }
+.cp-encadre li { margin: 0.4rem 0; line-height: 1.5; }
+
+/* ---- Domaine de magie ---- */
+.cp-domaine {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-domaine > h3 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  text-align: center;
+}
+
+/* Attribut du domaine, pleine largeur sous le titre */
+.cp-attribut {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.cp-attribut p { margin: 0; }
+
+/* ---- Boîte de niveau : une par niveau, empilées ---- */
+.cp-niveau {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin-bottom: 0.8rem;
+  background: var(--light);
+}
+.cp-niveau:last-child { margin-bottom: 0; }
+.cp-niveau > h4 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* ---- Sorts : autant de colonnes que de sorts ---- */
+.cp-sorts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+.cp-sort {
+  min-width: 0;
+  padding: 0 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+/* Séparateur vertical entre les sorts d'un même niveau */
+.cp-sort + .cp-sort {
+  border-left: 1px solid var(--lightgray);
+  padding-left: 0.9rem;
+}
+.cp-sort p { margin: 0 0 0.35rem; }
+.cp-sort p:last-child { margin-bottom: 0; }
+
+/* ---- Mobile : tout s'empile ---- */
+@media (max-width: 700px) {
+  .cp-sorts { grid-auto-flow: row; }
+  .cp-sort + .cp-sort {
+    border-left: none;
+    border-top: 1px solid var(--lightgray);
+    padding-left: 0.2rem;
+    padding-top: 0.7rem;
+  }
 }
 </style>
