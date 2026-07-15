@@ -215,6 +215,23 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 ---
 ## Commandants
+
+<div class="legendary">
+
+### Arkadia — 42 pts
+
+</div>
+
+| ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Arkadia | **5** | **3+** | **-** | **6+** | **8** | **4** | **2** | **4** | Sœur |
+| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Règles spéciales :
+- Parade : les modèles adverses à  1'' ou moins subissent un malus de -1  pour toucher en mêlée.
+- Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6'' ou moins.
+---
 ### Abbesse — 44 pts
 
 | ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -282,25 +299,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 <div class="legendary">
 
-### Hegel — 28 pts
-
-</div>
-
-| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**  |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | --------- |
-| Hegel      | **5**   | **4+**                                                                               | **3+**                                                                                  | **5+**                                                                          | **9**                                                                            | **3**  | **2**  | **3**  | Chevalier |
-| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | 4d6                                                                             |                                                                                  |        |        |        |           |
-
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
-##### Équipement :
-- Pistolet : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-##### Règles spéciales :
-- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Hegel, volez 2 Manœuvres à votre adversaire.
-- Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
----
-
-<div class="legendary">
-
 ### Jeanne — 48 pts
 
 </div>
@@ -335,23 +333,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Chaînes en Vrai-Argent : lorsque ce modèle utilise Faveur Divine lors d’une attaque en mêlée, il peut transformer deux résultats de 6 explosifs au lieu d’un seul.
 ##### Règles spéciales :
 - Tempête de lames (1) : utilisable une seule fois par tour, ce modèle peut Riposter sans s’activer ou se fatiguer.
----
-
-<div class="legendary">
-
-### Lenera — 32 pts
-
-</div>
-
-| ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Lenera     | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                            | **4**  | **2**  | **5**  | Sœur     |
-| **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
-
-*[[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].*
-##### Règles spéciales :
-- Chasseur de mage : si un modèle Lanceur de Sorts est éliminé à 6’’ ou moins de Lenera, volez 2 Manœuvres à votre adversaire.
-- Rune d’antimagie : une fois par partie, vous pouvez annuler le lancement d’un sort à 18’’ ou moins.
 ---
 
 <div class="legendary">
@@ -407,6 +388,17 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Cage de lumière (court, 12+, projectile) : Portée 12’’, 3d6. Si la moindre touche est obtenue, la valeur de mouvement de la cible est réduite à 0 pour le reste du tour.
 ##### Règles spéciales :
 - Dualité : Lorsque Luxana lance un sort avec succès, elle déclenche à la fois l’attribut du Domaine de la Pureté et celui du domaine de la Lumière.
+---
+### Matriarche — 29 pts
+
+| 🟥🟥🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Matriarche | **5** | **4+** | **-** | **6+** | **8** | **4** | **2** | **3** | Sœur |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Règles spéciales :
+- Tison enflammé : au début de chaque tour, octroyez [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] à un modèle ami à  9'' ou moins.
 ---
 ### Sergent — 12 pts
 
@@ -498,6 +490,17 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Chevalier du roi (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]] au chevaucheur, sa valeur d’attaque en mêlée devient 3+.
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+---
+### Chantelame — 25 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Arkadia | **5** | **3+** | **-** | **6+** | **8** | **3** | **2** | **2** | Sœur |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Règles spéciales :
+- Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6'' ou moins.
 ---
 ### Eclaireuse — 16 pts
 
