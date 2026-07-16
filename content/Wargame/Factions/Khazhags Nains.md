@@ -13,10 +13,58 @@ Les nains n’oublient jamais une rancune envers un ennemi, et celle-ci ressurgi
 #### Être de Pierre :
 Lorsqu’un modèle Nain est affecté par un sort (ami, allié ou ennemi), jetez un dé, sur 5+ le sort n’a aucun effet.
 Vous ne pouvez cependant pas lancer de sorts : la magie c’est pour les faibles (ou ces connards d’elfes).
-#### Mur de Boucliers :
+#### Mur de Boucliers (A enlever)
 La première fois qu’un modèle Nain est attaqué en mêlée sur son arc avant par un nouveau modèle ennemi, il bénéficie d’un bonus de +1 à son jet d’armure.
 #### Forge :
 Lorsqu’un modèle Nain Forge, désignez un modèle Artéfact à 12’’ ou moins et ajoutez-lui un marqueur Forge.
+
+#### Rancunes :
+
+Les nains n'oublient jamais. Chaque perte s'inscrit au **Livre des Rancunes**, chaque vengeance s'y raye.
+- **Inscrire :** lorsqu'un de vos modèles Nain de **Masse 3 ou plus** est détruit, inscrivez à votre Livre une rancune de votre choix parmi celles ci-dessous. Une même rancune ne peut être inscrite qu'une seule fois par partie.
+- **Rayer :** lorsqu'un modèle ennemi de **Masse 3 ou plus** est détruit, rayez la rancune **la plus ancienne** de votre Livre : elle cesse immédiatement de faire effet, et vous générez 1 Manœuvres au prochain tour. Si votre Livre est vide, rien ne se produit.
+- Une rancune inscrite et non rayée fait effet jusqu'à la fin de la partie.
+
+---
+
+## Le Livre des Rancunes
+<div class="cp-rancunes">
+<div class="cp-ranc-cat">
+
+### Rancunes de Vengeance
+Ces rancunes visent **le meurtrier** : à l'inscription, désignez le modèle ennemi qui a détruit le vôtre. Si aucun ne peut l'être, désignez le modèle ennemi de votre choix.  
+- **Rancune de Sang :** Vos modèles bénéficient d'un bonus de +1 pour toucher contre le modèle désigné.
+- **Rancune de Prime :** Si le modèle désigné est détruit, générez 2 Manœuvres supplémentaires.
+- **Rancune de Justice :** Le modèle désigné subit un malus de -1 à ses jets de moral pour chaque rancune inscrite à votre Livre.
+</div>
+<div class="cp-ranc-cat">
+
+### Rancunes Ancestrales
+- **Rancune des Cimes :** Vos modèles bénéficient d'un bonus de +1 pour toucher contre les modèles ayant [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].
+- **Rancune des Grandes Bêtes :** Vos modèles bénéficient de +1d6 en mêlée contre les modèles de Taille 3 ou plus.
+- **Rancune des Sorciers :** Vos modèles déclenchent la règle *Être de Pierre* sur 4+ au lieu de 5+.
+- **Rancune de l'Acier Étranger :** Vos modèles bénéficient de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] et [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]] contre les modèles de type Machine.
+  **Rancuner du Bouclier :** La première fois qu’un de vos modèles est attaqué en mêlée sur son arc avant par un nouveau modèle ennemi, il bénéficie d’un bonus de +1 à son jet d’armure.
+- **Rancune de Granit :** Vos modèles peuvent relancer leurs jets d'armure ayant obtenu 1.
+- **Rancune des Dressées :** Vos modèles bénéficient d'un bonus de +1 à leurs jets de moral.
+- **Rancune des Marteaux Grondants :** Vos modèles peuvent relancer leurs jets de touche ayant obtenu 1.
+</div>
+<div class="cp-ranc-cat">
+
+### Rancunes de Forge
+- **Rancune de Forge :** Au début de chaque tour, désignez un modèle qui Forge.
+- **Rancune de Surchauffe :** Vos règles *Surcharge* ne marquent plus vos modèles fatigués.
+- **Rancune d'Exploitation :** Générez 1 Manœuvre supplémentaire au début de chaque tour.
+- **Rancune du Blindage :** Vos modèles de type Machine bénéficient d'un bonus de +1 à leurs jets d'armure.
+- **Rancune des Galeries :** Vos modèles de type Mine bénéficient de +1d6 en mêlée et à distance.
+</div>
+<div class="cp-ranc-cat">
+
+### Rancunes d'Orgueil
+- **Rancune de la Loi :** Vos modèles bénéficient de +1 moral par rancune inscrite dans votre Livre.
+- **Rancune de :** Lorsque vous inscrivez une rancune, inscrivez-en une seconde (cette rancune ne peut pas être inscrite par ce biais).
+</div>
+</div>
 
 ---
 
@@ -443,3 +491,44 @@ Les nains se réunissent autour des grandes bannières de leurs Khazhags, n'impo
 ##### Règles spéciales :
 - Financer la guerre : si un modèle nain est présent à 6’’ ou moins au début du tour, générez 1 Manœuvre. S’il s’agit d’un mineur, générez 1 Manœuvre supplémentaire.
 - Avancée des grottes : les modèles de type Mine à 9’’ ou moins bénéficient de +1 à Vit et +1 à leurs jets d’attaque en mêlée et à distance.
+
+<style>
+/* ============================================================
+   Livre des Rancunes — encadrés par catégorie
+   ============================================================ */
+.cp-rancunes { margin: 1.2rem 0; }
+
+.cp-ranc-cat {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.8rem 1.1rem 1rem;
+  margin-bottom: 1rem;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-ranc-cat:last-child { margin-bottom: 0; }
+
+.cp-ranc-cat > h3 {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  text-align: center;
+}
+
+.cp-ranc-intro {
+  margin: 0 0 0.7rem;
+  padding: 0.45rem 0.7rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--darkgray);
+}
+.cp-ranc-intro p { margin: 0; }
+
+.cp-ranc-cat ul { margin: 0; padding-left: 1.1rem; }
+.cp-ranc-cat li { margin: 0.35rem 0; line-height: 1.5; }
+</style>
