@@ -32,14 +32,6 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 #### Histoire & Contexte
 Le rapport à la lumière a été profondément bouleversé lors de la création de Lun par celui qui deviendra plus tard le Dieu Dragon Bahamutt. Les clercs et paladins qui en maîtrisent le domaine sont généralement membres d'institutions religieuses officielles, formés dans des ordres stricts. Il est à noter que d'autres peuples, tels que les hommes-lézards, continuent de vénérer la lumière et le soleil tels qu'ils l'étaient à la fondation des âges — une pratique plus brute, moins raffinée, mais tout aussi puissante.
  
-### Domaine de la Pureté
-- **Écoles principales** : Altération, Destruction.  
-- **Passif** : un maître de la Pureté impose un test de Volonté à quiconque tente de lui lancer un sort d'un domaine impur (Tombe, Ténèbres…).  
-- **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui retirer un état de son choix, autre qu'un marqueur d'activation.  
-- **Exemples d'utilisation** : dissiper un par un les enchantements actifs d'un ennemi, poser une zone sacrée qui octroie des Égides en début de tour, purifier une source empoisonnée ou lever une malédiction ancienne, etc.
-#### Histoire & Contexte
-Ses praticiens croient que le monde tend naturellement vers le chaos et la corruption, et que leur rôle est d'en retarder l'avancée. Souvent affiliés à des ordres de justice ou à des institutions religieuses liées à Bahamutt, les mages de la Pureté sont aussi bien des guérisseurs spirituels que des inquisiteurs redoutables. Leur domaine est dual : ils protègent leurs alliés avec la même précision qu'ils affaiblissent leurs ennemis, et la ligne entre bénédiction et malédiction n'est souvent qu'une question de cible.
- 
 ### Domaine de la Tombe
 - **Écoles principales** : Invocation, Construction.  
 - **Passif** : un maître de la Tombe bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque créature Cadavérique ou cadavre à 12" ou moins.  
