@@ -26,23 +26,23 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 
 ### Domaine de la Lumière
 - **Écoles principales** : Construction, Altération.  
-- **Passif** : un maître de la Lumière et les alliés à 3m ou moins bénéficient de +1 Armure tant qu'ils se trouvent en pleine lumière (jour, feu, ou lumière magique).  
+- **Passif** : un maître de la Lumière est capable de déceler l'invisibilité et ignore la *Furtivité*.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature alliée à 9" ou moins et lui conférer Égide (1).  
-- **Exemples d'utilisation** : protéger un allié en première ligne avant un assaut, inonder une zone de lumière aveuglante pour annuler toute furtivité ou invisibilité, maintenir un allié en vie à 1 PV en vidant sa réserve, etc.
+- **Exemples d'utilisation** : protéger un allié, créer une barrière lumineuse, inonder une zone de lumière aveuglante pour annuler toute furtivité ou invisibilité, etc.
 #### Histoire & Contexte
 Le rapport à la lumière a été profondément bouleversé lors de la création de Lun par celui qui deviendra plus tard le Dieu Dragon Bahamutt. Les clercs et paladins qui en maîtrisent le domaine sont généralement membres d'institutions religieuses officielles, formés dans des ordres stricts. Il est à noter que d'autres peuples, tels que les hommes-lézards, continuent de vénérer la lumière et le soleil tels qu'ils l'étaient à la fondation des âges — une pratique plus brute, moins raffinée, mais tout aussi puissante.
  
 ### Domaine de la Tombe
-- **Écoles principales** : Invocation, Construction.  
-- **Passif** : un maître de la Tombe bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque créature Cadavérique ou cadavre à 12" ou moins.  
-- **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature Cadavérique à 9" ou moins, qui effectue immédiatement un déplacement de 3".  
-- **Exemples d'utilisation** : invoquer et repositionner une ligne de morts-vivants pour absorber les dégâts, amplifier un mort-vivant en lui conférant une action et un bonus en mêlée, communiquer avec l'esprit d'un mort récent pour obtenir des informations, etc.
+- **Écoles principales** : Construction, Invocation.  
+- **Passif** : un maître de la Tombe peut vivre plusieurs jours en parfaite santé sans dormir, boire ou manger.  
+- **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature Cadavérique à 9m ou moins et lui faire effectuer une action.  
+- **Exemples d'utilisation** : invoquer des créatures morts-vivantes, communiquer avec l'esprit d'un mort,conserver ou faire pourrir des êtres vivants, etc.
 #### Histoire & Contexte
-La magie de la Tombe est la plus vieille de toutes : depuis que les premiers humains ont enterré leurs morts, certains ont cherché à leur parler, puis à les rappeler. Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
+Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
  
 ### Domaine des Astres
-- **Écoles principales** : Destruction, Invocation.  
-- **Passif** : un maître des Astres bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, la nuit, à la belle étoile.  
+- **Écoles principales** : Construction, Invocation.  
+- **Passif** : un maître des Astres utilise toujours un dé en plus lorsqu'il effectue une action.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé en dépensant au moins 1 dé de magie, le lanceur récupère 1 dé dans sa réserve.  
 - **Exemples d'utilisation** : frapper deux cibles simultanément d'une décharge cosmique, maintenir une cadence de sorts élevée sur un combat long, consulter les étoiles pour obtenir un pressentiment vague avant une mission risquée, etc.
 #### Histoire & Contexte
@@ -50,7 +50,7 @@ Les mages des Astres lisent l'avenir dans le mouvement des étoiles et canalisen
  
 ### Domaine des Cieux
 - **Écoles principales** : Destruction, Altération.  
-- **Passif** : un maître des Cieux ignore tout malus lié au vent, à la pluie ou à l'altitude.  
+- **Passif** : un maître des Cieux bénéficie de +1 Vitesse. 
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut déplacer une créature de 3".  
 - **Exemples d'utilisation** : repousser hors de portée le survivant le plus dangereux d'un groupe frappé par la foudre, repositionner un allié en hauteur avant de le bénir, dévier les projectiles d'un archer ennemi par perturbation atmosphérique, etc.
 #### Histoire & Contexte
@@ -91,7 +91,7 @@ Le Domaine du Festin est la magie de la consommation — absorber, dévorer, tra
  
 ### Domaine du Givre
 - **Écoles principales** : Construction, Altération.  
-- **Passif** : un maître du Givre bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il est lui-même Gelé.  
+- **Passif** : un maître du Givre ezt immunisé au Gel et aux basses températures.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui appliquer un marqueur Gelé.  
 - **Exemples d'utilisation** : cumuler les marqueurs Gelé pour réduire Vitesse et Armure jusqu'à l'immobilisation totale, créer une couche de glace transformant une zone en terrain difficile, produire de l'eau utile en contexte de survie, etc.
 #### Histoire & Contexte
