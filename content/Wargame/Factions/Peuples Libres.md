@@ -350,6 +350,24 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 <div class="legendary">
 
+### Hans Lightmealow — 64 pts
+
+</div>
+
+| ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Hans | **5** | **3+** | **-** | **4+** | **8** | **5** | **2** | **6** | Chevalier |
+| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+##### Règles spéciales :
+- Entrainement : Au début de chaque tour, désignez un modèle ami à 9'' ou moins et octroyez à chacune de ses unités +1d6 en mêlée.
+- Coup de grâce : Hans bénéficie de +2d6 contre les unités ayant moins de PV restant que lui.
+- Compagnon de quête : Une fois le déploiement terminé, générez un Point de Victoire. Si Hans est retiré du plateau de jeu, perdez 1 Point de Victoire.
+---
+
+<div class="legendary">
+
 ### Jeanne — 48 pts
 
 </div>
