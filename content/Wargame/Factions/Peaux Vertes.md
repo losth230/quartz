@@ -53,29 +53,31 @@ Affinité Chamanique (5+) : Si votre bande est d’affinité Chamanique, lorsque
 Lors de la création d'une armée Peaux-Vertes, choisissez à quel clan elle appartient. Tous les modèles de votre armée gagnent alors les bonus du clan.
 #### Clan Kipik
 - Pluie de flèches : lors d’attaques à distance, les résultats de 5 et 6 naturels sont explosifs. Une fois par partie vous pouvez déclencher le ciel gris, ce qui octroie +1d6 à toutes vos unités pour leurs attaques à distance.
-- Grouillants : le clan Kipik peut accueillir jusqu’à 10 unités de base identiques par tranches de 100 pts d’armée.
+- Frabikation parfèt : vos Machines coûtent 2 pts de moins.
 #### Clan de la Harde de Fer
-Affinité Occulte (6)
+Affinité Occulte (8)
 - Grande chevauchée : une fois par partie, retirez le marqueur Activation de 2 modèles amis.
 - Charge massiv’ : les modèles adverses ne peuvent bénéficier de *Défense d’obstacle,* ou de n’importe quelle autre règle défensive lorsqu’ils se font charger par des modèles de la Harde de Fer.
 #### Clan du Crâne Mystique
-Affinité Chamanique (20)
+Affinité Chamanique (8)
 - Chasse aux crânes : lorsqu’un modèle de ce clan parvient à éliminer un modèle adverse, ou chaque fois qu’un modèle adverse est en déroute, ajoutez 1 dé à votre réserve de magie.
-- Bénédiction de Vrasha, la mère-tonnerre : Si un modèle subit une touche, vous pouvez dépenser un dé de votre réserve de magie pour annuler 1d6 touches.
+- Bénédiction de Vrasha, la mère-tonnerre : Si un modèle subit une touche, vous pouvez dépenser un dé de votre réserve de magie pour annuler 1d3 touches.
 #### Clan du Fléau Noir
-Affinité Occulte (12)
+Affinité Occulte (4)
 - Honneur au clan : lorsqu’un modèle de ce clan parvient à éliminer ou mettre en déroute un modèle adverse, gagnez 1 Manœuvre.
 - Troupes d’élit’ : votre grande bannière octroie un bonus de +1 moral à la troupe qu’elle rejoint. La portée d’effet de votre grande bannière est doublée.
 #### Clan des Mâcheurs Cendrés
-Affinité Chamanique (12)
+Affinité Chamanique (6)
 - Kachés dans la foré : Toute votre armée bénéficie de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
 - Massacreurs : une fois par partie, tous vos modèles gagnent [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] pour le reste du tour.
 #### Clan Fouet de Lave
-- Enfants de Magmadon : Vos effets de fin de tour se déclenchent deux fois.
-- Courroux élémentaire : lorsqu’un de vos modèles attaque en mêlée, les résultats de 6+ naturel ne peuvent être annulés par des sauvegardes d’armure.
+Affinité Occulte (6)
+- Enfants de Magmadon : Vos effets de début et fin de tour se déclenchent deux fois.
+- Courroux élémentaire : lorsqu’un de vos modèles attaque en mêlée, les résultats de 6+ naturel infligent des dégâts bruts.
 #### Clan Forgefeu
+Affinité Chamanique (4)
 - Embrasement : Chaque fois qu’un modèle ami attaque, si la moindre touche est obtenue, la cible est marquée *enflammée.*
-- Combustion : une fois par partie, chaque modèle subit autant de dégâts qu’il ne possède de marqueur *enflammé,* retirez ensuite les marqueurs *enflammé.*
+- Combustion : une fois par partie, chaque modèle subit autant de dégâts qu’il ne possède de marqueur *enflammé.*
 
 ---
 
@@ -120,6 +122,7 @@ Affinité Chamanique (12)
 | Captain    | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Gobelin  |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 3d6                                                                             |                                                                                  |        |        |        |          |
 
+*Affinité Occulte (2)*
 ##### Équipement :
 - Arme lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 - Arc long (+4 pts) : Portée (C : 12’’, L : 15’’).
@@ -134,7 +137,7 @@ Affinité Chamanique (12)
 | Champion   | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **8**                                                                            | **4**  | **2**  | **5**  | Orque    |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*Affinité Occulte (2), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*Affinité Occulte (4), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Équipement :
 - Hach plu Gross (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
@@ -171,13 +174,13 @@ Affinité Chamanique (12)
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
 | Hoogit     | **-**     | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **8**                                                                            | **4**  | **3**  | **5**  | Gobelin  |
 | Gro’ os    | **7**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Bête     |
-| **Mêlée:** | 4d6 / 4d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
+| **Mêlée:** | 0d6 / 4d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*Affinité Chamanique (2), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]].*
+*Affinité Chamanique (4), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].*
 ##### Équipement :
-- Lame perfide de chef : Hoogit gagne un nombre de d6 en mêlée équivalent à son initiative.
+- Lame perfide de chef : Hoogit possède un nombre de d6 en mêlée égal à 2 fois le rang de l'affinité de votre bande.
 ##### Règles spéciales :
-- Crocs d’araignée : les jets d’attaque en mêlée de 4+ de Gro’ os ne peuvent être annulés par des jets d’armure.
+- Crocs d’araignée : les jets d’attaque en mêlée de 5+ de Gro’ os infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
 
 ---
@@ -193,7 +196,7 @@ Affinité Chamanique (12)
 | Kiggit     | **5**   | **4+**                                                                               | **3+**                                                                                  | **5+**                                                                          | **8**                                                                            | **3**  | **2**  | **1**  | Gobelin  |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 4d6                                                                             |                                                                                  |        |        |        |          |
 
-*Affinité Chamanique (2), [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
+*Affinité Chamanique (3), [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], [[Wargame/_Visualisation/Règles spéciales/Motivant|Motivant]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].*
 ##### Équipement :
 - Arc de Kiggit : Portée (C : 15’’, L : 21’’).
 ##### Règles spéciales :
@@ -204,7 +207,7 @@ Affinité Chamanique (12)
 
 <div class="legendary">
 
-### Slaig le Pourfendeur sur Magmadon asservi — 124 pts
+### Slaig le Pourfendeur sur Magmadon asservi — 118 pts
 
 </div>
 
@@ -214,14 +217,13 @@ Affinité Chamanique (12)
 | Magmadon   | **6**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            |        |        |        | Elémentaire |
 | **Mêlée:** | 6d6 / 8d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |             |
 
-*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*Affinité ChamanOcculte (7), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],  [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Hach de Pourfendeur : Slaig régénère autant de PV qu’il n’inflige de blessures.
 ##### Règles spéciales :
 - Peau d’élémentaire de feu : cette unité ne peut subir de dégâts que d’attaques ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant]].
 - Couronne de domination : chaque tour, Magmadon tente de se libérer de Slaig. Lorsque vous activez cette unité, faites-lui réaliser un test de moral. En cas d’échec, votre adversaire la joue à votre place. Si Nagash est également présent dans la partie, il perd sa règle de Couronne de domination.
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de feu supérieur : à la fin de chaque tour, tout modèle ennemi à 3’’ ou moins de cette unité reçoit 1 marqueur *enflammé*. Si la météo est Pluie de feu, la portée de l’aura est de 6’’.
-- Bénédiction de Mutazat supérieure : Tant que la météo est Pluie de feu, à la fin de chaque tour, cette unité régénère 3 PV.
 - Gueule enflammée : Magmadon impose 2 marqueurs *enflammé* s’il réussit au moins 2 touches en mêlée.
 - Né des flammes : Cette unité est immunisée à la règles [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 
@@ -249,7 +251,7 @@ Affinité Chamanique (12)
 | Grondeur | **6** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Bête |
 | **Mêlée:** | 2d6 / 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*Affinité Occulte (2), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*Affinité Chamanique (2), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]]. / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Charge Furieuse|Charge Furieuse]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Lance de cavalerie (+1 pts) : l'orque bénéficie de +1d6 en mêlée s’il a chargé ce tour-ci.
 - Caparaçon de grondeur (+4 pts) : l'armure de ce modèle passe de 4+ à 3+.
@@ -288,11 +290,11 @@ Affinité Chamanique (12)
 | Araignée | **7** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Bête |
 | **Mêlée:** | 2d6 / 2d6 |  | **Tir:** |  |  |  |  |  |  |
 
-*Affinité Chamanique (1), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]].*
+*Affinité Chamanique (1), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] / -.*
 ##### Équipement :
 - Lance de cavalerie (+1 pts) : le Gobelin bénéficie de +1d6 en mêlée s'il a chargé ce tour-ci.
 ##### Règles spéciales :
-- Crocs d’araignée : les jets d’attaque en mêlée de 5+ de l’araignée ne peuvent être annulés par des jets d’armure.
+- Crocs d’araignée : les jets d’attaque en mêlée de 5+ de l’araignée infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
 
 ---
@@ -304,13 +306,10 @@ Affinité Chamanique (12)
 | Loup       | **8**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Bête     |
 | **Mêlée:** | 2d6 / 2d6 |                                                                                      | **Tir:**                                                                                | 2d6 / -                                                                         |                                                                                  |        |        |        |          |
 
-*Affinité Chamanique (1), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]].*
+*Affinité Chamanique (1), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Plateforme de Tir Instable|Plateforme de Tir Instable]], / -.*
 ##### Équipement :
 - Lance de cavalerie (+1 pts) : le Gobelin bénéficie de +1d6 en mêlée s'il a chargé ce tour-ci.
 - Arc court (+2 pts) : Portée (C : 12’’).
-##### Règles spéciales :
-- Plateforme de tir bancale : l’action de tir est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue. Si cette unité fait appel à cette règle spéciale pour tirer sans dépenser d’action, elle souffre d’un malus de -1 sur ses jets de touche.
-
 ---
 ### Primordial — 18 pts
 
@@ -344,14 +343,14 @@ Affinité Chamanique (12)
 - Sabotage : à la fin de chaque tour, désignez un modèle machine à 9’’ ou moins et retirez lui 3 PV.
 
 ---
-### Traq'eur embuské — 13 pts
+### Traq'eur embuské — 15 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Gobelin | **5** | **4+** | **-** | **6+** | **5** | **1** | **2** | **2** | Gobelin |
 | **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours en Premier|Frappe Toujours en Premier]].*
+*Affinité Occulte (2), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Frappe Toujours en Premier|Frappe Toujours en Premier]].*
 ##### Équipement :
 - Lames empoisonnées (+4 pts) : confère attaques empoisonnées.
 ##### Règles spéciales :
@@ -368,6 +367,7 @@ Affinité Chamanique (12)
 | Baliste    | **4**   | **6+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **5**                                                                            | **3**  | **3**  | **5**  | Machine  |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 4d6                                                                             |                                                                                  |        |        |        |          |
 
+*Affinité Occulte (1)*
 ##### Équipement :
 - Baliste : Portée (C : 15’’, L : 22’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
@@ -381,6 +381,7 @@ Affinité Chamanique (12)
 | Catapulte  | **4**   | **6+**                                                                               | **5+**                                                                                  | **4+**                                                                          | **5**                                                                            | **3**  | **3**  | **5**  | Machine  |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 3d6                                                                             |                                                                                  |        |        |        |          |
 
+*Affinité Occulte (1)*
 ##### Équipement :
 - Catapulte : Portée (C : 15’’, L : 24’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
@@ -394,7 +395,7 @@ Affinité Chamanique (12)
 | Chaman | **5** | **5+** | **4+** | **6+** | **6** | **2** | **2** | **3** | Gobelin |
 | **Mêlée:** | 1d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
-*Affinité Chamanique (3).*
+*Affinité Chamanique (4).*
 ##### Équipement :
 - Apprenti un peu moisi (par défaut) : lanceur de sorts de niveau 1
 - Gribouilleur (+5 pts) : lanceur de sorts de niveau 2.
@@ -455,6 +456,7 @@ Affinité Chamanique (12)
 | Mekanicien | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **1**  | Gobelin  |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 2d6                                                                             |                                                                                  |        |        |        |          |
 
+*Affinité Occulte (1)*
 ##### Équipement :
 - Klé à molet’ : Portée (C : 6’’, L : 12’’).
 ##### Règles spéciales :
