@@ -131,7 +131,7 @@ Affinité Chamanique (4)
 
 <div class="legendary">
 
-### Char'Kut — 52 pts
+### Char'Kut — 42 pts
 
 </div>
 
