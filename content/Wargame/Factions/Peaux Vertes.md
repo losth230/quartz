@@ -142,10 +142,10 @@ Affinité Chamanique (4)
 
 *Affinité Chamanique (4).*
 ##### Magie :
-- Char'Kut a accès au Domaine de la Sournoizerie et au Domaine Primordial. Votre bande reçoit *Affinité Chamanique (4)* si Char'Kut apprend le Domaine Primordial, et *Affinité Occulte (4)* s’il apprend le Domaine des Ténèbres.
+- Char'Kut a accès au Domaine du Festin (Voir Krovors) ainsi qu'à un domaine au choix entre le Domaine Primordial et le Domaine des Ténèbres. Votre bande reçoit *Affinité Chamanique (4)* si Char'Kut apprend le Domaine Primordial, et *Affinité Occulte (4)* s’il apprend le Domaine des Ténèbres.
 - Poussière de fée (court, 12+, projectile) : Portée 12’’, la cible perd toutes ses règles spéciales.
 ##### Règles Spéciales :
-- Gand Kuisto : Une fois que Char'Kut lance un sort, désignez un modèle à 9'' ou moins et octroyez-lui +1d6 en mêlée et à distance pour le reste du tour.
+- Gand Kuisto : Une fois que Char'Kut lance un sort, désignez un modèle à 9'' ou moins et octroyez-lui +1d6 en mêlée et à distance pour le reste du tour. Lorsque Char'Kut lance un sort du domaine du Festin, au lieu de déclenchez l'attribut de domaine, générez 1 Manoeuvre.
 - Peur des loups : Char'Kut souffre d'un malus de -3 au Moral tant qu'une bête se trouve à 6'' ou moins.
 - Balance : Si l'affinité de votre bande est Chamanique, Char'Kut génère un dé blanc supplémentaire. Si l'affinité de votre bande est Occulte, Char'Kut bénéficie d'un bonus de 2 à ses lancements de sorts. 
 ---
@@ -235,7 +235,7 @@ Affinité Chamanique (4)
 | Magmadon   | **6**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            |        |        |        | Elémentaire |
 | **Mêlée:** | 6d6 / 8d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |             |
 
-*Affinité ChamanOcculte (7), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],  [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*Affinité Occulte (7), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],  [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
 - Hach de Pourfendeur : Slaig régénère autant de PV qu’il n’inflige de blessures.
 ##### Règles spéciales :
