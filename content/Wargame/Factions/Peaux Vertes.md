@@ -115,21 +115,6 @@ Affinité Chamanique (4)
 ---
 ## Commandants
 
-### Kaptain Gob — 20 pts
-
-| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Captain    | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Gobelin  |
-| **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 3d6                                                                             |                                                                                  |        |        |        |          |
-
-*Affinité Occulte (2)*
-##### Équipement :
-- Arme lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
-- Arc long (+4 pts) : Portée (C : 12’’, L : 15’’).
-##### Règles spéciales :
-- Taktik parfèt (1) : Le Captain Gob échange sa place avec un modèle ami à 12’’ ou moins. Vous pouvez choisir l’orientation des modèles après avoir échangé leur place, mais le centre de chaque modèle doit se trouver à l’emplacement du centre de l’ancien modèle.
-
----
 ### Big Boss — 36 pts
 
 | 🟥🟥       | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -142,7 +127,27 @@ Affinité Chamanique (4)
 - Hach plu Gross (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Tu la vois celle-là ? (1) : à utiliser lorsque qu’un modèle ami rate un test de moral à 6’’ ou moins, il le réussit.
+---
 
+<div class="legendary">
+
+### Char'Kut — 52 pts
+
+</div>
+
+| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Chaman | **5** | **5+** | **4+** | **5+** | **7** | **3** | **2** | **4** | Orque |
+| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*Affinité Chamanique (4).*
+##### Magie :
+- Char'Kut a accès au Domaine de la Sournoizerie et au Domaine Primordial. Votre bande reçoit *Affinité Chamanique (4)* si Char'Kut apprend le Domaine Primordial, et *Affinité Occulte (4)* s’il apprend le Domaine des Ténèbres.
+- Poussière de fée (court, 12+, projectile) : Portée 12’’, la cible perd toutes ses règles spéciales.
+##### Règles Spéciales :
+- Gand Kuisto : Une fois que Char'Kut lance un sort, désignez un modèle à 9'' ou moins et octroyez-lui +1d6 en mêlée et à distance pour le reste du tour.
+- Peur des loups : Char'Kut souffre d'un malus de -3 au Moral tant qu'une bête se trouve à 6'' ou moins.
+- Balance : Si l'affinité de votre bande est Chamanique, Char'Kut génère un dé blanc supplémentaire. Si l'affinité de votre bande est Occulte, Char'Kut bénéficie d'un bonus de 2 à ses lancements de sorts. 
 ---
 
 <div class="legendary">
@@ -161,7 +166,6 @@ Affinité Chamanique (4)
 - Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Par-là ! (1) : retirez le marqueur Activé d’un modèle à 6’’ ou moins.
-
 ---
 
 <div class="legendary">
@@ -182,7 +186,21 @@ Affinité Chamanique (4)
 ##### Règles spéciales :
 - Crocs d’araignée : les jets d’attaque en mêlée de 5+ de Gro’ os infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
+---
 
+### Kaptain Gob — 20 pts
+
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Captain    | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **2**  | Gobelin  |
+| **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | 3d6                                                                             |                                                                                  |        |        |        |          |
+
+*Affinité Occulte (2)*
+##### Équipement :
+- Arme lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+- Arc long (+4 pts) : Portée (C : 12’’, L : 15’’).
+##### Règles spéciales :
+- Taktik parfèt (1) : Le Captain Gob échange sa place avec un modèle ami à 12’’ ou moins. Vous pouvez choisir l’orientation des modèles après avoir échangé leur place, mais le centre de chaque modèle doit se trouver à l’emplacement du centre de l’ancien modèle.
 ---
 
 <div class="legendary">
