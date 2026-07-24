@@ -12,8 +12,9 @@ Après qu’un modèle ami ait éliminé un modèle ennemi, retirez son marqueur
 #### Fuite (1) :
 Gobelins uniquement.
 Lorsqu’une unité Gobelin est engagée en mêlée, si elle n’est pas fatiguée, elle peut, avant la résolution de toute attaque, effectuer une action de *marche* puis être marquée Activée, ou fatiguée si elle est déjà activée. Si l’unité l’ayant *engagée* n’a plus assez de mouvement pour la contacter, son activation se termine (elle ne peut être marquée fatiguée).
-
 ---
+
+(A enlever ?)
 
 <center><h2>Grandes Bannières</h2></center>
 
@@ -456,15 +457,13 @@ Affinité Chamanique (4)
 
 | 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Porteur    | **5**   | **4+**                                                                               | **-**                                                                                   | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **1**  | Orque    |
+| Porteur    | **5**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **2**  | **2**  | **1**  | Orque    |
 | **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*Affinité Occulte (2), [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
 ##### Équipement :
-- Grande bannière : ce modèle peut posséder une grande bannière.
-- Amas de cranes (+5 pts) : la zone d’effet de la grande bannière augmente de 3’’.
+- Grand Icône : les modèles amis à 14'' ou moins bénéficient de +1 à leurs tests de moral et au lancement de leurs sorts.
 ##### Règles spéciales :
-- Planter l’icône (1) : Aura (18’’), utilisable une seule fois par partie, toutes les unités adverses souffrent d’un malus de -1 au moral pour le reste du tour.
+- Commencer le rituel : utilisable une seule fois par partie pour inverser l'affinité de votre bande en conservant son rang.
 
 ---
 ### Mekanicien — 16 pts
