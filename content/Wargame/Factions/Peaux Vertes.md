@@ -12,17 +12,6 @@ Après qu’un modèle ami ait éliminé un modèle ennemi, retirez son marqueur
 #### Fuite (1) :
 Gobelins uniquement.
 Lorsqu’une unité Gobelin est engagée en mêlée, si elle n’est pas fatiguée, elle peut, avant la résolution de toute attaque, effectuer une action de *marche* puis être marquée Activée, ou fatiguée si elle est déjà activée. Si l’unité l’ayant *engagée* n’a plus assez de mouvement pour la contacter, son activation se termine (elle ne peut être marquée fatiguée).
----
-
-(A enlever ?)
-
-<center><h2>Grandes Bannières</h2></center>
-
-Les grandes bannières se réunissent autour des grandes bannières de leurs clans, voici les grandes bannières possibles :
-- **Bannière d’Os (10 pts) :** Les modèles amis à 12’’ ou moins de cette grande bannière bénéficient de +1 à leurs jets de moral.
-- **Bannière de la Griffe Sanglante (10 pts) :** Les modèles ennemis à 12’’ ou moins de cette grande bannière bénéficient de -1 à leurs jets de moral.
-- **Bannière de l’Œil de Fureur (10 pts) :** Une fois par partie, vous pouvez annuler un sort lancé à 18’’ ou moins de cette bannière.
-- **Bannières des chaines de lamentation (15 pts) :** les modèles ennemis à 12’’ ou moins de cette grande bannière ont -1 Vit.
 
 ---
 
@@ -166,7 +155,7 @@ Affinité Chamanique (4)
 ##### Équipement :
 - Arme lourde (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
-- Par-là ! (1) : retirez le marqueur Activé d’un modèle à 6’’ ou moins.
+- Par-là ! (2) : retirez le marqueur Activé d’un modèle à 6’’ ou moins.
 ---
 
 <div class="legendary">
