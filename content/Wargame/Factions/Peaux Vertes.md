@@ -21,19 +21,19 @@ Les peaux-vertes, bien que créés par de sombres rituels occultes, ont peu à p
 #### Equillibre
 Equilibre : Si l’affinité de votre bande n'est ni Occulte ni Chamanique, vous pouvez relancer tous les jets d’attaque en mêlée, à distance, ainsi que les jets d’armure ayant obtenu 1. De plus, une bande à l'Equilibre permet à tous ses modèles utilisant la Balance de bénéficier à la fois des bonus Chamaniques et Occultisme.
 #### Occultisme
-Affinité Occulte (5+) : Si votre bande est d’affinité Occulte, chaque fois qu’un de vos modèles rate un test de moral, il peut perdre 2 PV pour le réussir.
-- Rang I (5+) : les modèles ennemis à 6’’ ou moins d’un Commandant ami souffrent d’un malus de -1 Moral.
-- Rang II (10+) : une fois par partie, vous pouvez choisir de réussir un test de moral qu’un de vos modèles a raté.
-- Rang III (15+) : lors de la création de votre bande, vous pouvez octroyer +1d6 en mêlée aux unités d’un de vos modèles.
-- Rang IV (20+) : lorsque vous activez un commandant, vous pouvez lui retirer 1 PV pour gagner 1 Manœuvre.
-- Rang V (25+) : si vous réussissez à dissiper un sort adverse, le lanceur est tué.
+Affinité Occulte (2+) : Si votre bande est d’affinité Occulte, vos modèles bénéficient d'un bonus de +1 Moral
+- Rang I (4+) : les modèles ennemis à 6’’ ou moins d’un Commandant ami souffrent d’un malus de -1 Moral.
+- Rang II (8+) : une fois par partie, vous pouvez choisir de réussir un test de moral qu’un de vos modèles a raté.
+- Rang III (12+) : lors de la création de votre bande, vous pouvez octroyer +1d6 en mêlée aux unités d’un de vos modèles.
+- Rang IV (16+) : lorsque vous activez un commandant, vous pouvez lui retirer 1 PV pour gagner 1 Manœuvre.
+- Rang V (20+) : si vous réussissez à dissiper un sort adverse, le lanceur est tué.
 #### Chamanisme
-Affinité Chamanique (5+) : Si votre bande est d’affinité Chamanique, lorsque vous lancez un sort sur un modèle ami, vous le faites avec un bonus de +3 au lancement des sorts.
-- Rang I (5+) : votre Général vous permet de relancer deux dés de Manœuvre lors de la phase d’Initiative.
-- Rang II (10+) : les bêtes bénéficient de +1 Vitesse.
-- Rang III (15+) : lors de la création de votre bande, vous pouvez octroyer [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]] à deux de vos modèles.
-- Rang IV (20+) : au début de chaque tour, vous pouvez conférez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] au modèle de votre choix.
-- Rang V (25+) : vous possédez un dé de Manœuvre blanc supplémentaire.
+Affinité Chamanique (2+) : Si votre bande est d’affinité Chamanique, lorsque vous lancez un sort sur un modèle ami, vous le faites avec un bonus de +3 au lancement des sorts.
+- Rang I (4+) : votre Général vous permet de relancer deux dés de Manœuvre lors de la phase d’Initiative au lieu d'un seul.
+- Rang II (8+) : lors de la création de votre bande, vous pouvez octroyer [[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]] à un de vos modèles.
+- Rang III (12+) : vos bêtes bénéficient de +1d6 en mêlée.
+- Rang IV (16+) : au début de chaque tour, vous pouvez conférez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] au modèle de votre choix.
+- Rang V (20+) : vous possédez un dé de Manœuvre blanc supplémentaire.
 
 
 ---
@@ -42,32 +42,28 @@ Affinité Chamanique (5+) : Si votre bande est d’affinité Chamanique, lorsque
 
 Lors de la création d'une armée Peaux-Vertes, choisissez à quel clan elle appartient. Tous les modèles de votre armée gagnent alors les bonus du clan.
 #### Clan Kipik
-- Pluie de flèches : lors d’attaques à distance, les résultats de 5 et 6 naturels sont explosifs. Une fois par partie vous pouvez déclencher le ciel gris, ce qui octroie +1d6 à toutes vos unités pour leurs attaques à distance.
-- Frabikation parfèt : vos Machines coûtent 2 pts de moins.
+- Pluie de flèches : lors d’attaques à distance, les résultats de 5 et 6 naturels sont explosifs, à conditions que ce soient des réussites. Une fois par partie vous pouvez déclencher le ciel gris, ce qui octroie +1d6 à toutes vos unités pour leurs attaques à distance.
 #### Clan de la Harde de Fer
 Affinité Occulte (8)
-- Grande chevauchée : une fois par partie, retirez le marqueur Activation de 2 modèles amis.
 - Charge massiv’ : les modèles adverses ne peuvent bénéficier de *Défense d’obstacle,* ou de n’importe quelle autre règle défensive lorsqu’ils se font charger par des modèles de la Harde de Fer.
 #### Clan du Crâne Mystique
 Affinité Chamanique (8)
-- Chasse aux crânes : lorsqu’un modèle de ce clan parvient à éliminer un modèle adverse, ou chaque fois qu’un modèle adverse est en déroute, ajoutez 1 dé à votre réserve de magie.
-- Bénédiction de Vrasha, la mère-tonnerre : Si un modèle subit une touche, vous pouvez dépenser un dé de votre réserve de magie pour annuler 1d3 touches.
+- Protection des ancêtres : Si un modèle subit au moins une blessure, vous pouvez dépenser un dé de votre réserve de magie pour annuler 1 blessure.
 #### Clan du Fléau Noir
 Affinité Occulte (4)
 - Honneur au clan : lorsqu’un modèle de ce clan parvient à éliminer ou mettre en déroute un modèle adverse, gagnez 1 Manœuvre.
-- Troupes d’élit’ : votre grande bannière octroie un bonus de +1 moral à la troupe qu’elle rejoint. La portée d’effet de votre grande bannière est doublée.
 #### Clan des Mâcheurs Cendrés
-Affinité Chamanique (6)
 - Kachés dans la foré : Toute votre armée bénéficie de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]].
-- Massacreurs : une fois par partie, tous vos modèles gagnent [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] pour le reste du tour.
 #### Clan Fouet de Lave
 Affinité Occulte (6)
-- Enfants de Magmadon : Vos effets de début et fin de tour se déclenchent deux fois.
-- Courroux élémentaire : lorsqu’un de vos modèles attaque en mêlée, les résultats de 6+ naturel infligent des dégâts bruts.
+- Dompter la nature : Vos effets de début et fin de tour se déclenchent deux fois.
 #### Clan Forgefeu
 Affinité Chamanique (4)
 - Embrasement : Chaque fois qu’un modèle ami attaque, si la moindre touche est obtenue, la cible est marquée *enflammée.*
-- Combustion : une fois par partie, chaque modèle subit autant de dégâts qu’il ne possède de marqueur *enflammé.*
+#### Clan des Caverneux
+Affinité Chamanique (6)
+- Peau fongique : lorsqu'un modèle de ce clan subi une blessure en mêlée, l'attaquant est marqué [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Empoisonné]].
+
 
 ---
 
