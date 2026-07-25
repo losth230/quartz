@@ -19,7 +19,7 @@ Lorsqu’une unité Gobelin est engagée en mêlée, si elle n’est pas fatigu�
 
 Les peaux-vertes, bien que créés par de sombres rituels occultes, ont peu à peu abandonné l'occultisme pour le Chamanisme. Lorsque vous créez une armée Peaux-Vertes, les unités et clans vous donnent des affinités avec l'Occultisme ou le Chamanisme.
 #### Equillibre
-Equilibre : Si l’affinité de votre bande n'est ni Occulte ni Chamanique, vous pouvez relancer tous les jets d’attaque en mêlée, à distance, ainsi que les jets d’armure ayant obtenu 1.
+Equilibre : Si l’affinité de votre bande n'est ni Occulte ni Chamanique, vous pouvez relancer tous les jets d’attaque en mêlée, à distance, ainsi que les jets d’armure ayant obtenu 1. De plus, une bande à l'Equilibre permet à tous ses modèles utilisant la Balance de bénéficier à la fois des bonus Chamaniques et Occultisme.
 #### Occultisme
 Affinité Occulte (5+) : Si votre bande est d’affinité Occulte, chaque fois qu’un de vos modèles rate un test de moral, il peut perdre 2 PV pour le réussir.
 - Rang I (5+) : les modèles ennemis à 6’’ ou moins d’un Commandant ami souffrent d’un malus de -1 Moral.
@@ -117,6 +117,7 @@ Affinité Chamanique (4)
 - Hach plu Gross (+4 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ##### Règles spéciales :
 - Tu la vois celle-là ? (1) : à utiliser lorsque qu’un modèle ami rate un test de moral à 6’’ ou moins, il le réussit.
+- Balance : Si l'affinité de votre bande est Chamanique, le modèle ciblé par *Tu la vois celle-là ?* bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]]. Si l'affinité de votre bande est Occulte, les unités du modèle ciblé par *Tu la vois celle-là ?* bénéficient de +1d6 en mêlée et à distance pour le reste du tour. 
 ---
 
 <div class="legendary">
@@ -209,6 +210,7 @@ Affinité Chamanique (4)
 - Arc de Kiggit : Portée (C : 15’’, L : 21’’).
 ##### Règles spéciales :
 - Visez ici ! (2) : tous les modèles Gobelins à 6’’ ou moins bénéficient de +1 à leurs jets de touche d'attaque à distance.
+- Balance : Si l'affinité de votre bande est Chamanique, *Visez ici !* cible tous les modèles Gobelin à 12'' ou moins. Si l'affinité de votre bande est Occulte, les modèles ciblés par *Visez ici !* bénéficient également de +1 Vitesse pour le reste du tour.
 - Lé fidèl de Kiggit : Lors de la construction de votre bande, vous pouvez désigner un modèle Gobelin comment Fidèles de Kiggit. Si vous le faites, celui-ci voit son coût augmenter de 1 pts par unité et gagne la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]], mais doit être déployé en Troupe avec Kiggit.
 
 ---
@@ -334,7 +336,7 @@ Affinité Chamanique (4)
 - Marque de Magmadon (+1 pt) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 - Zimmortels de Slaig (+7 pts) : la caractéristique de mêlée de cette unité devient 3+. La caractéristique de PV de cette unité devient 3, et sa Masse devient 3.
 ##### Règles spéciales :
-- Déchus : si l’affinité de votre bande est Occulte, cette unité inflige 1 Blessure à l’attaquant si elle est tuée en mêlée
+- Balance : Si l'affinité de votre bande est Chamanique, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] au début de chaque tour. Si l’affinité de votre bande est Occulte, cette unité inflige 1 Blessure à l’attaquant si elle est tuée en mêlée
 
 ---
 ### Sapeur — 16 pts
@@ -364,6 +366,21 @@ Affinité Chamanique (4)
 ##### Règles spéciales :
 - Embuské : ne déployez pas cette unité, à la place, lors de la création de votre liste d’armée, désignez une unité Gobelin amie dans laquelle elle est cachée. Dès qu’un modèle adverse se retrouve à 4’’ ou moins de l’unité hôte, vous pouvez arrêter son déplacement et révéler le Traq’eur embuské en l’engageant avec elle.
 
+___
+### Troll — 27 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Troll | **6** | **5+** | **-** | **6+** | **5** | **5** | **3** | **3** | Bête |
+| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].*
+##### Equipement :
+- Marque d'obsidienne (+4 pts) : votre bande reçoit Affinité Occulte (6).
+- Marque des Esprits (+4 pts) : votre bande reçoit Affinité Chamanique (6).
+##### Règles spéciales :
+- Gardien des esprits : Un troll qui meurt ne déclenche pas de Panique.
+- Balance : Si l'affinité de votre bande est Chamanique, vous pouvez octroyer [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]] aux modèles de votre choix à 9'' ou moins. Si l'affinité de votre bande est Occulte, déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] du Troll au moment de sa mort, le sauvant potentiellement de son funeste destin.
 ---
 ## Modèles de soutient
 
@@ -469,18 +486,6 @@ Affinité Chamanique (4)
 - Tir de barrage : les Machines à 9’’ ou moins bénéficient de +1 à leurs jets de touche. Cet effet n’est pas cumulable avec d’autres effets apportés par d’autres Mekaniciens .
 
 ---
-### Troll — 27 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Troll | **6** | **5+** | **-** | **6+** | **5** | **5** | **3** | **3** | Bête |
-| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
-
-*Affinité Chamanique (6), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].*
-##### Règles spéciales :
-- Gardien des esprits : si l’affinité de votre bande est Chamanique, lorsque cette unité est tuée, retirez le marqueur Activé d’un modèle à 9’’ ou moins et octroyez-lui [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]]. S’il s’agit d’une bête, où un mouvement gratuit s’il s’agit d’un Gobelin. Un troll qui meurt ne déclenche pas de Panique.
-
----
 ## Modèles Spéciaux
 
 ---
@@ -493,7 +498,7 @@ Affinité Chamanique (4)
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]].*
 ##### Règles spéciales :
-- Niom : à la fin de chaque tour, le Géant peut désigner une unité de taille 2 ou moins avec laquelle il est engagé en mêlée, et la manger. Elle est alors retirée du jeu.
+- Niom : à la fin de chaque tour, le Géant peut désigner une unité de taille 2 ou moins avec laquelle il est engagé en mêlée, et la manger. Elle est alors retirée du jeu et le géant régénère 2 PV perdus.
 
 ---
 ### Tarentule — 68 pts
@@ -506,10 +511,11 @@ Affinité Chamanique (4)
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]] / -.*
 ##### Équipement :
-- Equipage gobelin (+4 pts) : des gobelins s’ajoutent à la tarentule. Ils peuvent tirer sans dépenser d'action
-- Bénédiction d’obsidienne (+12 pts) : la tarentule gagne +2 PV et son armure passe de 5+ à 4+. De plus, vous gagnez [[Wargame/_Visualisation/Règles spéciales/Affinité Chamanique|Affinité Chamanique (6)]].
-##### Règles spéciales :
-- Crocs d’araignée : les jets d’attaque en mêlée de 5+ de la tarentule ne peuvent être annulés par des jets d’armure.
+- Equipage gobelin (+4 pts) : des gobelins s’ajoutent à la tarentule. Ils peuvent tirer sur des cibles à 9'' ou moins sans dépenser d'action.
+- Bénédiction d’obsidienne (+12 pts) : la tarentule gagne +2 PV et son armure passe à 4+. De plus, votre bande reçoit Affinité Occulte (6).
+- Bénédiction des Esprits (+12 pts) : la tarentule bénéficie de la règle sléciale [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] et ses *Crocs d'araignée* se déclenchent sur 4+ au lieu de 5+. De plus, votre bande reçoit Affinité Chamanique (6).
+##### Règles spéciales
+- Crocs d’araignée : les jets d’attaque en mêlée de 5+ de la tarentule infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
 
 ---
