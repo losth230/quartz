@@ -137,6 +137,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
+</div>
 <div class="cp-royaume">
    
 ## Royaume de Lun
@@ -163,6 +164,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
+</div>
 <div class="cp-royaume">
 
 ## Empire de Seth
@@ -174,7 +176,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 <div class="cp-roy-ordres">
-
 <div class="cp-ordre">
 
 #### Duché d'Hydrac
@@ -182,7 +183,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Dernier rempart :** Les modèles peuvent cumuler la volonté de fer. Ainsi, un modèle avec 2 volontés de fer pourra relancer les jets d'armure ayant obtenu 1 et 2. Un modèle ne peut gagner plus de 1 volonté de fer par tour.
 
 </div>
-
 <div class="cp-ordre">
 
 #### Ordre des Chevaliers du Notan
@@ -191,7 +191,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
-
+</div>
 <div class="cp-royaume">
 
 ## Royaume de Thoriath
@@ -216,6 +216,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Le devoir du paysan :** Les unités Paysans coûtent 1 pts de moins lors de la création d'un bande (pour un minimum de 5 pts).
 - **En rangs serrés :** Un modèle à 4'' ou moins d'un autre modèle ami gagne +1 en Moral et bénéficie d'un bonus de +1 sur ses jets d'armure.
 
+</div>
 </div>
 </div>
 <div class="cp-royaume">
