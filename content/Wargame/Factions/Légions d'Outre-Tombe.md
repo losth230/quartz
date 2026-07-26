@@ -47,7 +47,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 
 ##### Lien de Suzerain :
-- **Peur du noir :** les modèles liés à Mok'Tor bénéficient de la règle *Ombre Insaisissable*, et cceux qui la possèdent appliquent cette règle avec 3 pions au lieu de 2.
+- **Peur du noir :** les modèles liés à Mok'Tor bénéficient de la règle *Ombre Insaisissable*, et ceux qui la possèdent appliquent cette règle avec 3 pions au lieu de 2.
 
 | ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
