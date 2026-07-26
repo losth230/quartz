@@ -378,7 +378,6 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
   margin: 0 0 0.6rem;
   padding-bottom: 0.4rem;
   border-bottom: 2px solid var(--secondary);
-  font-variant: small-caps;
   letter-spacing: 0.03em;
 }
 .cp-suzerain table { min-width: 0; }
