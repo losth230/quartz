@@ -25,8 +25,6 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 
-(A enlever ?) **Vœu de silence :** Au début de chaque tour, si un modèle Sœur se trouve à 12’’ ou moins d’un Lanceur de sort ennemi, elle peut lui voler 1 dé de sa Réserve de magie et l’ajouter à la vôtre. Chaque Lanceur de sort ennemi ne peut être affecté qu’une seule fois par tour par cette règle spéciale. Si un modèle Sœur se trouve à la place à 12’’ ou moins d'un modèle générant des dés de Manœuvre, il peut lui voler un de ses dés de Manœuvre et l'ajouter à votre réserve.
-
 ---
 
 <center><h2>Grandes Bannières</h2></center>
@@ -248,7 +246,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 <div class="cp-ordre">
 
 #### Monastère de la Busquette
-- **Croisade (1) :** Lorsqu'un modèle Sœur a effectué une attaque à distance ou en mêlée (et après une potentielle riposte), octroyez-lui une marche gratuite.
+- **Croisade (4) :** Utilisable une seule fois par partie pour octroyer +1d6 en mêlée et à distance à toutes vos unités Sœur pour le reste du tour.
 - **Epiphanie :** Au début de chaque tour, désignez un modèle Sœur et faites-lui effectuer une marche gratuite.
 
 </div>
@@ -256,8 +254,9 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 <div class="cp-ordre">
 
 #### Abatiale d'Hazard
-- **Assomption (3) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
-- **L'heure de la prière :** Lors de la phase d'initiative, vous pouvez déclarer une prière. Dans ce cas tous vos modèles Sœurs bénéficient de [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie (1)]] et vous générez 2 Manœuvres supplémentaires. Cependant, votre adversaire doit activer 2 modèles à la suite au lieu d'un lors de sa première activation du tour.
+- **Assomption (2) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
+- **L'heure de la prière (1) :** Utilisable une g
+fois par tour, à utiliser à la place d'une activation pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] et [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]].
 
 </div>
 </div>
@@ -668,6 +667,17 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 *[[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Ardent défenseur : ce modèle commence avec la volonté de fer.
+---
+### Séraphine — 25 pts
+
+| 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Séraphine | **5** | **3+** | **-** | **4+** | **8** | **3** | **2** | **2** | Sœur |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+##### Règles spéciales :
+- Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6'' ou moins.
 ---
 ### Sœur du Martyr — 16 pts
 
