@@ -11,9 +11,7 @@ Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
 #### Ombres insaisissables :
 Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et son détruits s’ils subissent la moindre touche.
 #### Anciens Suzerains 
-À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut se lier à un Ancien Suzerain présent dans la liste ci dessous.
-
-Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement.
+À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut se lier à un Ancien Suzerain présent dans la liste ci dessous.Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison?
 
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
@@ -23,6 +21,8 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 
 </div>
 
+##### Lien de suzerain :
+- **Servitude éternelle :** les modèles liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 - **Collecter les corps :** Chaque fois qu’une unité amie qui n’est pas du type Cadavérique meurt, vous gagnez un nombre de cadavres égal à sa masse.
 - **Cadavériques :** Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
@@ -37,8 +37,28 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - Charrette Macabre : ce modèle génère un nombre de Cadavres égal au nombre de blessure infligées par L’Ankou.
 ##### Règles spéciales :
 - Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
-##### Lien de suzerain :
-- Servitude éternelle : les modèles liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
+
+</div>
+<div class="cp-suzerain">
+<div class="legendary">
+
+### Mok’Tor — 68 pts
+
+</div>
+
+##### Lien de Suzerain :
+- **Peur du noir :** les modèles liés à Mok'Tor bénéficient de la règle *Ombre Insaisissable*, et cceux qui la possèdent appliquent cette règle avec 3 pions au lieu de 2.
+
+| ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Mok’Tor    | **6**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **8**  | **4**  | **6**  | Mort     |
+| **Mêlée:** | 8d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
+
+*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Équipement :
+- Masse des anciens rois : si Mok’Tor réussit la moindre touche en mêlée, l’armure de sa cible devient 6+ pour le reste de la partie.
+##### Règles spéciales :
+- Un Roi règne seul : 4 fois par partie, lors de la phase d’initiative, vous pouvez voler 1 Manœuvre à votre adversaire. Vous pouvez ainsi voler plusieurs Manœuvres le même tour.
 
 </div>
 <div class="cp-suzerain">
@@ -48,7 +68,11 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 
 </div> 
 
+##### Lien de Suzerain :
 - **Marque Blanche :** Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -5 lorsqu'ils tentent de lancer un sort. Si un modèle adverse marqué par la Marque Blanche rate un test de moral, il est détruit.
+- **Mortelle Extase :** pour chaque modèle lié à Weißroth, les modèles affectés par une Marque Blanche subissent un malus de -1 Moral.
+- **Siphonner les faibles :** Weißroth et les modèles qui lui sont liés gagnent un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
+
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -61,31 +85,6 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]]. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
 ##### Règles spéciales :
 - Martyr : Lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
-##### Lien de Suzerain :
-- Mortelle Extase : pour chaque modèle lié à Weißroth, les modèles affectés par une Marque Blanche subissent un malus de -1 Moral.
-- Siphonner les faibles : Weißroth et les modèles qui lui sont liés gagnent un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
-
-</div>
-<div class="cp-suzerain">
-<div class="legendary">
-
-### Mok’Tor — 68 pts
-
-</div>
-
-| 🟦         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Mok’Tor    | **6**   | **4+**                                                                               | **-**                                                                                   | **5+**                                                                          | **10**                                                                           | **8**  | **4**  | **6**  | Mort     |
-| **Mêlée:** | 8d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
-
-*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Équipement :
-- Masse des anciens rois : si Mok’Tor réussit la moindre touche en mêlée, l’armure de sa cible devient 6+ pour le reste de la partie.
-##### Règles spéciales :
-- Un Roi règne seul : 3 fois par partie, lors de la phase d’initiative, vous pouvez voler 1 Manœuvre à votre adversaire. Vous pouvez ainsi voler plusieurs Manœuvres le même tour.
-##### Lien de Suzerain :
-- Peur du noir : les modèles liés à Mok'Tor bénéficient de la règle *Ombre Insaisissable*, et cceux qui la possèdent appliquent cette règle avec 3 pions au lieu de 2.
----
 
 </div>
 <div class="cp-suzerain">
@@ -95,7 +94,10 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 
 </div>
 
-| 🟦           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+##### Lien de Suzerain
+- **Seigneur Suprême des Racines :** Au début de chaque tour, Yehudiah bénéficie de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (N)]] où N est le nombre d'unité qui lui est lié.
+
+| ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ------------ | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
 | Yehudiah, 0F | **4**   | **5+**                                                                               | **4+**                                                                                  | **5+**                                                                          | **9**                                                                            | **5**  | **6**  | **5**  | Mort     |
 | Yehudiah, 1F | **4**   | **5+**                                                                               | **4+**                                                                                  | **5+**                                                                          | **9**                                                                            | **6**  | **6**  | **6**  | Mort     |
@@ -119,9 +121,7 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - Rite des morts (long, 18+, projectile) : Portée 12’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Le nombre de touches est égal à la valeur de lancement de ce sort.
 ##### Règles spéciales :
 - Livres des morts : Yehudiah possède autant de Livres des morts qu’il n’a réussi à rassembler de fragments d’âmes. Il peut en défausser un pour lancer un par tour pour lancer un sort sans dépenser d’action. Chaque fois que Yehudiah défausse un livre des morts, il perd un fragment (son profil devient donc moins fort).
-- Funestes serviteurs : au début de chaque tour, Yehudiah gagne Egide (N) où N est le nombre de ẞterblich présent sur la table.
-##### Lien de Suzerain
-- Seigneur Suprême des Racines : Au début de chaque tour, Yehudiah bénéficie de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (N)]] où N est le nombre de modèles qui lui est lié.
+- Sorcier vénérable : Yehudiah peut lancer des sorts s'il est engagé en mêlée.
 
 </div>
 </div>
@@ -249,27 +249,16 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 
 ---
-### Nuckelavee — 21 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Cavalier | **-** | **4+** | **-** | **5+** | **7** | **2** | **3** | **2** | Ombre |
-| Cheval d’effroi | **8** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Ombre |
-| **Mêlée:** | 2d6 / 2d6 |  | **Tir:** | - |  |  |  |  |  |
-
-*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-
----
 ### ẞterblich — 58 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ẞterblich | **5** | **4+** | **-** | **4+** | **7** | **5** | **4** | **5** | Ombre |
+| ẞterblich | **5** | **4+** | **-** | **5+** | **4** | **1** | **4** | **5** | Ombre |
 | **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
-- Bouclier d’os : au début de chaque tour, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].
+- Bouclier d’os : au début de chaque tour, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (N)]] où N correspond au nombre de fragments d'âmes que possède Yehudiah.
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de mort : à la fin de chaque tour, chaque modèle ennemi à 1’’ ou moins de cette unité perd 1 PV.
 ---
 ### Faucheur — 26 pts
@@ -296,6 +285,17 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - Fauchage : cette unité peut relancer tous ses jets d’attaque en mêlée ratés.
 - L’heure du cauchemar (1) : choisissez un modèle ami à 6’’ ou moins de l’harceleur, qui obtient une marche gratuite. Cette compétence peut être utilisé en dehors de la phase d’activation de l’Harceleur, mais toujours dans la limite d’une seule fois par tour.
 ---
+
+### Nuckelavee — 21 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Cavalier | **-** | **4+** | **-** | **5+** | **7** | **2** | **3** | **2** | Ombre |
+| Cheval d’effroi | **8** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Ombre |
+| **Mêlée:** | 2d6 / 2d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+
 ### Pleureuse — 13 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
