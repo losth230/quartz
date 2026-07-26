@@ -361,27 +361,25 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 ---
 
 
-
 <style>
 /* ============================================================
    Anciens Suzerains — mise en page
-   Deux Suzerains côte à côte, chacun dans son propre encadré.
+   Chaque Suzerain dans son propre encadré, empilés verticalement.
    ============================================================ */
-.cp-suzerain-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.4rem;
-  margin: 1.4rem 0;
-}
 .cp-suzerain {
-  min-width: 0; /* évite que les tableaux ne fassent déborder la grille */
   border: 1px solid var(--lightgray);
   border-radius: 8px;
   padding: 0.9rem 1.1rem 1.1rem;
-  background: var(--light);
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
 }
-/* Mobile : empilé sur une colonne */
-@media (max-width: 700px) {
-  .cp-suzerain-grid { grid-template-columns: 1fr; }
+/* Bandeau titre : garde le dégradé doré de .legendary, ajoute juste le filet */
+.cp-suzerain h3 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
 }
+.cp-suzerain table { min-width: 0; }
 </style>
