@@ -255,8 +255,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 #### Abatiale d'Hazard
 - **Assomption (2) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
-- **L'heure de la prière (1) :** Utilisable une g
-fois par tour, à utiliser à la place d'une activation pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] et [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]].
+- **L'heure de la prière (1) :** A utiliser à la place d'une activation pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] et [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]].
 
 </div>
 </div>
