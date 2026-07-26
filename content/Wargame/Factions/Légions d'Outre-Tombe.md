@@ -8,8 +8,6 @@ Si un modèle charge sur une distance de 7’’ ou plus, il gagne un bonus de F
 Une unité de type Fantôme peut posséder un modèle ami qui devient son hôte. Ne déployez alors pas le Fantôme. A la place, pendant l’activation de l’hôte, vous pouvez révéler l’unité ainsi cachée et la placez à 3’’ ou moins de l’hôte. Un hôte ne peut cacher plus d'unité qu'il n'a d'unité au sein de son modèle.
 #### Le règne des Morts :
 Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
-#### Marque Blanche :
-Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -5 lorsqu'ils tentent de lancer un sort.  
 #### Cadavre :
 Chaque fois qu’une unité amie qui n’est pas du type Cadavérique meure, vous gagnez 1 cadavre, une ressource unique.
 #### Ombre :
@@ -21,6 +19,34 @@ Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénératio
 À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut se lier à un Ancien Suzerain présent dans la liste ci dessous.
 
 Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement.
+
+<div class="cp-suzerain-grid">
+<div class="cp-suzerain">
+<div class="legendary">
+
+### Weißroth — 54 pts
+
+</div> 
+
+- *Marque Blanche :* Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -5 lorsqu'ils tentent de lancer un sort. Si un modèle adverse marqué par la Marque Blanche rate un test de moral, il est détruit.
+
+| ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Weißroth | **6** | **6+** | **3+** | **5+** | **10** | **5** | **4** | **5** | Fantôme |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Magie :
+- Weißroth est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Tombe et au Domaine des Ténèbres.
+- Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]]. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
+##### Règles spéciales :
+- Martyr : Lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
+##### Lien de Suzerain :
+- Mortelle Extase : pour chaque modèle lié à Weißroth, les modèles affectés par une Marque Blanche subissent un malus de -1 Moral.
+- Siphonner les faibles : Weißroth et les modèles qui lui sont liés gagnent un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
+
+</div>
+</div>
 
 ---
 
@@ -164,27 +190,6 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - Masse des anciens rois : si Mok’Tor réussit la moindre touche en mêlée, l’armure de sa cible devient 6+ pour le reste de la partie.
 ##### Règles spéciales :
 - Un Roi règne seul : 3 fois par partie, lors de la phase d’initiative, vous pouvez voler 1 Manœuvre à votre adversaire. Vous pouvez ainsi voler plusieurs Manœuvres le même tour.
----
-
-<div class="legendary">
-
-### Weißroth — 54 pts
-
-</div> 
-
-| ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Weißroth | **6** | **6+** | **3+** | **5+** | **10** | **5** | **4** | **5** | Fantôme |
-| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
-
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Magie :
-- Weißroth est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Tombe et au Domaine des Ténèbres.
-- Marque de la rose (court, 11+, projectile) : Portée 12’’ 3d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]]. Si la moindre blessure est obtenue, la cible reçoit une Marque Blanche.
-##### Règles spéciales :
-- Marque Blanche supérieure : si un modèle adverse marqué par la Marque Blanche rate un test de moral, elle est détruite.
-- Martyr : lorsque Weißroth est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
-- Siphonner les faibles : Weißroth gagne un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
 ---
 
 <div class="legendary">
@@ -354,3 +359,29 @@ Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont l
 - A la fin de chaque tour, le Dévoreur peut consumer des Zombies à 9’’ ou moins. Retirez les Zombies et gagner autant de Cadavres.
 - Gros tas d’os : Si cette unité est détruite, générez 2 Cadavres.
 ---
+
+
+
+<style>
+/* ============================================================
+   Anciens Suzerains — mise en page
+   Deux Suzerains côte à côte, chacun dans son propre encadré.
+   ============================================================ */
+.cp-suzerain-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.4rem;
+  margin: 1.4rem 0;
+}
+.cp-suzerain {
+  min-width: 0; /* évite que les tableaux ne fassent déborder la grille */
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  background: var(--light);
+}
+/* Mobile : empilé sur une colonne */
+@media (max-width: 700px) {
+  .cp-suzerain-grid { grid-template-columns: 1fr; }
+}
+</style>
