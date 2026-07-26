@@ -234,8 +234,6 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ##### Règles spéciales :
 - Ombre invisible : au lieu de déployer ce moddèle normalement, déployez-le à l'endroit de votre choix sans que votre adversaire ne vous voit. Prenez-le en photo, et retirez-le. A la place de n'importe quelle activation, vous pouvez montrer la photo et déployer ce modèle à cet endroit. Il n'est pas marqué activé.
 
-<div class="legendary">
-
 ---
 ## Modèles de base
 ---
