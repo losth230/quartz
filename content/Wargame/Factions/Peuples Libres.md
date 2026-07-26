@@ -122,7 +122,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 <div class="cp-roy-ordres">
-
 <div class="cp-ordre">
 
 #### Ordre des Chevaliers
@@ -130,7 +129,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Offrande rituelle (4) :** Action courte utilisable par n'importe quel modèle chevalier non engagé en mêlée pour générer 1 point de victoire. Utilisable une seule fois par tour.
 
 </div>
-
 <div class="cp-ordre">
 
 #### Duché de Skoïda
@@ -139,8 +137,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
-</div>
-
 <div class="cp-royaume">
    
 ## Royaume de Lun
@@ -152,7 +148,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 <div class="cp-roy-ordres">
-
 <div class="cp-ordre">
 
 #### Palais des Légendes
@@ -160,7 +155,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Main Divine :** Les comandants bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].
 
 </div>
-
 <div class="cp-ordre">
 
 #### Inquisition
@@ -169,8 +163,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
-</div>
-
 <div class="cp-royaume">
 
 ## Empire de Seth
@@ -199,7 +191,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
-</div>
 
 <div class="cp-royaume">
 
@@ -212,7 +203,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 <div class="cp-roy-ordres">
-
 <div class="cp-ordre">
 
 #### Duché de Boïtal
@@ -220,7 +210,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Grande chevauchée :** Les modèles ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] bénéficient de +1 Vitesse.
 
 </div>
-
 <div class="cp-ordre">
 
 #### Duché de Fessac
@@ -229,8 +218,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 </div>
-</div>
-
 <div class="cp-royaume">
 
 ## Temple d'Ishtar
@@ -242,7 +229,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 </div>
 <div class="cp-roy-ordres">
-
 <div class="cp-ordre">
 
 #### Monastère de la Busquette
@@ -250,7 +236,6 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - **Epiphanie :** Au début de chaque tour, désignez un modèle Sœur et faites-lui effectuer une marche gratuite.
 
 </div>
-
 <div class="cp-ordre">
 
 #### Abatiale d'Hazard

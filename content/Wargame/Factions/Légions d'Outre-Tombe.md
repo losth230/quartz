@@ -17,6 +17,11 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 #### Cadavérique :
 Lorsqu’un modèle de type Cadavérique bénéficie de la règle Régénération (X), s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
+#### Anciens Suzerains 
+À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut se lier à un Ancien Suzerain présent dans la liste ci dessous.
+
+Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement.
+
 ---
 
 <center><h2>Domaines de Faction</h2></center>
