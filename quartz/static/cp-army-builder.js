@@ -420,22 +420,24 @@ function affinites() {
   if (clan && clan.affinite_type) add(clan.affinite_type, clan.affinite_valeur || 0);
   return { occulte, chamanique };
 }
-// Occultisme et Chamanisme sont OPPOSÉS sur un même axe : seul l'écart (net) compte.
-//  |écart| ≤ 5  => Équilibre.
-//  Au-delà, la tendance penche du côté dominant et le rang dépend de l'écart :
-//  Rang I : 6–10, II : 11–15, III : 16–20, IV : 21–25, V : 26+.
+// Occultisme et Chamanisme sont suivis INDÉPENDAMMENT (chacun son propre total).
+//  Le camp dominant (total le plus haut) donne l'affinité de la bande.
+//  Égalité, ou aucun des deux camps n'atteint le seuil minimum (2) => Équilibre.
+//  Paliers du camp dominant : Affinité (2+), Rang I (4+), II (8+), III (12+), IV (16+), V (20+).
 function affiniteVerdict(occ, cha) {
   if (occ === 0 && cha === 0) return { texte: "Aucune affinité pour l'instant", classe: "" };
-  const net = occ - cha;
-  const ecart = Math.abs(net);
-  if (ecart <= 5) return { texte: "Équilibre (écart " + ecart + ") — relance des 1 en attaque et armure", classe: "eq" };
-  const type = net > 0 ? "Occulte" : "Chamanique";
-  const classe = net > 0 ? "occ" : "cha";
-  const seuils = [5, 10, 15, 20, 25];
-  let rang = 0; seuils.forEach((s) => { if (ecart > s) rang = Math.min(5, rang + 1); });
-  const roman = ["", "I", "II", "III", "IV", "V"][rang];
-  const suite = rang < 5 ? " · Rang " + ["", "II", "III", "IV", "V"][rang] + " à un écart de " + (seuils[rang] + 1) : " · max";
-  return { texte: "Affinité " + type + " — Rang " + roman + suite, classe };
+  if (occ === cha || (occ < 2 && cha < 2)) {
+    return { texte: "Équilibre (Occ " + occ + " / Cha " + cha + ") — relance des 1 en attaque et armure", classe: "eq" };
+  }
+  const type = occ > cha ? "Occulte" : "Chamanique";
+  const classe = occ > cha ? "occ" : "cha";
+  const total = Math.max(occ, cha);
+  const seuils = [2, 4, 8, 12, 16, 20];
+  const roman = ["", "I", "II", "III", "IV", "V"];
+  let rang = 0; seuils.forEach((s, i) => { if (total >= s) rang = i; });
+  const label = rang > 0 ? " — Rang " + roman[rang] : "";
+  const suite = rang < 5 ? " · Rang " + roman[rang + 1] + " à " + seuils[rang + 1] : " · max";
+  return { texte: "Affinité " + type + label + suite, classe };
 }
 function affinitePanel() {
   if (!factionAAffinite()) return "";
