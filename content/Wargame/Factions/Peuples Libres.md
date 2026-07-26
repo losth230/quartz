@@ -560,14 +560,14 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 ---
-### Chantelame — 25 pts
+### Chantelame — 22 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Arkadia | **5** | **3+** | **-** | **6+** | **8** | **3** | **2** | **2** | Sœur |
+| Chantelame | **5** | **3+** | **-** | **6+** | **8** | **3** | **2** | **2** | Sœur |
 | **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]].*
 ##### Règles spéciales :
 - Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6'' ou moins.
 ---
