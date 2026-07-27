@@ -170,8 +170,9 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 | Clochard   | **3**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **9**                                                                            | **3**  | **2**  | **4**  | Ombre    |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (3)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
+- Danse Macabre : lorsque ce modèle attaque un modèle possédant une Marque blanche, il inflige des dégâts bruts.
 - Siphon d’âme : lorsque ce modèle tue une unité, volez un point de Manœuvre à votre adversaire.
 - Pas de l’ombre (1/2 par unité) : action courte, le Clochard se téléporte sur 12’’. S’il entre en contact avec un modèle adverse, il s‘agit d’une charge.
 - Martyr : lorsque cette unité est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
@@ -190,7 +191,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 <div class="legendary">
 
-### Domblaʄ — 56 pts
+### Domblaʄ — 46 pts
 
 </div>
 
@@ -201,9 +202,8 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
-- Danse Macabre : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche. Domblaʄ n'a pas besoin d'être révélé.
+- Galanterie : au début du premier tour, désignez un modèle adverse et appliquez-lui une Marque Blanche. Domblaʄ n'a pas besoin d'être révélé.
 - Premier Roi : Domblaʄ bénéficie d’un bonus de +2 sur ses résultats de combat.
-- Galanterie : Si Weißroth est présente, Domblaʄ coûte 12 pts de moins.
 ---
 ### Geôlier — 31 pts
 
@@ -229,10 +229,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 | Destrier d'effroi | **8** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Ombre |
 | **Mêlée:** | 6d6 / 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Cavalier Expérimenté]] [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
-
-##### Règles spéciales :
-- Ombre invisible : au lieu de déployer ce moddèle normalement, déployez-le à l'endroit de votre choix sans que votre adversaire ne vous voit. Prenez-le en photo, et retirez-le. A la place de n'importe quelle activation, vous pouvez montrer la photo et déployer ce modèle à cet endroit. Il n'est pas marqué activé.
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],[[Wargame/_Visualisation/Règles spéciales/Cavalerie Expérimenté|Cavalier Expérimenté]], [[Wargame/_Visualisation/Règles spéciales/Embuscade|Embuscade]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 
 ---
 ## Modèles de base
@@ -254,7 +251,7 @@ ___
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Cauchemar | **6** | **5+** | **-** | **5+** | **6** | **1** | **2** | **1** | Ombre |
-| **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
+| **Mêlée:** | 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 
@@ -266,8 +263,9 @@ ___
 | Faucheur   | **3**   | **3+**                                                                               | **-**                                                                                   | **5+**                                                                          | **8**                                                                            | **2**  | **2**  | **2**  | Ombre    |
 | **Mêlée:** | 3d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
+- Danse Macabre : lorsque ce modèle attaque un modèle possédant une Marque blanche, il inflige des dégâts bruts.
 - Siphon d’âme : lorsque ce modèle tue une unité, volez un point de Manœuvre à votre adversaire.
 - Pas de l’ombre (1/2 par unité) : action courte, Le modèle du Faucheur se téléporte sur 12’’. S’il entre en contact avec un modèle adverse, il s‘agit d’une charge.
 ---
@@ -280,7 +278,7 @@ ___
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
-- Fauchage : cette unité peut relancer tous ses jets d’attaque en mêlée ratés.
+- Moisson : cette unité peut relancer tous ses jets d’attaque en mêlée ratés.
 - L’heure du cauchemar (1) : choisissez un modèle ami à 6’’ ou moins de l’harceleur, qui obtient une marche gratuite. Cette compétence peut être utilisé en dehors de la phase d’activation de l’Harceleur, mais toujours dans la limite d’une seule fois par tour.
 ---
 
