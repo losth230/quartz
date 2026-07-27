@@ -237,6 +237,18 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ---
 ## Modèles de base
 ---
+### ẞterblich — 54 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| ẞterblich | **5** | **4+** | **-** | **4+** | **7** | **8** | **4** | **5** | Ombre |
+| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Équipement :
+- Bouclier d’os : au début de chaque tour, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+- [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de mort : à la fin de chaque tour, chaque modèle ennemi à 1’’ ou moins de cette unité perd 1 PV.
+___
 ### Cauchemar — 6 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -246,18 +258,6 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 *[[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 
----
-### ẞterblich — 58 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| ẞterblich | **5** | **4+** | **-** | **5+** | **4** | **1** | **4** | **5** | Ombre |
-| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
-
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Équipement :
-- Bouclier d’os : au début de chaque tour, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (N)]] où N correspond au nombre de fragments d'âmes que possède Yehudiah.
-- [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de mort : à la fin de chaque tour, chaque modèle ennemi à 1’’ ou moins de cette unité perd 1 PV.
 ---
 ### Faucheur — 26 pts
 
