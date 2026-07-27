@@ -213,8 +213,8 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |               |     |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Équipement :
-- Chaînes hurlantes : Si ce modèle inflige au moins une blessure, la vitesse de sa cible tombe à 0 pour le reste du tour.
+##### Règles Spéciales :
+- Attaches mortelles : au début de chaque tour, désignez un modèle à 8'' ou moins. Si des unités de ce modèle sont tuées, résolvez leurs potentiels effets de mort, mais ne les retirez pas de la table. A la fin du tour, retirez les unités qui auraient dû mourir et déclenchez une deuxième fois leurs effets de mort.
 ---
 
 <div class="legendary">
