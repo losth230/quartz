@@ -24,9 +24,8 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 
 ##### Lien de suzerain :
-- **Servitude éternelle :** les modèles liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
-- **Collecter les corps :** Chaque fois qu’une unité amie qui n’est pas du type Cadavérique meurt, vous gagnez un nombre de cadavres égal à sa masse.
-- **Cadavériques :** Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
+- **Collecter les corps :** Chaque fois qu’une unité liée à L'Ankou qui n’est pas du type Cadavérique meurt, vous gagnez un nombre de cadavres égal à sa masse.
+- **Servitude éternelle :** Au début de chaque tour, les modèles de type Cadavérique liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (N)]] où N est le nombre de cadavres dépensés. Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -36,7 +35,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] / [[Wargame/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge Dévastatrice]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
-- Charrette Macabre : ce modèle génère un nombre de Cadavres égal au nombre de blessure infligées par L’Ankou.
+- Faux collectrice d'âmes : ce modèle génère un nombre de Cadavres égal au nombre de blessure infligées par L’Ankou.
 ##### Règles spéciales :
 - Collecte des morts : au début de chaque tour, vous pouvez dépenser N Cadavres pour invoquer un modèle de N Zombies à 3’’ ou moins de L’Ankou et à 3’’ ou plus de tout modèle ennemi.
 
