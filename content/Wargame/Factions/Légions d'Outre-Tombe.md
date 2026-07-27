@@ -8,6 +8,8 @@ Si un modèle charge sur une distance de 7’’ ou plus, il gagne un bonus de F
 Une unité de type Fantôme peut posséder un modèle ami qui devient son hôte. Ne déployez alors pas le Fantôme. A la place, pendant l’activation de l’hôte, vous pouvez révéler l’unité ainsi cachée et la placez à 3’’ ou moins de l’hôte. Un hôte ne peut cacher plus d'unité qu'il n'a d'unité au sein de son modèle.
 #### Le règne des Morts :
 Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
+#### Marque Blanche :
+Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -4 lorsqu'ils tentent de lancer un sort. Si un modèle adverse marqué par la Marque Blanche rate un test de moral, il est détruit.
 #### Ombres insaisissables :
 Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et son détruits s’ils subissent la moindre touche.
 #### Anciens Suzerains 
@@ -69,7 +71,6 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div> 
 
 ##### Lien de Suzerain :
-- **Marque Blanche :** Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -5 lorsqu'ils tentent de lancer un sort. Si un modèle adverse marqué par la Marque Blanche rate un test de moral, il est détruit.
 - **Mortelle Extase :** pour chaque modèle lié à Weißroth, les modèles affectés par une Marque Blanche subissent un malus de -1 Moral.
 - **Siphonner les faibles :** Weißroth et les modèles qui lui sont liés gagnent un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
 
