@@ -245,6 +245,13 @@ Une bande est considérée en déroute dès lors qu'elle a perdu plus de 50% de 
 > ##### (Règles avancées) Invocations et déroute :
 > Les invocations sont ajoutées à votre liste d'armée, mais ne comptent pas dans la limite concernant les déroutes.
 *Par exemple, si vous avez une liste à 300 pts, votre bande est en déroute dès que vous avez moins de 150 pts restants sur la table. Les invocations vous permettent ainsi de tenir plus longtemps!*
+> ##### (Règles avancées) Limite de renforts :
+> Afin de simuler l'épuisement des bandes des joueurs, une limite est posée à la [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] maximale dont elles peuvent bénéficier, qui dévroit au fur et à mesure des tours :
+- Tour 1 : limite de 10 PV régénérés maximum.
+- Tour 2 : limite de 8 PV régénérés maximum.
+- Tour 3 : limite de 6 PV régénérés maximum.
+- Tour 4 : limite de 4 PV régénérés maximum.
+- Tour 5 : limite de 2 PV régénérés maximum.
 
 ---
 
