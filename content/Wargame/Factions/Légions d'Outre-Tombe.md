@@ -57,7 +57,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
-- Masse des anciens rois : si Mok’Tor réussit la moindre touche en mêlée, l’armure de sa cible devient 6+ pour le reste de la partie.
+- Masse des anciens rois : si Mok’Tor réussit la moindre touche en mêlée, sa cible subit des dégâts bruts de toutes les sources pour le reste de la partie.
 ##### Règles spéciales :
 - Un Roi règne seul : 4 fois par partie, lors de la phase d’initiative, vous pouvez voler 1 Manœuvre à votre adversaire. Vous pouvez ainsi voler plusieurs Manœuvres le même tour.
 
@@ -300,7 +300,7 @@ ___
 | **Mêlée:** | 1d6 |  | **Tir:** | - |  |  |  |  |  |
 
 ##### Équipement :
-- Pleurer les morts : chaque fois qu’un modèle Cadavérique meurt à 6’’ ou plus, cette unité gagne +1d6 en mêlée.
+- Pleurer les morts : chaque fois qu’un modèle Cadavérique meurt à 9’’ ou plus, cette unité gagne +1d6 en mêlée.
 - Mélopée : les attaques de ce modèle obtenant 6 ne sont pas explosives.
 ---
 ### Revenant — 16 pts
@@ -356,17 +356,16 @@ ___
 ---
 ## Modèles Spéciaux
 ---
-### Dévoreur — 54 pts
+### Dévoreur — 64 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Dévoreur | **5** | **4+** | **-** | **5+** | **6** | **6** | **4** | **4** | Mort |
-| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
+| Dévoreur | **5** | **4+** | **-** | **5+** | **6** | **8** | **4** | **6** | Mort |
+| **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
-- A la fin de chaque tour, le Dévoreur peut consumer des Zombies à 9’’ ou moins. Retirez les Zombies et gagner autant de Cadavres.
-- Gros tas d’os : Si cette unité est détruite, générez 2 Cadavres.
+- Au début de chaque tour, le Dévoreur peut consumer jusqu'à 5 Zombies à 9’’ ou moins. Pour chaque Zombie ainsi consummé, ce modèle reçoit +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénérère]] 1 PV.
 ---
 
 
