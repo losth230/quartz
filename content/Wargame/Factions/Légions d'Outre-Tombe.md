@@ -322,8 +322,9 @@ ___
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
-##### Règles spéciales :
+##### Equipement :
 - Lame Purulente : si ce modèle réussit au moins 3 Blessures en mêlée, sa cible est marquée Fatiguée.
+##### Règles spéciales :
 - Attaches multiples : ce modèle peut rejoindre la cour et se lier à autant d'Ancien Suzerain qu'il souhaite.
 ___
 ### Transporteur de cadavres — 21 pts
