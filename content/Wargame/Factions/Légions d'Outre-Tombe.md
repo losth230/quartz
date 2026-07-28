@@ -135,7 +135,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 **Attribut : armée déliée :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle Cadavérique ou Ombre à 12’’ ou moins non engagé en mêlée et déplacez-le de 3’’.
 #### Niveau 1
-- **Levée Macabre (court, 6+, Amélioration) :** Portée 12’’, le lanceur peut dépenser jusqu’à 3 fois son niveau de lanceur de sort en cadavre pour octroyer Régénération (X) à un modèle Cadavérique, où X est le nombre de Cadavres dépensés.
+- **Levée Macabre (court, 6+, Amélioration) :** Portée 12’’, le lanceur peut invoquer jusqu'à son niveau de lanceur en Zombies. Ajoutez les unités ainsi invoquées à un modèle existant ou créez un nouveau modèle à 6'' ou moins du lanceur et 6'' ou plus de tout modèle ennemi puis marquez-le activé.
 - **Rayon purulent (court, 8+, projectile) :** Portée 9’’, 2d6. Si la moindre touche est obtenue, la cible doit réussir un test de moral ou être marqué fatiguée.
 #### Niveau 2
 - **Horreur (court, 4+, malédiction) :** Portée 6’’. La cible doit réussir un test de moral ou être marquée Activée et fatiguée.
