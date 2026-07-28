@@ -163,6 +163,17 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ##### Règles spéciales :
 - Un temps d’avance : une fois le déploiement terminé, Aklash et les modèles amis à 6’’ ou moins bénéficient d’une marche gratuite.
 ---
+### Bourreau — 38 pts
+
+| 🟥🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Bourreau | **6** | **3+** | **-** | **5+** | **7** | **3** | **2** | **4** | Ombre |
+| **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Règle spéciales :
+- Travail terminé : ce modèle inflige des dégâts bruts aux modèles n'ayant pas tous leurs PV.
+___
 ### Clochard — 44 pts
 
 | ⬜          | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
