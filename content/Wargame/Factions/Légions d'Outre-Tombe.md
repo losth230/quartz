@@ -24,7 +24,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 
 ##### Lien de suzerain :
-- **Collecter les corps :** Chaque fois qu’une unité liée à L'Ankou qui n’est pas du type Cadavérique meurt, vous gagnez un nombre de cadavres égal à sa masse.
+- **Collecter les corps :** Chaque fois qu’une unité liée à L'Ankou meurt, vous gagnez un nombre de cadavres égal à sa masse.
 - **Servitude éternelle :** Au début de chaque tour, les modèles de type Cadavérique liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (N)]] où N est le nombre de cadavres dépensés. Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -177,14 +177,14 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 - Pas de l’ombre (1/2 par unité) : action courte, le Clochard se téléporte sur 12’’. S’il entre en contact avec un modèle adverse, il s‘agit d’une charge.
 - Martyr : lorsque cette unité est révélée, désignez un modèle adverse qui reçoit une Marque Blanche.
 ---
-### Coureur de minuit — 40 pts
+### Coureur de minuit — 42 pts
 
 | 🟥🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Coureur | **6** | **4+** | **-** | **5+** | **8** | **4** | **2** | **4** | Ombre |
 | **Mêlée:** | 4d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Équipement :
 - Lame purulente : en cas de blessure en mêlée, la cible est marquée Fatiguée.
 ---
@@ -301,6 +301,7 @@ ___
 
 ##### Équipement :
 - Pleurer les morts : chaque fois qu’un modèle Cadavérique meurt à 6’’ ou plus, cette unité gagne +1d6 en mêlée.
+- Mélopée : les attaques de ce modèle obtenant 6 ne sont pas explosives.
 ---
 ### Revenant — 16 pts
 
