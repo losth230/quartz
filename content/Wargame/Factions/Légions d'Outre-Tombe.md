@@ -13,7 +13,7 @@ Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuv
 #### Ombres insaisissables :
 Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et son détruits s’ils subissent la moindre touche.
 #### Anciens Suzerains 
-À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut se lier à un Ancien Suzerain présent dans la liste ci dessous.Tant que le Suzerain choisi est vivant sur la table, les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
+À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut rejoindre la cour d'un Ancien Suzerain présent dans la liste ci dessous et se lier lui.Tant que le Suzerain choisi est vivant sur la table (même camouflé ou en possession), les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
 
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
