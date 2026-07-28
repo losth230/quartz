@@ -11,9 +11,9 @@ Une armée de la Légion d’Outre – Tombe ne peut pas être mise en déroute.
 #### Marque Blanche :
 Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuvres et souffrent d'un malus de -4 lorsqu'ils tentent de lancer un sort. Si un modèle adverse marqué par la Marque Blanche rate un test de moral, il est détruit.
 #### Ombres insaisissables :
-Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et son détruits s’ils subissent la moindre touche.
+Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et sont détruits s’ils subissent la moindre touche.
 #### Anciens Suzerains 
-À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut rejoindre la cour d'un Ancien Suzerain présent dans la liste ci dessous et se lier lui.Tant que le Suzerain choisi est vivant sur la table (même camouflé ou en possession), les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
+À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut rejoindre la cour d'un Ancien Suzerain présent dans la liste ci dessous et se lier lui. Tant que le Suzerain choisi est vivant sur la table (même camouflé ou en possession), les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
 
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
@@ -303,7 +303,7 @@ ___
 - Pleurer les morts : chaque fois qu’un modèle Cadavérique meurt à 9’’ ou plus, cette unité gagne +1d6 en mêlée.
 - Mélopée : les attaques de ce modèle obtenant 6 ne sont pas explosives.
 ---
-### Revenant — 16 pts
+### Revenant — 17 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -313,17 +313,18 @@ ___
 *[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Lame Purulente : si ce modèle réussit au moins 3 Blessures en mêlée, sa cible est marquée Fatiguée.
+- Attaches multiples : ce modèle peut rejoindre la cour et se lier à autant d'Ancien Suzerain qu'il souhaite.
 ___
-### Revenant — 16 pts
+### Transporteur de cadavres — 21 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Revenant | **6** | **4+** | **-** | **5+** | **7** | **2** | **2** | **2** | Ombre |
+| Revenant | **5** | **4+** | **-** | **5+** | **7** | **3** | **2** | **3** | Ombre |
 | **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+*[[Wargame/_Visualisation/Règles spéciales/Eclaireur|Eclaireur]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]].*
 ##### Règles spéciales :
-- Lame Purulente : si ce modèle réussit au moins 3 Blessures en mêlée, sa cible est marquée Fatiguée.
+- Sac mortuaire : lorsque ce modèle est révélé, gagnez 2 Cadavres.
 ---
 ### Zombie — 4 pts
 
@@ -363,7 +364,18 @@ ___
 - Réanimé (+5 pts) : lanceur de sorts de niveau 2.
 - Prélat de la Mort (+11 pts) : lanceur de sorts de niveau 3.
 ##### Magie :
-- Les Nécromants ont accès au Domaine de la Tombe et au Domain des Racines**.**
+- Les Nécromants ont accès au Domaine de la Tombe et au Domain des Racines.
+___
+### Recycleur — 19 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Recycleur | **6** | **6+** | **-** | **5+** | **7** | **2** | **2** | **2** | Ombre |
+| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
+##### Règles spéciales :
+- Recyclage (1) : déclenchez l'effet de début de tour, ou de fin de tour d'un modèle ami à 9'' ou moins.
 ---
 ## Modèles Spéciaux
 ---
