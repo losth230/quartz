@@ -658,4 +658,58 @@ ___
     padding-top: 0.7rem;
   }
 }
+
+// ═══════════════════════════════════════════════════════════
+//   Anciens Suzerains — variante rouge sang de .legendary
+// ═══════════════════════════════════════════════════════════
+
+.legendary-crimson {
+
+  h3 {
+    background: linear-gradient(
+      135deg,
+      #6b0f0f,
+      #a3161d 30%,
+      #e0393e 50%,
+      #a3161d 70%,
+      #6b0f0f
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+    animation: legendary-shimmer 4s ease-in-out infinite;
+  }
+
+}
+
+// Mode sombre : bordure dégradée assortie
+[saved-theme="dark"] .legendary-crimson {
+  background:
+    linear-gradient(var(--light), var(--light)) padding-box,
+    linear-gradient(
+      135deg,
+      #6b0f0f 0%,
+      #b1181f 25%,
+      #ffb3b3 50%,
+      #b1181f 75%,
+      #6b0f0f 100%
+    ) border-box;
+
+  h3 {
+    background: linear-gradient(
+      135deg,
+      #6b0f0f,
+      #b1181f 30%,
+      #ffb3b3 50%,
+      #b1181f 70%,
+      #6b0f0f
+    );
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+  }
+}
+
 </style>
