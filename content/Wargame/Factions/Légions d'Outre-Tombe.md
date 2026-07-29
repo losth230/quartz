@@ -1,6 +1,8 @@
-##### Version : A3.2 
+##### Version : A3.5.0 
 
 <center><h2>Règles de Faction</h2></center>
+
+<div class="cp-encadre">
 
 #### Charge du fond du monde :
 Si un modèle charge sur une distance de 7’’ ou plus, il gagne un bonus de Force Dévastatrice (+1). S’il charge sur une distance de 13’’ ou plus, il gagne Force Dévastatrice (+2). Il peut dépasser la limite maximale à l’aide de cette règle.
@@ -13,8 +15,9 @@ Les modèles souffrant d'une marque blanche ne peuvent plus dépenser de Manœuv
 #### Ombres insaisissables :
 Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pions numérotés à votre liste d’armée et choisissez secrètement lequel sera le modèle camouflé. Les pions ainsi ajoutés se déploient comme des modèles standards, à l’exception près qu’ils se déploient 2 par 2. Les pions camouflés ne peuvent attaquer, ont une taille de 2, une vitesse de 6, volent, bloquent les lignes de vue et sont détruits s’ils subissent la moindre touche.
 #### Anciens Suzerains 
-À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut rejoindre la cour d'un Ancien Suzerain présent dans la liste ci dessous et se lier lui. Tant que le Suzerain choisi est vivant sur la table (même camouflé ou en possession), les modèles qui lui sont liés bénéficient de son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison mais qu'il est vivant, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
+À la création de votre liste, chaque modèle qui n'est pas un Ancien Suzerain peut rejoindre la cour d'un Ancien Suzerain présent dans la liste ci dessous et se lier lui. Tant que le Suzerain choisi est vivant sur la table (même camouflé ou en possession), les modèles qui lui sont liés appliquent son effet de Lien. Si le Suzerain est tué, l'effet cesse immédiatement. Même s'il n'est pas sur la table pour une quelconque raison, le suzerain génère ses dés de Manœuvre tant qu'il n'a pas été tué ou retiré du jeu pour une autre raison.
 
+</div>
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
 <div class="legendary">
@@ -22,12 +25,15 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ### L’Ankou — 64 pts
 
 </div>
+<div class="cp-suzerain-lien">
 
 ##### Lien de suzerain :
 - **Collecter les corps :** Chaque fois qu’une unité liée à L'Ankou meurt, vous gagnez un nombre de cadavres égal à sa masse.
 - **Servitude éternelle :** Au début de chaque tour, les modèles de type Cadavérique liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (N)]] où N est le nombre de cadavres dépensés. Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
-| ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+</div>
+
+| | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | L’Ankou | **-** | **4+** | **-** | **5+** | **10** | **8** | **4** | **6** | Mort |
 | Charrette | **6** | **4+** | **-** | **-** | **-** | **-** | **-** | **-** | Machine |
@@ -46,9 +52,12 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ### Mok’Tor — 68 pts
 
 </div>
+<div class="cp-suzerain-lien">
 
 ##### Lien de Suzerain :
 - **Peur du noir :** les modèles liés à Mok'Tor bénéficient de la règle *Ombre Insaisissable*, et ceux qui la possèdent appliquent cette règle avec 3 pions au lieu de 2.
+
+</div>
 
 | ⬜⬜         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -68,11 +77,13 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ### Weißroth — 54 pts
 
 </div> 
+<div class="cp-suzerain-lien">
 
 ##### Lien de Suzerain :
 - **Mortelle Extase :** pour chaque modèle lié à Weißroth, les modèles affectés par une Marque Blanche subissent un malus de -1 Moral.
 - **Siphonner les faibles :** Weißroth et les modèles qui lui sont liés gagnent un bonus au lancement des sorts égal au nombre de Marques Blanches affectant des modèles adverses.
 
+</div>
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -93,9 +104,12 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 ### Yehudiah — 52 pts
 
 </div>
+<div class="cp-suzerain-lien">
 
 ##### Lien de Suzerain :
 - **Seigneur Suprême des Racines :** Au début de chaque tour, Yehudiah bénéficie de la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (N)]] où N est le nombre d'unité qui lui est lié.
+
+</div>
 
 | ⬜           | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ------------ | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -131,17 +145,62 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 <center><h2>Domaines de Faction</h2></center>
 
-<center><h3>Domaine de la Tombe</h3></center>
+<div class="cp-domaine">
 
-**Attribut : armée déliée :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle Cadavérique ou Ombre à 12’’ ou moins non engagé en mêlée et déplacez-le de 3’’.
-#### Niveau 1
-- **Levée Macabre (court, 6+, Amélioration) :** Portée 12’’, le lanceur peut invoquer jusqu'à son niveau de lanceur en Zombies. Ajoutez les unités ainsi invoquées à un modèle existant ou créez un nouveau modèle à 6'' ou moins du lanceur et 6'' ou plus de tout modèle ennemi puis marquez-le activé.
-- **Rayon purulent (court, 8+, projectile) :** Portée 9’’, 2d6. Si la moindre touche est obtenue, la cible doit réussir un test de moral ou être marqué fatiguée.
-#### Niveau 2
-- **Horreur (court, 4+, malédiction) :** Portée 6’’. La cible doit réussir un test de moral ou être marquée Activée et fatiguée.
-- **Entraves de malédiction (court, 10+, amélioration) :** Placez 2 entraves à 12’’ ou moins du pour le reste de la partie. Un modèle adverse débutant son tour à 4’’ ou moins d’une entrave souffre d’un malus de -1 à sa caractéristique de vitesse pour le tour.
-#### Niveau 3
-- **Moisson d’âmes (long, 15+, projectile) :** Portée 15’’, 7d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], si la moindre blessure est infligée, le lanceur récupère 2 PV.
+## Domaine de la Tombe
+
+<div class="cp-attribut">
+
+**Attribut : armée déliée :** Lorsqu'un sort de ce domaine est lancé, désignez un modèle Cadavérique ou Ombre à 12'' ou moins non engagé en mêlée et déplacez-le de 3''.
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 1
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Levée Macabre *(court, 6+, amélioration)*
+Le lanceur peut invoquer jusqu'à son niveau de lanceur en Zombies. Ajoutez les unités ainsi invoquées à un modèle existant ou créez un nouveau modèle à 6'' ou moins du lanceur et 6'' ou plus de tout modèle ennemi, puis marquez-le activé.
+</div>
+<div class="cp-sort">
+
+##### Rayon purulent *(court, 8+, projectile)*
+Portée 9'', 2d6. Si la moindre touche est obtenue, la cible doit réussir un test de moral ou être marquée Fatiguée.
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 2
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Horreur *(court, 4+, malédiction)*
+Portée 6''. La cible doit réussir un test de moral ou être marquée Activée et Fatiguée.
+</div>
+<div class="cp-sort">
+
+##### Entraves de malédiction *(court, 10+, amélioration)*
+Placez 2 entraves à 12'' ou moins du lanceur pour le reste de la partie. Un modèle adverse débutant son tour à 4'' ou moins d'une entrave souffre d'un malus de -1 à sa Vitesse pour le tour.
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 3
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Moisson d'âmes *(long, 15+, projectile)*
+Portée 15'', 7d6, [[Perforant|Perforant (1)]]. Si la moindre blessure est infligée, le lanceur récupère 2 PV.
+</div>
+</div>
+</div>
+</div>
+
 ---
 ## Commandants
 
@@ -416,12 +475,117 @@ ___
   margin: 1.4rem 0;
   background: color-mix(in srgb, var(--light) 92%, var(--gray));
 }
-/* Bandeau titre : garde le dégradé doré de .legendary, ajoute juste le filet */
-.cp-suzerain h3 {
+.cp-suzerain > h3 {
   margin: 0 0 0.6rem;
   padding-bottom: 0.4rem;
   border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
   letter-spacing: 0.03em;
+  color: var(--secondary);
 }
-.cp-suzerain table { min-width: 0; }
+.cp-suzerain-lien {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.cp-suzerain-lien p { margin: 0 0 0.3rem; }
+.cp-suzerain-lien ul { margin: 0.2rem 0 0; padding-left: 1.1rem; }
+.cp-suzerain-lien li { margin: 0.25rem 0; }
+
+/* ============================================================
+   Domaines de magie — reprise des patterns Peuples Libres
+   ============================================================ */
+.cp-domaine {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-domaine > h2 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  text-align: center;
+}
+.cp-attribut {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.cp-attribut p { margin: 0; }
+.cp-niveau {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin-bottom: 0.8rem;
+  background: var(--light);
+}
+.cp-niveau:last-child { margin-bottom: 0; }
+.cp-niveau > h3 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.cp-sorts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+.cp-sort {
+  min-width: 0;
+  padding: 0 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.cp-sort + .cp-sort {
+  border-left: 1px solid var(--lightgray);
+  padding-left: 0.9rem;
+}
+.cp-sort p { margin: 0 0 0.35rem; }
+.cp-sort p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   Encadré générique (règles de faction)
+   ============================================================ */
+.cp-encadre {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-encadre ul { margin: 0; padding-left: 1.1rem; }
+.cp-encadre li { margin: 0.4rem 0; line-height: 1.5; }
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media (max-width: 700px) {
+  .cp-sorts { grid-auto-flow: row; }
+  .cp-sort + .cp-sort {
+    border-left: none;
+    border-top: 1px solid var(--lightgray);
+    padding-left: 0.2rem;
+    padding-top: 0.7rem;
+  }
+}
 </style>

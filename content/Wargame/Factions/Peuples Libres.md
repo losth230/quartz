@@ -2,6 +2,8 @@
 
 <center><h2>Règles de Faction</h2></center>
 
+<div class="cp-encadre">
+
 #### Féodalité
 Les Peuples Libres n'ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.
 
@@ -24,6 +26,8 @@ Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture
 *[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Vol|Vol]].*
 ##### Règles spéciales :
 - Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+
+</div>
 
 ---
 
