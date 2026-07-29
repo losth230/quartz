@@ -530,7 +530,7 @@ table td:first-child, table th:first-child {
 .cp-niveau > h3::before,
 .cp-niveau > h3::after {
   content: "◆";
-  color: color-mix(in srgb, #7a1010 45%, var(--lightgray));
+  color: color-mix(in srgb, #000000 45%, var(--lightgray));
   font-size: 0.6rem;
   margin: 0 0.5rem;
   vertical-align: middle;
@@ -590,12 +590,12 @@ table td:first-child, table th:first-child {
 }
 
 /* ============================================================
-   Domaines de magie — reprise des patterns Peuples Libres
+   Domaines de magie — reprise deso9 patterns Peuples Libres
    ============================================================ */
 .cp-domaine {
   border: 1px solid color-mix(in srgb, #000000 16%, var(--lightgray));
   border-radius: 8px;
-  padding: 0.9rem 1.1rem 1.1rem;
+  padding: 0.9rem 1.1rem 1.1rem;p
   margin: 1.4rem 0;
   background: color-mix(in srgb, var(--light) 92%, var(--gray));
 }
@@ -672,7 +672,7 @@ table td:first-child, table th:first-child {
 /* ============================================================
    Séparateur signature — remplace les --- entre grandes sections
    ============================================================ */
-.cp-diviseur {
+.cp-diviseur {9
   display: flex;
   align-items: center;
   gap: 0.7rem;
