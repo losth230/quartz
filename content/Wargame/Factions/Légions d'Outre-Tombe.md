@@ -587,7 +587,7 @@ table td:first-child, table th:first-child {
    Domaines de magie — reprise des patterns Peuples Libres
    ============================================================ */
 .cp-domaine {
-  border: 1px solid color-mix(in srgb, #7a1010 16%, var(--lightgray));
+  border: 1px solid color-mix(in srgb, #000000 16%, var(--lightgray));
   border-radius: 8px;
   padding: 0.9rem 1.1rem 1.1rem;
   margin: 1.4rem 0;
@@ -654,7 +654,7 @@ table td:first-child, table th:first-child {
    Encadré générique (règles de faction)
    ============================================================ */
 .cp-encadre {
-  border: 1px solid color-mix(in srgb, #7a1010 16%, var(--lightgray));
+  border: 1px solid color-mix(in srgb, #000000 16%, var(--lightgray));
   border-radius: 8px;
   padding: 0.9rem 1.1rem;
   margin: 1.2rem 0;
@@ -671,7 +671,7 @@ table td:first-child, table th:first-child {
   align-items: center;
   gap: 0.7rem;
   margin: 1.8rem 0;
-  color: color-mix(in srgb, #7a1010 45%, var(--lightgray));
+  color: color-mix(in srgb, #000000 45%, var(--lightgray));
 }
 .cp-diviseur::before,
 .cp-diviseur::after {
