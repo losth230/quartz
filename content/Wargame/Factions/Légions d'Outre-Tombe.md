@@ -498,14 +498,6 @@ ___
   font-size: 0.92rem;
   line-height: 1.5;
 }
-/* ============================================================
-   Repères de section — bordure discrète sur les ## existants
-   (pas de wrapper, garde l'arborescence Quartz intacte)
-   ============================================================ */
-h2 {
-  border-bottom: 1px solid color-mix(in srgb, #7a1010 30%, var(--lightgray));
-  padding-bottom: 0.3rem;
-}
 
 /* ============================================================
    Tableaux de statistiques — alignement resserré
@@ -590,8 +582,7 @@ table td:first-child, table th:first-child {
 }
 
 /* ============================================================
-   Domaines de magie — reprise deso9 patterns Peuples Libres
-   ============================================================ */
+   Domaines de magie ============================================================ */
 .cp-domaine {
   border: 1px solid color-mix(in srgb, #000000 16%, var(--lightgray));
   border-radius: 8px;
