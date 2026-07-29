@@ -492,6 +492,45 @@ ___
   font-size: 0.92rem;
   line-height: 1.5;
 }
+/* ============================================================
+   Repères de section — bordure discrète sur les ## existants
+   (pas de wrapper, garde l'arborescence Quartz intacte)
+   ============================================================ */
+h2 {
+  border-bottom: 1px solid color-mix(in srgb, #7a1010 30%, var(--lightgray));
+  padding-bottom: 0.3rem;
+}
+
+/* ============================================================
+   Tableaux de statistiques — alignement resserré
+   ============================================================ */
+table thead tr {
+  border-bottom: 2px solid color-mix(in srgb, #7a1010 35%, var(--lightgray));
+}
+table td, table th {
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  padding: 0.35rem 0.5rem;
+}
+table td:first-child, table th:first-child {
+  text-align: left;
+}
+
+/* ============================================================
+   Titres encadrés — flanqués du même losange que le séparateur
+   ============================================================ */
+.cp-domaine > h2::before,
+.cp-domaine > h2::after,
+.cp-niveau > h3::before,
+.cp-niveau > h3::after {
+  content: "◆";
+  color: color-mix(in srgb, #7a1010 45%, var(--lightgray));
+  font-size: 0.6rem;
+  margin: 0 0.5rem;
+  vertical-align: middle;
+  border-bottom: none;
+}
+
 .cp-suzerain-lien p { margin: 0 0 0.3rem; }
 .cp-suzerain-lien ul { margin: 0.2rem 0 0; padding-left: 1.1rem; }
 .cp-suzerain-lien li { margin: 0.25rem 0; }
@@ -658,58 +697,4 @@ ___
     padding-top: 0.7rem;
   }
 }
-
-// ═══════════════════════════════════════════════════════════
-//   Anciens Suzerains — variante rouge sang de .legendary
-// ═══════════════════════════════════════════════════════════
-
-.legendary-crimson {
-
-  h3 {
-    background: linear-gradient(
-      135deg,
-      #6b0f0f,
-      #a3161d 30%,
-      #e0393e 50%,
-      #a3161d 70%,
-      #6b0f0f
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    -webkit-text-fill-color: transparent;
-    animation: legendary-shimmer 4s ease-in-out infinite;
-  }
-
-}
-
-// Mode sombre : bordure dégradée assortie
-[saved-theme="dark"] .legendary-crimson {
-  background:
-    linear-gradient(var(--light), var(--light)) padding-box,
-    linear-gradient(
-      135deg,
-      #6b0f0f 0%,
-      #b1181f 25%,
-      #ffb3b3 50%,
-      #b1181f 75%,
-      #6b0f0f 100%
-    ) border-box;
-
-  h3 {
-    background: linear-gradient(
-      135deg,
-      #6b0f0f,
-      #b1181f 30%,
-      #ffb3b3 50%,
-      #b1181f 70%,
-      #6b0f0f
-    );
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-  }
-}
-
 </style>
