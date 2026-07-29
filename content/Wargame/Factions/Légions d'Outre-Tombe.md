@@ -47,7 +47,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 </div>
 <div class="cp-suzerain">
-<div class="legendary">
+<div class="legendary-crimson">
 
 ### Mok’Tor — 68 pts
 
@@ -72,7 +72,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 </div>
 <div class="cp-suzerain">
-<div class="legendary">
+<div class="legendary-crimson">
 
 ### Weißroth — 54 pts
 
@@ -99,7 +99,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 </div>
 <div class="cp-suzerain">
-<div class="legendary">
+<div class="legendary-crimson">
 
 ### Yehudiah — 52 pts
 
