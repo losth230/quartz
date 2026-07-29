@@ -20,7 +20,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
-<div class="legendary">
+<div class="legendary-crimson">
 
 ### L’Ankou — 64 pts
 
@@ -469,7 +469,7 @@ ___
    Chaque Suzerain dans son propre encadré, empilés verticalement.
    ============================================================ */
 .cp-suzerain {
-  border: 1px solid var(--lightgray);
+  border: 1px solid color-mix(in srgb, #7a1010 16%, var(--lightgray));
   border-radius: 8px;
   padding: 0.9rem 1.1rem 1.1rem;
   margin: 1.4rem 0;
@@ -497,10 +497,58 @@ ___
 .cp-suzerain-lien li { margin: 0.25rem 0; }
 
 /* ============================================================
+   Titres des Anciens Suzerains — variante rouge sang de .legendary
+   Même rouge (#7a1010) que les bordures et le séparateur, pour
+   que tout vienne d'une seule et même teinte sur cette page.
+   ============================================================ */
+.legendary-crimson h3 {
+  background: linear-gradient(
+    135deg,
+    #7a1010,
+    #a3161d 30%,
+    #e0393e 50%,
+    #a3161d 70%,
+    #7a1010
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: legendary-shimmer 4s ease-in-out infinite;
+}
+
+[saved-theme="dark"] .legendary-crimson {
+  background:
+    linear-gradient(var(--light), var(--light)) padding-box,
+    linear-gradient(
+      135deg,
+      #7a1010 0%,
+      #b1181f 25%,
+      #ffb3b3 50%,
+      #b1181f 75%,
+      #7a1010 100%
+    ) border-box;
+}
+[saved-theme="dark"] .legendary-crimson h3 {
+  background: linear-gradient(
+    135deg,
+    #7a1010,
+    #b1181f 30%,
+    #ffb3b3 50%,
+    #b1181f 70%,
+    #7a1010
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ============================================================
    Domaines de magie — reprise des patterns Peuples Libres
    ============================================================ */
 .cp-domaine {
-  border: 1px solid var(--lightgray);
+  border: 1px solid color-mix(in srgb, #7a1010 16%, var(--lightgray));
   border-radius: 8px;
   padding: 0.9rem 1.1rem 1.1rem;
   margin: 1.4rem 0;
@@ -567,7 +615,7 @@ ___
    Encadré générique (règles de faction)
    ============================================================ */
 .cp-encadre {
-  border: 1px solid var(--lightgray);
+  border: 1px solid color-mix(in srgb, #7a1010 16%, var(--lightgray));
   border-radius: 8px;
   padding: 0.9rem 1.1rem;
   margin: 1.2rem 0;
@@ -575,6 +623,28 @@ ___
 }
 .cp-encadre ul { margin: 0; padding-left: 1.1rem; }
 .cp-encadre li { margin: 0.4rem 0; line-height: 1.5; }
+
+/* ============================================================
+   Séparateur signature — remplace les --- entre grandes sections
+   ============================================================ */
+.cp-diviseur {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 1.8rem 0;
+  color: color-mix(in srgb, #7a1010 45%, var(--lightgray));
+}
+.cp-diviseur::before,
+.cp-diviseur::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: currentColor;
+}
+.cp-diviseur > span {
+  font-size: 0.75rem;
+  opacity: 0.75;
+}
 
 /* ============================================================
    Mobile
