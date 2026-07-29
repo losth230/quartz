@@ -20,7 +20,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
-<dic class="legendary-crimson">
+<div class="legendary-crimson">
 
 ### L’Ankou — 64 pts
 
