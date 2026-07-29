@@ -20,11 +20,9 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 </div>
 <div class="cp-suzerain-grid">
 <div class="cp-suzerain">
-<div class="legendary">
 
 ### L’Ankou — 64 pts
 
-</div>
 <div class="cp-suzerain-lien">
 
 ##### Lien de suzerain :
