@@ -373,6 +373,9 @@ ___
 - Pleurer les morts : chaque fois qu’un modèle Cadavérique meurt à 9’’ ou plus, cette unité gagne +1d6 en mêlée.
 - Mélopée : les attaques de ce modèle obtenant 6 ne sont pas explosives.
 ---
+
+<div class="cp-encadre">
+
 ### Revenant — 17 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -385,6 +388,9 @@ ___
 - Lame Purulente : si ce modèle réussit au moins 3 Blessures en mêlée, sa cible est marquée Fatiguée.
 ##### Règles spéciales :
 - Attaches multiples : ce modèle peut rejoindre la cour et se lier à autant d'Ancien Suzerain qu'il souhaite.
+
+</div>
+
 ___
 ### Transporteur de cadavres — 21 pts
 
