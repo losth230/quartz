@@ -70,13 +70,13 @@ Les différents royaumes libres se regroupent souvent autour d'un étendard comm
 <div class="cp-sorts">
 <div class="cp-sort">
 
-##### Bouclier saint *(court, 3+, amélioration)*
+##### Bouclier saint *(court, 2+, amélioration)*
 Portée 12'', confère [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]].
 </div>
 <div class="cp-sort">
 
-##### Mot de silence *(court, 7+, malédiction)*
-Portée 12', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
+##### Mot de silence *(court, 6+, malédiction)*
+Portée 15'', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.
 </div>
 </div>
 </div>
@@ -86,12 +86,12 @@ Portée 12', cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper
 <div class="cp-sorts">
 <div class="cp-sort">
    
-##### Lumière bénie *(long, 9+, amélioration)*
+##### Lumière bénie *(long, 7+, amélioration)*
 Portée 12''. La prochaine fois que la cible de ce sort subit des touches d'une attaque en mêlée ou à distance, l'attaquant doit relancer tous ses jets ayant obtenu une touche.
 </div>
 <div class="cp-sort">
 
-##### Courroux divin *(court, 10+, amélioration)*
+##### Courroux divin *(court, 8+, amélioration)*
 Ce sort cible le lanceur et est utilisable en mêlée. Jusqu'à la fin du tour, le lanceur bénéficie de *[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]]* ainsi qu'un bonus de +1 sur ses jets d'attaque en mêlée.  
 → **Version renforcée (1) :** ce sort peut être lancé sans dépenser d'action.
 </div>
@@ -103,8 +103,8 @@ Ce sort cible le lanceur et est utilisable en mêlée. Jusqu'à la fin du tour, 
 <div class="cp-sorts">
 <div class="cp-sort">
 
-#### Mot sacré : sanctification *(long, 18+)*
-Bénie toutes les unités amies à 12'' ou moins du lanceur. Jusqu'à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
+#### Mot sacré : Sanctification *(long, 18+, Projectile)*
+Bénie toutes les unités amies à 15'' ou moins du lanceur. Jusqu'à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 </div>
 </div>
 </div>

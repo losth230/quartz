@@ -2,6 +2,8 @@
 
 <center><h2>Règles de Faction</h2></center>
 
+<div class="cp-encadre">
+
 #### Frénésie (3)
 Utilisable une seule fois par partie, tous les modèles de votre armée gagnent +1d6 en mêlée et à distance.
 #### Ils zétais faibl' :
@@ -13,13 +15,24 @@ Après qu’un modèle ami ait éliminé un modèle ennemi, retirez son marqueur
 Gobelins uniquement.
 Lorsqu’une unité Gobelin est engagée en mêlée, si elle n’est pas fatiguée, elle peut, avant la résolution de toute attaque, effectuer une action de *marche* puis être marquée Activée, ou fatiguée si elle est déjà activée. Si l’unité l’ayant *engagée* n’a plus assez de mouvement pour la contacter, son activation se termine (elle ne peut être marquée fatiguée).
 
+</div>
+
 ---
 
 <center><h2>Occultisme et Chamanisme</h2></center>
 
+<div class="cp-encadre">
+
 Les peaux-vertes, bien que créés par de sombres rituels occultes, ont peu à peu abandonné l'occultisme pour le Chamanisme. Lorsque vous créez une armée Peaux-Vertes, les unités et clans vous donnent des affinités avec l'Occultisme ou le Chamanisme.
+
+<div class="cp-encadre">
+
 #### Equillibre
 Equilibre : Si l’affinité de votre bande n'est ni Occulte ni Chamanique, vous pouvez relancer tous les jets d’attaque en mêlée, à distance, ainsi que les jets d’armure ayant obtenu 1. De plus, une bande à l'Equilibre permet à tous ses modèles utilisant la Balance de bénéficier à la fois des bonus Chamaniques et Occultisme.
+
+</div>
+<div class="cp-encadre">
+
 #### Occultisme
 Affinité Occulte (2+) : Si votre bande est d’affinité Occulte, vos modèles bénéficient d'un bonus de +1 Moral
 - Rang I (4+) : les modèles ennemis à 6’’ ou moins d’un Commandant ami souffrent d’un malus de -1 Moral.
@@ -27,6 +40,10 @@ Affinité Occulte (2+) : Si votre bande est d’affinité Occulte, vos modèles 
 - Rang III (12+) : lors de la création de votre bande, vous pouvez octroyer +1d6 en mêlée aux unités d’un de vos modèles.
 - Rang IV (16+) : lorsque vous activez un commandant, vous pouvez lui retirer 1 PV pour gagner 1 Manœuvre.
 - Rang V (20+) : si vous réussissez à dissiper un sort adverse, le lanceur est tué.
+
+</div>
+<div class="cp-encadre">
+
 #### Chamanisme
 Affinité Chamanique (2+) : Si votre bande est d’affinité Chamanique, lorsque vous lancez un sort sur un modèle ami, vous le faites avec un bonus de +3 au lancement des sorts.
 - Rang I (4+) : votre Général vous permet de relancer deux dés de Manœuvre lors de la phase d’Initiative au lieu d'un seul.
@@ -35,10 +52,14 @@ Affinité Chamanique (2+) : Si votre bande est d’affinité Chamanique, lorsque
 - Rang IV (16+) : au début de chaque tour, vous pouvez conférez [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] au modèle de votre choix.
 - Rang V (20+) : vous possédez un dé de Manœuvre blanc supplémentaire.
 
+</div>
+</div>
 
 ---
 
 <center><h2>Clans Peaux-Vertes</h2></center>
+
+<div class="cp-encadre">
 
 Lors de la création d'une armée Peaux-Vertes, choisissez à quel clan elle appartient. Tous les modèles de votre armée gagnent alors les bonus du clan.
 #### Clan Kipik
@@ -59,44 +80,130 @@ Affinité Occulte (6)
 - Dompter la nature : Vos effets de début et fin de tour se déclenchent deux fois.
 #### Clan Forgefeu
 Affinité Chamanique (4)
-- Embrasement : Chaque fois qu’un modèle ami attaque, si la moindre touche est obtenue, la cible est marquée *enflammée.*
+- Embrasement : Chaque fois qu’un modèle ami attaque, si la moindre touche est obtenue, la cible est marquée *[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|enflammé]].*
 #### Clan des Caverneux
 Affinité Chamanique (6)
-- Peau fongique : lorsqu'un modèle de ce clan subi une blessure en mêlée, l'attaquant est marqué [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Empoisonné]].
+- Peau fongique : lorsqu'un modèle de ce clan subi une blessure en mêlée, l'attaquant est marqué *[[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|empoisonné]]*.
 
+</div>
 
 ---
 
 <center><h2>Domaines de Faction</h2></center>
 
-<center><h3>Domaine du Cataclysme</h3></center>
+<div class="cp-domaine">
 
-**Attribut : tapé for' :** Lorsqu'un sort de ce domaine est lancé, ajoutez un marqueur *enflammé* à un modèle à 12'' ou moins.
-#### Niveau 1
-- **Colonne de feu (court, 6+, projectile) :** Portée 9'', 3d6, attaques enflammées.
-- **Peau de pierre (court, 7+, amélioration) :** Portée 12'', le modèle ciblé bénéficie d'un bonus de +1 à ses jets d'armure.
-#### Niveau 2
-- **Vents hurlants (court, 9+, projectile) :** Portée 12'', 4d8, Perforant (1). Retirez un effet bénéfique sur la cible au choix du lanceur si la moindre touche est réussie. Ensuite, attirez ou repoussez la cible de 6'' en ligne droite par rapport au lanceur.
-    - **→ Version renforcée (1) :** la portée de ce sort passe à 21''.
-- **Choc de flamme (court, 10+, projectile) :** Portée 15'', 3d6. Pour chaque réussite, désignez un modèle *enflammé* et ajoutez-lui un marqueur *enflammé* et *fatigue*.
-#### Niveau 3
-- **Pluie de feu (long, 14+, Météo) :** Tant que la pluie de feu est en place, tous les modèles *enflammés* souffrent d'un malus de -1 à leur moral par marqueur *enflammé*.
+## Domaine du Cataclysme
 
----
+<div class="cp-attribut">
 
-<center><h3>Domaine de la Sournoizerie</h3></center>
+**Attribut : Combustion :** Lorsqu'un sort de ce domaine est lancé, ajoutez un marqueur *[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|enflammé]]* à un modèle à 15'' ou moins.
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 1
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Colonne de feu *(court, 6+, projectile)*
+Portée 15'', 3d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
+</div>
+<div class="cp-sort">
+
+##### Veines bouillantes *(court, 1+, amélioration)*
+Portée 12'', les résultats d'armure contre des attaques en mêlée du modèle ciblé infligent une blessure à l'attaquant pour le reste du tour.
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 2
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Métal brûlant *(court, 4+, malédiction)*
+Portée 15'', le modèle ciblé souffre d'un malus de -1 pour toucher sur ses attaques en mêlée et à distance pour le reste du tour.
+</div>
+<div class="cp-sort">
+
+##### Choc de flamme *(court, 10+, projectile)*
+Portée 18'', 3d6. Pour chaque réussite, désignez un modèle *[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|enflammé]]* et ajoutez-lui un marqueur *fatigue*.
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 3
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Pluie de feu *(long, 14+, Météo)*
+Tant que la pluie de feu est en place, tous les modèles *[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|enflammé]]* souffrent d'un malus de -1 à leur moral par marqueur *[[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|enflammé]]*.
+</div>
+</div>
+</div>
+</div>
+
+<div class="cp-domaine">
+
+## Domaine de la Sournoizerie
+
+<div class="cp-attribut">
 
 **Attribut : Filouterie :** Lorsqu'un sort de ce domaine est lancé, désignez un modèle ennemi à 15'' et retirez lui le marqueur de votre choix.
-#### Niveau 1
-- **Ciel grisâtre (court, 5+) :** Portée 9'', cible un modèle ami. Le modèle ciblé bénéficie de +1d6 sur ses attaques à distance pour le reste du tour.
-- **Projectile magik' (court, 6+) :** Portée 9'', 5d6 cible un modèle ennemi.
-    - **→ Version renforcée (1) :** l'attaque à distance gagne Perforant (1).
-#### Niveau 2
-- **Poil à gratter (court, 9+) :** Portée 9'', cible un modèle ennemi. Pour le reste de la partie, chaque fois que votre adversaire active ce modèle, il jette un dé, sur 5+ il passe son tour à se gratter, marquez-le Activé.
-- **Katapult (long, 10+) :** Portée 9'', cible un modèle ami. Le modèle ciblé est catapulté sur une distance de 9'' ou moins. Désignez alors un modèle ennemi à 3'' ou moins de la zone d'atterrissage qui subit 5 touches Force Dévastatrice (1), le modèle ami subit 2 touches Force Dévastatrice (1). S'il survit et se retrouve à 1'' ou moins d'un modèle ennemi, il s'agit d'une Charge (il est ensuite marqué Activé dans ce cas).
-    - **→ Version renforcée (1) :** la distance de la catapulte est de 12'' au lieu de 9''.
-#### Niveau 3
-- **Pluie d'acid' (long, 14+) :** Portée 12''–21'', cible toutes les unités (ou unités au sein d'une Troupe) adverses à portée. Chaque unité doit réussir un test d'armure avec un malus de -1 sous peine de perdre 1 PV.
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 1
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Ciel grisâtre *(court, 0+, Amélioration)*
+Portée 9'', cible un modèle ami. Le modèle ciblé bénéficie de +1d6 sur ses attaques à distance pour le reste du tour.
+</div>
+<div class="cp-sort">
+
+##### Projectile magik' *(court, 6+, Projectile)*
+Portée 15'', 5d6 .
+- **→ Version renforcée (1) :** l'attaque à distance gagne Perforant (1).
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 2
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Poil à gratter *(court, 6+, Malédiction)*
+Portée 15'', cible un modèle ennemi. Pour le reste de la partie, chaque fois que votre adversaire active ce modèle, il jette un dé, sur 5+ il passe son tour à se gratter, marquez-le Activé.
+</div>
+<div class="cp-sort">
+
+##### Katapult *(long, 10+, Projectile)*
+Portée 9'', cible un modèle ami. Le modèle ciblé est catapulté sur une distance de 9'' ou moins. Désignez alors un modèle ennemi à 3'' ou moins de la zone d'atterrissage qui subit 5 touches Force Dévastatrice (1), le modèle ami subit 2 touches Force Dévastatrice (1). S'il survit et se retrouve à 1'' ou moins d'un modèle ennemi, il s'agit d'une Charge (il est ensuite marqué Activé dans ce cas).
+- **→ Version renforcée (1) :** la distance de la catapulte est de 12'' au lieu de 9''.
+</div>
+</div>
+</div>
+
+<div class="cp-niveau">
+
+### Niveau 3
+<div class="cp-sorts">
+<div class="cp-sort">
+
+##### Pluie d'acid' *(long, 14+, Projectile)*
+Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unité doit réussir un test d'armure avec un malus de -1 sous peine de perdre 1 PV.
+</div>
+</div>
+</div>
+</div>
 
 ---
 ## Commandants
@@ -505,13 +612,110 @@ ___
 | Gobelins   | **-**   | **-**                                                                                | **5+**                                                                                  | **-**                                                                           | **-**                                                                            | **-**  | **-**  | **-**  | Gobelin  |
 | **Mêlée:** | 8d6 / - |                                                                                      | **Tir:**                                                                                | - / 4d6                                                                         |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]] / -.*
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Plateforme de Tir|Plateforme de Tir]] / -.*
 ##### Équipement :
-- Equipage gobelin (+4 pts) : des gobelins s’ajoutent à la tarentule. Ils peuvent tirer sur des cibles à 9'' ou moins sans dépenser d'action.
 - Bénédiction d’obsidienne (+12 pts) : la tarentule gagne +2 PV et son armure passe à 4+. De plus, votre bande reçoit Affinité Occulte (6).
 - Bénédiction des Esprits (+12 pts) : la tarentule bénéficie de la règle sléciale [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]] et ses *Crocs d'araignée* se déclenchent sur 4+ au lieu de 5+. De plus, votre bande reçoit Affinité Chamanique (6).
+- Equipage gobelin (+4 pts) : des gobelins s’ajoutent à la tarentule. Ils possèdent des arcs courts : Portée (C : 9'', L : 12'').
+- Cavalier chaman (+25 pts) : un chaman gobelin de niveau 3 monte le dos de la Tarentule, il a accès au Domaine de la Sounoizerie et au Domaine Primordial.
 ##### Règles spéciales
 - Crocs d’araignée : les jets d’attaque en mêlée de 5+ de la tarentule infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
 
 ---
+
+<style>
+
+/* ============================================================
+   Domaines de magie — reprise des patterns Peuples Libres
+   ============================================================ */
+.cp-domaine {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-domaine > h2 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  text-align: center;
+}
+.cp-attribut {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.cp-attribut p { margin: 0; }
+.cp-niveau {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin-bottom: 0.8rem;
+  background: var(--light);
+}
+.cp-niveau:last-child { margin-bottom: 0; }
+.cp-niveau > h3 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.cp-sorts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+.cp-sort {
+  min-width: 0;
+  padding: 0 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+.cp-sort + .cp-sort {
+  border-left: 1px solid var(--lightgray);
+  padding-left: 0.9rem;
+}
+.cp-sort p { margin: 0 0 0.35rem; }
+.cp-sort p:last-child { margin-bottom: 0; }
+
+/* ============================================================
+   Encadré générique (règles de faction)
+   ============================================================ */
+.cp-encadre {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-encadre ul { margin: 0; padding-left: 1.1rem; }
+.cp-encadre li { margin: 0.4rem 0; line-height: 1.5; }
+
+/* ============================================================
+   Mobile
+   ============================================================ */
+@media (max-width: 700px) {
+  .cp-sorts { grid-auto-flow: row; }
+  .cp-sort + .cp-sort {
+    border-left: none;
+    border-top: 1px solid var(--lightgray);
+    padding-left: 0.2rem;
+    padding-top: 0.7rem;
+  }
+}
+</style>

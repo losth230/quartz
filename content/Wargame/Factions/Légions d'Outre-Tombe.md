@@ -166,7 +166,7 @@ Le lanceur peut invoquer jusqu'à son niveau de lanceur en Zombies. Ajoutez les 
 <div class="cp-sort">
 
 ##### Rayon purulent *(court, 8+, projectile)*
-Portée 9'', 2d6. Si la moindre touche est obtenue, la cible doit réussir un test de moral ou être marquée Fatiguée.
+Portée 15'', 2d6. Si la moindre touche est obtenue, la cible doit réussir un test de moral ou être marquée Fatiguée.
 </div>
 </div>
 </div>
@@ -177,13 +177,13 @@ Portée 9'', 2d6. Si la moindre touche est obtenue, la cible doit réussir un te
 <div class="cp-sorts">
 <div class="cp-sort">
 
-##### Horreur *(court, 4+, malédiction)*
-Portée 6''. La cible doit réussir un test de moral ou être marquée Activée et Fatiguée.
+##### Horreur *(court, 6+, malédiction)*
+Portée 12''. La cible doit réussir un test de moral ou être marquée Activée et Fatiguée.
 </div>
 <div class="cp-sort">
 
 ##### Entraves de malédiction *(court, 10+, amélioration)*
-Placez 2 entraves à 12'' ou moins du lanceur pour le reste de la partie. Un modèle adverse débutant son tour à 4'' ou moins d'une entrave souffre d'un malus de -1 à sa Vitesse pour le tour.
+Placez 2 entraves à 15'' ou moins du lanceur pour le reste de la partie. Un modèle adverse débutant son tour à 4'' ou moins d'une entrave souffre d'un malus de -1 à sa Vitesse pour le tour.
 </div>
 </div>
 </div>
@@ -195,7 +195,7 @@ Placez 2 entraves à 12'' ou moins du lanceur pour le reste de la partie. Un mod
 <div class="cp-sort">
 
 ##### Moisson d'âmes *(long, 15+, projectile)*
-Portée 15'', 7d6, [[Perforant|Perforant (1)]]. Si la moindre blessure est infligée, le lanceur récupère 2 PV.
+Portée 18'', 7d6, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Si la moindre blessure est infligée, le lanceur récupère 2 PV.
 </div>
 </div>
 </div>
