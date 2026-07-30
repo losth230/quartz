@@ -248,6 +248,7 @@ function libelleOptions(entry) {
       if (nom !== "Aucune") parts.push(nom); // « Aucune » = pas de sélection -> rien dans le texte
     }
   });
+  if (entry.lien) parts.push("lié à " + entry.lien);
   return parts.join(", ");
 }
 
@@ -375,6 +376,18 @@ function ligneEntree(e) {
     choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">Coût unitaire</span>' +
       '<input type="number" min="0" step="1" class="cp-ab-manuel" value="' + (e.manuel || 0) + '" title="' + esc(u.special_note || "") + '"></div>');
   }
+  // Lien vers un Ancien Suzerain (Légions d'Outre-Tombe) : seulement pour les modèles
+  // qui ne sont pas eux-mêmes Suzerains, et seulement s'il y a un Suzerain dans la liste.
+  if (!u.suzerain && factionASuzerains()) {
+    const suz = suzerainsEnListe();
+    if (suz.length) {
+      choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">Lié à</span>' +
+        '<select data-lien="1">' +
+        '<option value="">— aucun —</option>' +
+        suz.map((n) => '<option value="' + esc(n) + '"' + (e.lien === n ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
+        "</select></div>");
+    }
+  }
   let opts = "";
   if (chips.length) opts += '<div class="cp-ab-additifs">' + chips.join("") + "</div>";
   if (choix.length) opts += '<div class="cp-ab-choixs">' + choix.join("") + "</div>";
@@ -452,9 +465,32 @@ function affinitePanel() {
   "</div>";
 }
 
+// ---- Anciens Suzerains / Lien (Légions d'Outre-Tombe) ----
+// Une unité avec ref_unites.suzerain = true peut être rejointe par les autres modèles
+// de la liste. Le lien se stocke par NOM (comme niv1/niv2), pour un round-trip texte simple.
+function factionASuzerains() {
+  return (R.unites || []).some((u) => u.suzerain);
+}
+// Suzerains réellement présents dans la liste en cours (qty > 0) : seuls eux sont
+// proposés comme cible de lien, pas tous les Suzerains du roster.
+function suzerainsEnListe() {
+  const noms = [];
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.suzerain && (Number(e.qty) || 0) > 0 && !noms.includes(u.nom)) noms.push(u.nom);
+  });
+  return noms;
+}
+// Un modèle lié à un Suzerain qui a quitté la liste (retiré ou qty à 0) perd son lien.
+function purgerLiensInvalides() {
+  const suz = suzerainsEnListe();
+  state.entries.forEach((e) => { if (e.lien && !suz.includes(e.lien)) e.lien = ""; });
+}
+
 function render() {
   const host = $("cp-ab-host");
   if (!host) return;
+  purgerLiensInvalides();
   const v = validation(state);
   const entries = state.entries.length ? state.entries.map(ligneEntree).join("") : '<p class="cp-ab-empty">Aucune unité. Ajoute-en avec le menu ci-dessus.</p>';
   const warns = v.items.length
@@ -489,7 +525,7 @@ function render() {
 function ajouter(unitId) {
   if (!R.byId[unitId]) return;
   state.pris = true;
-  state.entries.push({ uid: state.seq++, unitId, qty: 1, opts: [], choix: {}, manuel: 0 });
+  state.entries.push({ uid: state.seq++, unitId, qty: 1, opts: [], choix: {}, manuel: 0, lien: "" });
   render();
 }
 function entryByUid(uid) { return state.entries.find((e) => String(e.uid) === String(uid)); }
@@ -520,7 +556,9 @@ function importerTexte(bloc) {
     const u = parNom[normNom(m[2])];
     if (!u) continue;
     const optNoms = (m[3] || "").split(",").map((s) => s.trim()).filter(Boolean);
-    const entry = { uid: state.seq++, unitId: u.id, qty: Math.max(1, parseInt(m[1], 10) || 1), opts: [], choix: {}, manuel: 0, collapsed: true };
+    const entry = { uid: state.seq++, unitId: u.id, qty: Math.max(1, parseInt(m[1], 10) || 1), opts: [], choix: {}, manuel: 0, lien: "", collapsed: true };
+    const lienIdx = optNoms.findIndex((n) => n.indexOf("lié à ") === 0);
+    if (lienIdx >= 0) { entry.lien = optNoms[lienIdx].slice("lié à ".length).trim(); optNoms.splice(lienIdx, 1); }
     (u.options || []).forEach((o, i) => {
       if (o.t === "opt") { if (optNoms.includes(o.nom)) entry.opts.push(i); }
       else if (o.t === "choix") {
@@ -636,6 +674,11 @@ function wireOnce() {
     }
     if (e.target.dataset.choix != null) {
       const i = parseInt(e.target.dataset.choix, 10); en.choix = en.choix || {}; en.choix[i] = parseInt(e.target.value, 10) || 0; render();
+      return;
+    }
+    if (e.target.dataset.lien != null) {
+      en.lien = e.target.value || "";
+      render();
     }
   });
 
