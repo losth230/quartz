@@ -15,7 +15,10 @@ L'équipement d'un Mage est :
 ##### Focalisation
 Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce cas vous bénéficiez d'un bonus de +3 au lancement du sort.
 ##### Déviation magique
-Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficiez d'un bonus de 1 à votre résistance magique le temps de l'attaque.
+Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficier d'un bonus de 1 à votre résistance magique le temps de l'attaque.
+##### Enseignement magique :
+Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous :
+- **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
