@@ -7,7 +7,7 @@ Les Mages peuvent être de n'importe quelle **race** (Humain, Elfe, Nain, etc.),
 Les caractéristiques de base en combat d'un Mage sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4 + niveau de Résilience.
+- **PV** : 3 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.
@@ -19,22 +19,7 @@ Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
-
-| Niveaux de Mage | Niveau de sorts max | Reserve de Dés de magie |
-| :-------------: | :-----------------: | :---------------------: |
-|      **1**      |          1          |           5d6           |
-|      **2**      |          1          |           6d6           |
-|      **3**      |          2          |           6d6           |
-|      **4**      |          2          |           7d6           |
-|      **5**      |          2          |           7d6           |
-|      **6**      |          3          |           7d6           |
-|      **7**      |          3          |           8d6           |
-|      **8**      |          3          |           8d6           |
-|      **9**      |          4          |           8d6           |
-|     **10**      |          4          |           9d6           |
-|     **11**      |          4          |           9d6           |
-|     **12**      |          4          |          10d6           |
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi votre domaine de race ou parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
 
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
