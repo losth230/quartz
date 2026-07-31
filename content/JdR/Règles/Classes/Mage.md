@@ -8,6 +8,7 @@ Les caractéristiques de base en combat d'un Mage sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 3 + niveau de Résilience.
+- **Réserve de Magie :** 12 dés.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.
@@ -17,13 +18,18 @@ Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficier d'un bonus de 1 à votre résistance magique le temps de l'attaque.
 ##### Enseignement magique :
-Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous :
+Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous, chaque enseignement peut être appris plusieurs fois.
 - **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
+- **Préservation :** votre réserve de magie augmente de 2 dés.
+- **Sagacité :** apprenez le domaine de magie de votre choix.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
 Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi votre domaine de race ou parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
 
+## Niveau 2
+##### Règle de 3
+A partir du niveau 2, lorsque vous unitlisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
@@ -41,32 +47,7 @@ A partir du niveau 10, vous bénéficiez de +1 à votre résistance magique.
 A partir du niveau 12, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
 <center><h1>Spécialisations</h1> </center>
 
-___
-<center><h2>Pyromane</h2> </center>
 
-##### Retour de flammes (Niveau 2)
-Vous pouvez dépenser votre réaction après qu'une créature amie ait subit une touche en mêlée pour infliger 1  *enflammement* à son attaquant.
-##### Embrasement (Niveau 2)
-Vous êtes immunisés à la règle *enflammé*. Lorsque vous lancez un sort, vous subissez un *enflammement*. Lorsque vous lancez un sort vous bénéficiez d'un bonus de +1 à votre jet de lancement de sort par *enflammement* vous affectant.
-##### Aura de feu (niveau 5)
-Lorsque vous subissez des dégâts suite à  une attaque en mêlée, l'attaquant reçoit un *enflammement*.
-##### Transfert de flammes (niveau 8)
-Au prix d'une action courte, vous pouvez enlever tous les *enflammements* sur une créature et lui infliger autant de blessures qu'elle ne possédait d'*enflammements*. pour chaque enflammement ainsi enlevé, gagnez un *enflammement*.
-##### Combustion (niveau 11)
-Au prix  d'une action courte, vous pouvez effectuer  une attaque à distance selon les règles suivantes : Portée9'', Nd6, où N est égal à votre nombre d'*enflammement*.
-
-___
-<center><h2>Occultiste</h2> </center>
-
-##### Compagnon du néant
-Vous pouvez dépenser un dé de magie pour invoquer un [[Compagnon du néant]].
-Chaque fois de vous lancez un sort en utilisant au moins 1 dé de votre réserve de magie, vous pouvez ajouter une charge de Buveur de magie à votre compagnon du néant. Lorsque le Compagnon du néant attaque, X correspond au nombre de charge de Buveur de magie qu'il possède.
-##### Voile d'ombre
-Vous bénéficiez de la règle Furtif tant que vous possédez au moins un dé dans votre réserve de magie.
-##### Focalisateur arcanique (Niveau 5)
-A partir du niveau 5, vous pouvez utiliser votre compagnon du néant pour lancer des sorts, en utilisant sa ligne de vue et sa portée mais votre bonus d'incantation. Si le compagnon du néant doit se concentrer sur un sort, vous vous concentrez dessus à la place.
-
-___
 <center><h2>Sage</h2> </center>
 
 ##### Théoricien (niveau 2)
@@ -80,16 +61,4 @@ A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre c
 ##### Vision double (niveau 11)
 Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
 
-___
-<center><h2>Sage</h2> </center>
 
-##### Théoricien (niveau 2)
-Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
-##### Exactitude (niveau 2)
-Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (3).
-##### Le choix des possibles (niveau 5)
-Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vous choisissez l'attribut de domaine que vous déclenchez parmi les domaines que vous connaissez.
-##### Rat de bibliothèque (niveau 8)
-A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
-##### Vision double (niveau 11)
-Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
