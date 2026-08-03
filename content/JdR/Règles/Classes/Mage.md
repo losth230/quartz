@@ -22,10 +22,11 @@ Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction
 ##### Enseignement magique :
 Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous, chaque enseignement peut être appris plusieurs fois.
 - **Adaptation :** lorsque vous lancez un sort, vous oouvez déclencher n'importe quel attribut de domaine parmi les domaines que vous possédez.
-- **Proactif :** lorsque vous lancez un sort dans le cadre d'une réaction, vous bénéficiez d'un bonus de +3 au lancement du sort.
-- **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Préservation :** votre réserve de magie augmente de 2 dés.
+- **Proactif :** lorsque vous lancez un sort dans le cadre d'une réaction, vous bénéficiez d'un bonus de +3 au lancement du sort.
+- **Ritualiste :** lorsque vous utilisez une action longue pour lancer un sort, vous bénéficiez d'un bonus de +5 supplémentaire.
 - **Sagacité :** apprenez le domaine de magie de votre choix.
+- **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Seconde chance :** lorsque vous lancez un sort, vous bénéficiez de Tireur d’élite.
 - **Vision double :** une fois par jour, lorsque que vous lancez un sort, lancez-le une seconde fois.
 ### Par delà le niveau 1
