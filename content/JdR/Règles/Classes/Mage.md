@@ -13,27 +13,33 @@ Les caractéristiques de base en combat d'un Mage sont :
 L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.
+##### Magie
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi votre domaine de race ou parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
 ##### Focalisation
 Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce cas vous bénéficiez d'un bonus de +3 au lancement du sort.
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficier d'un bonus de 1 à votre résistance magique le temps de l'attaque.
 ##### Enseignement magique :
 Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous, chaque enseignement peut être appris plusieurs fois.
+- **Adaptation :** lorsque vous lancez un sort, vous oouvez déclencher n'importe quel attribut de domaine parmi les domaines que vous possédez.
+- **Proactif :** lorsque vous lancez un sort dans le cadre d'une réaction, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Préservation :** votre réserve de magie augmente de 2 dés.
 - **Sagacité :** apprenez le domaine de magie de votre choix.
+- **Seconde chance :** lorsque vous lancez un sort, vous bénéficiez de Tireur d’élite.
+- **Vision double :** une fois par jour, lorsque que vous lancez un sort, lancez-le une seconde fois.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
-## Magie
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi votre domaine de race ou parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
-
 ## Niveau 2
 ##### Règle de 3
 A partir du niveau 2, lorsque vous unitlisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
-## Niveau 4
+## Niveaux 4, 8, 12
+##### Enseignement supérieur 
+Lorsque vous atteignez les niveaux 4, 8 et 12, vous pouvez apprendre un enseignement supplémentaire présent dans la liste.
+## Niveau 5
 ##### Bouclier de mana
 A partir du niveau 4, vous pouvez dépenser votre réaction et un dé de magie. Lancer le dé et gagnez autant d'*[[Règles/Règles spéciales#Egide (N)|Egides]]* que le résultat indiqué par le dé.
 ## Niveau 7
@@ -42,23 +48,6 @@ A partir du niveau 7, vous pouvez lancer des sorts long au prix d'action courte 
 ## Niveau 10
 ##### A l'épreuve des échecs
 A partir du niveau 10, vous bénéficiez de +1 à votre résistance magique.
-## Niveau 12
+## Niveau 11
 ##### Eveil
-A partir du niveau 12, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
-<center><h1>Spécialisations</h1> </center>
-
-
-<center><h2>Sage</h2> </center>
-
-##### Théoricien (niveau 2)
-Vous pouvez apprendre le domaine de magie de votre choix en plus de ceux que vous connaissez déjà.
-##### Exactitude (niveau 2)
-Lorsque vous lancez exactement 3 dés de magie pour lancer un sort, la portée du sort augmente de 3'' et vous gagnez Egide (3).
-##### Le choix des possibles (niveau 5)
-Lorsque vous lancez un sort, au lieu de déclencher son attribut de domaine, vous choisissez l'attribut de domaine que vous déclenchez parmi les domaines que vous connaissez.
-##### Rat de bibliothèque (niveau 8)
-A partir du niveau 8, vous pouvez gagner 1 niveau dans la Compétence de votre choix. De plus, vous gagnez un bonus de +1 au lancement des sorts.
-##### Vision double (niveau 11)
-Une fois entre deux repos, lorsque vous lancer un sort, lancez-le une seconde fois.
-
-
+A partir du niveau 11, après avoir terminé votre tour, vous pouvez immédiatement jouer un nouveau tour. Cet effet n'est utilisable qu'une seule fois entre deux repos.
