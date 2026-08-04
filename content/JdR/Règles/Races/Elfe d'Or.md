@@ -7,10 +7,9 @@ Les autres peuples admirent leur beauté et leur puissance, tout en craignant le
 - **Taille** : 2.
 - **Vitesse** : 5.
 - **Langues** : Commun, Elfique, 1 langue supplémentaire au choix.
-- **Magie** : les Elfes d'Or ont accès au Domaine de la Lumière et au Domaine de la Pureté.
 ### **Capacités Spéciales**
 **Sang bleu** : votre sang hors du commun vous immunise aux effets de *Saignements* et de *Poison*.  
-**Assoiffés de mana** : une fois par jour et au prix d'une action longue, vous pouvez drainez la magie d'une créature morte ou vivante possédant une affinité magique pour lui voler un nombre de dés de magie égal à la moitié (arrondie au supérieur) de votre niveau.
+**Assoiffés de mana** : votre réserve de mana augmente de 2 dés. Vous pouvez dépenser un dé de votre réserve de mana lors de n'importe quel test et gagner +1d6 pour ce test.  
 Si pour une quelconque raison votre réserve de dés de magie tombe à 0, vous obtenez Sauvagerie et ne pouvez plus différencier vos amis de vos ennemis.
 ### **Culture et Histoire**
 Les **Elfes d'Or** prétendent descendre d’une antique lignée d’êtres quasi divins, les premiers à avoir façonné la magie comme un art plutôt qu’une science. Leurs cités sont isolées du monde, cachées dans des dimensions parallèles ou sur des sommets infranchissables. Ils se pensent supérieurs aux autres peuples, qu’ils voient comme des créatures inférieures incapables de comprendre la vraie nature de la magie.
