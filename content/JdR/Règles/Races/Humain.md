@@ -5,7 +5,7 @@ En raison de leur capacité à s’adapter à de nombreux défis, les Humains on
 - **Bonus de caractéristiques** : apprenez trois compétences au niveau 1.
 - **Age** : moins d'un siècle.
 - **Taille** : M.
-- **Vitesse** : 5''.
+- **Vitesse** : 5m.
 - **Langues** : Commun, 1 langue supplémentaire au choix.
 ### **Culture et Histoire**
 Les **Humains** sont une race diverse, constituée de nombreuses cultures, royaumes et civilisations. Leur histoire est marquée par des progrès rapides dans les arts, la magie, et la guerre, mais aussi par des guerres civiles, des révolutions et des conflits avec d'autres races.
