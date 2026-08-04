@@ -14,9 +14,7 @@ L'équipement d'un Mage est :
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.
 ##### Magie
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines parmi votre domaine de race ou parmi les suivants : Domaine de la Lumière, Domaine de la Pureté, Domaine des Cieux, Domaine des Racines, Domaine des Ténèbres, Domain du Cataclysme, Domaine du Givre, Domaine Primordial.
-##### Focalisation
-Vous pouvez choisir de lancer un sort court au prix d'une action longue. Dans ce cas vous bénéficiez d'un bonus de +3 au lancement du sort.
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficier d'un bonus de 1 à votre résistance magique le temps de l'attaque.
 ##### Enseignement magique :
