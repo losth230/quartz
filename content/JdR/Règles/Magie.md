@@ -79,7 +79,7 @@ Les Ténèbres ne sont pas le mal — elles sont l'absence, le vide entre les ch
  
 ### Domaine du Cataclysme
 - **Écoles principales** : Destruction, Construction.  
-- **Passif** : un maître du Cataclysme bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il est lui-même Enflammé.  
+- **Passif** : un maître du Cataclysme peut, une fois par jour, dévorer une source de feu au prix d'une action courte pour regagner 2 dés de sa réserve de magie.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut ajouter un marqueur Enflammé à une créature à 12" ou moins.  
 - **Exemples d'utilisation** : intensifier une explosion de lave contre une cible déjà enflammée, briser l'élan d'une ligne de charge ennemie avec un séisme localisé, fondre des barreaux ou chauffer une armure à blanc en dehors du combat, etc.
 #### Histoire & Contexte
