@@ -5,7 +5,7 @@ Les autres peuples admirent leur beauté et leur puissance, tout en craignant le
 - **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
 - **Age** : jusqu'à 200 ans, parfois plus en fonction de la quantité de mana ingurgitée.
 - **Taille** : 2.
-- **Vitesse** : 5.
+- **Vitesse** : 5m.
 - **Langues** : Commun, Elfique, 1 langue supplémentaire au choix.
 ### **Capacités Spéciales**
 **Sang bleu** : votre sang hors du commun vous immunise aux effets de *Saignements* et de *Poison*.  
