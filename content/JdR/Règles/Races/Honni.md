@@ -6,7 +6,7 @@ Ils ne cherchent ni vengeance ni pardon. Ils veulent seulement vivre libres, loi
 - **Bonus de caractéristiques** : apprenez deux compétences de votre choix au niveau 1.
 - **Âge** : jusqu’à 100 ans, adultes dès 20 ans.
 - **Taille** : M.
-- **Vitesse** : 5''.
+- **Vitesse** : 5m.
 - **Langues** : Elfique, Commun.
 ### **Capacités Spéciales**
 **Mémoire des chaînes** : Vous connaissez l'esclavage mieux que personne et savez y résister. Tant que vous possédez moins de la moitié de vos PV, vous ignorez les effets de *fatigue*, d'*étourdissement*, de *ralentissement* et d'*immobilisation*.  
