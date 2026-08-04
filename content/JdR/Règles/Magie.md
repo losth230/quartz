@@ -24,8 +24,10 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 
 ---
 
+### Domaine de la Ferromancie
+- **Écoles principales** : Altération.
 ### Domaine de la Lumière
-- **Écoles principales** : Construction, Altération.  
+- **Écoles principales** : Altération, Construction.  
 - **Passif** : un maître de la Lumière est capable de déceler l'invisibilité et ignore la *Furtivité*.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature alliée à 9" ou moins et lui conférer Égide (1).  
 - **Exemples d'utilisation** : protéger un allié, créer une barrière lumineuse, inonder une zone de lumière aveuglante pour annuler toute furtivité ou invisibilité, etc.
