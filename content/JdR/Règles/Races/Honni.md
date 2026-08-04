@@ -3,12 +3,11 @@ Les **Honnis** sont d’anciens Elfes d’Or qui ont renié leur héritage. Autr
 Leur apparence porte les stigmates de cette rupture : leur éclat s’est terni, leur chair s’est durcie, leurs traits se sont creusés. Ils n’ont conservé de leurs origines que des yeux durs, où brûle une lueur de défi et de fierté blessée. Là où les Elfes d’Or rayonnent d’arrogance, les Honnis inspirent le silence et la méfiance.
 Ils ne cherchent ni vengeance ni pardon. Ils veulent seulement vivre libres, loin des chaînes invisibles qu’est devenue la magie.
 ### **Caractéristiques de la Race**
-- **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
+- **Bonus de caractéristiques** : apprenez deux compétences de votre choix au niveau 1.
 - **Âge** : jusqu’à 100 ans, adultes dès 20 ans.
 - **Taille** : M.
 - **Vitesse** : 5''.
 - **Langues** : Elfique, Commun.
-- **Magie** : les Honnis n'ont accès à aucun Domaine particulier.
 ### **Capacités Spéciales**
 **Mémoire des chaînes** : Vous connaissez l'esclavage mieux que personne et savez y résister. Tant que vous possédez moins de la moitié de vos PV, vous ignorez les effets de *fatigue*, d'*étourdissement*, de *ralentissement* et d'*immobilisation*.  
 **Vulnérabilité à la Magie** : Lorsque vous subissez une attaque magique de projectile, votre jet d'armure s'effectue avec un malus de -1.
