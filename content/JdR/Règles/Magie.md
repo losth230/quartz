@@ -63,7 +63,7 @@ Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseau
  
 ### Domaine des Racines
 - **Écoles principales** : Altération, Construction.  
-- **Passif** : un maître des Racines bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il est lui-même Fatigué.  
+- **Passif** : un maître des Racines ignore les malus liés aux terrains difficiles.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui infliger l'état Fatigué.  
 - **Exemples d'utilisation** : marquer puis attirer à soi la cible la plus mobile d'un groupe adverse, faire jaillir un enchevêtrement de racines transformant une zone en terrain difficile, accélérer la croissance d'une forêt pour obstruer un passage, etc.
 #### Histoire & Contexte
@@ -71,8 +71,8 @@ Le Domaine des Racines puise dans les forces lentes et implacables de la terre �
  
 ### Domaine des Ténèbres
 - **Écoles principales** : Altération, Invocation.  
-- **Passif** : un maître des Ténèbres est indétectable à la vue tant qu'il reste immobile dans l'obscurité.  
-- **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut se déplacer de 3".  
+- **Passif** : un maître des Ténèbres bénéficie de +1 niveau en discrétion.
+- **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur bénéficie de Furtif jusqu'à son prochain tour.  
 - **Exemples d'utilisation** : se rendre imprévisible en se déplaçant à chaque sort lancé, envelopper tout un groupe d'un voile d'obscurité pour traverser une zone gardée, établir un canal télépathique silencieux entre alliés pour coordonner une embuscade, etc.
 #### Histoire & Contexte
 Les Ténèbres ne sont pas le mal — elles sont l'absence, le vide entre les choses, l'espace que la lumière de Bahamutt n'a pas encore rempli. Souvent confondus avec des nécromanciens par le grand public, les mages des Ténèbres s'en distinguent par leur indifférence à la mort : ce qui les intéresse n'est pas le cadavre mais l'ombre qu'il projette. On les retrouve parmi les espions de haut rang, les assassins et les conseillers de cours qui préfèrent agir sans être vus.
