@@ -26,6 +26,8 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 
 ### Domaine de la Ferromancie
 - **Écoles principales** : Altération.
+- **Passif** : un maître de la Ferromancie peut se lier à un objet au cours d'un rituel de 6 heures. Un maître de la Ferromancie obtient la maîtrise de tout objet avec lequel il est lié. Un maître de la Ferromancie peut se lier à 2 objets +1 objet pour chacun de ses niveaux.
+- Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut immédiatement équiper un de ses objets liés.
 ### Domaine de la Lumière
 - **Écoles principales** : Altération, Construction.  
 - **Passif** : un maître de la Lumière est capable de déceler l'invisibilité et ignore la *Furtivité*.
