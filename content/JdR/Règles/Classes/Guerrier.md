@@ -7,11 +7,11 @@ Les Guerriers peuvent être de n'importe quelle **[[Règles/Race|race]]** (Humai
 Les caractéristiques de base en combat d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 6 + niveau de Résilience.
+- **PV** : 5 + niveau de Résilience.
 - Choisissez 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 L'[[Règles/Equipements/|équipement]] d'un Guerrier est :
 - **Maitrises** : Armures complètes.
-- **Argent de départ** : 300 Florins.
+- **Argent de départ** : 600 Florins.
 ##### Entrainement
 Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire dans la liste ci-dessous :
 - **Charge dévastatrice** : après avoir réussi une charge, vous bénéficiez d'1d6 bonus à l'attaque gratuite octroyée.
@@ -25,12 +25,10 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 - **Bourreau :** vos attaques contre les cibles ayant moins de 50% de leurs Points de Vie bénéficient de +2d6.
 - **Visée :** vos pouvez utiliser une action longue au lieu d'une action courte pour un tir et ainsi bénéficier de Perforant (+1) pour cette attaque.
-##### Saignements
-Lorsque vous infligez une blessure en mêlée, appliquez un marqueur *[[Règles/Règles spéciales#saignement|saignement]]* sur votre cible.
-##### Croc en jambe
-Lorsqu'une créature au contact avec vous essaye de se désengager, vous pouvez réduire sa vitesse à 0.
+##### Parade
+Lorsqu'une créature à 3m ou moins attaque, vous pouvez dépenser votre réaction pour annuler une de ses touches.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Guerrier, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveaux 3, 6, 9
@@ -52,7 +50,7 @@ ___
 <center><h2>Sanguinaire</h2> </center>
 
 #### Exécution (niveau 2)
-A partir du niveau 2, vos attaques contre les cibles ayant moins de 50% bénéficient de +2d6 et infligent des dégâts bruts.
+A partir du niveau 2, vos attaques contre les cibles ayant moins de 50% bénéficient de +1d6 et infligent des dégâts bruts.
 ##### Soif de sang (niveau 2)
 A partir du niveau 2, lorsque vous infligez au moins 1 dégât brut, vous récupérez 1 PV.
 ##### Bourreau (niveau 5)
@@ -61,34 +59,6 @@ A partir du niveau 5, vos attaques contre les cibles ayant perdu au moins 1 PV b
 A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% PV avec la règle Force Dévastatrice. Vous infligez 2 blessure par force dévastatrice.
 ##### Mise a mort (niveau 11)
 A partir du niveau 11, lorsque vous tuez une créature de niveau 6 ou plus, vous récupérez toutes vos actions.
-___
-<center><h2>Chasseur</h2> </center>
-
-##### Maitrise des armes de jets (niveau 2)
-Lorsque vous effectuez une attaque à distance avec une arme ayant la règle *[[Règles/Règles spéciales#lancer|Lancer]]*, vous appliquez un *[[Règles/Règles spéciales#saignement|saignement]]*.
-##### Fabrication de pièges (niveau 2)
-Après chaque sommeil, vous pouvez effectuer un test de [[Règles/Règles#Compétences|DIY]], pour chaque réussite, vous pouvez dépenser 15 Florins en matériaux pour vous procurer un [[Règles/Equipements/Objets divers#utilitaires|piège à loup]]. Vous êtes le seul à pouvoir utiliser ces pièges et ne pouvez en posséder plus de 3 à la fois.
-##### Bond (niveau 2)
-Vous pouvez utiliser votre réaction pour bondir sur une case adjacente à une créature qui souffre de [[Règles/Règles#Compétences|compétence]] à 6'' ou moins et réaliser une attaque en mêlée contre celle-ci.
-##### Pisteur chevronné (niveau 5)
-Vous gagnez un niveau dans la compétence Nature et votre vitesse de déplacement augmente de 1.
-##### Pièges améliorés (niveau 8)
-Les pièges que vous fabriquez ont 2d6 attaques supplémentaires et appliquent un *[[Règles/Règles spéciales#saignement|saignement]]* supplémentaire.
-##### Danse de guerre (niveau 11)
-Vous gagnez 1d6 en mêlée et à distance. Après avoir réalisé une attaque en mêlée ou à distance, vous pouvez vous déplacer de  2''.
-
-___
-<center><h2>Chevalier</h2> </center>
-
-##### Cavalier expérimenté (niveau 2)
-Votre monture vous octroie la règle [[Règles/Règles spéciales#Cavalerie|Cavalerie]] également contre les créatures de votre taille.
-##### Bond (niveau 2)
-
-##### Pisteur chevronné (niveau 5)
-
-##### Pièges améliorés (niveau 8)
-
-##### Danse de guerre (niveau 11)
 
 ___
 <center><h2>Escrimeur</h2> </center>
@@ -117,19 +87,19 @@ ___
 <center><h2>Masochiste</h2> </center>
 
 ##### Souffrance (niveau 2)
-A partir du niveau 2, pour chaque PV perdu, vous gagnez en souffrances. Les modificateurs apportés par les souffrances sont cumulatives.
-**2 Souffrances :** +1d6 en mêlée.  
-**4 Souffrances :** +1d6 en mêlée.  
-**6 Souffrances :** +1d6 en mêlée.  
-**8 Souffrances :** vous bénéficiez de Sauvagerie (1).  
-**10 Souffrances :** vous bénéficiez d'un bonus de +1 à vos jets d'armure contre les attaques physiques.  
-**12 Souffrances :** vous bénéficiez de Sauvagerie (1).    
-**14 Souffrances :** vos attaques en mêlées infligeant au moins 1 blessure infligent 2 *[[Règles/Règles spéciales#saignement|saignements]]* supplémentaires.
+A partir du niveau 2, pour chaque PV perdu, vous gagnez en souffrances. Les modificateurs apportés par les souffrances sont cumulatifs.
+- **2 PV perdus :** vous bénéficiez +1d6 en mêlée.  
+- **4 PV perdus :** vous bénéficiez +1d6 en mêlée.  
+- **6 PV perdus :** vous bénéficiez +1d6 en mêlée.  
+- **8 PV perdus :** vous bénéficiez de Sauvagerie (1).
+- **10 PV perdus :** vous bénéficiez +1d6 en mêlée. 
+- **12 PV perdus :** vous bénéficiez de Sauvagerie (1).    
+- **14 PV perdus :** vous bénéficiez de Sauvagerie (1).
 ##### A l'épreuve de la douleur (niveau 2)
-Lorsque vous atteignez les niveaux 2,6 et 10, vous gagnez +1 PV.
+Lorsque vous atteignez les niveaux 2, 6 et 10, vous gagnez +1 PV.
 ##### Peau épaisse (niveau 5)
 A partir du niveau 5, vous pouvez choisir de réduire de 1 les dégâts physiques que vous subissez lors d'une attaque.
 ##### Provocation (niveau 8)
-A partir du niveau 8, vous pouvez dépenser votre réaction pour forcer une créature que vous voyez à 3'' ou moins à vous attaquer. Si cette créature vous inflige au moins 1 blessure, vous gagner Sauvagerie (1) et pouvez riposter gratuitement.
+A partir du niveau 8, vous pouvez dépenser votre réaction pour forcer une créature que vous voyez à 3m ou moins à vous attaquer. Si cette créature vous inflige au moins 1 blessure, vous pouvez riposter gratuitement.
 ##### Saigner à vif (niveau 11)
-A partir du niveau 11, vous gagnez Sauvagerie (1) à chaque fois que vous infligez 1 *[[Règles/Règles spéciales#saignement|saignement]]*. 
+A partir du niveau 11, vous gagnez Sauvagerie (1) à chaque fois que vous infligez 1 

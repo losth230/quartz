@@ -7,51 +7,39 @@ Les Cuisiniers peuvent être de n'importe quelle **race** (Humain, Nain, Gobelin
 Les caractéristiques de base d’un Cuisinier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 5 + niveau de Résilience.
+- **PV** : 4 + niveau de Résilience.
+- **Réserve de Magie :** 8 dés.
 - Choisissez 8 compétences que vous apprenez niveau 1.
 L'équipement d'un Cuisinier est :
 - **Maitrises** : Armures partielles.
-- **Argent de départ** : 200 Florins.
+- **Argent de départ** : 300 Florins.
+##### Magie
+Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
 ##### Bien nourri
 Lorsque vous cuisinez, quiconque se nourrit de votre nourriture reçoit 1 PV temporaire pour le reste de la journée.
 ##### Chef de service
 Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Cuisinier, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Magie
-Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez deux domaines parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin, Domaine Primordial ou votre Domaine de Race.
-
-| Niveaux de Cuisinier | Niveau de sorts max | Reserve de Dés de magie |
-| :------------------: | :-----------------: | :---------------------: |
-|        **1**         |          1          |           4d6           |
-|        **2**         |          1          |           4d6           |
-|        **3**         |          1          |           4d6           |
-|        **4**         |          1          |           5d6           |
-|        **5**         |          2          |           5d6           |
-|        **6**         |          2          |           5d6           |
-|        **7**         |          2          |           5d6           |
-|        **8**         |          2          |           6d6           |
-|        **9**         |          3          |           6d6           |
-|        **10**        |          3          |           6d6           |
-|        **11**        |          3          |           6d6           |
-|        **12**        |          3          |           7d6           |
+Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez un domaine parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin ou Domaine Primordial.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
-##### Tout goûter
-Vous êtes immunisé au poison.
+##### La science du chaudron
+Lorsque vous atteignez le niveau 4, vous pouvez apprendre l'Enseignement de Mage de votre choix.
 ## Niveau 7
-##### Sublimer la viande
-Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous gagnez toutes les **règles spéciales** de la créature pendant 1 jour.
+##### Tout goûter
+A partir du niveau 7, vous êtes immunisé au poison.
 ## Niveau 10
-##### Ajouter la sauce
-Lorsque vous cuisinez des **Rations savoureuses**, vous pouvez ajouter une plante par ration pour lui octroyer un effet d'Elixir (cf. [[Potions & Elixirs]]) de votre choix.
+##### Sublimer la viande
+A partir du niveau 10, lorsque vous cuisinez à partir de viande, les créatures **Bien nourries** gagnent toutes les **règles spéciales** de la créature pendant 1 jour.
 ## Niveau 12
-##### Hors d'œuvre 
-Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouvez mélanger jusqu'à deux espèces et obtenir les **règles spéciales**  de ces deux espèces.
+##### Ajouter la sauce
+Lorsque vous cuisinez, vous pouvez ajouter une plante par ration pour lui octroyer un effet d'Elixir (cf. [[Potions & Elixirs]]) de votre choix.
 
 <center><h1>Spécialisations</h1> </center>
 
@@ -60,61 +48,41 @@ Lorsque vous cuisinez des **Rations savoureuses** à partir de viande, vous pouv
 
 Le Chef de Guerre est un maître des cuisines… et du champ de bataille. Il transforme ses poêles en armes et ses plats en outils de domination physique. Quand ça chauffe, c’est lui qui sert le plat principal : la baston.
 ##### Ustensiles de guerre (niveau 2)
-Vos attaques avec des armes improvisées suivent les règles suivantes :
-Mêlée, 3d6, Anti-infanterie, Lancer.
-##### Rôtissage brutal (niveau 2)
-A partir du niveau 2, si une de vos attaques obtient au moins une blessure, déclencher l'attribut de domaine d'un de vos domaine de magie.
-##### Fumet Intimidant (niveau 5)
-Vos attaques avec des armes improvisées gagnent +2d6 (total 5d6, Anti-infanterie, Lancer).
+A partir du niveau 2, vos attaques avec des armes improvisées suivent les règles suivantes : Mêlée, 3d6, Anti-infanterie, Lancer.
+##### Le boss des cuisines (niveau 2)
+Lorsque vous atteignez le niveau 2, apprenez l'Entrainement de Guerrier de votre choix.
+##### Rôtissage brutal (niveau 5)
+A partir du niveau 5, si une de vos attaques obtient au moins une blessure, déclencher l'attribut de domaine d'un de vos domaine de magie.
 ##### Tranche chair (niveau 8)
-Vos attaques avec une arme de cuisine infligent un marqueur *Saignement* en plus de leurs effets habituels.
+A partir du niveau 8, vos attaques avec des armes improvisées gagnent +2d6 (total 5d6, Anti-infanterie, Lancer).
 ##### Assiette de plomb (niveau 11)
-Vous pouvez, une fois par combat, effectuer une attaque de zone avec votre poêle. Toutes les créatures à 2'' ou moins de vous subissent une attaque de 3d6, force dévastatrice (2) et un test de Résilience ou sont **étourdies** pour 1 tour.
-
----
-<center><h2>Cannibale</h2> </center>
-
-Le Chef Cannibale croit que la chair des créatures puissantes transmet leur force. Il cuisine les restes de ses ennemis, et chaque bouchée devient un acte de domination… ou de perversion.
-##### Chair savoureuse (niveau 2)
-Vous pouvez transformer des créatures comestibles mortes en **Rations savoureuses**.
-##### Morsure (niveau 2)
-Vous gagnez une nouvelle action : morsure. Il s'agit d'une attaque avec les règles suivantes : mêlée, 2d6, Saignement.
-##### Goût du souvenir (niveau 5)
-Lorsque vous cuisinez la chair d’une créature intelligente, vous pouvez transmettre à celui qui la mange un souvenir de cette créature.
-##### Sang chaud (niveau 8)
-Vous pouvez traquer les créatures par leur sang lorsqu'elles sont blessées, vous offrant un bonus de +2d6 à vos tests relatifs à une telle traque. De plus, vous bénéficiez d'un bonus de +2d6 en mêlée contre les créatures  affectée de *saignements*.
-##### Dévoration (niveau 11)
-Une fois par jour, après avoir tué une créature légendaire, vous pouvez cuisiner sa chair en un plat unique. Ce plat confère un effet permanent aléatoire :
-- +1 PV max.
-Ou
-- +1 en une compétence liée à la créature.
+A partir du niveau 11, vos attaques avec des armes improvisées gagnent Force Dévastatrice (2) (total 5d6, Anti-infanterie, Force dévastatrice (2), Lancer).
 
 ---
 <center><h2>Gastromancien</h2> </center>
 
 Pour le Gastromancien, la nourriture n'est pas de la simple matière, mais un art magique à part entière, et un bon client est toujours un client satisfait.
 ##### Remontant(niveau 2)
-A partir du niveau 2, vous pouvez dépenser votre réaction pour octroyer Egide (1) à une créature qui vient de subir une au moins une touche.
+A partir du niveau 2, vous pouvez dépenser une action courte et un dé de magie pour rendre 1 PV à une créature alliée à 3m ou moins.
 ##### Complément alimentaire (niveau 2)
 A partir du niveau 2, les créatures **Bien nourries** bénéficient également de +1 dé à leur réserve de magie.
 ##### Dopamine (niveau 5)
 A partir du niveau 5, les créatures **Bien nourries** bénéficient de 2 Réactions par tour.
 ##### Récupération des sucs (niveau 8)
 A partir du niveau 8, lorsqu'une créature **Bien nourrie** lance un sort, elle bénéficie d'un bonus de +2 à ses jets de lancement.
-##### Banquet (niveau 11)
-
-
+##### Gain de confiance (niveau 11)
+A partir du niveau 8, les créatures **Bien nourries** bénéficient de +1d6 à toutes leurs actions.
 ---
 <center><h2>Glouton</h2> </center>
 
 ##### Ventre plein (niveau 2)
-Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 4. Pour chaque niveau suivant, votre maximum de PV augmente de 1 supplémentaire.
+Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 2.
 ##### Couenne épaisse (niveau 2)
-Les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
+A partir du niveau 2, les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
 ##### Coup de bidon (niveau 5)
 A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
 ##### Digestion (niveau 8)
-A partir du niveau 8, un repos vous rend 1 PV supplémentaire.
+
 
 ___
 <center><h2>Maitre brasseur</h2> </center>

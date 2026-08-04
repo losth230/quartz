@@ -31,7 +31,7 @@ Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la
 - **Stabilité arcanique :** il vous faut 3 résultats de 6 naturels pour déclencher un Contrecoup au lieu de 2.
 - **Vision double :** une fois par jour, lorsque que vous lancez un sort, lancez-le une seconde fois.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 ##### Règle de 3
 A partir du niveau 2, lorsque vous unitlisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.
