@@ -4,7 +4,7 @@ Tout lanceur de sorts possède une **réserve de magie** composée de dés (d6),
 ### Lancer un sort
 Lancer un sort coûte une action courte, ou une réaction (avec un effet amoindri dans ce deuxième cas). Le joueur décrit librement ce qu'il cherche à accomplir — l'effet, la cible, la portée approximative — puis dépense autant de dés de sa réserve qu'il le souhaite et les lance et additionne les résultats.
 
-Un joueur peut dépenser une action longue plutôt qu’une action courte pour lancer un sort et bénéficie alors d'un bonus de +3 au lancement de son sort.
+> Un joueur peut dépenser une action longue plutôt qu’une action courte pour lancer un sort et bénéficie alors d'un bonus de +3 au lancement de son sort.
 
 Plus le joueur dépense de dés, plus le total potentiel est élevé — et plus la puissance ou la précision de l'effet se rapproche de ce qu'il souhaitait. Un sort ne peut jamais véritablement échouer. Au pire, avec un total très bas, l'effet est imperceptible ou anecdotique. C'est au MJ d'interpréter l'effet en fonction du total obtenu et de l'ambition de la demande.
 ### Contrecoup — Double 6
