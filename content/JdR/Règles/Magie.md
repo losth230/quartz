@@ -41,6 +41,7 @@ Le rapport à la lumière a été profondément bouleversé lors de la création
 Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
  
 ### Domaine des Astres
+> Attention, ce domaine ne peut être appris.
 - **Écoles principales** : Construction, Invocation.  
 - **Passif** : un maître des Astres utilise toujours un dé en plus lorsqu'il effectue une action.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé en dépensant au moins 1 dé de magie, le lanceur récupère 1 dé dans sa réserve.  
