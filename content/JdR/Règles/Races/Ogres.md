@@ -5,9 +5,8 @@ Les Ogres vivent généralement en petits groupes familiaux ou tribaux. Leur vie
 - **Bonus de caractéristiques** : aucun.
 - **Age** : un siècle.
 - **Taille** : L.
-- **Vitesse** : 5''.
+- **Vitesse** : 5m.
 - **Langues** : Commun.
-- **Magie** : les Ogres ont accès au Domaine du Festin.
 ### **Capacités Spéciales**
 **Ventre plein** : Lorsque vous créez un **Ogre** au niveau 1, vous commencez avec 1 PV supplémentaire.  
 **Gros Bras** : Vos attaques en mêlée bénéficient de Force dévastatrice (+1).
