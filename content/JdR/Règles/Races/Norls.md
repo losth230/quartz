@@ -4,9 +4,8 @@ Les **Norls** sont un peuple du Nord, né entre **fjords**, **forêts de pins** 
 - **Bonus de caractéristiques** : apprenez une compétences au **niveau 1**.
 - **Age** : rarement au-delà d’un siècle.
 - **Taille** : 2.
-- **Vitesse** : 5''.
+- **Vitesse** : 5m.
 - **Langues** : Commun, 1 langue supplémentaire au choix.
-- **Magie** : les  Norls accèdent au **Domaine du Givre**.
 ### **Capacités Spéciales**
 **Robustesse Glaciale** : Vous pouvez dépenser votre Réaction pour perdre un marqueur *Fatigue* ou *Gel* et gagner Egide (1).
 ### **Culture et Histoire**
