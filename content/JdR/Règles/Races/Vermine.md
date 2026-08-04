@@ -4,11 +4,10 @@ Souvent méprisées ou chassées, les Vermines ont développé des sociétés se
 ### **Caractéristiques de la Race**
 - **Bonus de caractéristiques** : +1 niveau à la caractéristique de votre choix.
 - **Âge** : jusqu’à 30 ans, adultes dès 5 ans.
-- **Taille** : P (Petite).
-- **Vitesse** : 5''.
+- **Taille** : 2.
+- **Vitesse** : 5m.
 - **Langues** : Commun.
-- **Magie** : les Vermines accès au Domaine des Egouts.
-- **Vision dans le noir** : 15''.
+- **Vision dans le noir** : 15m.
 ### **Capacités Spéciales**
 **Maitre empoisonneur** : Vous pouvez dépenser une action courte pour enduire une arme de poison et lui octroyer la règle Attaques empoisonnées pour leur prochaine attaque.  
 **Nuée** : Si votre cible  est engagée avec un adversaire, vous bénéficiez d'un bonus de +1d6 sur vos attaques dirigées contre elle.  
