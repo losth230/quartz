@@ -5,10 +5,9 @@ Les Nains vivent dans des montagnes escarpées ou sous des forteresses souterrai
 - **Bonus de caractéristiques** : apprenez une compétence de votre choix au niveau 1.
 - **Age** : 2 à 3 siècles.
 - **Taille** : P.
-- **Vitesse** : 4''.
+- **Vitesse** : 4m.
 - **Langues** : Commun, 1 langue supplémentaire au choix.
-- **Magie** : les Nains n'ont accès à aucun Domaine particulier.
-- **Vision dans le noir** : 15''.
+- **Vision dans le noir** : 15m.
 ### **Capacités Spéciales**
 **Êtres de Pierre** : Lorsque vous êtes touché par un sort (quelle qu'en soit la source), jetez 1d6, sur 5+ le sort est annulé.  
 **Mur de Boucliers** : le premier tour  de chaque  combat, vous bénéficiez d'un bonus de +1 à vos jets d'armure.
