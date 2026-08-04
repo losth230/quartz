@@ -7,7 +7,6 @@ En raison de leur capacité à s’adapter à de nombreux défis, les Humains on
 - **Taille** : M.
 - **Vitesse** : 5''.
 - **Langues** : Commun, 1 langue supplémentaire au choix.
-- **Magie** : les Humains ont accès au domaine de la Pureté.
 ### **Culture et Histoire**
 Les **Humains** sont une race diverse, constituée de nombreuses cultures, royaumes et civilisations. Leur histoire est marquée par des progrès rapides dans les arts, la magie, et la guerre, mais aussi par des guerres civiles, des révolutions et des conflits avec d'autres races.
 - **Histoire** : Les Humains sont issus de nombreux royaumes et territoires, ayant migré à travers des continents entiers à la recherche de nouvelles terres. Ils ont été à la fois les opprimés et les oppresseurs dans leur propre histoire, formant des empires puissants et des royaumes fragiles.
