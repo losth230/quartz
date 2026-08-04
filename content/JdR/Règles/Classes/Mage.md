@@ -20,6 +20,7 @@ Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction
 ##### Enseignement magique :
 Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la liste ci-dessous, chaque enseignement peut être appris plusieurs fois.
 - **Adaptation :** lorsque vous lancez un sort, vous oouvez déclencher n'importe quel attribut de domaine parmi les domaines que vous possédez.
+- **Expérimentaliste :** lorsque vous lancez un sort, vos résultats obtenant un 6 naturel sont explosifs.
 - **Préservation :** votre réserve de magie augmente de 2 dés.
 - **Milicien :** apprenez un Entraînement de la classe de guerrier au choix.
 - **Proactif :** lorsque vous lancez un sort dans le cadre d'une réaction, vous bénéficiez d'un bonus de +3 au lancement du sort.
@@ -27,6 +28,7 @@ Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la
 - **Sagacité :** apprenez le domaine de magie de votre choix.
 - **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Seconde chance :** lorsque vous lancez un sort, vous bénéficiez de Tireur d’élite.
+- **Stabilité arcanique :** il vous faut 3 résultats de 6 naturels pour déclencher un Contrecoup au lieu de 2.
 - **Vision double :** une fois par jour, lorsque que vous lancez un sort, lancez-le une seconde fois.
 ### Par delà le niveau 1
 Lorsque vous atteignez un niveau supérieur avec un Mage, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
