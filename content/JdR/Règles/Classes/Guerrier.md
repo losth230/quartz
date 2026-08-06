@@ -8,10 +8,11 @@ Les caractéristiques de base en combat d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de Résilience.
-- Choisissez 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
-L'[[Règles/Equipements/|équipement]] d'un Guerrier est :
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+##### Equipement
 - **Maitrises** : Armures complètes.
 - **Argent de départ** : 600 Florins.
+## Créer un Guerrier
 ##### Entrainement
 Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire dans la liste ci-dessous :
 - **Charge dévastatrice** : après avoir réussi une charge, vous bénéficiez d'1d6 bonus à l'attaque gratuite octroyée.
@@ -101,5 +102,5 @@ Lorsque vous atteignez les niveaux 2, 6 et 10, vous gagnez +1 PV.
 A partir du niveau 5, vous pouvez choisir de réduire de 1 les dégâts physiques que vous subissez lors d'une attaque.
 ##### Provocation (niveau 8)
 A partir du niveau 8, vous pouvez dépenser votre réaction pour forcer une créature que vous voyez à 3m ou moins à vous attaquer. Si cette créature vous inflige au moins 1 blessure, vous pouvez riposter gratuitement.
-##### Saigner à vif (niveau 11)
-A partir du niveau 11, vous gagnez Sauvagerie (1) à chaque fois que vous infligez 1 
+##### Encaissement (niveau 11)
+A partir du niveau 11, chaque fois que vous perdez au moins 1 PV, vous gagnez Egide (1).

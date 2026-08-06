@@ -9,10 +9,11 @@ Les caractéristiques de base d’un Cuisinier sont :
 - **Tir** : 5+
 - **PV** : 4 + niveau de Résilience.
 - **Réserve de Magie :** 8 dés.
-- Choisissez 8 compétences que vous apprenez niveau 1.
-L'équipement d'un Cuisinier est :
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+##### Equipement
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 300 Florins.
+## Créer un Cuisinier
 ##### Magie
 Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
 ##### Bien nourri
@@ -71,7 +72,8 @@ A partir du niveau 5, les créatures **Bien nourries** bénéficient de 2 Réact
 ##### Récupération des sucs (niveau 8)
 A partir du niveau 8, lorsqu'une créature **Bien nourrie** lance un sort, elle bénéficie d'un bonus de +2 à ses jets de lancement.
 ##### Gain de confiance (niveau 11)
-A partir du niveau 8, les créatures **Bien nourries** bénéficient de +1d6 à toutes leurs actions.
+A partir du niveau 8, les créatures **Bien nourries** bénéficient de +1d6 à toutes leurs actions et tests.
+
 ---
 <center><h2>Glouton</h2> </center>
 
@@ -82,7 +84,6 @@ A partir du niveau 2, les dégâts physiques que vous subissez sont réduits de 
 ##### Coup de bidon (niveau 5)
 A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
 ##### Digestion (niveau 8)
-
 
 ___
 <center><h2>Maitre brasseur</h2> </center>

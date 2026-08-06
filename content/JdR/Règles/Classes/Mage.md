@@ -9,10 +9,11 @@ Les caractéristiques de base en combat d'un Mage sont :
 - **Tir** : 5+
 - **PV** : 3 + niveau de Résilience.
 - **Réserve de Magie :** 12 dés.
-- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
-L'équipement d'un Mage est :
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+##### Equipement
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.
+## Créer un Mage
 ##### Magie
 Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
 ##### Déviation magique

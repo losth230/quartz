@@ -8,10 +8,11 @@ Les caractéristiques de base d’un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de Résilience.
-- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
-L'équipement d'un Chaman est :
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+##### Equipement
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 200 Florins.
+## Créer un Chaman
 ##### Communication spirituelle (niveau 1 )
 Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre réserve de magie.
 ##### Conseil des esprits (niveau 1)
