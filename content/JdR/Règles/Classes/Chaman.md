@@ -8,52 +8,37 @@ Les caractéristiques de base d’un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de Résilience.
+- **Réserve de Magie :** 8 dés.
 Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.
-- **Argent de départ** : 200 Florins.
+- **Argent de départ** : 400 Florins.
 ## Créer un Chaman
+##### Magie
+Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deuxun domaine parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre ou votre Domaine de Race.
 ##### Communication spirituelle (niveau 1 )
 Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre réserve de magie.
 ##### Conseil des esprits (niveau 1)
 Une fois par jour, vous pouvez avec les esprits au prix d'une action longue et leur poser une question pour laquelle ils répondront oui ou non.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Chaman, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
-## Magie
-Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez trois domaines parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre ou votre Domaine de Race.
-
-| Niveaux de Chaman | Niveau de sorts max | Réserve de Dés de magie |
-| :---------------: | :-----------------: | :---------------------: |
-|       **1**       |          1          |           5d6           |
-|       **2**       |          1          |           6d6           |
-|       **3**       |          2          |           6d6           |
-|       **4**       |          2          |           7d6           |
-|       **5**       |          2          |           7d6           |
-|       **6**       |          3          |           7d6           |
-|       **7**       |          3          |           8d6           |
-|       **8**       |          3          |           8d6           |
-|       **9**       |          4          |           8d6           |
-|      **10**       |          4          |           9d6           |
-|      **11**       |          4          |           9d6           |
-|      **12**       |          4          |          10d6           |
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
-##### Volonté des ancêtres 
-Une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui vous confère 1 action courte supplémentaire par tour pendant 3 tours.
+##### Voie de l'esprit
+Lorsque vous atteignez le niveau 4, vous pouvez apprendre l'Enseignement de Mage de votre choix.
 ## Niveau 7
 ##### Eveil
 A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire supplémentaire.
 ## Niveau 10
-##### Absorption élémentaire
-??????
-
+##### Volonté des ancêtres 
+A partir du niveau 10, une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui vous confère 1 action courte supplémentaire par tour pendant 3 tours.
 ## Niveau 12
 ##### Les 4 éléments
-Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine élémentaire. Si vous connaissez déjà les 4 domaines élémentaires, votre maximum de dés de magie augmente de 2.
+Lorsque vous atteignez le niveau 12, vous pouvez apprendre un domaine de magie élémentaire supplémentaire. Si vous connaissez déjà les 4 domaines élémentaires, votre maximum de dés de magie augmente de 2.
 
 <center> <h1> Spécialisations </h1></center>
 
@@ -62,16 +47,16 @@ Lorsque vous atteignez le niveau 12, vous pouvez apprendre le 4e domaine éléme
 
 ##### Frappe élémentaire (niveau 2)
 A partir du niveau 2, vous pouvez lancer des sorts en mêlée.
-##### Réceptacle élémentaire (niveau 2)
-A partir du niveau 2, vous pouvez offrir votre corps à un esprit élémentaire et ainsi devenir son réceptacle. Les effets liés dépendent du type de l'élémentaire :
+##### Frappe élémentaire (niveau 2)
+A partir du niveau 2, vous 
+##### Réceptacle élémentaire (niveau 5)
+A partir du niveau 5, vous pouvez offrir votre corps à un esprit élémentaire et ainsi devenir son réceptacle. Les effets liés dépendent du type de l'élémentaire :
 - élémentaire de feu : vous êtes immunisé aux attaques enflammées et gagnez la règle spéciale attaques enflammées sur toutes vos attaques en mêlée.
 - élémentaire du givre : vous êtes immunisé au gel. Votre résistance magique augmente de 1.
 - élémentaire de terre : votre armure augmente de 1 et vous recevez Egide (1) à chaque sort que vous lancez.
 - élémentaire de foudre : votre vitesse augmente de 1, vos attaques en mêlée bénéficient de force dévastatrice (1).
-##### Harmonie (niveau 5)
-A partir du niveau 5, vos attaques en mêlée deviennent magiques. Lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
-##### Absorption élémentaire (niveau 8)
-Lorsque vous attaquez, vous pouvez dépenser les marqueurs *enflammés* ou *gelé* de votre cible pour lui infliger autant de dégâts.
+##### Harmonie (niveau 8)
+A partir du niveau 8, vos attaques en mêlée deviennent magiques. Lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
 ##### Mande - Eléments (niveau 11)
 A partir du niveau 11 vous voulez vous lier à un second élémentaire ou doubler l'effet de votre élémentaire.
 
@@ -79,15 +64,17 @@ A partir du niveau 11 vous voulez vous lier à un second élémentaire ou double
 <center><h2> Mande Esprit</h2></center>
 
 ##### Esprit animal (niveau 2)
-A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dé de magie.
+A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dés de magie.
 ##### Communication extra sensorielle (niveau 2)
 A partir du niveau 2, vous gagnez la capacité à communiquer avec les Esprits, les Fantômes et les Ombres pendant 10 tours après avoir lancé n'importe quel sort.
 ##### Symbiose (niveau 5)
-Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon esprit et voyez à travers ses yeux.
+Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon esprit et voir à travers ses yeux.
 ##### Esprit supérieur (niveau 8)
-Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine lié à votre aura.
+Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine de votre choix.
 ##### Réincarnation (niveau 11)
 A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capacité d'envoyer des messages télépathiques aux créatures proches de vous.
+
+___
 <h2><center>Oracle</center></h2>
 
 ##### Se tourner vers les astres (niveau 2)

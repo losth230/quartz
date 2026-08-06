@@ -12,18 +12,16 @@ Les caractéristiques de base d’un Cuisinier sont :
 Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.
-- **Argent de départ** : 300 Florins.
+- **Argent de départ** : 400 Florins.
 ## Créer un Cuisinier
 ##### Magie
-Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
+Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez un domaine parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin ou Domaine Primordial.
 ##### Bien nourri
 Lorsque vous cuisinez, quiconque se nourrit de votre nourriture reçoit 1 PV temporaire pour le reste de la journée.
 ##### Chef de service
 Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
 Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
-## Magie
-Le Cuisinier est un lanceur de sorts. Lorsque vous créez un Cuisinier, choisissez un domaine parmi les suivants : Domaine de l'Hémophilie, Domaine des Ténèbres, Domaines du Festin ou Domaine Primordial.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
@@ -79,12 +77,14 @@ A partir du niveau 8, les créatures **Bien nourries** bénéficient de +1d6 à 
 
 ##### Ventre plein (niveau 2)
 Lorsque vous atteignez le niveau 2, votre maximum de PV augmente de 2.
-##### Couenne épaisse (niveau 2)
-A partir du niveau 2, les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
+##### Choucroute garnie (niveau 2)
+A partir du niveau 2, les créatures **Bien nourries** bénéficient de deux PV temporaires au lieu d'un seul.
 ##### Coup de bidon (niveau 5)
 A partir du niveau 5, lorsque vous réussissez une charge, votre cible doit réussir un test de Brute égal au nombre de blessures qu'elle a subie ou tomber à terre. Après une charge réussie, vous gagnez Egide (2).
 ##### Digestion (niveau 8)
-
+A partir du niveau 8, lorsque vous subissez au moins une blessure, votre prochaine attaque bénéficie de +2d6.
+##### Couenne épaisse (niveau 11)
+A partir du niveau 11, les dégâts physiques que vous subissez sont réduits de 1 (pour un minimum de 0).
 ___
 <center><h2>Maitre brasseur</h2> </center>
 

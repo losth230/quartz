@@ -35,7 +35,7 @@ Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la
 Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 ##### Règle de 3
-A partir du niveau 2, lorsque vous unitlisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.
+A partir du niveau 2, lorsque vous untilisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.
 ## Niveaux 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
