@@ -14,7 +14,7 @@ Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez ni
 - **Argent de départ** : 700 Florins.
 ## Créer un Paladin
 ## Magie
-Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez un domaine parmi les suivants : Domaine de la Ferromancie, Domaine des Cieux, Domaine de la Lumière.
+Le Paladin est un lanceur de sorts. Lorsque vous créez un Paladin, choisissez un domaine parmi les suivants : Domaine de la Ferromancie, Domaine des Cieux, Domaine de la Lumière(-yuj,k ).
 ##### Faveur divine
 Vous pouvez dépenser votre réaction et un dé de votre réserve de magie pour transformer n'importe quel résultat obtenu lors d'un test de compétence ou d'attaque pour le transformer en 6 explosif.
 ##### Vœux

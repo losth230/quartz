@@ -1,0 +1,1 @@
+Lorsqu'un modèle possède cette règle, il ignore les malus du type de terrain en ce qui concerne ses mouvements. Cela veut dire qu'un modèle ayant cavalerie et guide (collines) peut escalader des collines.

@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle effectue une attaque en mêlée, sa cible souffre d'un malus de -N sur ses jets d'armure (max -3).

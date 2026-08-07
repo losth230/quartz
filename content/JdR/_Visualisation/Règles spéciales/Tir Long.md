@@ -1,0 +1,1 @@
+L'action de tir est une action longue pour les armes possédant cette règle.

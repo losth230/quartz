@@ -4,7 +4,7 @@ Le Guerrier est un maître du combat physique, qu'il s'agisse de mêlée ou de d
 Les Guerriers peuvent être de n'importe quelle **[[Règles/Race|race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
 ## Caractéristiques de base
 ##### Compétences de base
-Les caractéristiques de base en combat d'un Guerrier sont :
+Les caractéristiques de base d'un Guerrier sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de Résilience.

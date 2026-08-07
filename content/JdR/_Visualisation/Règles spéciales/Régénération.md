@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle débute son activation, guérissez N PV perdu par le modèle.

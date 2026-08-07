@@ -1,0 +1,1 @@
+Un modèle doté de cette règle ET de la règle spéciale Cavalerie bénéficie également du bonus de +1 à ses chances de toucher contre les modèles de sa taille.

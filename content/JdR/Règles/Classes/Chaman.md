@@ -21,7 +21,7 @@ Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre réserv
 ##### Conseil des esprits (niveau 1)
 Une fois par jour, vous pouvez avec les esprits au prix d'une action longue et leur poser une question pour laquelle ils répondront oui ou non.
 ### Par delà le niveau 1
-Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9

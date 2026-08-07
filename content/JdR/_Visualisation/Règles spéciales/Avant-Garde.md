@@ -1,0 +1,3 @@
+Ne déployez ce modèle que lorsque tous les autres modèles ont été déployées. Une fois déployé, faites lui effectuer une marche gratuite (il ne peut engager en mêlée).  
+Si les deux joueurs possèdent tous les deux des modèles d'avant-garde, déployez lés à tour de rôle en commençant par celui ayant fini son déploiement en premier.  
+Les modèles d'avant-garde ne comptent pas pour savoir quel joueur a terminé son déploiement en premier et qui aura le premier tour.

@@ -4,102 +4,84 @@ Le **Voleur** est un maître de la furtivité, de la ruse et des attaques sourno
 Les Voleurs peuvent être de n'importe quelle **race** (Humain, Nain, Elfe, Gobelin, etc.), bien que les Elfes et les Gobelins soient souvent les plus adaptés à cette classe en raison de leur agilité et de leur finesse naturelle.
 ### Caractéristiques de base
 ##### Compétences de base
-Lorsque vous créez un Voleur, choisissez :
-- Sept compétences que vous apprenez niveau 1.
-Les caractéristiques de base en combat d'un Voleur sont :
+Les caractéristiques de base d'un Voleur sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 4 + niveau de Résilience.
-- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
-L'équipement d'un Voleur est :
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
+##### Equipement
 - **Maitrises** : Armures partielles.
-- **Argent de départ** : 200 Florins.
+- **Argent de départ** : 350 Florins.
+## Créer un Voleur
 ##### Esquive supérieure
 Lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour annuler automatiquement une touche.
 ##### Coup bas
 Lorsque vous effectuez  une attaque dans le dos d'une cible, vous pouvez jeter 1d6 supplémentaire lors de votre jet d'attaque et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Voleur, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteignez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 À partir du niveau 2, vous pouvez choisir une spécialisation parmi celles présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
-##### Instinct
-Lorsque vous atteignez le niveau 4, vous pouvez améliorer votre compétence de **Perception** de un niveau.
-## Niveau 7
 ###### Course
-Lorsque vous atteignez le niveau 7, votre Vitesse augmente de 1.
+Lorsque vous atteignez le niveau 4, votre Vitesse augmente de 1.
+## Niveau 7
+##### Instinct de survie
+Lorsque vous atteignez le niveau 7, vous possédez une réaction supplémentaire par tour.
 ## Niveau 10
 ##### Maître des Ombres
 À partir du niveau 10, une fois par repos long, vous pouvez devenir invisible pendant 10 minutes ou jusqu’à ce vous attaquiez.
 ## Niveau 12
 ##### Disparition
 À partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant. 
+
 <center><h1>Spécialisations</h1> </center>
 
 ___
 <center><h2>Assassin</h2> </center>
 
-##### Attaques empoisonnées
-Vos attaques en mêlée bénéficient de la règle **Attaques Empoisonnées**.
-##### Coup bas amélioré
-Lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche.
+##### Attaques empoisonnées (niveau 2)
+A partir du niveau 2, vos attaques en mêlée bénéficient de la règle **Attaques Empoisonnées**.
+##### Coup bas amélioré (niveau 2)
+A partir du niveau 2, lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ##### Rapidité mortelle (niveau 5)
-Lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire, qui peut être une action déjà effectuée durant le tour.
+A partir du niveau 5, lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire, qui peut être une action déjà effectuée durant le tour.
 ##### Frappe fatale (niveau 8)
-Lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
+A partir du niveau 8, lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
 ##### Premier coup (niveau 11)
-Si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
-
-___
-<center><h2>Pilouface</h2> </center>
-
-##### Parité
-A partir du niveau 2, lorsque vous lancez les dés pour une compétence ou une attaque, vous pouvez choisir de parier sur **Pair** ou **Impair**.
-- Si la majorité de vos dés affichent le résultat choisi : ajoutez **1 Réussites** au résultat final.
-- Si vous vous trompez : vous subissez **Fatigue**.
-##### Trucage 
-A partir du niveau 2,jour, lorsque vous effectuez un test de compétence ou d'attaque, vous pouvez dépenser votre réaction pour inverser le résultat d'un dé (un 1 devient un 6 ou un 5 devient un 2).
-##### Règle de 4 (niveau 5)
-A partir du niveau 5, lorsque vous obtenez exactement 2 succès sur un test de compétences ou d'attaque, vous pouvez considérer que vous en avez obtenu 4.
-##### Double jeu (niveau 8)
-A partir du niveau 8, lorsque vous obtenez un double sur un test de compétence ou d'attaque, vous pouvez ajouter un effet supplémentaire :
-- **Double pair :** vous gagnez +1 Réaction pour ce tour.
-- **Double impair :** choisissez une cible à 6'' ou moins qui perd une action courte.
-##### Geste du diable (niveau 11)
-A partir du niveau 11, une fois par jour, vous pouvez relancer intégralement un test, tous les résultats pairs sont des **réussites explosives**, les résultats impairs sont des échecs.
+A partir du niveau 11, si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
 
 ___
 <center><h2>Danseur de lame</h2> </center>
 
 ##### Riposte (niveau 2)
-Lorsque vous réussissez un jet d'armure, vous pouvez dépenser votre réaction pour immédiatement effectuer une attaque en mêlée.
+A partir du niveau 2, lorsque vous réussissez un jet d'armure, vous pouvez dépenser votre réaction pour immédiatement effectuer une attaque en mêlée.
 ##### De cape et d'épée (niveau 2)
-Lorsque vous utiliser votre réaction pour Esquiver, vous bénéficiez de 1d6 supplémentaire (total +2d6).
-Si vous ne portez pas d'armure, votre armure augmente de 1 si vous maniez une arme de mêlée, et de 1 supplémentaire si vous possédez une arme de main gauche.
+A partir du nibeau 2, lorsque vous utiliser votre réaction pour Esquiver, vous annulez une touche supplémentaire.  
+Si vous ne portez pas d'armure, votre armure augmente de 1 tant que vous maniez au moins 2 armes
 ##### Grâce (niveau 5)
-Vous possédez une réaction supplémentaire par tour (total 2 réactions).
+A partir du niveau 5, après avoir utilisé votre réaction, votre prochaine attaque bénéficie de +1d6 en mêlée.    
 ##### Feinte (niveau 8)
 Lorsque vous subissez une attaque, vous pouvez vous déplacer d'une distance égale au nombre de jets d'armures que vous avez réussi.
 ##### Moulinet (niveau 11)
-Lorsque vous effectuez une Riposte, vous ajoutez un nombre de d6 égal au nombre de jets  d'armures que vous avez réussi.
+Lorsque vous effectuez une Riposte, vous ajoutez un nombre de d6 égal au nombre de jets d'armures que vous avez réussi.
 
 ___
 <center><h2>Pirate</h2> </center>
 
 ##### Tir rapide (niveau 2)
-Lorsque vous maniez une arme à distance en main gauche, vous gagnez +1d6 en mêlée. Vous pouvez effectuer des actions de tir avec des armes à distance à 1   main même si vous êtes engagé en mêlée.
+A partir du niveau 2, lorsque vous maniez une arme à distance en main gauche, vous gagnez +1d6 en mêlée. Vous pouvez effectuer des actions de tir avec des armes à distance à 1 main même si vous êtes engagé en mêlée.
 ##### Feindre la mort (niveau 2)
-Lorsque vous êtes réduit à 0 PV, vous regagnez 1 PV et pouvez immédiatement effectuer une action courte.
+A partir du niveau 2, lorsque vous êtes réduit à 0 PV, vous regagnez 1 PV et pouvez immédiatement effectuer une action courte.
 ##### Duel (niveau 5)
-Lorsque vous effectuez une attaque à distance contre une créature contre laquelle vous avez réussi une touche lors d'une attaque en mêlée ce tour-ci, votre attaque à distance bénéficie de +2d6.
+A partir du niveau 5, lorsque vous effectuez une attaque à distance contre une créature contre laquelle vous avez réussi une touche lors d'une attaque en mêlée ce tour-ci, votre attaque à distance bénéficie de +2d6.  
 Lorsque vous effectuez une attaque en mêlée contre une créature contre laquelle vous avez réussi une touche lors d'une attaque à distance ce tour-ci, votre attaque en mêlée bénéficie de +1 sur ses jets de touches.
 ##### Ralliement (niveau 8)
-Vous pouvez dépenser votre réaction pour octroyer un bonus de +1d6 à un nombre d'alliés égal à votre nombre de dé de Social pour leur prochaine attaque  en mêlée ou à  distance.
+A partir du niveau 8, vous pouvez dépenser votre réaction pour octroyer un bonus de +1d6 à un nombre d'alliés égal à votre nombre de dé de Social pour leur prochaine attaque en mêlée ou à  distance.
 ##### Tir de sommation (niveau 11)
-Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
+A partir du niveau 11, au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
 
 ___
 <center><h2>Franc-tireur</h2> </center>

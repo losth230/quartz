@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle est ciblé lors d'une attaque à distance, l'attaquant souffre d'un malus de -1 sur ses jets de touche.

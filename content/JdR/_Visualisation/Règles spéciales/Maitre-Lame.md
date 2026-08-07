@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle effectue une attaque en en mêlée, il peut relancer ses jets de touche ayant obtenu 1.

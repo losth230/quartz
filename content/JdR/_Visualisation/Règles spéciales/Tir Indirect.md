@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle effectue une attaque à distance, il ne nécessite pas de LdV directe sur sa cible tant que la LdV verticale est partiellement dégagée.

@@ -21,7 +21,7 @@ Lorsque vous cuisinez, quiconque se nourrit de votre nourriture reçoit 1 PV tem
 ##### Chef de service
 Vous pouvez dépenser votre réaction et un dé de magie pour octroyer une action courte gratuite à une créature à 6'' ou moins.
 ### Par delà le niveau 1
-Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pari, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9

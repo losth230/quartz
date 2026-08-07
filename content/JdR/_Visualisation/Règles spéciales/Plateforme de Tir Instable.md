@@ -1,0 +1,2 @@
+Une fois par tour, un modèle avec cette règle peut effectuer l’action de tir instantanée, c'est à dire qu’il ne s’agit ni d’une action courte ni d’une action longue. Cette action s'effectue avec un malus de -1 aux chances de toucher.  
+Rappel : un modèle ne pouvant effectuer deux fois la même action dans un même tour, il ne pourra pas rerirer ce tour-ci.

@@ -4,20 +4,21 @@ Le Savant est un érudit maîtrisant les mystères de la science, de la magie an
 Les Savants peuvent être de toute **race**, mais les Vermines et les Gnomes sont souvent attirés par cette voie en raison de leur curiosité naturelle et de leur lien avec les forces magiques ou naturelles.
 ## Caractéristiques de base
 ##### Compétences de base
-Les caractéristiques de base en combat d'un Savant sont :
+Les caractéristiques de base d'un Savant sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 4 + niveau de Résilience.
-- Choisissez 9 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
-L'équipement d'un Savant est :
+Choisissez ensuite 9 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
+##### Equipement
 - **Maitrises** : Armures partielles.
-- **Argent de départ** : 300 Florins.
+- **Argent de départ** : 400 Florins.
+## Créer un Savant
 ##### Anticipation
 Vous pouvez dépenser votre réaction pour permettre à un allié ou  à vous-même de relancer un dé lors d'un test de compétence ou d'attaque.
 ##### Eclair de génie
 Vous pouvez dépenser votre réaction pour octroyer automatiquement une réussite à l'un de vos tests de compétence ou test de compétence que vous aidez. Vous ne pouvez utiliser cette réaction de nouveau avant d'avoir effectué un repos.
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Savant, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 : 
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveaux 3, 6, 9 :
@@ -26,60 +27,17 @@ Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compét
 ## Niveau 4 : 
 ##### Rat de bibliothèque 
 A partir du niveau 4, lorsque vous aidez ou vous faite aidez par lors d'un test de compétence, vous ou la créature que vous aidez bénéficie de +3d6 au lieu de +2d6
-## Niveaux 7, 12
+## Niveaux 7
 ##### Connaissances avancées
-Lorsque vous atteignez le niveau 4 et le niveau 10, vous pouvez gagner 1 niveau dans la compétence de votre choix.
-## Niveau 7
-##### Optimisation
-Lorsque vous fabriquez un objet, vous dépensez  1  matériaux en moins.
+A partir du niveau 7, lorsque vous utilisez Anticipation, l'allié ciblé peut relancer deux dés au lieu d'un seul.
 ## Niveau 10
-##### Génie reconnu
-Une fois par combat, vous pouvez effectuer **deux actions longues** au lieu d’une seule.
+##### Optimisation
+A partir du niveau 10, Lorsque vous fabriquez un objet, vous dépensez  1  matériaux en moins.
+## Niveau 12
+##### Réaction contrôlée
+A partir du niveau 12, vous possédez 2 réactions par tour.
+
 <center><h1>Spécialisations</h1> </center>
-
-___
-<center><h2>Runiste</h2> </center>
-
-##### Gravure magique (niveau 2)
-En tant que Runiste, vous pouvez graver toutes sortes d'équipements. Chaque rune possède un niveau. Le **niveau combiné des runes** que peut manier une créature ne peut jamais dépasser son **niveau en DIY**.
-##### Runes de niveau I (niveau 2)
-**Rune de Protection I** : lorsqu'un personnage subit des touches en portant une **armure** possédant cette rune, il peut relancer ses jets d'armure ayant obtenu 1. 
-**Rune de Fer** : lorsqu'un personnage subit des touches en portant un **bouclier** possédant cette rune, il bénéficie d'un bonus de +1 aux jets d’armure tant qu'il ne se déplace pas pendant son tour.  
-**Rune de Frappe I** : lorsqu'un personnage porte une **arme** avec cette rune, il gagne +1d6 en mêlée.  
-**Rune de Vélocité I** : lorsqu'un personnage attaque avec une **arme à distance** possédant cette rune sans s’être déplacé, il gagne +1d6 au tir.  
-**Rune de Lumière** : tout objet gravé avec cette rune émet une lumière constante dans un rayon de 6''.  
-**Rune d’Alerte** : lorsqu’un ennemi passe sur une **rune gravée au sol**, elle émet un bruit audible à 12''. Usage unique.  
-**Rune de Froid I** : lorsqu'un personnage est blessé par une **arme** portant cette rune, il est *gelé*.
-**Rune de Vitalité I** : Lorsqu'un personnage porte une **armure**  gravée de cette rune, il gagne +1 PV.
-##### Runes de niveau II (niveau 5)
-**Rune de Protection II** : lorsqu'un personnage subit des touches en portant une **armure** possédant cette rune, il bénéficie d'un bonus de +1 à ses jets d'armure.
-**Rune de Frappe II** : lorsqu'un personnage porte une **arme** avec cette rune, il gagne +1d6 en mêlée, et applique 1 *saignement* si la moindre blessure est réussie.  
-**Rune de Concentration** : l'arme ignore les malus dus aux obstacles partiels lors des attaques à distance.  
-**Rune de Stabilité** : lorsqu'un personnage porte une **arme** avec cette rune, il ne peut être repoussé. De plus il peut se relever sans dépenser d'action.
-**Rune de Surcharge** : gravée au sol, explose en infligeant 1d6 dégâts dans un rayon de 2''. Usage unique.
-**Rune d’Éclat** : lorsqu’une **arme à distance** touche, la cible subit un malus de -1 à ses jets de Perception pendant 1 tour. 
-**Rune de Vitalité II** : Lorsqu'un personnage porte une **armure**  gravée de cette rune, il gagne +2 PV.
-**Rune de projection I** :  une **arme à distance** gravée de cette rune gagne +3'' à sa portée.
-##### Runes de niveau III (niveau 8) 
-**Rune de Fusion** : permet de combiner **deux runes de niveau I** sur le même objet.
-**Rune tranchante** : lorsqu'un personnage attaque avec une **arme** gravée de cette rune, il gagne  Force dévastatrice (1).
-**Rune de vision pure** : lorsqu'un personnage porte un objet gravé de cette rune, il peut l'invisibilité à 6'' ou moins.
-**Rune de projection II** :  une **arme à distance** gravée de cette rune gagne +3'' à sa portée.
-##### Maitre Rune *(niveau 11)*
-A partir du niveau 11, vous pouvez posséder 3 niveaux de runes supplémentaires.
-
-___
-<center><h2>Alchimiste</h2> </center>
-
-##### Botaniste (niveau 2)
-A partir du niveau 2, fabriquer des [[Potions & Elixirs]] vous coûte 1 **Plante** de moins.
-##### Transmutation mineure (niveau 2)
-A partir du niveau 2, vous pouvez modifier transformer 1 [[Règles/Equipements/Matériaux|matériaux]] en un autre une fois par jour ou altérer une petite surface.
-##### Transmutation agressive (niveau 5)
-Vous pouvez dépenser 1 **Plante** pour que votre prochaine attaque inflige *Empoisonnement* ou *Gel* à votre cible.
-##### Formule instable (niveau 8)
-##### Transmutation (niveau 11)
-
 ___
 <center><h2>Biomancien</h2> </center>
 

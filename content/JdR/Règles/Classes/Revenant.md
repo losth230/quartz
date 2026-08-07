@@ -8,8 +8,8 @@ Les caractéristiques de base d'un Revenant sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 4 + niveau de Résilience.
-- **Réserve de Magie :** 
-- Choisissez 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
+- **Réserve de Magie :** 8 dés.
+Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 500 Florins.
@@ -21,7 +21,7 @@ Vous pouvez dépenser un dé de votre réserve de magie pour vous téléporter s
 ##### Résistance à la magie
 Vous bénéficiez d'une résistance magique naturelle de 6+. Si vous portez des objets vous octroyant une résistance magique, vous résistance magique totale est améliorée de 1 (un 5+ devient donc 4+).
 ### Par delà le niveau 1
-Lorsque vous atteignez un niveau supérieur avec un Revenant, vous gagnez 2 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous atteignez un niveau supérieur avec un Revenant, vous gagnez 1 PV et 1 [[Règles/Règles#Points de talent|point de talent]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9

@@ -1,0 +1,1 @@
+Lorsqu'une unité possédant cette règle effectue une attaque de tir, ajoutez un nombre de dé à l'attaque égal au nombre d'unité au sein du modèle (max +6d6).

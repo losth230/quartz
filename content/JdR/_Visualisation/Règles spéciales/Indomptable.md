@@ -1,0 +1,1 @@
+Lorsqu'un modèle possédant cette règle effectue un test de moral, elle jette 3d6 et choisi les deux qu'elle conserve.

@@ -1,0 +1,1 @@
+Un modèle possédant cette règle Riposte avant son adversaire (même si celui-ci a chargé). Deux modèles bénéficiant ainsi de celle règle frapperont en même temps.
