@@ -32,7 +32,7 @@ A partir du niveau 4, lorsque vous aidez ou vous faite aidez par lors d'un test 
 A partir du niveau 7, lorsque vous utilisez Anticipation, l'allié ciblé peut relancer deux dés au lieu d'un seul.
 ## Niveau 10
 ##### Optimisation
-A partir du niveau 10, Lorsque vous fabriquez un objet, vous dépensez  1  matériaux en moins.
+A partir du niveau 10, Lorsque vous fabriquez un objet, vous dépensez 1 matériaux en moins.
 ## Niveau 12
 ##### Réaction contrôlée
 A partir du niveau 12, vous possédez 2 réactions par tour.

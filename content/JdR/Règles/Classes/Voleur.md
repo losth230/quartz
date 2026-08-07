@@ -32,7 +32,7 @@ Lorsque vous atteignez le niveau 4, votre Vitesse augmente de 1.
 Lorsque vous atteignez le niveau 7, vous possédez une réaction supplémentaire par tour.
 ## Niveau 10
 ##### Maître des Ombres
-À partir du niveau 10, une fois par repos long, vous pouvez devenir invisible pendant 10 minutes ou jusqu’à ce vous attaquiez.
+À partir du niveau 10, les attaques vous prenant pour cible souffrent d'un malus de -1 pour toucher.
 ## Niveau 12
 ##### Disparition
 À partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant. 
