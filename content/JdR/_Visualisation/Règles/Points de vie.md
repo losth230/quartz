@@ -1,0 +1,2 @@
+Les points de vie (PV) représentent la résistance physiqued'une créature.  
+Quand une créature prend des dégâts, ceux-ci sont soustraits de ses points de vies. La perte de points de vie n'a aucun effet sur les capacités d'une créature tant que ceux-ci restent supérieurs à 0.

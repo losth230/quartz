@@ -45,7 +45,7 @@ C'est ce qui fait qu'investir n'importe où dans un arbre profite à toutes les 
 | -------------------- | --- | --- | --- | --- | --- |
 | **Seuil de succès** | 6+ | 5+ | 4+ | 3+ | 2+ |
 
-#### Les Compétences
+#### Compétences
 Chaque arbre compte 7 compétences.  
 #### Physique
 - Agilité — équilibre et mouvements précis : sauter un fossé, marcher sur une poutre, esquiver un objet lancé.

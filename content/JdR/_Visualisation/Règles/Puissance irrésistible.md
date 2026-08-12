@@ -1,0 +1,1 @@
+Si au moins deux dés affichent simultanément un **6** lors d'un lancement de sort, le mage, incapable de contrôler la puissance déclenche alors un contrecoup dont l'effet est à la discrétion du MJ.

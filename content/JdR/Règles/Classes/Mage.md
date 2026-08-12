@@ -27,12 +27,12 @@ Lorsque vous créez un mage, vous pouvez choisir un enseignement magique dans la
 - **Proactif :** lorsque vous lancez un sort dans le cadre d'une réaction, vous bénéficiez d'un bonus de +3 au lancement du sort.
 - **Ritualiste :** lorsque vous utilisez une action longue pour lancer un sort, vous bénéficiez d'un bonus de +5 supplémentaire.
 - **Sagacité :** apprenez le domaine de magie de votre choix.
-- **Spécialiste :** choisissez l'un des types de magie (Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
-- **Seconde chance :** lorsque vous lancez un sort, vous bénéficiez de [[JdR/_Visualisation/Règles spéciales/Tireur d'élite|Tireur d'élite]].
-- **Stabilité arcanique :** il vous faut 3 résultats de 6 naturels pour déclencher un [[JdR/_Visualisation/Règles/Contrecoup|Contrecoup]] au lieu de 2.
+- **Spécialiste :** choisissez l'un des types de magie (Altération, Construction, Destruction, Invocation). Lorsque vous lancez un sort qui correspond a ce type de magie, vous bénéficiez d'un bonus de +3 au lancement du sort.
+- **Seconde chance :** lorsque vous lancez un sort, vous bénéficiez de [[JdR/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'élite]].
+- **Stabilité arcanique :** il vous faut 3 résultats de 6 naturels pour déclencher un [[JdR/_Visualisation/Règles/Puissance irrésistible|Contrecoup]] au lieu de 2.
 - **Vision double :** une fois par jour, lorsque que vous lancez un sort, lancez-le une seconde fois.
 ### Par delà le niveau 1
-Lorsque vous montez de niveau, vous gagnez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*. Si vous atteingez un niveau pair, gagnez également 1 *[[JdR/_Visualisation/Règles/Points de vie|point de vie]]*. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 ##### Règle de 3
 A partir du niveau 2, lorsque vous untilisez exactement 3 dés de votre réserve de mana pour lancer un sort, vous bénéficiez d'un bonus de +5 au lancement du sort.

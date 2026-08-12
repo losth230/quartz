@@ -1,0 +1,1 @@
+La résilience représente l'endurance d'une créature, sa capacité à encaisser les coups ou résister à des chocs.
