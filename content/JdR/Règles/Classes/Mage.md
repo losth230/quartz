@@ -9,7 +9,7 @@ Les caractéristiques de base d'un Mage sont :
 - **Tir** : 5+
 - **PV** : 3 + niveau de [[JdR/_Visualisation/Règles/Résilience|Résilience]].
 - **Réserve de Magie :** 12 dés.
-Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 ##### Equipement
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.
