@@ -28,7 +28,7 @@ L'hémomancie est l'une des pratiques magiques les plus anciennes et les plus co
 
 ### Domaine de la Ferromancie
 - **Écoles principales** : Altération.
-- **Passif** : un maître de la Ferromancie peut se lier à un objet au cours d'un rituel de 6 heures. Un maître de la Ferromancie obtient la maîtrise de tout objet avec lequel il est lié. Un maître de la Ferromancie peut se lier à 2 objets +1 objet pour chacun de ses niveaux.
+- **Passif** : un maître de la Ferromancie peut se lier à un objet au cours d'un rituel de 6 heures et obtient la maîtrise de tout objet avec lequel il est lié. Un maître de la Ferromancie peut se lier à 2 objets +1 objet pour chacun de ses niveaux.
 - Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut immédiatement équiper un de ses objets liés.
 ### Domaine de la Lumière
 - **Écoles principales** : Altération, Construction.  
@@ -42,7 +42,7 @@ Le rapport à la lumière a été profondément bouleversé lors de la création
 - **Écoles principales** : Construction, Invocation.  
 - **Passif** : un maître de la Tombe peut vivre plusieurs jours en parfaite santé sans dormir, boire ou manger.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature Cadavérique à 9m ou moins et lui faire effectuer une action.  
-- **Exemples d'utilisation** : invoquer des créatures morts-vivantes, communiquer avec l'esprit d'un mort,conserver ou faire pourrir des êtres vivants, etc.
+- **Exemples d'utilisation** : invoquer des créatures morts-vivantes, communiquer avec l'esprit d'un mort, conserver ou faire pourrir des êtres vivants, etc.
 #### Histoire & Contexte
 Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
  
@@ -59,7 +59,7 @@ Les mages des Astres lisent l'avenir dans le mouvement des étoiles et canalisen
 - **Écoles principales** : Destruction, Altération.  
 - **Passif** : un maître des Cieux bénéficie de +1 Vitesse. 
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut déplacer une créature de 3".  
-- **Exemples d'utilisation** : repousser hors de portée le survivant le plus dangereux d'un groupe frappé par la foudre, repositionner un allié en hauteur avant de le bénir, dévier les projectiles d'un archer ennemi par perturbation atmosphérique, etc.
+- **Exemples d'utilisation** : repousser une créature dangereuse, faire tomber la foudre, repositionner un allié en hauteur, dévier les projectiles d'un archer ennemi, etc.
 #### Histoire & Contexte
 Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseaux volants ou des druides des cimes qui ont appris à lire l'air comme d'autres lisent des livres. Dans les armées, les mages des Cieux sont redoutés pour leur capacité à rompre les formations adverses — une poussée de vent bien placée peut ouvrir une brèche dans laquelle toute une cavalerie s'engouffre. Leur force est le contrôle de l'espace : pas seulement frapper, mais dicter où chacun se trouve.
  
@@ -67,9 +67,9 @@ Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseau
 - **Écoles principales** : Altération, Construction.  
 - **Passif** : un maître des Racines ignore les malus liés aux terrains difficiles.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui infliger l'état Fatigué.  
-- **Exemples d'utilisation** : marquer puis attirer à soi la cible la plus mobile d'un groupe adverse, faire jaillir un enchevêtrement de racines transformant une zone en terrain difficile, accélérer la croissance d'une forêt pour obstruer un passage, etc.
+- **Exemples d'utilisation** : attirer à soi une créature, faire jaillir un enchevêtrement de racines transformant une zone en terrain difficile, accélérer la croissance d'une forêt pour obstruer un passage, etc.
 #### Histoire & Contexte
-Le Domaine des Racines puise dans les forces lentes et implacables de la terre — la croissance des plantes, le pourrissement de la matière organique, la gravité qui finit par tout ramener au sol. Contrairement à la magie des Cieux qui frappe vite et fort, celle des Racines installe une pression constante : elle ralentit, épuise et attire, jusqu'à ce que les adversaires ne puissent plus résister. Ses praticiens pensent en saisons, pas en tours.
+Le Domaine des Racines puise dans les forces lentes et implacables de la vie et de la mort : la croissance des plantes, le pourrissement de la matière organique, etc... Contrairement à la magie des Cieux qui frappe vite et fort, celle des Racines installe une pression constante : elle ralentit, épuise et attire, jusqu'à ce que les adversaires ne puissent plus résister.
  
 ### Domaine des Ténèbres
 - **Écoles principales** : Altération, Invocation.  
@@ -106,7 +106,7 @@ La magie du Givre vient des régions du grand nord, là où les hivers durent hu
  
 ### Domaine Primordial
 - **Écoles principales** : Altération, Invocation.  
-- **Passif** : un maître du Primordial bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il se trouve en pleine nature, loin de toute construction.  
+- **Passif** : un maître Primordial bénéficie d'une armure naturelle de 5+, ou qui augmente sa valeur d'armure de -1 s'il porte une armure (par exemple, un 4+ deviendrait 3+).
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 12" ou moins et lui conférer Sauvagerie (1) pendant 2 tours.  
 - **Exemples d'utilisation** : octroyer Sauvagerie à l'allié le plus offensif avant une charge, se métamorphoser partiellement pour devenir soi-même le front de combat, faire jaillir ronces et racines pour créer une zone d'entrave permanente, etc.
 #### Histoire & Contexte
