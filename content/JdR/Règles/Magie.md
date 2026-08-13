@@ -42,7 +42,7 @@ Le rapport à la lumière a été profondément bouleversé lors de la création
 - **Écoles principales** : Construction, Invocation.  
 - **Passif** : un maître de la Tombe peut vivre plusieurs jours en parfaite santé sans dormir, boire ou manger.  
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature Cadavérique à 9m ou moins et lui faire effectuer une action.  
-- **Exemples d'utilisation** : invoquer des créatures morts-vivantes, communiquer avec l'esprit d'un mort,conserver ou faire pourrir des êtres vivants, etc.
+- **Exemples d'utilisation** : invoquer des créatures morts-vivantes, communiquer avec l'esprit d'un mort, conserver ou faire pourrir des êtres vivants, etc.
 #### Histoire & Contexte
 Dans le monde de Chasse & Pêche, la nécromancie n'est pas universellement condamnée — certaines cultures y voient une forme de respect pour les ancêtres, d'autres un outil de guerre parmi d'autres. Un nécromancien habile ne commande pas ses morts : il les convainc.
  
