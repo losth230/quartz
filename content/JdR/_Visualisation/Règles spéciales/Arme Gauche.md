@@ -1,0 +1,1 @@
+Une arme gauche peut être maniée en main gauche. Posséder une arme en main gauche vous octroie un bonus de +1d6 à toutes vos attaques en mêlée.

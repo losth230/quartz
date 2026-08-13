@@ -1,0 +1,1 @@
+Une arme avec cette propriétée peut être utilisée aussi bien en mêlée qu'à distance.

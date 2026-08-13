@@ -8,7 +8,7 @@ Les caractéristiques de base d'un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
 - **PV** : 5 + niveau de [[JdR/_Visualisation/Règles/Résilience|Résilience]].
-- **Réserve de Magie :** 8 dés.
+- **Réserve de [[JdR/Règles/Magie|Magie]] :** 8 dés.
 Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.

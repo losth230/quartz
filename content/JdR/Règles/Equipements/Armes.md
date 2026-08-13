@@ -11,7 +11,6 @@
 | **Bâton**              | Mêlée (2 mains)           | 2d6  |                                                             | 2 Bois                 | 20f  |
 | **Fouet**              | Mêlée (1 main)            | 1d6  | Anti infanterie, Gauche                                     | 2 Organiques, 2 Tissus | 170f |
 
-**Arme gauche** : posséder une arme en main gauche vous octroie un bonus de +1d6 à toutes vos attaques en mêlée.
 ## Armes à distance
 | Nom                    | Maniement  | Atta | Propriétés              | Ingrédients      | Coût |
 | ---------------------- | ---------- | :--: | ----------------------- | ---------------- | :--: |
