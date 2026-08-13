@@ -14,7 +14,7 @@ Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous 
 - **Maitrises** : Armures légères.
 - **Argent de départ** : 500 Florins.
 ## Créer un Mage
-##### Magie
+##### [[JdR/Règles/Magie|Magie]]
 Le Mage est un lanceur de sorts. Lorsque vous créez un Mage, choisissez deux domaines au choix.
 ##### Déviation magique
 Lorsque vous subissez une attaque magique, vous pouvez dépenser votre réaction pour bénéficier d'un bonus de 1 à votre résistance magique le temps de l'attaque.

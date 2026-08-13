@@ -9,11 +9,8 @@ Lancer un sort coûte une action courte, ou une réaction (avec un effet amoindr
 Plus le joueur dépense de dés, plus le total potentiel est élevé — et plus la puissance ou la précision de l'effet se rapproche de ce qu'il souhaitait. Un sort ne peut jamais véritablement échouer. Au pire, avec un total très bas, l'effet est imperceptible ou anecdotique. C'est au MJ d'interpréter l'effet en fonction du total obtenu et de l'ambition de la demande.
 ### Puissance irrésistible
 Si au moins deux dés affichent simultanément un **6** lors d'un lancement de sort, le mage, incapable de contrôler la puissance déclenche alors un contrecoup dont l'effet est à la discrétion du MJ.
-
 ---
-
 ## Les Domaines
-
 ---
 
 ### Domaine de l'Hémomancie

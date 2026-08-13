@@ -1,27 +1,27 @@
 ## Description
-Le Chaman est un intermédiaire entre les mondes. Capable de communier avec les esprits de la nature, des ancêtres ou des éléments, il est à la fois un guide spirituel et un guerrier mystique. Son pouvoir provient de ses liens étroits avec le monde spirituel, qu’il utilise pour soutenir ses alliés ou affaiblir ses ennemis.
+Le Chaman est un intermédiaire entre les mondes. Capable de communier avec les esprits de la nature, des ancêtres ou des éléments, il est à la fois un guide spirituel et un guerrier mystique. Son pouvoir provient de ses liens étroits avec le monde spirituel, qu'il utilise pour soutenir ses alliés ou affaiblir ses ennemis.
 ## Race
-Le Chaman peut être de n’importe quelle **[[Race]]**, mais les races proches de la nature comme les [[Race/Elfe d'Or]] ou les [[Race/Peaux - Vertes]] sont naturellement attirées par cette classe.
+Le Chaman peut être de n'importe quelle **[[JdR/Races|Race]]**, mais les races proches de la nature comme les [[JdR/Race/Elfe d'Or|Elfe d'Or]] ou les [[JdR/Race/Peaux - Vertes|Peaux-Vertes]] sont naturellement attirées par cette classe.
 ## Caractéristiques de base
 ##### Compétences de base
-Les caractéristiques de base d’un Chaman sont :
+Les caractéristiques de base d'un Chaman sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 5 + niveau de Résilience.
+- **PV** : 5 + niveau de [[JdR/_Visualisation/Règles/Résilience|Résilience]].
 - **Réserve de Magie :** 8 dés.
-Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
+Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous apprenez au niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 400 Florins.
 ## Créer un Chaman
-##### Magie
-Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez deuxun domaine parmi les suivants : Domaine des Cieux, Domaines du Cataclysme, Domaine Primordial, Domaine du Givre ou votre Domaine de Race.
-##### Communication spirituelle (niveau 1 )
-Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre réserve de magie.
+##### [[JdR/Règles/Magie|Magie]]
+Le Chaman est un lanceur de sorts. Lorsque vous créez un Chaman, choisissez un des 4 domaine élémentaire suivants : [[JdR/Règles/Magie#Domaine des Cieux|Domaine des Cieux]], [[JdR/Règles/Magie#Domaine du Cataclysme|Domaine du Cataclysme]], [[JdR/Règles/Magie#Domaine Primordial|Domaine Primordial]] ou [[JdR/Règles/Magie#Domaine du Givre|Domaine du Givre]].
+##### Communication spirituelle (niveau 1)
+Vous pouvez passer 2 heures à méditer pour récupérer 2 dés de votre [[JdR/Règles/Règles#Réserve de Magie|réserve de magie]].
 ##### Conseil des esprits (niveau 1)
-Une fois par jour, vous pouvez avec les esprits au prix d'une action longue et leur poser une question pour laquelle ils répondront oui ou non.
+Une fois par jour, vous pouvez communiquer avec les esprits au prix d'une action longue et leur poser une question pour laquelle ils répondront oui ou non.
 ### Par delà le niveau 1
-Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[JdR/_Visualisation/Règles/Points de talent|point de talent]]. Si vous atteignez un niveau pair, gagnez également 1 [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]]. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2
 A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécialisations présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
@@ -29,7 +29,7 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
 ##### Voie de l'esprit
-Lorsque vous atteignez le niveau 4, vous pouvez apprendre l'Enseignement de Mage de votre choix.
+Lorsque vous atteignez le niveau 4, vous pouvez apprendre l'[[JdR/Règles/classes/mage#Enseignement magique|Enseignement magique]] de votre choix.
 ## Niveau 7
 ##### Eveil
 A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire supplémentaire.
@@ -38,7 +38,7 @@ A partir du niveau 7, vous pouvez apprendre un domaine de magie élémentaire su
 A partir du niveau 10, une fois entre deux repos, vous pouvez invoquer la volonté de vos ancêtres qui vous confère 1 action courte supplémentaire par tour pendant 3 tours.
 ## Niveau 12
 ##### Les 4 éléments
-Lorsque vous atteignez le niveau 12, vous pouvez apprendre un domaine de magie élémentaire supplémentaire. Si vous connaissez déjà les 4 domaines élémentaires, votre maximum de dés de magie augmente de 2.
+Lorsque vous atteignez le niveau 12, vous pouvez apprendre un domaine de magie élémentaire supplémentaire. Si vous connaissez déjà les 4 domaines élémentaires, votre maximum de dés de [[JdR/Règles/Règles#Réserve de Magie|magie]] augmente de 2.
 
 <center> <h1> Spécialisations </h1></center>
 
@@ -47,16 +47,14 @@ Lorsque vous atteignez le niveau 12, vous pouvez apprendre un domaine de magie �
 
 ##### Frappe élémentaire (niveau 2)
 A partir du niveau 2, vous pouvez lancer des sorts en mêlée.
-##### Frappe élémentaire (niveau 2)
-A partir du niveau 2, vous 
 ##### Réceptacle élémentaire (niveau 5)
 A partir du niveau 5, vous pouvez offrir votre corps à un esprit élémentaire et ainsi devenir son réceptacle. Les effets liés dépendent du type de l'élémentaire :
-- élémentaire de feu : vous êtes immunisé aux attaques enflammées et gagnez la règle spéciale attaques enflammées sur toutes vos attaques en mêlée.
+- élémentaire de feu : vous êtes immunisé aux [[JdR/_Visualisation/Règles spéciales/Attaques Enflammées|attaques enflammées]] et gagnez la règle spéciale [[JdR/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]] sur toutes vos attaques en mêlée.
 - élémentaire du givre : vous êtes immunisé au gel. Votre résistance magique augmente de 1.
-- élémentaire de terre : votre armure augmente de 1 et vous recevez Egide (1) à chaque sort que vous lancez.
-- élémentaire de foudre : votre vitesse augmente de 1, vos attaques en mêlée bénéficient de force dévastatrice (1).
+- élémentaire de terre : votre armure augmente de 1 et vous recevez [[JdR/_Visualisation/Règles spéciales/Egide|Egide (1)]] à chaque sort que vous lancez.
+- élémentaire de foudre : votre vitesse augmente de 1, vos attaques en mêlée bénéficient de [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].
 ##### Harmonie (niveau 8)
-A partir du niveau 8, vos attaques en mêlée deviennent magiques. Lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'attribut de domaine d'un de vos domaines de magie.
+A partir du niveau 8, vos attaques en mêlée deviennent magiques. Lorsque vous réussissez au moins une touche en mêlée, vous pouvez déclencher l'[[JdR/Règles/Règles#Attributs de Domaine|attribut de domaine]] d'un de vos domaines de magie.
 ##### Mande - Eléments (niveau 11)
 A partir du niveau 11 vous voulez vous lier à un second élémentaire ou doubler l'effet de votre élémentaire.
 
@@ -64,13 +62,13 @@ A partir du niveau 11 vous voulez vous lier à un second élémentaire ou double
 <center><h2> Mande Esprit</h2></center>
 
 ##### Esprit animal (niveau 2)
-A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre réserve de dés de magie.
+A partir du niveau 2, vous pouvez choisir un esprit animal inférieur qui combattra à vos côtés. Invoquer votre compagnon esprit vous demande de vider votre [[JdR/Règles/Règles#Réserve de Magie|réserve de dés de magie]].
 ##### Communication extra sensorielle (niveau 2)
 A partir du niveau 2, vous gagnez la capacité à communiquer avec les Esprits, les Fantômes et les Ombres pendant 10 tours après avoir lancé n'importe quel sort.
 ##### Symbiose (niveau 5)
 Au prix d'une action longue, vous pouvez prendre le contrôle de votre compagnon esprit et voir à travers ses yeux.
 ##### Esprit supérieur (niveau 8)
-Chaque fois que votre compagnon esprit attaque, il déclenche l'attribut de domaine de votre choix.
+Chaque fois que votre compagnon esprit attaque, il déclenche l'[[JdR/Règles/Règles#Attributs de Domaine|attribut de domaine]] de votre choix.
 ##### Réincarnation (niveau 11)
 A partir du niveau 11, si vous mourez, vous vous réincarnez en votre compagnon esprit et développer la capacité d'envoyer des messages télépathiques aux créatures proches de vous.
 
