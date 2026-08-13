@@ -1,7 +1,7 @@
 ## Description
 Le Guerrier est un maître du combat physique, qu'il s'agisse de mêlée ou de distance. Il est entraîné à l'utilisation de toutes sortes d'armes et d'armures, et est souvent vu en première ligne des batailles. Leur rôle principal est de protéger leurs alliés et d'éliminer les menaces sur le champ de bataille. Ils peuvent être des soldats disciplinés ou des mercenaires aguerris, chacun portant son propre style de combat.
 ## Race
-Les Guerriers peuvent être de n'importe quelle **[[JdR/Règles/Race|race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
+Les Guerriers peuvent être de n'importe quelle **[[JdR/Règles/Races|race]]** (Humain, Nain, Elfe, Orque, etc.), bien que les Humains et Nains soient souvent les plus adaptés à cette classe en raison de leur aptitude naturelle au combat.
 ## Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base d'un Guerrier sont :
@@ -16,12 +16,12 @@ Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous 
 ##### Entrainement
 Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire dans la liste ci-dessous :
 - **[[JdR/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge dévastatrice]]** : après avoir réussi une charge, vous bénéficiez de +2d6 à l'attaque gratuite octroyée.
-- **[[JdR/_Visualisation/Règles spéciales/Maître-lame|Maitre-lame]]** : lors d'une attaque en mêlée, vous pouvez relancer les jets de touche ayant obtenu 1.
+- **[[JdR/_Visualisation/Règles spéciales/Maître-Lame|Maitre-lame]]** : lors d'une attaque en mêlée, vous pouvez relancer les jets de touche ayant obtenu 1.
 - **[[JdR/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'élite]]** : lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1.
 - **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est utilisable qu'une seule fois par jour.
 - **Défenseur** : lorsque vous effectuez des jets d'armure, vous pouvez relancer vos jets ayant obtenu 1 si vous possédez un bouclier.
 - **Esquive** : lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour jeter 1d6 supplémentaire lors de votre test d'armure.
-- **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle [[JdR/_Visualisation/Règles spéciales/Anti-infanterie|Anti-infanterie]].
+- **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle [[JdR/_Visualisation/Règles spéciales/Anti-infanterie|Anti-Infanterie]].
 - **Discipline** : recevez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*.
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 - **Bourreau :** vos attaques contre les cibles ayant moins de 50% de leurs [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +2d6.
@@ -37,10 +37,10 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 Lorsque vous atteignez le niveau 3, 6 ou 9, vous pouvez améliorer votre [[JdR/Règles/Règles#Caractéristiques|caractéristique]] de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveaux 4,7
 ##### Entrainement supérieur
-Lorsque vous atteignez le niveau 4 ou 7, vous pouvez apprendre un nouvel [[JdR/Règles/classes/guerrier#Entrainement|entrainement]].
+Lorsque vous atteignez le niveau 4 ou 7, vous pouvez apprendre un nouvel [[JdR/Règles/Classes/Guerrier#Entrainement|entrainement]].
 ## Niveau 10
 ##### Charge supérieure
-A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[JdR/_Visualisation/Règles spéciales/Force dévastatrice|Force dévastatrice (+1)]] et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
+A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
 ## Niveau 12
 ##### Frénésie guerrière
 A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant.
@@ -57,7 +57,7 @@ A partir du niveau 2, lorsque vous infligez au moins 1 dégât [[JdR/_Visualisat
 ##### Bourreau (niveau 5)
 A partir du niveau 5, vos attaques contre les cibles ayant perdu au moins 1 [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +2d6.
 ##### Exécution améliorée (niveau 8)
-A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] avec la règle [[JdR/_Visualisation/Règles spéciales/Force dévastatrice|Force Dévastatrice]]. Vous infligez 2 blessure par [[JdR/_Visualisation/Règles spéciales/Force dévastatrice|Force Dévastatrice]].
+A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] avec la règle [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]]. Vous infligez 2 blessure par [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]].
 ##### Mise a mort (niveau 11)
 A partir du niveau 11, lorsque vous tuez une créature de niveau 6 ou plus, vous récupérez toutes vos actions.
 
@@ -75,7 +75,7 @@ A partir du niveau 2, vous pouvez dépenser vos **Manœuvres** pour des actions 
 - **Retrait défensif (1 Manœuvre)** : dépensez votre réaction pour recevoir [[JdR/_Visualisation/Règles spéciales/Egide|Egide (2)]].
 - **Massacre (1 Manœuvre)** : à utiliser lors d'une attaque en mêlée pour gagner 2d6 supplémentaires.
 ##### Feinte (niveau 5)
-A partir du niveau 5, si vous réussissez au moins 1 jet d'armure après une attaque, vous pouvez dépenser votre réaction pour vous déplacer de 3m et infliger 1 [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]] à une créature à 1m ou moins. Cette règle s'applique si une [[JdR/_Visualisation/Règles Spéciales/Egide|Egide]] bloque une touche.
+A partir du niveau 5, si vous réussissez au moins 1 jet d'armure après une attaque, vous pouvez dépenser votre réaction pour vous déplacer de 3m et infliger 1 [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]] à une créature à 1m ou moins. Cette règle s'applique si une [[JdR/_Visualisation/Règles spéciales/Egide|Egide]] bloque une touche.
 ##### Stabilité (niveau 8)
 Vos postures s'améliorent comme suit :
 **Posture de l'Aube** : +1d6 supplémentaire sur vos attaques en mêlée.
