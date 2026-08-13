@@ -106,7 +106,7 @@ La magie du Givre vient des régions du grand nord, là où les hivers durent hu
  
 ### Domaine Primordial
 - **Écoles principales** : Altération, Invocation.  
-- **Passif** : un maître du Primordial bénéficie d'un bonus de +1 au lancement de ses sorts pour chaque niveau qu'il possède, tant qu'il se trouve en pleine nature, loin de toute construction.  
+- **Passif** : un maître Primordial bénéficie d'une armure naturelle de 5+, ou qui augmente sa valeur d'armure de -1 s'il porte une armure (par exemple, un 4+ deviendrait 3+).
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 12" ou moins et lui conférer Sauvagerie (1) pendant 2 tours.  
 - **Exemples d'utilisation** : octroyer Sauvagerie à l'allié le plus offensif avant une charge, se métamorphoser partiellement pour devenir soi-même le front de combat, faire jaillir ronces et racines pour créer une zone d'entrave permanente, etc.
 #### Histoire & Contexte
