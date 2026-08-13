@@ -67,9 +67,9 @@ Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseau
 - **Écoles principales** : Altération, Construction.  
 - **Passif** : un maître des Racines ignore les malus liés aux terrains difficiles.
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut désigner une créature à 9" ou moins et lui infliger l'état Fatigué.  
-- **Exemples d'utilisation** : marquer puis attirer à soi la cible la plus mobile d'un groupe adverse, faire jaillir un enchevêtrement de racines transformant une zone en terrain difficile, accélérer la croissance d'une forêt pour obstruer un passage, etc.
+- **Exemples d'utilisation** : attirer à soi une créature, faire jaillir un enchevêtrement de racines transformant une zone en terrain difficile, accélérer la croissance d'une forêt pour obstruer un passage, etc.
 #### Histoire & Contexte
-Le Domaine des Racines puise dans les forces lentes et implacables de la terre — la croissance des plantes, le pourrissement de la matière organique, la gravité qui finit par tout ramener au sol. Contrairement à la magie des Cieux qui frappe vite et fort, celle des Racines installe une pression constante : elle ralentit, épuise et attire, jusqu'à ce que les adversaires ne puissent plus résister. Ses praticiens pensent en saisons, pas en tours.
+Le Domaine des Racines puise dans les forces lentes et implacables de la vie et de la mort : la croissance des plantes, le pourrissement de la matière organique, etc... Contrairement à la magie des Cieux qui frappe vite et fort, celle des Racines installe une pression constante : elle ralentit, épuise et attire, jusqu'à ce que les adversaires ne puissent plus résister.
  
 ### Domaine des Ténèbres
 - **Écoles principales** : Altération, Invocation.  
