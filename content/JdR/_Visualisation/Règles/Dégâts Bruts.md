@@ -1,0 +1,1 @@
+Les attaques infligeant des dégâts bruts ne peuvent être annulées par des jets d'armures ou de résistance magique.
