@@ -59,7 +59,7 @@ Les mages des Astres lisent l'avenir dans le mouvement des étoiles et canalisen
 - **Écoles principales** : Destruction, Altération.  
 - **Passif** : un maître des Cieux bénéficie de +1 Vitesse. 
 - **Attribut de domaine** : lorsqu'un sort de ce domaine est lancé, le lanceur peut déplacer une créature de 3".  
-- **Exemples d'utilisation** : repousser hors de portée le survivant le plus dangereux d'un groupe frappé par la foudre, repositionner un allié en hauteur avant de le bénir, dévier les projectiles d'un archer ennemi par perturbation atmosphérique, etc.
+- **Exemples d'utilisation** : repousser une créature dangereuse, faire tomber la foudre, repositionner un allié en hauteur, dévier les projectiles d'un archer ennemi, etc.
 #### Histoire & Contexte
 Ses praticiens sont souvent des voyageurs solitaires, des capitaines de vaisseaux volants ou des druides des cimes qui ont appris à lire l'air comme d'autres lisent des livres. Dans les armées, les mages des Cieux sont redoutés pour leur capacité à rompre les formations adverses — une poussée de vent bien placée peut ouvrir une brèche dans laquelle toute une cavalerie s'engouffre. Leur force est le contrôle de l'espace : pas seulement frapper, mais dicter où chacun se trouve.
  
