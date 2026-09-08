@@ -521,7 +521,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Assassinat : si cette unité attaque une cible de dos et après avoir résolu les touches, vous pouvez transformer une de ses touches impaires en touche pair.
 - Nappe de brouillard (1) : une fois par partie, ce modèle devient inciblable pour les attaques à distances et sorts pour le reste du tour.
 ---
-### Basiléen — 16 pts
+### Basiléen — 46 pts
 
 | 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
