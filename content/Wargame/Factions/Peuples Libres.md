@@ -238,14 +238,14 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 
 #### Monastère de la Busquette
 - **Croisade (4) :** Utilisable une seule fois par partie pour octroyer +1d6 en mêlée et à distance à toutes vos unités Sœur pour le reste du tour.
-- **Epiphanie :** Au début de chaque tour, désignez un modèle Sœur et faites-lui effectuer une marche gratuite.
+- **Assomption :** Lorsqu'une unité Sœur meurt, générez 1 Manœuvre.
 
 </div>
 <div class="cp-ordre">
 
 #### Abatiale d'Hazard
-- **Assomption (2) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
-- **L'heure de la prière (1) :** A utiliser à la place d'une activation pour octroyer [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (2)]] et [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]].
+- **Epiphanie (2) :** Retirez le marqueur *Activé* d'un modèle Sœur après avoir résolu son activation.
+- **Ferveur de Bataille :** lorsqu'un modèle Sœur est pris pour cible par une attaque à distance, vous pouvez lui faire effectuer une marche gratuite et lui octroyer [[Wargame/_Visualisation/Règles spéciales/Sauvagerie|Sauvagerie]] (ce qui peut donc rendre le tir impossible, ou déclenche automatiquement une charge si le modèle Sœur arrive ainsi en mêlée). Chaque modèle Sœur ne peut utiliser cette aptitude qu'une seule fois par tour.
 
 </div>
 </div>
@@ -278,7 +278,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 | Abbesse    | **5**   | **3+**                                                                               | **-**                                                                                   | **4+**                                                                          | **9**                                                                           | **3**  | **2**  | **4**  | Sœur     |
 | **Mêlée:** | 4d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
 
-*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Règles spéciales :
 - Appel divin (3) : utilisable une seule fois par partie lorsque vous avez terminé l’activation de l’Abbesse. Désignez jusqu’à 3 modèles amis à 6’’ ou et retirez leurs marqueurs Activés.
 - Regard silencieux : la règle Vœu de silence de cette unité peut affecter un modèle déjà affecté par la règle Vœu de silence.
