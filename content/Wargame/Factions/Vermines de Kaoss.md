@@ -30,10 +30,10 @@ Au début de chaque tour, chaque modèle de cette caste génère 1 Scorie.
 
 </div>
 </div>
-
 <div class="cp-caste">
 
 ## Constructions
+Lorsque vous recrutez des modèles Construction, décidez s'ils sont des Engins de Kaoss ou des Homonculus.
 
 <div class="cp-caste-sous">
 <div class="cp-caste-type">
@@ -57,7 +57,7 @@ Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles s
 <div class="cp-caste">
 
 ## Vermines
-
+Lorsque vous recrutez des modèles Esclaves, décidez s'ils sont Esclaves ou Affranchis.
 #### Esclaves
 
 ##### Nuée :
@@ -93,7 +93,7 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
 #### Niveau 3
 - **Expérience finale (long, 18+, projectile) :** Déclenchez la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]] de tous vos modèles.
 ---
-## Commandants
+## Mains de Kaoss
 ### Assassin des bas-fonds — 56 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -131,9 +131,24 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
   - 4 : Le modèle ciblé bénéficie d’un bonus de +1 sur ses jets d’attaque en mêlée et à distance.
   - 5 : Le modèle ciblé bénéficie de +1d6 à ses attaques en mêlée et à distance.
   - 6 : L’armure du modèle devient 2+.
-- Ramasser ce qui brille : au début de chaque tour, gagnez 1 scorie.
 - Rats-zombis du Docteur Skritzz : au début du premier tour, désignez un modèle Vermine ami. Pour le reste de la partie, chaque fois qu’il bénéficie de la règle spéciale Régénération (X), il récupère 1 PV supplémentaire.
 ---
+
+---
+### Machiniste — 17 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Machiniste | **4** | **6+** | **4+** | **5+** | **6** | **3** | **2** | **2** | Machine |
+| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
+
+##### Équipement :
+- Pistolet : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+##### Règles spéciales :
+- Recalibrage ! : utilisable une fois par tour lorsqu’un modèle ami à 12’’ ou moins dépense des scories pour une action de renforcement. La machine ciblée peut rajouter 1d6 à son renforcement, si le dé obtient un 6, cela ne compte pas pour les potentiels effets négatifs liés au renforcement.
+- Ramasser ce qui reste : lorsqu’une machine est détruite à 9’’ ou moins du Machiniste, générez 2 Scories.
+---
+
 
 <div class="legendary">
 
@@ -150,7 +165,6 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
 *[[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]].*
 ##### Règles spéciales :
 - C’est moi qui choisis ! : lors de la phase d’Initiative, choisissez si vous générez 2 scories, ou si votre adversaire génère 2 Manœuvres.
-- Toujours plus ! : Au début de chaque tour, gagnez 1 Scorie.
 - Rapportez-moi ça : au début de chaque tour, désignez un modèle ami à 9’’ ou moins qui peut effectuer une marche gratuite.
 - Sacrifier le fou : si le Petit roi est réduit à 0 PV, il peut faire détonner son Fou piégé. Il s’agit d’une attaque à distance contre une ennemi situé à 3’’ ou moins selon les règles suivantes : 6d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (3)]]. Une fois cette attaque résolue, placez le Petit roi sans son fou à 6’’ ou moins. Le Petit roi ainsi redéployé possède 1 seul PV et cette règle ne peut plus se déclencher.
 ---
@@ -176,7 +190,6 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
 ##### Magie :
 - Le Prophète est un lanceur de sorts de niveau 3 ayant accès au Domaine des Egouts et au Domaine des Ténèbres.
 ##### Règles spéciales :
-- Ramasser ce qui brille : au début de chaque tour, gagnez 1 scorie.
 - Jouons un coup : cachez un dé dans votre main, si votre adversaire le trouve, le Prophète est marqué Empoisonné. Sinon, désignez un modèle ennemi à 9’’ ou moins et marquez-le empoisonné.
 - Et paf, surprise ! : lorsque ce modèle est révélé, placez un socle 20mm x 20mm à 15’’ ou moins du Prophète. Si un modèle ennemi entre à moins de 6’’, retirez le socle. Le modèle ennemi subit une attaque à distance selon les règles suivantes : 4d6, [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]].
 ---
@@ -210,6 +223,26 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
 - Nuées sans fin : Si Saxon intègre un modèle de type Vermine, celui-ci bénéficie de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+N)]] où N correspond au tour en cours.
 ___
 
+### Technomage — 15 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Technomage | **5** | **5+** | **4+** | **6+** | **6** | **2** | **2** | **3** | Rat |
+| Abomination | **-** | **4+** | **4+** | **-** | **-** | **-** | **-** | **-** | Rat |
+| **Mêlée:** | 1d6 / 5d6 |  | **Tir:** | - / 5d6 |  |  |  |  |  |
+
+##### Équipement :
+- Colporteur de peste (par défaut) : lanceur de sorts de niveau 1
+- Erudit pestiféré (+5 pts) : lanceur de sorts de niveau 2.
+- Prophète (+11 pts) : lanceur de sorts de niveau 3.
+- Monture Abominable (+46 pts) : ajoute la monture Abomination et la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] au Technomage. L’armure de ce modèle devient alors 4+, ses PV 7, sa Taille 4 et sa Masse 5.
+- Poings-canon (Abomination uniquement) : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
+##### Magie :
+- Le Technomage a accès au Domaine des Egouts et au Domaine des Ténèbres.
+##### Règles spéciales :
+- Plateforme de tir (si monture Abominable) : l’action de tir / Magie du Technomage est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
+
+
 <div class="legendary">
 
 ### ZigZon — 42 pts
@@ -233,7 +266,7 @@ ___
 - Percée (nécessite la roue): si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
 
 ---
-## Modèles de base
+## Vermines
 ---
 ### Basse levée du clan — 5 pts
 
@@ -320,20 +353,9 @@ ___
 ##### Équipement :
 - Bouclier (+2 pts) : l’armure de ce modèle passe à 3+.
 - Hallebarde (+2 pts) : confère +1d6 et [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice(+1)]] contre les modèles de taille 3+.
----
-### Mort sur roue — 24 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Roue | **1d6** | **5+** | **-** | **5+** | **7** | **3** | **3** | **4** | Machine |
-| **Mêlée:** | Voir ci-dessous |  | **Tir:** | - |  |  |  |  |  |
-
-##### Règles spéciales :
-- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). La vitesse maximale de se modèle n'est plus de 9 mais 12. Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 sont obtenus ou plus, la roue perd 4 PV.
-- Broyez-les tous ! : lors d’une charge, le nombre d’attaque en mêlée de ce modèle est égal à sa vitesse. Sinon, ce modèle possède 0d6 en mêlée.
-- Percée : si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
 ---
-## Modèles de soutient
+## Constructions
 ---
 ### Catapulte à peste — 24 pts
 
@@ -346,22 +368,8 @@ ___
 - Catapulte : Portée 8–24’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
 - Tonneau putride : lors de ses tirs, la catapulte peut utiliser un tonneau de pestilence des égouts. Si elle le fait, elle gagne la règle [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] et perd sa règle [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Cependant, si un résultat de 1 au tir de tonneau putride est obtenu, la catapulte est marquée empoisonnée.
----
-### Machiniste — 17 pts
 
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Machiniste | **4** | **6+** | **4+** | **5+** | **6** | **3** | **2** | **2** | Machine |
-| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
-
-##### Équipement :
-- Pistolet : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-##### Règles spéciales :
-- Recalibrage ! : utilisable une fois par tour lorsqu’un modèle ami à 12’’ ou moins dépense des scories pour une action de renforcement. La machine ciblée peut rajouter 1d6 à son renforcement, si le dé obtient un 6, cela ne compte pas pour les potentiels effets négatifs liés au renforcement.
-- Ramasser ce qui reste : lorsqu’une machine est détruite à 9’’ ou moins du Machiniste, générez 2 Scories.
----
-
-### Mutation colossale — 32 pts
+### Abomination — 32 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -373,30 +381,7 @@ ___
 - Faux rotatives (+6 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 - Poings épineux (+2 pts) : confère +1d6 en mêlée.
 ##### Règles spéciales :
-- Générateur à scories : les modèles de type Vermine à 6" ou moins bénéricient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération(+1]].
----
-
-### Technomage — 15 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Technomage | **5** | **5+** | **4+** | **6+** | **6** | **2** | **2** | **3** | Rat |
-| Abomination | **-** | **4+** | **4+** | **-** | **-** | **-** | **-** | **-** | Rat |
-| **Mêlée:** | 1d6 / 5d6 |  | **Tir:** | - / 5d6 |  |  |  |  |  |
-
-##### Équipement :
-- Colporteur de peste (par défaut) : lanceur de sorts de niveau 1
-- Erudit pestiféré (+5 pts) : lanceur de sorts de niveau 2.
-- Prophète (+11 pts) : lanceur de sorts de niveau 3.
-- Monture Abominable (+46 pts) : ajoute la monture Abomination et la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]] au Technomage. L’armure de ce modèle devient alors 4+, ses PV 7, sa Taille 4 et sa Masse 5.
-- Poings-canon (Abomination uniquement) : Portée 9’’, [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]].
-##### Magie :
-- Le Technomage a accès au Domaine des Egouts et au Domaine des Ténèbres.
-##### Règles spéciales :
-- Ramasser ce qui brille : au début de chaque tour, gagnez 1 scorie.
-- Plateforme de tir (si monture Abominable) : l’action de tir / Magie du Technomage est une action instantanée, cela signifie qu’il ne s’agit ni d’une action courte ni d’une action longue.
----
-## Modèles Spéciaux
+- Générateur à scories : les modèles de type Vermine à 6" ou moins bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération(+1]].
 ---
 
 ### Bélier Pestilentiel — 58 pts
@@ -456,6 +441,20 @@ ___
 - Veines surchargées : si ce modèle doit Régénérer mais qu’il a atteint son maximum de PV, alors ses PV max augmentent de la valeur de la [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 - En pleine forme : la valeur en mêlée est d’un nombre de d6 égal à ses PV restants.
 ---
+
+### Mort sur roue — 24 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Roue | **1d6** | **5+** | **-** | **5+** | **7** | **3** | **3** | **4** | Machine |
+| **Mêlée:** | Voir ci-dessous |  | **Tir:** | - |  |  |  |  |  |
+
+##### Règles spéciales :
+- Tourner la roue (1-3, nécessite la roue) : renforcement, la vitesse de ce modèle est de 1d6 +1d6 par Scories dépensées (max 4d6). La vitesse maximale de se modèle n'est plus de 9 mais 12. Cependant, si au moins un 6 est obtenu, la roue perd 1 PV, si deux 6 sont obtenus ou plus, la roue perd 4 PV.
+- Broyez-les tous ! : lors d’une charge, le nombre d’attaque en mêlée de ce modèle est égal à sa vitesse. Sinon, ce modèle possède 0d6 en mêlée.
+- Percée : si ce modèle inflige davantage de touches que la masse de sa cible, il la traverse sur une distance égale à la différence.
+---
+
 ### Mort sur Roue de Guerre — 46 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
