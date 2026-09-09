@@ -2,7 +2,7 @@
 
 <center><h2>Règles de Faction</h2></center>
 
-#### Amasser de Scories
+#### Amasser des Scories
 Même sur les champs de batailles, les Rats sont à la recherche des Scories qu’ils pourraient y trouver. Les rats ne peuvent pas gagner de points de Manœuvres comme les autres factions, mais peuvent dépenser leurs Scories comme s’ils s’agissaient de points de Manœuvre.
 Au début de chaque tour, gagnez 1 Scorie. A la fin de chaque tour, les scories ne sont pas perdues.
 #### Progression souterraine
@@ -10,15 +10,14 @@ Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Vi
 
 ---
 
-<div class="cp-caste">
-
-#### Castes
+<center><h2>Castes</h2></center>
 
 Une bande de Vermines de Kaoss ne se construit pas avec les règles de création de base. A la place, chaque modèle appartient à une Caste, et c'est elle qui détermine sa place dans la liste. Un bande doit comprendre au minimum 1 Commandant (à choisir parmi les Mains de Kaoss) et 5 unités de Vermines. Une bande peut également inclure :
 
 - Maximum 2 Constructions par tranche de 100 pts.
 - Maximum 1 Main de Kaoss par tranche de 100 pts.
 
+<div class="cp-caste">
 <div class="cp-caste">
 
 ## Main de Kaoss
