@@ -10,7 +10,7 @@ Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Vi
 
 ---
 
-<div>
+<div class="cp-caste">
 
 #### Castes
 
@@ -56,7 +56,7 @@ Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles s
 </div>
 <div class="cp-caste">
 
-## Verminesq
+## Vermines
 
 #### Esclaves
 
@@ -79,6 +79,7 @@ Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent
 </div>
 </div>
 </div>
+
 <center><h2>Domaines de Faction</h2></center>
 <center><h3>Domaine des Égouts</h3></center>
 
