@@ -48,9 +48,6 @@ Lorsqu'un modèle de cette caste utilise sa règle de Renforcement, il ajoute 1d
 
 #### Homonculus
 
-<div class="cp-caste-sous">
-<div class="cp-caste-type">
-
 ##### Surplus de chair :
 Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 
@@ -61,6 +58,10 @@ Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles s
 
 ## Vermines
 Lorsque vous recrutez des modèles Esclaves, décidez s'ils sont Esclaves ou Affranchis.
+
+<div class="cp-caste-sous">
+<div class="cp-caste-type">
+
 #### Esclaves
 
 ##### Nuée :
@@ -78,6 +79,8 @@ Vos modèles de cette caste bénéficient de la règle Régénération (X), dép
 ##### Fierté du citoyen :
 Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent leurs jets d'armure ayant obtenu un 1.
 
+</div>
+</div>
 </div>
 </div>
 </div>
