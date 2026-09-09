@@ -65,7 +65,7 @@ Lorsque vous recrutez des modèles Esclaves, décidez s'ils sont Esclaves ou Aff
 #### Esclaves
 
 ##### Nuée :
-Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche. La règle Masse Ecrasante se déclenche sur un nombre 5 fois supérieur au lieu d’un nombre 3 fois supérieur.
+Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche.
 ##### Invasion sans fin :
 Vos modèles de cette caste bénéficient de la règle Régénération (X), dépendant de leur masse. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 - **Modèles de masse 1-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
