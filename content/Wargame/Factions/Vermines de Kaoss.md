@@ -48,7 +48,7 @@ Lorsqu'un modèle de cette caste utilise sa règle de Renforcement, il ajoute 1d
 
 #### Homonculus
 
-#### Surplus de chair :
+##### Surplus de chair :
 Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
 
 </div>
