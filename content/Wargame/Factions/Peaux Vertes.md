@@ -208,6 +208,20 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 ---
 ## Commandants
 
+### Azrsatch l'Unifikatrice — 56 pts
+
+| ⬜       | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Troll | **6** | **5+** | **-** | **5+** | **5** | **8** | **3** | **3** | Bête |
+| **Mêlée:** | Nd6 |  | **Tir:** | - |  |  |  |  |  |
+
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (2)]], [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (3)]].*
+
+##### Règles spéciales :
+- Disciple du Notan : choisissez si Azrsatch vous confère Affinité Chamanique (4) ou Affinité Occulte (4)
+- Main de Vrasha : Azrsatch lance un nombre de d6 en mêlée égal au nombre d'unité avec la règle spéciale Balance dans votre bande.
+- Equilibre : si l'affinité de votre bande est l'équilibre, générez 2 Manoeuvre supplémentaires en début de tour.
+--- 
 ### Big Boss — 36 pts
 
 | 🟥🟥       | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -276,10 +290,11 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 
 *Affinité Chamanique (4), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].*
 ##### Équipement :
-- Lame perfide de chef : Hoogit possède un nombre de d6 en mêlée égal à 2 fois le rang de l'affinité de votre bande.
+- Lame perfide de chef : Hoogit possède un nombre de d6 en mêlée à la caractéristique de PV de l'unité qu'il cible.
 ##### Règles spéciales :
 - Crocs d’araignée : les jets d’attaque en mêlée de 5+ de Gro’ os infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
+- Balance : si l'affinité de votre bande est Chamanique, ce modèle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]]. Si l’affinité de votre bande est Occulte, Gro' os inflige des dégâts bruts sur 4+.
 ---
 
 ### Kaptain Gob — 20 pts
@@ -324,7 +339,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 
 </div>
 
-| 🟥🟥🟥     | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**    |
+| ⬜    | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**    |
 | ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
 | Slaig      |           | **4+**                                                                               | **3+**                                                                                  | **4+**                                                                          | **9**                                                                            | **9**  | **4**  | **7**  | Orque       |
 | Magmadon   | **6**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            |        |        |        | Elémentaire |
@@ -339,7 +354,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de feu supérieur : à la fin de chaque tour, tout modèle ennemi à 3’’ ou moins de cette unité reçoit 1 marqueur *enflammé*. Si la météo est Pluie de feu, la portée de l’aura est de 6’’.
 - Gueule enflammée : Magmadon impose 2 marqueurs *enflammé* s’il réussit au moins 2 touches en mêlée.
 - Né des flammes : Cette unité est immunisée à la règles [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
-
+  
 ---
 ## Modèles de base
 
@@ -356,7 +371,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 - Arbalète lourde : Portée (C : 12’’, L : 18’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 
 ---
-### Chevaucheur de Grondeur — 32 pts
+### Chevaucheur de Grondeur — 34 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -368,9 +383,10 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 ##### Équipement :
 - Lance de cavalerie (+1 pts) : l'orque bénéficie de +1d6 en mêlée s’il a chargé ce tour-ci.
 - Caparaçon de grondeur (+4 pts) : l'armure de ce modèle passe de 4+ à 3+.
-
+##### Règles spéciales :
+- Balance : si l'affinité de votre bande est Chamanique, ce modèle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Furtif|Furtif]]. Si l’affinité de votre bande est Occulte, le grondeur bénéficie de +1d6 en mêlée.
 ---
-### Combattant orque — 7 pts
+### Combattant orque — 8 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -381,7 +397,8 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 - Bouclier (+1 pts) : l’armure de cette unité passe à 4+.
 - Arme lourde (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]].
 - Lance (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]].
-
+##### Règles spéciales :
+- Balance : si l'affinité de votre bande est Chamanique, ce modèle bénéficie de +1 [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]]. Si l’affinité de votre bande est Occulte, ce modèle bénéficie de +1d6 en mêlée.
 ---
 ### Gobelin — 4 pts
 
@@ -395,7 +412,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 - Arc court (+1 pts) : Portée (C : 9’’, L : 15’’)
 
 ---
-### Gobelin sur araignée — 14 pts
+### Gobelin sur araignée — 15 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -409,6 +426,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 ##### Règles spéciales :
 - Crocs d’araignée : les jets d’attaque en mêlée de 5+ de l’araignée infligent des dégâts bruts.
 - Monture araignée : cette unité peut *escalader* malgré la règle cavalerie. Les décors ne sont pas considérés comme des obstacles en ce qui concerne les charges.
+- Balance : si l'affinité de votre bande est Chamanique, ce modèle bénéficie de [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]]. Si l’affinité de votre bande est Occulte, l'araignée inflige des dégâts bruts sur 4+.
 
 ---
 ### Gobelin sur loup — 13 pts
@@ -439,7 +457,7 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 - Marque de Magmadon (+1 pt) : confère [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
 - Zimmortels de Slaig (+7 pts) : la caractéristique de mêlée de cette unité devient 3+. La caractéristique de PV de cette unité devient 3, et sa Masse devient 3.
 ##### Règles spéciales :
-- Balance : Si l'affinité de votre bande est Chamanique, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] au début de chaque tour. Si l’affinité de votre bande est Occulte, cette unité inflige 1 Blessure à l’attaquant si elle est tuée en mêlée
+- Balance : Si l'affinité de votre bande est Chamanique, cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]] au début de chaque tour. Si l’affinité de votre bande est Occulte, cette unité inflige 1 Blessure à l’attaquant si elle est tuée en mêlée.
 
 ---
 ### Sapeur — 16 pts
