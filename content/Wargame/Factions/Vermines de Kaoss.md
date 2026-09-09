@@ -56,7 +56,7 @@ Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles s
 </div>
 <div class="cp-caste">
 
-## Vermines
+## Verminesq
 
 #### Esclaves
 
