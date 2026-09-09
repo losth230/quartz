@@ -7,17 +7,76 @@ Même sur les champs de batailles, les Rats sont à la recherche des Scories qu�
 Au début de chaque tour, gagnez 1 Scorie. A la fin de chaque tour, les scories ne sont pas perdues.
 #### Progression souterraine
 Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Visualisation/Règles spéciales/Avant-Garde|Avant-Garde]] à vos modèles en dépensant leur Masse en points.
-#### Nuée :
-Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche. La règle Masse Ecrasante se déclenche sur un nombre 5 fois supérieur au lieu d’un nombre 3 fois supérieur.
-#### Invasion sans fin :
-Vos modèles de type Vermine bénéficient de la règle Régénération (X), dépendant de sa masse originale. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
-**Modèles de masse 1-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
-**Modèles de masse 11+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
 
 ---
 
-<center><h2>Domaines de Faction</h2></center>
+#### Castes
 
+Une bande de Vermines de Kaoss ne se construit pas avec les règles de création de base. A la place, chaque modèle appartient à une Caste, et c'est elle qui détermine sa place dans la liste. Un bande doit comprendre au minimum 1 Commandant (à choisir parmi les Mains de Kaoss) et 5 unités de Vermines. Une bande peut également inclure :
+
+- Maximum 2 Constructions par tranche de 100 pts.
+- Maximum 1 Main de Kaoss par tranche de 100 pts.
+
+<div class="cp-caste">
+
+## Main de Kaoss
+
+<div class="cp-caste-regle">
+
+##### Tribut de la Main :
+Au début de chaque tour, chaque modèle de cette caste génère 1 Scorie.
+
+</div>
+</div>
+
+<div class="cp-caste">
+
+## Constructions
+
+<div class="cp-caste-sous">
+<div class="cp-caste-type">
+
+#### Engins de Kaoss
+
+##### Rouages bien huilés : 
+Lorsqu'un modèle de cette caste utilise sa règle de Renforcement, il ajoute 1d6 gratuit au résultat, sans dépenser de Scorie supplémentaire pour ce dé.
+
+</div>
+<div class="cp-caste-type">
+
+#### Homonculus
+
+#### Surplus de chair :
+Les modèles de cette caste bénéficient  de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (+1)]].
+
+</div>
+</div>
+</div>
+<div class="cp-caste">
+
+## Vermines
+
+#### Esclaves
+
+##### Nuée :
+Si un de vos modèle combat un modèle ennemi possédant moins d’unité que lui, votre modèle bénéficie d’un bonus de +1 à ses jets de touche. La règle Masse Ecrasante se déclenche sur un nombre 5 fois supérieur au lieu d’un nombre 3 fois supérieur.
+##### Invasion sans fin :
+Vos modèles de cette caste bénéficient de la règle Régénération (X), dépendant de leur masse. Si le modèle ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
+**Modèles de masse 1-10 :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (1)]].
+**Modèles de masse 11+ :** [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (2)]].
+
+</div>
+<div class="cp-caste-type">
+
+#### Affranchis
+
+##### Fierté du citoyen :
+Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent leurs jets d'armure ayant obtenu un 1.
+
+</div>
+</div>
+</div>
+<center><h2>Domaines de Faction</h2></center>
 <center><h3>Domaine des Égouts</h3></center>
 
 **Attribut : propager la peste :** Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 9’’ ou moins du lanceur qui obtient la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] pour le reste du tour.
@@ -429,3 +488,62 @@ ___
 ##### Règles spéciales :
 - Arrivée surprise : au lieu de déployer vos modèles en avant-garde, vous pouvez les mettre de côté. A la place d’une activation normale, vous pouvez décider d’en déployer un entièrement à 6’’ ou moins d’un Tunnel. Marquez-le ensuite activé (vous pouvez le fatiguer avant de le marquer activée). Si le modèle apparait engagé en mêlée avec un modèle ennemi, il s’agit d’une charge.
 ---
+
+
+<style>
+/* ============================================================
+   Castes — Vermines de Kaoss
+   Palette neutre du thème, aucune couleur d'accent propre.
+   ============================================================ */
+.cp-caste {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-caste > h2 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+.cp-caste-regle {
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Sous-choix (Machines/Homonculus, Esclaves/Citoyens) — même
+   moule que .cp-roy-ordres / .cp-ordre des Peuples Libres. */
+.cp-caste-sous {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.cp-caste-type {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: var(--light);
+  min-width: 0;
+}
+.cp-caste-type h4 {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.cp-caste-type p { margin: 0; line-height: 1.45; }
+
+@media (max-width: 700px) {
+  .cp-caste-sous { grid-template-columns: 1fr; }
+}
+</style>
+
