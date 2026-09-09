@@ -10,6 +10,8 @@ Lors de la création de votre armée, vous pouvez donner la règle [[Wargame/_Vi
 
 ---
 
+<div>
+
 #### Castes
 
 Une bande de Vermines de Kaoss ne se construit pas avec les règles de création de base. A la place, chaque modèle appartient à une Caste, et c'est elle qui détermine sa place dans la liste. Un bande doit comprendre au minimum 1 Commandant (à choisir parmi les Mains de Kaoss) et 5 unités de Vermines. Une bande peut également inclure :
@@ -73,6 +75,7 @@ Vos modèles de cette caste bénéficient de la règle Régénération (X), dép
 ##### Fierté du citoyen :
 Les modèles de cette caste bénéficient d'un bonus de +3 au Moral et relancent leurs jets d'armure ayant obtenu un 1.
 
+</div>
 </div>
 </div>
 </div>
