@@ -362,18 +362,6 @@ ___
 ---
 ## Constructions
 ---
-### Catapulte à peste — 24 pts
-
-|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Catapulte | **4** | **6+** | **4+** | **5+** | **5** | **3** | **2** | **5** | Machine |
-| **Mêlée:** | 3d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
-
-##### Équipement :
-- Catapulte : Portée 8–24’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
-##### Règles spéciales :
-- Tonneau putride : lors de ses tirs, la catapulte peut utiliser un tonneau de pestilence des égouts. Si elle le fait, elle gagne la règle [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] et perd sa règle [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Cependant, si un résultat de 1 au tir de tonneau putride est obtenu, la catapulte est marquée empoisonnée.
-
 ### Abomination — 32 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -414,6 +402,18 @@ ___
 - Roulis lourd : Portée (C : 15’’, L : 21’’), [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]], [[Wargame/_Visualisation/Règles spéciales/Tireur d'Élite|Tireur d'Élite]].
 ##### Règles spéciales :
 - Tourner les barils plus vite ! (1-4) : renforcement à utiliser lors d’une attaque de tir, pour chaque Scorie dépensée, jetez 1d6 et ajoutez le résultat au nombre d’attaques. Cependant, pour chaque résultat de 6 obtenu, reculez le Bourreau à Roulis de 2’’ dans la direction opposée au tir.
+---
+### Catapulte à peste — 24 pts
+
+|  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Catapulte | **4** | **6+** | **4+** | **5+** | **5** | **3** | **2** | **5** | Machine |
+| **Mêlée:** | 3d6 |  | **Tir:** | 3d6 |  |  |  |  |  |
+
+##### Équipement :
+- Catapulte : Portée 8–24’’, [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+##### Règles spéciales :
+- Tonneau putride : lors de ses tirs, la catapulte peut utiliser un tonneau de pestilence des égouts. Si elle le fait, elle gagne la règle [[Wargame/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]] et perd sa règle [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]]. Cependant, si un résultat de 1 au tir de tonneau putride est obtenu, la catapulte est marquée empoisonnée.
 ---
 ### Cloche hurlante — 52 pts
 
