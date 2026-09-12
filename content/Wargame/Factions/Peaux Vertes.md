@@ -335,22 +335,22 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 
 <div class="legendary">
 
-### Slaig le Pourfendeur sur Magmadon asservi — 118 pts
+### Slaig le Pourfendeur sur Magmadon asservi — 108 pts
 
 </div>
 
 | ⬜    | **Vit**   | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type**    |
-| ---------- | --------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | ----------- |
-| Slaig      |           | **4+**                                                                               | **3+**                                                                                  | **4+**                                                                          | **9**                                                                            | **9**  | **4**  | **7**  | Orque       |
-| Magmadon   | **6**     | **4+**                                                                               | **-**                                                                                   | **-**                                                                           | **-**                                                                            |        |        |        | Elémentaire |
-| **Mêlée:** | 6d6 / 8d6 |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |             |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | ---- |
+| Slaig   | - | **4+** | **3+** | **3+** | **9** | **9**  | **4**  | **7**  | Orque  |
+| Magmadon   | **6** | **4+** | **-** | **-** | **-** |   |   |    | Elémentaire |
+| **Mêlée:** | 6d6 / 8d6 |   | **Tir:** | - |  |   |    |    |   |
 
-*Affinité Occulte (7), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]], [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]],  [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+*Affinité Occulte (7), [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]] / [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
 ##### Équipement :
-- Hach de Pourfendeur : Slaig régénère autant de PV qu’il n’inflige de blessures.
+- Hach de Pourfendeur : si Slaig tue au moins une unité, il régénère 2 PV.
 ##### Règles spéciales :
 - Peau d’élémentaire de feu : cette unité ne peut subir de dégâts que d’attaques ayant la règle spéciale [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]] ou [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant]].
-- Couronne de domination : chaque tour, Magmadon tente de se libérer de Slaig. Lorsque vous activez cette unité, faites-lui réaliser un test de moral. En cas d’échec, votre adversaire la joue à votre place. Si Nagash est également présent dans la partie, il perd sa règle de Couronne de domination.
+- Couronne de domination : chaque tour, Magmadon tente de se libérer de Slaig. Lorsque vous activez cette unité, faites-lui réaliser un test de moral. En cas d’échec, marquez-la activé. Si Nagash est également présent dans la partie, il perd sa règle de Couronne de domination.
 - [[Wargame/_Visualisation/Règles spéciales/Aura|Aura]] de feu supérieur : à la fin de chaque tour, tout modèle ennemi à 3’’ ou moins de cette unité reçoit 1 marqueur *enflammé*. Si la météo est Pluie de feu, la portée de l’aura est de 6’’.
 - Gueule enflammée : Magmadon impose 2 marqueurs *enflammé* s’il réussit au moins 2 touches en mêlée.
 - Né des flammes : Cette unité est immunisée à la règles [[Wargame/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques Enflammées]].
