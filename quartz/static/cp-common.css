@@ -133,3 +133,22 @@
 
 /* ---- Divers ---- */
 .cp-empty { font-style: italic; color: var(--gray); }
+
+/* ---- Markdown Auto-toggle Fields ---- */
+.cp-md-wrapper { position: relative; max-width: 100%; box-sizing: border-box; }
+.cp-md-view {
+  box-sizing: border-box;
+  cursor: text; transition: all 0.1s;
+  overflow: auto;
+  opacity: 0.9;
+}
+.cp-md-view:hover { 
+  border-color: var(--secondary) !important;
+  opacity: 1;
+}
+.cp-md-view p { margin: 0; }
+.cp-md-view p + p { margin-top: 0.5em; }
+.cp-md-view ul, .cp-md-view ol { margin: 0.2em 0; padding-left: 1.2em; }
+.cp-md-view code { background: var(--lightgray); padding: 0.1em 0.3em; border-radius: 3px; font-size: 0.9em; }
+.cp-md-placeholder { color: var(--gray); font-style: italic; opacity: 0.7; pointer-events: none; }
+.cp-md-empty { border: 1px dashed var(--gray); opacity: 0.6; }

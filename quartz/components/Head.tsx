@@ -98,6 +98,8 @@ export default (() => {
           }
         })}
       <link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve />
+      <script src="/quartz/static/marked.min.js" spa-preserve />
+      <script src="/quartz/static/cp-markdown.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-army-lists.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-bug-tracker.js" spa-preserve />
@@ -108,7 +110,6 @@ export default (() => {
       <script type="module" src="/quartz/static/jdr-fiches.js" spa-preserve />
       <script type="module" src="/quartz/static/cp-auth.js?v=1" spa-preserve />
       
-      <link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-bug-report.css" spa-preserve />
       <link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve />
