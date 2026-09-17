@@ -167,6 +167,7 @@
   border: 1.5px solid var(--jdr-encre-forte); border-top: none;
   border-radius: 0 0 6px 6px;
   padding: .6em 0; background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
 }
 .jdr-fanion-corps input {
   width: 70%; text-align: center; font-size: 1.15rem; font-weight: 700;
@@ -228,6 +229,7 @@
 
 /* champs génériques */
 #jdr-fiches-app input, #jdr-fiches-app textarea {
+  box-sizing: border-box;
   font-family: var(--jdr-police-corps); font-size: inherit;
   border: 1px solid var(--jdr-ligne); border-radius: 3px;
   background: transparent; color: var(--jdr-encre); padding: .15em .4em;

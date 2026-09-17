@@ -5,6 +5,7 @@
  */
 
 (function() {
+  console.log("CP-Markdown chargé v4");
   function renderMarkdown(text, isInline) {
     if (typeof marked !== 'undefined') {
       return isInline ? marked.parseInline(text) : marked.parse(text);
@@ -20,10 +21,8 @@
     // Créer le wrapper
     const wrapper = document.createElement('div');
     wrapper.classList.add('cp-md-wrapper');
-    const style = window.getComputedStyle(el);
     
     // On rend le wrapper invisible pour le layout (flexbox/grid) 
-    // pour que l'élément garde ses propriétés natives par rapport à son parent.
     wrapper.style.display = 'contents';
 
     el.parentNode.insertBefore(wrapper, el);
@@ -51,56 +50,81 @@
     const wrapper = getWrapper(el);
     const view = wrapper.querySelector('.cp-md-view');
     const isTextarea = el.tagName === 'TEXTAREA';
-    
-    // Synchroniser les dimensions et styles
     const style = window.getComputedStyle(el);
+    const rect = el.getBoundingClientRect();
+
     if (!el._cp_orig_display || el._cp_orig_display === 'none') {
       el._cp_orig_display = style.display;
     }
 
-    view.style.width = el.offsetWidth + 'px';
-    view.style.height = el.offsetHeight + 'px';
+    // Copie chirurgicale des dimensions et du positionnement
+    // On utilise la largeur de contenu exacte pour éviter tout débordement à droite
+    view.style.width = rect.width + 'px';
+    view.style.height = rect.height + 'px';
+    view.style.minWidth = style.minWidth;
+    view.style.maxWidth = style.maxWidth;
+    view.style.minHeight = style.minHeight;
+    view.style.maxHeight = style.maxHeight;
+    
+    // Copie des styles de boîte
     view.style.margin = style.margin;
     view.style.padding = style.padding;
-    view.style.borderWidth = style.borderWidth;
-    view.style.borderStyle = style.borderStyle;
-    view.style.borderColor = style.borderColor;
+    view.style.border = style.border;
     view.style.borderRadius = style.borderRadius;
-    view.style.background = style.background;
-    view.style.color = style.color;
+    view.style.boxSizing = 'border-box';
+    
+    // Copie des styles de texte
     view.style.fontSize = style.fontSize;
     view.style.fontFamily = style.fontFamily;
     view.style.fontWeight = style.fontWeight;
     view.style.lineHeight = style.lineHeight;
+    view.style.color = style.color;
+    view.style.textAlign = style.textAlign;
     view.style.verticalAlign = style.verticalAlign;
+    
+    // Aligner en flex si le texte est centré ou à droite
+    if (style.textAlign === 'center') {
+      view.style.justifyContent = 'center';
+      view.style.justifySelf = 'center';
+    } else if (style.textAlign === 'right') {
+      view.style.justifyContent = 'flex-end';
+      view.style.justifySelf = 'flex-end';
+    }
+    
+    // Copie des styles de flex/layout
     view.style.flex = style.flex;
-    view.style.boxSizing = 'border-box';
+    view.style.alignSelf = style.alignSelf;
+    // Si textAlign a déjà forcé justifySelf, on ne l'écrase pas par 'auto'
+    if (style.textAlign !== 'center' && style.textAlign !== 'right') {
+      view.style.justifySelf = style.justifySelf;
+    }
+    
+    // Fond
+    view.style.background = style.background;
 
     if (isTextarea) {
       view.style.overflowY = 'auto';
       view.style.resize = style.resize;
-      view.style.display = 'block';
     } else {
       view.style.overflow = 'hidden';
       view.style.whiteSpace = 'nowrap';
-      view.style.display = 'flex';
       view.style.alignItems = 'center';
-      // Permettre aux éléments inline (strong, em, etc.) d'être rendus
-      view.style.textOverflow = 'clip'; 
+      view.style.textOverflow = 'clip';
     }
 
     const val = el.value.trim();
     if (val) {
-      // marked.parseInline permet le gras, l'italique, etc. sans créer de paragraphes <p>
       view.innerHTML = renderMarkdown(val, !isTextarea);
       view.classList.remove('cp-md-empty');
     } else {
-      view.innerHTML = `<span class="cp-md-placeholder">${el.placeholder || '...'}</span>`;
+      const placeholder = el.placeholder || '...';
+      view.innerHTML = `<div class="cp-md-placeholder">${renderMarkdown(placeholder, !isTextarea)}</div>`;
       view.classList.add('cp-md-empty');
     }
     
     el.style.display = 'none';
-    view.style.display = 'block';
+    // On restaure le mode d'affichage adapté en respectant le flux original
+    view.style.display = isTextarea ? 'block' : (style.display.includes('inline') ? 'inline-flex' : 'flex');
   }
 
   function switchToEdit(el) {
@@ -108,12 +132,12 @@
     const view = wrapper.querySelector('.cp-md-view');
     
     if (el.tagName === 'TEXTAREA' && view.style.display !== 'none') {
-      el.style.width = view.offsetWidth + 'px';
+      // On ne synchronise que la hauteur, la largeur doit rester fluide (ex: 100%)
       el.style.height = view.offsetHeight + 'px';
     }
 
     view.style.display = 'none';
-    el.style.display = '';
+    el.style.display = el._cp_orig_display || '';
   }
 
   // Délégation d'événements pour gérer les éléments dynamiques
@@ -135,7 +159,6 @@
   function initAll() {
     const inputs = document.querySelectorAll('textarea, input[type="text"]');
     inputs.forEach(el => {
-      // On évite de boucler si déjà wrappé
       if (!el.parentElement.classList.contains('cp-md-wrapper')) {
         if (document.activeElement !== el) {
           switchToView(el);
@@ -144,16 +167,30 @@
     });
   }
 
-  // Plusieurs tentatives d'initialisation pour parer au chargement asynchrone des composants Quartz
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initAll);
   } else {
     initAll();
   }
   window.addEventListener('load', initAll);
-  // Un petit délai supplémentaire pour les scripts JS qui injectent du contenu après 'load'
   setTimeout(initAll, 500);
   setTimeout(initAll, 2000);
+
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach(mutation => {
+      mutation.addedNodes.forEach(node => {
+        if (node.nodeType === 1) {
+          const targets = node.querySelectorAll ? node.querySelectorAll('textarea, input[type="text"]') : [];
+          targets.forEach(el => {
+            if (document.activeElement !== el) switchToView(el);
+          });
+          if (node.tagName === 'TEXTAREA' || (node.tagName === 'INPUT' && node.type === 'text')) {
+            if (document.activeElement !== node) switchToView(node);
+          }
+        }
+      });
+    });
+  });
 
   observer.observe(document.body, { childList: true, subtree: true });
 
