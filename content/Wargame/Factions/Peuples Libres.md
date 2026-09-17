@@ -634,14 +634,14 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 - Vouge (+2 pts) : confère [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] et +1d6 contre les modèles de Taille 3 ou plus.
 - Arbalète (+2 pts) : Portée (C : 12’’, L : 18’’). [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ---
-### Paladin — 24 pts
+### Paladin — 23 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | Paladin | **5** | **4+** | **-** | **4+** | **8** | **2** | **2** | **2** | Chevalier |
 | **Mêlée:** | 5d6 |  | **Tir:** | - |  |  |  |  |  |
 
-*[[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].*
+*[[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]], [[Wargame/_Visualisation/Règles spéciales/Egide|Egide (1)]].*
 ##### Magie :
 - Les Paladins ont accès au Domaine de la Pureté et au domaine de la Lumière, leur niveau est égal au nombre d'unités au sein du modèle (max. niveau 4).
 ---
