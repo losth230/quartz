@@ -333,6 +333,21 @@ Portée 12'' – 21'', cible toutes les unités adverses à portée. Chaque unit
 
 ---
 
+### Mekanicien — 16 pts
+
+| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
+| Mekanicien | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **1**  | Gobelin  |
+| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 2d6                                                                             |                                                                                  |        |        |        |          |
+
+*Affinité Occulte (1)*
+##### Équipement :
+- Klé à molet’ : Portée (C : 6’’, L : 12’’).
+##### Règles spéciales :
+- Tir de barrage (1) : au début du tour, désignez un modèle machine ami à 6'' ou moins qui bénéficie de +1 à ses jets de touche et augmente sa portée maximale de 9'' pour le reste du tour.
+
+---
+
 <div class="legendary">
 
 ### Slaig le Pourfendeur sur Magmadon asservi — 108 pts
@@ -506,7 +521,7 @@ ___
 ## Modèles de soutient
 
 ---
-### Baliste — 34 pts
+### Baliste — 32 pts
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
@@ -515,9 +530,9 @@ ___
 
 *Affinité Occulte (1)*
 ##### Équipement :
-- Baliste : Portée (C : 15’’, L : 22’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
+- Baliste : Portée (C : 12’’, L : 22’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Large|Anti-Large]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (1)]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
-- Batterie : cette unité bénéficie de +1d6 par autre Machine au sein de son modèle et +1d6 par machine à 3’’ ou moins.
+- Batterie : cette unité bénéficie de +1d6 si une autre machine se trouve à 9'' ou moins.
 
 ---
 ### Catapulte — 32 pts
@@ -531,7 +546,7 @@ ___
 ##### Équipement :
 - Catapulte : Portée (C : 15’’, L : 24’’), [[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Perforant|Perforant (2)]], [[Wargame/_Visualisation/Règles spéciales/Tir Indirect|Tir Indirect]], [[Wargame/_Visualisation/Règles spéciales/Tir Long|Tir Long]].
 ##### Règles spéciales :
-- Batterie : cette unité bénéficie de +1d6 par autre Machine au sein de son modèle et +1d6 par machine à 3’’ ou moins.
+- Batterie : cette unité bénéficie de +1d6 si une autre machine se trouve à 9'' ou moins.
 
 ---
 ### Chaman gobelin — 15 pts
@@ -591,20 +606,6 @@ ___
 - Grand Icône : les modèles amis à 14'' ou moins bénéficient de +1 à leurs tests de moral et au lancement de leurs sorts.
 ##### Règles spéciales :
 - Commencer le rituel : utilisable une seule fois par partie pour inverser l'affinité de votre bande en conservant son rang.
-
----
-### Mekanicien — 16 pts
-
-| 🟥         | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Mekanicien | **5**   | **4+**                                                                               | **4+**                                                                                  | **4+**                                                                          | **7**                                                                            | **2**  | **2**  | **1**  | Gobelin  |
-| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | 2d6                                                                             |                                                                                  |        |        |        |          |
-
-*Affinité Occulte (1)*
-##### Équipement :
-- Klé à molet’ : Portée (C : 6’’, L : 12’’).
-##### Règles spéciales :
-- Tir de barrage : les Machines à 9’’ ou moins bénéficient de +1 à leurs jets de touche. Cet effet n’est pas cumulable avec d’autres effets apportés par d’autres Mekaniciens .
 
 ---
 ## Modèles Spéciaux
