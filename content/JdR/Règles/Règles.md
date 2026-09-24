@@ -7,7 +7,7 @@ title: Règles
 Le système lui-même est volontairement simple à apprendre — un seul moteur de résolution, valable aussi bien pour un test de compétence que pour un combat.  
 Ce document est organisé pour se lire dans l'ordre : on commence par la seule mécanique qu'il faut vraiment retenir (comment on lance les dés), puis on construit un personnage avec, on fabrique ce dont on a besoin, on l'utilise en jeu, en combat, sous la pression, et enfin en magie.
 ## 1. Résoudre une Action
-Tout ce que fait un personnage — forcer une porte, tirer une flèche, convaincre un garde, lancer un sort — se résout de la même façon. C'est la seule mécanique de base du jeu ; tout le reste de ce document n'en est qu'une application.
+Tout ce que fait un personnage — forcer une porte, tirer une flèche, convaincre un garde — se résout de la même façon.
 ##### Composer un jet
 Un jet se compose toujours de 3 informations :
 - Le **nombre de dés** à lancer (déterminé par la caractéristique ou l'arme concernée).
@@ -48,29 +48,29 @@ C'est ce qui fait qu'investir n'importe où dans un arbre profite à toutes les 
 #### Compétences
 Chaque arbre compte 7 compétences.  
 #### Physique
-- Agilité — équilibre et mouvements précis : sauter un fossé, marcher sur une poutre, esquiver un objet lancé.
-- Brute — force pure : soulever un objet lourd, enfoncer une porte, plier du métal.
-- Crochetage / Larcin — ouvrir une serrure, désamorcer un piège, ou dérober discrètement un objet sur quelqu'un.
-- Discrétion — se déplacer sans être vu ni entendu.
-- Intimidation — impressionner ou menacer par sa carrure ou sa présence physique.
-- Résilience — résister à la fatigue, à la douleur, au poison ou à la maladie.
-- Vigilance — repérer un danger, une embuscade ou un détail qui cloche avant qu'il ne soit trop tard.
+- Agilité : sauter un fossé, marcher sur une poutre, esquiver un objet lancé.
+- Brute : soulever un objet lourd, enfoncer une porte, plier du métal.
+- Crochetage / Larcin : ouvrir une serrure, désamorcer un piège, ou dérober discrètement un objet sur quelqu'un.
+- Discrétion : agir sans être vu ni entendu.
+- Intimidation : impressionner ou menacer par sa carrure ou sa présence physique.
+- Résilience : résister à la fatigue, à la douleur, au poison ou à la maladie.
+- Vigilance : repérer un danger, une embuscade ou un détail qui cloche avant qu'il ne soit trop tard.
 ##### Mental
-- Arcane — comprendre, identifier ou analyser un phénomène ou un objet magique.
-- Exploration — se repérer dans un environnement, comprendre un terrain, identifier un élément du paysage.
-- Fabrication — créer, réparer ou améliorer un objet à l'aide des bons matériaux et outils.
-- Érudition — connaissance du monde : événements passés, légendes, traditions, croyances et doctrines religieuses.
-- Nature — connaissance de la faune, de la flore et des phénomènes naturels.
-- Premiers secours — soigner une blessure ou traiter une maladie mineure.
-- Volonté — résister à une pression psychologique : peur, manipulation, obsession, ou à ses propres pulsions.
+- Arcane : comprendre, identifier ou analyser un phénomène ou un objet magique.
+- Exploration : se repérer dans un environnement, comprendre un terrain, identifier un élément du paysage.
+- Fabrication : créer, réparer ou améliorer un objet à l'aide des bons matériaux et outils.
+- Érudition : connaissance du monde, événements passés, légendes, traditions, croyances et doctrines religieuses.
+- Nature , connaissance de la faune, de la flore et des phénomènes naturels.
+- Premiers secours , soigner une blessure ou traiter une maladie mineure.
+- Volonté , résister à une pression psychologique, peur, manipulation, obsession, ou à ses propres pulsions.
 ##### Social
-- Etiquette — connaître et respecter les codes sociaux d'un contexte formel.
-- Dressage — apprivoiser, dresser ou communiquer avec un animal.
-- Persuasion — convaincre quelqu'un de faire, donner ou accepter quelque chose, par la négociation, le charme ou la manipulation : peu importe le moyen employé.
-- Présence — impressionner ou inspirer les autres par son aura, sans un mot.
-- Perspicacité — lire les intentions d'autrui, détecter un mensonge ou une émotion cachée.
-- Spectacle — performer en public : musique, danse, théâtre ou tout autre art.
-- Réseautage — savoir qui connaître, et obtenir une information ou un contact utile grâce à son réseau.
+- Etiquette : connaître et respecter les codes sociaux d'un contexte formel.
+- Dressage : apprivoiser, dresser ou communiquer avec un animal.
+- Persuasion : convaincre quelqu'un de faire, donner ou accepter quelque chose, par la négociation, le charme ou la manipulation.
+- Présence : impressionner ou inspirer les autres par son aura, sans un mot.
+- Perspicacité : lire les intentions d'autrui, détecter un mensonge ou une émotion cachée.
+- Spectacle : performer en public, musique, danse, théâtre ou tout autre art.
+- Réseautage : savoir qui connaître, et obtenir une information ou un contact utile grâce à son réseau.
 ##### Aider
 Un personnage peut aider un autre personnage sur une compétence qu'il possède lui-même. Le joueur effectuant le test ajoute alors à son pool un nombre de d6 égal au niveau de compétence de celui qui l'aide.  
 *Exemple : Anatole possède 1 niveau en Érudition et aide Anton sur un test d'Érudition. Anton lance ses 2d6 habituels (sa valeur de Mental) plus le 1d6 offert par Anatole.*
@@ -90,9 +90,8 @@ Le nombre de réussites obtenues au test de Fabrication détermine le résultat 
 | 0 | Fiasco : perte des matériaux. |
 | 1-2 | Réussite normale : objet utilisable. |
 | 3-4 | Objet de qualité : l'objet reçoit une amélioration de rang 1 |
-| 3-4 | Objet de qualité : l'objet reçoit une amélioration de rang 1 |
-| 3-4 | Chef-d'œuvre : l'objet reçoit une amélioration de rang 3 |
-| 4+ | Chef-d'œuvre : l'objet reçoit une amélioration de rang 1. |
+| 4-5 | Chef-d'œuvre : l'objet reçoit une amélioration de rang 3 |
+| 6+ | Chef-d'œuvre : l'objet reçoit une amélioration de rang 1. |
 
 ##### Matériaux de base
 Tout objet se fabrique à partir de 5 types de matériaux :
@@ -107,9 +106,11 @@ Tout objet se fabrique à partir de 5 types de matériaux :
 
 ## 4. Le Tour de Jeu
 ##### Structure d'un tour
-Lors de son tour, un personnage dispose au choix de **deux actions courtes**, ou d'**une action longue**. Il dispose en plus d'une **réaction**, utilisable à tout moment en dehors de son propre tour. Il ne peut jamais effectuer deux fois la même action lors d'un même tour.
+Lors de son tour, un personnage dispose d'un nombre de **Points d'Action (PA)** qu'il peut dépenser. Il ne peut jamais effectuer deux fois la même action lors d'un même tour.
+
+Il peut également dépenser un **PA** pour utiliser une **réaction**, c'est à dire une action utilisable à n'importe quel moment en dehors de son tour.
 ##### Les Actions
-- **Marche** *(courte)* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
+- **Marche** *(1PA)* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
 - **Course** *(longue)* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
 - **Tir** *(courte)* — attaque à distance contre une cible à portée.
 - **Mêlée** *(courte)* — attaque au corps-à-corps contre une cible adjacente.
