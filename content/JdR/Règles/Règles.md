@@ -1,3 +1,4 @@
+
 ---
 title: Règles
 ---
@@ -106,21 +107,28 @@ Tout objet se fabrique à partir de 5 types de matériaux :
 
 ## 4. Le Tour de Jeu
 ##### Structure d'un tour
-Lors de son tour, un personnage dispose d'un nombre de **Points d'Action (PA)** qu'il peut dépenser. Il ne peut jamais effectuer deux fois la même action lors d'un même tour.
+Lors de son tour, un personnage dispose d'un nombre de **Points d'Action (PA)** qu'il peut dépenser, et en gagne 2 au début de son tour. Un personnage ne peut jamais effectuer deux fois la même action lors d'un même tour.
+
+Au début d'un combat, chaque joueur reçoit 4 **PA**.
 
 Il peut également dépenser un **PA** pour utiliser une **réaction**, c'est à dire une action utilisable à n'importe quel moment en dehors de son tour.
 ##### Les Actions
-- **Marche** *(1PA)* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
-- **Course** *(longue)* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
-- **Tir** *(courte)* — attaque à distance contre une cible à portée.
-- **Mêlée** *(courte)* — attaque au corps-à-corps contre une cible adjacente.
-- **Se relever** *(courte)* — retire l'état à terre.
-##### Terrain difficile
-Un terrain difficile compte double pour le calcul de la distance parcourue en déplacement. Une créature avec 5 de Vitesse ne pourra donc traverser que 2 cases de terrain difficile lors d'un même mouvement.
+- **Marche** *(1 PA)* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
+- **Course** *(2 PA)* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
+- **Tir** *(1 PA)* — attaque à distance contre une cible à portée.
+- **Mêlée** *(1 PA)* — attaque au corps-à-corps contre une cible adjacente.
+- **Se relever** *(1 PA)* — retire l'état à terre.
+> **Terrain difficile :**
+> Un terrain difficile compte double pour le calcul de la distance parcourue en déplacement. Une créature avec 5 de Vitesse ne pourra donc traverser que 2 cases de terrain difficile lors d'un même mouvement.
 ##### Résoudre une Attaque
-Une attaque suit exactement le moteur décrit en partie 1 : on lance un nombre de d6 égal à sa valeur d'attaque, on compte les réussites contre le seuil de la cible (son armure, voir plus bas), avec quelques modificateurs propres au combat.
-**En mêlée** — l'attaquant doit être adjacent à sa cible, dans son arc avant (il peut pivoter avant d'attaquer, jamais après). Il lance un nombre de d6 égal à sa valeur de Mêlée, avec -1 aux chances de toucher si le défenseur est derrière un obstacle.
-**À distance** — l'attaquant choisit une arme à distance et une cible à portée dont la ligne de vue est au moins partiellement dégagée. Il lance un nombre de d6 égal à sa valeur de Tir, avec -1d6 s'il n'a pas de ligne de vue dégagée, et +1 aux chances de toucher s'il tire en position avantageuse (par exemple surélevée).
+Une attaque suit exactement le moteur décrit en partie 1 : un joueur lance un nombre de d6 égal à la valeur d'attaque de son arme et il compte son nombre de succès par rapport à son seuil de mêlée.
+**En mêlée** — l'attaquant doit être adjacent à sa cible, dans son arc avant (il peut pivoter avant d'attaquer, jamais après) avec les modificateurs suivants :  
+-1 aux chances de toucher si le défenseur se situe derrière un obstacle.
+**À distance** — l'attaquant choisit une arme à distance et une cible à portée qu'il peut voir et ajoute les modificateurs suivants :  
++1 aux chances de toucher si la taille du tireur plus celle du potentiel terrain sur lequel il se situe dépasse de 3 ou plus celle de sa cible.  
++1 aux chances de toucher si la cible est de taille 4 ou plus.  
+-1 aux chances de toucher si la LdV est au moins partiellement couverte.  
+-1 aux chances de toucher si la cible est à longue portée.  
 ##### Jets d'Armure
 Face à une touche, le défenseur peut faire un jet d'armure : il lance un nombre de d6 égal au nombre de touches subies, avec -1 si l'attaque provient du dos.
 Une attaque **magique** se résiste exactement de la même façon, mais avec la Résistance Magique à la place de l'Armure.
