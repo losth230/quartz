@@ -91,8 +91,8 @@ A partir du niveau 2, vous pouvez dépenser votre réaction pour relancer tous v
 ##### Tir stable (niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour gagner +2d6 sur votre attaque à distance.
 ##### Retranchement (niveau 5)
-A partir du niveau 5, si vous n'acez subit aucun dégâts depuis votre dernier tour, vous gagnez Perforant (1) sur vos attaques à distance.
+A partir du niveau 5, si vous n'acez subit aucun dégâts depuis votre dernier tour, vous gagnez Egide (2).
 ##### Avantagé en toute circonstance (niveau 8)
-A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
+A partir du niveau 8, lorsque vous tirez, vous pouvez choisir entre gagner +2d6 ou Perforant (+1) pour le tir.
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
