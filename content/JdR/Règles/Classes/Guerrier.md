@@ -25,6 +25,7 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Discipline** : recevez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*.
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 - **Bourreau :** vos attaques contre les cibles ayant moins de 50% de leurs [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +2d6.
+- **Vif :** au début de chaque combat, recevez 1 **PA** supplémentaire.
 - **Visée :** vos pouvez utiliser une action longue au lieu d'une action courte pour un tir et ainsi bénéficier de [[JdR/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]] pour cette attaque.
 ##### Parade
 Lorsqu'une créature à 3m ou moins attaque, vous pouvez dépenser votre réaction pour annuler une de ses touches.
@@ -103,3 +104,17 @@ A partir du niveau 5, vous pouvez choisir de réduire de 1 les dégâts physique
 A partir du niveau 8, vous pouvez dépenser votre réaction pour forcer une créature que vous voyez à 3m ou moins à vous attaquer. Si cette créature vous inflige au moins 1 blessure, vous pouvez riposter gratuitement.
 ##### Encaissement (niveau 11)
 A partir du niveau 11, chaque fois que vous perdez au moins 1 [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]], vous gagnez [[JdR/_Visualisation/Règles spéciales/Egide|Egide (1)]].
+
+___
+<center><h2>Chasseur</h2> </center>
+
+#### Marquage (niveau 2)
+A partir du niveau 2, vous pouvez dépenser 1 **PA** pour *marquer* une créature à 12m ou moins. Vous ne pouvez marquer qu'une seule cible à la fois.
+#### Tuez la bête (niveau 2)
+Toutes les attaques contre une créature marquée infligent des dégâts bruts sur les 6 naturels. Les créatures *marquées* bénéficient d'un malus de -1 vitesse.
+#### Fin de la chasse (niveau 5)
+A partur du niveau 5, si la créature que vous avez *marqué* meurt, transférez la *marque* sur une créature à 12m ou moins et octroyez 1 **PA** à la créature de votre choix.
+#### Chasse en meute (niveau 8)
+A partir du niveau 8, vous pouvez maintenir 2 *marques* à la fois.
+#### Acharnement (niveau 11)
+A partir du niveau 11, vous pouvez maintenir 1 *marque* supplémentaire. Vous gagnez également +1d6 par *marque avtive* sur vos attaquez en mêlée et à distance.
