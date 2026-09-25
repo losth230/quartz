@@ -43,13 +43,13 @@ ___
 <center><h2>Assassin</h2> </center>
 
 ##### Attaques empoisonnées (niveau 2)
-A partir du niveau 2, vos attaques en mêlée bénéficient de la règle **Attaques Empoisonnées**.
+A partir du niveau 2, vos attaques bénéficient de la règle **Attaques Empoisonnées**.
 ##### Coup bas amélioré (niveau 2)
-A partir du niveau 2, lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche.
+A partir du niveau 2, lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche ou à distance.
 ##### Rapidité mortelle (niveau 5)
-A partir du niveau 5, lors du premier tour d'un combat, vous bénéficiez d'une action supplémentaire, qui peut être une action déjà effectuée durant le tour.
+A partir du niveau 5, lors du premier tour d'un combat, vous pouvez effectuez deux fois la même action.
 ##### Frappe fatale (niveau 8)
-A partir du niveau 8, lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez une action courte.
+A partir du niveau 8, lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez 1 **PA**.
 ##### Premier coup (niveau 11)
 A partir du niveau 11, si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
 
@@ -87,28 +87,12 @@ ___
 <center><h2>Franc-tireur</h2> </center>
 
 ##### Tir de précision (niveau 2)
-A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche (et donc gagnez 2d6 supplémentaires au lieu d'un seul).
-##### Position avantageuse (niveau 2)
-A partir du niveau 2, si vous n'avez pas bougé pendant votre tour, vous gagnez Portée +5 et pouvez relancer les jets de tir ayant obtenu 1.
-##### Tir dans le genou (niveau 5)
-A partir du niveau 5, lorsque vous infligez des dégâts avec une arme à distance, vous pouvez choisir de retirer une touche pour infliger l'état **Immobilisé** ou **À Terre** à la cible.
+A partir du niveau 2, vous pouvez dépenser votre réaction pour relancer tous vos dés ayant obtenu un échec lors d'une attaque.
+##### Tir stable (niveau 2)
+A partir du niveau 2, vous pouvez dépenser votre réaction pour gagner +2d6 sur votre attaque à distance.
+##### Retranchement (niveau 5)
+A partir du niveau 5, si vous n'acez subit aucun dégâts depuis votre dernier tour, vous gagnez Perforant (1) sur vos attaques à distance.
 ##### Avantagé en toute circonstance (niveau 8)
 A partir du niveau 8, vos tirs en action longue bénéficient de Perforant (+2) et vos tirs en action courte bénéficient de +3d6.
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
-
-___
-<center><h2>Ombrelame</h2> </center>
-
-Le Voleur qui préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
-##### Magie mineure (niveau 2)
-A partir du niveau 2, vous gagnez une **Réserve de Magie de 3d6** et connaissez le [Domaine de magie](Règles/Magie) de votre choix. Votre niveau de sort max est 1.
-##### Lame spectrale (niveau 2)
-A partir du niveau 2, vous pouvez utiliser une action courte pour dépenser un de vos dé de magie et invoquer une dague d'énergie pure qui inflige des dégâts magiques. Elle disparaît si elle se trouve à plus de 20m de vous.
-##### Tir dans le genou (niveau 5)
-A partir du niveau 5, vous pouvez dépenser 1 dé de magie pour vous téléporter instantanément à la place de votre **Lame Spectrale** (Portée 9m).
-De plus, votre réserve de dés de magie augmente de 1.
-##### Magie intermédiaire (niveau 8)
-A partir du niveau 8, votre réserve de dés de magie augmente de 1 et votre niveau de sort max devient 2.
-##### Art onirique (niveau 11)
-A partir du niveau 11, vous pouvez lancer des sorts depuis votre **Lame spectrale**. De plus, lancer un sort depuis votre **Lame spectrale** ne vous coûte aucune action et vous pouvez lancer des sorts en étant engagé en mêlée si cette dernière a réussi à infliger une blessure ce tour-ci.
