@@ -26,10 +26,10 @@ Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
 ###### Course
-Lorsque vous atteignez le niveau 4, votre Vitesse augmente de 1.
+À partir du niveau 4, vous débutez un combat avec 3 **PA** de plus.
 ## Niveau 7
 ##### Instinct de survie
-Lorsque vous atteignez le niveau 7, vous possédez une réaction supplémentaire par tour.
+Lorsque vous atteignez le niveau 7, vous pouvez utiliser 2 réactions par tour.
 ## Niveau 10
 ##### Maître des Ombres
 À partir du niveau 10, les attaques vous prenant pour cible souffrent d'un malus de -1 pour toucher.
@@ -86,9 +86,8 @@ A partir du niveau 11, au début de chaque tour, vous pouvez effectuer une attaq
 ___
 <center><h2>Franc-tireur</h2> </center>
 
-Le Franc-Tireur préfère ne jamais se salir les mains. Il applique la létalité de l'assassin mais à 20 mètres de distance.
 ##### Tir de précision (niveau 2)
-A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche.
+A partir du niveau 2, si vous parvenez à appliquer **Coup bas** lors d'une attaque à distance, vous considérez toujours que vous avez une arme en main gauche (et donc gagnez 2d6 supplémentaires au lieu d'un seul).
 ##### Position avantageuse (niveau 2)
 A partir du niveau 2, si vous n'avez pas bougé pendant votre tour, vous gagnez Portée +5 et pouvez relancer les jets de tir ayant obtenu 1.
 ##### Tir dans le genou (niveau 5)
