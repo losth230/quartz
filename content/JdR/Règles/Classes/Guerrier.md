@@ -15,16 +15,16 @@ Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]] que vous 
 ## Créer un Guerrier
 ##### Entrainement
 Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire dans la liste ci-dessous :
-- **[[JdR/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge dévastatrice]]** : après avoir réussi une charge, vous bénéficiez de +2d6 à l'attaque gratuite octroyée.
-- **[[JdR/_Visualisation/Règles spéciales/Maître-Lame|Maitre-lame]]** : lors d'une attaque en mêlée, vous pouvez relancer les jets de touche ayant obtenu 1.
-- **[[JdR/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'élite]]** : lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1.
-- **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est utilisable qu'une seule fois par jour.
-- **Défenseur** : lorsque vous effectuez des jets d'armure, vous pouvez relancer vos jets ayant obtenu 1 si vous possédez un bouclier.
-- **Esquive** : lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour jeter 1d6 supplémentaire lors de votre test d'armure.
-- **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle [[JdR/_Visualisation/Règles spéciales/Anti-infanterie|Anti-Infanterie]].
-- **Discipline** : recevez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*.
 - **Bagarreur** : lorsque vous ne maniez aucune arme ou bouclier, vos attaques à mains nues bénéficient de 2d6 supplémentaires en mêlée.
 - **Bourreau :** vos attaques contre les cibles ayant moins de 50% de leurs [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +2d6.
+- **Bretteur** : si vous maniez une arme à une main sans rien dans votre seconde main, vous bénéficiez de la règle [[JdR/_Visualisation/Règles spéciales/Anti-infanterie|Anti-Infanterie]].
+- **[[JdR/_Visualisation/Règles spéciales/Charge Dévastatrice|Charge dévastatrice]]** : après avoir réussi une charge, vous bénéficiez de +2d6 à l'attaque gratuite octroyée.
+- **Défenseur** : lorsque vous effectuez des jets d'armure, vous pouvez relancer vos jets ayant obtenu 1 si vous possédez un bouclier.
+- **Discipline** : recevez 1 *[[JdR/_Visualisation/Règles/Points de talent|point de talent]]*.
+- **Esquive** : lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour jeter 1d6 supplémentaire lors de votre test d'armure.
+- **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est utilisable qu'une seule fois par jour.
+- **[[JdR/_Visualisation/Règles spéciales/Maître-Lame|Maitre-lame]]** : lors d'une attaque en mêlée, vous
+- **[[JdR/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'élite]]** : lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1. pouvez relancer les jets de touche ayant obtenu 1.
 - **Vif :** au début de chaque combat, recevez 1 **PA** supplémentaire.
 - **Visée :** vos pouvez utiliser une action longue au lieu d'une action courte pour un tir et ainsi bénéficier de [[JdR/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]] pour cette attaque.
 ##### Parade
@@ -44,7 +44,7 @@ Lorsque vous atteignez le niveau 4 ou 7, vous pouvez apprendre un nouvel [[JdR/R
 A partir du niveau 10, lorsque vous réalisez une charge, vous gagnez [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (+1)]] et +1d6 en mêlée lors de l'attaque gratuite octroyée par la charge.
 ## Niveau 12
 ##### Frénésie guerrière
-A partir du niveau 12, vous pouvez dépenser une action courte pour annuler tous les états négatifs vous affectant.
+A partir du niveau 12, vous pouvez dépenser 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]] pour annuler tous les états négatifs vous affectant.
 
 <center><h1>Spécialisations</h1> </center>
 
@@ -52,15 +52,15 @@ ___
 <center><h2>Sanguinaire</h2> </center>
 
 #### Exécution (niveau 2)
-A partir du niveau 2, vos attaques contre les cibles ayant moins de 50% de leurs [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +1d6 et infligent des [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]].
+A partir du niveau 2, vos attaques contre les cibles ayant moins de 50% de leurs [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] infligent des [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]].
 ##### Soif de sang (niveau 2)
 A partir du niveau 2, lorsque vous infligez au moins 1 dégât [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]], vous récupérez 1 [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]].
 ##### Bourreau (niveau 5)
 A partir du niveau 5, vos attaques contre les cibles ayant perdu au moins 1 [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] bénéficient de +2d6.
 ##### Exécution améliorée (niveau 8)
-A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] avec la règle [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]]. Vous infligez 2 blessure par [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]].
+A partir du niveau 8, vos attaques contre les créatures ayant moins de 50% [[JdR/_Visualisation/Règles/Points de vie|Points de Vie]] avec la règle [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]] infligent 1 blessure par [[JdR/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice]] en plus des blessures normales.
 ##### Mise a mort (niveau 11)
-A partir du niveau 11, lorsque vous tuez une créature de niveau 6 ou plus, vous récupérez toutes vos actions.
+A partir du niveau 11, lorsque vous tuez une créature de niveau 6 ou plus, vous récupérez 2 [[JdR/_Visualisation/Règles/Point d'Action|PA]].
 
 ___
 <center><h2>Escrimeur</h2> </center>
@@ -72,8 +72,8 @@ A partir du niveau 2, si vous combattez avec une arme à une main et rien dans v
 - **Posture du Crépuscule :** lorsque vous entrez dans cette posture, vous recevez [[JdR/_Visualisation/Règles spéciales/Egide|Egide (1)]]. Si votre égide bloque une touche, vous générez une **Manœuvre**. 
 ##### Manœuvres (Niveau 2)
 A partir du niveau 2, vous pouvez dépenser vos **Manœuvres** pour des actions spéciales.
-- **Frappe de l'étoile (3 Manœuvres)** : dépenser une action courte pour effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
-- **Retrait défensif (1 Manœuvre)** : dépensez votre réaction pour recevoir [[JdR/_Visualisation/Règles spéciales/Egide|Egide (2)]].
+- **Frappe de l'étoile (3 Manœuvres)** : dépenser 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]] pour effectuer une marche puis réaliser une attaque en mêlée qui ignore l'armure de votre adversaire. Ensuite, perdez votre posture.
+- **Retrait défensif (1 Manœuvre)** : dépensez 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]] pour recevoir [[JdR/_Visualisation/Règles spéciales/Egide|Egide (2)]].
 - **Massacre (1 Manœuvre)** : à utiliser lors d'une attaque en mêlée pour gagner 2d6 supplémentaires.
 ##### Feinte (niveau 5)
 A partir du niveau 5, si vous réussissez au moins 1 jet d'armure après une attaque, vous pouvez dépenser votre réaction pour vous déplacer de 3m et infliger 1 [[JdR/_Visualisation/Règles/Dégâts Bruts|dégâts bruts]] à une créature à 1m ou moins. Cette règle s'applique si une [[JdR/_Visualisation/Règles spéciales/Egide|Egide]] bloque une touche.

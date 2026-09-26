@@ -91,8 +91,8 @@ Le nombre de réussites obtenues au test de Fabrication détermine le résultat 
 | 0 | Fiasco : perte des matériaux. |
 | 1-2 | Réussite normale : objet utilisable. |
 | 3-4 | Objet de qualité : l'objet reçoit une amélioration de rang 1 |
-| 4-5 | Chef-d'œuvre : l'objet reçoit une amélioration de rang 3 |
-| 6+ | Chef-d'œuvre : l'objet reçoit une amélioration de rang 1. |
+| 4-5 | Chef-d'œuvre : l'objet reçoit une amélioration de rang 2. |
+| 6+ | Chef-d'œuvre : l'objet reçoit une amélioration de rang 3. |
 
 ##### Matériaux de base
 Tout objet se fabrique à partir de 5 types de matériaux :
@@ -107,17 +107,17 @@ Tout objet se fabrique à partir de 5 types de matériaux :
 
 ## 4. Le Tour de Jeu
 ##### Structure d'un tour
-Lors de son tour, un personnage dispose d'un nombre de **Points d'Action (PA)** qu'il peut dépenser, et en gagne 2 au début de son tour. Un personnage ne peut jamais effectuer deux fois la même action lors d'un même tour.
+Lors de son tour, un personnage dispose d'un nombre de [[JdR/_Visualisation/Règles/Point d'Action|Points d'Action (PA)]] qu'il peut dépenser, et en gagne 2 au début de son tour. Un personnage ne peut jamais effectuer deux fois la même action lors d'un même tour.
 
-Au début d'un combat, chaque joueur reçoit 4 **PA**.
+Au début d'un combat, chaque joueur reçoit 4 [[JdR/_Visualisation/Règles/Point d'Action|PA]].
 
-Il peut également dépenser un **PA** pour utiliser une **réaction**, c'est à dire une action utilisable à n'importe quel moment en dehors de son tour.
+Il peut également dépenser un [[JdR/_Visualisation/Règles/Point d'Action|PA]] pour utiliser une **réaction**, c'est à dire une action utilisable à n'importe quel moment en dehors de son tour.
 ##### Les Actions
-- **Marche** *(1 PA)* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
-- **Course** *(2 PA)* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
-- **Tir** *(1 PA)* — attaque à distance contre une cible à portée.
-- **Mêlée** *(1 PA)* — attaque au corps-à-corps contre une cible adjacente.
-- **Se relever** *(1 PA)* — retire l'état à terre.
+- **Marche** *(1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
+- **Course** *(2 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
+- **Tir** *(1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — attaque à distance contre une cible à portée.
+- **Mêlée** *([[JdR/_Visualisation/Règles/Point d'Action|PA]])* — attaque au corps-à-corps contre une cible adjacente.
+- **Se relever** *([[JdR/_Visualisation/Règles/Point d'Action|PA]])* — retire l'état à terre.
 > **Terrain difficile :**
 > Un terrain difficile compte double pour le calcul de la distance parcourue en déplacement. Une créature avec 5 de Vitesse ne pourra donc traverser que 2 cases de terrain difficile lors d'un même mouvement.
 ##### Résoudre une Attaque
