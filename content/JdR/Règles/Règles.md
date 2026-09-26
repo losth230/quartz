@@ -25,10 +25,12 @@ Pour un test de compétence, le nombre de réussites nécessaires dépend de la 
 - Extrême : 4 réussites.  
 *Exemple : Aurore tente de crocheter un petit coffre (difficulté Facile, donc 1 réussite suffit). Son seuil en Crochetage est de 5+ et elle lance 4d6 (sa valeur de Physique). Elle obtient 2, 3, 3, 5 : une seule réussite, mais c'est suffisant.*
 ##### L'Échec Critique
-Un jet devient un Échec Critique — un résultat dramatique, pas un simple raté — lorsque les deux conditions suivantes sont réunies :
+Un jet devient un Échec Critique lorsque les deux conditions suivantes sont réunies :
 - Le jet ne contient **aucune réussite**,  
 **ET**  
 - Le jet contient **au moins deux résultats de 1**.
+##### Espoir et Désespoir
+Lorsqu'un joueur effectue un test, il doit toujours le faire avec un dé d'une couleur différente. Si le résultat de ce dé est 6, le joueur gagne 1 **Espoir**, si le résultat de ce dé est 1, le MJ gagne 1 **Désespoir**.
 ## 2. Le Personnage
 #### Caractéristiques
 Chaque personnage possède 7 caractéristiques. Quatre sont des valeurs fixes qui dépendent de l'équipement et du niveau du joueur :
@@ -74,7 +76,13 @@ Chaque arbre compte 7 compétences.
 - Réseautage : savoir qui connaître, et obtenir une information ou un contact utile grâce à son réseau.
 ##### Aider
 Un personnage peut aider un autre personnage sur une compétence qu'il possède lui-même. Le joueur effectuant le test ajoute alors à son pool un nombre de d6 égal au niveau de compétence de celui qui l'aide.  
-*Exemple : Anatole possède 1 niveau en Érudition et aide Anton sur un test d'Érudition. Anton lance ses 2d6 habituels (sa valeur de Mental) plus le 1d6 offert par Anatole.*
+*Exemple : Anatole possède 1 niveau en Érudition et aide Anton sur un test d'Érudition. Anton lance ses 2d6 habituels (sa valeur de Mental) plus le 1d6 offert par Anatole.
+##### Expériences et Valeurs
+Lors de la création d'un personnage, le joueur peut lui définir jusqu'à 3 traits d'expériences ou valeurs morales.
+
+*Par exemple, Thierry crée son personnage, et pourrait décider que c'est un personnage qui défendra toujours les plus pauvres, qu'il vient d'une grande cité, et qu'il a toujours vécu dans la rue.*
+
+> Un joueur peut dépenser 1 **Espoir** pour gagner un bonus de +2d6 sur un test de compétence ou d'attaque si celui-ci va avec les expériences ou les valeurs du personnage.
 ## 3. La Fabrication
 Dans Chasse & Pêche, un personnage peut fabriquer un objet à partir de matériaux trouvés ou récoltés durant l'aventure. Les recettes précises (quel objet, avec quels matériaux, pour quel effet) sont détaillées sur les pages dédiées à chaque type d'objet — cette section couvre uniquement la procédure et la résolution, communes à toutes.
 ##### Fabriquer un objet
@@ -115,11 +123,11 @@ Au début de son premier tour de combat, un personnage reçoit 4 [[JdR/_Visualis
 
 Il peut également dépenser un [[JdR/_Visualisation/Règles/Point d'Action|PA]] pour utiliser une **réaction**, c'est à dire une action utilisable à n'importe quel moment en dehors de son tour.
 ##### Les Actions
-- **Marche** *(1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
-- **Course** *(2 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
-- **Tir** *(1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])* — attaque à distance contre une cible à portée.
-- **Mêlée** *([[JdR/_Visualisation/Règles/Point d'Action|PA]])* — attaque au corps-à-corps contre une cible adjacente.
-- **Se relever** *([[JdR/_Visualisation/Règles/Point d'Action|PA]])* — retire l'état à terre.
+- **Marche (1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])** — mouvement d'une distance égale ou inférieure à la Vitesse du personnage.
+- **Course (2 [[JdR/_Visualisation/Règles/Point d'Action|PA]])** — mouvement d'une distance égale ou inférieure à deux fois sa Vitesse. Si ce mouvement amène le personnage au contact d'un autre, il s'agit d'une charge, qui octroie une action Mêlée gratuite — à condition que la cible ait été visible dès le début du mouvement.
+- **Tir (1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])** — attaque à distance contre une cible à portée.
+- **Mêlée (1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])** — attaque au corps-à-corps contre une cible adjacente.
+- **Se relever( 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]])** — retire l'état à terre.
 > **Terrain difficile :**
 > Un terrain difficile compte double pour le calcul de la distance parcourue en déplacement. Une créature avec 5 de Vitesse ne pourra donc traverser que 2 cases de terrain difficile lors d'un même mouvement.
 ##### Résoudre une Attaque
@@ -153,10 +161,22 @@ Lorsqu'un personnage tombe à 0 PV, il subit un **Trauma**. Il récupère un nom
 **Refuser un Trauma** — un joueur peut refuser de subir le Trauma (et donc de réduire sa caractéristique ou remonter à 1 PV), à condition de le justifier en jeu : son personnage s'effondre, sombre dans l'inconscience, etc.
 **Dernière scène** — un joueur ayant déjà subi des Traumas peut déclencher une dernière scène pour son personnage : il récupère immédiatement 1 PV par niveau ainsi que toute sa réserve de magie, mais meurt définitivement à la fin de la scène, ou si ses PV retombent à 0.
 **Guérir d'un Trauma** — aucun Trauma n'est irréversible : une prothèse peut compenser un membre perdu, une thérapie peut apaiser une phobie.
-## 6. La Magie
+## 6. Le Bivouac
+Lorsque les joueurs en ont la possibilité, ils peuvent décider de monter un Bivouac. Cela peut être une nuit à la taverne, une session de camping autour d'un feu de camp, ou simplement une journée de repos. Un Bivouac doit durer au moins 10h pour être valide.
+##### Actions de Bivouac
+Durant les temps creux des Bivouacs, les joueurs peuvent effectuer jusqu'à deux actions.
+- Déchiffrer un livre.
+- Fabriquer ou améliorer un objet.
+- Se reposer pour regagner la moitié de ses [[JdR/_Visualisation/Règles/Points de vie|PV]] et de sa réserve de magie.
+- Identifier un objet magique.
+- Soigner un trauma.
+- Vendre ou acheter des objets (si des marchands se trouvent à proximité).
+- Se former pour retirer 1 [[JdR/_Visualisation/Règles/Point de talent|point de talent]] d'une compétence et le transférer à une autre.
+Une action de Bivouac n'est pas forcément une réussite, mais peut être un progrès. *Par exemple, Camille utilise une action de Bivouac pour déchiffrer un livre. Elle n'arrivera probablement pas à déchiffrer le livre en entier, mais pourrait reconnaitre un lieux ou une personne qui est nommé de manière récurrente dans le livre.*
+## 7. La Magie
 La magie utilise le même moteur que le reste du jeu — un pool de dés, des 6 qui explosent — mais avec ses propres règles de risque.
 ##### Réserve de Magie
-Un personnage capable de lancer des sorts possède une Réserve de Magie, composée de d6. Sa taille dépend de sa classe (voir la page de la classe concernée) et elle est reconstituée après chaque repos.
+Un personnage capable de lancer des sorts possède une Réserve de Magie, composée de d6, qui dépend de la classe et des compétences du personnages.
 ##### Lancer un Sort
 Le joueur décrit l'effet qu'il souhaite produire, puis dépense autant de dés de sa réserve qu'il le souhaite. Plus le résultat obtenu est élevé, plus l'effet est puissant.
 > Une matrice reliant résultat obtenu et puissance de l'effet reste à écrire.

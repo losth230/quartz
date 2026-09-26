@@ -14,9 +14,9 @@ Choisissez ensuite 9 [[Règles/Règles#Compétences|compétences]]  que vous app
 - **Argent de départ** : 400 Florins.
 ## Créer un Savant
 ##### Anticipation
-Vous pouvez dépenser votre réaction pour permettre à un allié ou  à vous-même de relancer un dé lors d'un test de compétence ou d'attaque.
+Vous pouvez dépenser votre réaction pour permettre à un allié ou  à vous-même de relancer un dé lors d'un test de compétence, d'attaque ou d'armure.
 ##### Eclair de génie
-Vous pouvez dépenser votre réaction pour octroyer automatiquement une réussite à l'un de vos tests de compétence ou test de compétence que vous aidez. Vous ne pouvez utiliser cette réaction de nouveau avant d'avoir effectué un repos.
+Une fois par jour, vous pouvez octroyer une réussite à n'importe lequel de vos tests.
 ### Par delà le niveau 1
 Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteingez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 : 
@@ -25,17 +25,17 @@ A partir du niveau 2, vous pouvez choisir une spécialisation parmi les spécial
 ##### Amélioration de caractéristique
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4 : 
-##### Rat de bibliothèque 
-A partir du niveau 4, lorsque vous aidez ou vous faite aidez par lors d'un test de compétence, vous ou la créature que vous aidez bénéficie de +3d6 au lieu de +2d6
+##### Transmutation
+A partir du niveau 4, vous gagnez une nouvelle action de Bivouac, que vous pouvez utiliser pour transformer 1 matériaux en un autre matériaux de votre choix.
 ## Niveaux 7
 ##### Connaissances avancées
 A partir du niveau 7, lorsque vous utilisez Anticipation, l'allié ciblé peut relancer deux dés au lieu d'un seul.
 ## Niveau 10
-##### Optimisation
-A partir du niveau 10, Lorsque vous fabriquez un objet, vous dépensez 1 matériaux en moins.
+##### Rat de bibliothèque
+A partir du niveau 10, votre seuil de réussite ne peut jamais être inférieur à 5+.
 ## Niveau 12
-##### Réaction contrôlée
-A partir du niveau 12, vous possédez 2 réactions par tour.
+##### Optimisation
+A partir du niveau 12, sorsque vous fabriquez un objet, vous dépensez 1 matériaux en moins.
 
 <center><h1>Spécialisations</h1> </center>
 ___

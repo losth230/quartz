@@ -1,14 +1,14 @@
 ### Description
-Le **Voleur** est un maître de la furtivité, de la ruse et des attaques sournoises. Il excelle dans l’infiltration, l’utilisation des armes légères et dans l’art du vol. Grâce à sa rapidité et à son agilité, il peut éviter les dangers et surprendre ses ennemis. Que ce soit pour l’infiltration, l’espionnage ou l’assassinat, le Voleur sait comment se faufiler et frapper là où ça fait mal. Son rôle principal est de surprendre ses ennemis, de collecter des informations et de récupérer des objets précieux tout en restant invisible et insaisissable.
+Le **Voleur** est un maître de la furtivité, de la ruse et des attaques sournoises. Il excelle dans l'infiltration, l'utilisation des armes légères et dans l'art du vol. Grâce à sa rapidité et à son agilité, il peut éviter les dangers et surprendre ses ennemis. Que ce soit pour l'infiltration, l'espionnage ou l'assassinat, le Voleur sait comment se faufiler et frapper là où ça fait mal. Son rôle principal est de surprendre ses ennemis, de collecter des informations et de récupérer des objets précieux tout en restant invisible et insaisissable.
 ### Race
-Les Voleurs peuvent être de n'importe quelle **race** (Humain, Nain, Elfe, Gobelin, etc.), bien que les Elfes et les Gobelins soient souvent les plus adaptés à cette classe en raison de leur agilité et de leur finesse naturelle.
+Les Voleurs peuvent être de n'importe quelle **[[JdR/Règles/Races|race]]** (Humain, Nain, Elfe, Gobelin, etc.), bien que les Elfes et les Gobelins soient souvent les plus adaptés à cette classe en raison de leur agilité et de leur finesse naturelle.
 ### Caractéristiques de base
 ##### Compétences de base
 Les caractéristiques de base d'un Voleur sont :
 - **Mêlée** : 5+
 - **Tir** : 5+
-- **PV** : 4 + niveau de Résilience.
-Choisissez ensuite 8 [[Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
+- **PV** : 4 + niveau de [[JdR/_Visualisation/Règles/Résilience|Résilience]].
+Choisissez ensuite 8 [[JdR/Règles/Règles#Compétences|compétences]]  que vous apprenez niveau 1.
 ##### Equipement
 - **Maitrises** : Armures partielles.
 - **Argent de départ** : 350 Florins.
@@ -18,7 +18,7 @@ Lorsque vous subissez une attaque, vous pouvez  dépenser votre réaction pour a
 ##### Coup bas
 Lorsque vous effectuez  une attaque dans le dos d'une cible, vous pouvez jeter 1d6 supplémentaire lors de votre jet d'attaque et 1d6 supplémentaire si vous possédez une arme de main gauche.
 ### Par delà le niveau 1
-Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|point de talent]]. Si vous atteignez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
+Lorsque vous montez de niveau, vous gagnez 1 [[JdR/_Visualisation/Règles/Points de talent|point de talent]]. Si vous atteignez un niveau pair, gagnez également 1 PV. Consultez ensuite les sections ci-dessous pour apprendre vos nouvelles compétences.
 ## Niveau 2 :
 À partir du niveau 2, vous pouvez choisir une spécialisation parmi celles présentées dans les sections suivantes.
 ## Niveau 3, 6, 9
@@ -26,7 +26,7 @@ Lorsque vous montez de niveau, vous gagnez 1 [[Règles/Règles#Points de talent|
 Lorsque vous atteignez le niveau 3, 6 et 9, vous pouvez améliorer votre compétence de Mêlée ou Tir d'un niveau (un 5+ devient donc 4+).
 ## Niveau 4
 ###### Course
-À partir du niveau 4, vous débutez un combat avec 3 **PA** de plus.
+À partir du niveau 4, vous débutez un combat avec 3 [[JdR/_Visualisation/Règles/Point d'Action|PA]] de plus.
 ## Niveau 7
 ##### Instinct de survie
 Lorsque vous atteignez le niveau 7, vous pouvez utiliser 2 réactions par tour.
@@ -43,13 +43,13 @@ ___
 <center><h2>Assassin</h2> </center>
 
 ##### Attaques empoisonnées (niveau 2)
-A partir du niveau 2, vos attaques bénéficient de la règle **Attaques Empoisonnées**.
+A partir du niveau 2, vos attaques bénéficient de la règle **[[JdR/_Visualisation/Règles spéciales/Attaques Empoisonnées|Attaques Empoisonnées]]**.
 ##### Coup bas amélioré (niveau 2)
 A partir du niveau 2, lorsque vous effectuez une attaque dans le dos d'une adversaire, vous bénéficiez de 1d6 supplémentaire, et 1d6 supplémentaire si vous possédez une arme de main gauche ou à distance.
 ##### Rapidité mortelle (niveau 5)
 A partir du niveau 5, lors du premier tour d'un combat, vous pouvez effectuez deux fois la même action.
 ##### Frappe fatale (niveau 8)
-A partir du niveau 8, lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez 1 **PA**.
+A partir du niveau 8, lorsque vous réussissez une attaque dans le dos d'une créature, vous gagnez 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]].
 ##### Premier coup (niveau 11)
 A partir du niveau 11, si vous attaquez une créature avant que celle-ci n'ai pu jouer, vous gagnez +4d6 sur votre attaque.
 
@@ -91,8 +91,8 @@ A partir du niveau 2, vous pouvez dépenser votre réaction pour relancer tous v
 ##### Tir stable (niveau 2)
 A partir du niveau 2, vous pouvez dépenser votre réaction pour gagner +2d6 sur votre attaque à distance.
 ##### Retranchement (niveau 5)
-A partir du niveau 5, si vous n'acez subit aucun dégâts depuis votre dernier tour, vous gagnez Egide (2).
+A partir du niveau 5, si vous n'acez subit aucun dégâts depuis votre dernier tour, vous gagnez [[JdR/_Visualisation/Règles spéciales/Egide|Egide (2)]].
 ##### Avantagé en toute circonstance (niveau 8)
-A partir du niveau 8, lorsque vous tirez, vous pouvez choisir entre gagner +2d6 ou Perforant (+1) pour le tir.
+A partir du niveau 8, lorsque vous tirez, vous pouvez choisir entre gagner +2d6 ou [[JdR/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]] pour le tir.
 ##### Tir de sommation (niveau 11)
 Au début de chaque tour, vous pouvez effectuer une attaque de tir à distance avec une arme que vous avez équipé.
