@@ -41,19 +41,19 @@ Lorsque de la création d'un personnage **Peaux - Vertes**, vous pouvez choisir 
 - **Pluie de flèches** : Vous gagnez la règle spéciale Tireur d'élite.
 ### **Clan de la Harde de Fer**
 *Guerriers montés ou piétons brutaux, unis dans la ruée. Leur masse brise tout obstacle sur son passage.*
-- **Charge massive** : Vos charges ignorent les règles défensives.
+- **Charge massive** : Vos charges bénéficient de +1d6.
 ### **Clan du Crâne Mystique**
 *Guidés par les esprits, ils puisent leur puissance dans les morts et les flux magiques des combats.*
-- **Chasse aux crânes** :  Lorsque vous éliminez une créature de votre niveau ou plus, vous récupérez 1 dé de magie.
+- **Chasse aux crânes** :  vous bénéficiez de +2 dés sur votre réderve de magie.
 ### **Clan du Fléau Noir**
 *Honneur, discipline et efficacité brutale. Ce sont les élites martiales des Peaux - Vertes.*
 - **Troupes d’élite** : Vous gagnez la règle spéciale Maitre - Lame.
 ### **Clan des Mâcheurs Cendrés**
 *Maîtres des embuscades et de la guerre sylvestre, ils frappent sans prévenir, puis disparaissent.*
-- **Kachés dans la forêt** : Votre compétence **Discrétion** augmente de 1 niveau.
+- **Kachés dans la forêt** : Vous bénéficiez de +1 PA au début d'un combat.
 ### **Clan Fouet de Lave**
 *Fanatiques du feu et de la colère élémentaire, ils déchaînent la destruction sans contrôle.*
-- **Courroux élémentaire** : Toutes vos attaques sont des attaques magiques.
+- **Courroux élémentaire** : Vous bénéficiez d'un bonus de +1 à vos lancements de sorts.
 ### **Clan Forgefeu**
 *Technomagiciens ou pyromanciens dégénérés, ils transforment leur haine en flammes dévastatrices.*
 - **Embrasement** : vos attaques en mêlée et à distance bénéficient de la règle Attaques Enflammées.
