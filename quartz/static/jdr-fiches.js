@@ -48,8 +48,15 @@ const IDENTITE_PHYSIQUE = [
 ];
 const IDENTITE = [...IDENTITE_TITRE, ...IDENTITE_PHYSIQUE];
 
-/* Panneaux repliables, et leur état par défaut (true = replié) */
-const REPLIABLES = { histoire: true, notes: true };
+/* Panneaux repliables, et leur état par défaut (true = replié au chargement).
+   Tout est dépliable/repliable ; seuls Histoire et Notes démarrent fermés. */
+const REPLIABLES = {
+  identite: false, valeurs: false,
+  physique: false, mental: false, social: false,
+  armes: false, domaines: false,
+  capacites: false, inventaire: false, description: false,
+  histoire: true, notes: true,
+};
 
 /* ------------------------------------------------------------
    Icônes SVG inline — currentColor partout, donc elles suivent
@@ -479,15 +486,17 @@ function renderCompetences(catKey, catLabel) {
   const total = sommeArbre(catKey);
   const insuffisant = total < SEUIL_MIN_ARBRE;
   return `
-    <section class="jdr-bloc jdr-attributs">
-      ${bandeau(ICONES[catKey], catLabel)}
+    <section class="jdr-bloc jdr-attributs${state.replie[catKey] ? " est-replie" : ""}">
+      ${bandeau(ICONES[catKey], catLabel, catKey)}
       <div class="jdr-de${insuffisant ? " jdr-de-insuffisant" : ""}"
            data-de-badge="${catKey}"
            title="${insuffisant ? `Minimum ${SEUIL_MIN_ARBRE} niveaux requis dans cet arbre` : "Nombre de dés = somme des niveaux"}">
         ${total}d6
       </div>
-      <div class="jdr-comp-entetes"><span>Niv</span><span>Seuil</span><span></span></div>
-      ${lignes}
+      <div class="jdr-repliable">
+        <div class="jdr-comp-entetes"><span>Niv</span><span>Seuil</span><span></span></div>
+        ${lignes}
+      </div>
     </section>`;
 }
 
@@ -501,10 +510,12 @@ function renderValeurs() {
       <button type="button" class="jdr-btn-icone" data-action="retirer-valeur" title="Retirer">×</button>
     </div>`).join("");
   return `
-    <section class="jdr-bloc jdr-valeurs">
-      ${bandeau(ICONES.valeurs, "Valeurs et expériences")}
-      <div class="jdr-liste-valeurs">${lignes}</div>
-      <button class="jdr-btn jdr-btn-secondaire jdr-btn-ajout" data-action="ajouter-valeur">+ Ajouter</button>
+    <section class="jdr-bloc jdr-valeurs${state.replie.valeurs ? " est-replie" : ""}">
+      ${bandeau(ICONES.valeurs, "Valeurs et expériences", "valeurs")}
+      <div class="jdr-repliable">
+        <div class="jdr-liste-valeurs">${lignes}</div>
+        <button class="jdr-btn jdr-btn-secondaire jdr-btn-ajout" data-action="ajouter-valeur">+ Ajouter</button>
+      </div>
     </section>`;
 }
 
@@ -519,9 +530,10 @@ function renderArmes() {
       <td class="jdr-centre"><button type="button" class="jdr-btn-icone" data-action="retirer-arme" title="Retirer">×</button></td>
     </tr>`).join("");
   return `
-    <section class="jdr-bloc jdr-bloc-filigrane">
+    <section class="jdr-bloc jdr-bloc-filigrane${state.replie.armes ? " est-replie" : ""}">
       <div class="jdr-filigrane">${ICONES.armes}</div>
-      ${bandeau("", "Armes")}
+      ${bandeau("", "Armes", "armes")}
+      <div class="jdr-repliable">
       <table class="jdr-table-armes">
         <colgroup>
           <col style="width:26%"><col style="width:16%"><col style="width:14%">
@@ -531,6 +543,7 @@ function renderArmes() {
         <tbody>${lignes}</tbody>
       </table>
       <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-arme">+ Ajouter une arme</button>
+      </div>
     </section>`;
 }
 
@@ -547,11 +560,13 @@ function renderDomaines() {
       <input type="text" data-domaine="passif2" value="${esc(x.passif2 || "")}" placeholder="Passif 2">
     </div>`).join("");
   return `
-    <section class="jdr-bloc jdr-bloc-filigrane">
+    <section class="jdr-bloc jdr-bloc-filigrane${state.replie.domaines ? " est-replie" : ""}">
       <div class="jdr-filigrane">${ICONES.magie}</div>
-      ${bandeau("", "Domaines de magie")}
-      <div class="jdr-domaines">${lignes}</div>
-      <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-domaine">+ Ajouter un domaine</button>
+      ${bandeau("", "Domaines de magie", "domaines")}
+      <div class="jdr-repliable">
+        <div class="jdr-domaines">${lignes}</div>
+        <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-domaine">+ Ajouter un domaine</button>
+      </div>
     </section>`;
 }
 
@@ -606,6 +621,7 @@ function renderFiche() {
           }
           <input type="file" accept="image/*" data-champ="portrait-fichier" hidden>
         </div>
+
         <div class="jdr-entete-gauche">
           <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}"
                  placeholder="Nom + prénom" aria-label="Nom et prénom">
@@ -615,20 +631,27 @@ function renderFiche() {
             <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
           </div>
         </div>
-        <section class="jdr-bloc jdr-identite">${idPhysique}</section>
-      </div>
 
-      <div class="jdr-rang-stats">
+        <section class="jdr-bloc jdr-identite${state.replie.identite ? " est-replie" : ""}">
+          ${bandeau(ICONES.description, "Identité", "identite")}
+          <div class="jdr-repliable">
+            <div class="jdr-identite-grille">${idPhysique}</div>
+          </div>
+        </section>
+
         <div class="jdr-stats-gauche">
-          <div class="jdr-coeur" title="Points de vie">
-            <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+          <div class="jdr-jauges">
+            <div class="jdr-coeur" title="Points de vie">
+              <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+            </div>
+            <div class="jdr-fiole" title="Réserve de magie">
+              <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
+                     aria-label="Réserve de magie" placeholder="7d6">
+            </div>
           </div>
-          <div class="jdr-fiole" title="Réserve de magie">
-            <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
-                   aria-label="Réserve de magie" placeholder="7d6">
-          </div>
-          ${fanions}
+          <div class="jdr-fanions">${fanions}</div>
         </div>
+
         ${renderValeurs()}
       </div>
 
@@ -642,19 +665,23 @@ function renderFiche() {
       </div>
 
       <div class="jdr-grille-duo">
-        <section class="jdr-bloc jdr-bloc-filigrane">
+        <section class="jdr-bloc jdr-bloc-filigrane${state.replie.capacites ? " est-replie" : ""}">
           <div class="jdr-filigrane">${ICONES.capacites}</div>
-          ${bandeau("", "Capacités")}
-          <textarea data-champ="capacites" rows="4">${esc(d.capacites)}</textarea>
+          ${bandeau("", "Capacités", "capacites")}
+          <div class="jdr-repliable">
+            <textarea data-champ="capacites" rows="4">${esc(d.capacites)}</textarea>
+          </div>
         </section>
-        <section class="jdr-bloc jdr-bloc-filigrane">
+        <section class="jdr-bloc jdr-bloc-filigrane${state.replie.inventaire ? " est-replie" : ""}">
           <div class="jdr-filigrane">${ICONES.inventaire}</div>
-          ${bandeau("", "Florins + Inventaire")}
-          <label class="jdr-id-ligne jdr-florins">
-            <span>Florins</span>
-            <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
-          </label>
-          <textarea data-champ="inventaire" rows="4">${esc(d.inventaire)}</textarea>
+          ${bandeau("", "Florins + Inventaire", "inventaire")}
+          <div class="jdr-repliable">
+            <label class="jdr-id-ligne jdr-florins">
+              <span>Florins</span>
+              <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
+            </label>
+            <textarea data-champ="inventaire" rows="4">${esc(d.inventaire)}</textarea>
+          </div>
         </section>
       </div>
 
@@ -665,9 +692,11 @@ function renderFiche() {
             <textarea data-champ="histoire" rows="5">${esc(d.histoire)}</textarea>
           </div>
         </section>
-        <section class="jdr-bloc">
-          ${bandeau(ICONES.description, "Description physique")}
-          <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
+        <section class="jdr-bloc${state.replie.description ? " est-replie" : ""}">
+          ${bandeau(ICONES.description, "Description physique", "description")}
+          <div class="jdr-repliable">
+            <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
+          </div>
         </section>
       </div>
 
