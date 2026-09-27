@@ -610,30 +610,27 @@ function renderFiche() {
           <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}"
                  placeholder="Nom + prénom" aria-label="Nom et prénom">
           <div class="jdr-id-titre">${idTitre}</div>
+          <div class="jdr-niveau-talents">
+            <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
+            <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+          </div>
         </div>
         <section class="jdr-bloc jdr-identite">${idPhysique}</section>
       </div>
 
       <div class="jdr-rang-stats">
         <div class="jdr-stats-gauche">
-          <div class="jdr-niveau-talents">
-            <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
-            <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+          <div class="jdr-coeur" title="Points de vie">
+            <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
           </div>
-          <div class="jdr-jauges">
-            <div class="jdr-coeur" title="Points de vie">
-              <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
-            </div>
-            <div class="jdr-fiole" title="Réserve de magie">
-              <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
-                     aria-label="Réserve de magie" placeholder="7d6">
-            </div>
+          <div class="jdr-fiole" title="Réserve de magie">
+            <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
+                   aria-label="Réserve de magie" placeholder="7d6">
           </div>
+          ${fanions}
         </div>
         ${renderValeurs()}
       </div>
-
-      <div class="jdr-rang-fanions">${fanions}</div>
 
       <div class="jdr-grille-attributs">
         ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}

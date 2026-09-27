@@ -150,17 +150,19 @@
 
 /* ---- rangée 2 : niveau/talents + jauges | valeurs et expériences ---- */
 .jdr-rang-stats {
-  display: grid; grid-template-columns: auto 1fr; gap: .8rem;
-  align-items: start; margin-bottom: .8rem;
+  display: grid; grid-template-columns: auto minmax(240px, 1fr); gap: 1.2rem;
+  align-items: stretch; margin-bottom: .8rem;
 }
-.jdr-stats-gauche { display: flex; align-items: center; gap: 1rem; }
-.jdr-niveau-talents { display: flex; flex-direction: column; gap: .4rem; font-size: .85rem; }
+.jdr-stats-gauche { display: flex; align-items: center; gap: .7rem; flex-wrap: wrap; }
+
+/* Niveau / Talents : discrets, sous Race et Classe */
+.jdr-niveau-talents { display: flex; gap: 1rem; margin-top: .45rem; font-size: .78rem; }
 .jdr-niveau-talents label { display: flex; align-items: center; gap: .4em; }
-.jdr-niveau-talents span { font-weight: 700; min-width: 4em; }
-.jdr-niveau-talents input { width: 3.4em; }
+.jdr-niveau-talents span { font-weight: 700; opacity: .75; }
+.jdr-niveau-talents input { width: 3.2em; font-size: .82rem; padding: .1em .3em; }
 
 .jdr-jauges { display: flex; gap: .8rem; align-items: center; }
-.jdr-coeur, .jdr-fiole { width: 74px; height: 74px; display: grid; place-items: center; position: relative; }
+.jdr-coeur, .jdr-fiole { width: 68px; height: 68px; display: grid; place-items: center; position: relative; flex: none; }
 .jdr-coeur::before {
   content: ""; position: absolute; inset: 0;
   background: var(--jdr-accent); opacity: .18; border: 2px solid var(--jdr-accent);
@@ -178,18 +180,17 @@
 .jdr-fiole input { width: 3.6em; }
 
 /* valeurs et expériences : deux listes libres côte à côte */
-.jdr-valeurs { margin-bottom: 0; }
+.jdr-valeurs { margin-bottom: 0; padding: 0 .7rem .6rem; }
 .jdr-liste-valeurs {
-  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: .35rem .8rem; margin-bottom: .6rem;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: .3rem .6rem; margin-bottom: .45rem; align-content: start;
 }
 .jdr-puce { display: flex; align-items: center; gap: .2em; }
 .jdr-puce input { flex: 1 1 0; min-width: 0; font-size: .88rem; }
 .jdr-btn-ajout { align-self: flex-start; }
 
 /* ---- fanions de stats ---- */
-.jdr-rang-fanions { display: flex; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
-.jdr-fanion { width: 108px; text-align: center; }
+.jdr-fanion { width: 100px; text-align: center; }
 .jdr-fanion-titre {
   background: var(--jdr-bandeau); color: var(--jdr-papier);
   font-family: var(--jdr-police-titre); font-size: .85rem; letter-spacing: .05em;
