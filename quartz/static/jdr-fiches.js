@@ -130,7 +130,6 @@ function defaultDonnees() {
     identite: Object.fromEntries(IDENTITE.map(([k]) => [k, ""])),
     des: { physique: "3d6", mental: "3d6", social: "3d6" },
     valeurs: [],
-    experiences: [],
     competences: comps,
     armes: [],
     domaines_magie: [],
@@ -168,8 +167,9 @@ function normaliseDonnees(d) {
     };
   }
   out.armes = Array.isArray(d.armes) ? d.armes : [];
-  out.valeurs = normaliseListeNoms(d.valeurs);
-  out.experiences = normaliseListeNoms(d.experiences);
+  // Valeurs et expériences ont fusionné en une seule liste : on récupère
+  // les anciennes "experiences" enregistrées à part, sans rien perdre.
+  out.valeurs = [...normaliseListeNoms(d.valeurs), ...normaliseListeNoms(d.experiences)];
   // Domaines : l'ancien format était ["Cataclysme", "Givre", ""] —
   // on le convertit en objets {nom, passif1, passif2} sans rien perdre.
   out.domaines_magie = Array.isArray(d.domaines_magie)
@@ -401,9 +401,6 @@ function lireFicheDepuisDom() {
   d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")]
     .map((el) => ({ nom: el.querySelector("[data-valeur='nom']").value.trim() }))
     .filter((v) => v.nom);
-  d.experiences = [...root.querySelectorAll("[data-experience-ligne]")]
-    .map((el) => ({ nom: el.querySelector("[data-experience='nom']").value.trim() }))
-    .filter((v) => v.nom);
   d.capacites = val("[data-champ='capacites']");
   d.inventaire = val("[data-champ='inventaire']");
   d.florins = num("[data-champ='florins']");
@@ -494,32 +491,20 @@ function renderCompetences(catKey, catLabel) {
     </section>`;
 }
 
-/* Valeurs = idéaux auxquels croit le personnage.
-   Expériences = son passé (vécu en ville, ancien soldat…). */
+/* Valeurs et expériences : une seule et même liste — ce à quoi croit
+   le personnage et d'où il vient, sans distinction mécanique. */
 function renderValeurs() {
-  const d = state.courant.donnees;
-  const liste = (items, type) =>
-    (items.length ? items : [{}]).map((v) => `
-      <div class="jdr-puce" data-${type}-ligne>
-        <input type="text" data-${type}="nom" value="${esc(v.nom || "")}"
-               placeholder="${type === "valeur" ? "Honnêteté, Justice…" : "Vécu en ville, ancien soldat…"}">
-        <button type="button" class="jdr-btn-icone" data-action="retirer-${type}" title="Retirer">×</button>
-      </div>`).join("");
+  const items = state.courant.donnees.valeurs;
+  const lignes = (items.length ? items : [{}]).map((v) => `
+    <div class="jdr-puce" data-valeur-ligne>
+      <input type="text" data-valeur="nom" value="${esc(v.nom || "")}" aria-label="Valeur ou expérience">
+      <button type="button" class="jdr-btn-icone" data-action="retirer-valeur" title="Retirer">×</button>
+    </div>`).join("");
   return `
     <section class="jdr-bloc jdr-valeurs">
       ${bandeau(ICONES.valeurs, "Valeurs et expériences")}
-      <div class="jdr-deux-listes">
-        <div>
-          <div class="jdr-sous-titre">Valeurs</div>
-          <div data-liste="valeur">${liste(d.valeurs, "valeur")}</div>
-          <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-valeur">+ Ajouter</button>
-        </div>
-        <div>
-          <div class="jdr-sous-titre">Expériences</div>
-          <div data-liste="experience">${liste(d.experiences, "experience")}</div>
-          <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-experience">+ Ajouter</button>
-        </div>
-      </div>
+      <div class="jdr-liste-valeurs">${lignes}</div>
+      <button class="jdr-btn jdr-btn-secondaire jdr-btn-ajout" data-action="ajouter-valeur">+ Ajouter</button>
     </section>`;
 }
 
@@ -577,17 +562,14 @@ function renderFiche() {
   const p = state.courant;
   const d = p.donnees;
 
-  const idTitre = IDENTITE_TITRE.map(([k, label]) => `
-    <label class="jdr-id-ligne">
-      <span>${label}</span>
-      <input type="text" data-identite="${k}" value="${esc(d.identite[k])}">
-    </label>`).join("");
+  // Le libellé sert de texte indicatif DANS la case : pas de colonne
+  // d'étiquettes à côté, donc des blocs nettement plus compacts.
+  const champIdentite = ([k, label]) => `
+    <input type="text" class="jdr-champ-identite" data-identite="${k}"
+           value="${esc(d.identite[k])}" placeholder="${label}" aria-label="${label}">`;
 
-  const idPhysique = IDENTITE_PHYSIQUE.map(([k, label]) => `
-    <label class="jdr-id-ligne">
-      <span>${label}</span>
-      <input type="text" data-identite="${k}" value="${esc(d.identite[k])}">
-    </label>`).join("");
+  const idTitre = IDENTITE_TITRE.map(champIdentite).join("");
+  const idPhysique = IDENTITE_PHYSIQUE.map(champIdentite).join("");
 
   const fanions = [
     ["vitesse", "Vitesse", d.vitesse],
@@ -801,17 +783,6 @@ function attacherEvenements(root) {
         break;
       case "retirer-valeur": {
         const el = e.target.closest("[data-valeur-ligne]");
-        if (el) { el.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
-        break;
-      }
-      case "ajouter-experience":
-        lireFicheDepuisDom();
-        state.courant.donnees.experiences.push({ nom: "" });
-        state.dirty = true;
-        render();
-        break;
-      case "retirer-experience": {
-        const el = e.target.closest("[data-experience-ligne]");
         if (el) { el.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
         break;
       }

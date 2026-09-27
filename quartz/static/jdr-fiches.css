@@ -101,8 +101,10 @@
 
 /* ---- rangée 1 : portrait | nom+race+classe | identité physique ---- */
 .jdr-entete-fiche {
-  display: grid; grid-template-columns: auto minmax(220px, 1fr) minmax(260px, 30%);
-  gap: .8rem; align-items: start; margin-bottom: .8rem;
+  display: grid;
+  grid-template-columns: auto minmax(220px, 360px) minmax(280px, 400px);
+  justify-content: space-between;
+  gap: 2.5rem; align-items: start; margin-bottom: .8rem;
 }
 .jdr-portrait {
   position: relative; width: 96px; height: 96px; flex: none;
@@ -133,10 +135,14 @@
 }
 .jdr-id-titre { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
 
+/* libellé intégré à la case : le texte indicatif tient lieu d'étiquette */
+.jdr-champ-identite { width: 100%; font-size: .9rem; padding: .35em .6em; }
+.jdr-champ-identite::placeholder { color: var(--jdr-encre); opacity: .55; font-weight: 700; }
+
 /* identité physique : 2 colonnes × 3 lignes */
 .jdr-identite {
-  display: grid; grid-template-columns: 1fr 1fr; gap: .3rem .9rem;
-  padding-top: .6rem; align-content: start;
+  display: grid; grid-template-columns: 1fr 1fr; gap: .5rem .7rem;
+  padding: .9rem; align-content: start;
 }
 .jdr-id-ligne { display: flex; align-items: center; gap: .5em; font-size: .85rem; min-width: 0; }
 .jdr-id-ligne span { font-weight: 700; min-width: 4.4em; flex: none; }
@@ -173,13 +179,13 @@
 
 /* valeurs et expériences : deux listes libres côte à côte */
 .jdr-valeurs { margin-bottom: 0; }
-.jdr-deux-listes { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem 1.2rem; }
-.jdr-sous-titre {
-  font-family: var(--jdr-police-titre); font-size: .74rem; font-weight: 700;
-  letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: .3rem;
+.jdr-liste-valeurs {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: .35rem .8rem; margin-bottom: .6rem;
 }
-.jdr-puce { display: flex; align-items: center; gap: .3em; margin-bottom: .25rem; }
+.jdr-puce { display: flex; align-items: center; gap: .2em; }
 .jdr-puce input { flex: 1 1 0; min-width: 0; font-size: .88rem; }
+.jdr-btn-ajout { align-self: flex-start; }
 
 /* ---- fanions de stats ---- */
 .jdr-rang-fanions { display: flex; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
@@ -281,7 +287,6 @@
   .jdr-stats-gauche { justify-content: space-between; }
   .jdr-grille-attributs { grid-template-columns: 1fr; }
   .jdr-grille-duo { grid-template-columns: 1fr; }
-  .jdr-deux-listes { grid-template-columns: 1fr; }
   .jdr-id-titre { grid-template-columns: 1fr; }
   .jdr-cell-date { display: none; }
   .jdr-table-liste th:last-child { display: none; }
