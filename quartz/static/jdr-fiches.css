@@ -11,7 +11,11 @@
   color: var(--jdr-encre);
   font-family: var(--jdr-police-corps);
 }
-.jdr-app { max-width: 980px; margin: 0 auto; }
+
+/* Pleine largeur de la page : la fiche se lit en défilant vers le bas,
+   sans limite verticale. Si le gabarit Quartz contraint la colonne de
+   contenu, c'est là qu'il faut élargir, pas ici. */
+.jdr-app { width: 100%; max-width: none; margin: 0; }
 
 /* ---- boutons ---- */
 .jdr-btn {
@@ -24,12 +28,13 @@
 .jdr-btn-principal { background: var(--jdr-bandeau); color: var(--jdr-papier); }
 .jdr-btn-principal:disabled { opacity: .45; cursor: default; }
 .jdr-btn-principal:not(:disabled):hover { background: var(--jdr-encre-forte); }
+.jdr-btn-secondaire { font-size: .82rem; padding: .3em .8em; }
 .jdr-btn-secondaire:hover { background: var(--jdr-ligne); }
 .jdr-btn-danger { border-color: var(--jdr-accent); color: var(--jdr-accent); }
 .jdr-btn-danger:hover { background: var(--jdr-accent); color: var(--jdr-papier); }
 .jdr-btn-icone {
   border: none; background: none; color: var(--jdr-accent);
-  font-size: 1rem; line-height: 1; cursor: pointer;
+  font-size: 1rem; line-height: 1; cursor: pointer; flex: none;
   width: 1.7em; height: 1.7em; border-radius: 50%;
   display: inline-flex; align-items: center; justify-content: center;
   transition: background .15s;
@@ -54,46 +59,53 @@
 .jdr-erreur { color: var(--jdr-accent); font-style: normal; }
 
 /* ---- barre d'action fiche ---- */
-.jdr-barre {
-  display: flex; align-items: center; gap: 1rem;
-  margin-bottom: 1.2rem; flex-wrap: wrap;
-}
+.jdr-barre { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap; }
 .jdr-barre-etat { flex: 1; font-size: .82rem; font-style: italic; opacity: .75; }
 .jdr-barre-actions { display: flex; gap: .5rem; }
 
-/* ---- blocs / bandeaux (style fiche papier) ---- */
+/* ---- blocs / bandeaux ---- */
 .jdr-bloc {
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
   background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
   padding: 0 .9rem .9rem; margin-bottom: .8rem; position: relative;
+  display: flex; flex-direction: column;
 }
 .jdr-bandeau {
+  align-self: flex-start;
   display: inline-flex; align-items: center; gap: .45em;
   background: var(--jdr-bandeau); color: var(--jdr-papier);
   font-family: var(--jdr-police-titre); font-size: .95rem; letter-spacing: .04em;
   padding: .25em 1.1em; margin: -1px 0 .7rem; border-radius: 0 0 6px 6px;
+  border: none;
 }
+.jdr-bandeau-repliable { cursor: pointer; font-family: var(--jdr-police-titre); }
+.jdr-bandeau-repliable:hover { background: var(--jdr-encre-forte); }
+.jdr-bandeau-repliable:focus-visible { outline: 2px solid var(--jdr-accent); outline-offset: 2px; }
 .jdr-icone { width: 15px; height: 15px; flex: none; }
+.jdr-chevron { width: 14px; height: 14px; flex: none; margin-left: .2em; transition: transform .18s; }
+.jdr-bandeau-repliable.est-replie .jdr-chevron { transform: rotate(-90deg); }
 
-/* filigranes décoratifs en fond des sections équipement/capacités/magie/inventaire */
+/* panneaux repliables : Histoire et Notes sont fermés au chargement */
+.jdr-bloc.est-replie { padding-bottom: 0; }
+.jdr-bloc.est-replie .jdr-bandeau { margin-bottom: 0; }
+.jdr-bloc.est-replie .jdr-repliable { display: none; }
+
+/* filigranes décoratifs */
 .jdr-filigrane {
   position: absolute; z-index: -1; bottom: .5rem; right: .6rem;
   width: 76px; height: 76px; color: var(--jdr-encre-forte); opacity: .16;
   pointer-events: none;
 }
 .jdr-filigrane-svg { width: 100%; height: 100%; }
-
 .jdr-cadre { position: relative; }
 
-/* ---- entête de fiche ---- */
+/* ---- rangée 1 : portrait | nom+race+classe | identité physique ---- */
 .jdr-entete-fiche {
-  display: grid; grid-template-columns: auto minmax(190px, 240px) auto minmax(0, 320px);
-  gap: .7rem;
-  align-items: start; margin-bottom: .8rem;
+  display: grid; grid-template-columns: auto minmax(220px, 1fr) minmax(260px, 30%);
+  gap: .8rem; align-items: start; margin-bottom: .8rem;
 }
-/* portrait */
 .jdr-portrait {
-  position: relative; width: 84px; height: 84px; flex: none;
+  position: relative; width: 96px; height: 96px; flex: none;
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
   overflow: hidden; cursor: pointer;
   background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
@@ -115,23 +127,36 @@
 .jdr-portrait-suppr:hover { background: var(--jdr-accent); color: var(--jdr-papier); }
 
 .jdr-nom {
-  width: 100%; font-family: var(--jdr-police-titre); font-size: 1.7rem; font-weight: 700;
+  width: 100%; font-family: var(--jdr-police-titre); font-size: 1.6rem; font-weight: 700;
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
   background: transparent; color: var(--jdr-encre-forte); padding: .2em .5em;
 }
-.jdr-niveau-talents { display: flex; gap: 1.2rem; margin-top: .5rem; font-size: .9rem; }
-.jdr-niveau-talents label { display: flex; align-items: center; gap: .4em; }
-.jdr-niveau-talents input { width: 3.2em; }
+.jdr-id-titre { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
 
-/* jauges : cœur PV et fiole de magie */
+/* identité physique : 2 colonnes × 3 lignes */
+.jdr-identite {
+  display: grid; grid-template-columns: 1fr 1fr; gap: .3rem .9rem;
+  padding-top: .6rem; align-content: start;
+}
+.jdr-id-ligne { display: flex; align-items: center; gap: .5em; font-size: .85rem; min-width: 0; }
+.jdr-id-ligne span { font-weight: 700; min-width: 4.4em; flex: none; }
+.jdr-id-ligne input { flex: 1 1 0; min-width: 0; }
+
+/* ---- rangée 2 : niveau/talents + jauges | valeurs et expériences ---- */
+.jdr-rang-stats {
+  display: grid; grid-template-columns: auto 1fr; gap: .8rem;
+  align-items: start; margin-bottom: .8rem;
+}
+.jdr-stats-gauche { display: flex; align-items: center; gap: 1rem; }
+.jdr-niveau-talents { display: flex; flex-direction: column; gap: .4rem; font-size: .85rem; }
+.jdr-niveau-talents label { display: flex; align-items: center; gap: .4em; }
+.jdr-niveau-talents span { font-weight: 700; min-width: 4em; }
+.jdr-niveau-talents input { width: 3.4em; }
+
 .jdr-jauges { display: flex; gap: .8rem; align-items: center; }
-.jdr-coeur, .jdr-fiole {
-  width: 74px; height: 74px; display: grid; place-items: center; position: relative;
-}
-.jdr-coeur::before, .jdr-coeur::after {
-  content: ""; position: absolute; inset: 0;
-}
+.jdr-coeur, .jdr-fiole { width: 74px; height: 74px; display: grid; place-items: center; position: relative; }
 .jdr-coeur::before {
+  content: ""; position: absolute; inset: 0;
   background: var(--jdr-accent); opacity: .18; border: 2px solid var(--jdr-accent);
   clip-path: path("M37 68 C10 48 2 30 10 16 C18 4 34 6 37 20 C40 6 56 4 64 16 C72 30 64 48 37 68 Z");
 }
@@ -146,16 +171,17 @@
 }
 .jdr-fiole input { width: 3.6em; }
 
-/* identité */
-.jdr-identite {
-  display: grid; grid-template-columns: 1fr 1fr; gap: .15rem .9rem;
-  width: 100%; box-sizing: border-box; padding-top: .6rem;
+/* valeurs et expériences : deux listes libres côte à côte */
+.jdr-valeurs { margin-bottom: 0; }
+.jdr-deux-listes { display: grid; grid-template-columns: 1fr 1fr; gap: .4rem 1.2rem; }
+.jdr-sous-titre {
+  font-family: var(--jdr-police-titre); font-size: .74rem; font-weight: 700;
+  letter-spacing: .06em; text-transform: uppercase; opacity: .7; margin-bottom: .3rem;
 }
-.jdr-id-ligne { display: flex; align-items: center; gap: .5em; font-size: .85rem; min-width: 0; }
-.jdr-id-ligne span { font-weight: 700; min-width: 5.2em; flex: none; }
-.jdr-id-ligne input { flex: 1 1 0; min-width: 0; width: 100%; box-sizing: border-box; }
+.jdr-puce { display: flex; align-items: center; gap: .3em; margin-bottom: .25rem; }
+.jdr-puce input { flex: 1 1 0; min-width: 0; font-size: .88rem; }
 
-/* fanions de stats (signature de la fiche papier) */
+/* ---- fanions de stats ---- */
 .jdr-rang-fanions { display: flex; gap: .8rem; margin-bottom: .8rem; flex-wrap: wrap; }
 .jdr-fanion { width: 108px; text-align: center; }
 .jdr-fanion-titre {
@@ -164,17 +190,16 @@
   padding: .25em 0; border-radius: 4px 4px 0 0;
 }
 .jdr-fanion-corps {
-  border: 1.5px solid var(--jdr-encre-forte); border-top: none;
-  border-radius: 0 0 6px 6px;
+  border: 1.5px solid var(--jdr-encre-forte); border-top: none; border-radius: 0 0 6px 6px;
   padding: .6em 0; background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  display: flex; align-items: center; justify-content: center;
 }
 .jdr-fanion-corps input {
   width: 70%; text-align: center; font-size: 1.15rem; font-weight: 700;
   border: none; background: transparent; color: var(--jdr-encre-forte);
 }
 
-/* attributs + compétences */
+/* ---- attributs + compétences ---- */
 .jdr-grille-attributs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
 .jdr-de {
   position: absolute; top: .4rem; right: .8rem;
@@ -183,9 +208,7 @@
   color: var(--jdr-encre-forte); padding: .15em 0;
   cursor: default; user-select: none;
 }
-.jdr-de-insuffisant {
-  border-color: var(--jdr-accent); color: var(--jdr-accent);
-}
+.jdr-de-insuffisant { border-color: var(--jdr-accent); color: var(--jdr-accent); }
 .jdr-comp-entetes {
   display: grid; grid-template-columns: 3em 3em 1fr; gap: .4em;
   font-size: .72rem; font-weight: 700; opacity: .7; margin-bottom: .2rem;
@@ -197,7 +220,7 @@
 .jdr-comp-niv { width: 100%; text-align: center; }
 .jdr-comp-seuil { text-align: center; font-weight: 700; font-size: .85rem; }
 
-/* armes */
+/* ---- armes ---- */
 .jdr-table-armes { width: 100%; border-collapse: collapse; font-size: .88rem; margin-bottom: .7rem; }
 .jdr-table-armes th {
   text-align: left; font-family: var(--jdr-police-titre); font-weight: 600;
@@ -207,27 +230,30 @@
 }
 .jdr-table-armes td { padding: .3em .5em; border-bottom: 1px solid var(--jdr-ligne); }
 .jdr-table-armes tbody tr:hover td { background: color-mix(in srgb, var(--jdr-ligne) 40%, transparent); }
-.jdr-table-armes input {
-  width: 100%; border: none; background: transparent; color: var(--jdr-encre); padding: .1em .15em;
-}
+.jdr-table-armes input { width: 100%; border: none; background: transparent; color: var(--jdr-encre); padding: .1em .15em; }
 .jdr-table-armes input:focus-visible { outline: none; border-bottom: 1.5px solid var(--jdr-accent); }
 .jdr-table-armes .jdr-centre { text-align: center; }
 
-/* colonne basse */
-.jdr-grille-bas { display: grid; grid-template-columns: 3fr 2fr; gap: 1rem; margin-top: 1rem; }
+/* ---- domaines de magie : nom + deux passifs par domaine ---- */
+.jdr-domaines {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: .6rem; margin-bottom: .7rem;
+}
+.jdr-domaine {
+  border: 1px solid var(--jdr-ligne); border-radius: 5px; padding: .4rem .5rem;
+  display: flex; flex-direction: column; gap: .3rem;
+}
+.jdr-domaine-entete { display: flex; align-items: center; gap: .3em; }
+.jdr-domaine-nom { flex: 1 1 0; min-width: 0; font-weight: 700; font-family: var(--jdr-police-titre); }
+.jdr-domaine input { font-size: .85rem; }
+
+/* ---- grilles à deux colonnes ---- */
+.jdr-grille-duo { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start; }
+.jdr-grille-duo > .jdr-bloc { margin-bottom: .8rem; }
 .jdr-florins { margin-bottom: .5rem; }
 .jdr-florins input { max-width: 6em; }
 
-/* compteur points de valeur */
-.jdr-compteur-valeur { margin-bottom: .7rem; }
-.jdr-stepper { display: inline-flex; align-items: center; gap: .35em; }
-.jdr-stepper input { width: 3.2em; text-align: center; }
-.jdr-stepper .jdr-btn-icone { border: 1px solid var(--jdr-ligne); }
-
-/* histoire / description physique / notes */
-.jdr-grille-recit { display: grid; grid-template-columns: 3fr 2fr; gap: 1rem; margin-top: 1rem; }
-
-/* champs génériques */
+/* ---- champs génériques ---- */
 #jdr-fiches-app input, #jdr-fiches-app textarea {
   box-sizing: border-box;
   font-family: var(--jdr-police-corps); font-size: inherit;
@@ -237,18 +263,26 @@
 #jdr-fiches-app input:focus-visible, #jdr-fiches-app textarea:focus-visible {
   outline: 2px solid var(--jdr-accent); outline-offset: 1px;
 }
-#jdr-fiches-app textarea { width: 100%; resize: vertical; line-height: 1.45; }
+/* les zones de texte grandissent avec leur contenu (hauteur pilotée en JS) */
+#jdr-fiches-app textarea {
+  width: 100%; line-height: 1.45; resize: none; overflow: hidden; min-height: 4.5em;
+}
 #jdr-fiches-app input[type=number] { -moz-appearance: textfield; }
 #jdr-fiches-app input::-webkit-outer-spin-button,
 #jdr-fiches-app input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 
-/* responsive */
-@media (max-width: 820px) {
+/* ---- responsive ---- */
+@media (max-width: 1100px) {
   .jdr-entete-fiche { grid-template-columns: auto 1fr; }
-  .jdr-identite { min-width: 0; grid-column: 1 / -1; }
+  .jdr-identite { grid-column: 1 / -1; }
+}
+@media (max-width: 820px) {
+  .jdr-rang-stats { grid-template-columns: 1fr; }
+  .jdr-stats-gauche { justify-content: space-between; }
   .jdr-grille-attributs { grid-template-columns: 1fr; }
-  .jdr-grille-bas { grid-template-columns: 1fr; }
-  .jdr-grille-recit { grid-template-columns: 1fr; }
+  .jdr-grille-duo { grid-template-columns: 1fr; }
+  .jdr-deux-listes { grid-template-columns: 1fr; }
+  .jdr-id-titre { grid-template-columns: 1fr; }
   .jdr-cell-date { display: none; }
   .jdr-table-liste th:last-child { display: none; }
 }

@@ -16,7 +16,7 @@ import { sb as supabase } from "./cp-supabase.js";
 const TABLE = "jdr_personnages";
 
 /* ------------------------------------------------------------
-   Modèle de données (calqué sur le template papier)
+   Modèle de données
 ------------------------------------------------------------ */
 const COMPETENCES = {
   physique: [
@@ -24,12 +24,12 @@ const COMPETENCES = {
     "Intimidation", "Résilience", "Vigilance",
   ],
   mental: [
-    "Arcane", "Exploration", "Fabrication", "Histoire",
-    "Nature", "Premiers secours", "Religion",
+    "Arcane", "Exploration", "Fabrication", "Érudition",
+    "Nature", "Premiers secours", "Volonté",
   ],
   social: [
-    "Etiquette", "Dressage", "Manipulation", "Négociation",
-    "Présence / Volonté", "Perspicacité", "Spectacle",
+    "Etiquette", "Dressage", "Persuasion", "Présence",
+    "Perspicacité", "Spectacle", "Réseautage",
   ],
 };
 
@@ -39,18 +39,23 @@ const CATEGORIES = [
   { key: "social", label: "Social" },
 ];
 
-const IDENTITE = [
-  ["classe", "Classe"], ["race", "Race"], ["age", "Âge"],
-  ["taille", "Taille"], ["poids", "Poids"], ["peau", "Peau"],
-  ["yeux", "Yeux"], ["cheveux", "Cheveux"],
+/* Identité : Race/Classe sous le nom, le reste dans le bloc physique */
+const IDENTITE_TITRE = [["race", "Race"], ["classe", "Classe"]];
+const IDENTITE_PHYSIQUE = [
+  ["taille", "Taille"], ["peau", "Peau"],
+  ["cheveux", "Cheveux"], ["yeux", "Yeux"],
+  ["poids", "Poids"], ["age", "Âge"],
 ];
+const IDENTITE = [...IDENTITE_TITRE, ...IDENTITE_PHYSIQUE];
+
+/* Panneaux repliables, et leur état par défaut (true = replié) */
+const REPLIABLES = { histoire: true, notes: true };
 
 /* ------------------------------------------------------------
    Icônes SVG inline — currentColor partout, donc elles suivent
    automatiquement la couleur d'encre du thème (clair/sombre).
 ------------------------------------------------------------ */
 const ICONES = {
-  // Icônes de catégorie, affichées dans les bandeaux Physique/Mental/Social
   physique: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M6.5 10.2V7.6a1.9 1.9 0 1 1 3.8 0v2M10.3 9.6V6.4a1.9 1.9 0 1 1 3.8 0v3.4M14.1 10V7.6a1.7 1.7 0 1 1 3.4 0V13a4.6 4.6 0 0 1-4.6 4.6h-1.8A4.6 4.6 0 0 1 7 15.1L5.3 11.9c-.4-.8 0-1.7.9-2 .7-.2 1.4.1 1.8.8l.7 1.2"/>
   </svg>`,
@@ -63,7 +68,6 @@ const ICONES = {
     <path d="M4 6.5h12.5a1.8 1.8 0 0 1 1.8 1.8v5.4a1.8 1.8 0 0 1-1.8 1.8H10l-3.6 2.7v-2.7H4a1.8 1.8 0 0 1-1.8-1.8V8.3A1.8 1.8 0 0 1 4 6.5Z"/>
     <path d="M6.5 10.3h8M6.5 13h5.2"/>
   </svg>`,
-  // Filigranes en fond des sections équipement / capacités
   armes: `<svg class="jdr-filigrane-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <path d="M3 21 12.5 11.5M14 10l6.5-6.5.9 2.6L19 8.5l-2.6-.9L14 10Z"/>
     <path d="M21 21 11.5 11.5M10 14l-6.5 6.5-.9-2.6L5 15.5l2.6.9L10 14Z"/>
@@ -80,13 +84,11 @@ const ICONES = {
     <path d="M8 8V6.5a4 4 0 0 1 8 0V8"/>
     <path d="M5.5 8h13l1 12.5a1.6 1.6 0 0 1-1.6 1.5H6.1A1.6 1.6 0 0 1 4.5 20.5L5.5 8Z"/>
   </svg>`,
-  // Icône placeholder du portrait (avant upload)
   portrait: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <rect x="3.5" y="4.5" width="17" height="14" rx="1.6"/>
     <circle cx="9" cy="10" r="1.6"/>
     <path d="M4 16.5 8.5 12l3 3 3.5-4L20 15.5"/>
   </svg>`,
-  // Icône de bandeau pour la section Valeurs
   valeurs: `<svg class="jdr-icone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
     <circle cx="12" cy="12" r="8.2"/>
     <path d="M12 7.2 13.4 12 12 16.8 10.6 12 12 7.2Z" fill="currentColor" stroke="none"/>
@@ -103,6 +105,9 @@ const ICONES = {
     <path d="M4 20 14.5 9.5"/>
     <path d="M13 7l4 4-1.8 1.8-4-4L13 7Z"/>
     <path d="M4 20l1-4.2 3.2 3.2L4 20Z"/>
+  </svg>`,
+  chevron: `<svg class="jdr-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M6 9.5 12 15.5 18 9.5"/>
   </svg>`,
 };
 
@@ -125,10 +130,10 @@ function defaultDonnees() {
     identite: Object.fromEntries(IDENTITE.map(([k]) => [k, ""])),
     des: { physique: "3d6", mental: "3d6", social: "3d6" },
     valeurs: [],
-    points_valeur: 0,
+    experiences: [],
     competences: comps,
     armes: [],
-    domaines_magie: ["", "", ""],
+    domaines_magie: [],
     capacites: "",
     inventaire: "",
     florins: 0,
@@ -136,6 +141,15 @@ function defaultDonnees() {
     description_physique: "",
     notes: "",
   };
+}
+
+/* Liste de chaînes simples ({nom}) — tolère l'ancien format tableau
+   de chaînes brutes aussi bien que le nouveau format objet. */
+function normaliseListeNoms(v) {
+  if (!Array.isArray(v)) return [];
+  return v
+    .map((x) => (typeof x === "string" ? { nom: x } : { nom: (x && x.nom) || "" }))
+    .filter((x) => x.nom);
 }
 
 /* Fusionne les données stockées avec le modèle par défaut
@@ -154,10 +168,23 @@ function normaliseDonnees(d) {
     };
   }
   out.armes = Array.isArray(d.armes) ? d.armes : [];
-  out.valeurs = Array.isArray(d.valeurs) ? d.valeurs : [];
+  out.valeurs = normaliseListeNoms(d.valeurs);
+  out.experiences = normaliseListeNoms(d.experiences);
+  // Domaines : l'ancien format était ["Cataclysme", "Givre", ""] —
+  // on le convertit en objets {nom, passif1, passif2} sans rien perdre.
   out.domaines_magie = Array.isArray(d.domaines_magie)
-    ? [0, 1, 2].map((i) => d.domaines_magie[i] || "")
-    : ["", "", ""];
+    ? d.domaines_magie
+        .map((x) =>
+          typeof x === "string"
+            ? { nom: x, passif1: "", passif2: "" }
+            : {
+                nom: (x && x.nom) || "",
+                passif1: (x && x.passif1) || "",
+                passif2: (x && x.passif2) || "",
+              }
+        )
+        .filter((x) => x.nom || x.passif1 || x.passif2)
+    : [];
   return out;
 }
 
@@ -169,8 +196,7 @@ function seuil(niv) {
 }
 
 /* Nombre de dés d'un arbre = somme des niveaux de ses compétences.
-   Règle : chaque arbre (physique/mental/social) doit totaliser au
-   moins 2 niveaux répartis entre ses compétences. */
+   Règle : chaque arbre doit totaliser au moins 2 niveaux. */
 function sommeArbre(catKey) {
   const comp = state.courant?.donnees?.competences?.[catKey];
   if (!comp) return 0;
@@ -179,21 +205,17 @@ function sommeArbre(catKey) {
 
 const SEUIL_MIN_ARBRE = 2;
 
-// Section "Valeurs" (idéaux + points de valeur) : masquée pour l'instant,
-// le temps de finaliser la mécanique. Le code et les données existants
-// restent intacts — repasse à `true` pour la réafficher.
-const AFFICHER_VALEURS = false;
-
 /* ------------------------------------------------------------
    État
 ------------------------------------------------------------ */
 const state = {
-  view: "liste",        // "liste" | "fiche"
+  view: "liste",
   personnages: [],
-  courant: null,        // { id, nom, donnees, updated_at }
+  courant: null,
   dirty: false,
   chargement: true,
   erreur: null,
+  replie: { ...REPLIABLES },
 };
 
 /* ------------------------------------------------------------
@@ -216,9 +238,19 @@ function dateFr(iso) {
   }
 }
 
+/* Les panneaux s'adaptent à leur contenu : chaque textarea grandit
+   à la hauteur de son texte, sans barre de défilement interne. */
+function ajusterTextarea(ta) {
+  ta.style.height = "auto";
+  ta.style.height = ta.scrollHeight + "px";
+}
+
+function ajusterTousTextareas(root) {
+  root.querySelectorAll("textarea").forEach(ajusterTextarea);
+}
+
 /* Redimensionne et recompresse une image côté client avant stockage
-   en base64 dans le JSONB — évite d'alourdir la table Supabase avec
-   des photos brutes (souvent plusieurs Mo sur téléphone). */
+   en base64 dans le JSONB — évite d'alourdir la table Supabase. */
 function comprimerImage(fichier, tailleMax = 480, qualite = 0.75) {
   return new Promise((resolve, reject) => {
     const lecteur = new FileReader();
@@ -239,7 +271,6 @@ function comprimerImage(fichier, tailleMax = 480, qualite = 0.75) {
         canvas.width = width;
         canvas.height = height;
         const ctx = canvas.getContext("2d");
-        // Fond blanc : les PNG/portraits à transparence ne virent pas noir en JPEG
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, width, height);
         ctx.drawImage(img, 0, 0, width, height);
@@ -285,6 +316,7 @@ async function creerPersonnage() {
   state.courant = data;
   state.view = "fiche";
   state.dirty = false;
+  state.replie = { ...REPLIABLES };
   render();
 }
 
@@ -328,6 +360,7 @@ function lireFicheDepuisDom() {
   const p = state.courant;
   if (!p) return;
   const root = document.getElementById("jdr-fiches-app");
+  if (!root || state.view !== "fiche") return;
   const val = (sel) => root.querySelector(sel)?.value ?? "";
   const num = (sel) => {
     const n = parseInt(val(sel), 10);
@@ -360,15 +393,17 @@ function lireFicheDepuisDom() {
     attaques: tr.querySelector("[data-arme='attaques']").value.trim(),
     proprietes: tr.querySelector("[data-arme='proprietes']").value.trim(),
   })).filter((a) => a.nom || a.maniement || a.attaques || a.proprietes);
-  if (AFFICHER_VALEURS) {
-    d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")].map((tr) => ({
-      nom: tr.querySelector("[data-valeur='nom']").value.trim(),
-    })).filter((v) => v.nom);
-    d.points_valeur = num("[data-champ='points_valeur']");
-  }
-  // Si masquée, d.valeurs / d.points_valeur restent tels quels en mémoire
-  // (pas de champ dans le DOM à relire) — rien n'est perdu à l'enregistrement.
-  d.domaines_magie = [0, 1, 2].map((i) => val(`[data-magie='${i}']`).trim());
+  d.domaines_magie = [...root.querySelectorAll("[data-domaine-ligne]")].map((el) => ({
+    nom: el.querySelector("[data-domaine='nom']").value.trim(),
+    passif1: el.querySelector("[data-domaine='passif1']").value.trim(),
+    passif2: el.querySelector("[data-domaine='passif2']").value.trim(),
+  })).filter((x) => x.nom || x.passif1 || x.passif2);
+  d.valeurs = [...root.querySelectorAll("[data-valeur-ligne]")]
+    .map((el) => ({ nom: el.querySelector("[data-valeur='nom']").value.trim() }))
+    .filter((v) => v.nom);
+  d.experiences = [...root.querySelectorAll("[data-experience-ligne]")]
+    .map((el) => ({ nom: el.querySelector("[data-experience='nom']").value.trim() }))
+    .filter((v) => v.nom);
   d.capacites = val("[data-champ='capacites']");
   d.inventaire = val("[data-champ='inventaire']");
   d.florins = num("[data-champ='florins']");
@@ -418,8 +453,19 @@ function renderListe() {
 }
 
 /* ------------------------------------------------------------
-   Rendu — fiche de personnage
+   Rendu — briques réutilisables
 ------------------------------------------------------------ */
+function bandeau(icone, label, cle) {
+  if (!cle) return `<div class="jdr-bandeau">${icone || ""}<span>${label}</span></div>`;
+  const replie = state.replie[cle];
+  return `
+    <button type="button" class="jdr-bandeau jdr-bandeau-repliable${replie ? " est-replie" : ""}"
+            data-action="replier" data-panneau="${cle}"
+            aria-expanded="${replie ? "false" : "true"}">
+      ${icone || ""}<span>${label}</span>${ICONES.chevron}
+    </button>`;
+}
+
 function renderCompetences(catKey, catLabel) {
   const d = state.courant.donnees;
   const lignes = COMPETENCES[catKey].map((c) => {
@@ -437,7 +483,7 @@ function renderCompetences(catKey, catLabel) {
   const insuffisant = total < SEUIL_MIN_ARBRE;
   return `
     <section class="jdr-bloc jdr-attributs">
-      <div class="jdr-bandeau">${ICONES[catKey]}<span>${catLabel}</span></div>
+      ${bandeau(ICONES[catKey], catLabel)}
       <div class="jdr-de${insuffisant ? " jdr-de-insuffisant" : ""}"
            data-de-badge="${catKey}"
            title="${insuffisant ? `Minimum ${SEUIL_MIN_ARBRE} niveaux requis dans cet arbre` : "Nombre de dés = somme des niveaux"}">
@@ -448,37 +494,32 @@ function renderCompetences(catKey, catLabel) {
     </section>`;
 }
 
-/* Section "Valeurs" : les idéaux du personnage (Honnêteté, Justice,
-   Don de soi…) sont une liste libre sans score individuel — comme les
-   armes pour l'interaction (ajout/suppression de lignes), mais une
-   seule colonne. Les "points de valeur" sont un compteur global unique,
-   gagné en jouant ses idéaux et dépensé pour un bonus en jeu (mécanique
-   proche de l'Inspiration D&D, mais cumulable). */
+/* Valeurs = idéaux auxquels croit le personnage.
+   Expériences = son passé (vécu en ville, ancien soldat…). */
 function renderValeurs() {
   const d = state.courant.donnees;
-  const valeurs = d.valeurs;
-  const lignes = (valeurs.length ? valeurs : [{}]).map((v) => `
-    <tr data-valeur-ligne>
-      <td><input type="text" data-valeur="nom" value="${esc(v.nom || "")}" placeholder="Honnêteté, Justice, Don de soi…"></td>
-      <td class="jdr-centre"><button class="jdr-btn-icone" data-action="retirer-valeur" title="Retirer">×</button></td>
-    </tr>`).join("");
+  const liste = (items, type) =>
+    (items.length ? items : [{}]).map((v) => `
+      <div class="jdr-puce" data-${type}-ligne>
+        <input type="text" data-${type}="nom" value="${esc(v.nom || "")}"
+               placeholder="${type === "valeur" ? "Honnêteté, Justice…" : "Vécu en ville, ancien soldat…"}">
+        <button type="button" class="jdr-btn-icone" data-action="retirer-${type}" title="Retirer">×</button>
+      </div>`).join("");
   return `
-    <section class="jdr-bloc">
-      <div class="jdr-bandeau">${ICONES.valeurs}<span>Valeurs</span></div>
-      <label class="jdr-id-ligne jdr-compteur-valeur">
-        <span>Points de valeur</span>
-        <span class="jdr-stepper">
-          <button type="button" class="jdr-btn-icone" data-action="valeur-moins" title="Dépenser 1 point">−</button>
-          <input type="number" min="0" data-champ="points_valeur" value="${d.points_valeur || ""}">
-          <button type="button" class="jdr-btn-icone" data-action="valeur-plus" title="Gagner 1 point">+</button>
-        </span>
-      </label>
-      <table class="jdr-table-armes">
-        <colgroup><col style="width:94%"><col style="width:6%"></colgroup>
-        <thead><tr><th>Idéal</th><th></th></tr></thead>
-        <tbody id="jdr-valeurs-corps">${lignes}</tbody>
-      </table>
-      <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-valeur">+ Ajouter une valeur</button>
+    <section class="jdr-bloc jdr-valeurs">
+      ${bandeau(ICONES.valeurs, "Valeurs et expériences")}
+      <div class="jdr-deux-listes">
+        <div>
+          <div class="jdr-sous-titre">Valeurs</div>
+          <div data-liste="valeur">${liste(d.valeurs, "valeur")}</div>
+          <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-valeur">+ Ajouter</button>
+        </div>
+        <div>
+          <div class="jdr-sous-titre">Expériences</div>
+          <div data-liste="experience">${liste(d.experiences, "experience")}</div>
+          <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-experience">+ Ajouter</button>
+        </div>
+      </div>
     </section>`;
 }
 
@@ -490,29 +531,59 @@ function renderArmes() {
       <td><input type="text" data-arme="maniement" value="${esc(a.maniement || "")}"></td>
       <td><input type="text" data-arme="attaques" value="${esc(a.attaques || "")}"></td>
       <td><input type="text" data-arme="proprietes" value="${esc(a.proprietes || "")}"></td>
-      <td class="jdr-centre"><button class="jdr-btn-icone" data-action="retirer-arme" title="Retirer">×</button></td>
+      <td class="jdr-centre"><button type="button" class="jdr-btn-icone" data-action="retirer-arme" title="Retirer">×</button></td>
     </tr>`).join("");
   return `
     <section class="jdr-bloc jdr-bloc-filigrane">
       <div class="jdr-filigrane">${ICONES.armes}</div>
-      <div class="jdr-bandeau">Armes</div>
+      ${bandeau("", "Armes")}
       <table class="jdr-table-armes">
         <colgroup>
-          <col style="width:24%"><col style="width:16%"><col style="width:16%">
+          <col style="width:26%"><col style="width:16%"><col style="width:14%">
           <col style="width:38%"><col style="width:6%">
         </colgroup>
         <thead><tr><th>Arme</th><th>Maniement</th><th>Attaques</th><th>Propriétés</th><th></th></tr></thead>
-        <tbody id="jdr-armes-corps">${lignes}</tbody>
+        <tbody>${lignes}</tbody>
       </table>
       <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-arme">+ Ajouter une arme</button>
     </section>`;
 }
 
+function renderDomaines() {
+  const doms = state.courant.donnees.domaines_magie;
+  const lignes = (doms.length ? doms : [{}]).map((x) => `
+    <div class="jdr-domaine" data-domaine-ligne>
+      <div class="jdr-domaine-entete">
+        <input type="text" class="jdr-domaine-nom" data-domaine="nom"
+               value="${esc(x.nom || "")}" placeholder="Domaine">
+        <button type="button" class="jdr-btn-icone" data-action="retirer-domaine" title="Retirer">×</button>
+      </div>
+      <input type="text" data-domaine="passif1" value="${esc(x.passif1 || "")}" placeholder="Passif 1">
+      <input type="text" data-domaine="passif2" value="${esc(x.passif2 || "")}" placeholder="Passif 2">
+    </div>`).join("");
+  return `
+    <section class="jdr-bloc jdr-bloc-filigrane">
+      <div class="jdr-filigrane">${ICONES.magie}</div>
+      ${bandeau("", "Domaines de magie")}
+      <div class="jdr-domaines">${lignes}</div>
+      <button class="jdr-btn jdr-btn-secondaire" data-action="ajouter-domaine">+ Ajouter un domaine</button>
+    </section>`;
+}
+
+/* ------------------------------------------------------------
+   Rendu — fiche de personnage
+------------------------------------------------------------ */
 function renderFiche() {
   const p = state.courant;
   const d = p.donnees;
 
-  const identite = IDENTITE.map(([k, label]) => `
+  const idTitre = IDENTITE_TITRE.map(([k, label]) => `
+    <label class="jdr-id-ligne">
+      <span>${label}</span>
+      <input type="text" data-identite="${k}" value="${esc(d.identite[k])}">
+    </label>`).join("");
+
+  const idPhysique = IDENTITE_PHYSIQUE.map(([k, label]) => `
     <label class="jdr-id-ligne">
       <span>${label}</span>
       <input type="text" data-identite="${k}" value="${esc(d.identite[k])}">
@@ -530,12 +601,6 @@ function renderFiche() {
         <input type="text" data-champ="${k}" value="${esc(v)}" aria-label="${label}">
       </div>
     </div>`).join("");
-
-  const magie = [0, 1, 2].map((i) => `
-    <label class="jdr-id-ligne">
-      <span>Domaine ${i + 1}</span>
-      <input type="text" data-magie="${i}" value="${esc(d.domaines_magie[i])}">
-    </label>`).join("");
 
   return `
     <div class="jdr-barre">
@@ -557,79 +622,82 @@ function renderFiche() {
                  <button type="button" class="jdr-portrait-suppr" data-action="portrait-suppr" title="Retirer le portrait">×</button>`
               : `<div class="jdr-portrait-vide">${ICONES.portrait}<span>Portrait</span></div>`
           }
-          <input type="file" accept="image/*" class="jdr-portrait-input" data-champ="portrait-fichier" hidden>
+          <input type="file" accept="image/*" data-champ="portrait-fichier" hidden>
         </div>
         <div class="jdr-entete-gauche">
-          <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}" aria-label="Nom du personnage">
+          <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}"
+                 placeholder="Nom + prénom" aria-label="Nom et prénom">
+          <div class="jdr-id-titre">${idTitre}</div>
+        </div>
+        <section class="jdr-bloc jdr-identite">${idPhysique}</section>
+      </div>
+
+      <div class="jdr-rang-stats">
+        <div class="jdr-stats-gauche">
           <div class="jdr-niveau-talents">
-            <label>Niveau <input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
-            <label>Talents <input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+            <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
+            <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+          </div>
+          <div class="jdr-jauges">
+            <div class="jdr-coeur" title="Points de vie">
+              <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+            </div>
+            <div class="jdr-fiole" title="Réserve de magie">
+              <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
+                     aria-label="Réserve de magie" placeholder="7d6">
+            </div>
           </div>
         </div>
-        <div class="jdr-jauges">
-          <div class="jdr-coeur" title="Points de vie">
-            <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
-          </div>
-          <div class="jdr-fiole" title="Réserve de magie">
-            <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}" aria-label="Réserve de magie" placeholder="7d6">
-          </div>
-        </div>
-        <section class="jdr-bloc jdr-identite">
-          ${identite}
-        </section>
+        ${renderValeurs()}
       </div>
 
       <div class="jdr-rang-fanions">${fanions}</div>
-
-      ${AFFICHER_VALEURS ? renderValeurs() : ""}
 
       <div class="jdr-grille-attributs">
         ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
       </div>
 
-      <div class="jdr-grille-bas">
-        <div class="jdr-colonne">
-          ${renderArmes()}
-          <section class="jdr-bloc jdr-bloc-filigrane">
-            <div class="jdr-filigrane">${ICONES.capacites}</div>
-            <div class="jdr-bandeau">Capacités</div>
-            <textarea data-champ="capacites" rows="7">${esc(d.capacites)}</textarea>
-          </section>
-        </div>
-        <div class="jdr-colonne">
-          <section class="jdr-bloc jdr-bloc-filigrane">
-            <div class="jdr-filigrane">${ICONES.magie}</div>
-            <div class="jdr-bandeau">Domaines de magie</div>
-            ${magie}
-          </section>
-          <section class="jdr-bloc jdr-bloc-filigrane">
-            <div class="jdr-filigrane">${ICONES.inventaire}</div>
-            <div class="jdr-bandeau">Inventaire</div>
-            <label class="jdr-id-ligne jdr-florins">
-              <span>Florins</span>
-              <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
-            </label>
-            <textarea data-champ="inventaire" rows="9">${esc(d.inventaire)}</textarea>
-          </section>
-        </div>
+      <div class="jdr-grille-duo">
+        ${renderArmes()}
+        ${renderDomaines()}
       </div>
 
-      <div class="jdr-grille-recit">
-        <section class="jdr-bloc">
-          <div class="jdr-bandeau">${ICONES.histoire}<span>Histoire</span></div>
-          <textarea data-champ="histoire" rows="6">${esc(d.histoire)}</textarea>
+      <div class="jdr-grille-duo">
+        <section class="jdr-bloc jdr-bloc-filigrane">
+          <div class="jdr-filigrane">${ICONES.capacites}</div>
+          ${bandeau("", "Capacités")}
+          <textarea data-champ="capacites" rows="4">${esc(d.capacites)}</textarea>
         </section>
-        <div class="jdr-colonne">
-          <section class="jdr-bloc">
-            <div class="jdr-bandeau">${ICONES.description}<span>Description physique</span></div>
-            <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
-          </section>
-          <section class="jdr-bloc">
-            <div class="jdr-bandeau">${ICONES.notes}<span>Notes</span></div>
-            <textarea data-champ="notes" rows="5">${esc(d.notes)}</textarea>
-          </section>
-        </div>
+        <section class="jdr-bloc jdr-bloc-filigrane">
+          <div class="jdr-filigrane">${ICONES.inventaire}</div>
+          ${bandeau("", "Florins + Inventaire")}
+          <label class="jdr-id-ligne jdr-florins">
+            <span>Florins</span>
+            <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
+          </label>
+          <textarea data-champ="inventaire" rows="4">${esc(d.inventaire)}</textarea>
+        </section>
       </div>
+
+      <div class="jdr-grille-duo">
+        <section class="jdr-bloc${state.replie.histoire ? " est-replie" : ""}">
+          ${bandeau(ICONES.histoire, "Histoire", "histoire")}
+          <div class="jdr-repliable">
+            <textarea data-champ="histoire" rows="5">${esc(d.histoire)}</textarea>
+          </div>
+        </section>
+        <section class="jdr-bloc">
+          ${bandeau(ICONES.description, "Description physique")}
+          <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
+        </section>
+      </div>
+
+      <section class="jdr-bloc${state.replie.notes ? " est-replie" : ""}">
+        ${bandeau(ICONES.notes, "Notes", "notes")}
+        <div class="jdr-repliable">
+          <textarea data-champ="notes" rows="6">${esc(d.notes)}</textarea>
+        </div>
+      </section>
     </div>`;
 }
 
@@ -642,6 +710,7 @@ function render() {
   root.innerHTML = `<div class="jdr-app">${
     state.view === "fiche" && state.courant ? renderFiche() : renderListe()
   }</div>`;
+  ajusterTousTextareas(root);
 }
 
 function majEtatBarre() {
@@ -653,7 +722,8 @@ function majEtatBarre() {
 
 function attacherEvenements(root) {
   root.addEventListener("click", async (e) => {
-    const action = e.target.closest("[data-action]")?.dataset.action;
+    const cible = e.target.closest("[data-action]");
+    const action = cible?.dataset.action;
     const ligne = e.target.closest("[data-ouvrir]");
 
     if (ligne) {
@@ -662,8 +732,24 @@ function attacherEvenements(root) {
         state.courant = { ...p, donnees: normaliseDonnees(p.donnees) };
         state.view = "fiche";
         state.dirty = false;
+        state.replie = { ...REPLIABLES };
         render();
         window.scrollTo({ top: 0 });
+      }
+      return;
+    }
+
+    /* Replier / déplier : pas de re-rendu, on bascule juste la classe —
+       sinon on perdrait le focus et la position de défilement. */
+    if (action === "replier") {
+      const cle = cible.dataset.panneau;
+      state.replie[cle] = !state.replie[cle];
+      const section = cible.closest(".jdr-bloc");
+      section.classList.toggle("est-replie", state.replie[cle]);
+      cible.classList.toggle("est-replie", state.replie[cle]);
+      cible.setAttribute("aria-expanded", state.replie[cle] ? "false" : "true");
+      if (!state.replie[cle]) {
+        section.querySelectorAll("textarea").forEach(ajusterTextarea);
       }
       return;
     }
@@ -685,64 +771,59 @@ function attacherEvenements(root) {
       case "supprimer":
         await supprimerPersonnage();
         break;
-      case "ajouter-arme": {
+      case "ajouter-arme":
         lireFicheDepuisDom();
         state.courant.donnees.armes.push({ nom: "", maniement: "", attaques: "", proprietes: "" });
         state.dirty = true;
         render();
         break;
-      }
       case "retirer-arme": {
         const tr = e.target.closest("[data-arme-ligne]");
-        if (tr) {
-          tr.remove();
-          lireFicheDepuisDom();
-          state.dirty = true;
-          render();
-        }
+        if (tr) { tr.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
         break;
       }
-      case "ajouter-valeur": {
+      case "ajouter-domaine":
+        lireFicheDepuisDom();
+        state.courant.donnees.domaines_magie.push({ nom: "", passif1: "", passif2: "" });
+        state.dirty = true;
+        render();
+        break;
+      case "retirer-domaine": {
+        const el = e.target.closest("[data-domaine-ligne]");
+        if (el) { el.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
+        break;
+      }
+      case "ajouter-valeur":
         lireFicheDepuisDom();
         state.courant.donnees.valeurs.push({ nom: "" });
         state.dirty = true;
         render();
         break;
-      }
       case "retirer-valeur": {
-        const tr = e.target.closest("[data-valeur-ligne]");
-        if (tr) {
-          tr.remove();
-          lireFicheDepuisDom();
-          state.dirty = true;
-          render();
-        }
+        const el = e.target.closest("[data-valeur-ligne]");
+        if (el) { el.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
         break;
       }
-      case "valeur-plus": {
+      case "ajouter-experience":
         lireFicheDepuisDom();
-        state.courant.donnees.points_valeur = (state.courant.donnees.points_valeur || 0) + 1;
+        state.courant.donnees.experiences.push({ nom: "" });
         state.dirty = true;
         render();
         break;
-      }
-      case "valeur-moins": {
-        lireFicheDepuisDom();
-        state.courant.donnees.points_valeur = Math.max(0, (state.courant.donnees.points_valeur || 0) - 1);
-        state.dirty = true;
-        render();
+      case "retirer-experience": {
+        const el = e.target.closest("[data-experience-ligne]");
+        if (el) { el.remove(); lireFicheDepuisDom(); state.dirty = true; render(); }
         break;
       }
       case "portrait-clic":
         root.querySelector("[data-champ='portrait-fichier']")?.click();
         break;
-      case "portrait-suppr": {
+      case "portrait-suppr":
         lireFicheDepuisDom();
         state.courant.donnees.portrait = "";
         state.dirty = true;
         render();
         break;
-      }
     }
   });
 
@@ -750,7 +831,7 @@ function attacherEvenements(root) {
   root.addEventListener("change", async (e) => {
     if (!e.target.matches("[data-champ='portrait-fichier']")) return;
     const fichier = e.target.files && e.target.files[0];
-    e.target.value = ""; // permet de re-choisir le même fichier ensuite
+    e.target.value = "";
     if (!fichier) return;
     if (!fichier.type.startsWith("image/")) {
       alert("Merci de choisir un fichier image.");
@@ -775,16 +856,17 @@ function attacherEvenements(root) {
   root.addEventListener("input", (e) => {
     if (state.view !== "fiche") return;
     state.dirty = true;
+
+    if (e.target.tagName === "TEXTAREA") ajusterTextarea(e.target);
+
     if (e.target.matches("[data-comp]")) {
       const cat = e.target.dataset.comp;
       const nom = e.target.dataset.nom;
       const niv = parseInt(e.target.value, 10) || 0;
 
-      // Seuil recalculé en direct pour la compétence modifiée
       const span = e.target.parentElement.querySelector("[data-seuil]");
       if (span) span.textContent = seuil(niv);
 
-      // État synchronisé avant de recalculer la somme de l'arbre
       state.courant.donnees.competences[cat][nom] = niv;
       const total = sommeArbre(cat);
       const insuffisant = total < SEUIL_MIN_ARBRE;
@@ -799,16 +881,12 @@ function attacherEvenements(root) {
     }
     majEtatBarre();
   });
-
-  // Garde-fou avant fermeture d'onglet — posé une seule fois, hors de
-  // attacherEvenements, car le module n'est chargé qu'une fois par
-  // Quartz (spa-preserve) même si init() s'exécute à chaque navigation.
 }
 
-let beforeUnloadArme = false;
+let gardeFouArme = false;
 function armerGardeFou() {
-  if (beforeUnloadArme) return;
-  beforeUnloadArme = true;
+  if (gardeFouArme) return;
+  gardeFouArme = true;
   window.addEventListener("beforeunload", (e) => {
     if (state.dirty) {
       e.preventDefault();
@@ -822,19 +900,18 @@ function armerGardeFou() {
    Quartz utilise une navigation SPA : ce module n'est chargé
    qu'une fois (spa-preserve), donc on ne peut pas se fier au
    seul DOMContentLoaded. Quartz émet un événement "nav" sur
-   `document` à chaque changement de page (y compris le tout
-   premier chargement) : c'est le bon endroit pour (ré)agir.
+   `document` à chaque changement de page (premier chargement
+   compris) : c'est le bon endroit pour (ré)agir.
 ------------------------------------------------------------ */
 function init() {
   const root = document.getElementById("jdr-fiches-app");
   if (!root) return; // pas sur la page des fiches, rien à faire
 
   armerGardeFou();
-  // Réinitialise l'état à chaque arrivée sur la page (ex. retour
-  // depuis une autre page du site sans rechargement complet).
   state.view = "liste";
   state.courant = null;
   state.dirty = false;
+  state.replie = { ...REPLIABLES };
 
   attacherEvenements(root);
   chargerListe();
