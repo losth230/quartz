@@ -101,18 +101,30 @@
 .jdr-cadre { position: relative; }
 
 /* ---- rangée 1 : portrait | nom+race+classe | identité physique ---- */
+/* Deux colonnes indépendantes de même hauteur. La colonne de gauche
+   pousse ses stats vers le bas (space-between), donc le bas des quatre
+   caractéristiques tombe exactement sur le bas du bloc Valeurs. */
 .jdr-entete-fiche {
-  display: grid;
-  grid-template-columns: auto minmax(220px, 360px) minmax(300px, 420px);
-  grid-template-rows: auto auto;
-  justify-content: space-between;
-  gap: .9rem 2.5rem; align-items: start; margin-bottom: .8rem;
+  display: flex; gap: 2.5rem; align-items: stretch; margin-bottom: .8rem;
 }
-.jdr-entete-fiche > .jdr-portrait      { grid-column: 1; grid-row: 1; }
-.jdr-entete-fiche > .jdr-entete-gauche { grid-column: 2; grid-row: 1; }
-.jdr-entete-fiche > .jdr-identite      { grid-column: 3; grid-row: 1; }
-.jdr-entete-fiche > .jdr-stats-gauche  { grid-column: 1 / 3; grid-row: 2; }
-.jdr-entete-fiche > .jdr-valeurs       { grid-column: 3; grid-row: 2; }
+.jdr-col-gauche {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column; justify-content: space-between; gap: 1.2rem;
+}
+.jdr-col-droite {
+  flex: 0 1 420px; min-width: 300px;
+  display: flex; flex-direction: column; gap: .8rem;
+}
+.jdr-haut-gauche { display: flex; gap: 1.2rem; align-items: flex-start; }
+.jdr-entete-gauche { flex: 1 1 auto; min-width: 0; max-width: 360px; }
+
+/* largeur calée sur la rangée de fanions : les jauges se centrent dessus */
+.jdr-stats-gauche {
+  display: flex; flex-direction: column; gap: .7rem; width: fit-content;
+}
+.jdr-jauges { display: flex; gap: .7rem; justify-content: center; }
+.jdr-fanions { display: flex; gap: .7rem; }
+
 .jdr-portrait {
   position: relative; width: 96px; height: 96px; flex: none;
   border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
@@ -154,10 +166,6 @@
 .jdr-id-ligne span { font-weight: 700; min-width: 4.4em; flex: none; }
 .jdr-id-ligne input { flex: 1 1 0; min-width: 0; }
 
-/* ---- rangée 2 : niveau/talents + jauges | valeurs et expériences ---- */
-.jdr-stats-gauche { display: flex; flex-direction: column; gap: .7rem; }
-.jdr-fanions { display: flex; gap: .7rem; flex-wrap: wrap; }
-
 /* Niveau / Talents : discrets, sous Race et Classe */
 .jdr-niveau-talents { display: flex; gap: 1rem; margin-top: .45rem; font-size: .78rem; }
 .jdr-niveau-talents label { display: flex; align-items: center; gap: .4em; }
@@ -183,7 +191,7 @@
 .jdr-fiole input { width: 3.6em; }
 
 /* valeurs et expériences : deux listes libres côte à côte */
-.jdr-valeurs { margin-bottom: 0; }
+.jdr-col-droite > .jdr-bloc { margin-bottom: 0; }
 .jdr-liste-valeurs {
   display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   gap: .3rem .6rem; margin-bottom: .45rem; align-content: start;
@@ -283,10 +291,10 @@
 
 /* ---- responsive ---- */
 @media (max-width: 1100px) {
-  .jdr-entete-fiche { grid-template-columns: auto minmax(0, 1fr); justify-content: stretch; gap: .9rem 1.2rem; }
-  .jdr-entete-fiche > .jdr-identite     { grid-column: 1 / -1; grid-row: 2; }
-  .jdr-entete-fiche > .jdr-stats-gauche { grid-column: 1 / -1; grid-row: 3; }
-  .jdr-entete-fiche > .jdr-valeurs      { grid-column: 1 / -1; grid-row: 4; }
+  .jdr-entete-fiche { flex-direction: column; gap: 1rem; }
+  .jdr-col-droite { flex: 1 1 auto; max-width: none; }
+  .jdr-stats-gauche { width: 100%; }
+  .jdr-fanions { flex-wrap: wrap; }
 }
 @media (max-width: 820px) {
   .jdr-grille-attributs { grid-template-columns: 1fr; }

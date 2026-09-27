@@ -612,47 +612,52 @@ function renderFiche() {
     <div class="jdr-cadre">
 
       <div class="jdr-entete-fiche">
-        <div class="jdr-portrait" data-action="portrait-clic" title="Cliquer pour changer le portrait">
-          ${
-            d.portrait
-              ? `<img src="${esc(d.portrait)}" alt="Portrait de ${esc(p.nom)}">
-                 <button type="button" class="jdr-portrait-suppr" data-action="portrait-suppr" title="Retirer le portrait">×</button>`
-              : `<div class="jdr-portrait-vide">${ICONES.portrait}<span>Portrait</span></div>`
-          }
-          <input type="file" accept="image/*" data-champ="portrait-fichier" hidden>
-        </div>
 
-        <div class="jdr-entete-gauche">
-          <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}"
-                 placeholder="Nom + prénom" aria-label="Nom et prénom">
-          <div class="jdr-id-titre">${idTitre}</div>
-          <div class="jdr-niveau-talents">
-            <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
-            <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
-          </div>
-        </div>
-
-        <section class="jdr-bloc jdr-identite${state.replie.identite ? " est-replie" : ""}">
-          ${bandeau(ICONES.description, "Identité", "identite")}
-          <div class="jdr-repliable">
-            <div class="jdr-identite-grille">${idPhysique}</div>
-          </div>
-        </section>
-
-        <div class="jdr-stats-gauche">
-          <div class="jdr-jauges">
-            <div class="jdr-coeur" title="Points de vie">
-              <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+        <div class="jdr-col-gauche">
+          <div class="jdr-haut-gauche">
+            <div class="jdr-portrait" data-action="portrait-clic" title="Cliquer pour changer le portrait">
+              ${
+                d.portrait
+                  ? `<img src="${esc(d.portrait)}" alt="Portrait de ${esc(p.nom)}">
+                     <button type="button" class="jdr-portrait-suppr" data-action="portrait-suppr" title="Retirer le portrait">×</button>`
+                  : `<div class="jdr-portrait-vide">${ICONES.portrait}<span>Portrait</span></div>`
+              }
+              <input type="file" accept="image/*" data-champ="portrait-fichier" hidden>
             </div>
-            <div class="jdr-fiole" title="Réserve de magie">
-              <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
-                     aria-label="Réserve de magie" placeholder="7d6">
+            <div class="jdr-entete-gauche">
+              <input type="text" class="jdr-nom" data-champ="nom" value="${esc(p.nom)}"
+                     placeholder="Nom + prénom" aria-label="Nom et prénom">
+              <div class="jdr-id-titre">${idTitre}</div>
+              <div class="jdr-niveau-talents">
+                <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
+                <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
+              </div>
             </div>
           </div>
-          <div class="jdr-fanions">${fanions}</div>
+
+          <div class="jdr-stats-gauche">
+            <div class="jdr-jauges">
+              <div class="jdr-coeur" title="Points de vie">
+                <input type="number" min="0" data-champ="pv" value="${d.pv || ""}" aria-label="Points de vie">
+              </div>
+              <div class="jdr-fiole" title="Réserve de magie">
+                <input type="text" data-champ="reserve_magie" value="${esc(d.reserve_magie)}"
+                       aria-label="Réserve de magie" placeholder="7d6">
+              </div>
+            </div>
+            <div class="jdr-fanions">${fanions}</div>
+          </div>
         </div>
 
-        ${renderValeurs()}
+        <div class="jdr-col-droite">
+          <section class="jdr-bloc jdr-identite${state.replie.identite ? " est-replie" : ""}">
+            ${bandeau(ICONES.description, "Identité", "identite")}
+            <div class="jdr-repliable">
+              <div class="jdr-identite-grille">${idPhysique}</div>
+            </div>
+          </section>
+          ${renderValeurs()}
+        </div>
       </div>
 
       <div class="jdr-grille-attributs">
