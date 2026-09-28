@@ -664,45 +664,44 @@ function renderFiche() {
         ${CATEGORIES.map((c) => renderCompetences(c.key, c.label)).join("")}
       </div>
 
-      <div class="jdr-grille-duo">
-        ${renderArmes()}
-        ${renderDomaines()}
-      </div>
+      <div class="jdr-colonnes-bas">
+        <div class="jdr-pile">
+          ${renderArmes()}
+          <section class="jdr-bloc jdr-bloc-filigrane${state.replie.capacites ? " est-replie" : ""}">
+            <div class="jdr-filigrane">${ICONES.capacites}</div>
+            ${bandeau("", "Capacités", "capacites")}
+            <div class="jdr-repliable">
+              <textarea data-champ="capacites" rows="4">${esc(d.capacites)}</textarea>
+            </div>
+          </section>
+          <section class="jdr-bloc${state.replie.histoire ? " est-replie" : ""}">
+            ${bandeau(ICONES.histoire, "Histoire", "histoire")}
+            <div class="jdr-repliable">
+              <textarea data-champ="histoire" rows="5">${esc(d.histoire)}</textarea>
+            </div>
+          </section>
+        </div>
 
-      <div class="jdr-grille-duo">
-        <section class="jdr-bloc jdr-bloc-filigrane${state.replie.capacites ? " est-replie" : ""}">
-          <div class="jdr-filigrane">${ICONES.capacites}</div>
-          ${bandeau("", "Capacités", "capacites")}
-          <div class="jdr-repliable">
-            <textarea data-champ="capacites" rows="4">${esc(d.capacites)}</textarea>
-          </div>
-        </section>
-        <section class="jdr-bloc jdr-bloc-filigrane${state.replie.inventaire ? " est-replie" : ""}">
-          <div class="jdr-filigrane">${ICONES.inventaire}</div>
-          ${bandeau("", "Florins + Inventaire", "inventaire")}
-          <div class="jdr-repliable">
-            <label class="jdr-id-ligne jdr-florins">
-              <span>Florins</span>
-              <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
-            </label>
-            <textarea data-champ="inventaire" rows="4">${esc(d.inventaire)}</textarea>
-          </div>
-        </section>
-      </div>
-
-      <div class="jdr-grille-duo">
-        <section class="jdr-bloc${state.replie.histoire ? " est-replie" : ""}">
-          ${bandeau(ICONES.histoire, "Histoire", "histoire")}
-          <div class="jdr-repliable">
-            <textarea data-champ="histoire" rows="5">${esc(d.histoire)}</textarea>
-          </div>
-        </section>
-        <section class="jdr-bloc${state.replie.description ? " est-replie" : ""}">
-          ${bandeau(ICONES.description, "Description physique", "description")}
-          <div class="jdr-repliable">
-            <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
-          </div>
-        </section>
+        <div class="jdr-pile">
+          ${renderDomaines()}
+          <section class="jdr-bloc jdr-bloc-filigrane${state.replie.inventaire ? " est-replie" : ""}">
+            <div class="jdr-filigrane">${ICONES.inventaire}</div>
+            ${bandeau("", "Florins + Inventaire", "inventaire")}
+            <div class="jdr-repliable">
+              <label class="jdr-id-ligne jdr-florins">
+                <span>Florins</span>
+                <input type="number" min="0" data-champ="florins" value="${d.florins || ""}">
+              </label>
+              <textarea data-champ="inventaire" rows="4">${esc(d.inventaire)}</textarea>
+            </div>
+          </section>
+          <section class="jdr-bloc${state.replie.description ? " est-replie" : ""}">
+            ${bandeau(ICONES.description, "Description physique", "description")}
+            <div class="jdr-repliable">
+              <textarea data-champ="description_physique" rows="5">${esc(d.description_physique)}</textarea>
+            </div>
+          </section>
+        </div>
       </div>
 
       <section class="jdr-bloc${state.replie.notes ? " est-replie" : ""}">
