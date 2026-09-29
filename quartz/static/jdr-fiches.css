@@ -122,62 +122,43 @@
 .jdr-stats-gauche {
   display: flex; flex-direction: column; gap: .7rem; width: fit-content;
 }
-/* Plaque encadrant PV et réserve de magie : double filet, hachures
-   discrètes, étiquettes sous chaque jauge. C'est le cadre qui les
-   distingue du reste, pas leur taille. */
-.jdr-jauges {
-  display: flex; gap: 1.6rem; justify-content: center;
-  padding: .8rem 1.6rem 1.9rem;
-  position: relative; border-radius: 10px;
-  border: 1.5px solid var(--jdr-encre-forte);
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent 0 7px,
-    color-mix(in srgb, var(--jdr-encre-forte) 7%, transparent) 7px 8px);
-}
-/* second filet intérieur, façon encadrement de planche */
-.jdr-jauges::before {
-  content: ""; position: absolute; inset: 3px;
-  border: 1px solid var(--jdr-encre-forte); opacity: .4;
-  border-radius: 7px; pointer-events: none;
-}
+.jdr-jauges { display: flex; gap: .7rem; justify-content: center; }
+.jdr-fanions { display: flex; gap: .7rem; }
 
-.jdr-coeur, .jdr-fiole {
-  width: 84px; height: 84px; display: grid; place-items: center;
-  position: relative; flex: none;
+.jdr-portrait {
+  position: relative; width: 96px; height: 96px; flex: none;
+  border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
+  overflow: hidden; cursor: pointer;
+  background: color-mix(in srgb, var(--jdr-papier) 92%, transparent);
+  display: grid; place-items: center;
 }
-/* la forme garde ses coordonnées d'origine (tracé calé sur 74px) et
-   se recentre dans la boîte, sinon le clip-path resterait décalé */
-.jdr-coeur::before, .jdr-fiole::before {
-  content: ""; position: absolute;
-  width: 74px; height: 74px; left: 50%; top: 50%;
-  transform: translate(-50%, -50%) scale(1.12);
+.jdr-portrait img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.jdr-portrait-vide {
+  display: flex; flex-direction: column; align-items: center; gap: .3em;
+  color: var(--jdr-encre-forte); opacity: .5; font-size: .62rem; text-align: center; padding: .3em;
 }
-.jdr-coeur::before {
-  background: var(--jdr-accent); opacity: .3; border: 2px solid var(--jdr-accent);
-  clip-path: path("M37 68 C10 48 2 30 10 16 C18 4 34 6 37 20 C40 6 56 4 64 16 C72 30 64 48 37 68 Z");
+.jdr-portrait-vide svg { width: 22px; height: 22px; }
+.jdr-portrait-suppr {
+  position: absolute; top: 3px; right: 3px; width: 1.5em; height: 1.5em;
+  border-radius: 50%; border: none;
+  background: color-mix(in srgb, var(--jdr-papier) 80%, transparent);
+  color: var(--jdr-accent); font-size: .85rem; line-height: 1; cursor: pointer;
+  display: grid; place-items: center;
 }
-.jdr-fiole::before {
-  background: var(--jdr-arcane); opacity: .3; border: 2px solid var(--jdr-arcane);
-  clip-path: path("M30 6 h14 v14 c12 5 18 15 18 26 a25 25 0 0 1 -50 0 c0 -11 6 -21 18 -26 Z");
-}
-/* étiquettes, posées sous chaque jauge dans le padding de la plaque */
-.jdr-coeur::after, .jdr-fiole::after {
-  position: absolute; bottom: -17px; left: 0; right: 0;
-  text-align: center; font-family: var(--jdr-police-titre);
-  font-size: .62rem; font-weight: 700; letter-spacing: .12em;
-  text-transform: uppercase; pointer-events: none;
-}
-.jdr-coeur::after { content: "Points de vie"; color: var(--jdr-accent); }
-.jdr-fiole::after { content: "Réserve de magie"; color: var(--jdr-arcane); }
+.jdr-portrait-suppr:hover { background: var(--jdr-accent); color: var(--jdr-papier); }
 
-.jdr-coeur input, .jdr-fiole input {
-  width: 2.8em; text-align: center; font-weight: 700; font-size: 1.5rem;
-  font-family: var(--jdr-police-titre);
-  background: transparent; border: none; color: var(--jdr-encre-forte); z-index: 1;
+.jdr-nom {
+  width: 100%; font-family: var(--jdr-police-titre); font-size: 1.6rem; font-weight: 700;
+  border: 1.5px solid var(--jdr-encre-forte); border-radius: 8px;
+  background: transparent; color: var(--jdr-encre-forte); padding: .2em .5em;
 }
-.jdr-fiole input { width: 3.1em; font-size: 1.25rem; }
+.jdr-id-titre { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; margin-top: .5rem; }
 
+/* libellé intégré à la case : le texte indicatif tient lieu d'étiquette */
+.jdr-champ-identite { width: 100%; font-size: .9rem; padding: .35em .6em; }
+.jdr-champ-identite::placeholder { color: var(--jdr-encre); opacity: .55; font-weight: 700; }
+
+/* identité physique : 2 colonnes × 3 lignes */
 .jdr-identite-grille {
   display: grid; grid-template-columns: 1fr 1fr; gap: .5rem .7rem;
 }
@@ -191,7 +172,25 @@
 .jdr-niveau-talents span { font-weight: 700; opacity: .75; }
 .jdr-niveau-talents input { width: 3.2em; font-size: .82rem; padding: .1em .3em; }
 
-/* valeurs et expériences */
+.jdr-jauges { display: flex; gap: .7rem; align-items: center; }
+.jdr-coeur, .jdr-fiole { width: 68px; height: 68px; display: grid; place-items: center; position: relative; flex: none; }
+.jdr-coeur::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--jdr-accent); opacity: .18; border: 2px solid var(--jdr-accent);
+  clip-path: path("M37 68 C10 48 2 30 10 16 C18 4 34 6 37 20 C40 6 56 4 64 16 C72 30 64 48 37 68 Z");
+}
+.jdr-fiole::before {
+  content: ""; position: absolute; inset: 0;
+  background: var(--jdr-arcane); opacity: .18; border: 2px solid var(--jdr-arcane);
+  clip-path: path("M30 6 h14 v14 c12 5 18 15 18 26 a25 25 0 0 1 -50 0 c0 -11 6 -21 18 -26 Z");
+}
+.jdr-coeur input, .jdr-fiole input {
+  width: 3.2em; text-align: center; font-weight: 700; font-size: 1rem;
+  background: transparent; border: none; color: var(--jdr-encre-forte); z-index: 1;
+}
+.jdr-fiole input { width: 3.6em; }
+
+/* valeurs et expériences : deux listes libres côte à côte */
 .jdr-col-droite > .jdr-bloc { margin-bottom: 0; }
 .jdr-liste-valeurs {
   display: flex; flex-direction: column; gap: .3rem; margin-bottom: .45rem;
