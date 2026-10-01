@@ -29,7 +29,7 @@ Au lieu de les déployer normalement les modèles de type Ombre, ajoutez deux pi
 
 ##### Lien de suzerain :
 - **Collecter les corps :** Chaque fois qu’une unité liée à L'Ankou meurt, vous gagnez un nombre de cadavres égal à sa masse.
-- **Servitude éternelle :** Au début de chaque tour, les modèles de type Cadavérique liés à L'Ankou bénéficient de [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (N)]] où N est le nombre de cadavres dépensés. Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
+- **Servitude éternelle :** Lorsque vous activez un modèle de type Cadavérique liés à L'Ankou, vous pouvez lui octroyer [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération (N)]] où N est le nombre de cadavres dépensés. Lorsqu’un modèle de type Cadavérique bénéficie de la règle [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]], s’il ne peut régénérer de PV, rajoutez-lui alors des unités jusqu’à le que leur quantité totale de PV soit équivalent à sa [[Wargame/_Visualisation/Règles spéciales/Régénération|Régénération]].
 
 </div>
 
