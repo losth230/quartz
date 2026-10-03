@@ -27,6 +27,26 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 → Version renforcée (2) : augmente la portée du sort de 3’’ et lance un trait supplémentaire.
 ---
 ## Commandants
+<div class="legendary">
+
+### Daïne Cœur-de-Glace — 49 pts
+
+</div>
+
+| ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Daïne | **4** | **6+** | **3+** | **5+** | **10** | **2** | **2** | **4** | Norls |
+| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+
+##### Magie :
+- Daïne est un lanceur de sorts de niveau 4 à accès au Domaine des Cieux et au Domaine du Givre.
+- Invocation élémentaire (long, 10+, amélioration) : Daïne peut invoquer une tempête de glace sous ses pieds. Elle ne peut alors plus se déplacer mais possède Ta 6 et la portée de toutes ses sorts, ses aptitudes et leurs effets est augmentée de 4’’.
+- Transfert (court, 3+, amélioration) : Daïne se téléporte sur 3’’.
+##### Règles spéciales :
+- Cœur-de-Glace : Daïne ne peut perdre plus de 1 PV par tour.
+- Hiver sans fin : au début de chaque tour, ajoutez autant de marqueurs Gelé que le numéro du tour, répartis comme vous le souhaitez parmi les modèles à 12’’ ou moins.
+---
+
 ### Fine-lame — 36 pts
 
 | ⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
@@ -54,25 +74,22 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ##### Équipement :
 - Hache de Fordinson : si cette unité réussit une blessure en mêlée, ajoutez des marqueurs fatigue ou gel à la cible de manière qu’elle ait autant de fatigues que de gel.
 ---
-
 <div class="legendary">
 
-### Daïne Cœur-de-Glace — 49 pts
+### Thorn — 63 pts
 
 </div>
 
 | ⬜⬜ | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| Daïne | **4** | **6+** | **3+** | **5+** | **10** | **2** | **2** | **4** | Norls |
-| **Mêlée:** | 3d6 |  | **Tir:** | - |  |  |  |  |  |
+| Thron | **5** | **3+** | **-** | **5+** | **10** | **7** | **2** | **6** | Norls |
+| **Mêlée:** | 6d6 |  | **Tir:** | - |  |  |  |  |  |
 
-##### Magie :
-- Daïne est un lanceur de sorts de niveau 4 à accès au Domaine des Cieux et au Domaine du Givre.
-- Invocation élémentaire (long, 10+, amélioration) : Daïne peut invoquer une tempête de glace sous ses pieds. Elle ne peut alors plus se déplacer mais possède Ta 6 et la portée de toutes ses sorts, ses aptitudes et leurs effets est augmentée de 4’’.
-- Transfert (court, 3+, amélioration) : Daïne se téléporte sur 3’’.
+*[[Wargame/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-Infanterie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Équipement :
+- Trancheuse des Racines : si ce modèle obtient au moins une touche en mêlée, il transforme les [[Wargame/_Visualisation/Règles spéciales/Egide|Egides]] en marqueur Gel.
 ##### Règles spéciales :
-- Cœur-de-Glace : Daïne ne peut perdre plus de 1 PV par tour.
-- Hiver sans fin : au début de chaque tour, ajoutez autant de marqueurs Gelé que le numéro du tour, répartis comme vous le souhaitez parmi les modèles à 12’’ ou moins.
+- Parade : les modèles adverses à  1'' ou moins subissent un malus de -1  pour toucher en mêlée.
 ---
 ## Modèles de base
 ---
@@ -92,12 +109,14 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ### Guerrier des steppes — 6 pts
 
 |            | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
-| ---------- | ------- | ------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- | ------ | ------ | ------ | -------- |
-| Guerrier   | **5**   | **5+**                                                                               | **-**                                                                                   | **5+**                                                                          | **7**                                                                            | **1**  | **2**  | **1**  | Norls    |
-| **Mêlée:** | 2d6     |                                                                                      | **Tir:**                                                                                | -                                                                               |                                                                                  |        |        |        |          |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Guerrier | **5** | **5+** | **5+** | **6+** | **6** | **1** | **2** | **1** | Norls |
+| **Mêlée:** | 2d6 |  | **Tir:** | 2d6 |  |  |  |  |  |
 
 ##### Équipement :
 - Bouclier (+1 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.
+- Arc court (+2 pts) : Portée (C : 9’’, L : 15’’).
+
 ---
 ### Porteur-de-Givre — 21 pts
 
@@ -108,13 +127,15 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 | **Mêlée:** | 2d6 / 2d6 |  | **Tir:** | - |  |  |  |  |  |
 
 */ [[Wargame/_Visualisation/Règles spéciales/Cavalerie|Cavalerie]], [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)]].*
+##### Equipement :
+- Lance de cavalerie (+1 pts) : le cavalier bénéficie de +1d6 en mêlée si elle réussit une charge.
 ##### Règles spéciales :
-- Ruée de l’hiver : cette unité commence la partie Gelé. S’il obtient la moindre touche lors d’une charge, sa cible est marquée fatiguée.
+- Ruée de l’hiver : cette unité commence la partie Gelé. Si elle obtient la moindre touche lors d’une charge, sa cible est marquée fatiguée.
 - Râle tétanisant : lorsque ce modèle meurt, désignez un modèle à 4’’ ou moins à qui transférer les marqueurs Gelés.
 ---
 ## Modèles de soutient
 ---
-### Evocateur — 31 pts
+### Evocateur — 36 pts
 
 | 🟥 | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -130,7 +151,7 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 ---
 ## Modèles Spéciaux
 ---
-### Elémentaire de givre — 58 pts
+### Elémentaire de givre — 60 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -143,7 +164,7 @@ Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la 
 - Frappe de glace : la compétence en mêlée de cette unité est égale au nombre de marqueur Gel qu’elle possède.
 - Cœur gelé : ce modèle commence avec 2 marqueurs Gel.
 ---
-### Grand dragon blanc — 108 pts
+### Grand dragon blanc — 122 pts
 
 |  | **Vit** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque en mêlée\|Me]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer une attaque à distance\|Tir]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un jet d'armure\|Ar]]** | **[[Wargame/_Visualisation/Règles de bataille/Effectuer un test de moral\|Mo]]** | **PV** | **Ta** | **Ma** | **Type** |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
