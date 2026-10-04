@@ -125,6 +125,7 @@ function defaultDonnees() {
     for (const c of COMPETENCES[cat]) comps[cat][c] = 0;
   }
   return {
+    campagne: "",
     niveau: 1,
     talents: 0,
     pv: 9,
@@ -218,6 +219,7 @@ const SEUIL_MIN_ARBRE = 2;
 const state = {
   view: "liste",
   personnages: [],
+  tri: { cle: "nom", sens: 1 },
   courant: null,
   dirty: false,
   chargement: true,
@@ -376,6 +378,7 @@ function lireFicheDepuisDom() {
 
   p.nom = val("[data-champ='nom']").trim() || "Sans nom";
   const d = p.donnees;
+  d.campagne = val("[data-champ='campagne']").trim().toUpperCase().slice(0, 3);
   d.niveau = num("[data-champ='niveau']");
   d.talents = num("[data-champ='talents']");
   d.pv = num("[data-champ='pv']");
@@ -419,6 +422,41 @@ function lireFicheDepuisDom() {
 /* ------------------------------------------------------------
    Rendu — vue liste
 ------------------------------------------------------------ */
+const COLONNES_LISTE = [
+  ["campagne", "ID"],
+  ["nom", "Nom"],
+  ["classe", "Classe"],
+  ["race", "Race"],
+  ["niveau", "Niv."],
+  ["pv", "PV"],
+  ["updated_at", "Modifié"],
+];
+
+function cleTri(cle, d, p) {
+  if (cle === "nom") return (p.nom || "").toLowerCase();
+  if (cle === "updated_at") return p.updated_at || "";
+  if (cle === "niveau" || cle === "pv") return d[cle] || 0;
+  return ((d.identite || {})[cle] || "").toLowerCase();
+}
+
+function personnagesTries() {
+  const { cle, sens } = state.tri;
+  const avecDonnees = state.personnages.map((p) => ({ p, d: normaliseDonnees(p.donnees) }));
+  avecDonnees.sort((a, b) => {
+    const va = cleTri(cle, a.d, a.p);
+    const vb = cleTri(cle, b.d, b.p);
+    if (va < vb) return -1 * sens;
+    if (va > vb) return 1 * sens;
+    return (a.p.nom || "").localeCompare(b.p.nom || "");
+  });
+  return avecDonnees;
+}
+
+function enteteTri(cle, label) {
+  const actif = state.tri.cle === cle;
+  return `<th data-tri="${cle}" class="jdr-th-tri${actif ? " est-actif" : ""}" title="Trier par ${label.toLowerCase()}">${label}${actif ? `<span class="jdr-fleche" data-sens>${state.tri.sens === 1 ? "▾" : "▴"}</span>` : ""}</th>`;
+}
+
 function renderListe() {
   if (state.chargement) {
     return `<div class="jdr-vide">Chargement des personnages…</div>`;
@@ -426,18 +464,16 @@ function renderListe() {
   if (state.erreur) {
     return `<div class="jdr-erreur">${esc(state.erreur)}</div>`;
   }
-  const lignes = state.personnages.map((p) => {
-    const d = normaliseDonnees(p.donnees);
-    return `
-      <tr class="jdr-ligne" data-ouvrir="${p.id}">
-        <td class="jdr-cell-nom">${esc(p.nom)}</td>
-        <td>${esc(d.identite.classe) || "—"}</td>
-        <td>${esc(d.identite.race) || "—"}</td>
-        <td class="jdr-centre">${d.niveau || "—"}</td>
-        <td class="jdr-centre">${d.pv || "—"}</td>
-        <td class="jdr-cell-date">${dateFr(p.updated_at)}</td>
-      </tr>`;
-  }).join("");
+  const lignes = personnagesTries().map(({ p, d }) => `
+    <tr class="jdr-ligne" data-ouvrir="${p.id}">
+      <td class="jdr-cell-campagne">${esc(d.campagne) || "—"}</td>
+      <td class="jdr-cell-nom">${esc(p.nom)}</td>
+      <td>${esc(d.identite.classe) || "—"}</td>
+      <td>${esc(d.identite.race) || "—"}</td>
+      <td class="jdr-centre">${d.niveau || "—"}</td>
+      <td class="jdr-centre">${d.pv || "—"}</td>
+      <td class="jdr-cell-date">${dateFr(p.updated_at)}</td>
+    </tr>`).join("");
 
   return `
     <div class="jdr-entete-liste">
@@ -449,7 +485,7 @@ function renderListe() {
         ? `<div class="jdr-vide">Aucun personnage pour l'instant. Crée la première fiche pour commencer la partie.</div>`
         : `<table class="jdr-table-liste">
             <thead>
-              <tr><th>Nom</th><th>Classe</th><th>Race</th><th>Niv.</th><th>PV</th><th>Modifié</th></tr>
+              <tr>${COLONNES_LISTE.map(([cle, label]) => enteteTri(cle, label)).join("")}</tr>
             </thead>
             <tbody>${lignes}</tbody>
           </table>`
@@ -629,6 +665,7 @@ function renderFiche() {
                      placeholder="Nom + prénom" aria-label="Nom et prénom">
               <div class="jdr-id-titre">${idTitre}</div>
               <div class="jdr-niveau-talents">
+                <label><span>ID</span><input type="text" class="jdr-champ-campagne" data-champ="campagne" value="${esc(d.campagne)}" maxlength="3" placeholder="—" aria-label="ID de campagne" title="ID de campagne (3 caractères)"></label>
                 <label><span>Niveau</span><input type="number" min="1" data-champ="niveau" value="${d.niveau || ""}"></label>
                 <label><span>Talents</span><input type="number" min="0" data-champ="talents" value="${d.talents || ""}"></label>
               </div>
@@ -737,6 +774,15 @@ function attacherEvenements(root) {
     const cible = e.target.closest("[data-action]");
     const action = cible?.dataset.action;
     const ligne = e.target.closest("[data-ouvrir]");
+
+    const tri = e.target.closest("[data-tri]");
+    if (tri) {
+      const cle = tri.dataset.tri;
+      if (state.tri.cle === cle) state.tri.sens *= -1;
+      else state.tri = { cle, sens: 1 };
+      render();
+      return;
+    }
 
     if (ligne) {
       const p = state.personnages.find((x) => x.id === ligne.dataset.ouvrir);
@@ -912,6 +958,7 @@ function init() {
   state.view = "liste";
   state.courant = null;
   state.dirty = false;
+  state.tri = { cle: "campagne", sens: 1 };
   state.replie = { ...REPLIABLES };
 
   attacherEvenements(root);

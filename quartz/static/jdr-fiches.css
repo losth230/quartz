@@ -53,6 +53,22 @@
 .jdr-ligne { cursor: pointer; }
 .jdr-ligne:hover { background: var(--jdr-ligne); }
 .jdr-cell-nom { font-family: var(--jdr-police-titre); font-weight: 600; }
+
+/* tri cliquable dans la liste */
+.jdr-th-tri { cursor: pointer; user-select: none; white-space: nowrap; }
+.jdr-th-tri:hover { color: var(--jdr-accent); }
+.jdr-th-tri.est-actif { color: var(--jdr-accent); }
+.jdr-fleche { font-size: .7em; margin-left: .15em; }
+
+/* ID de campagne : discret, 3 caractères */
+.jdr-cell-campagne {
+  font-family: var(--jdr-police-titre); font-weight: 700;
+  letter-spacing: .08em; font-size: .85rem; opacity: .8; white-space: nowrap;
+}
+.jdr-champ-campagne {
+  width: 3.4em; font-size: .82rem; padding: .1em .3em;
+  text-transform: uppercase; letter-spacing: .08em; text-align: center;
+}
 .jdr-cell-date { font-size: .8rem; opacity: .7; white-space: nowrap; }
 .jdr-centre { text-align: center; }
 .jdr-vide, .jdr-erreur { padding: 2rem 1rem; text-align: center; font-style: italic; opacity: .8; }
@@ -300,6 +316,7 @@
   .jdr-colonnes-bas { flex-direction: column; }
   .jdr-id-titre { grid-template-columns: 1fr; }
   .jdr-cell-date { display: none; }
+  .jdr-cell-campagne { font-size: .75rem; }
   .jdr-table-liste th:last-child { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
