@@ -25,7 +25,7 @@ Lorsque vous créez un Guerrier, vous pouvez choisir un entrainement militaire d
 - **Indomptable** : si vous tombez à 0 PV, vous remonter à 1 PV. Cet effet n'est utilisable qu'une seule fois par jour.
 - **[[JdR/_Visualisation/Règles spéciales/Maître-Lame|Maitre-lame]]** : lors d'une attaque en mêlée, vous
 - **[[JdR/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'élite]]** : lors d'une attaque à distance, vous pouvez relancer les jets de touche ayant obtenu 1. pouvez relancer les jets de touche ayant obtenu 1.
-- **Vif :** au début de chaque combat, recevez 1 **PA** supplémentaire.
+- **Vif :** au début de chaque combat, recevez 1 **[[JdR/_Visualisation/Règles/Point d'Action|PA]]** supplémentaire.
 - **Visée :** vos pouvez utiliser une action longue au lieu d'une action courte pour un tir et ainsi bénéficier de [[JdR/_Visualisation/Règles spéciales/Perforant|Perforant (+1)]] pour cette attaque.
 ##### Parade
 Lorsqu'une créature à 3m ou moins attaque, vous pouvez dépenser votre réaction pour annuler une de ses touches.
