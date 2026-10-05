@@ -38,7 +38,7 @@ Le Primordial est équipé au choix d'une hache de guerre à deux mains ou d'une
 *[[JdR/_Visualisation/Règles spéciales/Anti-Infanterie|Anti-infanterie]], [[JdR/_Visualisation/Règles spéciales/Attaques Enflammées|Attaques enflammées]], [[JdR/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-lame]].*
 
 **Brutalité** : lorsqu'il élimine une créature de son niveau ou plus, le Béni récupère 1 [[JdR/_Visualisation/Règles/Point d'Action|PA]].
-**Peau de lave** : tout ennemi qui réussi une touche en mêlée contre le Béni subit le statut *enflammé*.
+**Peau de lave** : tout ennemi qui réussit une touche en mêlée contre le Béni subit le statut *enflammé*.
 
 ##### Équipement :
 Le Béni est équipé au choix d'une hache de guerre à deux mains ou d'une masse d'arme et un bouclier.
