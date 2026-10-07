@@ -219,7 +219,7 @@ const SEUIL_MIN_ARBRE = 2;
 const state = {
   view: "liste",
   personnages: [],
-  tri: { cle: "nom", sens: 1 },
+  tri: { cle: "campagne", sens: 1 },
   courant: null,
   dirty: false,
   chargement: true,
@@ -442,6 +442,7 @@ const COLONNES_LISTE = [
 ];
 
 function cleTri(cle, d, p) {
+  if (cle === "campagne") return (d.campagne || "").toLowerCase();
   if (cle === "nom") return (p.nom || "").toLowerCase();
   if (cle === "updated_at") return p.updated_at || "";
   if (cle === "niveau" || cle === "pv") return d[cle] || 0;
@@ -474,7 +475,7 @@ function renderListe() {
     return `<div class="jdr-erreur">${esc(state.erreur)}</div>`;
   }
   const lignes = personnagesTries().map(({ p, d }) => `
-    <tr class="jdr-ligne" data-ouvrir="${p.id}" style="--jdr-teinte: ${teinte(p.id)};">
+    <tr class="jdr-ligne" data-ouvrir="${p.id}" style="--jdr-teinte: ${teinte(d.campagne)};">
       <td class="jdr-cell-campagne">${esc(d.campagne) || "—"}</td>
       <td class="jdr-cell-nom">${esc(p.nom)}</td>
       <td>${esc(d.identite.classe) || "—"}</td>

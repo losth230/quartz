@@ -50,8 +50,8 @@
   border-bottom: 2px solid var(--jdr-bandeau); padding: .4em .6em;
 }
 .jdr-table-liste td { padding: .55em .6em; border-bottom: 1px solid var(--jdr-ligne); }
-.jdr-ligne { cursor: pointer; background: color-mix(in srgb, oklch(65% 0.19 var(--jdr-teinte, 0)) 20%, transparent); }
-.jdr-ligne:hover { background: color-mix(in srgb, oklch(65% 0.19 var(--jdr-teinte, 0)) 34%, transparent); }
+.jdr-ligne { cursor: pointer; background: color-mix(in srgb, oklch(75% 0.10 var(--jdr-teinte, 0)) 9%, transparent); }
+.jdr-ligne:hover { background: color-mix(in srgb, oklch(75% 0.10 var(--jdr-teinte, 0)) 18%, transparent); }
 .jdr-cell-nom { font-family: var(--jdr-police-titre); font-weight: 600; }
 
 /* tri cliquable dans la liste */
