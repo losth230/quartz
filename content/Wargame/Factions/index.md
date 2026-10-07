@@ -77,6 +77,25 @@
       <p class="cp-wg-ct">Légions d'Outre-Tombe</p>
       <p class="cp-wg-cd">test</p>
     </a>
+    <a class="cp-wg-card" href="/Wargame/Factions/Les-Sylvains">
+      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Tronc central stylisé (Opacité forte) -->
+        <path d="M 18 4 V 32" opacity="0.85"/>
+        <!-- Branches maîtresses (Opacité forte) -->
+        <path d="M 18 12 C 14 10 11 9 8 8 M 18 12 C 22 10 25 9 28 8" opacity="0.85"/>
+        <path d="M 18 18 C 15 16 12 15 9 14 M 18 18 C 21 16 24 15 27 14" opacity="0.85"/>
+        <!-- Ramure feuillue / couronne (Opacité faible) -->
+        <path d="M 18 4 C 14 2 11 4 9 6 C 7 4 4 6 4 8 M 18 4 C 22 2 25 4 27 6 C 29 4 32 6 32 8" stroke-width="1.5" opacity="0.55"/>
+        <path d="M 12 7 C 10 6 8 7 7 9 M 24 7 C 26 6 28 7 29 9" stroke-width="1.5" opacity="0.55"/>
+        <!-- Racines s'étalant (Opacité forte) -->
+        <path d="M 18 32 C 14 34 11 33 8 33 M 18 32 C 22 34 25 33 28 33" opacity="0.85"/>
+        <!-- Petites pousses de racines (Opacité faible) -->
+        <path d="M 14 32 L 13 35 M 22 32 L 23 35 M 18 32 L 18 35" stroke-width="1.5" opacity="0.55"/>
+      </svg>
+      <div class="cp-wg-rule"></div>
+      <p class="cp-wg-ct">Les Sylvains</p>
+      <p class="cp-wg-cd">test</p>
+    </a>
     <a class="cp-wg-card" href="/Wargame/Factions/Norls">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <!-- Casque et cornes (Opacité forte) -->
