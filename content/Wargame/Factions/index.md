@@ -97,6 +97,23 @@
       <p class="cp-wg-ct">Norls</p>
       <p class="cp-wg-cd">test</p>
     </a>
+    <a class="cp-wg-card" href="/Wargame/Factions/Sylvaniens">
+      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Tronc de l'arbre (Opacité forte) -->
+        <path d="M 16 36 V 22 M 20 36 V 22" stroke-width="2.5" opacity="0.85"/>
+        <!-- Houppier principal, plusieurs feuilles arrondies (Opacité forte) -->
+        <path d="M 18 6 C 11 6 8 12 11 16 C 8 18 9 24 14 24 C 14 28 18 28 18 24 C 18 28 22 28 22 24 C 27 24 28 18 25 16 C 28 12 25 6 18 6 Z" opacity="0.85"/>
+        <!-- Feuilles supérieures et bourgeons (Opacité faible) -->
+        <path d="M 18 2 C 16 4 18 6 18 6 C 18 6 20 4 18 2" stroke-width="1.5" opacity="0.55"/>
+        <!-- Détails du feuillage (Opacité faible) -->
+        <path d="M 12 10 C 10 11 10 13 11 14 M 25 10 C 27 11 27 13 26 14 M 9 20 C 8 21 9 23 10 23 M 27 20 C 28 21 27 23 26 23" stroke-width="1.5" opacity="0.55"/>
+        <!-- Racines (Opacité faible) -->
+        <path d="M 16 36 C 14 34 12 34 10 35 M 20 36 C 22 34 24 34 26 35" stroke-width="1.8" opacity="0.55"/>
+      </svg>
+      <div class="cp-wg-rule"></div>
+      <p class="cp-wg-ct">Sylvaniens</p>
+      <p class="cp-wg-cd">test</p>
+    </a>
     <a class="cp-wg-card" href="/Wargame/Factions/Peaux-Vertes">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <!-- Silhouette de la tête (Opacité forte, forme robuste) -->
