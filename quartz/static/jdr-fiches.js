@@ -301,7 +301,7 @@ async function chargerListe() {
   const { data, error } = await supabase
     .from(TABLE)
     .select("id, nom, donnees, updated_at")
-    .order("nom", { ascending: true });
+    .order("id", { ascending: true });
   state.chargement = false;
   if (error) {
     state.erreur = "Impossible de charger les personnages : " + error.message;
@@ -419,6 +419,15 @@ function lireFicheDepuisDom() {
   d.notes = val("[data-champ='notes']");
 }
 
+/* Teinte stable dérivée de l'id : chaque personnage garde sa couleur
+   d'une session à l'autre (hash simple → hue 0–360). */
+function teinte(id) {
+  let h = 0;
+  const s = String(id || "");
+  for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 360;
+  return h;
+}
+
 /* ------------------------------------------------------------
    Rendu — vue liste
 ------------------------------------------------------------ */
@@ -465,7 +474,7 @@ function renderListe() {
     return `<div class="jdr-erreur">${esc(state.erreur)}</div>`;
   }
   const lignes = personnagesTries().map(({ p, d }) => `
-    <tr class="jdr-ligne" data-ouvrir="${p.id}">
+    <tr class="jdr-ligne" data-ouvrir="${p.id}" style="--jdr-teinte: ${teinte(p.id)};">
       <td class="jdr-cell-campagne">${esc(d.campagne) || "—"}</td>
       <td class="jdr-cell-nom">${esc(p.nom)}</td>
       <td>${esc(d.identite.classe) || "—"}</td>
