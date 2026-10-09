@@ -1,0 +1,151 @@
+// ══════════════════════════════════════════════════════════════════════
+//  Briques d'interface partagées
+// ══════════════════════════════════════════════════════════════════════
+
+import React, { useEffect, useState } from 'react'
+
+export function fmt(n: number, decimals = 1): string {
+  if (!isFinite(n)) return '—'
+  return new Intl.NumberFormat('fr-FR', {
+    maximumFractionDigits: decimals,
+    minimumFractionDigits: 0,
+  }).format(n)
+}
+
+export function Card({ title, children, right }: {
+  title?: React.ReactNode
+  children: React.ReactNode
+  right?: React.ReactNode
+}) {
+  return (
+    <div className="card">
+      {title && (
+        <div className="card-head">
+          <h3>{title}</h3>
+          {right && <div className="card-right">{right}</div>}
+        </div>
+      )}
+      {children}
+    </div>
+  )
+}
+
+export function Field({ label, children, hint }: {
+  label: string
+  children: React.ReactNode
+  hint?: string
+}) {
+  return (
+    <label className="field">
+      <span className="field-label">{label}</span>
+      {children}
+      {hint && <span className="field-hint">{hint}</span>}
+    </label>
+  )
+}
+
+export function TextInput({ value, onChange, placeholder, disabled }: {
+  value: string
+  onChange: (v: string) => void
+  placeholder?: string
+  disabled?: boolean
+}) {
+  return (
+    <input
+      type="text"
+      className="input"
+      value={value}
+      placeholder={placeholder}
+      disabled={disabled}
+      onChange={(e) => onChange(e.target.value)}
+    />
+  )
+}
+
+/** Saisie numérique tolérante : édition libre en chaîne, commit au blur/change. */
+export function NumberInput({ value, onChange, step = 1, min, max }: {
+  value: number
+  onChange: (v: number) => void
+  step?: number
+  min?: number
+  max?: number
+}) {
+  const [text, setText] = useState<string>(String(value))
+  useEffect(() => {
+    const parsed = parseFloat(text.replace(',', '.'))
+    if (!isNaN(parsed) && parsed !== value) setText(String(value))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value])
+  const commit = (t: string) => {
+    const parsed = parseFloat(t.replace(',', '.'))
+    if (isNaN(parsed)) return
+    let v = parsed
+    if (min !== undefined) v = Math.max(min, v)
+    if (max !== undefined) v = Math.min(max, v)
+    onChange(v)
+  }
+  return (
+    <input
+      type="number"
+      className="input num"
+      step={step}
+      value={text}
+      onChange={(e) => {
+        setText(e.target.value)
+        commit(e.target.value)
+      }}
+    />
+  )
+}
+
+export function Select<T extends string>({ value, options, onChange, disabled }: {
+  value: T
+  options: { value: T; label: string }[]
+  onChange: (v: T) => void
+  disabled?: boolean
+}) {
+  return (
+    <select
+      className="input"
+      value={value}
+      disabled={disabled}
+      onChange={(e) => onChange(e.target.value as T)}
+    >
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>{o.label}</option>
+      ))}
+    </select>
+  )
+}
+
+export function Badge({ children, tone = 'neutral' }: {
+  children: React.ReactNode
+  tone?: 'neutral' | 'good' | 'bad' | 'warn' | 'info'
+}) {
+  return <span className={`badge badge-${tone}`}>{children}</span>
+}
+
+export function Button({ children, onClick, tone = 'normal', disabled, title }: {
+  children: React.ReactNode
+  onClick?: () => void
+  tone?: 'normal' | 'primary' | 'danger'
+  disabled?: boolean
+  title?: string
+}) {
+  return (
+    <button
+      className={`btn btn-${tone}`}
+      onClick={onClick}
+      disabled={disabled}
+      title={title}
+    >
+      {children}
+    </button>
+  )
+}
+
+export const TAX_OPTIONS = [
+  { value: 'Faible' as const, label: 'Faible (×0,5 Or / ×1,5 naissances)' },
+  { value: 'Moyenne' as const, label: 'Moyenne (×1 / ×1)' },
+  { value: 'Forte' as const, label: 'Forte (×1,5 Or / ×0,5 naissances)' },
+]
