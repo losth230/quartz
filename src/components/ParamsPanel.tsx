@@ -1,12 +1,15 @@
 // ══════════════════════════════════════════════════════════════════════
-//  Paramètres : éditeur INTÉGRAL de la configuration de la partie.
-//  Toutes les variables (constantes et formules du moteur VBA) et
-//  toutes les tables de référentiels du classeur sont modifiables à
-//  chaud, par n'importe qui, sans aucune validation bloquante :
+//  Paramètres : éditeur INTÉGRAL de la configuration du jeu.
+//  Accessible EN PERMANENCE — même sans partie en cours.
+//  La configuration est COMMUNE à toutes les parties : chaque
+//  modification est mémorisée (navigateur) et propagée à la partie
+//  en cours + aux nouvelles parties. Toutes les variables (constantes
+//  et formules du moteur VBA) et toutes les tables de référentiels du
+//  classeur sont modifiables à chaud, sans aucune validation bloquante :
 //  les stocks peuvent être négatifs, les poids nuls, les textes vides.
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf, cloneDefaultConfig } from '../config/defaultConfig'
 import type { GameConfig } from '../config/defaultConfig'
@@ -20,35 +23,14 @@ const ONGLETS = [
 ] as const
 
 export function ParamsPanel() {
-  const { state, update, replaceState, exportState, importState } = useGame()
+  const { state, globalConfig, setGlobalCfg, replaceState, exportState, importState } = useGame()
   const [onglet, setOnglet] = useState<(typeof ONGLETS)[number]>('Formules')
 
-  // Normalise la config au premier affichage : la partie porte TOUJOURS
-  // une config complète (fusion des défauts) → tout est éditable.
-  useEffect(() => {
-    if (!state) return
-    if (!state.config || Object.keys(state.config).length < 10) {
-      update((s) => { s.config = cloneDefaultConfig() })
-    } else {
-      const merged = cfgOf(state.config).config
-      if (state.config !== merged && !state.config.eventEffets) {
-        update((s) => { s.config = merged })
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  // Configuration commune, fusionnée sur les défauts (clés manquantes, etc.)
+  const config: GameConfig = cfgOf(globalConfig).config
 
-  if (!state) {
-    return <Card title="Paramètres"><p className="muted">Créez d'abord une partie dans « ⚙ Nouvelle partie » : sa configuration (formules + référentiels) sera alors modifiable à chaud ici.</p></Card>
-  }
-  const config: GameConfig = cfgOf(state.config).config
-
-  /** Mutation directe de la config — aucun blocage possible. */
-  const setCfg = (fn: (c: GameConfig) => void) =>
-    update((s) => {
-      if (!s.config) s.config = cloneDefaultConfig()
-      fn(s.config)
-    })
+  /** Mutation de la configuration commune — propagée à la partie en cours. */
+  const setCfg = (fn: (c: GameConfig) => void) => setGlobalCfg(fn)
 
   const setParam = (key: string, v: number | string) =>
     setCfg((c) => {
@@ -58,12 +40,15 @@ export function ParamsPanel() {
 
   return (
     <div className="stack">
-      <Card title="Paramètres de la partie — tout est modifiable, rien ne bloque">
+      <Card title="Paramètres communs à toutes les parties — modifiables à tout moment">
         <p className="muted small">
-          Chaque constante du moteur VBA (fécondité, maladie, mariages, taxes, événements…) et chaque
-          table du classeur (titres, traits, cultures, peuples, banques de noms…) vit dans la
-          configuration de la partie. Modifiez-la à volonté : les effets s'appliquent au tour suivant,
-          sans redémarrage. Exportez/importez la configuration en JSON depuis le dernier onglet.
+          Ces réglages sont <strong>communs à toutes les parties</strong> : modifiables à tout moment,
+          même sans partie en cours. Chaque constante du moteur VBA (fécondité, maladie, mariages,
+          taxes, événements…) et chaque table du classeur (titres, traits, cultures, peuples, banques
+          de noms…) vit dans cette configuration unique, mémorisée par le navigateur. Pendant une
+          partie, les effets s'appliquent au tour suivant, sans redémarrage ; une nouvelle partie
+          démarre avec ces mêmes réglages. Exportez/importez la configuration en JSON depuis le
+          dernier onglet.
         </p>
         <div className="tabs">
           {ONGLETS.map((o) => (
@@ -421,7 +406,7 @@ function JsonPanel({ config, setCfg, replaceState, exportState, importState }: {
   const [text, setText] = useState('')
   const [msg, setMsg] = useState('')
   return (
-    <Card title="Export / import de la configuration">
+    <Card title="Export / import de la configuration commune">
       <div className="row mb">
         <Button onClick={() => { setText(JSON.stringify(config, null, 2)); setMsg('Configuration exportée ci-dessous — copiez-la ou collez-en une autre puis « Importer ».') }}>Exporter la config</Button>
         <Button tone="danger" onClick={() => {
@@ -455,30 +440,32 @@ function JsonPanel({ config, setCfg, replaceState, exportState, importState }: {
             setMsg(`JSON invalide : ${String(e)}`)
           }
         }}>Importer la config</Button>
-        <Button onClick={() => {
-          if (!state) return
-          const full = exportState()
-          setText(full)
-          setMsg('Partie complète exportée (état + config). Pour la restaurer, utilisez le bouton « Importer la partie » ci-dessous.')
-        }}>Exporter la partie complète</Button>
-        <Button onClick={() => {
-          try {
-            if (importState(text)) setMsg('Partie complète importée ✓')
-            else setMsg('Import impossible : partie invalide.')
-          } catch (e) {
-            setMsg(String(e))
-          }
-        }}>Importer la partie complète</Button>
         {state && (
-          <Button onClick={() => {
-            const s2 = JSON.parse(JSON.stringify(state)) as import('../engine/types').GameState
-            s2.config = config
-            replaceState(s2)
-            setMsg('Config fusionnée dans la partie ✓')
-          }}>Appliquer</Button>
+          <>
+            <Button onClick={() => {
+              const full = exportState()
+              setText(full)
+              setMsg('Partie complète exportée (état + config). Pour la restaurer, utilisez le bouton « Importer la partie » ci-dessous.')
+            }}>Exporter la partie complète</Button>
+            <Button onClick={() => {
+              try {
+                if (importState(text)) setMsg('Partie complète importée ✓')
+                else setMsg('Import impossible : partie invalide.')
+              } catch (e) {
+                setMsg(String(e))
+              }
+            }}>Importer la partie complète</Button>
+            <Button onClick={() => {
+              const s2 = JSON.parse(JSON.stringify(state)) as import('../engine/types').GameState
+              s2.config = config
+              replaceState(s2)
+              setMsg('Config fusionnée dans la partie ✓')
+            }}>Appliquer</Button>
+          </>
         )}
       </div>
       {msg && <p className="small">{msg}</p>}
+      {!state && <p className="muted small">Aucune partie en cours : la configuration modifiée ici sera utilisée par votre prochaine partie.</p>}
     </Card>
   )
 }
