@@ -2,7 +2,7 @@
 //  Application principale — navigation 7 sections + sélecteur J1..J8
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useGame } from './state/store'
 import { TurnBar } from './components/TurnBar'
 import { Dashboard } from './components/Dashboard'
@@ -29,10 +29,35 @@ const SECTIONS: { key: Section; label: string }[] = [
   { key: 'setup', label: '⚙ Nouvelle partie' },
 ]
 
+// ══════════════════════════════════════════════════════════════════════
+//  Deep link : ouvrir une section directement via l'URL.
+//  Ex. /jeu/#nouvelle-partie → ouvre « ⚙ Nouvelle partie » dès l'arrivée.
+//  Utilisé par le bouton « ▶ Lancer une campagne » du site quartz.
+// ══════════════════════════════════════════════════════════════════════
+
+const HASH_SECTIONS: Record<string, Section> = {
+  'nouvelle-partie': 'setup',
+  'nouvelle_partie': 'setup',
+  setup: 'setup',
+}
+
+function sectionFromHash(): Section {
+  const h = window.location.hash.replace(/^#/, '').trim().toLowerCase()
+  return HASH_SECTIONS[h] ?? 'accueil'
+}
+
 export default function App() {
   const { state } = useGame()
-  const [section, setSection] = useState<Section>('accueil')
+  const [section, setSection] = useState<Section>(sectionFromHash)
   const [joueur, setJoueur] = useState(1)
+
+  // Suit aussi les changements de hash pendant la visite
+  // (ex. re-clic sur le bouton du site quartz).
+  useEffect(() => {
+    const onHash = () => setSection(sectionFromHash())
+    window.addEventListener('hashchange', onHash)
+    return () => window.removeEventListener('hashchange', onHash)
+  }, [])
 
   const joueursBars = state && (
     <div className="players-bar">
