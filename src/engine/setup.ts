@@ -1,13 +1,15 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Génération de la population initiale
 //  (portage de la macro VBA GenererPopulationInitiale / frmInitPop)
-//  La config (référentiels + paramètres) est attachée à la partie :
-//  tout reste modifiable à chaud ensuite, sans aucune contrainte.
+//  La config (référentiels + paramètres) vient de la configuration
+//  COMMUNE à toutes les parties (voir store) : tout reste modifiable
+//  à chaud ensuite, sans aucune contrainte.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, GameState, Player } from './types'
 import { makeRng, type Rng } from './rng'
 import { cfgOf, cloneDefaultConfig, peupleDef, type Cfg } from './gameData'
+import type { GameConfig } from '../config/defaultConfig'
 import { computeAgeMax, computeFecondite, isNobleDyn } from './engine'
 
 export interface SetupLine {
@@ -22,11 +24,16 @@ export interface SetupLine {
 
 const DEFAULT_VILLES = ['Capitale', 'Bourg']
 
-/** Crée une partie complète à 8 joueurs à partir des paramètres de setup. */
-export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | 'supabase'): GameState {
+/**
+ * Crée une partie complète à 8 joueurs à partir des paramètres de setup.
+ * La partie démarre avec la configuration commune (sinon : défauts du classeur).
+ */
+export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | 'supabase', config?: GameConfig): GameState {
   const rng = makeRng(seed)
-  const config = cloneDefaultConfig()
-  const C = cfgOf(config)
+  const startConfig: GameConfig = config
+    ? (JSON.parse(JSON.stringify(config)) as GameConfig)
+    : cloneDefaultConfig()
+  const C = cfgOf(startConfig)
   const state: GameState = {
     version: 1,
     seed,
@@ -34,7 +41,7 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
     turn: 1,
     saison: 'Été',
     modDanger: 0,
-    config,
+    config: startConfig,
     players: [],
     population: {},
     log: [

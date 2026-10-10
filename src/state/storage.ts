@@ -1,11 +1,13 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Persistance locale (localStorage) — mode solo/hotseat
+//  + configuration COMMUNE à toutes les parties (clé dédiée).
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState } from '../engine/types'
-import { cloneDefaultConfig } from '../config/defaultConfig'
+import { cloneDefaultConfig, type GameConfig } from '../config/defaultConfig'
 
 const KEY = 'chasse-et-peche:save'
+const CONFIG_KEY = 'chasse-et-peche:config'
 
 export function saveLocal(state: GameState): boolean {
   try {
@@ -35,6 +37,29 @@ export function clearLocal() {
     localStorage.removeItem(KEY)
   } catch {
     /* ignore */
+  }
+}
+
+// ── Configuration commune (indépendante des parties) ──────────────────
+
+export function saveGlobalConfig(config: GameConfig): boolean {
+  try {
+    localStorage.setItem(CONFIG_KEY, JSON.stringify(config))
+    return true
+  } catch {
+    return false
+  }
+}
+
+export function loadGlobalConfig(): GameConfig | null {
+  try {
+    const raw = localStorage.getItem(CONFIG_KEY)
+    if (!raw) return null
+    const config = JSON.parse(raw) as GameConfig
+    if (!config || !Array.isArray(config.titres) || !config.params) return null
+    return config
+  } catch {
+    return null
   }
 }
 
