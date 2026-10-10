@@ -173,7 +173,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
             )}
           </div>
         ) : (
-          <p className="muted">Lancez un tour pour voir apparaître le récapitulatif (équivalent J{n}!A35 du classeur).</p>
+          <p className="muted">Lancez un tour pour voir apparaître le récapitulatif (équivalent J{joueur}!A35 du classeur).</p>
         )}
       </Card>
     </div>
