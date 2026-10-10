@@ -8,7 +8,8 @@ import { useGame } from '../state/store'
 import { cfgOf } from '../engine/gameData'
 import { Card, Select, fmt } from './ui'
 
-const COULEURS = ['#e0b04b', '#5fb0d9', '#7fbf6a', '#d95f5f', '#b07fd9', '#d98db0', '#8ab5b0', '#c2a878']
+// Palette sobre, lisible en thème clair comme sombre (couleurs du site).
+const COULEURS = ['#35729b', '#c08a3d', '#4e9464', '#c25555', '#8a6bb5', '#4b8f9e', '#c9778f', '#8a8a5c']
 
 export function HistoryPanel() {
   const { state } = useGame()
@@ -54,7 +55,7 @@ export function HistoryPanel() {
         <p className="muted">Lancez au moins deux tours pour voir les courbes se tracer.</p>
       ) : (
         <svg viewBox={`0 0 ${W} ${H}`} className="chart">
-          <line x1={pad} y1={y(0)} x2={W - pad} y2={y(0)} stroke="#4a4137" strokeDasharray="4 3" />
+          <line x1={pad} y1={y(0)} x2={W - pad} y2={y(0)} className="chart-axis" />
           {data.series.map((s, si) => (
             <polyline
               key={s.nom}
@@ -66,10 +67,10 @@ export function HistoryPanel() {
           ))}
           {data.turns.map((t, i) =>
             i % Math.max(1, Math.ceil(n / 12)) === 0 ? (
-              <text key={t} x={x(i)} y={H - 10} textAnchor="middle" fontSize="10" fill="#8a7f70">T{t}</text>
+              <text key={t} x={x(i)} y={H - 10} textAnchor="middle" className="chart-label">T{t}</text>
             ) : null,
           )}
-          <text x={pad} y={18} fontSize="10" fill="#8a7f70">max {fmt(data.max)}</text>
+          <text x={pad} y={18} className="chart-label">max {fmt(data.max)}</text>
         </svg>
       )}
       <div className="legend">
