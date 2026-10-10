@@ -16,7 +16,7 @@ import type { GameState } from '../engine/types'
 import { runTurn } from '../engine/engine'
 import type { SetupLine } from '../engine/setup'
 import { createGame } from '../engine/setup'
-import { cfgOf, cloneDefaultConfig, type GameConfig } from '../config/defaultConfig'
+import { cfgOf, cloneDefaultConfig, migrateGameConfig, type GameConfig } from '../config/defaultConfig'
 import * as storage from './storage'
 import * as remote from '../supabase/client'
 
@@ -94,7 +94,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   /** Aligne la configuration commune sur une config extérieure (partie rejointe, importée ou distante). */
   const syncGlobalCfg = useCallback((c: GameConfig) => {
-    const clone = JSON.parse(JSON.stringify(c)) as GameConfig
+    // Migration : une partie ancienne (V2, 37 traits) aligne la configuration
+    // commune sur la table génétique 7.19 (traits_genetiques).
+    const clone = migrateGameConfig(JSON.parse(JSON.stringify(c)) as GameConfig)
     globalConfigRef.current = clone
     setGlobalConfig(clone)
     storage.saveGlobalConfig(clone)

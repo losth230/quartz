@@ -154,34 +154,29 @@ const ref = refJson as any
 
 // ── Normalisation des tables du classeur vers les types du moteur ─────
 
+/** Table des traits génétiques — feuille `traits_genetiques` du classeur 7.19.
+ *  C'est LA liste du moteur : création des personnages, héritage à la
+ *  naissance, effets (mariage, fécondité, espérance de vie, résurrection).
+ *  Remplace l'ancienne table V2 des 37 traits de personnage. */
 function normaliserTraits(): TraitDef[] {
-  const speciaux: Record<string, Partial<TraitDef>> = {
-    'Béni': { resurrection_min_roll: 4 },
-    'Frêle': { life_delta: -30 },
-    'Doyen': { life_delta: -26 },
-    'Stérile': { fert_add: -10 },
-    'Impuissant': { fert_add: -0.3 },
-    'Fertile': { fert_add: 0.3 },
-    'Beau': { marriage_mod: 0.1 },
-    'Magnifique': { marriage_mod: 0.2 },
-    'Charismatique': { marriage_mod: 0.1 },
-    'Repoussant': { marriage_mod: -0.1 },
-    'Terrifiant': { marriage_mod: -0.1 },
-  }
-  const out: TraitDef[] = ref.traits.map((t: any) => ({
+  const out: TraitDef[] = ref.traitsGenetiques.map((t: any) => ({
     name: t.name,
     weight: Number(t.weight) || 0,
     description: t.description || '',
-    life_delta: 0,
-    resurrection_min_roll: 0,
+    life_delta: Number(t.lifeDelta) || 0,
+    resurrection_min_roll: Number(t.resurrectionMinRoll) || 0,
     fert_add: Number(t.fertAdd) || 0,
     heritable: !!t.heritable,
-    marriage_mod: 0,
-    ...(speciaux[t.name] ?? {}),
+    marriage_mod: Number(t.marriageMod) || 0,
   }))
-  // traits système (hors tirage pondéré)
-  out.push({ name: 'Bâtard', weight: 0, description: 'Enfant illégitime (système).', life_delta: 0, resurrection_min_roll: 0, fert_add: 0, heritable: false, marriage_mod: 0 })
-  out.push({ name: 'Consanguin', weight: 0, description: 'Parents apparentés (système). Perd 1 an d\'espérance de vie.', life_delta: -1, resurrection_min_roll: 0, fert_add: 0, heritable: true, marriage_mod: 0 })
+  // Traits système : présents dans la table (poids 0, jamais tirés) ;
+  // on les garantit même si la table était incomplète.
+  if (!out.some((t) => t.name === 'Bâtard')) {
+    out.push({ name: 'Bâtard', weight: 0, description: '(système) Enfant illégitime.', life_delta: 0, resurrection_min_roll: 0, fert_add: 0, heritable: false, marriage_mod: 0 })
+  }
+  if (!out.some((t) => t.name === 'Consanguin')) {
+    out.push({ name: 'Consanguin', weight: 0, description: '(système) Parents apparentés.', life_delta: -2, resurrection_min_roll: 0, fert_add: -0.2, heritable: false, marriage_mod: 0 })
+  }
   return out
 }
 
@@ -388,6 +383,20 @@ export interface Cfg {
 }
 
 /** Fusionne la config d'une partie (state.config) sur les défauts. */
+/** Migration : une table de traits héritée de la V2 (37 traits de
+ *  personnage, dont « Nanisme ») repasse sur la table génétique 7.19.
+ *  Les configs éditées à partir de la nouvelle liste ne sont pas touchées. */
+export function migrateTraits(t: TraitDef[] | undefined): TraitDef[] {
+  if (!Array.isArray(t) || t.length === 0) return DEFAULT_CONFIG.traits
+  if (t.some((x) => x?.name === 'Obstiné')) return t
+  return DEFAULT_CONFIG.traits
+}
+
+/** Applique la migration des traits à une config complète (chargement). */
+export function migrateGameConfig(cfg: GameConfig): GameConfig {
+  return { ...cfg, traits: migrateTraits(cfg.traits) }
+}
+
 export function cfgOf(config: GameConfig | undefined): Cfg {
   const c = config ?? DEFAULT_CONFIG
   const merged: GameConfig = {
@@ -400,7 +409,7 @@ export function cfgOf(config: GameConfig | undefined): Cfg {
     ressources: merged.ressources,
     educations: merged.educations,
     titres: merged.titres,
-    traits: merged.traits,
+    traits: migrateTraits(merged.traits),
     cultures: merged.cultures,
     regimes: merged.regimes,
     events: merged.events,

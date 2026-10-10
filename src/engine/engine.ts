@@ -314,8 +314,12 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
 }
 
 export function computeAgeMax(c: Character, rng: Rng, C: Cfg = cfgOf()): number {
-  const t1 = traitDef(c.traits[0], C.config)
-  const delta = t1 ? t1.life_delta : 0
+  // VBA ComputeAgeMaxEx : somme des life_delta des trois traits.
+  let delta = 0
+  for (const t of c.traits) {
+    const td = t ? traitDef(t, C.config) : undefined
+    if (td) delta += td.life_delta
+  }
   return C.p.ageMaxBase + rng.int(0, Math.max(0, C.p.ageMaxAla)) + delta
 }
 
@@ -343,7 +347,8 @@ export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, re
     // chance = professeurBaseChance / ln(profs + 2,72)
     const chance = C.p.professeurBaseChance / Math.log(nbProfs + 2.72)
     if (!rng.chance(chance)) continue
-    const candidats = vivants.filter((c) => c.age >= C.p.adultAge && !c.titre)
+    // VBA : pas de Professeur « Obstiné » (TRAIT_NO_EDUC)
+    const candidats = vivants.filter((c) => c.age >= C.p.adultAge && !c.titre && !c.traits.includes(C.p.traitObstine))
     if (candidats.length === 0) continue
     const elu = rng.pick(candidats)
     elu.titre = C.p.titreProfesseur
@@ -438,6 +443,8 @@ function characterMarriageMod(c: Character, C: Cfg = cfgOf()): number {
 
 export function tryEducateMinor(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
   const C = cfgOf(state.config)
+  // VBA : le trait « Obstiné » refuse toute éducation.
+  if (c.traits.includes(C.p.traitObstine)) return
   const ville = p.villes.find((v) => v.nom === c.ville)
   if (!ville) return
   const rank = schoolRankOf(ville.batiments, C.config)
@@ -828,11 +835,14 @@ export function inheritTraits(enfant: Character, mere: Character, pere: Characte
       }
     }
   }
-  for (let slot = 0; slot < 3; slot++) {
+  // VBA : tirage pondéré par slot libre, hors traits déjà présents.
+  const pris = enfant.traits.filter(Boolean) as string[]
+  const pool = C.traits.filter((td) => td.weight > 0 && !pris.includes(td.name))
+  for (let slot = 0; slot < 3 && pool.length > 0; slot++) {
     if (enfant.traits[slot]) continue
     if (rng.chance(C.p.traitTirageSlot)) {
-      const t = rng.pickWeighted(C.traits, (td) => td.weight)
-      if (t.weight > 0) addTraitIfFree(enfant, t.name)
+      const t = rng.pickWeighted(pool, (td) => td.weight)
+      addTraitIfFree(enfant, t.name)
     }
   }
 }
@@ -910,6 +920,8 @@ export function migrerEnfants(state: GameState, p: Player, rng: Rng) {
   for (const c of pop) {
     if (c.statut === 'Décédé' || c.age >= C.p.adultAge) continue
     if (c.education) continue
+    // VBA : les « Obstinés » ne migrent pas — l'éducation ne les tentera jamais.
+    if (c.traits.includes(C.p.traitObstine)) continue
     if (!rng.chance(C.p.migrationProba)) continue
     const autres = p.villes.filter((v) => v.nom !== c.ville)
     if (autres.length === 0) continue

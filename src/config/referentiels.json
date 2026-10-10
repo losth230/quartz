@@ -847,7 +847,7 @@
    "heritable": true,
    "marriageMod": 0.0,
    "fertAdd": 0.0,
-   "lifeDelta": 0,
+   "lifeDelta": 6,
    "resurrectionMinRoll": 0.0,
    "description": "Vit six ans de plus que la moyenne."
   },
@@ -879,7 +879,7 @@
    "weight": 8.0,
    "heritable": true,
    "marriageMod": 0.0,
-   "fertAdd": 0,
+   "fertAdd": 0.5,
    "lifeDelta": 0.0,
    "resurrectionMinRoll": 0.0,
    "description": "Fécondité +0,5"
@@ -889,7 +889,7 @@
    "name": "Charmant",
    "weight": 8.0,
    "heritable": false,
-   "marriageMod": 0,
+   "marriageMod": 0.2,
    "fertAdd": 0.0,
    "lifeDelta": 0.0,
    "resurrectionMinRoll": 0.0,

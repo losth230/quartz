@@ -75,6 +75,7 @@ export interface GameParams {
   titreCommandant: string
   traitBatard: string
   traitConsanguin: string
+  traitObstine: string
   dynastieRoturier: string
   // ── Système ──
   maxLog: number
@@ -147,6 +148,7 @@ export const DEFAULT_PARAMS: GameParams = {
   titreCommandant: 'Commandant',
   traitBatard: 'Bâtard',
   traitConsanguin: 'Consanguin',
+  traitObstine: 'Obstiné',
   dynastieRoturier: 'Roturier',
   maxLog: 4000,
   saisonLongueur: 3,

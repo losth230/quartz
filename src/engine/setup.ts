@@ -109,13 +109,18 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
   }
 
   function randomTraits(): [string, string, string] {
+    // Comme la macro VBA AjouterPopulation : 1er trait systématique,
+    // 2e à 50 %, 3e à 30 % — tirage pondéré dans traits_genetiques (7.19),
+    // sans doublon (exclusion des traits déjà tirés).
     const traits: [string, string, string] = ['', '', '']
-    for (let slot = 0; slot < 3; slot++) {
-      if (rng.chance(C.p.traitTirageSlot)) {
-        const t = rng.pickWeighted(C.traits, (td) => td.weight)
-        if (t.weight > 0) traits[slot] = t.name
-      }
+    const draw = (exclus: string[]): string => {
+      const pool = C.traits.filter((td) => td.weight > 0 && !exclus.includes(td.name))
+      if (pool.length === 0) return ''
+      return rng.pickWeighted(pool, (td) => td.weight).name
     }
+    traits[0] = draw([])
+    if (traits[0]) traits[1] = rng.chance(0.5) ? draw([traits[0]]) : ''
+    if (traits[1] && rng.chance(0.3)) traits[2] = draw([traits[0], traits[1]])
     return traits
   }
 
