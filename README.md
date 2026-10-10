@@ -10,7 +10,28 @@ Portage **React + TypeScript + Supabase** du jeu de grande stratégie **Chasse &
 
 ---
 
-## 1. Lancer le jeu
+## 1. Jouer en ligne — rien à installer, aucune ligne de commande
+
+Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
+
+> 🎮 **https://losth230.github.io/Chasse-et-Peche/**
+
+- Ouvrez le lien dans un navigateur (ordi, tablette, téléphone) et cliquez sur
+  « ⚙ Nouvelle partie ». Aucune installation, aucun terminal.
+- **Un seul écran (hotseat)** : créez la partie, jouez à 8 autour du même écran.
+  La sauvegarde reste dans le navigateur.
+- **Chacun chez soi (temps réel)** : créez un projet gratuit sur
+  [supabase.com](https://supabase.com), collez `supabase/schema.sql` dans le **SQL Editor**
+  de leur site web, puis collez l'URL + la clé « anon public » du projet **directement dans
+  l'onglet ⚙ Nouvelle partie → 🌐** du jeu. Les identifiants sont mémorisés par le
+  navigateur : plus besoin de fichier `.env`. Un joueur crée la partie avec un code de
+  salon, les 7 autres cliquent « 🔗 Rejoindre ce salon » — tout se synchronise en temps réel.
+
+Le déploiement est assuré par `.github/workflows/chasse-et-peche-pages.yaml`
+(build Vite + activation automatique de Pages). Le site du dépôt `quartz`
+(v4) n'est pas concerné : le jeu est publié uniquement depuis `Chasse-et-Peche`.
+
+## 2. Lancer le jeu (mode développeur, optionnel)
 
 ```bash
 npm install
@@ -20,17 +41,24 @@ npm run dev        # http://localhost:5173
 Autres commandes :
 
 ```bash
-npm run build      # build de production (tsc + vite)
+npm run build      # build de production (vite)
+npm run build:strict  # build + vérification de types stricte (tsc)
+npm run typecheck  # vérification de types seule
 npm run preview    # sert le build
 npm run docx       # régénère docs/Chasse-et-Peche-Livret-numerique.docx (Python 3, sans dépendance)
 ```
 
 ### Mode multijoueur (Supabase)
 
+La façon recommandée est **sans ligne de commande** : voir §1 — les identifiants
+Supabase se collent directement dans l'onglet **⚙ Nouvelle partie → 🌐** du jeu
+(mémorisés par le navigateur). Le `.env` reste possible pour le mode développeur :
+
 1. Créez un projet sur [supabase.com](https://supabase.com).
 2. Exécutez `supabase/schema.sql` dans le **SQL Editor** (table `parties` + RLS ouverte + realtime).
-3. Copiez `.env.example` en `.env` et renseignez `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`.
-4. Relancez `npm run dev`, choisissez « Multijoueur Supabase » dans **⚙ Nouvelle partie**
+3. Copiez `.env.example` en `.env` et renseignez `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`
+   (secours uniquement : l'onglet 🌐 de l'interface prime).
+4. Relancez `npm run dev`, choisissez « Multijoueur en ligne » dans **⚙ Nouvelle partie**
    et entrez un code de salon partagé entre les 8 joueurs.
 
 Sans clés Supabase, l'application tourne **entièrement en local** (localStorage, export/import JSON) :
@@ -39,7 +67,7 @@ tous les joueurs accèdent à la même partie par le code du salon (RLS anon ouv
 
 ---
 
-## 2. Ce qui est porté du classeur
+## 3. Ce qui est porté du classeur
 
 | Classeur Excel / VBA | Portage TypeScript |
 |---|---|
@@ -64,7 +92,7 @@ tous les joueurs accèdent à la même partie par le code du salon (RLS anon ouv
 
 ---
 
-## 3. Interface
+## 4. Interface
 
 8 sections : **Accueil** (tableau de bord 8 joueurs + conditions de victoire ch. XII),
 **Pays** (ressources, villes, taxes, bâtiments, récap), **Population** (filtres, tri,
@@ -75,7 +103,7 @@ réelles du classeur en consultation), **⚙ Nouvelle partie** (8 joueurs, grain
 
 ---
 
-## 4. Tout est paramétrable — aucune contrainte bloquante
+## 5. Tout est paramétrable — aucune contrainte bloquante
 
 Le cahier des charges : **toutes les variables (constantes et formules) modifiables à
 volonté par n'importe qui, chaque joueur peut toucher à ses stocks et productions à tout
@@ -97,7 +125,7 @@ moment, aucune contrainte bloquante.**
 
 ---
 
-## 5. VBA de référence & livret
+## 6. VBA de référence & livret
 
 - `vba/Personnages.vba` — module « Personnages » complet (3 604 lignes) : source du portage.
 - `vba/FinDeTour-et-gains-population.vba` — `FinDeTour`, `SnapshotRessources`,
@@ -109,7 +137,7 @@ moment, aucune contrainte bloquante.**
 
 ---
 
-## 6. Limites connues
+## 7. Limites connues
 
 1. **Nourriture négative** : fidèle au classeur — la production de départ est nulle et
    chaque habitant vivant consomme 1 Nourriture/tour. Ajoutez des Fermiers, des Chasseurs
@@ -125,7 +153,7 @@ moment, aucune contrainte bloquante.**
 
 ---
 
-## 7. Structure
+## 8. Structure
 
 ```
 src/
@@ -140,13 +168,14 @@ src/
   supabase/   client (table parties, realtime)
 supabase/     schema.sql (table, RLS anon, publication realtime)
 scripts/      make_docx.py (livret DOCX)
+.github/workflows/chasse-et-peche-pages.yaml  déploiement auto GitHub Pages
 vba/          code VBA original de référence
 docs/         livret DOCX (régénérable)
 ```
 
 ---
 
-## 8. Suppression / réinitialisation
+## 9. Suppression / réinitialisation
 
 Le bouton ✕ de la barre de tour efface la sauvegarde locale. En mode Supabase,
 supprimez la ligne du salon dans la table `parties` (ou `TRUNCATE parties`).

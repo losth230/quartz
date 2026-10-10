@@ -94,6 +94,8 @@ export default function App() {
         Chasse &amp; Pêche — Légendes · portage React + TypeScript + Supabase du jeu Excel/VBA.
         Les référentiels viennent du classeur d'origine et les formules du VBA : TOUT est
         modifiable à chaud dans l'onglet « 🎛 Paramètres » (aucune contrainte bloquante).
+        Multijoueur en ligne : onglet « ⚙ Nouvelle partie » → 🌐 (aucune ligne de commande,
+        les identifiants Supabase se collent directement dans l'interface).
       </footer>
     </div>
   )

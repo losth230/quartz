@@ -6,9 +6,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "vite build",
     "preview": "vite preview",
-    "docx": "python3 scripts/make_docx.py"
+    "docx": "python3 scripts/make_docx.py",
+    "build:strict": "tsc && vite build",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0",

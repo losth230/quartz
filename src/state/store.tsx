@@ -25,6 +25,7 @@ interface GameContextValue {
   conflit: boolean
   lastSavedAt: number | null
   newGame: (setups: SetupLine[], seed: number, mode: Mode, salon?: string) => void
+  joinGame: (salon: string) => Promise<boolean>
   nextTurn: () => void
   update: (mutator: (s: GameState) => void) => void
   replaceState: (s: GameState) => void
@@ -91,6 +92,18 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     void persist(s, m, salonId ?? '')
   }, [persist])
 
+  /** Rejoint une partie multijoueur existante (chargée depuis Supabase). */
+  const joinGame = useCallback(async (salonId: string): Promise<boolean> => {
+    const s = await remote.loadRemote(salonId)
+    if (!s) return false
+    setMode('supabase')
+    setSalon(salonId)
+    setConflit(false)
+    lastLocalEdit.current = 0
+    setState(s)
+    return true
+  }, [])
+
   const replaceState = useCallback((s: GameState) => {
     setState(s)
     lastLocalEdit.current = Date.now()
@@ -133,9 +146,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<GameContextValue>(() => ({
     state, mode, salon, saving, conflit, lastSavedAt,
-    newGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState,
+    newGame, joinGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState,
   }), [state, mode, salon, saving, conflit, lastSavedAt,
-    newGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState])
+    newGame, joinGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState])
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>
 }
