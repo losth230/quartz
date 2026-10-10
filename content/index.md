@@ -58,7 +58,7 @@ cssclasses:
       </svg>
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Jeu en ligne</p>
-      <p class="cp-wg-cd">Lancer une campagne — 8 joueurs, aucune installation</p>
+      <p class="cp-wg-cd">Lancer une campagne — 8 joueurs, réglages communs, aucune installation</p>
     </a>
   </div>
 
