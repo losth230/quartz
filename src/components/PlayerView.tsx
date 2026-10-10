@@ -6,13 +6,13 @@
 import React from 'react'
 import { useGame } from '../state/store'
 import type { Player } from '../engine/types'
-import { RESOURCES, CULTURES } from '../engine/gameData'
-import { BUILDINGS } from '../engine/gameData2'
+import { cfgOf } from '../engine/gameData'
 import { Card, NumberInput, Select, TextInput, Button, fmt, TAX_OPTIONS } from './ui'
 
 export function PlayerView({ joueur }: { joueur: number }) {
   const { state, update } = useGame()
   if (!state) return null
+  const C = cfgOf(state.config)
   const p = state.players.find((x) => x.n === joueur)
   if (!p) return <Card>Joueur introuvable.</Card>
 
@@ -31,11 +31,25 @@ export function PlayerView({ joueur }: { joueur: number }) {
           <Field label="Nom du joueur">
             <TextInput value={p.nom} onChange={(v) => setPlayer((x) => { x.nom = v })} />
           </Field>
+          <Field label="Peuple (faction du classeur)">
+            <Select
+              value={p.peuple}
+              options={C.peuples.map((n) => ({ value: n, label: n }))}
+              onChange={(v) => setPlayer((x) => { x.peuple = v })}
+            />
+          </Field>
           <Field label="Culture du pays (capitale)">
             <Select
               value={p.culture}
-              options={CULTURES.map((c) => ({ value: c.nom, label: `${c.nom} (hérédité ${c.heredite.toLowerCase()})` }))}
+              options={C.cultures.map((c) => ({ value: c.nom, label: `${c.nom} (hérédité ${String(c.heredite).toLowerCase()})` }))}
               onChange={(v) => setPlayer((x) => { x.culture = v })}
+            />
+          </Field>
+          <Field label="Régime politique">
+            <Select
+              value={p.regime}
+              options={C.regimes.map((r) => ({ value: r.nom, label: r.nom }))}
+              onChange={(v) => setPlayer((x) => { x.regime = v })}
             />
           </Field>
         </div>
@@ -48,7 +62,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
               <tr><th>Ressource</th><th>Stock</th><th>Production / tour</th></tr>
             </thead>
             <tbody>
-              {RESOURCES.map((r) => {
+              {C.ressources.map((r) => {
                 const rs = p.resources[r] ?? { stock: 0, prod: 0 }
                 return (
                   <tr key={r}>
@@ -129,7 +143,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                   <Select
                     value=""
                     options={[{ value: '', label: '+ ajouter un bâtiment…' },
-                      ...BUILDINGS.map((b) => ({ value: b.nom, label: `${b.nom} (${b.categorie})` }))]}
+                      ...C.batiments.map((b) => ({ value: b.nom, label: `${b.nom} (${b.categorie})` }))]}
                     onChange={(v) => v && setPlayer((x) => {
                       if (!x.villes[idx].batiments.includes(v)) x.villes[idx].batiments.push(v)
                     })}

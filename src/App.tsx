@@ -13,8 +13,9 @@ import { EventLogPanel } from './components/EventLogPanel'
 import { HistoryPanel } from './components/HistoryPanel'
 import { SetupPanel } from './components/SetupPanel'
 import { ReferenceDataPanel } from './components/ReferenceDataPanel'
+import { ParamsPanel } from './components/ParamsPanel'
 
-type Section = 'accueil' | 'joueur' | 'population' | 'armees' | 'journal' | 'historique' | 'setup' | 'referentiels'
+type Section = 'accueil' | 'joueur' | 'population' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'accueil', label: '🏛 Accueil' },
@@ -24,6 +25,7 @@ const SECTIONS: { key: Section; label: string }[] = [
   { key: 'journal', label: '📜 Journal' },
   { key: 'historique', label: '📈 Historique' },
   { key: 'referentiels', label: '📚 Référentiels' },
+  { key: 'parametres', label: '🎛 Paramètres' },
   { key: 'setup', label: '⚙ Nouvelle partie' },
 ]
 
@@ -71,7 +73,7 @@ export default function App() {
       {(section === 'joueur' || section === 'population' || section === 'armees') && joueursBars}
 
       <main className="main">
-        {!state && section !== 'setup' && section !== 'referentiels' ? (
+        {!state && section !== 'setup' && section !== 'referentiels' && section !== 'parametres' ? (
           <div className="card">Aucune partie en cours. Allez dans « ⚙ Nouvelle partie ».</div>
         ) : (
           <>
@@ -82,6 +84,7 @@ export default function App() {
             {section === 'journal' && <EventLogPanel />}
             {section === 'historique' && <HistoryPanel />}
             {section === 'referentiels' && <ReferenceDataPanel />}
+            {section === 'parametres' && <ParamsPanel />}
             {section === 'setup' && <SetupPanel />}
           </>
         )}
@@ -89,8 +92,8 @@ export default function App() {
 
       <footer className="footer muted small">
         Chasse &amp; Pêche — Légendes · portage React + TypeScript + Supabase du jeu Excel/VBA.
-        Les référentiels (titres, noms, événements) sont des seeds éditables : le classeur d'origine
-        n'a pas pu être lu intégralement, corrigez-les dans l'onglet Référentiels ou dans src/engine/gameData.ts.
+        Les référentiels viennent du classeur d'origine et les formules du VBA : TOUT est
+        modifiable à chaud dans l'onglet « 🎛 Paramètres » (aucune contrainte bloquante).
       </footer>
     </div>
   )

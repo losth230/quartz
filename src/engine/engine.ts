@@ -14,62 +14,18 @@ import type {
 import type { Rng } from './rng'
 import { makeRng } from './rng'
 import {
-  RESOURCES, TITRES, TRAITS, ORIENTATIONS, CULTURES, PEUPLES,
-  titreDef, traitDef, cultureDef, peupleDef,
+  titreDef, traitDef, cultureDef, peupleDef, cfgOf,
+  type Cfg,
 } from './gameData'
-import { EVENTS, DYNASTIES, BUILDINGS, buildingDef, schoolRankOf } from './gameData2'
+import { buildingDef, schoolRankOf } from './gameData2'
 import { checkVictory } from './victory'
 import { findTitleIssues, titleCandidatesFor } from './validation'
 
-// ── Constantes (issues mot pour mot du module VBA « Personnages ») ─────
-export const ADULT_AGE = 16
-export const ADULTERY_RATE = 0.03
-export const TRAIT_BASTARD = 'Bâtard'
-export const TRAIT_INBRED = 'Consanguin'
-export const TITRE_DIRIGEANT = 'Dirigeant'
-export const TITRE_GOUVERNEUR = 'Gouverneur'
-export const TITRE_HERITIER = 'Héritier'
-export const TITRE_PROFESSEUR = 'Professeur'
-export const TITRE_CHASSEUR = 'Chasseur'
-export const CHANCE_EDUC_ROTURIER = 0.08
-export const CHANCE_EDUC_NOBLE = 0.15
-export const PROFESSEUR_BASE_CHANCE = 0.9
-export const PROF_BONUS_EDUC = 0.1
-export const PROBA_MALADIE = 0.0005
-export const MOD_MALADIE_AGE = 0.0001
-export const MOD_MALADIE_ENCEINTE = 0.03
-export const PROBA_GUERISON = 0.25
-export const MOD_GUERISON_AGE = 0.003
-export const FERT_BASE_RATE = 1.5
-export const FERT_SINGLE_FACTOR = 0.1
-export const FERT_TWINS_RATE = 0.05
-export const FERT_TRIPLETS_RATE = 0.001
-export const FERT_TRAIT_FACTOR_MIN = 0
-export const FERT_TRAIT_FACTOR_MAX = 1.6
-export const MIGRATION_PROBA = 0.1
-export const CONSO_NOURR_PAR_HAB = 1
-export const GAINS_CREDITE_STOCK = true
-export const PUISSANCE_GENERAL = 45
-export const PUISSANCE_SOLDAT = 15
-export const SOLDAT_AGE_MIN = 16
-export const SOLDAT_AGE_MAX = 30
-export const MAX_LOG = 4000
-
-export const TAX_OR_FAIBLES = 0.5
-export const TAX_OR_HAUTES = 1.5
-export const TAX_NAISS_FAIBLES = 1.5
-export const TAX_NAISS_HAUTES = 0.5
-
-export const EDU_AGRICOLE = 'Agricole'
-export const EDU_SCIENTIFIQUE = 'Scientifique'
-export const EDU_MILITAIRE = 'Militaire'
-export const EDU_ECONOMIQUE = 'Économique'
-export const EDU_MEDICALE = 'Médicale'
-export const EDU_CULTURELLE = 'Culturelle'
-export const ALL_EDUCATIONS = [
-  EDU_AGRICOLE, EDU_SCIENTIFIQUE, EDU_MILITAIRE,
-  EDU_ECONOMIQUE, EDU_MEDICALE, EDU_CULTURELLE,
-]
+// Toutes les constantes du module VBA vivent désormais dans la config de la
+// partie (state.config, onglet « Paramètres ») : valeurs par défaut dans
+// src/config/params.ts, données de référence dans src/config/defaultConfig.ts.
+// Chaque formule ci-dessous lit ses constantes via cfgOf(state.config) :
+// n'importe qui peut les changer à chaud, sans aucune contrainte.
 
 // ── Utilitaires ─────────────────────────────────────────────────────────
 let idCounter = 0
@@ -77,9 +33,9 @@ export function newId(rng: Rng): string {
   return `c${Date.now().toString(36)}${(idCounter++).toString(36)}${rng.int(100, 999)}`
 }
 
-export function isNobleDyn(dyn: string): boolean {
+export function isNobleDyn(dyn: string, C: Cfg = cfgOf()): boolean {
   const d = dyn.trim()
-  return d !== '' && d !== 'Roturier'
+  return d !== '' && d !== C.p.dynastieRoturier
 }
 
 export function fullName(c: Character): string {
@@ -104,18 +60,20 @@ function bump(dict: Record<string, number>, key: string, n = 1) {
 // ══════════════════════════════════════════════════════════════════════
 
 export function runTurn(state: GameState): GameState {
+  const C = cfgOf(state.config)
   const rng = makeRng(state.rngState)
   const turnBefore = state.turn
-  const newSaison = saisonForTurn(turnBefore + 1)
+  const newSaison = saisonForTurn(turnBefore + 1, C)
 
   // 1. Événement de saison (si la saison change au tour qui commence)
   if (newSaison !== state.saison) {
     const ev = rng.pickWeighted(
-      EVENTS.filter((e) => e.saison === newSaison),
+      C.events.filter((e) => e.saison === newSaison),
       (e) => e.poids,
     )
     const danger = rng.die(6) + state.modDanger
-    const level = danger <= 5 ? 'faible' : danger <= 8 ? 'moyenne' : danger <= 10 ? 'forte' : 'extreme'
+    const level: 'faible' | 'moyenne' | 'forte' | 'extreme' =
+      danger <= 5 ? 'faible' : danger <= 8 ? 'moyenne' : danger < C.p.dangerSeuilForte ? 'forte' : 'extreme'
     const texte = ev[level as 'faible' | 'moyenne' | 'forte' | 'extreme']
     state.log.push({
       turn: turnBefore + 1, type: 'Événement', joueur: null,
@@ -127,7 +85,7 @@ export function runTurn(state: GameState): GameState {
 
   // 2. Carte dynastie pour chaque joueur (TirerDynastie)
   for (const p of state.players) {
-    const card = rng.pick(DYNASTIES)
+    const card = rng.pick(C.dynasties)
     p.dynastie = { nom: card.nom, description: card.description }
     state.log.push({
       turn: turnBefore + 1, type: 'Dynastie', joueur: p.n,
@@ -140,7 +98,7 @@ export function runTurn(state: GameState): GameState {
   for (const p of state.players) {
     const gains = calculerGainsPopulation(state, p, rng)
     // production : stock += prod (lignes 18-28 des J{n})
-    for (const r of RESOURCES) {
+    for (const r of C.ressources) {
       const rs = p.resources[r]
       if (!rs) continue
       rs.stock += rs.prod
@@ -150,10 +108,10 @@ export function runTurn(state: GameState): GameState {
       const rs = p.resources['Nourriture']
       if (rs) rs.stock += rs.prod
     }
-    // gains de population crédités au stock (GAINS_CREDITE_STOCK = True)
+    // gains de population crédités au stock × gainsCrediteStock (paramètre)
     for (const [res, v] of Object.entries(gains)) {
       const rs = p.resources[res]
-      if (rs) rs.stock += v
+      if (rs) rs.stock += v * C.p.gainsCrediteStock
     }
   }
 
@@ -172,85 +130,84 @@ export function runTurn(state: GameState): GameState {
 
   // 7. Tour suivant
   state.turn = turnBefore + 1
-  if (state.log.length > MAX_LOG) {
-    state.log = state.log.slice(state.log.length - MAX_LOG)
+  if (state.log.length > C.p.maxLog) {
+    state.log = state.log.slice(state.log.length - C.p.maxLog)
   }
   state.rngState = rng.state()
   return state
 }
 
-export function saisonForTurn(turn: number): 'Été' | 'Hiver' {
-  return Math.floor(turn / 3) % 2 === 0 ? 'Été' : 'Hiver'
+export function saisonForTurn(turn: number, C: Cfg = cfgOf()): 'Été' | 'Hiver' {
+  return Math.floor(turn / Math.max(1, C.p.saisonLongueur)) % 2 === 0 ? 'Été' : 'Hiver'
 }
 
-/** Effets chiffrés simplifiés des événements seed (annexe III du livret). */
+/**
+ * Effets chiffrés des événements du classeur : la table eventEffets de la
+ * config donne, pour chaque événement, un effet de base par ressource,
+ * multiplié par le coefficient de niveau (params evMult*) ; Peste ajoute
+ * un risque de maladie, Sombres présages augmente modDanger.
+ * Tout est modifiable à chaud dans l'onglet « Paramètres ».
+ */
 function applyEventEffect(state: GameState, nom: string, level: 'faible' | 'moyenne' | 'forte' | 'extreme') {
-  const mult = { faible: 1, moyenne: 2, forte: 3, extreme: 5 }[level]
-  const add = (res: string, v: number) => {
+  const C = cfgOf(state.config)
+  const mult =
+    level === 'faible' ? C.p.evMultFaible
+    : level === 'moyenne' ? C.p.evMultMoyenne
+    : level === 'forte' ? C.p.evMultForte
+    : C.p.evMultExtreme
+  const def = C.config.eventEffets.find((e) => e.nom === nom)
+  if (!def) return
+  if (def.modDanger) state.modDanger += def.modDanger
+  for (const eff of def.effets) {
+    const v = eff.base * mult
     for (const p of state.players) {
-      const rs = p.resources[res]
+      const rs = p.resources[eff.ressource]
       if (rs) rs.stock += v
     }
   }
-  if (nom === 'Terres fertiles') add('Nourriture', 10 * mult)
-  else if (nom === 'Récoltes abondantes' || nom === 'Chasse d\'hiver' || nom === 'Bonne pêche') add('Nourriture', [10, 25, 40, 60][level === 'faible' ? 0 : level === 'moyenne' ? 1 : level === 'forte' ? 2 : 3])
-  else if (nom === 'Sécheresse' || nom === 'Gel des récoltes' || nom === 'Tempête de neige') add('Nourriture', -10 * mult)
-  else if (nom === 'Fête du soleil' || nom === 'Fête du solstice' || nom === 'Ambassade lointaine') {
-    add('Tourisme', 5 * mult)
-    add('Or', 2 * mult)
-  }
-  else if (nom === 'Explosion volcanique') { add('Nourriture', -5 * mult); add('Bois', -2 * mult) }
-  else if (nom === 'Razzia de brigands') add('Or', -2 * mult)
-  else if (nom === 'Loups en maraude') add('Bétail', -2 * mult)
-  // Épidémie : gérée via risque de maladie supplémentaire ce tour
-  if (nom === 'Épidémie' || nom === 'Épidémie d\'hiver') {
-    const risk = { faible: 0.05, moyenne: 0.1, forte: 0.15, extreme: 0.25 }[level]
+  if (def.maladieRisque > 0) {
+    const risk = def.maladieRisque * mult
+    const rng = makeRng(state.rngState)
     for (const p of state.players) {
-      const pop = state.population[p.n] ?? []
-      for (const c of pop) {
-        if (c.statut === 'Sain' && c.statut !== 'Décédé') {
-          const r2 = makeRng(state.rngState ^ (hash(c.id) & 0xffff))
-          if (r2.chance(risk)) c.statut = 'Malade'
-          state.rngState = r2.state()
+      for (const c of state.population[p.n] ?? []) {
+        if (c.statut === 'Sain' && c.statut !== 'Décédé' && rng.chance(risk)) {
+          c.statut = 'Malade'
         }
       }
     }
+    state.rngState = rng.state()
   }
 }
 
-function hash(s: string): number {
-  let h = 2166136261
-  for (let i = 0; i < s.length; i++) {
-    h ^= s.charCodeAt(i)
-    h = Math.imul(h, 16777619)
-  }
-  return h >>> 0
-}
-
+/**
+ * Effets chiffrés des cartes dynastie du classeur : table dynastieEffets de
+ * la config ('(aléatoire)' = une ressource de base tirée au sort ;
+ * guerison = guérit un personnage malade). Les cartes « à option » du
+ * classeur (dépenser X pour gagner Y) ne dépensent rien automatiquement :
+ * leur texte reste affiché dans le journal, le joueur applique son choix
+ * en éditant ses stocks — aucune contrainte bloquante.
+ */
 function applyDynastieCard(state: GameState, p: Player, nom: string, rng: Rng) {
-  const or = p.resources['Or']
-  const nourr = p.resources['Nourriture']
-  const tour = p.resources['Tourisme']
-  switch (nom) {
-    case 'Étoile montante': if (or) or.stock += 10; break
-    case 'Union providentielle': if (or) or.stock += 20; break
-    case 'Trésor oublié': if (or) or.stock += 25; break
-    case 'Ère de prospérité':
-      if (or) or.stock += 15; if (nourr) nourr.stock += 15; if (tour) tour.stock += 10
-      break
-    case 'Disgrâce': if (or) or.stock -= 15; if (tour) tour.stock -= 10; break
-    case 'Famine dynastique': if (nourr) nourr.stock -= 10; if (or) or.stock -= 5; break
-    case 'Sang nouveau': {
-      const hab = p.resources['Habitants']
-      if (hab) hab.stock += 5
-      break
+  const C = cfgOf(state.config)
+  const def = C.config.dynastieEffets.find((e) => e.nom === nom)
+  if (!def) return
+  const baseRessources = C.ressources.slice(0, 7)
+  if (def.guerison) {
+    const pop = state.population[p.n] ?? []
+    const malades = pop.filter((c) => c.statut === 'Malade' && c.statut !== 'Décédé')
+    if (malades.length > 0) {
+      const elu = rng.pick(malades)
+      elu.statut = 'Sain'
+      state.log.push({
+        turn: state.turn + 1, type: 'Système', joueur: p.n,
+        texte: `Miracle : ${fullName(elu)} est guéri(e).`,
+      })
     }
-    case 'Guerre de succession lointaine': {
-      const g = p.resources['Garnison']
-      if (g) g.stock += 5
-      break
-    }
-    default: break // Oracle, Héritage contesté, Anoblissement, Prophétie : effets narratifs
+  }
+  for (const eff of def.effets) {
+    const res = eff.ressource === '(aléatoire)' ? rng.pick(baseRessources) : eff.ressource
+    const rs = p.resources[res]
+    if (rs) rs.stock += eff.base
   }
 }
 
@@ -261,6 +218,7 @@ function applyDynastieCard(state: GameState, p: Player, nom: string, rng: Rng) {
 // ══════════════════════════════════════════════════════════════════════
 
 export function calculerGainsPopulation(state: GameState, p: Player, rng: Rng): Record<string, number> {
+  const C = cfgOf(state.config)
   const totals: Record<string, number> = {}
   const pop = state.population[p.n] ?? []
   for (const ville of p.villes) {
@@ -268,7 +226,7 @@ export function calculerGainsPopulation(state: GameState, p: Player, rng: Rng): 
     const vivants = pop.filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
     for (const c of vivants) {
       if (!c.titre) continue
-      const td = titreDef(c.titre)
+      const td = titreDef(c.titre, C.config)
       if (!td) continue
       if (td.ressource1 && td.valeur1 !== 0) {
         cityGains[td.ressource1] = (cityGains[td.ressource1] ?? 0) + td.valeur1
@@ -278,12 +236,12 @@ export function calculerGainsPopulation(state: GameState, p: Player, rng: Rng): 
       }
     }
     // Taxes : Faible → Or ×0,5 / Forte → Or ×1,5 (l'inverse pour la Nourriture)
-    const taxOr = ville.taxes === 'Faible' ? TAX_OR_FAIBLES : ville.taxes === 'Forte' ? TAX_OR_HAUTES : 1
-    const taxNourr = ville.taxes === 'Faible' ? TAX_OR_HAUTES : ville.taxes === 'Forte' ? TAX_OR_FAIBLES : 1
+    const taxOr = ville.taxes === 'Faible' ? C.p.taxOrFaibles : ville.taxes === 'Forte' ? C.p.taxOrHautes : 1
+    const taxNourr = ville.taxes === 'Faible' ? C.p.taxOrHautes : ville.taxes === 'Forte' ? C.p.taxOrFaibles : 1
     if (cityGains['Or']) cityGains['Or'] *= taxOr
     if (cityGains['Nourriture']) cityGains['Nourriture'] *= taxNourr
     // Consommation (non taxée, appliquée après)
-    cityGains['Nourriture'] = (cityGains['Nourriture'] ?? 0) - CONSO_NOURR_PAR_HAB * vivants.length
+    cityGains['Nourriture'] = (cityGains['Nourriture'] ?? 0) - C.p.consoNourrParHab * vivants.length
     for (const [res, v] of Object.entries(cityGains)) {
       totals[res] = (totals[res] ?? 0) + v
     }
@@ -292,9 +250,9 @@ export function calculerGainsPopulation(state: GameState, p: Player, rng: Rng): 
 }
 
 /** Facteur de taxes sur la conception (Faible ×1,5 / Moyenne ×1 / Forte ×0,5). */
-export function taxBirthFactor(ville: City | undefined): number {
+export function taxBirthFactor(ville: City | undefined, C: Cfg = cfgOf()): number {
   if (!ville) return 1
-  return ville.taxes === 'Faible' ? TAX_NAISS_FAIBLES : ville.taxes === 'Forte' ? TAX_NAISS_HAUTES : 1
+  return ville.taxes === 'Faible' ? C.p.taxNaissFaibles : ville.taxes === 'Forte' ? C.p.taxNaissHautes : 1
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -302,6 +260,7 @@ export function taxBirthFactor(ville: City | undefined): number {
 // ══════════════════════════════════════════════════════════════════════
 
 export function populationTurn(state: GameState, p: Player, rng: Rng) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n]
   if (!pop) return
   const recap = emptyRecap()
@@ -319,23 +278,23 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
     // statut vide → Sain
     if (!c.statut) c.statut = 'Sain'
     // AgeMax par défaut : 40 + aléa(0-39) + life_delta(Trait1)
-    if (!c.ageMax || c.ageMax <= 0) c.ageMax = computeAgeMax(c, rng)
+    if (!c.ageMax || c.ageMax <= 0) c.ageMax = computeAgeMax(c, rng, C)
     // vieillissement : +2 ans par tour
     c.age += 2
     // éducation des mineurs
-    if (c.age < ADULT_AGE) tryEducateMinor(state, p, c, rng, recap)
+    if (c.age < C.p.adultAge) tryEducateMinor(state, p, c, rng, recap)
     // fécondité affichée
     c.fecondite = computeFecondite(state, p, c)
     // mort de vieillesse
     if (c.age >= c.ageMax) {
-      const resurrected = tryResurrection(c, rng)
+      const resurrected = tryResurrection(c, rng, C)
       if (!resurrected) {
         killCharacter(state, p, c, 'vieillesse', recap)
         continue
       }
     }
     // titre automatique à l'âge adulte
-    if (c.age >= ADULT_AGE && !c.titre) assignAdultTitle(state, p, c, rng, recap)
+    if (c.age >= C.p.adultAge && !c.titre) assignAdultTitle(state, p, c, rng, recap)
     // maladie
     maladieStep(state, p, c, rng, recap)
   }
@@ -354,14 +313,14 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
   writeRecap(state, p, recap)
 }
 
-export function computeAgeMax(c: Character, rng: Rng): number {
-  const t1 = traitDef(c.traits[0])
+export function computeAgeMax(c: Character, rng: Rng, C: Cfg = cfgOf()): number {
+  const t1 = traitDef(c.traits[0], C.config)
   const delta = t1 ? t1.life_delta : 0
-  return 40 + rng.int(0, 39) + delta
+  return C.p.ageMaxBase + rng.int(0, Math.max(0, C.p.ageMaxAla)) + delta
 }
 
-function tryResurrection(c: Character, rng: Rng): boolean {
-  const t1 = traitDef(c.traits[0])
+function tryResurrection(c: Character, rng: Rng, C: Cfg = cfgOf()): boolean {
+  const t1 = traitDef(c.traits[0], C.config)
   const seuil = t1 ? t1.resurrection_min_roll : 0
   if (seuil > 0 && rng.die(6) >= seuil) {
     c.ageMax += rng.die(6) + rng.die(6)
@@ -373,23 +332,24 @@ function tryResurrection(c: Character, rng: Rng): boolean {
 // ── Professeurs ─────────────────────────────────────────────────────────
 
 export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   for (const ville of p.villes) {
-    const rank = schoolRankOf(ville.batiments)
+    const rank = schoolRankOf(ville.batiments, C.config)
     if (rank <= 0) continue
     const vivants = pop.filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
-    let nbProfs = vivants.filter((c) => c.titre === TITRE_PROFESSEUR).length
+    let nbProfs = vivants.filter((c) => c.titre === C.p.titreProfesseur).length
     if (nbProfs >= rank) continue
-    // chance = 0,9 / ln(profs + 2,72)
-    const chance = PROFESSEUR_BASE_CHANCE / Math.log(nbProfs + 2.72)
+    // chance = professeurBaseChance / ln(profs + 2,72)
+    const chance = C.p.professeurBaseChance / Math.log(nbProfs + 2.72)
     if (!rng.chance(chance)) continue
-    const candidats = vivants.filter((c) => c.age >= ADULT_AGE && !c.titre)
+    const candidats = vivants.filter((c) => c.age >= C.p.adultAge && !c.titre)
     if (candidats.length === 0) continue
     const elu = rng.pick(candidats)
-    elu.titre = TITRE_PROFESSEUR
-    if (!elu.education) elu.education = rng.pick(ALL_EDUCATIONS)
+    elu.titre = C.p.titreProfesseur
+    if (!elu.education) elu.education = rng.pick(C.educations)
     nbProfs++
-    bump(recap.titresAttribues, TITRE_PROFESSEUR)
+    bump(recap.titresAttribues, C.p.titreProfesseur)
     state.log.push({
       turn: state.turn + 1, type: 'Titre', joueur: p.n,
       texte: `${fullName(elu)} est promu Professeur à ${ville.nom}.`,
@@ -400,9 +360,10 @@ export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, re
 // ── Mariages ────────────────────────────────────────────────────────────
 
 export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   const celib = pop.filter(
-    (c) => c.statut !== 'Décédé' && !c.mariage && c.age >= ADULT_AGE,
+    (c) => c.statut !== 'Décédé' && !c.mariage && c.age >= C.p.adultAge,
   )
   const femmes = rng.shuffle(celib.filter((c) => c.sexe === 'F'))
   const hommes = celib.filter((c) => c.sexe === 'M')
@@ -412,12 +373,12 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
     const dispo = hommes.filter((h) => !h.mariage && !mariesIds.has(h.id))
     if (dispo.length === 0) break
     const h = rng.pick(dispo)
-    const proba = computeMarriageProbability(f, h)
+    const proba = computeMarriageProbability(f, h, C)
     if (!rng.chance(proba)) continue
     f.mariage = fullName(h)
     h.mariage = fullName(f)
     mariesIds.add(h.id)
-    const noble = isNobleDyn(f.dynastie) && isNobleDyn(h.dynastie)
+    const noble = isNobleDyn(f.dynastie, C) && isNobleDyn(h.dynastie, C)
     if (noble) bump(recap.mariagesNobles, formatDynastyPair(f.dynastie, h.dynastie))
     state.log.push({
       turn: state.turn + 1, type: 'Mariage', joueur: p.n,
@@ -432,57 +393,60 @@ export function formatDynastyPair(d1: string, d2: string): string {
   return d1 <= d2 ? `${d1} & ${d2}` : `${d2} & ${d1}`
 }
 
-export function computeMarriageProbability(f: Character, h: Character): number {
-  const nobleF = isNobleDyn(f.dynastie)
-  const nobleH = isNobleDyn(h.dynastie)
+export function computeMarriageProbability(f: Character, h: Character, C: Cfg = cfgOf()): number {
+  const nobleF = isNobleDyn(f.dynastie, C)
+  const nobleH = isNobleDyn(h.dynastie, C)
   let score: number
-  if (!nobleF && !nobleH) score = 0.3
-  else if (nobleF && nobleH) score = 0.15
-  else score = 0.03 // mésalliance
+  if (!nobleF && !nobleH) score = C.p.mariageRoturiers
+  else if (nobleF && nobleH) score = C.p.mariageNobles
+  else score = C.p.mariageMesalliance // mésalliance
   // bonus titre non-Chasseur (par époux)
-  if (f.titre && f.titre !== TITRE_CHASSEUR) score += 0.1
-  if (h.titre && h.titre !== TITRE_CHASSEUR) score += 0.1
-  // mods marriage_mod des traits (bornés ±0,20 par époux)
-  score += characterMarriageMod(f) + characterMarriageMod(h)
+  if (f.titre && f.titre !== C.p.titreChasseur) score += C.p.mariageBonusTitre
+  if (h.titre && h.titre !== C.p.titreChasseur) score += C.p.mariageBonusTitre
+  // mods marriage_mod des traits (bornés ±mariageTraitMax par époux)
+  score += characterMarriageMod(f, C) + characterMarriageMod(h, C)
   // culture
   if (f.culture && h.culture) {
-    score += f.culture.toLowerCase() === h.culture.toLowerCase() ? 0.1 : -0.1
+    score += f.culture.toLowerCase() === h.culture.toLowerCase()
+      ? C.p.mariageMemeCulture
+      : C.p.mariageAutreCulture
   }
   // écart d'âge
-  score -= Math.abs(f.age - h.age) * 0.005
+  score -= Math.abs(f.age - h.age) * C.p.mariageParAnEcart
   // bâtards
-  const batF = f.traits.includes(TRAIT_BASTARD)
-  const batH = h.traits.includes(TRAIT_BASTARD)
-  if (batF) score -= 0.05
-  if (batH) score -= 0.05
-  if (batF && batH) score += 0.1
-  if (batF && nobleF && nobleH) score -= 0.05
-  if (batH && nobleH && nobleF) score -= 0.05
-  return Math.min(0.9, Math.max(0.01, score))
+  const batF = f.traits.includes(C.p.traitBatard)
+  const batH = h.traits.includes(C.p.traitBatard)
+  if (batF) score += C.p.mariageBatard
+  if (batH) score += C.p.mariageBatard
+  if (batF && batH) score += C.p.mariageDeuxBatards
+  if (batF && nobleF && nobleH) score += C.p.mariageBatard
+  if (batH && nobleH && nobleF) score += C.p.mariageBatard
+  return Math.min(C.p.mariagePlafond, Math.max(C.p.mariagePlancher, score))
 }
 
-function characterMarriageMod(c: Character): number {
+function characterMarriageMod(c: Character, C: Cfg = cfgOf()): number {
   let total = 0
   for (const t of c.traits) {
     if (!t) continue
-    const td = traitDef(t)
+    const td = traitDef(t, C.config)
     if (td) total += td.marriage_mod
   }
-  return Math.min(0.2, Math.max(-0.2, total))
+  return Math.min(C.p.mariageTraitMax, Math.max(-C.p.mariageTraitMax, total))
 }
 
 // ── Éducation des mineurs (TryEducateMinor) ─────────────────────────────
 
 export function tryEducateMinor(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const ville = p.villes.find((v) => v.nom === c.ville)
   if (!ville) return
-  const rank = schoolRankOf(ville.batiments)
+  const rank = schoolRankOf(ville.batiments, C.config)
   if (rank <= 0) return
   const pop = state.population[p.n] ?? []
-  const profs = pop.filter((x) => x.statut !== 'Décédé' && x.ville === ville.nom && x.titre === TITRE_PROFESSEUR)
+  const profs = pop.filter((x) => x.statut !== 'Décédé' && x.ville === ville.nom && x.titre === C.p.titreProfesseur)
   if (profs.length === 0) return
-  const base = isNobleDyn(c.dynastie) ? CHANCE_EDUC_NOBLE : CHANCE_EDUC_ROTURIER
-  let chance = base * rank * (1 + PROF_BONUS_EDUC * (profs.length - 1))
+  const base = isNobleDyn(c.dynastie, C) ? C.p.chanceEducNoble : C.p.chanceEducRoturier
+  let chance = base * rank * (1 + C.p.profBonusEduc * (profs.length - 1))
   chance = Math.min(0.95, chance)
   if (!rng.chance(chance)) return
   const edus = new Set<string>()
@@ -498,35 +462,40 @@ export function tryEducateMinor(state: GameState, p: Player, c: Character, rng: 
 // ── Titre automatique à l'âge adulte ────────────────────────────────────
 
 export function assignAdultTitle(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
-  if (c.traits.includes(TRAIT_BASTARD)) {
-    c.titre = TITRE_CHASSEUR
-    bump(recap.titresAttribues, TITRE_CHASSEUR)
+  const C = cfgOf(state.config)
+  if (c.traits.includes(C.p.traitBatard)) {
+    c.titre = C.p.titreChasseur
+    bump(recap.titresAttribues, C.p.titreChasseur)
     return
   }
   let titre: string | null = null
   if (c.education) {
-    const td = TITRES.find(
+    const td = C.titres.find(
       (t) => t.attribution === 'Education' && t.education === c.education,
     )
-    if (td && titreAllowedForCharacter(td.titre, c, p)) titre = td.titre
+    if (td && titreAllowedForCharacter(td.titre, c, p, C)) titre = td.titre
   }
-  if (!titre) titre = TITRE_CHASSEUR
+  if (!titre) titre = C.p.titreChasseur
   c.titre = titre
   bump(recap.titresAttribues, titre)
 }
 
-export function titreAllowedForCharacter(titre: string, c: Character, p: Player): boolean {
-  const td = titreDef(titre)
+export function titreAllowedForCharacter(titre: string, c: Character, p: Player, C: Cfg = cfgOf()): boolean {
+  const td = titreDef(titre, C.config)
   if (!td) return false
-  if (td.nobleSeul && !isNobleDyn(c.dynastie)) return false
+  if (td.nobleSeul && !isNobleDyn(c.dynastie, C)) return false
   if (td.regleGenre === 'Masculine' && c.sexe !== 'M') return false
   if (td.regleGenre === 'Féminine' && c.sexe !== 'F') return false
-  if (td.regleGenre === 'Culture') {
-    const cult = cultureDef(p.culture)
+  if (td.regleGenre === 'Hérédité' || td.regleGenre === 'Culture') {
+    const cult = cultureDef(p.culture, C.config)
     if (cult) {
       if (cult.heredite === 'Masculine' && c.sexe !== 'M') return false
       if (cult.heredite === 'Féminine' && c.sexe !== 'F') return false
     }
+  }
+  if (td.regleGenre === 'Martialité') {
+    const cult = cultureDef(p.culture, C.config)
+    if (cult && !martialiteOk(cult.martialite, c.sexe)) return false
   }
   return true
 }
@@ -535,21 +504,27 @@ export function titreAllowedForCharacter(titre: string, c: Character, p: Player)
 
 function maladieStep(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
   if (c.statut === 'Décédé') return
+  const C = cfgOf(state.config)
   const ville = p.villes.find((v) => v.nom === c.ville)
   const batiments = ville ? ville.batiments : []
-  const guildeGlobal = p.villes.some((v) => v.batiments.includes('Guilde des Médecins'))
   let contractMod = 0
-  let cureMod = guildeGlobal ? 0.1 : 0
+  let cureMod = 0
+  for (const v of p.villes) {
+    for (const b of v.batiments) {
+      const bd = buildingDef(b, C.config)
+      if (bd) cureMod += bd.bonusGuerisonGlobal
+    }
+  }
   for (const b of batiments) {
-    const bd = buildingDef(b)
+    const bd = buildingDef(b, C.config)
     if (bd) {
       contractMod += bd.malContraction
       cureMod += bd.bonusGuerison
     }
   }
   if (c.statut === 'Sain' || c.statut === 'Enceinte') {
-    let pContract = PROBA_MALADIE + MOD_MALADIE_AGE * c.age + contractMod
-    if (c.statut === 'Enceinte') pContract += MOD_MALADIE_ENCEINTE
+    let pContract = C.p.probaMaladie + C.p.modMaladieAge * c.age + contractMod
+    if (c.statut === 'Enceinte') pContract += C.p.modMaladieEnceinte
     if (rng.chance(Math.max(0, pContract))) {
       if (c.statut === 'Enceinte') {
         // une femme enceinte qui tombe malade perd la grossesse
@@ -565,11 +540,11 @@ function maladieStep(state: GameState, p: Player, c: Character, rng: Rng, recap:
     }
   } else if (c.statut === 'Malade') {
     // un malade qui re-contracte la maladie meurt
-    if (rng.chance(Math.max(0, PROBA_MALADIE + MOD_MALADIE_AGE * c.age + contractMod))) {
+    if (rng.chance(Math.max(0, C.p.probaMaladie + C.p.modMaladieAge * c.age + contractMod))) {
       killCharacter(state, p, c, 'maladie', recap)
       return
     }
-    const pCure = PROBA_GUERISON - MOD_GUERISON_AGE * c.age + cureMod
+    const pCure = C.p.probaGuerison - C.p.modGuerisonAge * c.age + cureMod
     if (rng.chance(Math.max(0, pCure))) c.statut = 'Sain'
   }
 }
@@ -577,6 +552,7 @@ function maladieStep(state: GameState, p: Player, c: Character, rng: Rng, recap:
 // ── Décès ────────────────────────────────────────────────────────────────
 
 export function killCharacter(state: GameState, p: Player, c: Character, cause: 'vieillesse' | 'maladie', recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   c.statut = 'Décédé'
   // libérer le conjoint
   const pop = state.population[p.n] ?? []
@@ -591,18 +567,19 @@ export function killCharacter(state: GameState, p: Player, c: Character, cause: 
     texte: `${fullName(c)} (${c.age} ans, ${c.dynastie}${c.titre ? `, ${c.titre}` : ''}) meurt de ${cause === 'maladie' ? 'la maladie' : 'vieillesse'}.`,
   })
   // succession si Dirigeant
-  if (c.titre === TITRE_DIRIGEANT) {
+  if (c.titre === C.p.titreDirigeant) {
     handleDirigeantSuccession(state, p, c, recap)
   }
 }
 
 export function handleDirigeantSuccession(state: GameState, p: Player, defunt: Character, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   const heritier = pop.find(
-    (c) => c.statut !== 'Décédé' && c.titre === TITRE_HERITIER,
+    (c) => c.statut !== 'Décédé' && c.titre === C.p.titreHeritierStr,
   )
   if (heritier) {
-    heritier.titre = TITRE_DIRIGEANT
+    heritier.titre = C.p.titreDirigeant
     state.log.push({
       turn: state.turn + 1, type: 'Crise', joueur: p.n,
       texte: `${p.nom} : ${fullName(heritier)} (${heritier.dynastie}) succède à ${fullName(defunt)} comme Dirigeant.`,
@@ -610,13 +587,13 @@ export function handleDirigeantSuccession(state: GameState, p: Player, defunt: C
     return
   }
   const nobles = pop.filter(
-    (c) => c.statut !== 'Décédé' && c.age >= ADULT_AGE && isNobleDyn(c.dynastie) && c.titre !== 'Soldat' && c.titre !== 'Commandant',
+    (c) => c.statut !== 'Décédé' && c.age >= C.p.adultAge && isNobleDyn(c.dynastie, C) && c.titre !== C.p.titreSoldat && c.titre !== C.p.titreCommandant,
   )
   const rng = makeRng(state.rngState)
-  const eligibles = nobles.filter((c) => titreAllowedForCharacter(TITRE_DIRIGEANT, c, p))
+  const eligibles = nobles.filter((c) => titreAllowedForCharacter(C.p.titreDirigeant, c, p, C))
   if (eligibles.length > 0) {
     const elu = rng.pick(eligibles)
-    elu.titre = TITRE_DIRIGEANT
+    elu.titre = C.p.titreDirigeant
     state.rngState = rng.state()
     recap.crises.push('CRISE DE SUCCESSION')
     state.log.push({
@@ -635,9 +612,10 @@ export function handleDirigeantSuccession(state: GameState, p: Player, defunt: C
 // ── Fécondité (affichée) ─────────────────────────────────────────────────
 
 export function computeFecondite(state: GameState, p: Player, c: Character): number {
-  if (c.statut === 'Décédé' || c.age < ADULT_AGE) return 0
+  const C = cfgOf(state.config)
+  if (c.statut === 'Décédé' || c.age < C.p.adultAge) return 0
   if (c.sexe === 'F') {
-    return femaleAgeFactor(c.age) * cultureFertFactor(p.culture) * orientationFertFactor(c.orientation)
+    return femaleAgeFactor(c.age) * cultureFertFactor(p.culture, C) * orientationFertFactor(c.orientation)
   }
   return maleAgeFactor(c.age) * orientationFertFactor(c.orientation)
 }
@@ -664,29 +642,30 @@ export function orientationFertFactor(orientation: string): number {
   return o.includes('homo') || o.includes('asex') ? 0.7 : 1
 }
 
-function cultureFertFactor(culture: string): number {
-  const c = cultureDef(culture)
+function cultureFertFactor(culture: string, C: Cfg = cfgOf()): number {
+  const c = cultureDef(culture, C.config)
   return c ? c.fertFactor : 1
 }
 
-function traitsFertFactor(a: Character, b: Character | null): number {
+function traitsFertFactor(a: Character, b: Character | null, C: Cfg = cfgOf()): number {
   let sum = 0
   for (const t of a.traits) {
-    const td = t ? traitDef(t) : undefined
+    const td = t ? traitDef(t, C.config) : undefined
     if (td) sum += td.fert_add
   }
   if (b) {
     for (const t of b.traits) {
-      const td = t ? traitDef(t) : undefined
+      const td = t ? traitDef(t, C.config) : undefined
       if (td) sum += td.fert_add
     }
   }
-  return Math.min(FERT_TRAIT_FACTOR_MAX, Math.max(FERT_TRAIT_FACTOR_MIN, 1 + sum))
+  return Math.min(C.p.fertTraitFactorMax, Math.max(C.p.fertTraitFactorMin, 1 + sum))
 }
 
 // ── Conception et naissances ─────────────────────────────────────────────
 
 export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
 
   // 1. Naissances des femmes enceintes depuis le tour précédent
@@ -703,25 +682,25 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
   // 2. Tentatives de conception (femmes adultes saines)
   for (const mere of pop) {
     if (mere.sexe !== 'F' || mere.statut !== 'Sain') continue
-    if (mere.age < ADULT_AGE) continue
+    if (mere.age < C.p.adultAge) continue
     const ville = p.villes.find((v) => v.nom === mere.ville)
     const mari = mere.mariage ? pop.find((x) => fullName(x) === mere.mariage && x.statut !== 'Décédé') : undefined
-    const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) : FERT_SINGLE_FACTOR
-    let proba = FERT_BASE_RATE
+    const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) : C.p.fertSingleFactor
+    let proba = C.p.fertBaseRate
     proba *= femaleAgeFactor(mere.age)
     proba *= factorMari
-    proba *= traitsFertFactor(mere, mari ?? null)
-    proba *= cultureFertFactor(p.culture)
+    proba *= traitsFertFactor(mere, mari ?? null, C)
+    proba *= cultureFertFactor(p.culture, C)
     proba *= orientationFertFactor(mere.orientation)
-    proba *= taxBirthFactor(ville)
+    proba *= taxBirthFactor(ville, C)
     if (rng.chance(proba)) {
       let pereBio: Character | undefined
       let batard = false
       if (mari) {
-        if (rng.chance(ADULTERY_RATE)) {
+        if (rng.chance(C.p.adulteryRate)) {
           // adultère : amant aléatoire
           const amants = pop.filter(
-            (x) => x.sexe === 'M' && x.statut === 'Sain' && x.age >= ADULT_AGE && x.id !== mari.id,
+            (x) => x.sexe === 'M' && x.statut === 'Sain' && x.age >= C.p.adultAge && x.id !== mari.id,
           )
           pereBio = amants.length > 0 ? rng.pick(amants) : undefined
           batard = true
@@ -731,7 +710,7 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
       } else {
         // célibataire : amant aléatoire, enfant bâtard
         const amants = pop.filter(
-          (x) => x.sexe === 'M' && x.statut === 'Sain' && x.age >= ADULT_AGE,
+          (x) => x.sexe === 'M' && x.statut === 'Sain' && x.age >= C.p.adultAge,
         )
         pereBio = amants.length > 0 ? rng.pick(amants) : undefined
         batard = true
@@ -749,10 +728,11 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
 }
 
 function accoucher(state: GameState, p: Player, mere: Character, pere: Character | undefined, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   // nombre d'enfants
   const r = rng.next()
-  const nb = r < FERT_TRIPLETS_RATE ? 3 : r < FERT_TRIPLETS_RATE + FERT_TWINS_RATE ? 2 : 1
+  const nb = r < C.p.fertTripletsRate ? 3 : r < C.p.fertTripletsRate + C.p.fertTwinsRate ? 2 : 1
   const batard = mere.enfantBatard
   const consanguin = isConsanguineous(mere, pere)
   for (let i = 0; i < nb; i++) {
@@ -761,11 +741,11 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
       nom: mere.nom,
       prenom: pickName(state, p, rng, undefined),
       dynastie: computeBabyDynasty(state, p, mere, pere, batard, rng),
-      sexe: rng.chance(0.5) ? 'M' : 'F',
+      sexe: rng.pickWeighted(C.genres, (g) => g.poids).nom === 'Masculin' ? 'M' : 'F',
       age: 0,
       culture: mere.culture,
       ville: mere.ville,
-      orientation: rng.pickWeighted(ORIENTATIONS, (o) => o.poids).nom as Character['orientation'],
+      orientation: rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation'],
       traits: ['', '', ''],
       statut: 'Sain',
       mariage: null,
@@ -780,10 +760,10 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
       armee: null,
     }
     // traits
-    inheritTraits(enfant, mere, pere, rng)
-    if (batard) ensureTraitPresent(enfant, TRAIT_BASTARD)
-    if (consanguin) ensureTraitPresent(enfant, TRAIT_INBRED)
-    enfant.ageMax = computeAgeMax(enfant, rng)
+    inheritTraits(enfant, mere, pere, rng, C)
+    if (batard) ensureTraitPresent(enfant, C.p.traitBatard)
+    if (consanguin) ensureTraitPresent(enfant, C.p.traitConsanguin)
+    enfant.ageMax = computeAgeMax(enfant, rng, C)
     pop.push(enfant)
     bump(recap.naissances, enfant.dynastie)
     state.log.push({
@@ -795,7 +775,9 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
 }
 
 export function pickName(state: GameState, p: Player, rng: Rng, sexe: 'M' | 'F' | undefined): string {
-  const peup = peupleDef(p.peuple) ?? PEUPLES[0]
+  const C = cfgOf(state.config)
+  const peup = peupleDef(p.peuple, C.config) ?? peupleDef(C.peuples[0], C.config)
+  if (!peup) return 'Anonyme'
   if (sexe === 'F') return rng.pick(peup.prenomsF)
   if (sexe === 'M') return rng.pick(peup.prenomsM)
   return rng.pick([...peup.prenomsM, ...peup.prenomsF])
@@ -814,13 +796,14 @@ export function computeBabyDynasty(
   state: GameState, p: Player, mere: Character, pere: Character | undefined,
   batard: boolean, rng: Rng,
 ): string {
+  const C = cfgOf(state.config)
   if (batard) {
     // dynastie noble du parent noble s'il existe, sinon Roturier
-    if (pere && isNobleDyn(pere.dynastie)) return pere.dynastie
-    if (isNobleDyn(mere.dynastie)) return mere.dynastie
-    return 'Roturier'
+    if (pere && isNobleDyn(pere.dynastie, C)) return pere.dynastie
+    if (isNobleDyn(mere.dynastie, C)) return mere.dynastie
+    return C.p.dynastieRoturier
   }
-  const cult = cultureDef(p.culture)
+  const cult = cultureDef(p.culture, C.config)
   const hered = cult ? cult.heredite : 'Masculine'
   if (hered === 'Masculine') return pere ? pere.dynastie : mere.dynastie
   if (hered === 'Féminine') return mere.dynastie
@@ -830,15 +813,16 @@ export function computeBabyDynasty(
 
 /** Héritage des traits : 40% par trait parental héritable (3 essais mère + 3 essais père),
  *  puis 30% de tirage pondéré par slot libre. */
-export function inheritTraits(enfant: Character, mere: Character, pere: Character | undefined, rng: Rng) {
+export function inheritTraits(enfant: Character, mere: Character, pere: Character | undefined, rng: Rng, C: Cfg = cfgOf()) {
   const parents = [mere, ...(pere ? [pere] : [])]
+  const nbEssais = Math.max(0, Math.round(C.p.traitHeriteEssais))
   for (const parent of parents) {
     for (const t of parent.traits) {
       if (!t) continue
-      const td = traitDef(t)
+      const td = traitDef(t, C.config)
       if (!td || !td.heritable) continue
-      for (let essai = 0; essai < 3; essai++) {
-        if (rng.chance(0.4)) {
+      for (let essai = 0; essai < nbEssais; essai++) {
+        if (rng.chance(C.p.traitHeriteParEssai)) {
           if (addTraitIfFree(enfant, t)) break
         }
       }
@@ -846,8 +830,8 @@ export function inheritTraits(enfant: Character, mere: Character, pere: Characte
   }
   for (let slot = 0; slot < 3; slot++) {
     if (enfant.traits[slot]) continue
-    if (rng.chance(0.3)) {
-      const t = rng.pickWeighted(TRAITS, (td) => td.weight)
+    if (rng.chance(C.p.traitTirageSlot)) {
+      const t = rng.pickWeighted(C.traits, (td) => td.weight)
       if (t.weight > 0) addTraitIfFree(enfant, t.name)
     }
   }
@@ -872,23 +856,24 @@ function ensureTraitPresent(c: Character, trait: string) {
 // ── Influence culturelle (ApplyCultureInfluence) ─────────────────────────
 
 export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, recap: PlayerRecap) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   // pression touristique globale : somme du Tourisme de tous les joueurs par culture
   const pression: Record<string, number> = {}
-  for (const cult of CULTURES) pression[cult.nom] = 0.001
+  for (const cult of C.cultures) pression[cult.nom] = 0.001
   for (const other of state.players) {
     const tour = other.resources['Tourisme']?.stock ?? 0
     pression[other.culture] = (pression[other.culture] ?? 0) + tour
   }
   for (const c of pop) {
-    if (c.statut === 'Décédé' || c.titre === TITRE_DIRIGEANT) continue
-    if (!rng.chance(0.1)) continue
+    if (c.statut === 'Décédé' || c.titre === C.p.titreDirigeant) continue
+    if (!rng.chance(C.p.conversionProba)) continue
     const poids: Record<string, number> = {}
     for (const [cult, w] of Object.entries(pression)) {
       let weight = w
-      if (cult === c.culture) weight *= 5 // présence locale
+      if (cult === c.culture) weight *= C.p.conversionMemeCulture // présence locale
       const same = pop.filter((x) => x.statut !== 'Décédé' && x.ville === c.ville && x.culture === cult).length
-      weight += same * 5
+      weight += same * C.p.conversionPoidsLocal
       poids[cult] = weight
     }
     const entries = Object.entries(poids)
@@ -919,12 +904,13 @@ export function updateCityCultures(state: GameState, p: Player) {
 // ── Migration des enfants sans éducation ─────────────────────────────────
 
 export function migrerEnfants(state: GameState, p: Player, rng: Rng) {
+  const C = cfgOf(state.config)
   if (p.villes.length <= 1) return
   const pop = state.population[p.n] ?? []
   for (const c of pop) {
-    if (c.statut === 'Décédé' || c.age >= ADULT_AGE) continue
+    if (c.statut === 'Décédé' || c.age >= C.p.adultAge) continue
     if (c.education) continue
-    if (!rng.chance(MIGRATION_PROBA)) continue
+    if (!rng.chance(C.p.migrationProba)) continue
     const autres = p.villes.filter((v) => v.nom !== c.ville)
     if (autres.length === 0) continue
     const dest = rng.pick(autres)
@@ -940,9 +926,10 @@ export function migrerEnfants(state: GameState, p: Player, rng: Rng) {
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
 
 export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   const recap = p.recap ?? emptyRecap()
-  const cult = cultureDef(p.culture)
+  const cult = cultureDef(p.culture, C.config)
   for (const armee of p.armees) {
     // retirer les soldats morts
     armee.soldats = armee.soldats.filter((id) => {
@@ -951,9 +938,9 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
     })
     // commandant mort ?
     const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
-    let puissance = armee.soldats.length * PUISSANCE_SOLDAT
+    let puissance = armee.soldats.length * C.p.puissanceSoldat
     if (cmd && cmd.statut !== 'Décédé') {
-      puissance += PUISSANCE_GENERAL
+      puissance += C.p.puissanceGeneral
     } else if (armee.commandant) {
       armee.commandant = null
       recap.commandantTombe = armee.nom
@@ -967,16 +954,16 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       const candidats = pop.filter(
         (c) =>
           c.statut !== 'Décédé' &&
-          c.age >= SOLDAT_AGE_MIN && c.age <= SOLDAT_AGE_MAX &&
-          !c.armee && (!c.titre || c.titre === TITRE_CHASSEUR || c.titre === 'Pêcheur') &&
+          c.age >= C.p.soldatAgeMin && c.age <= C.p.soldatAgeMax &&
+          !c.armee && (!c.titre || c.titre === C.p.titreChasseur) &&
           martialiteOk(cult?.martialite, c.sexe),
       )
       if (candidats.length === 0) break
       const s = rng.pick(candidats)
-      s.titre = 'Soldat'
+      s.titre = C.p.titreSoldat
       s.armee = armee.nom
       armee.soldats.push(s.id)
-      puissance += PUISSANCE_SOLDAT
+      puissance += C.p.puissanceSoldat
       state.log.push({
         turn: state.turn + 1, type: 'Armée', joueur: p.n,
         texte: `${fullName(s)} rejoint l'armée « ${armee.nom} » comme soldat.`,
@@ -995,22 +982,24 @@ export function martialiteOk(martialite: string | undefined, sexe: 'M' | 'F'): b
 
 /** Recalcule la puissance affichée d'une armée (après édition manuelle). */
 export function recomputeArmy(state: GameState, p: Player, armee: { nom: string; soldats: string[]; commandant: string | null; puissance: number }) {
+  const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
   armee.puissance =
     armee.soldats.filter((id) => {
       const s = pop.find((x) => x.id === id)
       return s && s.statut !== 'Décédé'
-    }).length * PUISSANCE_SOLDAT + (cmd && cmd.statut !== 'Décédé' ? PUISSANCE_GENERAL : 0)
+    }).length * C.p.puissanceSoldat + (cmd && cmd.statut !== 'Décédé' ? C.p.puissanceGeneral : 0)
 }
 
 // ── Historique (SnapshotRessources) ──────────────────────────────────────
 
 export function snapshotRessources(state: GameState, turn: number) {
+  const C = cfgOf(state.config)
   for (const p of state.players) {
     const stocks: Record<string, number> = {}
     const prods: Record<string, number> = {}
-    for (const r of RESOURCES) {
+    for (const r of C.ressources) {
       stocks[r] = p.resources[r]?.stock ?? 0
       prods[r] = p.resources[r]?.prod ?? 0
     }

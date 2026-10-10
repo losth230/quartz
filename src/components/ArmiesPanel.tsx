@@ -8,8 +8,8 @@
 import React, { useState } from 'react'
 import { useGame } from '../state/store'
 import type { Player } from '../engine/types'
-import { cultureDef } from '../engine/gameData'
-import { isNobleDyn, ADULT_AGE, martialiteOk } from '../engine/engine'
+import { cfgOf, cultureDef } from '../engine/gameData'
+import { isNobleDyn, martialiteOk } from '../engine/engine'
 import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
 
 export function ArmiesPanel({ joueur }: { joueur: number }) {
@@ -20,15 +20,16 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
   const [puissance, setPuissance] = useState(90)
 
   if (!state) return null
+  const C = cfgOf(state.config)
   const p = state.players.find((x) => x.n === joueur)
   if (!p) return null
   const pop = state.population[joueur] ?? []
   const vivants = pop.filter((c) => c.statut !== 'Décédé')
-  const cult = cultureDef(p.culture)
+  const cult = cultureDef(p.culture, C.config)
 
   // Nobles adultes vivants, pas déjà engagés dans une armée
   const commandantsDispo = vivants.filter(
-    (c) => c.age >= ADULT_AGE && isNobleDyn(c.dynastie) && !c.armee
+    (c) => c.age >= C.p.adultAge && isNobleDyn(c.dynastie, C) && !c.armee
       && martialiteOk(cult?.martialite, c.sexe),
   )
 
@@ -48,14 +49,14 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       target.armees.push({
         nom: nomArmee,
         puissanceCible: puissance,
-        puissance: 45,
+        puissance: C.p.puissanceGeneral,
         commandant: cmd.id,
         soldats: [],
         cible: cible ? state.players.find((q) => q.n === cible)?.nom ?? null : null,
       })
       const pers = (s.population[joueur] ?? []).find((c) => c.id === cmd.id)
       if (pers) {
-        pers.titre = 'Commandant'
+        pers.titre = C.p.titreCommandant
         pers.armee = nomArmee
       }
     })
@@ -113,7 +114,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                     if (v) {
                       const nouveau = pers.find((c) => c.id === v)
                       if (nouveau) {
-                        nouveau.titre = 'Commandant'
+                        nouveau.titre = C.p.titreCommandant
                         nouveau.armee = x.armees[idx].nom
                       }
                     }

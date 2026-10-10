@@ -1,15 +1,14 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Génération de la population initiale
 //  (portage de la macro VBA GenererPopulationInitiale / frmInitPop)
+//  La config (référentiels + paramètres) est attachée à la partie :
+//  tout reste modifiable à chaud ensuite, sans aucune contrainte.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, GameSetup, GameState, Player } from './types'
+import type { Character, GameState, Player } from './types'
 import { makeRng, type Rng } from './rng'
-import { RESOURCES, ORIENTATIONS, TRAITS, PEUPLES, cultureDef, peupleDef } from './gameData'
-import {
-  ADULT_AGE, TITRE_DIRIGEANT, TRAIT_BASTARD, computeAgeMax,
-  isNobleDyn, computeFecondite,
-} from './engine'
+import { cfgOf, cloneDefaultConfig, peupleDef, type Cfg } from './gameData'
+import { computeAgeMax, computeFecondite, isNobleDyn } from './engine'
 
 export interface SetupLine {
   nom: string
@@ -26,6 +25,8 @@ const DEFAULT_VILLES = ['Capitale', 'Bourg']
 /** Crée une partie complète à 8 joueurs à partir des paramètres de setup. */
 export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | 'supabase'): GameState {
   const rng = makeRng(seed)
+  const config = cloneDefaultConfig()
+  const C = cfgOf(config)
   const state: GameState = {
     version: 1,
     seed,
@@ -33,6 +34,7 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
     turn: 1,
     saison: 'Été',
     modDanger: 0,
+    config,
     players: [],
     population: {},
     log: [
@@ -43,31 +45,32 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
   for (let i = 0; i < 8; i++) {
     const s = setups[i]
     const n = i + 1
-    const player = makePlayer(n, s, rng)
+    const player = makePlayer(n, s, C)
     state.players.push(player)
-    state.population[n] = makePopulation(player, s, rng)
+    state.population[n] = makePopulation(player, s, rng, C)
   }
   state.rngState = rng.state()
   return state
 }
 
-export function makePlayer(n: number, s: SetupLine, rng: Rng): Player {
+export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
   const resources: Record<string, { stock: number; prod: number }> = {}
-  for (const r of RESOURCES) {
+  for (const r of C.ressources) {
     resources[r] = { stock: r === 'Nourriture' ? 50 : r === 'Or' ? 20 : 0, prod: 0 }
   }
+  const peuples = C.peuples
   return {
     n,
     nom: s.nom || `Joueur ${n}`,
-    peuple: s.peuple || PEUPLES[(n - 1) % PEUPLES.length].nom,
-    culture: s.culture,
-    regime: s.regime || 'Monarchie de droit divin',
+    peuple: s.peuple || peuples[(n - 1) % Math.max(1, peuples.length)],
+    culture: s.culture || C.cultures[(n - 1) % Math.max(1, C.cultures.length)]?.nom || '',
+    regime: s.regime || C.regimes[0]?.nom || 'Monarchie',
     resources,
     villes: (s.villes && s.villes.length > 0 ? s.villes : DEFAULT_VILLES).map((nom, idx) => ({
       nom,
       culture: s.culture,
       taxes: 'Moyenne',
-      batiments: idx === 0 ? ['École élémentaire', 'Herboristerie'] : [],
+      batiments: idx === 0 ? ['Ecole élémentaire', 'Herboristerie'] : [],
     })),
     dynastie: null,
     armees: [],
@@ -75,11 +78,15 @@ export function makePlayer(n: number, s: SetupLine, rng: Rng): Player {
   }
 }
 
-export function makePopulation(player: Player, s: SetupLine, rng: Rng): Character[] {
+export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): Character[] {
   const taille = Math.max(10, s.taillePopulation || 30)
   const pourcentMariages = Math.min(100, Math.max(0, s.pourcentageMariages ?? 40))
-  const peup = peupleDef(player.peuple) ?? PEUPLES[0]
-  const cult = cultureDef(player.culture)
+  const peup = peupleDef(player.peuple, C.config) ?? peupleDef(C.peuples[0], C.config)
+  const fallback = C.banquesNoms[0]
+  const noms = peup?.noms ?? fallback.noms
+  const prenomsM = peup?.prenomsM ?? fallback.prenomsM
+  const prenomsF = peup?.prenomsF ?? fallback.prenomsF
+  const cult = C.cultures.find((c) => c.nom === player.culture)
   const heredite = cult ? cult.heredite : 'Masculine'
   const pop: Character[] = []
 
@@ -87,30 +94,34 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng): Characte
   const nextId = () => `p${player.n}c${++id}`
 
   function randomOrientation(): Character['orientation'] {
-    return rng.pickWeighted(ORIENTATIONS, (o) => o.poids).nom as Character['orientation']
+    return rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation']
+  }
+
+  function randomSexe(): 'M' | 'F' {
+    return rng.pickWeighted(C.genres, (g) => g.poids).nom === 'Masculin' ? 'M' : 'F'
   }
 
   function randomTraits(): [string, string, string] {
     const traits: [string, string, string] = ['', '', '']
     for (let slot = 0; slot < 3; slot++) {
-      if (rng.chance(0.3)) {
-        const t = rng.pickWeighted(TRAITS, (td) => td.weight)
+      if (rng.chance(C.p.traitTirageSlot)) {
+        const t = rng.pickWeighted(C.traits, (td) => td.weight)
         if (t.weight > 0) traits[slot] = t.name
       }
     }
     return traits
   }
 
-  // 1. Population générale : sexes 50/50, âges 0-50
+  // 1. Population générale : sexes pondérés par le classeur, âges 0-setupAgeMax
   for (let i = 0; i < taille - 2; i++) {
-    const sexe: 'M' | 'F' = rng.chance(0.5) ? 'M' : 'F'
+    const sexe: 'M' | 'F' = randomSexe()
     const c: Character = {
       id: nextId(),
-      nom: rng.pick(peup.noms),
-      prenom: sexe === 'M' ? rng.pick(peup.prenomsM) : rng.pick(peup.prenomsF),
-      dynastie: 'Roturier',
+      nom: rng.pick(noms),
+      prenom: sexe === 'M' ? rng.pick(prenomsM) : rng.pick(prenomsF),
+      dynastie: C.p.dynastieRoturier,
       sexe,
-      age: rng.int(0, 50),
+      age: rng.int(0, Math.max(1, Math.round(C.p.setupAgeMax))),
       culture: player.culture,
       ville: rng.pick(player.villes).nom,
       orientation: randomOrientation(),
@@ -127,72 +138,43 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng): Characte
       ageMax: 0,
       armee: null,
     }
-    c.ageMax = computeAgeMax(c, rng)
+    c.ageMax = computeAgeMax(c, rng, C)
     pop.push(c)
   }
 
   // 2. Couple royal : un homme et une femme adultes (âges forcés à 20),
   //    chacun reçoit un nom distinct devenu sa dynastie, mariés.
-  const roiName = rng.pick(peup.noms)
-  let reineName = rng.pick(peup.noms.filter((x) => x !== roiName))
+  const roiName = rng.pick(noms)
+  let reineName = rng.pick(noms.filter((x) => x !== roiName))
   if (!reineName) reineName = roiName + 'e'
   const roi: Character = {
-    id: nextId(),
-    nom: roiName,
-    prenom: rng.pick(peup.prenomsM),
-    dynastie: roiName,
-    sexe: 'M',
-    age: 20,
-    culture: player.culture,
-    ville: player.villes[0].nom,
-    orientation: 'Hétérosexuel',
-    traits: randomTraits(),
-    statut: 'Sain',
-    mariage: null,
-    mere: null,
-    pere: null,
-    pereBio: null,
-    enfantBatard: false,
-    titre: null,
-    education: null,
-    fecondite: 0,
-    ageMax: 0,
-    armee: null,
+    id: nextId(), nom: roiName, prenom: rng.pick(prenomsM), dynastie: roiName,
+    sexe: 'M', age: 20, culture: player.culture, ville: player.villes[0].nom,
+    orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
+    traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
+    pereBio: null, enfantBatard: false, titre: null, education: null,
+    fecondite: 0, ageMax: 0, armee: null,
   }
   const reine: Character = {
-    id: nextId(),
-    nom: reineName,
-    prenom: rng.pick(peup.prenomsF),
-    dynastie: reineName,
-    sexe: 'F',
-    age: 20,
-    culture: player.culture,
-    ville: player.villes[0].nom,
-    orientation: 'Hétérosexuel',
-    traits: randomTraits(),
-    statut: 'Sain',
-    mariage: `${roi.prenom} ${roi.nom}`,
-    mere: null,
-    pere: null,
-    pereBio: null,
-    enfantBatard: false,
-    titre: null,
-    education: null,
-    fecondite: 0,
-    ageMax: 0,
-    armee: null,
+    id: nextId(), nom: reineName, prenom: rng.pick(prenomsF), dynastie: reineName,
+    sexe: 'F', age: 20, culture: player.culture, ville: player.villes[0].nom,
+    orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
+    traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
+    pereBio: null, enfantBatard: false, titre: null, education: null,
+    fecondite: 0, ageMax: 0, armee: null,
   }
   roi.mariage = `${reine.prenom} ${reine.nom}`
-  roi.ageMax = computeAgeMax(roi, rng)
-  reine.ageMax = computeAgeMax(reine, rng)
+  reine.mariage = `${roi.prenom} ${roi.nom}`
+  roi.ageMax = computeAgeMax(roi, rng, C)
+  reine.ageMax = computeAgeMax(reine, rng, C)
   // Le Dirigeant est le roi si l'hérédité est masculine ou paritaire, sinon la reine
-  if (heredite === 'Féminine') reine.titre = TITRE_DIRIGEANT
-  else roi.titre = TITRE_DIRIGEANT
+  if (heredite === 'Féminine') reine.titre = C.p.titreDirigeant
+  else roi.titre = C.p.titreDirigeant
   pop.push(roi, reine)
 
   // 3. Les enfants sont répartis dans le couple royal
   for (const c of pop) {
-    if (c.age >= ADULT_AGE || c === roi || c === reine) continue
+    if (c.age >= C.p.adultAge || c === roi || c === reine) continue
     if (rng.chance(0.7)) {
       c.nom = roi.nom
       c.dynastie = heredite === 'Féminine' ? reineName : roi.nom
@@ -201,14 +183,18 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng): Characte
     }
   }
 
-  // 4. Titres aléatoires pour les adultes non-Dirigeant, mariages des roturiers
-  const adultes = pop.filter((c) => c.age >= ADULT_AGE && c.titre !== TITRE_DIRIGEANT)
-  const titresRoturiers = ['Chasseur', 'Pêcheur', 'Fermier']
+  // 4. Titres aléatoires pour les adultes non-Dirigeant, mariages des roturiers.
+  //    Seuls les titres roturiers à attribution Manuelle du classeur sont
+  //    tirés ici (aucun blocage : corrigez ensuite dans la table Population).
+  const adultes = pop.filter((c) => c.age >= C.p.adultAge && c.titre !== C.p.titreDirigeant)
+  const titresRoturiers = C.titres
+    .filter((t) => !t.nobleSeul && (t.attribution === 'Manuelle' || t.attribution === ''))
+    .map((t) => t.titre)
   for (const c of adultes) {
-    if (!c.titre && rng.chance(0.6)) c.titre = rng.pick(titresRoturiers)
+    if (!c.titre && titresRoturiers.length > 0 && rng.chance(0.6)) c.titre = rng.pick(titresRoturiers)
   }
   // ~le % demandé d'adultes roturiers se marient entre eux
-  const celibataires = adultes.filter((c) => !c.mariage && !isNobleDyn(c.dynastie))
+  const celibataires = adultes.filter((c) => !c.mariage && !isNobleDyn(c.dynastie, C))
   const nbMariages = Math.floor((celibataires.length * pourcentMariages) / 100)
   const celibM = rng.shuffle(celibataires.filter((c) => c.sexe === 'M'))
   const celibF = rng.shuffle(celibataires.filter((c) => c.sexe === 'F'))
@@ -220,19 +206,26 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng): Characte
   }
 
   // 5. Fécondités calculées pour les adultes
+  const fakeState: GameState = {
+    config: C.config,
+    version: 1, seed: 0, rngState: 0, turn: 1, saison: 'Été', modDanger: 0,
+    players: [player], population: { [player.n]: pop }, log: [], history: [],
+  } as GameState
   for (const c of pop) {
-    c.fecondite = computeFecondite({ population: { [player.n]: pop }, players: [player] } as GameState, player, c)
+    c.fecondite = computeFecondite(fakeState, player, c)
   }
 
   return pop
 }
 
 export function defaultSetups(): SetupLine[] {
+  const C = cfgOf(undefined)
+  const peuples = C.peuples.length > 0 ? C.peuples : ['Basiléens']
   return Array.from({ length: 8 }, (_, i) => ({
     nom: `Joueur ${i + 1}`,
-    peuple: PEUPLES[i % PEUPLES.length].nom,
-    culture: '',
-    regime: 'Monarchie de droit divin',
+    peuple: peuples[i % peuples.length],
+    culture: C.cultures[i % Math.max(1, C.cultures.length)]?.nom ?? '',
+    regime: C.regimes[0]?.nom ?? 'Monarchie',
     taillePopulation: 30,
     pourcentageMariages: 40,
     villes: i === 0 ? ['Capitale', 'Bourg'] : ['Capitale'],

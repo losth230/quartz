@@ -3,9 +3,12 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState, VictoryStatus } from './types'
-import { RESOURCES } from './gameData'
+import { cfgOf } from './gameData'
 
 export function checkVictory(state: GameState): VictoryStatus[] {
+  const C = cfgOf(state.config)
+  const T_DIRIGEANT = C.p.titreDirigeant
+  const T_GOUVERNEUR = C.p.titreGouverneur
   const vivantsMonde = state.players.reduce(
     (n, p) => n + (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé').length, 0,
   )
@@ -17,9 +20,9 @@ export function checkVictory(state: GameState): VictoryStatus[] {
 
   return state.players.map((p) => {
     const pop = (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé')
-    const dynDirigeant = pop.find((c) => c.titre === 'Dirigeant')?.dynastie
+    const dynDirigeant = pop.find((c) => c.titre === T_DIRIGEANT)?.dynastie
     const famille = pop.filter((c) => c.dynastie === dynDirigeant && dynDirigeant)
-    const gouverneurs = famille.filter((c) => c.titre === 'Gouverneur').length
+    const gouverneurs = famille.filter((c) => c.titre === T_GOUVERNEUR).length
     const eduRang3 = famille.filter((c) => c.education === 'Médicale' || c.education === 'Scientifique' || c.education === 'Militaire').length
     const nourr = p.resources['Nourriture']
     const prodNourr = nourr ? nourr.prod : 0

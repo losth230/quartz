@@ -1,15 +1,15 @@
 // ══════════════════════════════════════════════════════════════════════
-//  Validation de l'attribution manuelle des titres
+//  Contrôle de cohérence de l'attribution des titres
 //  (portage de la macro VBA ValidateTitleAssignment + frmAttribuerTitre)
+//  PHILOSOPHIE : ces contrôles sont des AVERTISSEMENTS, jamais des
+//  blocages. L'attribution est toujours appliquée (aucune contrainte
+//  bloquante) ; le message sert d'aide au joueur qui peut l'ignorer.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, Player, GameState } from './types'
-import { TITRES, titreDef, cultureDef } from './gameData'
+import { cfgOf, cultureDef, titreDef } from './gameData'
 import { schoolRankOf } from './gameData2'
-import {
-  ADULT_AGE, TITRE_DIRIGEANT, TITRE_GOUVERNEUR, TITRE_HERITIER,
-  TITRE_PROFESSEUR, isNobleDyn,
-} from './engine'
+import { isNobleDyn } from './engine'
 
 export interface TitleIssue {
   ok: boolean
@@ -17,14 +17,10 @@ export interface TitleIssue {
 }
 
 /**
- * Valide l'attribution d'un titre à un personnage.
- * Règles (cf. documentation §7) :
- *  · personnage vivant et adulte (16+)
- *  · noblesse si NobleSeul ; règles de genre (RegleGenre + culture)
- *  · éducation requise le cas échéant
- *  · titres « Armée » refusés (passent par l'engagement militaire)
- *  · unicité : Dirigeant (1), Héritier (1, même dynastie), Gouverneur (1/ville),
- *    Professeurs ≤ rang de l'école de la ville
+ * Contrôle l'attribution d'un titre à un personnage (cohérence avec le
+ * classeur) : âge adulte, noblesse, règles de genre du titre et de la
+ * culture (Reglege : vide / Masculine / Féminine / Hérédité / Martialité),
+ * éducation requise, unicité Dirigeant/Héritier/Gouverneur/Professeur.
  */
 export function validateTitleAssignment(
   state: GameState,
@@ -32,89 +28,92 @@ export function validateTitleAssignment(
   char: Character,
   titre: string,
 ): TitleIssue {
-  const td = titreDef(titre)
+  const C = cfgOf(state.config)
+  const td = titreDef(titre, C.config)
   if (!td) return { ok: false, message: `Titre inconnu : ${titre}` }
   if (char.statut === 'Décédé') return { ok: false, message: 'Ce personnage est décédé.' }
-  if (char.age < ADULT_AGE) return { ok: false, message: `Ce personnage est mineur (${char.age} ans).` }
+  if (char.age < C.p.adultAge) return { ok: false, message: `Ce personnage est mineur (${char.age} ans, adulte à ${C.p.adultAge}).` }
   if (td.attribution === 'Armée') {
-    return { ok: false, message: `Le titre « ${titre} » s'obtient uniquement par l'engagement militaire (lever une armée).` }
+    return { ok: false, message: `Le titre « ${titre} » s'obtient normalement par l'engagement militaire.` }
   }
-  if (td.nobleSeul && !isNobleDyn(char.dynastie)) {
-    return { ok: false, message: `Le titre « ${titre} » est réservé aux nobles (${char.dynastie}).` }
+  if (td.nobleSeul && !isNobleDyn(char.dynastie, C)) {
+    return { ok: false, message: `Le titre « ${titre} » est en principe réservé aux nobles (${char.dynastie}).` }
   }
-  // règles de genre
-  const cult = cultureDef(player.culture)
-  const cultureGender: 'Masculine' | 'Féminine' | 'Les deux' | undefined = cult
-    ? cult.heredite === 'Masculine' ? 'Masculine' : cult.heredite === 'Féminine' ? 'Féminine' : undefined
-    : undefined
+  // règles de genre (colonne RegleGenre du classeur : vide/Masculine/Féminine/Hérédité/Martialité)
+  const cult = cultureDef(player.culture, C.config)
   if (td.regleGenre === 'Masculine' && char.sexe !== 'M') {
-    return { ok: false, message: 'Ce titre est réservé aux hommes.' }
+    return { ok: false, message: 'Ce titre est en principe réservé aux hommes.' }
   }
   if (td.regleGenre === 'Féminine' && char.sexe !== 'F') {
-    return { ok: false, message: 'Ce titre est réservé aux femmes.' }
+    return { ok: false, message: 'Ce titre est en principe réservé aux femmes.' }
   }
-  if (td.regleGenre === 'Culture' && cultureGender) {
-    if (cultureGender === 'Masculine' && char.sexe !== 'M') {
-      return { ok: false, message: `La culture ${player.culture} (hérédité masculine) interdit ce poste aux femmes.` }
+  if (td.regleGenre === 'Hérédité' && cult) {
+    if (cult.heredite === 'Masculine' && char.sexe !== 'M') {
+      return { ok: false, message: `La culture ${player.culture} (hérédité masculine) réserve en principe ce poste aux hommes.` }
     }
-    if (cultureGender === 'Féminine' && char.sexe !== 'F') {
-      return { ok: false, message: `La culture ${player.culture} (hérédité féminine) interdit ce poste aux hommes.` }
+    if (cult.heredite === 'Féminine' && char.sexe !== 'F') {
+      return { ok: false, message: `La culture ${player.culture} (hérédité féminine) réserve en principe ce poste aux femmes.` }
     }
-    if (!cult?.homoAutorisee && (char.orientation === 'Homosexuel' || char.orientation === 'Bisexuel')) {
-      return { ok: false, message: `La culture ${player.culture} ne tolère pas l'homosexualité pour ce poste.` }
+  }
+  if (td.regleGenre === 'Martialité' && cult) {
+    if (cult.martialite === 'Masculine' && char.sexe !== 'M') {
+      return { ok: false, message: `La culture ${player.culture} (martialité masculine) réserve en principe ce poste aux hommes.` }
+    }
+    if (cult.martialite === 'Féminine' && char.sexe !== 'F') {
+      return { ok: false, message: `La culture ${player.culture} (martialité féminine) réserve en principe ce poste aux femmes.` }
     }
   }
   // éducation requise
   if (td.education && char.education !== td.education) {
-    return { ok: false, message: `Éducation requise : ${td.education} (ce personnage a : ${char.education ?? 'aucune'}).` }
+    return { ok: false, message: `Éducation attendue : ${td.education} (ce personnage a : ${char.education ?? 'aucune'}).` }
   }
-  // règles d'unicité
+  // règles d'unicité (Dirigeant, Héritier, Gouverneur, Professeurs)
   const pop = (state.population[player.n] ?? []).filter((c) => c.statut !== 'Décédé')
-  if (titre === TITRE_DIRIGEANT && pop.some((c) => c.id !== char.id && c.titre === TITRE_DIRIGEANT)) {
-    return { ok: false, message: 'Il y a déjà un Dirigeant.' }
+  if (titre === C.p.titreDirigeant && pop.some((c) => c.id !== char.id && c.titre === C.p.titreDirigeant)) {
+    return { ok: false, message: `Il y a déjà un ${C.p.titreDirigeant}.` }
   }
-  if (titre === TITRE_HERITIER) {
-    const dirigeant = pop.find((c) => c.titre === TITRE_DIRIGEANT)
-    if (pop.some((c) => c.id !== char.id && c.titre === TITRE_HERITIER)) {
-      return { ok: false, message: 'Il y a déjà un Héritier.' }
+  if (titre === C.p.titreHeritierStr) {
+    const dirigeant = pop.find((c) => c.titre === C.p.titreDirigeant)
+    if (pop.some((c) => c.id !== char.id && c.titre === C.p.titreHeritierStr)) {
+      return { ok: false, message: `Il y a déjà un ${C.p.titreHeritierStr}.` }
     }
     if (dirigeant && char.dynastie !== dirigeant.dynastie) {
-      return { ok: false, message: `L'Héritier doit être de la dynastie du Dirigeant (${dirigeant.dynastie}).` }
+      return { ok: false, message: `L'${C.p.titreHeritierStr} est en principe de la dynastie du ${C.p.titreDirigeant} (${dirigeant.dynastie}).` }
     }
   }
-  if (titre === TITRE_GOUVERNEUR) {
-    const autres = pop.filter((c) => c.id !== char.id && c.titre === TITRE_GOUVERNEUR && c.ville === char.ville)
+  if (titre === C.p.titreGouverneur) {
+    const autres = pop.filter((c) => c.id !== char.id && c.titre === C.p.titreGouverneur && c.ville === char.ville)
     if (autres.length > 0) {
-      return { ok: false, message: `${char.ville} a déjà un Gouverneur.` }
+      return { ok: false, message: `${char.ville} a déjà un ${C.p.titreGouverneur}.` }
     }
-    const ville = player.villes.find((v) => v.nom === char.ville)
-    if (!ville) return { ok: false, message: `La ville « ${char.ville} » n'existe pas chez ce joueur.` }
   }
-  if (titre === TITRE_PROFESSEUR) {
+  if (titre === C.p.titreProfesseur) {
     const ville = player.villes.find((v) => v.nom === char.ville)
-    const rank = ville ? schoolRankOf(ville.batiments) : 0
-    const nbProfs = pop.filter((c) => c.titre === TITRE_PROFESSEUR && c.ville === char.ville).length
+    const rank = ville ? schoolRankOf(ville.batiments, C.config) : 0
+    const nbProfs = pop.filter((c) => c.titre === C.p.titreProfesseur && c.ville === char.ville).length
     if (rank === 0) return { ok: false, message: `${char.ville} ne possède pas d'école.` }
     if (nbProfs >= rank) {
-      return { ok: false, message: `${char.ville} a déjà ${nbProfs} Professeur(s) pour une école de rang ${rank}.` }
+      return { ok: false, message: `${char.ville} a déjà ${nbProfs} ${C.p.titreProfesseur}(s) pour une école de rang ${rank}.` }
     }
   }
   return { ok: true, message: `« ${titre} » attribué à ${char.prenom} ${char.nom}.` }
 }
 
-/** Liste des titres attribuables à un personnage, avec motif de refus. */
+/** Liste des titres du référentiel avec contrôle de cohérence (jamais bloquant). */
 export function titleCandidatesFor(state: GameState, player: Player, char: Character) {
-  return TITRES.map((t) => {
+  const C = cfgOf(state.config)
+  return C.titres.map((t) => {
     const issue = validateTitleAssignment(state, player, char, t.titre)
     return { titre: t.titre, ok: issue.ok, motif: issue.ok ? '' : issue.message }
   })
 }
 
-/** Erreurs bloquantes pour un personnage donné (utilisé par la table de population). */
+/** Avertissements pour le titre courant d'un personnage (affichés, jamais bloquants). */
 export function findTitleIssues(state: GameState, player: Player, char: Character): string[] {
   const out: string[] = []
   if (!char.titre) return out
-  const td = titreDef(char.titre)
+  const C = cfgOf(state.config)
+  const td = titreDef(char.titre, C.config)
   if (!td) return out
   if (char.statut !== 'Décédé') {
     const issue = validateTitleAssignment(state, player, char, char.titre)

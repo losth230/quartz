@@ -5,13 +5,14 @@
 
 import React, { useMemo, useState } from 'react'
 import { useGame } from '../state/store'
-import { RESOURCES } from '../engine/gameData'
+import { cfgOf } from '../engine/gameData'
 import { Card, Select, fmt } from './ui'
 
 const COULEURS = ['#e0b04b', '#5fb0d9', '#7fbf6a', '#d95f5f', '#b07fd9', '#d98db0', '#8ab5b0', '#c2a878']
 
 export function HistoryPanel() {
   const { state } = useGame()
+  const RESOURCES = state ? cfgOf(state.config).ressources : cfgOf(undefined).ressources
   const [res, setRes] = useState('Or')
   const [mode, setMode] = useState<'stocks' | 'prods'>('stocks')
 

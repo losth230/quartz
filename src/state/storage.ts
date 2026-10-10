@@ -3,6 +3,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState } from '../engine/types'
+import { cloneDefaultConfig } from '../config/defaultConfig'
 
 const KEY = 'chasse-et-peche:save'
 
@@ -21,6 +22,8 @@ export function loadLocal(): GameState | null {
     if (!raw) return null
     const state = JSON.parse(raw) as GameState
     if (!state || !Array.isArray(state.players) || state.players.length === 0) return null
+    // migration : les parties sans config reçoivent la config par défaut
+    if (!state.config) state.config = cloneDefaultConfig()
     return state
   } catch {
     return null
@@ -43,6 +46,7 @@ export function importJson(text: string): GameState | null {
   try {
     const state = JSON.parse(text) as GameState
     if (!state || !Array.isArray(state.players) || state.players.length === 0) return null
+    if (!state.config) state.config = cloneDefaultConfig()
     return state
   } catch {
     return null

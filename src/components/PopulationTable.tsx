@@ -6,7 +6,7 @@
 import React, { useMemo, useState } from 'react'
 import { useGame } from '../state/store'
 import type { Character, Player } from '../engine/types'
-import { TITRES } from '../engine/gameData'
+import { cfgOf } from '../engine/gameData'
 import { validateTitleAssignment } from '../engine/validation'
 import { Card, Select, TextInput, Button, fmt } from './ui'
 
@@ -47,15 +47,14 @@ export function PopulationTable({ joueur }: { joueur: number }) {
 
   if (!state || !p) return null
 
+  // Aucune contrainte bloquante : le titre est TOUJOURS appliqué ;
+  // le contrôle de cohérence n'affiche qu'un avertissement (ignorable).
   const changeTitre = (c: Character, titre: string) => {
     const issue = validateTitleAssignment(state, p, c, titre)
-    if (!issue.ok) {
-      setErrors((e) => ({ ...e, [c.id]: issue.message }))
-      return
-    }
     setErrors((e) => {
       const copy = { ...e }
-      delete copy[c.id]
+      if (issue.ok) delete copy[c.id]
+      else copy[c.id] = issue.message
       return copy
     })
     update((s) => {
@@ -84,7 +83,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           ]} onChange={setFiltreVille} />
           <Select value={filtreTitre} options={[
             { value: '', label: 'Tous les titres' },
-            ...TITRES.map((t) => ({ value: t.titre, label: t.titre })),
+            ...cfgOf(state?.config).titres.map((t) => ({ value: t.titre, label: t.titre })),
           ]} onChange={setFiltreTitre} />
           <TextInput value={filtreDyn} onChange={setFiltreDyn} placeholder="Filtrer dynastie…" />
           <Select value={tri} options={[
@@ -119,7 +118,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
                       options={[
                         ...(c.titre ? [{ value: c.titre, label: c.titre }] : []),
                         { value: '', label: c.statut === 'Décédé' ? '—' : '(retirer)' },
-                        ...TITRES
+                        ...cfgOf(state?.config).titres
                           .filter((t) => t.titre !== c.titre && t.attribution !== 'Armée')
                           .map((t) => ({ value: t.titre, label: t.titre })),
                       ]}

@@ -5,7 +5,10 @@
 
 export type Sexe = 'M' | 'F'
 export type Statut = 'Sain' | 'Malade' | 'Enceinte' | 'Décédé'
-export type Orientation = 'Hétérosexuel' | 'Homosexuel' | 'Bisexuel' | 'Asexuel'
+// Le classeur utilise les formes au féminin ; les deux graphies sont admises.
+export type Orientation =
+  | 'Hétérosexuel' | 'Homosexuel' | 'Bisexuel' | 'Asexuel'
+  | 'Hétérosexuelle' | 'Homosexuelle' | 'Bisexuelle' | 'Asexuelle'
 export type Saison = 'Été' | 'Hiver'
 export type TaxeNiveau = 'Faible' | 'Moyenne' | 'Forte'
 export type Heredite = 'Masculine' | 'Féminine' | 'Parité'
@@ -178,6 +181,9 @@ export interface GameSetup {
 }
 
 export interface GameState {
+  /** Configuration de la partie : référentiels + paramètres des formules.
+   *  Absente des vieilles sauvegardes → complétée par cloneDefaultConfig(). */
+  config?: import('../config/defaultConfig').GameConfig
   version: number
   seed: number
   rngState: number

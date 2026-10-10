@@ -5,7 +5,7 @@
 
 import React from 'react'
 import { useGame } from '../state/store'
-import { RESOURCES } from '../engine/gameData'
+import { cfgOf } from '../engine/gameData'
 import { VICTORY_TEXT } from '../engine/gameData2'
 import { checkVictory } from '../engine/victory'
 import { Card, fmt } from './ui'
@@ -14,6 +14,7 @@ const RESSOURCES_VUES = ['Or', 'Nourriture', 'Science', 'Tourisme', 'Garnison', 
 
 export function Dashboard() {
   const { state } = useGame()
+  const RESOURCES = state ? cfgOf(state.config).ressources : cfgOf(undefined).ressources
   if (!state) return null
 
   const victory = checkVictory(state)
