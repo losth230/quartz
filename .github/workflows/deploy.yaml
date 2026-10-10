@@ -10,6 +10,9 @@
 #  ATTENTION : le groupe de concurrence « pages » n'accepte qu'une run
 #  en attente — un nouveau push annule les runs en attente. Toujours
 #  terminer par un push sur v4 pour réellement publier.
+#
+#  2026-10-10 : le jeu utilise la table Supabase parties_chasse_peche
+#  (propre au jeu — la table parties du même projet est celle du wargame).
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
