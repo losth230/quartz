@@ -8,17 +8,18 @@ cssclasses:
   <div class="hero-ornament">❦</div>
   <h1>Chasse et Pêche</h1>
   <p class="hero-subtitle">Compendium de règles, scénarios et bestiaires<br>pour vos parties de Wargame et de Jeu de Rôle</p>
+  <a class="hero-cta" href="https://losth230.github.io/quartz/jeu/#nouvelle-partie">▶ Lancer une campagne</a>
   <div class="hero-ornament-bottom">❦</div>
 </div>
 
 <div class="cp-wg-hub">
   <div class="cp-wg-head">
-    <span class="cp-wg-title">Factions</span>
+    <span class="cp-wg-title">Factions &amp; Jeu</span>
     <span class="cp-wg-ver">A3.2 test3</span>
     <span class="cp-wg-tag">Chasse &amp; Pêche</span>
   </div>
 
-  <div class="cp-cp-grid">
+  <div class="cp-wg-grid">
     <a class="cp-wg-card" href="/JdR">
       <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"> 
         <path d="M 18 4 L 30 11 L 30 25 L 18 32 L 6 25 L 6 11 Z" opacity="0.85"/>
@@ -51,6 +52,23 @@ cssclasses:
       <div class="cp-wg-rule"></div>
       <p class="cp-wg-ct">Wargame</p>
       <p class="cp-wg-cd">test</p>
+    </a>
+    <a class="cp-wg-card" href="https://losth230.github.io/quartz/jeu/#nouvelle-partie">
+      <svg class="cp-wg-ic" viewBox="0 0 36 36" width="42" height="42" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <!-- Contour extérieur (Hexagone géant, comme les autres cartes) - Opacité forte -->
+        <path d="M 18 4 L 30 11 L 30 25 L 18 32 L 6 25 L 6 11 Z" opacity="0.85"/>
+        <!-- Tête de sanglier stylisée (blason triangulaire) - Opacité forte -->
+        <path d="M 18 12 L 25 23 H 11 Z" opacity="0.85"/>
+        <!-- Détails du blason - Opacité faible -->
+        <path d="M 18 12 V 23 M 11 23 L 18 12 M 25 23 L 18 12" stroke-width="1.5" opacity="0.55"/>
+        <!-- Défenses du sanglier (crocs incurvés) - Opacité faible -->
+        <path d="M 12 26.5 Q 15 29.5 18 26.5 Q 21 29.5 24 26.5" stroke-width="1.5" opacity="0.55"/>
+        <!-- Étincelles (action en ligne) - Opacité faible -->
+        <path d="M 31 3 V 7 M 29 5 H 33" stroke-width="1.5" opacity="0.55"/>
+      </svg>
+      <div class="cp-wg-rule"></div>
+      <p class="cp-wg-ct">Jeu en ligne</p>
+      <p class="cp-wg-cd">Lancer une campagne — 8 joueurs, aucune installation</p>
     </a>
   </div>
 

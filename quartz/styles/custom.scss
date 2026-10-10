@@ -61,6 +61,31 @@ body[data-slug="index"] {
     }
   }
 
+  // Bouton « ▶ Lancer une campagne » (hero → jeu /jeu/)
+  // Mêmes couleurs que le site : dégradé secondary → tertiary, texte --light.
+  .hero-cta {
+    display: inline-block;
+    margin-top: 1.5rem;
+    padding: 0.65rem 1.9rem;
+    font-family: var(--headerFont);
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-decoration: none;
+    border: none;
+    border-radius: 999px;
+    color: var(--light);
+    background: linear-gradient(90deg, var(--secondary), var(--tertiary));
+    transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px color-mix(in srgb, var(--secondary) 35%, transparent);
+      filter: brightness(1.06);
+      text-decoration: none;
+    }
+  }
+
   // Grille de cartes
   .card-grid {
     display: grid;
@@ -175,7 +200,7 @@ body[data-slug="index"] {
       #ffd700 30%,
       #fff8dc 50%,
       #ffd700 70%,
-      #b8860b
+      #b8860b 100%
     );
     background-size: 200% auto;
     -webkit-background-clip: text;
