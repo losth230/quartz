@@ -20,7 +20,7 @@ import {
 import { Card, NumberInput, Select, TextInput, Button, Badge } from './ui'
 
 const SCHEMA_URL =
-  'https://raw.githubusercontent.com/losth230/Chasse-et-Peche/main/supabase/schema.sql'
+  'https://raw.githubusercontent.com/losth230/quartz/chasse-et-peche-web/supabase/schema.sql'
 
 export function SetupPanel() {
   const { newGame, joinGame } = useGame()

@@ -14,7 +14,7 @@ Portage **React + TypeScript + Supabase** du jeu de grande stratégie **Chasse &
 
 Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
 
-> 🎮 **https://losth230.github.io/Chasse-et-Peche/**
+> 🎮 **https://losth230.github.io/quartz/jeu/**
 
 - Ouvrez le lien dans un navigateur (ordi, tablette, téléphone) et cliquez sur
   « ⚙ Nouvelle partie ». Aucune installation, aucun terminal.
@@ -27,9 +27,10 @@ Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
   navigateur : plus besoin de fichier `.env`. Un joueur crée la partie avec un code de
   salon, les 7 autres cliquent « 🔗 Rejoindre ce salon » — tout se synchronise en temps réel.
 
-Le déploiement est assuré par `.github/workflows/chasse-et-peche-pages.yaml`
-(build Vite + activation automatique de Pages). Le site du dépôt `quartz`
-(v4) n'est pas concerné : le jeu est publié uniquement depuis `Chasse-et-Peche`.
+Le déploiement est assuré par `.github/workflows/deploy.yaml` du dépôt `quartz` :
+à chaque push sur `v4` ou sur `chasse-et-peche-web`, le workflow reconstruit le site
+quartz v4 ET le jeu, puis publie l'ensemble — le jeu est servi sous `/jeu/`, à côté du
+site existant, sans l'écraser.
 
 ## 2. Lancer le jeu (mode développeur, optionnel)
 
@@ -168,7 +169,7 @@ src/
   supabase/   client (table parties, realtime)
 supabase/     schema.sql (table, RLS anon, publication realtime)
 scripts/      make_docx.py (livret DOCX)
-.github/workflows/chasse-et-peche-pages.yaml  déploiement auto GitHub Pages
+.github/workflows/deploy.yaml  déploiement GitHub Pages (site v4 + jeu sous /jeu/)
 vba/          code VBA original de référence
 docs/         livret DOCX (régénérable)
 ```
