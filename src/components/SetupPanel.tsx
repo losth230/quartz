@@ -75,14 +75,14 @@ export function SetupPanel() {
       <Card title="🌐 Jouer en ligne à 8, sans rien installer">
         <p className="muted small">
           Pour jouer chacun sur son écran, il faut un petit serveur de sauvegarde gratuit
-          (Supabase). Tout se fait en 3 clics-copier-coller, sans terminal :
+          (Supabase). Tout se fait en un seul copier-coller, sans terminal :
         </p>
         <ol className="small">
-          <li>Créez un projet gratuit sur <a href="https://supabase.com" target="_blank" rel="noreferrer">supabase.com</a> (email + mot de passe).</li>
-          <li>Dans votre projet, ouvrez <strong>SQL Editor</strong> et collez le contenu de{' '}
+          <li>Le jeu est déjà pré-configuré avec le projet Supabase du site quartz — identifiants pré-remplis ci-dessous.</li>
+          <li><strong>Une seule fois</strong> : dans ce projet, ouvrez <strong>SQL Editor</strong> et collez le contenu de{' '}
             <a href={SCHEMA_URL} target="_blank" rel="noreferrer">supabase/schema.sql</a>, puis <strong>Run</strong>.{' '}
-            (crée la table des parties, sans authentification)</li>
-          <li>Dans <strong>Settings → API</strong>, copiez <strong>Project URL</strong> et <strong>anon public</strong> et collez-les ci-dessous.</li>
+            (crée la table <code>parties_chasse_peche</code>, sans authentification — sinon « table introuvable »)</li>
+          
         </ol>
         <div className="grid-3">
           <label className="field">

@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Store React — état de jeu, persistance (local ou Supabase), realtime
-//  Mode 'local' : localStorage · Mode 'supabase' : table `parties`
+//  Mode 'local' : localStorage · Mode 'supabase' : table `parties_chasse_peche`
 //  Verrou optimiste : chaque mutation sauvegarde ; si une mise à jour
 //  distante arrive pendant une édition locale, bandeau de conflit + recharge.
 //  La configuration (formules + référentiels) est COMMUNE à toutes les

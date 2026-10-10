@@ -1,42 +1,56 @@
 -- ══════════════════════════════════════════════════════════════════════
 --  CHASSE & PÊCHE — Schéma Supabase (multijoueur temps réel, sans auth)
 --  Exécutez ce script dans le SQL Editor de votre projet Supabase.
---  Principe : un salon = une ligne dans `parties` contenant l'état JSON
---  complet du jeu. Les 8 joueurs lisent/écrivent en anonyme (RLS ouverte)
---  et reçoivent les mises à jour via Realtime.
+--
+--  ⚠ IMPORTANT : le jeu utilise sa PROPRE table `parties_chasse_peche`.
+--  Ce même projet Supabase héberge déjà une table `parties` (celle du
+--  wargame, colonnes différentes : id uuid, version, scenario…). Ce script
+--  NE LA MODIFIE PAS — il se contente de retirer un trigger qu'une
+--  ancienne version de ce script avait pu y déposer (sans effet s'il
+--  n'existe pas).
+--
+--  Principe : un salon = une ligne dans `parties_chasse_peche` contenant
+--  l'état JSON complet du jeu. Les 8 joueurs lisent/écrivent en anonyme
+--  (RLS ouverte) et reçoivent les mises à jour via Realtime.
+--  Script idempotent : vous pouvez le relancer sans risque.
 -- ══════════════════════════════════════════════════════════════════════
 
-create table if not exists public.parties (
+-- ── Nettoyage défensif : une ancienne version de ce script créait le
+--    trigger touch_partie sur la table `parties` du wargame (qui n'a pas
+--    de colonne updated_at : le trigger cassait ses UPDATE). On le retire.
+drop trigger if exists touch_partie on public.parties;
+
+create table if not exists public.parties_chasse_peche (
   id         text primary key,          -- code du salon (ex: 'chasse-1')
   state      jsonb not null,            -- GameState complet
   updated_at timestamptz not null default now(),
   updated_by text
 );
 
-alter table public.parties enable row level security;
+alter table public.parties_chasse_peche enable row level security;
 
 -- RLS ouverte : les joueurs sont identifiés par le code du salon.
 -- ⚠️ N'utilisez pas de code devinable si vous jouez en public.
-drop policy if exists "anon lecture" on public.parties;
+drop policy if exists "anon lecture" on public.parties_chasse_peche;
 create policy "anon lecture"
-  on public.parties for select
+  on public.parties_chasse_peche for select
   to anon using (true);
 
-drop policy if exists "anon ecriture" on public.parties;
+drop policy if exists "anon ecriture" on public.parties_chasse_peche;
 create policy "anon ecriture"
-  on public.parties for insert
+  on public.parties_chasse_peche for insert
   to anon with check (true);
 
-drop policy if exists "anon maj" on public.parties;
+drop policy if exists "anon maj" on public.parties_chasse_peche;
 create policy "anon maj"
-  on public.parties for update
+  on public.parties_chasse_peche for update
   to anon using (true) with check (true);
 
 -- Realtime : diffusion des mises à jour d'une partie
 do $$
 begin
   begin
-    alter publication supabase_realtime add table public.parties;
+    alter publication supabase_realtime add table public.parties_chasse_peche;
   exception
     when duplicate_object then null; -- déjà ajoutée
   end;
@@ -50,7 +64,7 @@ begin
   return new;
 end $$;
 
-drop trigger if exists touch_partie on public.parties;
+drop trigger if exists touch_partie on public.parties_chasse_peche;
 create trigger touch_partie
-  before update on public.parties
+  before update on public.parties_chasse_peche
   for each row execute function public.touch_partie();

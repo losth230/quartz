@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Client Supabase — mode multijoueur temps réel (8 joueurs simultanés)
-//  Pas d'authentification : la table `parties` est accessible en anonyme
+//  Pas d'authentification : la table `parties_chasse_peche` est accessible en anonyme
 //  (RLS ouverte, cf. supabase/schema.sql) et suivie en realtime.
 //
 //  Identifiants PRÉ-CONFIGURÉS : le jeu utilise par défaut le projet
@@ -16,7 +16,7 @@ import type { GameState } from '../engine/types'
 const LS_URL = 'cpe.supabase.url'
 const LS_KEY = 'cpe.supabase.anon'
 
-// Projet Supabase public du site quartz (C&P / Khazhags) — table `parties`
+// Projet Supabase public du site quartz (C&P / Khazhags) — table `parties_chasse_peche`
 // du jeu à créer une fois via supabase/schema.sql dans le SQL Editor.
 const DEFAULT_URL = 'https://kucgmmefluwmlobujanc.supabase.co'
 const DEFAULT_KEY = 'sb_publishable_YB_VCzZgD2vi4xeFvFT6ZA_BA9Pwn7R'
@@ -80,14 +80,16 @@ export function supabaseAvailable(): boolean {
 export async function testSupabase(): Promise<{ ok: boolean; message: string }> {
   const sb = getSupabase()
   if (!sb) return { ok: false, message: 'Renseignez l\'URL et la clé anon, puis « Connecter ».' }
-  const { error } = await sb.from('parties').select('id').limit(1)
+  const { error } = await sb.from(TABLE).select('id').limit(1)
   if (error) {
-    return { ok: false, message: `Connexion OK mais table introuvable : ${error.message}. Exécutez supabase/schema.sql dans l'éditeur SQL de votre projet Supabase.` }
+    return { ok: false, message: `Connexion OK mais table introuvable : ${error.message}. Exécutez supabase/schema.sql dans l'éditeur SQL de votre projet Supabase (il crée la table parties_chasse_peche).` }
   }
   return { ok: true, message: 'Connecté : multijoueur temps réel disponible.' }
 }
 
-const TABLE = 'parties'
+// Table PROPRE au jeu : ce même projet Supabase héberge déjà la table `parties`
+// du wargame (colonnes incompatibles, id uuid) — le jeu ne doit PAS y toucher.
+const TABLE = 'parties_chasse_peche'
 
 /** Charge une partie depuis Supabase (id = code de salon). */
 export async function loadRemote(id: string): Promise<GameState | null> {

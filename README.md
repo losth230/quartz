@@ -20,11 +20,13 @@ Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
   « ⚙ Nouvelle partie ». Aucune installation, aucun terminal.
 - **Un seul écran (hotseat)** : créez la partie, jouez à 8 autour du même écran.
   La sauvegarde reste dans le navigateur.
-- **Chacun chez soi (temps réel)** : créez un projet gratuit sur
-  [supabase.com](https://supabase.com), collez `supabase/schema.sql` dans le **SQL Editor**
-  de leur site web, puis collez l'URL + la clé « anon public » du projet **directement dans
-  l'onglet ⚙ Nouvelle partie → 🌐** du jeu. Les identifiants sont mémorisés par le
-  navigateur : plus besoin de fichier `.env`. Un joueur crée la partie avec un code de
+- **Chacun chez soi (temps réel)** : le jeu est déjà pré-configuré avec le projet
+  Supabase du site quartz (URL + clé « anon public » pré-remplies dans l'onglet
+  ⚙ Nouvelle partie → 🌐 — vous pouvez aussi y coller vos propres identifiants,
+  mémorisés par le navigateur, sans fichier `.env`). Exécutez **une seule fois**
+  `supabase/schema.sql` dans le **SQL Editor** du projet : il crée la table
+  `parties_chasse_peche` du jeu (sans toucher à la table `parties` du wargame).
+  Un joueur crée la partie avec un code de
   salon, les 7 autres cliquent « 🔗 Rejoindre ce salon » — tout se synchronise en temps réel.
 
 Le déploiement est assuré par `.github/workflows/deploy.yaml` du dépôt `quartz` :
@@ -52,11 +54,11 @@ npm run docx       # régénère docs/Chasse-et-Peche-Livret-numerique.docx (Pyt
 ### Mode multijoueur (Supabase)
 
 La façon recommandée est **sans ligne de commande** : voir §1 — les identifiants
-Supabase se collent directement dans l'onglet **⚙ Nouvelle partie → 🌐** du jeu
+Supabase sont déjà pré-configurés dans l'onglet **⚙ Nouvelle partie → 🌐** du jeu
 (mémorisés par le navigateur). Le `.env` reste possible pour le mode développeur :
 
 1. Créez un projet sur [supabase.com](https://supabase.com).
-2. Exécutez `supabase/schema.sql` dans le **SQL Editor** (table `parties` + RLS ouverte + realtime).
+2. Exécutez `supabase/schema.sql` dans le **SQL Editor** (table `parties_chasse_peche` + RLS ouverte + realtime — propre au jeu, distincte de la table `parties` du wargame du même projet).
 3. Copiez `.env.example` en `.env` et renseignez `VITE_SUPABASE_URL` et `VITE_SUPABASE_ANON_KEY`
    (secours uniquement : l'onglet 🌐 de l'interface prime).
 4. Relancez `npm run dev`, choisissez « Multijoueur en ligne » dans **⚙ Nouvelle partie**
@@ -166,7 +168,7 @@ src/
   components/ UI : Dashboard, PlayerView, PopulationTable, ArmiesPanel, EventLog,
               HistoryPanel (SVG), SetupPanel, ParamsPanel (éditeur complet), 
               ReferenceDataPanel (consultation), TurnBar, ui
-  supabase/   client (table parties, realtime)
+  supabase/   client (table parties_chasse_peche, realtime)
 supabase/     schema.sql (table, RLS anon, publication realtime)
 scripts/      make_docx.py (livret DOCX)
 .github/workflows/deploy.yaml  déploiement GitHub Pages (site v4 + jeu sous /jeu/)
@@ -179,6 +181,6 @@ docs/         livret DOCX (régénérable)
 ## 9. Suppression / réinitialisation
 
 Le bouton ✕ de la barre de tour efface la sauvegarde locale. En mode Supabase,
-supprimez la ligne du salon dans la table `parties` (ou `TRUNCATE parties`).
+supprimez la ligne du salon dans la table `parties_chasse_peche` (ou `TRUNCATE parties_chasse_peche`).
 L'onglet 🎛 Paramètres contient un bouton de réinitialisation de la configuration
 (retour aux valeurs par défaut du classeur).
