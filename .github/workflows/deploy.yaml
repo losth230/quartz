@@ -16,6 +16,7 @@
 #  2026-10-11 (a) : page Royaume (rang, personnages importants, technologies, vassaux).
 #  2026-10-11 (b) : page Royaume — correctif build (échappement params.ts) ; déploiement réel.
 #  2026-10-11 (c) : refactor SOLID du moteur — engine.ts scindé en modules de domaine (façade à API inchangée) ; redéploiement.
+#  2026-10-11 (d) : fix crash armées/villes + bâtiments automatiques par tour + récap ressources cumulé ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
