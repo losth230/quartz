@@ -22,6 +22,7 @@
 #  2026-10-12 (g) : page Royaume — cadre Joueur déplacé de la page Pays, technologies retirées (consultables dans Référentiels → Progrès), cultures & régimes paramétrables (référentiel + paramètres) avec lois chiffrées appliquées automatiquement à chaque tour, garnison des habitations affichée sous la culture (pays & villes) ; redéploiement.
 #  2026-10-12 (h) : habitations — types Ville/Château (consommation par tour + garnison de base débitées automatiquement, référentiel éditable « Habitations »), garnison & Tourisme valeurs d'état (tourisme crédité une fois à la construction), page Royaume (culture expliquée, événement de dynastie, vassalité remontée) ; redéploiement.
 #  2026-10-12 (i) : page Royaume — garnison des habitations retirée de l'encadré culture (donnée militaire déjà détaillée sur la page Joueur) ; redéploiement.
+#  2026-10-12 (j) : page Pays — encadré « Culture du pays — bonus automatiques » : règle de pays chiffrée détaillée et appliquée à chaque fin de tour (ex. Lunisme : +4 Tourisme × nombre de villes lunistes dans le monde, dont chez soi — canal « Régimes & cultures » du récap ressources), +N Science par construction rappelé ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
