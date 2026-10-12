@@ -18,6 +18,7 @@
 #  2026-10-11 (c) : refactor SOLID du moteur — engine.ts scindé en modules de domaine (façade à API inchangée) ; redéploiement.
 #  2026-10-11 (d) : fix crash armées/villes + bâtiments automatiques par tour + récap ressources cumulé ; redéploiement.
 #  2026-10-11 (e) : page Pays — dynastie mise en avant, production / tour calculée cumulée, ressources dépliables, aménagements de terrain et coûts déduits automatiquement ; redéploiement.
+#  2026-10-12 (f) : page Pays — aménagements au-dessus des bâtiments + catégorie « Autres », référentiel exact (coût / production / description du classeur), cultures détaillées par ville, taxes sur toutes les ressources, panneau Ressources docké à droite, retrait dynastie ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
