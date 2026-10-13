@@ -28,6 +28,7 @@
 #  2026-10-12 (m) : factions — fiches de règles dans le référentiel (victoire désactivée, bâtiment de faction, 2 règles de base, 3+3 par âge), cadre Faction dans Royaume avec choix manuel de la règle d'Âge II/III ; redéploiement.
 #  2026-10-12 (n) : factions — bonus automatiques des règles de faction (flux par tour, garnison, Fête de la Bière), constructions de faction constructibles (Église, Apiculture, Puit de mana…), Sylvains : Savoir ancestral ↔ Bibliothèque enfouie inversées, arbre généalogique déplacé vers la page Population ; redéploiement.
 #  2026-10-12 (o) : cités libres — population propre aux cités (habitants titrés, Chasseurs ×2 Nourriture), suzerain et taxes automatiques vers le canal « Cités libres » du récap ressources, nouvel onglet 🗼 Cités libres (création de cités, émissaires par joueur, garnison 100 + 40 × rang de pays le plus haut, ajout d'habitants, détail des taxes) ; redéploiement.
+#  2026-10-12 (p) : valeurs de départ par défaut — chaque joueur démarre avec 1 ville de 50 habitants et 100 Nourriture, 80 Or, 15 Bois ; autant de cités libres créées que de joueurs (50 habitants Chasseurs chacune) ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
