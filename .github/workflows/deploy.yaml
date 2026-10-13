@@ -42,6 +42,7 @@
 #  2026-10-13 (a) : onglet Progrès — arbres affichés 3 par ligne (grille responsive) pour optimiser l'espace vertical, suppression des tags entre crochets dans les titres d'arbres ; redéploiement.
 #  2026-10-13 (b) : conteneur principal .app en pleine largeur — retrait de max-width 1160px, tous les onglets utilisent toute la largeur de la fenêtre ; redéploiement.
 #  2026-10-13 (c) : onglet Progrès — 3 arbres par ligne exactement (classe .grid-arbres en 3 colonnes, responsive 2 puis 1) et branches A/B toujours côte à côte (.grid-branches en 2 colonnes) ; redéploiement.
+#  2026-10-13 (d) : onglet Progrès — chaque arbre dans un cadre encadré teinté selon sa catégorie comme le classeur (vert développement/habitants, jaune économique, rouge militaire, blanc diplomatie, bleu science, violet tourisme — classes .arbre + .teinte-*) et tous les cadres de même taille (grid-auto-rows 1fr) ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
