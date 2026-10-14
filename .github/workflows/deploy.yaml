@@ -46,6 +46,7 @@
 #  2026-10-13 (e) : effets automatiques des technologies de progrès — nouveau module engine/progres.ts (gains au déblocage, production par tour canal « Progrès », garnison statique), champ « effets » paramétrable par tech dans Référentiels → Progrès (34 effets saisis d'après le classeur) ; redéploiement.
 #  2026-10-14 (f) : page Pays — retour à 2 villes par ligne (grille .grid-villes en 2 colonnes, repli 1 colonne sous 800px) au lieu d’une ville par ligne pleine largeur ; redéploiement.
 #  2026-10-14 (g) : rangs de pays refondus — échelle féodale unique (Baronnie→Empire), montée par sacre (coût Or/Nourriture + serments 1/2/3/4 : vassaux ou cités libres suzeraines), conseil de Ministres indexé sur le rang (avertissement Population), Avènement à la succession (sacre à moitié prix avec héritier, crise aléatoire sans héritier), table paramétrable dans Référentiels → Pays & rangs ; redéploiement.
+#  2026-10-14 (h) : ministres — 16 portefeuilles « de cour » en plus des 7 du classeur (23), rang minimum + mode Auto/Plateau, nomination nobles/dynasties, portefeuille par personnage (Population), titre Ministre au menu, table éditable Référentiels → « Ministères », effets automatiques (Trésorier, Grand Précepteur, Sénéchal, Maître de cour, Connétable, Grand Chambellan, Chancelier de justice, Archichancelier) ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
