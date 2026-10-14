@@ -39,7 +39,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { useGame } from '../state/store'
 import type { GameState, Player, AutreDef } from '../engine/types'
-import { cfgOf, cultureDef, type Cfg } from '../engine/gameData'
+import { cfgOf, cultureDef, couleurRessource, fondRessource, type Cfg } from '../engine/gameData'
 import {
   effetsTourBatiment, garnisonBatiment, coutBatiment,
   batimentsConstructionsRefs, constructionsRefs, amenagementRef, aCampDeBatisseurs,
@@ -280,6 +280,10 @@ export function PlayerView({ joueur }: { joueur: number }) {
               (tg.titres[r] ?? 0) !== 0 || (tg.taxes[r] ?? 0) !== 0 || (tg.conso[r] ?? 0) !== 0 || (tg.net[r] ?? 0) !== 0)
             return (
               <div key={idx} className="mini">
+                {/* Ligne de tête densifiée (retour Thibaut 2026-10-14) :
+                    nom de la ville EN GRAS + niveau de taxes sur la
+                    même ligne. */}
+                <div className="ville-tete">
                 <Field label="Nom">
                   <TextInput
                     value={ville.nom}
@@ -293,6 +297,14 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     })}
                   />
                 </Field>
+                <Field label="Taxes">
+                  <Select
+                    value={ville.taxes}
+                    options={TAX_OPTIONS}
+                    onChange={(v) => setPlayer((x) => { x.villes[idx].taxes = v })}
+                  />
+                </Field>
+                </div>
                 {/* Actions de ville : transfert à un autre joueur
                     (capture, vente, cadeau — la ville ET ses habitants
                     suivent) et suppression (les habitants restent
@@ -357,13 +369,6 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     </div>
                   )
                 })()}
-                <Field label="Niveau de taxes">
-                  <Select
-                    value={ville.taxes}
-                    options={TAX_OPTIONS}
-                    onChange={(v) => setPlayer((x) => { x.villes[idx].taxes = v })}
-                  />
-                </Field>
                 {/* Rang d'habitation et type de ville (Ville / Château)
                     sur la même ligne — échelles de rangs différentes :
                     Hameau → Cité → Grande Cité ou Motte → Donjon → Forteresse. */}
@@ -429,7 +434,10 @@ export function PlayerView({ joueur }: { joueur: number }) {
                   )
                 })()}
 
-                {/* ── AMÉNAGEMENTS (au-dessus des bâtiments) ── */}
+                {/* ── Aménagements et bâtiments CÔTE À CÔTE (densification,
+                    retour Thibaut 2026-10-14) ── */}
+                <div className="ville-constr">
+                  <div>
                 <div className="mini-title">
                   Aménagements
                   <span className="muted small">
@@ -462,7 +470,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                 <div className="add-bat">
                   <Select
                     value=""
-                    options={[{ value: '' as const, label: '+ aménager une case (coût déduit du stock)…' },
+                    options={[{ value: '' as const, label: '+ Aménager une case…' },
                       ...amRefs.map((a) => ({
                         value: a.nom,
                         label: `${a.nom} (${a.terrain}) — ${fmtCout(parseCoutTexte(a.cout))}`,
@@ -470,8 +478,8 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     onChange={(v) => v && construire(idx, v, 'amenagement')}
                   />
                 </div>
-
-                {/* ── BÂTIMENTS (ville / château / capitale) ── */}
+                  </div>
+                  <div>
                 <div className="mini-title">Bâtiments</div>
                 {ville.batiments.length === 0 && <div className="muted small">aucun</div>}
                 {ville.batiments.map((b, bi) => {
@@ -502,7 +510,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                 <div className="add-bat">
                   <Select
                     value=""
-                    options={[{ value: '' as const, label: '+ construire un bâtiment (coût déduit du stock)…' }]}
+                    options={[{ value: '' as const, label: '+ Construire…' }]}
                     groups={batParGroupePour(ville.nom === nomCapitale)}
                     onChange={(v) => {
                       if (!v) return
@@ -510,6 +518,8 @@ export function PlayerView({ joueur }: { joueur: number }) {
                       construire(idx, nom, 'batiment', groupe)
                     }}
                   />
+                </div>
+                  </div>
                 </div>
 
                 {/* ── AUTRES (ressource, source, nombre, bonus) ── */}
@@ -574,8 +584,11 @@ export function PlayerView({ joueur }: { joueur: number }) {
                       </thead>
                       <tbody>
                         {resTaxes.map((r) => (
-                          <tr key={r}>
-                            <td><strong>{r}</strong></td>
+                          <tr key={r} style={{ background: fondRessource(r, C) }}>
+                            <td>
+                              <span className="dot-res" style={{ background: couleurRessource(r, C) }} />
+                              <strong>{r}</strong>
+                            </td>
                             <td>{fmtNum(tg.titres[r] ?? 0)}</td>
                             <td>{fmtNum(tg.taxes[r] ?? 0)}</td>
                             <td className={(tg.conso[r] ?? 0) < 0 ? 'neg' : ''}>{fmtNum(tg.conso[r] ?? 0)}</td>
@@ -640,8 +653,12 @@ export function PlayerView({ joueur }: { joueur: number }) {
                             {lignesV.map((l) => {
                               if (l.kind === 'ete') {
                                 return (
-                                  <tr key="nourr-ete" className="muted">
-                                    <td><strong>Nourr - été</strong></td>
+                                  <tr key="nourr-ete" className="muted"
+                                    style={{ background: fondRessource('Nourr - été', C) }}>
+                                    <td>
+                                      <span className="dot-res" style={{ background: couleurRessource('Nourr - été', C) }} />
+                                      <strong>Nourr - été</strong>
+                                    </td>
                                     <td>—</td>
                                     <td>{nEteAm !== 0 ? fmtNum(nEteAm) : '—'}</td>
                                     <td>{nEteAut !== 0 ? fmtNum(nEteAut) : '—'}</td>
@@ -659,8 +676,11 @@ export function PlayerView({ joueur }: { joueur: number }) {
                                 (d[r] ?? 0) === 0 ? '—' : fmtNum(d[r] ?? 0)
                               const t = pv.total[r] ?? 0
                               return (
-                                <tr key={r}>
-                                  <td><strong>{r}</strong></td>
+                                <tr key={r} style={{ background: fondRessource(r, C) }}>
+                                  <td>
+                                    <span className="dot-res" style={{ background: couleurRessource(r, C) }} />
+                                    <strong>{r}</strong>
+                                  </td>
                                   <td>{col(pv.batiments)}</td>
                                   <td>{col(pv.amenagements)}</td>
                                   <td>{col(pv.autres)}</td>
@@ -780,8 +800,12 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     {lignesR.map((l) => {
                       if (l.kind === 'ete') {
                         return (
-                          <tr key="nourr-ete" className="muted">
-                            <td><strong>Nourr - été</strong></td>
+                          <tr key="nourr-ete" className="muted"
+                            style={{ background: fondRessource('Nourr - été', C) }}>
+                            <td>
+                              <span className="dot-res" style={{ background: couleurRessource('Nourr - été', C) }} />
+                              <strong>Nourr - été</strong>
+                            </td>
                             {canaux.map(([label]) => {
                               const v = label === 'Aménagements' ? nEteAmJ
                                 : label === 'Autres' ? nEteAutJ : 0
@@ -800,8 +824,11 @@ export function PlayerView({ joueur }: { joueur: number }) {
                       }
                       const r = l.r
                       return (
-                        <tr key={r}>
-                          <td><strong>{r}</strong></td>
+                        <tr key={r} style={{ background: fondRessource(r, C) }}>
+                          <td>
+                            <span className="dot-res" style={{ background: couleurRessource(r, C) }} />
+                            <strong>{r}</strong>
+                          </td>
                           {canaux.map(([label, d]) => (
                             <td key={label} className={val(d, r) < 0 ? 'neg' : ''}>
                               {val(d, r) !== 0 ? fmtNum(val(d, r)) : '—'}
@@ -962,23 +989,6 @@ export function PlayerView({ joueur }: { joueur: number }) {
         })()}
       </Card>
 
-      <Card title="Récap du dernier tour">
-        {p.recap ? (
-          <div className="grid-2 small">
-            <div>Conceptions : {dictToString(p.recap.conceptions)}</div>
-            <div>Naissances : {dictToString(p.recap.naissances)}</div>
-            <div>Décès : {dictToString(p.recap.deces)} (dont maladie : {p.recap.decesMaladie})</div>
-            <div>Mariages nobles : {dictToString(p.recap.mariagesNobles)}</div>
-            <div>Conversions : {dictToString(p.recap.conversions)}</div>
-            <div>Titres attribués : {dictToString(p.recap.titresAttribues)}</div>
-            {(p.recap.crises.length > 0 || p.recap.commandantTombe) && (
-              <div className="neg">⚠ {p.recap.crises.join(' ; ')}{p.recap.commandantTombe ? ` Commandant tombé : ${p.recap.commandantTombe}` : ''}</div>
-            )}
-          </div>
-        ) : (
-          <p className="muted">Lancez un tour pour voir le récapitulatif.</p>
-        )}
-      </Card>
     </div>
   )
 }
@@ -1106,12 +1116,6 @@ function RessourcesBar({ p, C, prodDetail, setPlayer }: {
     </div>
     </>
   )
-}
-
-function dictToString(dict: Record<string, number>): string {
-  const entries = Object.entries(dict).sort((a, b) => b[1] - a[1])
-  if (entries.length === 0) return '—'
-  return entries.map(([k, v]) => `${k} : ${v}`).join(', ')
 }
 
 /** Formate des effets par tour : « +2 Or, -10 Nourriture ». Garnison et
