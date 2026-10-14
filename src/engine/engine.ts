@@ -279,7 +279,11 @@ export function runTurn(state: GameState): GameState {
 }
 // ── API publique (ré-exports — signatures et noms inchangés) ────────────
 
-export { newId, isNobleDyn, fullName } from './shared'
+export {
+  newId, isNobleDyn, fullName,
+  type Detenteur, detenteursDe, populationDe, nomDe, porteurDe,
+  toutesLesPopulations, memeDetenteur, deplacerPersonnage,
+} from './shared'
 export { saisonForTurn, applyEventEffect, applyDynastieCard } from './saisons'
 export {
   calculerGainsPopulation, taxBirthFactor, detailGainsVille, type GainsVilleDetail,
@@ -300,8 +304,10 @@ export {
 export {
   constructionsRefs, constructionRef, amenagementsRefs, batimentsRefs,
   parseCoutTexte, parseProductionTexte, coutBatimentRef, coutConstructionRef,
-  effetsConstructionRef, eteSeulementRef, garnisonConstructionRef,
-  reductionCampDeBatisseurs, type ConstructionRef,
+  effetsConstructionRef, effetsConstructionEntries, effetsEteConstructionRef,
+  instantanesConstructionRef, eteSeulementRef, garnisonConstructionRef,
+  resumeConstruction, reductionCampDeBatisseurs, type ConstructionRef,
+  type EffetConstruction,
 } from './constructions'
 export {
   effetAutreLigne, effetsAutresVille, effetsNourrEteAutresVille, estNourrEte,
@@ -326,6 +332,8 @@ export {
   citesLibresDe, garnisonCiteLibre, facteurTaxesCite, emissairesDe,
   citesSuzerainesDe, detailCiteLibre, taxesCitesLibresRecues,
   appliquerTaxesCitesLibres, ajouterHabitantsCiteLibre, taxesCite,
+  ajouterFamilleNobleCiteLibre, titresAccessiblesCite,
+  pseudoJoueurDeCite, CONSO_NOURR_CITE_LIBRE,
   type DetailCiteLibre,
 } from './citesLibres'
 export {
@@ -373,3 +381,9 @@ export {
   victoryProgress, victoryLabels,
 } from './victory'
 export { findTitleIssues, titleCandidatesFor } from './validation'
+// Couleurs d'affichage (marqueur (o)) — palettes paramétrables
+export {
+  couleurJoueur, couleurRessource, fondRessource, migrerCouleurs,
+  COULEURS_JOUEURS_DEFAUT, COULEURS_RESSOURCES_DEFAUT, TRANSPARENCE_LIGNES_DEFAUT,
+  type CouleursConfig,
+} from './gameData'
