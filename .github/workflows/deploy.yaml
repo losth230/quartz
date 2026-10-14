@@ -44,6 +44,7 @@
 #  2026-10-13 (c) : onglet Progrès — 3 arbres par ligne exactement (classe .grid-arbres en 3 colonnes, responsive 2 puis 1) et branches A/B toujours côte à côte (.grid-branches en 2 colonnes) ; redéploiement.
 #  2026-10-13 (d) : onglet Progrès — chaque arbre dans un cadre encadré teinté selon sa catégorie comme le classeur (vert développement/habitants, jaune économique, rouge militaire, blanc diplomatie, bleu science, violet tourisme — classes .arbre + .teinte-*) et tous les cadres de même taille (grid-auto-rows 1fr) ; redéploiement.
 #  2026-10-13 (e) : effets automatiques des technologies de progrès — nouveau module engine/progres.ts (gains au déblocage, production par tour canal « Progrès », garnison statique), champ « effets » paramétrable par tech dans Référentiels → Progrès (34 effets saisis d'après le classeur) ; redéploiement.
+#  2026-10-14 (f) : page Pays — retour à 2 villes par ligne (grille .grid-villes en 2 colonnes, repli 1 colonne sous 800px) au lieu d’une ville par ligne pleine largeur ; redéploiement.
 # ══════════════════════════════════════════════════════════════════════
 name: Deploy Quartz site + Chasse & Pêche (jeu) to GitHub Pages
 
