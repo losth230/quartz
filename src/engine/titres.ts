@@ -205,6 +205,12 @@ export function titresAccessibles(state: GameState, p: Player, C: Cfg = cfgOf(st
   //  (avertissement affiché, jamais bloquant). Le portefeuille se
   //  choisit ensuite dans la page Population.
   out.push('Ministre')
+  // « Marchand » (marqueur (t)) : attribution manuelle comme Chasseur,
+  //  Gouverneur ou Ministre — le titre ouvre UNE route commerciale
+  //  (engine/commerce.ts : +marchandOrTour Or pour les 2 joueurs
+  //  reliés + copie d'une ressource d'un aménagement de la ville
+  //  ciblée). Pas de gain par tour dans la table des titres.
+  out.push('Marchand')
   const pop = state.population[p.n] ?? []
   const educations = new Set<string>()
   for (const c of pop) {
@@ -238,4 +244,44 @@ export function titreAllowedForCharacter(titre: string, c: Character, p: Player,
     if (cult && !martialiteOk(cult.martialite, c.sexe)) return false
   }
   return true
+}
+
+// ── Gouverneurs automatiques (marqueur (w), retour Thibaut) ──────────────
+
+/** Gouverneur en poste dans une ville d'un joueur (vivant, titre
+ *  « Gouverneur », rattaché à la ville) — null si la ville n'a pas
+ *  de gouverneur. */
+export function gouverneurDeVille(
+  state: GameState, p: Player, ville: string, C: Cfg = cfgOf(state.config),
+): Character | null {
+  return (state.population[p.n] ?? []).find(
+    (c) => c.statut !== 'Décédé' && c.titre === C.p.titreGouverneur && c.ville === ville,
+  ) ?? null
+}
+
+/** Si une ville sans gouverneur abrite au moins un noble, le noble le
+ *  plus âgé devient AUTOMATIQUEMENT gouverneur (retour Thibaut, marqueur
+ *  (w) — appelé à chaque fin de tour AVANT le calcul des gains : le
+ *  bonus +10 % d'impôts s'applique dès le tour de la nomination). Le
+ *  Dirigeant et l'Héritier ne sont jamais choisis (leur titre
+ *  commande la succession et ne se remplace pas). */
+export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.config)): void {
+  for (const p of state.players) {
+    const pop = state.population[p.n] ?? []
+    for (const ville of p.villes) {
+      if (gouverneurDeVille(state, p, ville.nom, C)) continue
+      const nobles = pop.filter(
+        (c) => c.statut !== 'Décédé' && c.ville === ville.nom
+          && isNobleDyn(c.dynastie, C)
+          && c.titre !== C.p.titreDirigeant && c.titre !== C.p.titreHeritierStr,
+      )
+      if (nobles.length === 0) continue
+      const elu = nobles.reduce((a, b) => (b.age > a.age ? b : a))
+      elu.titre = C.p.titreGouverneur
+      state.log.push({
+        turn: state.turn + 1, type: 'Titre', joueur: p.n,
+        texte: `🏰 ${ville.nom} n'a pas de ${C.p.titreGouverneur} — ${fullName(elu)}, noble le plus âgé de la ville, prend automatiquement la charge (+10 % d'impôts sur la ville).`,
+      })
+    }
+  }
 }
