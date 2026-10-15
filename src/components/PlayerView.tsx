@@ -52,6 +52,9 @@ import {
   capitaleDe, batimentsFaction, batimentsCapitale,
   effetsNourrEteAmenagementsVille, effetsNourrEteAutresVille,
   supprimerVille, transfererVille,
+  routesCommerceDe, routesCommerceVers, marchandsDe, fullName,
+  ressourcesCopiables, amenagementsCopiables,
+  creerRouteCommerce, changerCopieRoute, supprimerRouteCommerce,
   impotPopulation, impotsVassaux, genererImpotPopulation, genererImpotVassaux,
   debiterCoutHabitation,
   type ProductionDetail,
@@ -83,6 +86,14 @@ export function PlayerView({ joueur }: { joueur: number }) {
   // Type d'habitation de la prochaine ville ajoutée (retour Thibaut,
   //  marqueur (r) : choisir ville ou château à la création).
   const [typeAjout, setTypeAjout] = useState<'Ville' | 'Château'>('Ville')
+  // ── Commerce (marqueur (t)) : formulaire d'ouverture d'une route
+  //    commerciale — marchand libre, joueur/ville ciblés, aménagement
+  //    et ressource copiés. ─────────────────────────────────────────
+  const [rcMarchand, setRcMarchand] = useState('')
+  const [rcJoueur, setRcJoueur] = useState('')
+  const [rcVille, setRcVille] = useState('')
+  const [rcAmen, setRcAmen] = useState('')
+  const [rcErr, setRcErr] = useState<string | null>(null)
   const impotPopPrev = impotPopulation(state, p, C)
   const impotsVassPrev = impotsVassaux(state, p, C)
 
@@ -764,6 +775,152 @@ export function PlayerView({ joueur }: { joueur: number }) {
         </div>
       </Card>
 
+      {/* ═══ Commerce (marqueur (t)) : routes commerciales des marchands.
+          Un marchand = UNE route : sa ville ↔ une ville d'un autre
+          joueur. Chaque tour : +marchandOrTour Or pour CHAQUE joueur
+          relié + copie (propriétaire) de la production de l'aménagement
+          ENTIER choisi dans la ville ciblée — modifiable à tout moment
+          (arbitrages Thibaut 2026-10-15 : un aménagement par route ;
+          marqueur (u) : l'aménagement entier, plus de choix de
+          ressource). Correctif (u) : les menus du formulaire ont des
+          valeurs par défaut (le bug « Marchand introuvable » venait
+          des Selects jamais touchés, dont la valeur restait ''). ═══ */}
+      <Card title="Commerce — routes des marchands">
+        {(() => {
+          const mes = routesCommerceDe(state, p.n)
+          const entrantes = routesCommerceVers(state, p.n)
+          const libres = marchandsDe(state, p.n)
+            .filter((c) => !mes.some((r) => r.marchandId === c.id))
+          // Options du formulaire (cascade joueur → ville →
+          // aménagement copiable) + VALEURS EFFECTIVES : l'état OU la
+          // première option — correctif (u) du bug « Marchand
+          // introuvable » (les Selects contrôlés jamais touchés
+          // gardaient '' comme valeur).
+          const autresJoueurs = state.players.filter((q) => q.n !== p.n)
+          const mEff = rcMarchand || libres[0]?.id ?? ''
+          const jEff = rcJoueur || String(autresJoueurs[0]?.n ?? '')
+          const joueurCibleForm = state.players.find((q) => String(q.n) === jEff)
+          const vEff = rcVille || joueurCibleForm?.villes[0]?.nom ?? ''
+          const villeCibleForm = joueurCibleForm?.villes.find((v) => v.nom === vEff)
+          const amenForm = villeCibleForm ? amenagementsCopiables(villeCibleForm, C.config) : []
+          const aEff = rcAmen || amenForm[0] || ''
+          return (
+            <>
+              {mes.length === 0 && entrantes.length === 0 && (
+                <p className="muted">
+                  Aucune route commerciale. Attribue le titre « Marchand » à un
+                  personnage (page Population), puis ouvre une route vers la
+                  ville d'un autre joueur : chaque tour, les deux joueurs reliés
+                  gagnent {fmt(C.p.marchandOrTour)} Or et ton marchand copie la
+                  production entière d'un aménagement de la ville ciblée.
+                </p>
+              )}
+              {mes.length > 0 && (
+                <div className="table-wrap">
+                  <table className="tbl small">
+                    <thead>
+                      <tr>
+                        <th>Marchand (sa ville)</th>
+                        <th>Ville ciblée</th>
+                        <th>Aménagement copié</th>
+                        <th>Gain / tour</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {mes.map((route) => {
+                        const m = (state.population[p.n] ?? []).find((c) => c.id === route.marchandId)
+                        const cible = state.players.find((q) => q.n === route.joueurCible)
+                        const villeCible = cible?.villes.find((v) => v.nom === route.villeCible)
+                        const amenList = villeCible ? amenagementsCopiables(villeCible, C.config) : []
+                        const copList = ressourcesCopiables(route.amenagement, C.config)
+                        return (
+                          <tr key={route.id}>
+                            <td>
+                              <strong>{m ? fullName(m) : '—'}</strong>
+                              <br />
+                              <span className="muted small">{m?.ville ?? '—'}</span>
+                            </td>
+                            <td>↔ <strong>{route.villeCible}</strong><br /><span className="muted small">{cible?.nom ?? '?'}</span></td>
+                            <td>
+                              <Select
+                                value={route.amenagement}
+                                options={amenList.map((a) => ({ value: a, label: a }))}
+                                onChange={(v) => {
+                                  let err: string | null = null
+                                  update((s) => { err = changerCopieRoute(s, route.id, v) })
+                                  setRcErr(err)
+                                }}
+                              />
+                            </td>
+                            <td className="small">
+                              +{fmt(C.p.marchandOrTour)} Or
+                              {copList.map((x, i) => (
+                                (!x.ete || state.saison === 'Été')
+                                  ? <div key={i}>+{fmt(x.valeur)} {x.ressource}</div>
+                                  : <div key={i} className="muted">+{fmt(x.valeur)} {x.ressource} (en été)</div>
+                              ))}
+                            </td>
+                            <td>
+                              <Button tone="danger" title="Fermer la route" onClick={() => {
+                                let err: string | null = null
+                                update((s) => { err = supprimerRouteCommerce(s, route.id) })
+                                setRcErr(err)
+                              }}>✕</Button>
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+              {entrantes.length > 0 && (
+                <p className="small">
+                  <strong>Routes entrantes</strong> — tu encaisses
+                  +{fmt(C.p.marchandOrTour)} Or / tour par route :
+                  {' '}
+                  {entrantes.map((route) => {
+                    const m = (state.population[route.joueur] ?? []).find((c) => c.id === route.marchandId)
+                    const prop = state.players.find((q) => q.n === route.joueur)
+                    return `${m?.ville ?? '?'} (${prop?.nom ?? '?'}) → ${route.villeCible}`
+                  }).join(' · ')}
+                </p>
+              )}
+              {libres.length > 0 ? (
+                <div className="filters" style={{ alignItems: 'flex-end', flexWrap: 'wrap' }}>
+                  <Field label="Marchand">
+                    <Select value={mEff} options={libres.map((c) => ({ value: c.id, label: `${fullName(c)} (${c.ville})` }))} onChange={setRcMarchand} />
+                  </Field>
+                  <Field label="Joueur ciblé">
+                    <Select value={jEff} options={autresJoueurs.map((q) => ({ value: String(q.n), label: q.nom }))} onChange={(v) => { setRcJoueur(v); setRcVille(''); setRcAmen('') }} />
+                  </Field>
+                  <Field label="Ville ciblée">
+                    <Select value={vEff} options={(joueurCibleForm?.villes ?? []).map((v) => ({ value: v.nom, label: v.nom }))} onChange={(v) => { setRcVille(v); setRcAmen('') }} />
+                  </Field>
+                  <Field label="Aménagement copié (production entière)">
+                    <Select value={aEff} options={amenForm.map((a) => ({ value: a, label: a }))} onChange={setRcAmen} />
+                  </Field>
+                  <Button onClick={() => {
+                    let err: string | null = null
+                    update((s) => { err = creerRouteCommerce(s, p.n, mEff, Number(jEff), vEff, aEff) })
+                    setRcErr(err)
+                    if (!err) { setRcMarchand(''); setRcJoueur(''); setRcVille(''); setRcAmen('') }
+                  }}>Ouvrir la route</Button>
+                </div>
+              ) : (
+                <p className="muted small">
+                  Pour ouvrir une route : attribue le titre « Marchand » à un
+                  personnage vivant (page Population). Chaque marchand ne tient
+                  qu'une route.
+                </p>
+              )}
+              {rcErr && <p className="small" style={{ color: '#E74C3C', marginBottom: 0 }}>{rcErr}</p>}
+            </>
+          )
+        })()}
+      </Card>
+
       {/* ═══ Récap des ressources par tour : chaque ressource et d'où
           elle provient (calculé pour le prochain tour, moteurs des
           étapes de fin de tour). ═══ */}
@@ -778,6 +935,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
             ['Régimes & cultures', prodDetail.regimesCultures],
             ['Faction', prodDetail.faction],
             ['Cités libres', prodDetail.citesLibres],
+            ['Commerce', prodDetail.commerce],
             ['Conso villes', prodDetail.habitations],
             ['Vassalité', prodDetail.vassalite],
           ]
@@ -935,7 +1093,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
               </p>
             )
           }
-          const { production, batiments, amenagements, nourrEte, autres, population, vassalite, regimesCultures, habitations, faction, citesLibres } = row.apports
+          const { production, batiments, amenagements, nourrEte, autres, population, vassalite, regimesCultures, habitations, faction, citesLibres, commerce } = row.apports
           const amen = amenagements ?? {}
           const nEte = nourrEte ?? {}
           const aut = autres ?? {}
@@ -943,6 +1101,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
           const hab = habitations ?? {}
           const fac = faction ?? {}
           const cl = citesLibres ?? {}
+          const com = commerce ?? {}
           const val = (d: Record<string, number>, r: string) => d[r] ?? 0
           // Retour Thibaut (marqueur (r)) : toutes les ressources,
           // même à apport 0.
@@ -965,7 +1124,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     <th>Ressource</th><th>Production</th><th>Bâtiments</th>
                     <th>Aménagements</th><th>Autres</th>
                     <th>Conso. villes</th>
-                    <th>Habitants</th><th>Régimes & cultures</th><th>Faction</th><th>Cités libres</th><th>Vassalité</th><th>Total</th>
+                    <th>Habitants</th><th>Régimes & cultures</th><th>Faction</th><th>Cités libres</th><th>Commerce</th><th>Vassalité</th><th>Total</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -976,7 +1135,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                         <tr key="nourr-ete" className="muted" style={{ background: fondRessource('Nourr - été', C) }}>
                           <td><strong>Nourr - été</strong></td>
                           <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
-                          <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                          <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
                           <td><strong>{fmtNum(vEte)}</strong>{' '}
                             <span className="muted small">(créditée en été seulement)</span></td>
                         </tr>
@@ -985,7 +1144,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                     const r = l.r
                     const total = val(production, r) + val(batiments, r) + val(amen, r)
                       + val(nEte, r) + val(aut, r) + val(hab, r) + val(population, r) + val(vassalite, r) + val(reg, r)
-                      + val(fac, r) + val(cl, r)
+                      + val(fac, r) + val(cl, r) + val(com, r)
                     return (
                       <tr key={r} style={{ background: fondRessource(r, C) }}>
                         <td>
@@ -1001,6 +1160,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
                         <td>{fmtNum(val(reg, r))}</td>
                         <td>{fmtNum(val(fac, r))}</td>
                         <td>{fmtNum(val(cl, r))}</td>
+                        <td>{fmtNum(val(com, r))}</td>
                         <td>{fmtNum(val(vassalite, r))}</td>
                         <td className={total < 0 ? 'neg' : ''}><strong>{fmtNum(total)}</strong></td>
                       </tr>

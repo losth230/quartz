@@ -201,6 +201,12 @@ export interface CiteLibre {
   /** Niveau de taxes de la cité (module TOUTES les ressources produites
    *  par ses habitants, comme pour une ville de joueur). */
   taxes?: TaxeNiveau
+  /** Type d'habitation de la cité (retour Thibaut 2026-10-14) : Hameau
+   *  (rural) ou Château (fortifié), tiré AU HASARD à la création de la
+   *  partie. La règle du référentiel dit que la cité « change de niveau
+   *  d'habitation dès qu'un joueur entre dans une nouvelle ère » — suivi
+   *  au plateau. Champ optionnel : vieilles sauvegardes → null. */
+  habitation?: 'Hameau' | 'Château' | null
   /** N° du joueur suzerain de la cité (3 émissaires — plateau), sinon null. */
   suzerain?: number | null
   /** Émissaires gagnés par chaque joueur auprès de la cité (clé = n° de
@@ -208,6 +214,34 @@ export interface CiteLibre {
   emissaires?: Record<number, number>
   /** Population de la cité (habitants — titre Chasseur par défaut). */
   population?: Character[]
+}
+
+/** Route commerciale (marqueur (t)) : un personnage titré « Marchand »
+ *  relie SA ville à la ville d'un AUTRE joueur. Chaque tour, les deux
+ *  joueurs gagnent marchandOrTour Or (4 par défaut) ; le propriétaire
+ *  copie en plus la production d'UNE ressource d'UN aménagement de la
+ *  ville ciblée (choix modifiable à tout moment — arbitrage Thibaut
+ *  2026-10-15). Un marchand ne tient qu'une route ; elle se ferme s'il
+ *  meurt ou perd son titre (nettoyerRoutesCommerce, engine/commerce.ts).
+ *  Champ optionnel de GameState : absent des vieilles sauvegardes → []. */
+export interface RouteCommerce {
+  id: string
+  /** N° du joueur PROPRIÉTAIRE du marchand (encaisse Or + copie). */
+  joueur: number
+  /** Id du personnage portant le titre « Marchand ». */
+  marchandId: string
+  /** N° du joueur propriétaire de la ville ciblée (encaisse l'Or). */
+  joueurCible: number
+  /** Ville ciblée (une ville de joueurCible — les cités libres ne
+   *  produisent rien, cf. l'effet Marchand du référentiel). */
+  villeCible: string
+  /** Aménagement copié (présent dans la ville ciblée) — ENTIER
+   *  (marqueur (u) : toutes ses ressources positives). */
+  amenagement: string
+  /** OBSOLÈTE (marqueur (u)) : ne plus lire ni écrire — l'aménagement
+   *  entier est copié. Champ gardé OPTIONNEL pour les sauvegardes
+   *  faites sous le marqueur (t) (ignorez la valeur). */
+  ressource?: string
 }
 
 export interface ResourceState {
@@ -277,7 +311,7 @@ export interface Player {
 
 export interface LogEntry {
   turn: number
-  type: 'Événement' | 'Dynastie' | 'Crise' | 'Naissance' | 'Décès' | 'Mariage' | 'Titre' | 'Armée' | 'Culture' | 'Système'
+  type: 'Événement' | 'Dynastie' | 'Crise' | 'Naissance' | 'Décès' | 'Mariage' | 'Titre' | 'Armée' | 'Culture' | 'Commerce' | 'Système'
   joueur: number | null
   texte: string
 }
@@ -331,6 +365,11 @@ export interface ApportsTour {
    *  Grand Précepteur +1 Science, cumulables). Champ optionnel :
    *  absent des historiques d'avant l'ajout du canal. */
   ministeres?: Record<string, number>
+  /** routes commerciales des marchands (engine/commerce.ts — étape
+   *  3terdecies : +marchandOrTour Or pour chaque joueur relié + copie
+   *  d'une ressource d'un aménagement de la ville ciblée). Champ
+   *  optionnel : absent des historiques d'avant le canal. */
+  commerce?: Record<string, number>
 }
 
 export interface HistoryRow {
@@ -369,6 +408,9 @@ export interface GameState {
   /** Cités libres de la partie (onglet « 🗼 Cités libres »). Champ
    *  optionnel : absent des vieilles sauvegardes → liste vide. */
   citesLibres?: CiteLibre[]
+  /** Routes commerciales des marchands (marqueur (t), engine/commerce.ts).
+   *  Champ optionnel : absent des vieilles sauvegardes → liste vide. */
+  routesCommerce?: RouteCommerce[]
   log: LogEntry[]
   history: HistoryRow[]
 }
