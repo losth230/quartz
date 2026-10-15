@@ -180,6 +180,13 @@ export function RoyaumeView({ joueur }: { joueur: number }) {
                 </div>
                 {cult.reglePays && <div className="small muted">Règle de pays : {cult.reglePays}</div>}
                 {cult.reglePerso && <div className="small muted">Règle de personnage : {cult.reglePerso}</div>}
+                <div className="muted small">
+                  Ce que fait la culture : l'hérédité et la martialité règlent la
+                  transmission des titres et l'armée ; la fécondité influe sur les
+                  naissances ; les mariages homosexuels (si autorisés) permettent des
+                  unions de même sexe (sans conception) ; la règle de pays et les lois
+                  chiffrées sont appliquées automatiquement à chaque fin de tour.
+                </div>
               </>
             )}
           </div>
@@ -275,6 +282,11 @@ export function RoyaumeView({ joueur }: { joueur: number }) {
             <div className="mini-title">Événement de dynastie</div>
             <div><strong>{p.dynastie ? p.dynastie.nom : '—'}</strong></div>
             {p.dynastie && <div className="muted small">{p.dynastie.description}</div>}
+            <div className="muted small">
+              Carte tirée au hasard à CHAQUE tour parmi les dynasties du
+              référentiel — ce n'est pas la famille au pouvoir (voir
+              « Personnages importants » pour la famille royale).
+            </div>
           </div>
         </div>
       </Card>
