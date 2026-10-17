@@ -10765,6 +10765,16 @@ function transfererVille(state, p, idx, cible) {
   });
   return true;
 }
+function rejouerTransfertVille(state, payload) {
+  const src = state.players.find((q) => q.n === payload.src);
+  const dst = state.players.find((q) => q.n === payload.dst);
+  if (!src || !dst) return false;
+  const idx = src.villes.findIndex((v) => v.nom === payload.ville);
+  if (idx < 0) {
+    return false;
+  }
+  return transfererVille(state, src, idx, dst);
+}
 function bonusProximite(ville, C) {
   if (ville.proximite === "Rivi\xE8re") return C.p.proxRiviereNourriture;
   if (ville.proximite === "Mer") return C.p.proxMerNourriture;
@@ -11946,6 +11956,7 @@ export {
   reductionCampDeBatisseurs,
   regleActive,
   reglesActives,
+  rejouerTransfertVille,
   rembourserScienceTech,
   ressourcesCopiables,
   resumeConstruction,
