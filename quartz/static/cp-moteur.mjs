@@ -10264,20 +10264,6 @@ function peuplerMarchands(state, p) {
       texte: `\u{1F6D2} ${fullName(elu)} est promu Marchand (reprend la route vers ${route.villeCible}).`
     });
   }
-  const cap = maxMarchandsJoueur(p, C);
-  let nb = marchandsDe(state, p.n).length;
-  while (nb < cap) {
-    const elu = vivants.find((c) => (!c.titre || c.titre === C.p.titreChasseur) && c.age >= C.p.adultAge && p.villes.some((v) => v.nom === c.ville));
-    if (!elu) break;
-    elu.titre = TITRE_MARCHAND;
-    nb++;
-    state.log.push({
-      turn: state.turn + 1,
-      type: "Commerce",
-      joueur: p.n,
-      texte: `\u{1F6D2} ${fullName(elu)} est promu Marchand \u2014 ${nb}/${cap} route(s) disponible(s).`
-    });
-  }
 }
 function maxMarchandsJoueur(p, C) {
   let max = C.p.maxMarchands;
