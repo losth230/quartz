@@ -9,7 +9,7 @@
 //  les stocks peuvent être négatifs, les poids nuls, les textes vides.
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf, cloneDefaultConfig } from '../config/defaultConfig'
 import type { GameConfig } from '../config/defaultConfig'
@@ -29,14 +29,19 @@ const ONGLETS = [
 ] as const
 
 export function ParamsPanel() {
-  const { state, globalConfig, setGlobalCfg, replaceState, exportState, importState } = useGame()
+  const { globalConfig, setGlobalCfg, peutEditerConfig, replaceState, exportState, importState } = useGame()
   const [onglet, setOnglet] = useState<(typeof ONGLETS)[number]>('Formules')
 
   // Configuration commune, fusionnée sur les défauts (clés manquantes, etc.)
   const config: GameConfig = cfgOf(globalConfig).config
 
-  /** Mutation de la configuration commune — propagée à la partie en cours. */
-  const setCfg = (fn: (c: GameConfig) => void) => setGlobalCfg(fn)
+  /** Mutation de la configuration commune — propagée à la partie en cours.
+   *  RÈGLE CRÉATEUR : neutralisée en lecture seule (le garde-fou du store
+   *  bloque de toute façon en profondeur — ici on rend l'UI cohérente). */
+  const setCfg = (fn: (c: GameConfig) => void) => {
+    if (!peutEditerConfig) return
+    setGlobalCfg(fn)
+  }
 
   const setParam = (key: string, v: number | string) =>
     setCfg((c) => {
@@ -47,6 +52,13 @@ export function ParamsPanel() {
   return (
     <div className="stack">
       <Card title="Paramètres communs à toutes les parties — modifiables à tout moment">
+        {!peutEditerConfig && (
+          <div className="banner-warn">
+            🔒 Lecture seule — la configuration ne se modifie plus pendant une partie.
+            Retournez à l'accueil (finissez ou supprimez la partie) pour l'éditer ; les
+            changements s'appliquent à tout le monde après un simple rafraîchissement de la page.
+          </div>
+        )}
         <p className="muted small">
           Réglages <strong>communs à toutes les parties</strong>, mémorisés par le navigateur —
           export/import JSON dans le dernier onglet.

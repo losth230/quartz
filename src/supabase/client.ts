@@ -12,7 +12,8 @@
 
 import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { GameState } from '../engine/types'
-import { compacterEtat, elargirEtat } from '../state/storage'
+import type { GameConfig } from '../config/defaultConfig'
+import { elargirEtat } from '../state/storage'
 
 const LS_URL = 'cpe.supabase.url'
 const LS_KEY = 'cpe.supabase.anon'
@@ -31,8 +32,13 @@ function readCreds(): { url: string; key: string } {
     url = window.localStorage.getItem(LS_URL) ?? ''
     key = window.localStorage.getItem(LS_KEY) ?? ''
   } catch { /* localStorage indisponible (mode privé etc.) */ }
-  if (!url) url = (import.meta.env.VITE_SUPABASE_URL as string | undefined) ?? ''
-  if (!key) key = (import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined) ?? ''
+  // DURCISSEMENT (2026-10-19, tests de rendu Node) : `import.meta.env`
+  //  n'existe QUE dans un bundle Vite — hors navigateur (tsx/CI, tests
+  //  de rendu serveur) il vaut undefined et l'accès direct plantait
+  //  le RENDU de SetupPanel (supabaseCreds → readCreds au rendu).
+  const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env
+  if (!url) url = env?.VITE_SUPABASE_URL ?? ''
+  if (!key) key = env?.VITE_SUPABASE_ANON_KEY ?? ''
   // Défaut : projet du site quartz — le jeu est prêt à l'emploi.
   if (!url) url = DEFAULT_URL
   if (!key) key = DEFAULT_KEY
@@ -63,7 +69,7 @@ export function clearSupabaseCredentials(): void {
   client = null
 }
 
-export function getSupabase(): SupabaseClient | null {
+function getSupabase(): SupabaseClient | null {
   if (client) return client
   const { url, key } = readCreds()
   if (!url || !key) return null
@@ -91,11 +97,47 @@ export async function testSupabase(): Promise<{ ok: boolean; message: string }> 
 // Table PROPRE au jeu : ce même projet Supabase héberge déjà la table `parties`
 // du wargame (colonnes incompatibles, id uuid) — le jeu ne doit PAS y toucher.
 const TABLE = 'parties_chasse_peche'
+/** Ligne réservée qui porte la configuration mondiale unique. */
+const CONFIG_MONDIALE_ID = '__config__'
+
+// ── CONFIG MONDIALE UNIQUE (règle 2026-10-19) ─────────────────────────────
+// Une seule et unique configuration, INDÉPENDANTE des parties : stockée
+// dans la ligne réservée '__config__' de la même table. Toutes les
+// parties de tous les salons l'utilisent ; seul le créateur (garde du
+// store) l'édite en multijoueur ; chaque client l'adopte au chargement
+// et périodiquement. Les parties n'embarquent plus leur propre source
+// de vérité de config.
+
+/** Charge la configuration mondiale (null si jamais publiée). */
+export async function chargerConfigMondiale(): Promise<GameConfig | null> {
+  const sb = getSupabase()
+  if (!sb) return null
+  const { data, error } = await sb
+    .from(TABLE).select('state').eq('id', CONFIG_MONDIALE_ID).maybeSingle()
+  if (error || !data) return null
+  return (data.state as { config?: GameConfig })?.config ?? null
+}
+
+/** Publie la configuration mondiale (upsert de la ligne '__config__'). */
+export async function sauverConfigMondiale(config: GameConfig): Promise<boolean> {
+  const sb = getSupabase()
+  if (!sb) return false
+  const { error } = await sb.from(TABLE).upsert({
+    id: CONFIG_MONDIALE_ID,
+    state: { config } as unknown as GameState,
+    updated_by: CLIENT_ID,
+    updated_at: new Date().toISOString(),
+  })
+  return !error
+}
 
 /** Charge une partie depuis Supabase (id = code de salon). */
 export async function loadRemote(id: string): Promise<GameState | null> {
   const sb = getSupabase()
   if (!sb) return null
+  // La ligne '__config__' n'est PAS une partie (config mondiale) :
+  //  jamais joignable comme salon.
+  if (id === CONFIG_MONDIALE_ID) return null
   const { data, error } = await sb.from(TABLE).select('state').eq('id', id).maybeSingle()
   if (error || !data) return null
   // format compact : reconstruire les champs omis (valeurs par défaut)
@@ -107,46 +149,6 @@ export async function loadRemote(id: string): Promise<GameState | null> {
  *  échos realtime (la boucle update → événement → setState était
  *  inutile et creusait la fenêtre de conflit). */
 const CLIENT_ID = 'c' + Math.random().toString(36).slice(2, 10)
-export function clientId(): string { return CLIENT_ID }
-
-/** Sauvegarde une partie (création ou mise à jour) — upsert avec
- *  identité du writers (updated_by) : la dernière écriture gagne
- *  (garanti par le serveur), le rebase client fusionne les éditions
- *  simultanées de feuilles différentes. */
-/**
- * Sauvegarde AVEC GARDE DE TOUR (correctif rollback aléatoire
- *  2026-10-17) : un client PÉRIMÉ (onglet arrière-plan, navigateur
- *  sorti de veille, appareil resté sur l'ancien tour) pouvait
- *  écraser l'état partagé avec sa vieille version — « dernière
- *  écriture gagne » sans aucune vérification. Désormais : on lit
- *  d'abord le tour publié ; si le serveur est PLUS RÉCENT que ce
- *  qu'on veut écrire, l'écriture est REFUSÉE (le client local
- *  est hors date, il récupèrera l'état courant par le realtime).
- *  Coût : un SELECT léger avant chaque upsert (colonnes tour de
- *  l'en-tête JSON, pas le payload).
- */
-export async function saveRemote(id: string, state: GameState): Promise<boolean> {
-  const sb = getSupabase()
-  if (!sb) return false
-  // Garde de tour : ne JAMAIS écraser un état plus récent.
-  //  turn_done = numéro du tour publié (colonne légère, pas le
-  //  payload ~5 Mo) — mise à jour à chaque résolution de barrière.
-  const { data: entete, error: errEntete } = await sb
-    .from(TABLE).select('turn_done').eq('id', id).maybeSingle()
-  if (!errEntete && entete) {
-    const tourServeur = entete.turn_done ?? 0
-    if (typeof tourServeur === 'number' && tourServeur > state.turn) {
-      return false  // serveur plus récent : refus (client périmé)
-    }
-  }
-  const { error } = await sb.from(TABLE).upsert({
-    id,
-    state: compacterEtat(structuredClone(state)),
-    updated_by: CLIENT_ID,
-    updated_at: new Date().toISOString(),
-  })
-  return !error
-}
 
 
 // ═══════════════════════════════════════════════════════════════════════
@@ -169,33 +171,10 @@ export interface SectionJoueur {
   tour: number
 }
 
-/** Pousser MA section de fin de tour. Retourne l'état de la barrière
- *  après écriture : { sections, turn_done } — null si erreur réseau. */
-export async function pousserSection(
-  id: string, n: number, section: SectionJoueur,
-): Promise<{ sections: Record<string, SectionJoueur>; turn_done: number } | null> {
-  const sb = getSupabase()
-  if (!sb) return null
-  // upsert de la clé sections."<n>" — Supabase (jsonb) : lire-modifier-écrire
-  //  via une requête unique avec jsonb_set serait idéale mais l'API REST
-  //  ne la propose pas : on lit, fusionne, écrit. Le risque de collision
-  //  est borné par la barrière : chaque n° écrit une clé distincte.
-  const { data: row, error: errLecture } = await sb
-    .from(TABLE).select('sections, turn_done').eq('id', id).maybeSingle()
-  if (errLecture || !row) return null
-  const sections = { ...((row.sections as Record<string, SectionJoueur>) ?? {}) }
-  // barrière incompatible (nouveau tour lancé entre-temps) : abandon
-  if ((row.turn_done ?? 0) !== section.tour) return null
-  sections[String(n)] = section
-  const { error: errEcriture } = await sb
-    .from(TABLE).update({
-      sections,
-      updated_by: CLIENT_ID,
-      updated_at: new Date().toISOString(),
-    }).eq('id', id)
-  if (errEcriture) return null
-  return { sections, turn_done: row.turn_done ?? 0 }
-}
+// (RETRAIT 2026-10-19, brûlage audit R5) : pousserSection — la barrière
+//  v1 par colonne « sections » (lire-modifier-écrire) — a été retiré
+//  avec le protocole v1 : les sections passent désormais par des
+//  ÉVÉNEMENTS append-only (pousserSectionV2, table cp_events).
 
 /** Publier l'état de référence du NOUVEAU tour (résolution de la
  *  barrière) et réinitialiser les sections. */
@@ -217,17 +196,9 @@ export async function publierEtatFusionne(
   return !error
 }
 
-/** Lire l'état de la barrière (sections poussées, tour couvert). */
-export async function lireBarriere(
-  id: string,
-): Promise<{ sections: Record<string, SectionJoueur> | null; turn_done: number } | null> {
-  const sb = getSupabase()
-  if (!sb) return null
-  const { data, error } = await sb
-    .from(TABLE).select('sections, turn_done').eq('id', id).maybeSingle()
-  if (error || !data) return null
-  return { sections: data.sections ?? null, turn_done: data.turn_done ?? 0 }
-}
+// (RETRAIT 2026-10-19, brûlage audit R5) : lireBarriere (v1) a été
+//  retiré avec le protocole v1 — la barrière se lit sur les événements
+//  du tour (lireBarriereV2).
 
 /** S'abonne aux changements du salon. Retourne la fonction de désabonnement.
  *
@@ -286,9 +257,9 @@ export function subscribeRemote(
 }
 
 // ══════════════════════════════════════════════════════════════════
-//  PROTOCOLE v2 (serveur autoritaire + events append-only)
-//  Étape 2 (2026-10-17) — utilisé derrière le feature flag
-//  localStorage « cpe.proto2 » = "1". L'ancien flux reste le défaut.
+//  PROTOCOLE v2 UNIQUE (serveur autoritaire + events append-only)
+//  (RETRAIT v1 2026-10-19, brûlage audit R5 : le flux v1 — colonne
+//  « sections » + feature flag « cpe.proto2 » — a été brûlé.)
 // ══════════════════════════════════════════════════════════════════
 
 /** Pousser MA section de fin de tour en ÉVÉNEMENT append-only :

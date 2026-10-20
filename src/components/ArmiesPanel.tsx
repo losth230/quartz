@@ -5,7 +5,7 @@
 //  à la Martialité de la culture.
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useGame } from '../state/store'
 import type { GameState, Player } from '../engine/types'
 import { cfgOf, cultureDef } from '../engine/gameData'
@@ -16,7 +16,7 @@ import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
 export function ArmiesPanel({ joueur }: { joueur: number }) {
   const { state, update } = useGame()
   const [nom, setNom] = useState('')
-  const [cible, setCible] = useState<number | null>(null)
+  const [cible] = useState<number | null>(null)
   const [commandant, setCommandant] = useState('')
   const [puissance, setPuissance] = useState(90)
   // Revue Thibaut 2026-10-15 : la levée se passe DANS une habitation
@@ -75,12 +75,6 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (rs && prix2 > 0) rs.stock -= prix2
       // Stratégies militaires I : flag one-shot consommé.
       if (target.prochaineArmeeReduite) target.prochaineArmeeReduite = false
-      // Norls « Armées des traditions » (Âge III) : chaque levée
-      //  rapporte 10 Tourisme définitivement.
-      if (target.peuple === 'NORLS' && target.regleAge3 === 'Armées des traditions') {
-        const rsT = target.resources['Tourisme']
-        if (rsT) rsT.stock += 10
-      }
       target.armees.push({
         nom: nomArmee,
         puissanceCible: puissance,
@@ -255,7 +249,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
             ({C.p.armeePrixOr} Or tous les {C.p.armeePriXPuissance} points de force — payé une fois, pas d'entretien)
           </span>
           {prixBrut > prix && (
-            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (Grand écuyer, faction, merveilles, bâtiments de la ville)</span>
+            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (Grand écuyer, merveilles, bâtiments de la ville)</span>
           )}
           {orDispo < prix && <span className="neg"> ⚠ Or insuffisant ({fmt(orDispo)} disponible)</span>}
         </p>

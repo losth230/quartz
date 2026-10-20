@@ -6,7 +6,7 @@
 //  aucun .env, aucune ligne de commande.
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useGame, type Mode } from '../state/store'
 import type { SetupLine } from '../engine/setup'
 import { defaultSetups } from '../engine/setup'
@@ -31,7 +31,7 @@ const PEUPLES = PEUPLES_ALL ?? []
 const REGIMES = REGIMES_ALL ?? []
 
 export function SetupPanel() {
-  const { newGame, joinGame } = useGame()
+  const { newGame, joinGame, monNumero, setMonNumero } = useGame()
   const [setups, setSetups] = useState<SetupLine[]>(() => defaultSetups().map((s, i) => ({
     ...s,
     culture: CULTURES.length > 0 ? CULTURES[i % CULTURES.length].nom : s.culture,
@@ -118,6 +118,14 @@ export function SetupPanel() {
         </p>}
         <div className="row">
           <label className="field" style={{ minWidth: 220 }}>
+            <span className="field-label">Mon n° de joueur (tour simultané — chacun choisit le sien)</span>
+            <Select
+              value={String(monNumero)}
+              options={[1, 2, 3, 4, 5, 6, 7, 8].map((n) => ({ value: String(n), label: `Joueur ${n}` }))}
+              onChange={(v) => setMonNumero(parseInt(v, 10))}
+            />
+          </label>
+          <label className="field">
             <span className="field-label">Rejoindre une partie existante (code de salon)</span>
             <TextInput value={salon} onChange={setSalon} />
           </label>
@@ -154,7 +162,7 @@ export function SetupPanel() {
           <table className="tbl small">
             <thead>
               <tr>
-                <th>#</th><th>Nom</th><th>Peuple (faction)</th><th>Culture</th>
+                <th>#</th><th>Nom</th><th>Peuple</th><th>Culture</th>
                 <th>Régime</th><th>Capitale</th><th>Habitants / ville</th><th>% mariés</th><th>Villes (séparées par ,)</th>
               </tr>
             </thead>

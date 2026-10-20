@@ -13,7 +13,6 @@ import { buildingDef } from './gameData2'
 import { bump, fullName, isNobleDyn, toutesLesPopulations } from './shared'
 import { titreAllowedForCharacter } from './titres'
 import { facteurSacre, facteurAvencement } from './ministeres'
-import { regleActive } from './factions'
 
 export function computeAgeMax(c: Character, rng: Rng, C: Cfg = cfgOf()): number {
   // VBA ComputeAgeMaxEx : somme des life_delta des trois traits.
@@ -100,9 +99,11 @@ export function killCharacter(state: GameState, p: Player, c: Character, cause: 
   //  les mariages manuels entre cours (engine/cour.ts, 2026-10-14) :
   //  on parcourt donc TOUTES les populations du monde, joueurs ET
   //  cités libres (retour Thibaut 2026-10-14).
-  if (c.mariage) {
-    const conjoint = toutesLesPopulations(state).find((x) => x.mariage === fullName(c))
-    if (conjoint) conjoint.mariage = null
+  //  M1 (2026-10-19) : résolution par ID — le veuvage ne doit plus
+  //  dépendre de l'unicité des noms complets.
+  if (c.mariageId) {
+    const conjoint = toutesLesPopulations(state).find((x) => x.mariageId === c.id)
+    if (conjoint) { conjoint.mariage = null; conjoint.mariageId = null }
   }
   bump(recap.deces, c.dynastie)
   if (cause === 'maladie') recap.decesMaladie++
@@ -155,16 +156,9 @@ export function handleDirigeantSuccession(state: GameState, p: Player, defunt: C
         sacreTxt = ` Sacre d'avènement payé : ${demiOr} Or et ${demiNourr} Nourriture (${reduc.length > 0 ? `réduit — ${reduc.join(' ; ')}` : p.regime === 'Démocratie' ? 'sacre d\u2019avènement gratuit (Démocratie)' : `moitié du prix du rang ${rangDef.nom}`}).`
       }
     }
-    // Basiléens « Émissaires efficaces » (Âge II, revue 2026-10-15) :
-    //  +1 émissaire en réserve à chaque succession de Dirigeant.
-    let emissTxt = ''
-    if (p.peuple === 'Basiléens' && regleActive(p, C, 'Émissaires efficaces')) {
-      p.emissaires = (p.emissaires ?? 0) + 1
-      emissTxt = ` — +1 émissaire en réserve (Émissaires efficaces).`
-    }
     state.log.push({
       turn: state.turn + 1, type: 'Système', joueur: p.n,
-      texte: `${p.nom} : ${fullName(heritier)} (${heritier.dynastie}) succède à ${fullName(defunt)} comme Dirigeant.${sacreTxt}${emissTxt}`,
+      texte: `${p.nom} : ${fullName(heritier)} (${heritier.dynastie}) succède à ${fullName(defunt)} comme Dirigeant.${sacreTxt}`,
     })
     return
   }

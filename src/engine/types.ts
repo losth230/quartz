@@ -96,10 +96,23 @@ export interface Character {
   orientation: Orientation
   traits: [string, string, string]
   statut: Statut
-  mariage: string | null      // nom complet du conjoint
-  mere: string | null         // nom complet
+  mariage: string | null      // nom complet du conjoint (AFFICHAGE)
+  mere: string | null         // nom complet (AFFICHAGE)
   pere: string | null
-  pereBio: string | null      // père biologique en cas d'adultère
+  pereBio: string | null      // père biologique en cas d'adultère (AFFICHAGE)
+  // M1 (audit 2026-10-19, arbitrage Thibaut « ids purs ») : l'IDENTITÉ
+  //  démographique passe aux ids — à 16 000 habitants, les collisions de
+  //  noms complets (générateurs à listes finies) donnaient un mauvais
+  //  conjoint au veuvage et une mauvaise filiation. Les champs nommés
+  //  ci-dessus restent pour l'AFFICHAGE ; chaque site de mutation tient
+  //  les DEUX ; toute résolution (veuvage, filiation, consanguinité,
+  //  arbre généalogique) passe par les ids. Arbitrage explicite : les
+  //  vieilles sauvegardes sans ids ne sont PAS rattrapées (elles n'ont
+  //  plus lieu d'exister) — leurs relations tombent à null au chargement.
+  mariageId: string | null
+  mereId: string | null
+  pereId: string | null
+  pereBioId: string | null
   enfantBatard: boolean
   /** femme enceinte ayant contracté la maladie : elle accouchera,
    *  puis mourra de la maladie (règle simplifiée « malade ou sain »). */
@@ -304,12 +317,6 @@ export interface Player {
    *  d'une même branche, un arbre est terminé à EXACTEMENT 3 techs,
    *  et l'âge N exige 3 arbres complétés de l'âge N-1. */
   progresDebloques?: string[]
-  /** Règle de faction choisie pour l'Âge II / l'Âge III : le joueur
-   *  choisit UNE règle parmi les trois de son peuple à chaque montée
-   *  d'âge (la montée d'âge elle-même n'est PAS automatisée — choix
-   *  manuel, effet non appliqué automatiquement). */
-  regleAge2?: string | null
-  regleAge3?: string | null
   /** Bonus de garnison des ministères (refonte 2026-10-14) : crédité
    *  une fois à la prise de fonction d'un Connétable (+5 par ville,
    *  engine/ministeres.ts) et ajouté à la garnison calculée de chaque
@@ -365,10 +372,6 @@ export interface ApportsTour {
    *  négatives (ex. Cité : −10 Nourriture, −8 Or). Champ optionnel :
    *  absent des historiques d'avant l'ajout du canal. */
   habitations?: Record<string, number>
-  /** bonus automatiques des règles de faction du peuple du joueur
-   *  (engine/factions.ts — étape 3nonies). Champ optionnel : absent
-   *  des historiques d'avant l'ajout du canal. */
-  faction?: Record<string, number>
   /** effets par tour des technologies de progrès débloquées
    *  (engine/progres.ts — étape 3undecies). Champ optionnel : absent
    *  des historiques d'avant l'ajout du canal. */
@@ -417,7 +420,12 @@ export interface GameSetup {
 
 export interface GameState {
   /** Configuration de la partie : référentiels + paramètres des formules.
-   *  Absente des vieilles sauvegardes → complétée par cloneDefaultConfig(). */
+   *  Absente des vieilles sauvegardes → complétée par cloneDefaultConfig().
+   *  RÈGLE (2026-10-19) : la config est MONDIALE et unique (ligne
+   *  '__config__' Supabase), éditable uniquement HORS partie ; les
+   *  joueurs l'obtiennent en actualisant la page. Ce champ reste
+   *  l'injection locale pour le moteur (les parties sérialisées
+   *  l'embarquent pour la reprise hors-ligne). */
   config?: import('../config/defaultConfig').GameConfig
   version: number
   /** Version du schéma de sauvegarde (migrations versionnées — cf.

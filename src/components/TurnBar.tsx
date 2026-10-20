@@ -2,25 +2,16 @@
 //  Barre de jeu : tour, saison, sauvegarde, actions de partie
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useRef } from 'react'
+import { useRef } from 'react'
 import { useGame } from '../state/store'
 import { Button } from './ui'
 
 export function TurnBar() {
-  const { state, mode, salon, saving, conflit, nextTurn, saveNow, exportState, importState, reset, barriere, monNumero, forceNextTurn } = useGame()
+  const { state, mode, salon, saving, conflit, saveLocaleEchec, nextTurn, exportState, importState, reset, barriere, forceNextTurn } = useGame()
   const fileRef = useRef<HTMLInputElement>(null)
-  // PROTOCOLE v2 (étape 2) : bascule par joueur, mémorisée localement.
-  //  v2 = Fin de tour par événements + résolution SERVEUR (Edge
-  //  Function). v1 (défaut) = l'ancien flux. Le bouton affiche le
-  //  mode ACTIF ; cliquer bascule et recharge pour l'appliquer.
-  const [proto2, setProto2] = React.useState<boolean>(() => {
-    try { return window.localStorage.getItem('cpe.proto2') !== '0' } catch { return true }
-  })
-  const toggleProto2 = () => {
-    const nouveau = !proto2
-    setProto2(nouveau)
-    try { window.localStorage.setItem('cpe.proto2', nouveau ? '1' : '0') } catch { /* noop */ }
-  }
+  // (RETRAIT 2026-10-19, brûlage audit R5) : la bascule de protocole
+  //  v1/v2 (state « proto2 » + toggleProto2) a été retirée — le
+  //  protocole v2 est l'unique flux, plus de mélange possible.
 
   if (!state || !Array.isArray(state.players)) return null
 
@@ -51,6 +42,15 @@ export function TurnBar() {
           ⚠ Une modification d'un autre joueur est arrivée pendant votre édition — l'état a été rechargé.
         </div>
       )}
+      {/* R3 (audit 2026-10-19, arbitrage Thibaut « bandeau d'alerte ») :
+          la sauvegarde locale a échoué (quota navigateur) — la partie
+          ne vit plus qu'en mémoire : on propose l'export JSON de secours. */}
+      {saveLocaleEchec && (
+        <div className="banner-warn">
+          ⚠ Sauvegarde locale impossible (quota du navigateur dépassé) — un rechargement de la page perdrait le tour en cours.{' '}
+          <Button onClick={download} title="Exporter la partie en JSON (copie de secours)">⬇ Exporter maintenant</Button>
+        </div>
+      )}
       <div className="turnbar-actions">
         {mode === 'supabase' && barriere.prets.size > 0 && (
           <div className="banner-info" style={{ padding: '4px 12px' }}>
@@ -70,20 +70,20 @@ export function TurnBar() {
             ⏭ Forcer
           </Button>
         )}
-        {mode === 'supabase' && (
-          <Button
-            onClick={toggleProto2}
-            title={proto2
-              ? 'Protocole v2 ACTIF : fin de tour par événements + résolution serveur (recommandé). Cliquer pour revenir au protocole v1.'
-              : 'Protocole v1 (ancien). Cliquer pour activer le protocole v2 : résolution serveur des fins de tour (événements append-only, plus de pertes possibles).'}
-          >
-            {proto2 ? 'v2 🜲' : 'v1'}
-          </Button>
-        )}
-        <Button onClick={saveNow} title="Sauvegarder maintenant">💾</Button>
+        {/* (RETRAIT 2026-10-19, brûlage audit R5) : bouton de bascule
+            de protocole v1/v2 retiré — v2 est l'unique flux. */}
         <Button onClick={download} title="Exporter la partie en JSON">⬇ Export</Button>
         <Button onClick={() => fileRef.current?.click()} title="Importer une partie JSON">⬆ Import</Button>
-        <Button tone="danger" onClick={reset} title="Effacer la sauvegarde locale">✕</Button>
+        {/* M3 (audit 2026-10-19) : confirmation AVANT l'effacement — les
+            actions destructrices voisines (Forcer, Import) confirment
+            toutes ; le ✕ détruit la partie locale sans appel. */}
+        <Button
+          tone="danger"
+          title="Effacer la sauvegarde locale"
+          onClick={() => { if (window.confirm('Effacer la sauvegarde locale ? La partie locale sera perdue (le salon distant reste rejoignable).')) reset() }}
+        >
+          ✕
+        </Button>
         <input
           ref={fileRef}
           type="file"

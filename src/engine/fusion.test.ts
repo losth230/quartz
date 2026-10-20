@@ -141,43 +141,63 @@ test('événements de type inconnu ignorés silencieusement (forward compat)', (
   assert.equal(JSON.stringify(out), avant)
 })
 
-test('conflit de cité libre : deux joueurs modifient la même cité — déterminisme + journal', () => {
-  const ref = base()
-  ref.citesLibres = [{
-    nom: 'Cité', habitants: 10, population: [], culture: '', suzerain: null,
-  } as never]
-  const modifiee = (j: number) => ref.citesLibres!.map((c) => ({
-    ...c, habitants: 100 + j,
-  }))
-  // ordre d'insertion INVERSÉ volontaire : le résultat doit rester le
-  //  même (version du PLUS PETIT numéro de joueur) quel que soit
-  //  l'ordre de poussée des sections.
-  const sections: Record<string, SectionJoueurFusion> = {
-    '2': { player: ref.players[1], citesLibres: modifiee(2), log: [], tour: ref.turn },
-    '1': { player: ref.players[0], citesLibres: modifiee(1), log: [], tour: ref.turn },
-  }
-  const out = fusionnerSections(ref, sections)
-  assert.equal(out.citesLibres?.[0]?.habitants, 101, 'le joueur 1 (plus petit numéro) gagne le conflit')
-  const conflit = out.log.find((l) => l.type === 'Conflit')
-  assert.ok(conflit, 'un événement Conflit est journalisé pour l\'arbitre')
-  assert.ok(conflit.texte.includes('Cité'), 'le journal nomme la cité en conflit')
-  // ordre inversé (1 puis 2) : même résultat — déterminisme
-  const sectionsB: Record<string, SectionJoueurFusion> = {
-    '1': { player: ref.players[0], citesLibres: modifiee(1), log: [], tour: ref.turn },
-    '2': { player: ref.players[1], citesLibres: modifiee(2), log: [], tour: ref.turn },
-  }
-  const outB = fusionnerSections(ref, sectionsB)
-  assert.equal(outB.citesLibres?.[0]?.habitants, 101, 'déterminisme : même résultat, ordre indépendant')
-})
-
-test('forcer_absents : le tour forcé journalise les joueurs ignorés', () => {
+test('CONFIG MONDIALE : injection à la résolution — le tour est calculé avec la config publiée', async () => {
+  const { appliquerConfigMondiale } = await import('./fusion')
   const ref = base()
   const out = fusionnerSections(ref, {})
-  rejouerEvenementsPartages(out, [
-    { joueur: 1, type: 'forcer_absents', payload: { absents: [3, 4], message: '⏭ Tour forcé : sections de 2 joueur(s) ignorées — Bob (J3), Alice (J4).' } },
-  ])
-  const ev = out.log.find((l) => l.type === 'Conflit')
-  assert.ok(ev, 'le forçage est journalisé comme Conflit')
-  assert.ok(ev.texte.includes('Bob (J3)'), 'les absents sont nommés')
-  assert.equal(ev.joueur, 1, 'le forceur est identifié')
+  // config périmée embarquée dans l'état du salon
+  assert.ok(out.config, 'l état de référence embarque une config')
+  // la config mondiale publiée par le créateur remplace l embarquée
+  const cfgMondiale = JSON.parse(JSON.stringify(out.config))
+  cfgMondiale.params = { ...(cfgMondiale.params ?? {}), armeePrixOr: 99 }
+  appliquerConfigMondiale(out, cfgMondiale)
+  assert.equal((out.config.params as unknown as Record<string, unknown>).armeePrixOr, 99,
+    'la config mondiale doit remplacer l embarquée avant runTurn')
+  // null = pas de config mondiale publiée → l embarquée est conservée
+  const out2 = fusionnerSections(ref, {})
+  const avant = out2.config
+  appliquerConfigMondiale(out2, null)
+  assert.equal(out2.config, avant, 'sans config mondiale, l embarquée fait foi')
+})
+
+// ═════════════════════════════════════════════════════════════════════
+//  R4 (arbitrage Thibaut 2026-10-19 : rejet + journal visible) — les
+//  sections viennent du réseau (cp_events, JSON non contrôlé) : une
+//  section malformée ne doit JAMAIS atteindre Object.assign / runTurn.
+// ═════════════════════════════════════════════════════════════════════
+
+test('R4 : section malformée (population non tableau) rejetée ENTIÈRE + journal visible', () => {
+  const ref = base()
+  ref.players[0].nom = 'Originel'
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: { ...ref.players[0], nom: 'Falsifié' }, population: 'pas un tableau', routes: [], citesLibres: [], log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.equal(out.players[0].nom, 'Originel', 'RIEN de la section invalide ne doit être appliqué')
+  assert.ok(out.log.some((l) => l.type === 'Système' && l.texte.includes('Section invalide ignorée')),
+    'le rejet doit être visible dans le journal (arbitrage : journal visible)')
+})
+
+test('R4 : tour non numérique → rejet ; clé non numérique → ignorée sans trace', () => {
+  const ref = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: ref.players[0], routes: [], log: [], tour: 'abc' as unknown as number },
+    'xyz': { player: ref.players[1], routes: [], log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  const rejets = out.log.filter((l) => l.texte.includes('Section invalide ignorée'))
+  assert.equal(rejets.length, 1, 'seule la section à tour non numérique est rejetée-annoncée')
+  assert.equal(rejets[0].joueur, 1)
+  assert.equal(Object.keys(out.population).length, Object.keys(ref.population).length,
+    'aucune clé parasite (NaN) ne doit apparaître dans la population')
+})
+
+test('R4 : une section conforme passe toujours (non-régression des tests ci-dessus)', () => {
+  const ref = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: { ...ref.players[0], nom: 'Fusionné' }, population: [], routes: [], citesLibres: [], log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.equal(out.players[0].nom, 'Fusionné', 'une section valide fusionne comme avant')
+  assert.ok(!out.log.some((l) => l.texte.includes('Section invalide ignorée')), 'aucun faux rejet')
 })

@@ -15,23 +15,18 @@ import React, {
 import type { GameState } from '../engine/types'
 import { runTurn } from '../engine/engine'
 import { migrerEtat } from '../engine/migrations'
-import { fusionnerSections, rejouerEvenementsPartages } from '../engine/fusion'
+import { fusionnerSections, rejouerEvenementsPartages, appliquerConfigMondiale } from '../engine/fusion'
 import type { SetupLine } from '../engine/setup'
 import { createGame } from '../engine/setup'
-import { cfgOf, convergerConfig, cloneDefaultConfig, type GameConfig } from '../config/defaultConfig'
+import { cfgOf, convergerConfig, type GameConfig } from '../config/defaultConfig'
 import * as storage from './storage'
+import { adopterConfig } from './configPriorite'
 import * as remote from '../supabase/client'
 
-/** PROTOCOLE v2 (étape 2, 2026-10-17) — feature flag localStorage
- *  « cpe.proto2 » = "1" : Fin de tour par événements append-only +
- *  résolution SERVEUR (Edge Function resoudre-tour). Défaut : v1
- *  (l'ancien flux). Bascule par joueur, dans la barre de jeu. */
-function proto2Actif(): boolean {
-  // Étape 3 : v2 est le PROTOCOLE PAR DÉFAUT. Le flag ne sert plus
-  //  qu'au DOWNGRADE volontaire (« cpe.proto2 » = "0") pour revenir
-  //  à l'ancien flux (dépannage).
-  try { return window.localStorage.getItem('cpe.proto2') !== '0' } catch { return true }
-}
+// (RETRAIT 2026-10-19, brûlage audit R5) : le protocole v1 et son
+//  feature flag « cpe.proto2 » ont été retirés — le protocole v2
+//  (événements append-only + résolution serveur) est l'UNIQUE flux
+//  de fin de tour, plus aucune bascule par joueur.
 
 export type Mode = 'local' | 'supabase'
 
@@ -66,8 +61,19 @@ interface GameContextValue {
   saving: boolean
   conflit: boolean
   lastSavedAt: number | null
-  /** Configuration commune à toutes les parties (éditable en permanence). */
+  /** R3 (audit 2026-10-19, arbitrage Thibaut « bandeau d'alerte ») :
+   *  true si la DERNIÈRE sauvegarde locale a échoué (quota localStorage
+   *  dépassé / mode privé). Le bandeau de TurnBar propose l'export
+   *  JSON de secours — la partie reste en mémoire, un rechargement
+   *  sans export la perdrait. */
+  saveLocaleEchec: boolean
+  /** Configuration commune à toutes les parties (éditable en permanence).
+   *  En multijoueur, SEUL le créateur de la partie peut l'éditer (règle
+   *  2026-10-19) — sa config est publiée au salon et adoptée par tous. */
   globalConfig: GameConfig
+  /** True si CE navigateur peut éditer la configuration : en local toujours ;
+   *  en multijoueur, uniquement le créateur de la partie. */
+  peutEditerConfig: boolean
   /** Édite la configuration commune — persistée et propagée à la partie en cours. */
   setGlobalCfg: (fn: (c: GameConfig) => void) => void
   newGame: (setups: SetupLine[], seed: number, mode: Mode, salon?: string) => void
@@ -84,7 +90,6 @@ interface GameContextValue {
   nextTurn: () => void
   update: (mutator: (s: GameState) => void) => void
   replaceState: (s: GameState) => void
-  saveNow: () => void
   reset: () => void
   importState: (json: string) => boolean
   exportState: () => string
@@ -101,11 +106,26 @@ function initialGlobalConfig(): GameConfig {
 export function GameProvider({ children }: { children: React.ReactNode }) {
   // ── Configuration commune (localStorage dédié, indépendant des parties) ──
   const [globalConfig, setGlobalConfig] = useState<GameConfig>(initialGlobalConfig)
+  // CONFIG MONDIALE (règle 2026-10-19) : adoption au CHARGEMENT de la
+  //  page — « les joueurs actualisent pour obtenir la modification ».
+  //  Le localStorage local sert d'amorçe (hors-ligne) puis est remplacé
+  //  par la config mondiale '__config__' dès qu'elle est joignable.
+  useEffect(() => {
+    void (async () => {
+      const cfg = await remote.chargerConfigMondiale()
+      if (cfg) syncGlobalCfg(cfg)
+    })()
+    // une seule fois au montage
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   // ── État de jeu : une partie reprend TOUJOURS la configuration commune ──
   const [state, setState] = useState<GameState | null>(() => {
     const loaded = storage.loadLocal()
     if (!loaded) return null
+    // CONFIG MONDIALE : la partie chargée reçoit la config mondiale
+    //  (globalConfig = mondiale adoptée au chargement) — la config
+    //  embarquée de la sauvegarde n'est plus une source.
     loaded.config = JSON.parse(JSON.stringify(convergerConfig(globalConfig))) as GameConfig
     // MIGRATIONS VERSIONNÉES (étape 3) : normalisation + renommages
     //  portefeuilles exécutés UNE FOIS par état (tampon state.schema),
@@ -118,6 +138,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [salon, setSalon] = useState<string>('')
   const [saving, setSaving] = useState(false)
   const [conflit, setConflit] = useState(false)
+  // R3 (audit 2026-10-19, arbitrage « bandeau d'alerte ») : miroir du
+  //  retour de storage.saveLocal — persist l'arme à chaque flush.
+  const [saveLocaleEchec, setSaveLocaleEchec] = useState(false)
   // ── TOUR-SIMULTANÉ (barrière stricte, 2026-10-16) ──
   // Mon n° de joueur : persisté par salon (localStorage) — chaque
   //  navigateur choisit son numéro à l'entrée du salon (SetupPanel).
@@ -179,14 +202,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    * déclenche AUCUNE écriture — la version finale part après
    * 400 ms d'inactivité (la plus récente gagne, sémantique du
    * salon inchangée). Anti-perte GARANTI :
-   *  · beforeunload → flush immédiat (fermeture d'onglet) ;
-   *  · visibilitychange (hidden) → flush (changement d'onglet /
-   *    mise en veille, notamment mobile) ;
-   *  · bouton Sauvegarder → flush ;
    *  · REJOIGNE un salon / OUVRE une ancienne partie : le dernier
    *    état flushé y est déjà.
    */
-  const persist = useCallback((s: GameState, m: Mode, salonId: string, forcer = false) => {
+  const persist = useCallback((s: GameState, m: Mode, salonId: string) => {
     persistPending.current = s
     if (persistDebounce.current) clearTimeout(persistDebounce.current)
     persistDebounce.current = setTimeout(async () => {
@@ -197,23 +216,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       try {
         // Local TOUJOURS (anti-perte perso : chaque mutation est
         //  dans le localStorage de la machine).
-        storage.saveLocal(toSave)
-        // Réseau — PROTOCOLE v2 (étape 3, 2026-10-17) : pendant le
-        //  tour, PLUS AUCUN upsert d'état complet par mutation. À
-        //  16 000 habitants, chaque action poussait ~5 Mo qui
-        //  déclenchait chez les 7 autres joueurs un événement
-        //  realtime → re-téléchargement complet → lag en simultané.
-        //  L'état du salon n'est plus écrit qu'à la RÉSOLUTION du
-        //  tour par la Edge Function (fusion des sections par
-        //  joueur — rien ne peut être perdu : chaque joueur est
-        //  entièrement reconstruit depuis SA section). Anti-panne :
-        //  bouton 💾 (forcer=true) et flush beforeunload/onglet
-        //  caché poussent toujours l'état complet (reprise depuis
-        //  n'importe quelle machine après un crash).
-        if (m === 'supabase' && salonId && (!proto2Actif() || forcer)) {
-          const ok = await remote.saveRemote(salonId, toSave)
-          if (!ok) storage.saveLocal(toSave)
-        }
+        // R3 (audit 2026-10-19, arbitrage Thibaut « bandeau d'alerte ») :
+        //  on ne jette plus le retour — saveLocal peut échouer (QuotaExceeded,
+        //  mode privé) ; l'échec arme le bandeau de TurnBar.
+        setSaveLocaleEchec(!storage.saveLocal(toSave))
+        // Réseau — RÈGLE (2026-10-19) : PLUS AUCUN upsert d'état par
+        //  mutation, même en protocole v1 — la SEULE synchronisation
+        //  est la fin de tour (résolution : Edge Function ou repli
+        //  local). L'ancien flush fermeture d'onglet et l'ancien
+        //  bouton 💾 écrasaient l'état du salon avec l'état local
+        //  incomplet du joueur (pollution de la référence de fusion).
+        void m; void salonId
         setLastSavedAt(Date.now())
       } finally {
         setSaving(false)
@@ -230,6 +243,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     globalConfigRef.current = clone
     setGlobalConfig(clone)
     storage.saveGlobalConfig(clone)
+    // N°1 (revue critique) : réinjecter dans l'état de partie courant —
+    //  l'UI de jeu lit state.config (75 sites cfgOf(state.config)) ;
+    //  sans cette réinjection, l'onglet Paramètres montrait la nouvelle
+    //  config pendant que tout le jeu tournait sur l'ancienne.
+    const s = stateRef.current
+    if (s && s.config !== clone) {
+      const s2 = { ...s, config: clone }
+      stateRef.current = s2
+      setState(s2)
+    }
   }, [])
 
   /**
@@ -244,21 +267,30 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     // identique à celle affichée dans les onglets Paramètres, et les
     // migrations ne sont jamais REJOUÉES : une entrée supprimée ou
     // renommée (ministère, bâtiment…) ne « revient » plus.
+    // RÈGLE (2026-10-19, simplification) : la configuration ne se
+    //  modifie PLUS pendant une partie — uniquement HORS partie
+    //  (page d'accueil sans partie en cours). Ce garde-fou bloque tout
+    //  appel programmatique pendant qu'une partie est chargée.
+    if (stateRef.current) return
     const draft = JSON.parse(JSON.stringify(convergerConfig(globalConfigRef.current))) as GameConfig
     fn(draft)
     globalConfigRef.current = draft
     setGlobalConfig(draft)
     storage.saveGlobalConfig(draft)
-    const s = stateRef.current
-    if (s) {
-      const s2 = JSON.parse(JSON.stringify(s)) as GameState
-      s2.config = JSON.parse(JSON.stringify(draft)) as GameConfig
-      stateRef.current = s2
-      setState(s2)
-      lastLocalEdit.current = Date.now()
-      persist(s2, mode, salon)
-    }
-  }, [mode, salon, persist])
+    // (RETRAIT 2026-10-19, audit M2) : la branche morte « const s =
+    //  stateRef.current; if (s) { …réinjection de la config dans la
+    //  partie en cours… } » a été supprimée — INATTEIGNABLE depuis le
+    //  garde `if (stateRef.current) return` ci-dessus (reste du refactor
+    //  « config hors partie ») ; aucune partie chargée ne doit plus
+    //  voir sa config muter, la config mondiale est unique (règle
+    //  2026-10-19 ci-dessous).
+    // CONFIG MONDIALE UNIQUE (règle 2026-10-19) : la config n'appartient
+    //  à AUCUNE partie — elle est publiée dans la ligne mondiale '__config__'
+    //  et s'applique à TOUTES les parties de tous les salons. Le garde du
+    //  haut garantit qu'on est HORS partie : édition libre, dernier
+    //  écrivain gagne ; les autres joueurs l'obtiennent en actualisant.
+    void remote.sauverConfigMondiale(draft)
+  }, [])
 
   /**
    * CLONE SÉLECTIF (optimisation frappe 2026-10-16) : clone l'état en
@@ -301,7 +333,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       //  mutation RAFRAÎCHIT la section (upsert idempotent par
       //  (salon, tour, joueur, 'section')) : elle reste exacte
       //  jusqu'à la résolution, quel que soit le moment du clic.
-      if (mode === 'supabase' && salon && proto2Actif() && barriereRef.current.monTourPousse) {
+      if (mode === 'supabase' && salon && barriereRef.current.monTourPousse) {
         const moi = monNumeroRef.current
         void remote.pousserSectionV2(salon, moi, {
           player: structuredClone(draft.players.find((q) => q.n === moi) ?? null),
@@ -353,49 +385,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       const st = stateRef.current
       if (!st) return
       const moi = monNumeroRef.current
-      // ── PROTOCOLE v2 (flag cpe.proto2) : événements + serveur ──
-      if (proto2Actif()) {
-        await nextTurnV2(st, moi)
-        return
-      }
-      // ── PROTOCOLE v1 (défaut) : barrière par colonne sections ──
-      // 1. extraire MA section (ce que j'ai modifié ce tour-ci)
-      const maSection: remote.SectionJoueur = {
-        player: structuredClone(st.players.find((q) => q.n === moi) ?? null),
-        population: structuredClone(st.population[moi] ?? []),
-        // SEULEMENT mes routes (bug duplication 2026-10-17 : la
-      //  section embarquait toutes les routes du monde).
-      routes: structuredClone(st.routesCommerce ?? []).filter((r) => r.joueur === moi),
-        citesLibres: structuredClone(st.citesLibres ?? []),
-        log: structuredClone(st.log.slice(-50)),
-        tour: st.turn,
-      }
-      setBarriere({ prets: new Set([moi]), monTourPousse: true })
-      // 2. pousser ma section
-      const apres = await remote.pousserSection(salon, moi, maSection)
-      if (!apres) {
-        // REPLI (2026-10-16) : la barrière a échoué — schéma Supabase
-        //  non migré (colonnes sections/turn_done absentes : exécutez
-        //  supabase/schema.sql), erreur réseau, ou salon en test solo.
-        //  On ne bloque JAMAIS le tour : retour à la résolution
-        //  immédiate (runTurn local + publication directe).
-        setBarriere({ prets: new Set(), monTourPousse: false })
-        await resoudreSeul()
-        return
-      }
-      // 3. observer la barrière (poll léger) jusqu'à ce que tous
-      //    les joueurs de la partie aient poussé
-      const attendus = st.players.map((q) => q.n)
-      const prets = new Set(Object.keys(apres.sections ?? {}).map(Number))
-      setBarriere({ prets, monTourPousse: true })
-      if (prets.size >= attendus.length) {
-        // je suis le dernier : résoudre la barrière
-        await resoudreBarriere(apres.sections, attendus)
-      } else {
-        // attendre : poll toutes les 2 s (le realtime nous préviendra
-        //  aussi, le poll est le filet de sécurité)
-        void pollerBarriere(attendus)
-      }
+      // ── PROTOCOLE v2 UNIQUE (RETRAIT v1 2026-10-19, brûlage audit
+      //  R5) : fin de tour TOUJOURS par événements append-only +
+      //  résolution serveur — plus de bascule par feature flag. ──
+      await nextTurnV2(st, moi)
     })()
   }, [mode, salon, persist])
 
@@ -414,6 +407,12 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     } as GameState
     for (const m of pendingMutators.current) m(draft)
     pendingMutators.current = []
+    // CONFIG MONDIALE : effet en fin de tour, comme tout le reste
+    //  (seulement en réseau : en local sans réseau, la config commune
+    //  locale fait foi — pas de serveur pour la config mondiale).
+    if (mode === 'supabase' && salon) {
+      appliquerConfigMondiale(draft, await remote.chargerConfigMondiale())
+    }
     runTurn(draft)
     stateRef.current = draft
     setState(draft)
@@ -422,7 +421,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     // v2 : persist ne pousse PLUS l'état pendant le tour — une
     //  résolution locale doit TOUJOURS publier, sinon le salon
     //  reste à l'ancien tour (tour fantôme local, bug 2026-10-17).
-    if (mode === 'supabase' && salon && proto2Actif()) {
+    if (mode === 'supabase' && salon) {
       await remote.publierEtatFusionne(salon, draft)
     }
   }, [mode, salon, persist])
@@ -436,7 +435,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     //  sont ignorés — leurs sections non poussées ne seront pas
     //  dans la fusion, c'est la sémantique du Forcer). On garde le
     //  repli local si le serveur est indisponible.
-    if (proto2Actif() && mode === 'supabase' && salon) {
+    if (mode === 'supabase' && salon) {
       void (async () => {
         const st = stateRef.current
         if (!st) return
@@ -456,10 +455,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         const prets = await remote.lireBarriereV2(salon, st.turn)
         const attendus = [...(prets ?? new Set([moi]))]
         if (attendus.length === 0) attendus.push(moi)
-        // JOURNAL du Forcer (audit dette 2026-10-20) : les actions des
-        //  absents sont ignorées — il faut que ce soit VISIBLE dans le
-        //  salon (sinon le tour forcé semble « normal » alors que des
-        //  joueurs ont perdu leurs actions du tour).
+        // JOURNAL du Forcer : les actions des absents sont ignorées —
+        //  il faut que ce soit VISIBLE dans le salon (sinon le tour
+        //  forcé semble « normal » alors que des joueurs ont perdu
+        //  leurs actions du tour).
         const tous = st.players.map((q) => q.n)
         const absents = tous.filter((n) => !attendus.includes(n))
         if (absents.length > 0) {
@@ -499,7 +498,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  côté SERVEUR (idempotent, verrouillé). Le client ne pousse
    *  JAMAIS l'état global. Repli : si l'événement ne passe pas
    *  (table absente — SQL v2 non exécuté) ou si la fonction serveur
-   *  n'est pas déployée, retour au flux v1 puis à resoudreSeul. */
+   *  n'est pas déployée, résolution LOCALE avec publication
+   *  (resoudreBarriereLocaleV2, puis resoudreSeul en dernier recours). */
   /** Indirections pour les déclarations anticipées (ordre de
    *  déclaration : nextTurnV2 est défini avant les deux fonctions
    *  de repli qu'il appelle). */
@@ -588,6 +588,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     const draft = fusionnerSections(ref, sections)
     const evts = await remote.lireEvenementsPartages(salon, tour)
     rejouerEvenementsPartages(draft, evts)
+    // CONFIG MONDIALE : effet en fin de tour, comme tout le reste —
+    //  le repli local applique exactement ce que l'Edge Function applique.
+    appliquerConfigMondiale(draft, await remote.chargerConfigMondiale())
     runTurn(draft)
     const ok = await remote.publierEtatFusionne(salon, draft)
     if (ok) {
@@ -601,22 +604,31 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [salon, resoudreSeul])
   resoudreBarriereLocaleV2Ref.current = resoudreBarriereLocaleV2
 
-  /** Poll v2 : barrière sur cp_events, résolution serveur dès
-   *  complète. S'arrête dès que le tour publié a changé (le realtime
-   *  apporte le nouvel état au handler subscribeRemote). */
+  /** PROTOCOLE v2 — POLLER LA BARRIÈRE en attente (bug 2026-10-19 :
+   *  pollerBarriereV2Ref était APPELÉ mais jamais ASSIGNÉ — les
+   *  clients en attente ne pollaient rien ; si le dernier joueur à
+   *  pousser fermait son onglet avant la résolution, le salon se
+   *  bloquait pour tous jusqu'à un « Forcer » ou un rechargement).
+   *  Filet de sécurité du realtime : toutes les 2 s (max 2 minutes),
+   *  on relit la barrière v2 ; quand elle est complète, N'IMPORTE
+   *  QUI peut invoquer le serveur — la résolution est idempotente
+   *  (verrou + garde tour_publie), un double appel est sans effet. */
   const pollerBarriereV2 = useCallback(async (attendus: number[], tour: number) => {
     for (let i = 0; i < 60; i++) {  // max 2 minutes
       await new Promise((r) => setTimeout(r, 2000))
-      const prets = await remote.lireBarriereV2(salon, tour)
-      if (!prets) continue
-      if (stateRef.current?.turn !== tour) {
+      // le tour a été résolu et publié par quelqu'un d'autre : le
+      //  realtime nous a déjà amené l'état — arrêter le poll.
+      if ((stateRef.current?.turn ?? 0) > tour) {
         setBarriere({ prets: new Set(), monTourPousse: false })
         return
       }
+      const prets = await remote.lireBarriereV2(salon, tour)
+      if (!prets) continue  // erreur réseau ponctuelle : tick suivant
       setBarriere({ prets, monTourPousse: true })
       if (prets.size >= attendus.length) {
         const res = await remote.resoudreTourServeur(salon, tour, attendus)
         if (res.ok) {
+          // le serveur a publié : récupérer l'état du tour suivant
           const nouveau = await remote.loadRemote(salon)
           if (nouveau) {
             migrerEtat(nouveau)
@@ -625,66 +637,24 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             setBarriere({ prets: new Set(), monTourPousse: false })
             setConflit(false)
           }
-          return
+        } else if (!res.dejaPublie) {
+          // FONCTION SERVEUR INDISPONIBLE — même repli que le dernier
+          //  pousseur : résolution LOCALE AVEC PUBLICATION.
+          setBarriere({ prets: new Set(), monTourPousse: false })
+          await resoudreBarriereLocaleV2Ref.current(attendus, tour)
         }
-        if (res.dejaPublie) return
-        // repli avec publication (cf. nextTurnV2)
-        setBarriere({ prets: new Set(), monTourPousse: false })
-        await resoudreBarriereLocaleV2(attendus, tour)
         return
       }
     }
   }, [salon])
+  pollerBarriereV2Ref.current = pollerBarriereV2
 
 
-
-  /** Résoudre la barrière : fusionner les sections dans l'état de
-   *  référence (téléchargé frais), exécuter runTurn, publier. */
-  const resoudreBarriere = useCallback(async (
-    sections: Record<string, remote.SectionJoueur>,
-    attendus: number[],
-  ) => {
-    // état de référence FRAIS (pas notre état local)
-    const ref = await remote.loadRemote(salon)
-    if (!ref) return
-    // FUSION : même implémentation partagée que la Edge Function
-    //  (src/engine/fusion.ts). Le protocole v1 n'a pas d'événements
-    //  partagés — fusion seule.
-    const draft = fusionnerSections(ref, sections)
-    void attendus
-    // exécuter le tour
-    runTurn(draft)
-    // publier le nouvel état de référence
-    const ok = await remote.publierEtatFusionne(salon, draft)
-    if (ok) {
-      stateRef.current = draft
-      setState(draft)
-      lastLocalEdit.current = 0
-      setBarriere({ prets: new Set(), monTourPousse: false })
-      setConflit(false)
-    }
-  }, [salon])
-
-  /** Poller la barrière jusqu'à résolution (filet de sécurité du
-   *  realtime ; s'arrête dès que la barrière est complète ou que le
-   *  tour a changé). */
-  const pollerBarriere = useCallback(async (attendus: number[]) => {
-    const tourDebut = stateRef.current?.turn ?? 0
-    for (let i = 0; i < 60; i++) {  // max 2 minutes
-      await new Promise((r) => setTimeout(r, 2000))
-      const b = await remote.lireBarriere(salon)
-      if (!b) continue
-      // le tour a été résolu par quelqu'un d'autre : le realtime
-      //  nous amènera l'état ; on arrête le poll
-      if (b.turn_done !== tourDebut) { setBarriere({ prets: new Set(), monTourPousse: false }); return }
-      const prets = new Set(Object.keys(b.sections ?? {}).map(Number))
-      setBarriere({ prets, monTourPousse: true })
-      if (prets.size >= attendus.length) {
-        await resoudreBarriere(b.sections ?? {}, attendus)
-        return
-      }
-    }
-  }, [salon, resoudreBarriere])
+  // (RETRAIT 2026-10-19, brûlage audit R5) : resoudreBarriere et
+  //  pollerBarriere — la barrière v1 par colonne « sections »
+  //  (lire-modifier-écrire) — ont été retirés avec le protocole v1.
+  //  La résolution passe par la Edge Function « resoudre-tour » (v2)
+  //  ou son repli local v2 (resoudreBarriereLocaleV2).
 
   const newGame = useCallback((setups: SetupLine[], seed: number, m: Mode, salonId?: string) => {
     // La nouvelle part démarre avec la configuration commune actuelle,
@@ -703,11 +673,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const joinGame = useCallback(async (salonId: string): Promise<boolean> => {
     const s = await remote.loadRemote(salonId)
     if (!s) return false
-    // Paramètres communs : on adopte la configuration de la partie rejointe.
-    if (s.config) syncGlobalCfg(s.config)
-    // Marqueur (x) : la config de la partie rejointe est convergée
-    // (migrations + tampon) — plus jamais re-migrée ensuite.
-    s.config = JSON.parse(JSON.stringify(convergerConfig(s.config))) as GameConfig
+    // CONFIG MONDIALE (règle 2026-10-19) : contrat de priorité testé
+    //  (state/configPriorite.ts — config.test.ts) : la mondiale PRIME
+    //  sur l'embarquée du salon (édition depuis l'accueil entre deux
+    //  tours), puis injection dans l'état (l'UI lit state.config).
+    // CONFIG MONDIALE (règle 2026-10-19) : SEULE la mondiale fait loi —
+    //  la config embarquée du salon n'est plus une source (elle n'est
+    //  qu'un cache d'époque). Sans mondiale (jamais publiée), la
+    //  config LOCALE (amorce du navigateur) reste.
+    const cfgMondiale = await remote.chargerConfigMondiale()
+    const choisie = adopterConfig(s, { mondiale: cfgMondiale, locale: globalConfigRef.current })
+    if (choisie) syncGlobalCfg(choisie)
     migrerEtat(s)
     setMode('supabase')
     setSalon(salonId)
@@ -748,8 +724,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       setMode('supabase')
       setSalon(salonId)
       if (garderLocal) return
-      if (distant.config) syncGlobalCfg(distant.config)
-      distant.config = JSON.parse(JSON.stringify(convergerConfig(distant.config))) as GameConfig
+      // CONFIG MONDIALE : contrat de priorité testé (configPriorite.ts).
+      const cfgMondiale2 = await remote.chargerConfigMondiale()
+      const choisie2 = adopterConfig(distant, { mondiale: cfgMondiale2, locale: globalConfigRef.current })
+      if (choisie2) syncGlobalCfg(choisie2)
       migrerEtat(distant)
       setConflit(false)
       lastLocalEdit.current = 0
@@ -765,14 +743,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     persist(s, mode, salon)
   }, [mode, salon, persist])
 
-  const saveNow = useCallback(() => {
-    // FLUSH : annule le debounce et envoie immédiatement la version
-    //  la plus récente (bouton « Sauvegarder » = intention explicite).
-    if (persistDebounce.current) clearTimeout(persistDebounce.current)
-    const toSave = persistPending.current ?? state
-    persistPending.current = null
-    if (toSave) persist(toSave, mode, salon, true)
-  }, [state, mode, salon, persist])
+  // SAVE NOW SUPPRIMÉ (règle 2026-10-19) : la SEULE synchronisation est
+  //  la fin de tour — la sauvegarde auto à la fermeture d'onglet et le
+  //  bouton 💾 écrasaient l'état du salon avec l'état local incomplet
+  //  du joueur (pollution de la référence de fusion). Le localStorage
+  //  reste écrit à chaque mutation (reprise hors-ligne du joueur).
 
   const reset = useCallback(() => {
     storage.clearLocal()
@@ -787,11 +762,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const importState = useCallback((json: string) => {
     const s = storage.importJson(json)
     if (s) {
-      // Paramètres communs : la partie importée impose sa configuration.
-      if (s.config) syncGlobalCfg(s.config)
-      // Marqueur (x) : la config importée est convergée (migrations +
-      // tampon) — plus jamais re-migrée ensuite.
-      s.config = JSON.parse(JSON.stringify(convergerConfig(s.config))) as GameConfig
+      // CONFIG MONDIALE (règle 2026-10-19) : la partie importée
+      //  n'impose PLUS sa config — SEULE la mondiale fait loi. La
+      //  config embarquée de l'import est IGNORÉE, la mondiale
+      //  (globalConfig, adoptée au chargement) est injectée.
+      s.config = JSON.parse(JSON.stringify(convergerConfig(globalConfigRef.current))) as GameConfig
       migrerEtat(s)
       stateRef.current = s
       setState(s)
@@ -803,33 +778,6 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [mode, salon, persist, syncGlobalCfg])
 
   const exportState = useCallback(() => (state ? storage.exportJson(state) : ''), [state])
-
-  // FLUSH avant fermeture/rafraîchissement de l'onglet (anti-perte,
-  //  optimisation multijoueur 2026-10-16) : le debounce de 800 ms
-  //  peut encore tenir la dernière action du joueur — on l'envoie
-  //  immédiatement (sendBeacon n'accepte pas l'API Supabase, on
-  //  déclenche la requête fetch directement via saveRemote).
-  useEffect(() => {
-    const flush = () => {
-      if (persistDebounce.current) clearTimeout(persistDebounce.current)
-      const toSave = persistPending.current
-      if (!toSave) return
-      persistPending.current = null
-      // anti-perte : TOUJOURS le localStorage, réseau si salon —
-      //  y compris en v2 (fermeture d'onglet / mise en veille :
-      //  l'état complet part pour la reprise multi-machines).
-      storage.saveLocal(toSave)
-      if (mode === 'supabase' && salon) void remote.saveRemote(salon, toSave)
-    }
-    const onHidden = () => { if (document.hidden) flush() }
-    window.addEventListener('beforeunload', flush)
-    // changement d'onglet / mise en veille : flush aussi (mobile !)
-    document.addEventListener('visibilitychange', onHidden)
-    return () => {
-      window.removeEventListener('beforeunload', flush)
-      document.removeEventListener('visibilitychange', onHidden)
-    }
-  }, [mode, salon])
 
   // Abonnement realtime (mode supabase)
   useEffect(() => {
@@ -848,7 +796,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       //  Accepter un état de même tour écraserait les actions locales
       //  en cours des autres joueurs. En v2, on n'accepte donc
       //  qu'un tour STRICTEMENT plus récent (la résolution serveur).
-      if (proto2Actif() && typeof remoteState.turn === 'number'
+      if (typeof remoteState.turn === 'number'
         && remoteState.turn === tourLocal) {
         return
       }
@@ -869,18 +817,26 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       stateRef.current = remoteState
       setState(remoteState)
       // Paramètres communs : on suit la configuration arrivée avec la partie.
-      if (remoteState.config) syncGlobalCfg(remoteState.config)
+      // CONFIG MONDIALE (règle 2026-10-19) : une config embarquée dans un
+      //  état distant ne PRIME PLUS — seule la config mondiale '__config__'
+      //  fait foi (adoptée au montage + poll). On ne sync plus depuis
+      //  remoteState.config : la partie n'impose jamais sa config.
     })
     return unsub
   }, [mode, salon, syncGlobalCfg])
 
+  // RÈGLE (2026-10-19, simplification) : la config s'édite uniquement
+  //  HORS partie — aucune modification pendant une partie. Les joueurs
+  //  obtiennent les changements en actualisant la page.
+  const peutEditerConfig = state == null
+
   const value = useMemo<GameContextValue>(() => ({
-    state, mode, salon, saving, conflit, lastSavedAt,
-    globalConfig, setGlobalCfg,
-    newGame, joinGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState,
+    state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec,
+    globalConfig, peutEditerConfig, setGlobalCfg,
+    newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
     monNumero, setMonNumero: setMonNumeroPersist, barriere, forceNextTurn,
-  }), [state, mode, salon, saving, conflit, lastSavedAt, globalConfig, setGlobalCfg,
-    newGame, joinGame, nextTurn, update, replaceState, saveNow, reset, importState, exportState,
+  }), [state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec, globalConfig, peutEditerConfig, setGlobalCfg,
+    newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
     monNumero, setMonNumeroPersist, barriere, forceNextTurn])
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>

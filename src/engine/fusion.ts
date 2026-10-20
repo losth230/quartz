@@ -5,7 +5,12 @@
 //  Il est partagé par :
 //   · le client (src/state/store.tsx — repli local de la résolution v2) ;
 //   · l'Edge Function « resoudre-tour » (résolution serveur, via le
-//     bundle copié par scripts/build-function.mjs).
+//     bundle esbuild _engine.mjs construit par scripts/build-function.mjs
+//     et testé par scripts/test-function.mjs avant tout déploiement).
+//
+//  DÉPLOIEMENT (2026-10-19) : la branche chasse-et-peche-web est
+//  autorisée par l'environnement github-pages — un push = CI + Edge
+//  Function + publication site/jeu, sans sync v4.
 //
 //  Historique (bugs corrigés ici, ne pas régresser — tests fusion.test.ts) :
 //   · 2026-10-17 : routes et cités libres sont PARTAGÉES — remplacer tout
@@ -20,6 +25,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { GameState, RouteCommerce, CiteLibre, LogEntry } from './types'
+import type { GameConfig } from '../config/defaultConfig'
 import { rejouerTransfertVille } from './villes'
 
 /** Section d'un joueur pour la barrière de fin de tour (cf. supabase/client.ts).
@@ -38,6 +44,26 @@ export interface EvenementPartage {
   joueur: number
   type: string
   payload: Record<string, unknown>
+}
+
+/** (R4 — arbitrage Thibaut 2026-10-19 : rejet + journal visible)
+ *  Valide la FORME d'une section avant fusion : les payloads viennent
+ *  du réseau (cp_events — JSON non contrôlé) ; un client bogué peut
+ *  y déposer n'importe quoi. Contrat minimal (audit R4) : `tour` nombre
+ *  fini ; `player` objet s'il est présent ; population / routes /
+ *  citesLibres / log sont des TABLEAUX s'ils sont présents. Une
+ *  section invalide est rejetée ENTIÈRE — pas de demi-fusion (une
+ *  moitié de section pourrait casser runTurn à la publication).
+ *  Partagée client/Edge Function comme fusionnerSections. */
+export function sectionValide(sec: SectionJoueurFusion): boolean {
+  if (!sec || typeof sec !== 'object') return false
+  if (typeof sec.tour !== 'number' || !Number.isFinite(sec.tour)) return false
+  if (sec.player !== undefined && (typeof sec.player !== 'object' || sec.player === null)) return false
+  if (sec.population !== undefined && !Array.isArray(sec.population)) return false
+  if (sec.routes !== undefined && !Array.isArray(sec.routes)) return false
+  if (sec.citesLibres !== undefined && !Array.isArray(sec.citesLibres)) return false
+  if (sec.log !== undefined && !Array.isArray(sec.log)) return false
+  return true
 }
 
 /** Fusionne les sections du tour dans un ÉTAT DE RÉFÉRENCE cloné.
@@ -76,19 +102,33 @@ export function fusionnerSections(
   const citeModifieePar = new Map<string, number[]>()
   const routesFusionnees: RouteCommerce[] = [...(draft.routesCommerce ?? [])]
 
-  // Ordre DÉTERMINISTE (audit dette 2026-10-20) : trier les numéros de
-  //  joueurs — l'ordre d'insertion de Object.keys variait selon le
-  //  moment des poussées, rendant « le dernier gagne » des cités
-  //  libres non reproductible entre les clients et le serveur.
+  // Ordre DÉTERMINISTE : trier les numéros de joueurs — l'ordre
+  //  d'insertion de Object.keys varie selon le moment des poussées,
+  //  rendant « le dernier gagne » des cités libres non reproductible
+  //  entre les clients et le serveur.
   const numerosJoueurs = Object.keys(sections)
     .map(Number)
-    .filter((n) => Number.isInteger(n))
+    .filter((n) => Number.isInteger(n) && n >= 0)
     .sort((a, b) => a - b)
 
   for (const n of numerosJoueurs) {
     const nStr = String(n)
-    const sec = sections[nStr] ?? sections[nStr]
+    // Clé non numérique (payload réseau non contrôlé) : aucun joueur
+    //  à fusionner — ignorée sans log (rien n'a été tenté).
+    if (!Number.isInteger(n) || n < 0) continue
+    const sec = sections[nStr]
     if (!sec) continue
+    // R4 (arbitrage Thibaut 2026-10-19) : validation de FORME avant
+    //  toute application — une section malformée ne doit jamais
+    //  atteindre Object.assign / runTurn (crash à la publication).
+    //  Rejet ENTIÈR + entrée visible dans le journal du tour.
+    if (!sectionValide(sec)) {
+      newLogs.push({
+        turn: ref.turn + 1, type: 'Système', joueur: n,
+        texte: `⚠ Section invalide ignorée (données malformées reçues) — les actions de J${n} ne comptent pas pour ce tour.`,
+      })
+      continue
+    }
     const pj = draft.players.find((q) => q.n === n)
     if (pj && sec.player) Object.assign(pj, sec.player)
     if (sec.population) draft.population[n] = sec.population as typeof draft.population[number]
@@ -99,7 +139,7 @@ export function fusionnerSections(
       }
       for (const r of sec.routes as RouteCommerce[]) routesFusionnees.push(r)
     }
-    // CITÉS LIBRES : ne prendre que les citéss MODIFIÉES par ce joueur
+    // CITÉS LIBRES : ne prendre que les cités MODIFIÉES par ce joueur
     //  (différentes de la référence) ou CRÉÉES pendant le tour.
     if (Array.isArray(sec.citesLibres)) {
       for (const c of (sec.citesLibres ?? []) as CiteLibre[]) {
@@ -115,23 +155,20 @@ export function fusionnerSections(
     if (Array.isArray(sec.log)) newLogs.push(...(sec.log as unknown[]))
   }
 
-  // CONFLITS de cités libres (audit dette 2026-10-20) : deux joueurs ont
-  //  modifié la MÊME cité ce tour — la version du plus petit numéro l'
-  //  emporte (déterministe, ordre trié ci-dessus), et un événement
-  //  CONFLIT est journalisé dans le salon pour l'arbitre.
+  // CONFLITS de cités libres : deux joueurs ont modifié la MÊME cité ce
+  //  tour — la version du plus petit numéro l'emporte (déterministe,
+  //  ordre trié ci-dessus), et un événement CONFLIT est journalisé dans
+  //  le salon pour l'arbitre (plus de last-write-wins silencieux).
   const tourFusion = draft.turn
   for (const [nom, auteurs] of citeModifieePar) {
     if (auteurs.length > 1) {
-      const dernier = citeFusionnes.get(nom)
-      if (dernier) {
-        // rejouer dans l'ordre trié : le plus petit numéro gagne
-        for (const n of [...auteurs].sort((a, b) => a - b)) {
-          const sec = sections[String(n)]
-          const cand = ((sec?.citesLibres as CiteLibre[] | undefined) ?? []).find((c) => c.nom === nom)
-          if (cand) {
-            citeFusionnes.set(nom, cand)
-            break
-          }
+      for (const n of [...auteurs].sort((a, b) => a - b)) {
+        const sec = sections[String(n)]
+        if (!sec || !sectionValide(sec)) continue
+        const cand = ((sec.citesLibres as CiteLibre[] | undefined) ?? []).find((c) => c.nom === nom)
+        if (cand) {
+          citeFusionnes.set(nom, cand)
+          break
         }
       }
       conflits.push({
@@ -177,4 +214,18 @@ export function rejouerEvenementsPartages(
       })
     }
   }
+}
+
+/** CONFIG MONDIALE (règle 2026-10-19) : injecte la config mondiale dans
+ *  l'état fusionné AVANT runTurn — la mise à jour de la config se fait
+ *  EN FIN DE TOUR, comme tout le reste (sections, événements). Le créateur
+ *  publie ses éditions dans la ligne '__config__' à tout moment ; elles
+ *  prennent effet à la prochaine résolution du tour (Edge Function ou
+ *  repli local — même chemin, ici). `null` = pas de config mondiale
+ *  publiée : l'état garde sa config embarquée (comportement historique). */
+export function appliquerConfigMondiale(
+  draft: GameState,
+  cfg: GameConfig | null | undefined,
+): void {
+  if (cfg) draft.config = cfg
 }

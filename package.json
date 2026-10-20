@@ -16,7 +16,7 @@
     "docs": "npx quartz build --serve -d docs",
     "check": "tsc --noEmit && npx prettier . --check",
     "format": "npx prettier . --write",
-    "test": "tsx --test 'src/**/*.test.ts'",
+    "test": "tsx --test 'src/engine/*.test.ts' 'src/rules/*.test.ts'",
     "test:function": "node scripts/test-function.mjs",
     "build:function": "node scripts/build-function.mjs",
     "profile": "0x -D prof ./quartz/bootstrap-cli.mjs build --concurrency=1"

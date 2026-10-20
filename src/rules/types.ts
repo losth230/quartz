@@ -57,6 +57,115 @@ export interface EffetFluxJoueur {
   ete?: boolean
 }
 
+/** Production par tour du portefeuille ministériel donné — CUMULABLE :
+ *  la valeur s'applique PAR MINISTRE porteur vivant (deux Trésoriers =
+ *  +10 Or). Retour Thibaut (arbitrage portefeuilles cumulables). */
+export interface EffetFluxJoueurParMinistre {
+  type: 'fluxJoueurParMinistre'
+  /** Portefeuille concerné (nom exact de la table `ministeres`). */
+  portefeuille: string
+  ressource: string
+  valeur: number
+}
+
+/** Production par tour, par AMÉNAGEMENT portant l'un des noms listés,
+ *  dans TOUTES les villes du joueur (ex. Socialisme : +N Nourriture
+ *  d'été par Champ et Rizière — champ nourrEteChampRiziere du
+ *  référentiel, brûlage #3 source 2/3). */
+export interface EffetFluxParAmenagement {
+  type: 'fluxParAmenagement'
+  ressource: string
+  valeur: number
+  /** noms d'aménagements comptés (ex. ['Champ', 'Rizière']) */
+  noms: string[]
+}
+
+/** Production par tour, par VILLE de la culture du joueur dans le
+ *  MONDE entier, tous joueurs confondus (ex. Lunisme : +N Tourisme
+ *  par ville de culture Lunisme — règle de pays du classeur, champs
+ *  capitalNourr/Tourisme/OrParHabMonde). */
+export interface EffetFluxParVilleCultureMonde {
+  type: 'fluxParVilleCultureMonde'
+  ressource: string
+  valeur: number
+}
+
+// ── Effets des technologies de progrès (source 'tech', brûlage #3
+//  source 3/3 : TOUTE production passe par la banque) ──────────────────
+
+/** Production par tour SI le joueur possède une capitale (canal
+ *  historique « prodCapitale » des techs — ex. Musées : +30 Tourisme
+ *  par tour si capitale ; ex. Garde suzeraine : +12 Nourriture si
+ *  capitale ET cité suzeraine, la suzeraineté étant une CONDITION
+ *  de la règle). */
+export interface EffetFluxSiCapitale {
+  type: 'fluxSiCapitale'
+  ressource: string
+  valeur: number
+}
+
+/** Production par tour, PAR VILLE du joueur (canal historique
+ *  « prodParHabitation » des techs — ex. Assemblées scientifiques :
+ *  +1 Science par ville). */
+export interface EffetFluxParVille {
+  type: 'fluxParVille'
+  ressource: string
+  valeur: number
+}
+
+/** Production par tour, PAR VILLE dont la proximité est la donnée
+ *  `proximite` (canal historique « côtier » des techs — ex. Cours de
+ *  pêche : +4 Nourriture par ville à proximité de la Mer). */
+export interface EffetFluxParVilleProximite {
+  type: 'fluxParVilleProximite'
+  ressource: string
+  valeur: number
+  /** proximité requise (ex. 'Mer') */
+  proximite: string
+}
+
+/** Production par tour, PAR RANG d'habitation cumulé sur toutes les
+ *  villes (ex. Surconsommation : +1 Science et +5 Tourisme par rang —
+ *  la consommation de Nourriture reste un coût, pas une production). */
+export interface EffetFluxParRangHabitation {
+  type: 'fluxParRangHabitation'
+  ressource: string
+  valeur: number
+}
+
+/** Production par tour, PAR BÂTIMENT des villes du joueur, limité à
+ *  une famille du référentiel si `famille` est fournie (ex.
+ *  Industrialisation : +1 Charbon par bâtiment ; Merveilleux :
+ *  +1 Science par bâtiment de famille Merveille). */
+export interface EffetFluxParBatiment {
+  type: 'fluxParBatiment'
+  ressource: string
+  valeur: number
+  /** famille de la table constructions (ex. 'Merveille') — absent =
+   *  tous les bâtiments comptent */
+  famille?: string
+}
+
+/** Production par tour proportionnelle à la GARNISON d'habitants :
+ *  valeur × Σ garnisonHabitationVille sur les villes du joueur (ex.
+ *  Service militaire avancé : +0,5 Habitants par point de garnison). */
+export interface EffetFluxParGarnisonHabitation {
+  type: 'fluxParGarnisonHabitation'
+  ressource: string
+  valeur: number
+}
+
+/** Production par tour, PAR TITULAIRE VIVANT du titre donné dans la
+ *  population du joueur (générique des techs `prodParTitre` du
+ *  référentiel — ex. Commerce lointain : +3 Or par Marchand). */
+export interface EffetFluxParTitre {
+  type: 'fluxParTitre'
+  ressource: string
+  valeur: number
+  /** titre exact (ex. 'Marchand', 'Ministre') */
+  titre: string
+}
+
 /** Production par tour de la CAPITALE du joueur. */
 export interface EffetFluxCapitale {
   type: 'fluxCapitale'
@@ -85,9 +194,11 @@ export interface EffetGarnisonJoueur {
   valeur: number
 }
 
-/** Tourisme FLAT crédité UNE FOIS (à la construction — jamais un flux).
- *  N'est appliqué que par le site « construction » (construire), pas
- *  par le calcul de tour. */
+/** TYPE HISTORIQUE — plus AUCUN producteur depuis le retour Thibaut
+ *  2026-10-16 : le Tourisme est un FLUX NORMAL (fluxVille ; stock
+ *  recalculé en fin de tour — stock = production). Conservé dans le
+ *  contrat de types pour compatibilité des règles déjà saisies ; le
+ *  registre de constructions ne le produit plus. */
 export interface EffetTourismeInstantane {
   type: 'tourismeInstantane'
   valeur: number
@@ -168,6 +279,16 @@ export interface EffetDemographieVille {
 export type Effet =
   | EffetFluxVille
   | EffetFluxJoueur
+  | EffetFluxJoueurParMinistre
+  | EffetFluxParAmenagement
+  | EffetFluxParVilleCultureMonde
+  | EffetFluxSiCapitale
+  | EffetFluxParVille
+  | EffetFluxParVilleProximite
+  | EffetFluxParRangHabitation
+  | EffetFluxParBatiment
+  | EffetFluxParGarnisonHabitation
+  | EffetFluxParTitre
   | EffetFluxCapitale
   | EffetGarnisonVille
   | EffetGarnisonParRang
@@ -190,8 +311,6 @@ export type Effet =
 export interface ConditionRegle {
   /** Peuple requis (ex. 'NORLS' pour « L'art du viking »). */
   peuple?: string
-  /** Règle de faction active requise (nom EXACT du référentiel). */
-  regleFaction?: string
   /** Rang de Pontificat minimum requis. */
   pontificatMin?: number
   /** Âge minimum du joueur. */
@@ -204,6 +323,18 @@ export interface ConditionRegle {
   ministre?: string
   /** Technologie débloquée requise (clé `<arbre>:<slot>`). */
   tech?: string
+  /** Régime politique du joueur requis (ex. Socialisme). */
+  regime?: string
+  /** Culture du joueur requise (ex. Lunisme — règle de pays). */
+  culture?: string
+  /** Technologie débloquée requise, désignée par NOM (la clé réelle
+   *  `<arbre>:<slot>` est résolue par le registre — les homonymes de
+   *  plusieurs arbres matchent, comme l'historique aTech ; source
+   *  'tech', brûlage #3 source 3/3). */
+  techNom?: string
+  /** Le joueur doit posséder au moins une CITÉ LIBRE suzeraine
+   *  (ex. Garde suzeraine, Patronage — relations diplomatiques). */
+  suzerainDeCite?: boolean
 }
 
 // ── Règle de la banque ─────────────────────────────────────────────────────
@@ -243,6 +374,10 @@ export interface RegleBanque {
   /** Conditions d'activation (toutes en ET). Vide = toujours actif
    *  quand la source est possédée. */
   conditions?: ConditionRegle
+  /** QUAND la règle se déclenche : 'tour' (chaque fin de tour —
+   *  défaut) ou 'finSaison' (au changement de saison, production
+   *  équivalente par tour : Sénéchal, Maître de cour, Légat…). */
+  declencheur?: 'tour' | 'finSaison'
   /** Les effets — TOUJOURS piochés dans la banque. */
   effets: Effet[]
 }

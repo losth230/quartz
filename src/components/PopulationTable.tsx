@@ -21,9 +21,9 @@
 //  (les cités libres ne passent pas au moteur démographique).
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useGame } from '../state/store'
-import type { Character, CiteLibre, GameState, Player } from '../engine/types'
+import type { Character, CiteLibre, GameState } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import { validateTitleAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
@@ -156,7 +156,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   //  non bloquant (l'arbitre reste maître).
   const maxMinistres =
     (rangsPays[idxRangJoueur]?.ministres ?? rangsPays[0]?.ministres ?? 1)
-    + (p?.peuple === 'Basiléens' && p?.regleAge3 === 'Suzeraineté' ? 1 : 0)
     + (p?.progresDebloques?.some((k) => {
       // « Progrès du développement futur C » : +1 ministre (revue 2026-10-16)
       const C2 = C
@@ -234,9 +233,10 @@ export function PopulationTable({ joueur }: { joueur: number }) {
       const tc = ((s.citesLibres ?? [])[citeIdx]?.population ?? []).find((x) => x.id === c.id)
       if (!tc) return
       tc.statut = v as Character['statut']
-      if (v === 'Décédé' && tc.mariage) {
-        const conjoint = toutesLesPopulations(s).find((x) => x.mariage === fullName(tc))
-        if (conjoint) conjoint.mariage = null
+      if (v === 'Décédé' && tc.mariageId) {
+        // M1 (2026-10-19) : veuvage par ID.
+        const conjoint = toutesLesPopulations(s).find((x) => x.mariageId === tc.id)
+        if (conjoint) { conjoint.mariage = null; conjoint.mariageId = null }
         s.log.push({
           turn: s.turn, type: 'Décès', joueur: null,
           texte: `💀 ${fullName(tc)} est décédé(e) à la cité libre ${nomCite} — le conjoint est libéré.`,
@@ -271,7 +271,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   ]
   /** Nobles vivants, majeurs et célibataires (validité au moteur). */
   const eligibleMariage = (x: Character, c: Character) =>
-    x.id !== c.id && x.statut !== 'Décédé' && !x.mariage
+    x.id !== c.id && x.statut !== 'Décédé' && !x.mariageId
     && x.age >= C.p.adultAge && estNoble(x)
   /** Options « Marier avec… » (marqueur (z), retour Thibaut) : les
    *  nobles du porteur COURANT UNIQUEMENT (joueur ou cité libre

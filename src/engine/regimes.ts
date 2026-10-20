@@ -3,7 +3,11 @@
 //  Les régimes et les cultures sont paramétrables dans les référentiels
 //  (onglet « 📚 Référentiels » → « Cultures & régimes », ou « 🎛
 //  Paramètres » → Cultures / Régimes) et leurs lois chiffrées sont
-//  prises en compte AUTOMATIQUEMENT par le moteur à chaque fin de tour :
+//  prises en compte AUTOMATIQUEMENT par le moteur à chaque fin de tour
+//  (VOIE BANQUE depuis le 2026-10-20, brûlage #3 source 2/3 — retour
+//  Thibaut « toute production passe par la banque » : les montants
+//  vivent dans le registre src/rules/registry.ts, ce module ne fait
+//  que LIRE la banque) :
 //    · régime — Autoritarisme : garnison des habitations +15 par rang
 //      d'habitation (champ `garnisonParRang`) ;
 //    · régime — Socialisme : +5 Nourriture par tour d'été pour les
@@ -22,12 +26,14 @@
 import type { City, GameState, Player, Saison } from './types'
 import { detailGainsVille } from './economie'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
-import { aMinistre, portefeuillesDuJoueur } from './ministeres'
-import { garnisonBatiment, tourismeStatiqueBatiment } from './batiments'
-import { garnisonFactionVille, rangPaysNiveau, effetsFaction } from './factions'
+import { aMinistre, fluxFinSaisonMinisteres } from './ministeres'
+import { garnisonBatiment, productionTourismeBatiment } from './batiments'
+import { rangPaysNiveau } from './factions'
 import { nomRang, garnisonBaseVille } from './habitations'
-import { garnisonProgresVille, lignesGarnisonProgresVille, garnisonMinimaleProgres, aTech, fluxProgresJoueur } from './progresAuto'
-import { regleActive } from './factions'
+import { garnisonProgresVille, lignesGarnisonProgresVille, garnisonMinimaleProgres, fluxProgresJoueur } from './progresAuto'
+import { effetsCommerceJoueur } from './commerce'
+import { reglesRegimes, reglesCultures } from '../rules/registry'
+import { appliquerRegles } from '../rules/effects/banque'
 
 export { nomRang } from './habitations'
 
@@ -75,7 +81,6 @@ export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: 
   const regime = C.regimes.find((r) => r.nom === p.regime)
   const bonus = regime?.garnisonParRang ?? 0
   if (bonus) g += bonus * rangNiveau(ville, C)
-  if (state) g += garnisonFactionVille(state, p, ville, C)
   // Plancher « Combler les lacunes » (engine/progresAuto.ts) : les
   //  habitations ne descendent pas sous 30 si la tech est débloquée.
   return Math.max(g, garnisonMinimaleProgres(p, C))
@@ -88,8 +93,8 @@ export interface LigneDetailGarnison {
   label: string
   valeur: number
   /** catégorie affichable : base / bâtiment / technologie /
-   *  régime / ministre / faction */
-  origine: 'base' | 'bâtiment' | 'technologie' | 'régime' | 'ministre' | 'faction'
+   *  régime / ministre */
+  origine: 'base' | 'bâtiment' | 'technologie' | 'régime' | 'ministre'
 }
 
 export function detailGarnisonVille(
@@ -116,8 +121,6 @@ export function detailGarnisonVille(
   if (state && aMinistre(state, p, 'Grand prévôt')) {
     push('ministre', 'Grand prévôt : 10 × rang de pays', 10 * rangPaysNiveau(p, C))
   }
-  // 6. Règles de faction (Puit de mana +40, vassaux +20…)
-  if (state) push('faction', 'règles de faction', garnisonFactionVille(state, p, ville, C))
   return out
 }
 
@@ -128,24 +131,14 @@ export function garnisonHabitationsPays(p: Player, C: Cfg, state?: GameState): n
   return g
 }
 
-/** Effets par tour de la loi chiffrée du régime du pays
- *  (ex. Socialisme : +N Nourriture par tour d'été pour les champs et
- *  rizières). */
-export function effetsRegime(p: Player, saison: Saison, C: Cfg): Record<string, number> {
-  const out: Record<string, number> = {}
-  const regime = C.regimes.find((r) => r.nom === p.regime)
-  if (!regime) return out
-  const n = regime.nourrEteChampRiziere ?? 0
-  if (n && saison === 'Été') {
-    let nb = 0
-    for (const v of p.villes) {
-      for (const a of v.amenagements ?? []) {
-        if (a === 'Champ' || a === 'Rizière') nb++
-      }
-    }
-    if (nb > 0) out['Nourriture'] = (out['Nourriture'] ?? 0) + n * nb
-  }
-  return out
+/** Effets par tour de la loi chiffrée du régime du pays (ex.
+ *  Socialisme : +N Nourriture d'été par champ et rizière). VOIE
+ *  BANQUE (brûlage #3 source 2/3, 2026-10-20) : la règle vit dans le
+ *  registre (reglesRegimes — id regime.<slug>, conditions régime +
+ *  été, effet fluxParAmenagement) ; cette fonction ne fait que LIRE
+ *  la banque, plus aucun montant codé ici. */
+export function effetsRegime(state: GameState, p: Player, saison: Saison, C: Cfg): Record<string, number> {
+  return appliquerRegles(reglesRegimes(C.config), { state, joueur: p, saison }).flux
 }
 
 /** Nombre de villes d'une culture dans le monde (tous joueurs
@@ -184,17 +177,19 @@ export interface DetailCultureBonus {
 export function detailCulturePays(state: GameState, p: Player, C: Cfg): DetailCultureBonus[] {
   const cult = cultureDef(p.culture, C.config)
   if (!cult) return []
-  const lois: Array<[string, number | undefined]> = [
-    ['Nourriture', cult.capitalNourrParHabMonde],
-    ['Tourisme', cult.capitalTourismeParHabMonde],
-    ['Or', cult.capitalOrParHabMonde],
-  ]
   const nbVillesPerso = p.villes.filter((v) => v.culture === p.culture).length
   const nbVillesMonde = nbVillesCultureMonde(state, p.culture)
   const out: DetailCultureBonus[] = []
-  for (const [res, parVille] of lois) {
-    if (!parVille) continue
-    out.push({ res, parVille, nbVillesMonde, nbVillesPerso, total: parVille * nbVillesMonde })
+  // VOIE BANQUE (brûlage #3 source 2/3) : les montants par ville sont
+  //  LUS sur les règles du registre (reglesCultures — effet
+  //  fluxParVilleCultureMonde), plus aucun champ du référentiel décodé
+  //  ici. L'ordre Nourriture / Tourisme / Or est conservé.
+  for (const r of reglesCultures(C.config)) {
+    if (r.conditions?.culture !== p.culture) continue
+    for (const e of r.effets) {
+      if (e.type !== 'fluxParVilleCultureMonde') continue
+      out.push({ res: e.ressource, parVille: e.valeur, nbVillesMonde, nbVillesPerso, total: e.valeur * nbVillesMonde })
+    }
   }
   return out
 }
@@ -203,12 +198,12 @@ export function detailCulturePays(state: GameState, p: Player, C: Cfg): DetailCu
  *  génère +N d'une ressource par habitation de cette culture dans le
  *  monde (tous joueurs confondus). */
 export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<string, number> {
-  const out: Record<string, number> = {}
-  if (p.villes.length === 0) return out
-  for (const d of detailCulturePays(state, p, C)) {
-    out[d.res] = (out[d.res] ?? 0) + d.total
-  }
-  return out
+  if (p.villes.length === 0) return {}
+  // VOIE BANQUE (brûlage #3 source 2/3) : la règle de pays vit dans le
+  //  registre (reglesCultures — condition culture, effet
+  //  fluxParVilleCultureMonde compté sur tout le monde) ; cette
+  //  fonction ne fait que LIRE la banque.
+  return appliquerRegles(reglesCultures(C.config), { state, joueur: p, saison: state.saison }).flux
 }
 
 /**
@@ -225,8 +220,13 @@ export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<s
  *
  * `tourismeCourant` calcule la production Tourisme d'un joueur à
  * partir des mêmes canaux que le récap (bâtiments & aménagements
- * statiques + gains d'habitants + lois de culture + techs + faction
- * + ministres de fin de saison), et `resynchroniserTourisme` écrase
+ * statiques + gains d'habitants + lois de culture + techs
+
+ * + ministres de fin de saison + COMMERCE (arbitrage Thibaut 2026-10-19 : le
+
+ * Tourisme copié par une route commerciale est une production comme les
+
+ * autres — il compte dans « stock = production »), et `resynchroniserTourisme` écrase
  * le stock avec cette valeur.
  */
 export function tourismeCourant(state: GameState, p: Player, C: Cfg): number {
@@ -244,20 +244,23 @@ export function tourismeCourant(state: GameState, p: Player, C: Cfg): number {
   total += effetsCulturePays(state, p, C)['Tourisme'] ?? 0
   // 4. technologies (Surconsommation, Stands de goodies)
   total += fluxProgresJoueur(state, p, C)['Tourisme'] ?? 0
-  // 5. règles de faction (vassalité, champs basiléens)
-  total += effetsFaction(state, p, C)['Tourisme'] ?? 0
-  // 6. ministres (Maître de cour +2, Légat +20) — fin de saison :
-  //  production équivalente par tour
-  const portefeuilles = portefeuillesDuJoueur(state, p)
-  total += 2 * portefeuilles.filter((m) => m === 'Maître de cour').length
-  total += 20 * portefeuilles.filter((m) => m === 'Légat du pontificat').length
-  // 7. constructions statiques (Chapelle +35…) : tourisme statique
-  //  des bâtiments/aménagements — valeur d'état, partie intégrante
-  //  de la « production » de Tourisme du joueur.
+  // 5. ministres (Maître de cour +2, Légat +20) — fin de saison :
+  //  production équivalente par tour, LUE SUR LA RÈGLE DE BANQUE
+  //  (voie unique ministres → fluxJoueurParMinistre, montants dans le
+  //  registre MINISTERES_AUTO — plus aucun chiffre codé ici).
+  total += fluxFinSaisonMinisteres(state, p)['Tourisme'] ?? 0
+  // 6. CONSTRUCTIONS (Chapelle +35, Bahamutt +16…) : production Tourisme
+  //  des bâtiments/aménagements, lue sur la règle de BANQUE (voie unique
+  //  depuis le 2026-10-19 — même valeur que le canal Bâtiments du récap).
   for (const v of p.villes) {
-    for (const b of v.batiments) total += tourismeStatiqueBatiment(b, C, v.type)
-    for (const a of v.amenagements ?? []) total += tourismeStatiqueBatiment(a, C, v.type)
+    for (const b of v.batiments) total += productionTourismeBatiment(b, C, v.type)
+    for (const a of v.amenagements ?? []) total += productionTourismeBatiment(a, C, v.type)
   }
+  // 7. COMMERCE (arbitrage Thibaut 2026-10-19, clôture du B4 de l'audit) :
+  // le Tourisme copié par une route commerciale est une production comme
+  // les autres — il doit compter dans « stock = production », sinon le
+  // récap l'affiche (canal Commerce) mais le stock l'ignore.
+  total += effetsCommerceJoueur(state, p, state.saison, C)['Tourisme'] ?? 0
   // VASSALITÉ — CORRECTIF (retour utilisateur 2026-10-17) : le
   //  « +15 Tourisme × rang du suzerain » est une règle de FACTION
   //  (Basiléens « Temps de paix », choix d'âge) : elle est déjà
@@ -291,7 +294,7 @@ export function appliquerEffetsRegimesCultures(
   state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
 ): Record<string, number> {
   const out: Record<string, number> = {}
-  for (const [res, v] of Object.entries(effetsRegime(p, saison, C))) {
+  for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
     out[res] = (out[res] ?? 0) + v
   }
   for (const [res, v] of Object.entries(effetsCulturePays(state, p, C))) {
