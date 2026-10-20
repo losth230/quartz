@@ -140,3 +140,44 @@ test('événements de type inconnu ignorés silencieusement (forward compat)', (
   rejouerEvenementsPartages(out, [{ joueur: 1, type: 'type_du_futur', payload: {} }])
   assert.equal(JSON.stringify(out), avant)
 })
+
+test('conflit de cité libre : deux joueurs modifient la même cité — déterminisme + journal', () => {
+  const ref = base()
+  ref.citesLibres = [{
+    nom: 'Cité', habitants: 10, population: [], culture: '', suzerain: null,
+  } as never]
+  const modifiee = (j: number) => ref.citesLibres!.map((c) => ({
+    ...c, habitants: 100 + j,
+  }))
+  // ordre d'insertion INVERSÉ volontaire : le résultat doit rester le
+  //  même (version du PLUS PETIT numéro de joueur) quel que soit
+  //  l'ordre de poussée des sections.
+  const sections: Record<string, SectionJoueurFusion> = {
+    '2': { player: ref.players[1], citesLibres: modifiee(2), log: [], tour: ref.turn },
+    '1': { player: ref.players[0], citesLibres: modifiee(1), log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.equal(out.citesLibres?.[0]?.habitants, 101, 'le joueur 1 (plus petit numéro) gagne le conflit')
+  const conflit = out.log.find((l) => l.type === 'Conflit')
+  assert.ok(conflit, 'un événement Conflit est journalisé pour l\'arbitre')
+  assert.ok(conflit.texte.includes('Cité'), 'le journal nomme la cité en conflit')
+  // ordre inversé (1 puis 2) : même résultat — déterminisme
+  const sectionsB: Record<string, SectionJoueurFusion> = {
+    '1': { player: ref.players[0], citesLibres: modifiee(1), log: [], tour: ref.turn },
+    '2': { player: ref.players[1], citesLibres: modifiee(2), log: [], tour: ref.turn },
+  }
+  const outB = fusionnerSections(ref, sectionsB)
+  assert.equal(outB.citesLibres?.[0]?.habitants, 101, 'déterminisme : même résultat, ordre indépendant')
+})
+
+test('forcer_absents : le tour forcé journalise les joueurs ignorés', () => {
+  const ref = base()
+  const out = fusionnerSections(ref, {})
+  rejouerEvenementsPartages(out, [
+    { joueur: 1, type: 'forcer_absents', payload: { absents: [3, 4], message: '⏭ Tour forcé : sections de 2 joueur(s) ignorées — Bob (J3), Alice (J4).' } },
+  ])
+  const ev = out.log.find((l) => l.type === 'Conflit')
+  assert.ok(ev, 'le forçage est journalisé comme Conflit')
+  assert.ok(ev.texte.includes('Bob (J3)'), 'les absents sont nommés')
+  assert.equal(ev.joueur, 1, 'le forceur est identifié')
+})

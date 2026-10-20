@@ -70,13 +70,24 @@ export function fusionnerSections(
   } as GameState
 
   const newLogs: unknown[] = []
+  const conflits: LogEntry[] = []
   const refCiteParNom = new Map((ref.citesLibres ?? []).map((c) => [c.nom, JSON.stringify(c)]))
   const citeFusionnes = new Map((draft.citesLibres ?? []).map((c) => [c.nom, c]))
+  const citeModifieePar = new Map<string, number[]>()
   const routesFusionnees: RouteCommerce[] = [...(draft.routesCommerce ?? [])]
 
-  for (const nStr of Object.keys(sections)) {
-    const n = Number(nStr)
-    const sec = sections[nStr]
+  // Ordre DÉTERMINISTE (audit dette 2026-10-20) : trier les numéros de
+  //  joueurs — l'ordre d'insertion de Object.keys variait selon le
+  //  moment des poussées, rendant « le dernier gagne » des cités
+  //  libres non reproductible entre les clients et le serveur.
+  const numerosJoueurs = Object.keys(sections)
+    .map(Number)
+    .filter((n) => Number.isInteger(n))
+    .sort((a, b) => a - b)
+
+  for (const n of numerosJoueurs) {
+    const nStr = String(n)
+    const sec = sections[nStr] ?? sections[nStr]
     if (!sec) continue
     const pj = draft.players.find((q) => q.n === n)
     if (pj && sec.player) Object.assign(pj, sec.player)
@@ -88,7 +99,7 @@ export function fusionnerSections(
       }
       for (const r of sec.routes as RouteCommerce[]) routesFusionnees.push(r)
     }
-    // CITÉS LIBRES : ne prendre que les cités MODIFIÉES par ce joueur
+    // CITÉS LIBRES : ne prendre que les citéss MODIFIÉES par ce joueur
     //  (différentes de la référence) ou CRÉÉES pendant le tour.
     if (Array.isArray(sec.citesLibres)) {
       for (const c of (sec.citesLibres ?? []) as CiteLibre[]) {
@@ -96,11 +107,40 @@ export function fusionnerSections(
         if (refJson === undefined) {
           if (!citeFusionnes.has(c.nom)) citeFusionnes.set(c.nom, c)
         } else if (JSON.stringify(c) !== refJson) {
+          citeModifieePar.set(c.nom, [...(citeModifieePar.get(c.nom) ?? []), n])
           citeFusionnes.set(c.nom, c)
         }
       }
     }
     if (Array.isArray(sec.log)) newLogs.push(...(sec.log as unknown[]))
+  }
+
+  // CONFLITS de cités libres (audit dette 2026-10-20) : deux joueurs ont
+  //  modifié la MÊME cité ce tour — la version du plus petit numéro l'
+  //  emporte (déterministe, ordre trié ci-dessus), et un événement
+  //  CONFLIT est journalisé dans le salon pour l'arbitre.
+  const tourFusion = draft.turn
+  for (const [nom, auteurs] of citeModifieePar) {
+    if (auteurs.length > 1) {
+      const dernier = citeFusionnes.get(nom)
+      if (dernier) {
+        // rejouer dans l'ordre trié : le plus petit numéro gagne
+        for (const n of [...auteurs].sort((a, b) => a - b)) {
+          const sec = sections[String(n)]
+          const cand = ((sec?.citesLibres as CiteLibre[] | undefined) ?? []).find((c) => c.nom === nom)
+          if (cand) {
+            citeFusionnes.set(nom, cand)
+            break
+          }
+        }
+      }
+      conflits.push({
+        turn: tourFusion,
+        type: 'Conflit',
+        joueur: null,
+        texte: `⚠️ Cité libre « ${nom} » modifiée par ${auteurs.length} joueurs ce tour (${auteurs.join(', ')}) — version du joueur ${Math.min(...auteurs)} retenue.`,
+      })
+    }
   }
 
   // Déduplication par id (défense en profondeur : sections déjà poussées
@@ -112,7 +152,7 @@ export function fusionnerSections(
     return true
   })
   draft.citesLibres = [...citeFusionnes.values()]
-  const logFusionne = [...draft.log, ...(newLogs as LogEntry[])]
+  const logFusionne = [...draft.log, ...conflits, ...(newLogs as LogEntry[])]
   draft.log = logFusionne.slice(-Math.max(50, draft.log.length))
   return draft
 }
@@ -127,6 +167,14 @@ export function rejouerEvenementsPartages(
   for (const ev of evenements) {
     if (ev.type === 'transfert_ville') {
       rejouerTransfertVille(draft, ev.payload as { ville: string; src: number; dst: number })
+    } else if (ev.type === 'forcer_absents') {
+      const message = typeof ev.payload.message === 'string' ? ev.payload.message : '⏭ Tour forcé.'
+      draft.log.push({
+        turn: draft.turn,
+        type: 'Conflit',
+        joueur: ev.joueur,
+        texte: message,
+      })
     }
   }
 }
