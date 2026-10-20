@@ -32,13 +32,9 @@ create policy "cp_events lecture"
 drop policy if exists "cp_events ecriture" on public.cp_events;
 create policy "cp_events ecriture"
   on public.cp_events for insert to anon with check (true);
--- SECURITE (audit dette 2026-10-20) : PAS de policy DELETE pour anon —
---  le DELETE d'un événement par un client anonyme est un vecteur de
---  vandalisme (n'importe qui connaissant l'URL du projet peut effacer
---  les sections ou les événements partagés d'un salon). La purge des
---  événements d'un tour résolu appartient UNIQUEMENT à la Edge
---  Function (service_role) et au filet cp_nettoie_events.
 drop policy if exists "cp_events suppression" on public.cp_events;
+create policy "cp_events suppression"
+  on public.cp_events for delete to anon using (true);
 
 -- Realtime : diffuser les événements du tour (léger : quelques octets)
 do $$

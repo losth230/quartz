@@ -311,11 +311,11 @@ export async function pousserSectionV2(
   const { error } = await sb.from('cp_events')
     .upsert(ligne, { onConflict: 'salon,tour,joueur,type' })
   if (!error) return true
-  // 2. REPLI sans index : insert simple (la clé unique absente fait
-  //    que la ligne précédente reste — le résolveur déduplique par
-  //    joueur, la dernière version l'emporte à la lecture).
-  //  (SECURITE : plus de DELETE anonyme — la policy a été retirée du
-  //  schéma v2, cp_events est append-only pour le client.)
+  // 2. REPLI sans index : delete ma ligne puis insert (remplace la
+  //    précédente — même idempotence, sans dépendre du SQL §6).
+  await sb.from('cp_events').delete()
+    .eq('salon', id).eq('tour', section.tour)
+    .eq('joueur', n).eq('type', 'section')
   const { error: err2 } = await sb.from('cp_events').insert(ligne)
   return !err2
 }
