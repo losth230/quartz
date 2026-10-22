@@ -230,7 +230,7 @@ Lors de la création d'une bande des Peuples Libres, choisissez un Royaume auque
 <div class="cp-roy-bonus">
 
 - **Ferveur martiale :** Lorsqu'un modèle Sœur dépense une Manœuvre pour s'octroyer un dé lors d'une attaque en mêlée ou à distance, il bénéficie de [[Wargame/_Visualisation/Règles spéciales/Maitre-Lame|Maitre-Lame]] et [[Wargame/_Visualisation/Règles spéciales/Tireur d'Elite|Tireur d'Elite]] pour le reste de l'attaque.
-- **Anathème :** Lorsqu'un modèle Sœur attaque un modèle activé, il bénéficie d'un bonus de +1 pour toucher.
+- **Vœu de Silence :** lorsqu'un lanceur de sorts tente de lancer un sort, il souffre d'un malus de 1 par unité Sœurà 24'' ou moins de lui.
 
 </div>
 <div class="cp-roy-ordres">
