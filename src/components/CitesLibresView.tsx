@@ -1,6 +1,10 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Onglet « 🗼 Cités libres » — cités sans joueur (règle « Cités
-//  libres » du référentiel) :
+//  libres » du référentiel). ORCHESTRATEUR (vague qualité
+//  2026-10-24) : les cartes vivent dans src/components/citesLibres/
+//  (une carte = un composant, mutations conservées ici et passées
+//  par props, docblocks d'arbitrage déplacés avec leur code).
+//  Sémantique strictement identique (découpage mécanique).
 //    · chaque cité possède sa PROPRE POPULATION (habitants titrés,
 //      roturiers OU nobles — les Chasseurs des cités libres produisent
 //      1,1 × la Nourriture, la population consomme de la Nourriture
@@ -25,22 +29,18 @@
 import { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf } from '../engine/gameData'
-import { citesLibresDe, garnisonCiteLibre, detailCiteLibre, emissairesDe, citeLibreDevientVille, ajouterHabitantsCiteLibre, taxesCite } from '../engine/citesLibres'
-import type { CiteLibre, TaxeNiveau } from '../engine/types'
-import { Card, Select, TextInput, Button, NumberInput, Badge, TAX_OPTIONS } from './ui'
-
-function fmtNum(v: number): string {
-  return new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 1 }).format(v)
-}
+import { citesLibresDe, garnisonCiteLibre } from '../engine/citesLibres'
+import type { CiteLibre } from '../engine/types'
+import { Card } from './ui'
+import { CarteReservesEmissaires } from './citesLibres/CarteReservesEmissaires'
+import { CarteRegle } from './citesLibres/CarteRegle'
+import { CarteCreation } from './citesLibres/CarteCreation'
+import { CarteCite } from './citesLibres/CarteCite'
 
 export function CitesLibresView() {
   const { state, update } = useGame()
-  const [newNom, setNewNom] = useState('')
   // Joueur acquéreur sélectionné pour chaque cité (annexion → ville)
   const [annexions, setAnnexions] = useState<Record<string, string>>({})
-  const [newType, setNewType] = useState('')
-  const [newCulture, setNewCulture] = useState('')
-  const [newNb, setNewNb] = useState(10)
   if (!state) return null
   const C = cfgOf(state.config)
   const cites = citesLibresDe(state)
@@ -58,36 +58,6 @@ export function CitesLibresView() {
       const c = (s.citesLibres ?? []).find((x) => x.nom === nom)
       if (c) fn(c)
     })
-
-  const creerCite = () => {
-    const nb = Math.max(0, Math.round(newNb))
-    update((s) => {
-      const cites2 = s.citesLibres ?? (s.citesLibres = [])
-      let nom = newNom.trim()
-      if (!nom) {
-        let n = cites2.length + 1
-        nom = `Cité libre ${n}`
-        while (cites2.some((c) => c.nom === nom)) nom = `Cité libre ${++n}`
-      }
-      if (cites2.some((c) => c.nom === nom)) return
-      const cite: CiteLibre = {
-        nom,
-        type: newType || typesConfig[0]?.type || 'Ville',
-        culture: newCulture || cultures[0] || '',
-        taxes: 'Moyenne',
-        suzerain: null,
-        emissaires: {},
-        population: [],
-      }
-      cites2.push(cite)
-      if (nb > 0) ajouterHabitantsCiteLibre(s, cite, nb)
-      s.log.push({
-        turn: s.turn, type: 'Système', joueur: null,
-        texte: `🗼 Nouvelle cité libre : ${cite.nom} (${cite.type.split('\n')[0]})${nb > 0 ? `, ${nb} habitant(s)` : ''}.`,
-      })
-    })
-    setNewNom('')
-  }
 
   /** Recrute un émissaire pour un joueur (coût/rythme arbitres au
    *  plateau : la réserve est libre d'édition, les
@@ -167,64 +137,10 @@ export function CitesLibresView() {
 
   return (
     <div className="stack">
-      {/* ═══ Réserves d'émissaires (revue 2026-10-15) : ressource
-          de chaque joueur, dépensée en plaçant un émissaire dans une
-          cité libre. Les
-          merveilles (Antre de la déesse araignée) créditent automatiquement. */}
-      <Card title="✉ Réserves d'émissaires">
-        {state.players.map((p) => (
-          <div key={p.n} className="cl-emiss">
-            <span className="player-chip">J{p.n} · {p.nom}</span>
-            <span className="badge badge-info">{p.emissaires ?? 0} en réserve</span>
-            <Button onClick={() => recruterEmissaire(p.n, -1)}>−</Button>
-            <Button onClick={() => recruterEmissaire(p.n, +1)}>+</Button>
-          </div>
-        ))}
-      </Card>
+      <CarteReservesEmissaires players={state.players} recruterEmissaire={recruterEmissaire} />
+      <CarteRegle C={C} garnison={garnison} cites={cites} players={state.players} />
+      <CarteCreation typeOptions={typeOptions} typesConfig={typesConfig} cultures={cultures} update={update} />
 
-      {/* ═══ Règle et fonctionnement ═══ */}
-      <Card title="🗼 Cités libres — règle et fonctionnement">
-        <p className="small muted pre-wrap">{C.config.regleCitesLibres}</p>
-        <div className="badges-wrap">
-          <Badge tone="good">✓ population : adultes avec métier (Chasseurs ×1,1 Nourriture) ; enfants sans métier (consomment, ne produisent pas)</Badge>
-          <Badge tone="good">✓ garnison : 100 + 40 × rang de pays le plus haut (auto)</Badge>
-          <Badge tone="good">✓ taxes au suzerain : versées à chaque fin de tour (canal « Cités libres »)</Badge>
-          <Badge tone="good">✓ consommation de Nourriture : par habitant vivant, comme une ville de joueur</Badge>
-        </div>
-        <p className="muted small">
-          Chaque cité libre sous suzeraineté verse ses taxes à son suzerain à chaque fin de tour
-          (canal « Cités libres » du récap).
-        </p>
-        <p className="muted small">
-          Garnison actuelle des cités libres : <strong>{fmtNum(garnison)}</strong>
-          {' '}(100 + 40 × rang de pays du joueur au plus haut rang). Suzeraineté par joueur :
-          {' '}{state.players.map((p) => {
-            const nb = cites.filter((c) => c.suzerain === p.n).length
-            return `${p.nom} : ${nb}`
-          }).join(' · ')} — la voie Diplomatique demande 3 cités libres.
-        </p>
-      </Card>
-
-      {/* ═══ Création d'une cité ═══ */}
-      <Card title="Créer une cité libre">
-        <div className="grid-2">
-          <TextInput value={newNom} onChange={setNewNom} placeholder="Nom (vide → auto)" />
-          <Select
-            value={newType || typeOptions[0]?.value || ''}
-            options={typeOptions}
-            onChange={setNewType}
-          />
-          <Select
-            value={newCulture || cultures[0] || ''}
-            options={cultures.map((c) => ({ value: c, label: c }))}
-            onChange={setNewCulture}
-          />
-          <NumberInput value={newNb} onChange={setNewNb} min={0} />
-        </div>
-        <Button tone="primary" onClick={creerCite}>+ Créer la cité (et ses habitants)</Button>
-      </Card>
-
-      {/* ═══ Cités de la partie ═══ */}
       {cites.length === 0 && (
         <Card>
           <p className="muted">
@@ -234,191 +150,25 @@ export function CitesLibresView() {
         </Card>
       )}
       <div className="cl-grid">
-      {cites.map((cite) => {
-        const d = detailCiteLibre(cite, C)
-        const suz = cite.suzerain != null ? state.players.find((p) => p.n === cite.suzerain) : undefined
-        const pop = cite.population ?? []
-        const vivants = pop.filter((h) => h.statut !== 'Décédé')
-        const typeEffectif = typeOptions.some((o) => o.value === cite.type)
-          ? cite.type
-          : (cite.type || '—')
-        return (
-          <Card
-            key={cite.nom}
-            title={`🗼 ${cite.nom}`}
-            right={
-              <span className="badges-wrap">
-                <Badge tone="info">{typeEffectif.split('\n')[0]}</Badge>
-                {cite.habitation && <Badge tone="neutral">🏰 {cite.habitation}</Badge>}
-                <Badge tone="neutral">⚔ {fmtNum(garnison)} de garnison</Badge>
-                {suz
-                  ? <Badge tone="good">Suzerain : {suz.nom}</Badge>
-                  : <Badge tone="warn">Sans suzerain</Badge>}
-                <Button tone="danger" onClick={() => supprimerCite(cite.nom)}>Supprimer</Button>
-                {/* ── Cité libre → VILLE d'un joueur (retour Thibaut
-                    2026-10-15) : annexion/conquête — les habitants vont à
-                    l'acquéreur, les émissaires placés sont restitués aux
-                    réserves. */}
-                <span className="cl-annex">
-                  <Select
-                    value={annexions[cite.nom] ?? ''}
-                    options={[
-                      { value: '', label: 'Devenir une ville de…' },
-                      ...state.players.map((q) => ({ value: String(q.n), label: `${q.nom} (J${q.n})` })),
-                    ]}
-                    onChange={(v) => setAnnexions((a) => ({ ...a, [cite.nom]: v }))}
-                  />
-                  <Button
-                    disabled={!annexions[cite.nom]}
-                    onClick={() => {
-                      const n = Number(annexions[cite.nom])
-                      const q = state.players.find((x) => x.n === n)
-                      if (!q) return
-                      if (!window.confirm(`La cité libre « ${cite.nom} » devient une ville de ${q.nom} ? Ses habitants lui appartiennent désormais ; les émissaires placés sont restitués à leurs réserves.`)) return
-                      update((st) => {
-                        const acquereur = st.players.find((x) => x.n === n)
-                        if (acquereur) citeLibreDevientVille(st, cite.nom, acquereur)
-                      })
-                    }}
-                  >🏠 Annexer</Button>
-                </span>
-              </span>
-            }
-          >
-            <div className="grid-2">
-              {/* ── Identité de la cité ── */}
-              <div className="mini">
-                <div className="mini-title">Identité</div>
-                <TextInput
-                  value={cite.nom}
-                  onChange={(v) => mutCite(cite.nom, (c) => { c.nom = v })}
-                />
-                <Select
-                  value={cite.type}
-                  options={typeOptions.some((o) => o.value === cite.type)
-                    ? typeOptions
-                    : [{ value: cite.type, label: cite.type.split('\n')[0] || '—' }, ...typeOptions]}
-                  onChange={(v) => mutCite(cite.nom, (c) => { c.type = v })}
-                />
-                <Select
-                  value={cite.culture ?? ''}
-                  options={cultures.includes(cite.culture ?? '')
-                    ? cultures.map((c) => ({ value: c, label: c }))
-                    : [{ value: cite.culture ?? '', label: cite.culture ?? '—' }, ...cultures.map((c) => ({ value: c, label: c }))]}
-                  onChange={(v) => mutCite(cite.nom, (c) => { c.culture = v })}
-                />
-                <Select
-                  value={cite.habitation ?? ''}
-                  options={[
-                    { value: '', label: 'Habitation : —' },
-                    { value: 'Hameau', label: 'Habitation : Hameau' },
-                    { value: 'Château', label: 'Habitation : Château' },
-                  ]}
-                  onChange={(v) => mutCite(cite.nom, (c) => {
-                    c.habitation = (v || null) as CiteLibre['habitation']
-                  })}
-                />
-                <Select
-                  value={taxesCite(cite)}
-                  options={TAX_OPTIONS}
-                  onChange={(v) => mutCite(cite.nom, (c) => { c.taxes = v as TaxeNiveau })}
-                />
-                <p className="muted small">
-                  Garnison : <strong>{fmtNum(garnison)}</strong> (100 + 40 × rang de pays le
-                  plus haut). Effet du type (référentiel) :{' '}
-                  {typesConfig.find((t) => t.type === cite.type)?.effet ?? '—'}
-                </p>
-              </div>
-
-              {/* ── Émissaires & suzerain ── */}
-              <div className="mini">
-                <div className="mini-title">Émissaires & suzerain</div>
-                {state.players.map((p) => {
-                  const e = emissairesDe(cite, p.n)
-                  const reserve = p.emissaires ?? 0
-                  return (
-                    <div key={p.n} className="cl-emiss">
-                      <span className={`player-chip ${e >= 3 ? 'chip-active' : ''}`}>
-                        J{p.n} · {p.nom}
-                      </span>
-                      <span className="badge badge-neutral">{e} placé(s)</span>
-                      <span className="badge badge-info" title="Émissaires disponibles (ressource du joueur)">
-                        {reserve} en réserve
-                      </span>
-                      <Button onClick={() => changerEmissaires(cite.nom, p.n, -1)}>−</Button>
-                      <Button disabled={reserve <= 0} onClick={() => changerEmissaires(cite.nom, p.n, +1)}>+</Button>
-                      {e >= 3 && <Badge tone="good">suzerain possible</Badge>}
-                    </div>
-                  )
-                })}
-                <Select
-                  value={cite.suzerain != null ? String(cite.suzerain) : ''}
-                  options={[
-                    { value: '', label: 'Sans suzerain' },
-                    ...state.players.map((p) => ({
-                      value: String(p.n),
-                      label: `${p.nom} (J${p.n})`,
-                    })),
-                  ]}
-                  onChange={(v) => changerSuzerain(cite.nom, v)}
-                />
-                {(cite.suzerain == null || emissairesDe(cite, cite.suzerain) < 3) && (
-                  <p className="muted small">
-                    Règle : le suzerain s'obtient à 3 émissaires (aucune contrainte bloquante
-                    ici — le suivi des émissaires reflète le plateau).
-                  </p>
-                )}
-              </div>
-            </div>
-
-            {/* ── Population : résumé seul — la gestion vit dans le
-                panneau séparé « Population des cités libres » en bas de
-                page (comme les habitants des joueurs). ── */}
-            <div className="mini-title">
-              Population — {vivants.length} vivant(s) / {pop.length} au total
-              <span className="muted small">
-                {' '}· gestion dans l'onglet « 👥 Population » (sélectionnez la cité en haut de la page)
-              </span>
-            </div>
-
-            {/* ── Production & taxes ── */}
-            <div className="mini-title">
-              Ce que la cité produit — et verse à son suzerain
-            </div>
-            <div className="small">
-              <span className="muted">
-                {d.habitants} vivant(s) — {d.adultes} adulte(s), {d.enfants} enfant(s){d.enfants > 0 ? ' (ne produisent pas, consomment)' : ''}, dont {d.chasseurs} chasseur(s)
-                {d.chasseurs > 0 && <> — <strong>Nourriture ×1,1</strong> (règle des cités libres)</>}
-                {' '}· taxes ×{d.taxeMult}
-              </span>
-              <div className="badges-wrap">
-                {Object.entries(d.metiers).map(([res, v]) => (
-                  <span key={res} className="badge badge-info">métiers : +{fmtNum(v)} {res}</span>
-                ))}
-                {Object.entries(d.conso).map(([res, v]) => (
-                  <span key={res} className="badge badge-neutral">conso : {fmtNum(v)} {res}</span>
-                ))}
-              </div>
-              {suz ? (
-                <p className="small">
-                  <strong>Taxes versées à {suz.nom} à chaque fin de tour :</strong>{' '}
-                  {Object.entries(d.transfert).length === 0
-                    ? <span className="muted">rien (production nette nulle ou négative)</span>
-                    : Object.entries(d.transfert)
-                        .map(([res, v]) => `+${fmtNum(v)} ${res}`)
-                        .join(', ')}
-                  {' '}(canal « Cités libres » du récap ressources).
-                </p>
-              ) : (
-                <p className="muted small">
-                  Sans suzerain, la production de la cité n'est versée à personne —
-                  désignez un suzerain pour qu'il perçoive ces taxes.
-                </p>
-              )}
-            </div>
-          </Card>
-        )
-      })}
+      {cites.map((cite) => (
+        <CarteCite
+          key={cite.nom}
+          cite={cite}
+          state={state}
+          C={C}
+          garnison={garnison}
+          typeOptions={typeOptions}
+          typesConfig={typesConfig}
+          cultures={cultures}
+          annexions={annexions}
+          setAnnexions={setAnnexions}
+          mutCite={mutCite}
+          supprimerCite={supprimerCite}
+          changerEmissaires={changerEmissaires}
+          changerSuzerain={changerSuzerain}
+          update={update}
+        />
+      ))}
       </div>
 
     </div>
