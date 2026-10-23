@@ -5,7 +5,7 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import { invaliderIndexPopulation } from './indexPopulation'
+import { retirerDeLIndexPopulation } from './indexPopulation'
 import type { Character, GameState, Player, PlayerRecap } from './types'
 import { makeRng, type Rng } from './rng'
 import { cfgOf, traitDef, type Cfg } from './gameData'
@@ -90,7 +90,9 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
 // Rework habitants 2026-10-20 : la cause « vieillesse » n'existe plus,
 // la maladie est la seule cause de décès.
 export function killCharacter(state: GameState, p: Player, c: Character, cause: 'maladie', recap: PlayerRecap) {
-  invaliderIndexPopulation()
+  // Vague scalabilité : retrait CHIRURGICAL du décédé (O(1)) — plus
+  // d'invalidation suivie d'une reconstruction O(N) par mort.
+  retirerDeLIndexPopulation(state, c.id)
 
   const C = cfgOf(state.config)
   c.statut = 'Décédé'
