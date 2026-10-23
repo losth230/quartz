@@ -40,11 +40,8 @@ export interface GameParams {
   modMaladieEnceinte: number
   probaGuerison: number
   modGuerisonAge: number
-  // ── Éducation ──
-  chanceEducRoturier: number
-  chanceEducNoble: number
+  // ── Professeurs ──
   professeurBaseChance: number
-  profBonusEduc: number
   // ── Mariage ──
   mariageRoturiers: number
   mariageNobles: number
@@ -122,10 +119,7 @@ export const DEFAULT_PARAMS: GameParams = {
   modMaladieEnceinte: 0.03,
   probaGuerison: 0.25,
   modGuerisonAge: 0.003,
-  chanceEducRoturier: 0.08,
-  chanceEducNoble: 0.15,
   professeurBaseChance: 0.9,
-  profBonusEduc: 0.1,
   mariageRoturiers: 0.3,
   mariageNobles: 0.15,
   mariageMesalliance: 0.03,
@@ -208,10 +202,7 @@ export const PARAM_META: {
   { key: 'modMaladieEnceinte', label: 'Maladie — modificateur femme enceinte', groupe: 'Maladie' },
   { key: 'probaGuerison', label: 'Probabilité de guérison (base)', groupe: 'Maladie', unite: 'proba' },
   { key: 'modGuerisonAge', label: 'Guérison — modificateur par année d\'âge', groupe: 'Maladie' },
-  { key: 'chanceEducRoturier', label: 'Chance d\'éducation — roturier', groupe: 'Éducation', unite: 'proba' },
-  { key: 'chanceEducNoble', label: 'Chance d\'éducation — noble', groupe: 'Éducation', unite: 'proba' },
   { key: 'professeurBaseChance', label: 'Chance de base d\'attribution Professeur', groupe: 'Éducation' },
-  { key: 'profBonusEduc', label: 'Bonus d\'éducation par professeur supplémentaire', groupe: 'Éducation' },
   { key: 'mariageRoturiers', label: 'Proba mariage roturier × roturier', groupe: 'Mariage', unite: 'proba' },
   { key: 'mariageNobles', label: 'Proba mariage noble × noble', groupe: 'Mariage', unite: 'proba' },
   { key: 'mariageMesalliance', label: 'Proba mésalliance noble × roturier', groupe: 'Mariage', unite: 'proba' },
@@ -281,7 +272,6 @@ export function mergeParams(custom: Record<string, unknown> | undefined): GamePa
 
 export interface TitreDef {
   titre: string
-  education: string
   valeur1: number
   ressource1: string
   valeur2: number
@@ -362,7 +352,6 @@ export interface DynastieEffetsDef {
 }
 export interface GameConfig {
   ressources: string[]
-  educations: string[]
   params: GameParams & GameParamStrings
   titres: TitreDef[]
   traits: TraitDef[]
@@ -443,7 +432,6 @@ function normaliserTraits(): TraitDef[] {
 function normaliserTitres(): TitreDef[] {
   return (ref.metiers ?? ref.titres).map((t: any) => ({
     titre: t.metier ?? t.titre,
-    education: t.education || '',
     valeur1: Number(t.valeur1) || 0,
     ressource1: t.ressource1 || '',
     valeur2: Number(t.valeur2) || 0,
@@ -553,7 +541,6 @@ const BASE_DYNASTIE_EFFECTS: Record<string, { effets: EffetDef[]; guerison?: boo
 
 export const DEFAULT_CONFIG: GameConfig = {
   ressources: ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie', 'Or', 'Nourriture', 'Science', 'Habitants', 'Tourisme', 'Garnison'],
-  educations: ['Agricole', 'Scientifique', 'Militaire', 'Économique', 'Culturelle'],
   params: mergeParams(undefined),
   titres: normaliserTitres(),
   traits: normaliserTraits(),
@@ -616,7 +603,6 @@ DEFAULT_CONFIG.paysRangs = [
 export interface Cfg {
   p: GameParams & GameParamStrings
   ressources: string[]
-  educations: string[]
   titres: TitreDef[]
   traits: TraitDef[]
   cultures: CultureDef[]
@@ -659,7 +645,6 @@ export function cfgOf(config: GameConfig | undefined): Cfg {
   return {
     p: merged.params,
     ressources: merged.ressources,
-    educations: merged.educations,
     titres: merged.titres,
     traits: migrateTraits(merged.traits),
     cultures: merged.cultures,
@@ -700,7 +685,7 @@ export type Saison = 'Été' | 'Hiver'
 export type TaxeNiveau = 'Faible' | 'Moyenne' | 'Forte'
 export type Heredite = 'Masculine' | 'Féminine' | 'Parité'
 export type RegleGenre = 'Aucune' | 'Masculine' | 'Féminine' | 'Culture'
-export type Attribution = 'Manuelle' | 'Education' | 'Armée' | 'Aléatoire'
+export type Attribution = 'Manuelle' | 'Armée' | 'Aléatoire'
 
 // ── Référentiels (tables du classeur → seeds éditables) ────────────────
 
@@ -717,7 +702,6 @@ export interface TraitDef {
 
 export interface TitreDef {
   titre: string
-  education: string            // éducation requise ('' = aucune)
   valeur1: number              // gain par tour
   ressource1: string           // ressource du gain 1
   valeur2: number
@@ -787,7 +771,6 @@ export interface Character {
   pereBio: string | null      // père biologique en cas d'adultère
   enfantBatard: boolean
   titre: string | null
-  education: string | null
   fecondite: number
   ageMax: number
   armee: string | null        // nom de l'armée de rattachement
@@ -983,7 +966,6 @@ export const REGIMES = DEFAULT_CONFIG.regimes
 export const ORIENTATIONS = DEFAULT_CONFIG.orientations
 export const GENRES = DEFAULT_CONFIG.genres
 export const MALADIES = DEFAULT_CONFIG.maladies
-export const EDUCATIONS = DEFAULT_CONFIG.educations
 export const BANQUES = DEFAULT_CONFIG.banquesNoms
 
 // Peuples (référence : nom + banque de noms associée)
@@ -1269,7 +1251,7 @@ export function transfererTributVassal(
 // ══ src/engine/titres.ts ══
 // ══════════════════════════════════════════════════════════════════════
 //  TITRES, PROFESSEURS, MARIAGES ET ÉDUCATION
-//  Professeurs, mariages, éducation des mineurs, titres automatiques et règles d'attribution.
+//  Professeurs, mariages, titres automatiques et règles d'attribution.
 //  Portage des macros VBA du classeur Chasse & Pêche 7.19.
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
@@ -1294,7 +1276,6 @@ export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, re
     if (candidats.length === 0) continue
     const elu = rng.pick(candidats)
     elu.titre = C.p.titreProfesseur
-    if (!elu.education) elu.education = rng.pick(C.educations)
     nbProfs++
     bump(recap.titresAttribues, C.p.titreProfesseur)
     state.log.push({
@@ -1381,33 +1362,6 @@ function characterMarriageMod(c: Character, C: Cfg = cfgOf()): number {
   return Math.min(C.p.mariageTraitMax, Math.max(-C.p.mariageTraitMax, total))
 }
 
-// ── Éducation des mineurs (TryEducateMinor) ─────────────────────────────
-
-export function tryEducateMinor(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
-  const C = cfgOf(state.config)
-  // VBA : le trait « Obstiné » refuse toute éducation.
-  if (c.traits.includes(C.p.traitObstine)) return
-  const ville = p.villes.find((v) => v.nom === c.ville)
-  if (!ville) return
-  const rank = schoolRankOf(ville.batiments, C.config)
-  if (rank <= 0) return
-  const pop = state.population[p.n] ?? []
-  const profs = pop.filter((x) => x.statut !== 'Décédé' && x.ville === ville.nom && x.titre === C.p.titreProfesseur)
-  if (profs.length === 0) return
-  const base = isNobleDyn(c.dynastie, C) ? C.p.chanceEducNoble : C.p.chanceEducRoturier
-  let chance = base * rank * (1 + C.p.profBonusEduc * (profs.length - 1))
-  chance = Math.min(0.95, chance)
-  if (!rng.chance(chance)) return
-  const edus = new Set<string>()
-  for (const prof of profs) if (prof.education) edus.add(prof.education)
-  if (edus.size === 0) return
-  c.education = rng.pick([...edus])
-  state.log.push({
-    turn: state.turn + 1, type: 'Système', joueur: p.n,
-    texte: `${fullName(c)} (${c.age} ans) reçoit une éducation ${c.education.toLowerCase()} à ${ville.nom}.`,
-  })
-}
-
 // ── Titre automatique à l'âge adulte ────────────────────────────────────
 
 export function assignAdultTitle(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
@@ -1418,12 +1372,6 @@ export function assignAdultTitle(state: GameState, p: Player, c: Character, rng:
     return
   }
   let titre: string | null = null
-  if (c.education) {
-    const td = C.titres.find(
-      (t) => t.attribution === 'Education' && t.education === c.education,
-    )
-    if (td && titreAllowedForCharacter(td.titre, c, p, C)) titre = td.titre
-  }
   if (!titre) titre = C.p.titreChasseur
   c.titre = titre
   bump(recap.titresAttribues, titre)
@@ -1739,7 +1687,6 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
       pereBio: null,
       enfantBatard: batard,
       titre: null,
-      education: null,
       fecondite: 0,
       ageMax: 0,
       armee: null,
@@ -1935,8 +1882,6 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
     if (!c.ageMax || c.ageMax <= 0) c.ageMax = computeAgeMax(c, rng, C)
     // vieillissement : +2 ans par tour
     c.age += 2
-    // éducation des mineurs
-    if (c.age < C.p.adultAge) tryEducateMinor(state, p, c, rng, recap)
     // fécondité affichée
     c.fecondite = computeFecondite(state, p, c)
     // mort de vieillesse
@@ -1960,14 +1905,14 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
   applyCultureInfluence(state, p, rng, recap)
   updateCityCultures(state, p)
 
-  // Migration des enfants sans éducation (MIGRATION_PROBA)
+  // Migration des enfants (MIGRATION_PROBA)
   migrerEnfants(state, p, rng)
 
   // Récap dans le journal
   writeRecap(state, p, recap)
 }
 
-// ── Migration des enfants sans éducation ─────────────────────────────────
+// ── Migration des enfants ────────────────────────────────────────────────
 
 export function migrerEnfants(state: GameState, p: Player, rng: Rng) {
   const C = cfgOf(state.config)
@@ -1975,8 +1920,7 @@ export function migrerEnfants(state: GameState, p: Player, rng: Rng) {
   const pop = state.population[p.n] ?? []
   for (const c of pop) {
     if (c.statut === 'Décédé' || c.age >= C.p.adultAge) continue
-    if (c.education) continue
-    // VBA : les « Obstinés » ne migrent pas — l'éducation ne les tentera jamais.
+    // VBA : les « Obstinés » ne migrent pas.
     if (c.traits.includes(C.p.traitObstine)) continue
     if (!rng.chance(C.p.migrationProba)) continue
     const autres = p.villes.filter((v) => v.nom !== c.ville)
@@ -2135,7 +2079,6 @@ export function checkVictory(state: GameState): VictoryStatus[] {
     const dynDirigeant = pop.find((c) => c.titre === T_DIRIGEANT)?.dynastie
     const famille = pop.filter((c) => c.dynastie === dynDirigeant && dynDirigeant)
     const gouverneurs = famille.filter((c) => c.titre === T_GOUVERNEUR).length
-    const eduRang3 = famille.filter((c) => c.education === 'Médicale' || c.education === 'Scientifique' || c.education === 'Militaire').length
     const nourr = p.resources['Nourriture']
     const prodNourr = nourr ? nourr.prod : 0
     const orProd = p.resources['Or']?.prod ?? 0
@@ -2155,7 +2098,6 @@ export function checkVictory(state: GameState): VictoryStatus[] {
       dynastique:
         !!dynDirigeant &&
         gouverneurs >= 2 &&
-        eduRang3 >= 4 &&
         famille.length >= 10 &&
         pourcentCour >= 0.33,
     }
@@ -2197,7 +2139,7 @@ export interface TitleIssue {
  * Contrôle l'attribution d'un titre à un personnage (cohérence avec le
  * classeur) : âge adulte, noblesse, règles de genre du titre et de la
  * culture (Reglege : vide / Masculine / Féminine / Hérédité),
- * éducation requise, unicité Dirigeant/Héritier/Gouverneur/Professeur.
+ * unicité Dirigeant/Héritier/Gouverneur/Professeur.
  */
 export function validateTitleAssignment(
   state: GameState,
@@ -2231,10 +2173,6 @@ export function validateTitleAssignment(
     if (cult.heredite === 'Féminine' && char.sexe !== 'F') {
       return { ok: false, message: `La culture ${player.culture} (hérédité féminine) réserve en principe ce poste aux femmes.` }
     }
-  }
-  // éducation requise
-  if (td.education && char.education !== td.education) {
-    return { ok: false, message: `Éducation attendue : ${td.education} (ce personnage a : ${char.education ?? 'aucune'}).` }
   }
   // règles d'unicité (Dirigeant, Héritier, Gouverneur, Professeurs)
   const pop = (state.population[player.n] ?? []).filter((c) => c.statut !== 'Décédé')
@@ -2308,7 +2246,7 @@ export function findTitleIssues(state: GameState, player: Player, char: Characte
 //    economie.ts    gains de population par ville, taxes
 //    vassalite.ts   tribut des vassaux vers leur suzerain
 //    population.ts  orchestration démographique du tour, migration
-//    titres.ts      professeurs, mariages, éducation, titres
+//    titres.ts      professeurs, mariages, titres
 //    sante.ts       maladie, décès, succession du Dirigeant
 //    naissances.ts  fécondité, conceptions, accouchement, traits
 //    culture.ts    conversions culturelles, culture des villes
@@ -2569,7 +2507,6 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       pereBio: null,
       enfantBatard: false,
       titre: null,
-      education: null,
       fecondite: 0,
       ageMax: 0,
       armee: null,
@@ -2588,7 +2525,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
     sexe: 'M', age: 20, culture: player.culture, ville: player.villes[0].nom,
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
-    pereBio: null, enfantBatard: false, titre: null, education: null,
+    pereBio: null, enfantBatard: false, titre: null,
     fecondite: 0, ageMax: 0, armee: null,
   }
   const reine: Character = {
@@ -2596,7 +2533,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
     sexe: 'F', age: 20, culture: player.culture, ville: player.villes[0].nom,
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
-    pereBio: null, enfantBatard: false, titre: null, education: null,
+    pereBio: null, enfantBatard: false, titre: null,
     fecondite: 0, ageMax: 0, armee: null,
   }
   roi.mariage = `${reine.prenom} ${reine.nom}`
@@ -2753,7 +2690,6 @@ try {
     { nom: 'config.ressources = []', apply: (s) => { s.config.ressources = [] } },
     { nom: 'config.banquesNoms = []', apply: (s) => { s.config.banquesNoms = [] } },
     { nom: 'config.peuples = []', apply: (s) => { s.config.peuples = [] } },
-    { nom: 'config.educations = []', apply: (s) => { s.config.educations = [] } },
     { nom: 'config.dynasties = []', apply: (s) => { s.config.dynasties = [] } },
     { nom: 'config.events = []', apply: (s) => { s.config.events = [] } },
     { nom: 'config.eventEffets = []', apply: (s) => { s.config.eventEffets = [] } },
