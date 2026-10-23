@@ -1506,6 +1506,66 @@ miroirs v4 avec blobs identiques. Vagues 2-3 (import cycles,
 classe mère/ports, Ponton→proximité, Grand bailli) : design à
 venir, implémentation reportée à l'arbitrage Thibaut.
 
+## Simplification : santé ignorée, rangs 2+, factions, ministres et éducations retirés (2026-10-23, retour Thibaut — arbitrage simplification)
+
+Deuxième vague du retour Thibaut du 2026-10-23 : allègement
+PROVISOIRE pour dérouiller le jeu avant d'attaquer la refonte
+SOLID. ~50 fichiers code touchés.
+
+**Périmètre arbitré** (tout « provisoire » — les données pourront
+revenir) :
+- **Santé ignorée** pour l'instant ;
+- **Constructions de rang d'habitation ≥ 2 supprimées** du
+  référentiel : 118 → 41 constructions (bâtiments ET aménagements,
+  dont les aménagements tiers 2/3 et la Chapelle). La MÉCANIQUE
+  d'amélioration (remplaceAmenagement, garde-fous non bloquants)
+  reste en place, couverte par des tests qui réinjectent les defs
+  tier localement (prêtes à les recevoir à leur retour) ;
+- **Règles de factions** : derniers reliquats retirés des fiches
+  peuples (30 champs reglesBase/ageII/ageIII/victoire/batiment —
+  le moteur de factions avait déjà été retiré le 2026-10-19) ;
+- **Ministres supprimés EN TOTAL** : module ministeres.ts, registre
+  d'effets (fluxJoueurParMinistre, garnisonJoueur, cond.ministre),
+  canal de récap, onglets et écrans UI (SurintendantFinances.tsx,
+  portefeuilles, carte 👑 Ministres), table référentiel
+  ministeres, colonne ministres des paysRangs, fonction morte
+  statutMinistre. La migration d'état v2 devient no-op (numéro
+  conservé) ; les anciens états gardent l'étiquette metier
+  « Ministre » inoffensive ;
+- **Éducations supprimées EN TOTAL** (correction Thibaut : « supprime
+  toute la mécanique d'éducation ») : labels Character.education,
+  événements « reçoit une éducation » (tryEducateMinor), table
+  config.educations, champ education des métiers, attribution
+  'Education', contrainte de validation, paramètres
+  chanceEduc*/profBonusEduc, colonne et picker UI. CONSERVÉS :
+  Professeurs (professeurBaseChance), écoles (ecoleRang),
+  migration scolaire des enfants, trait Obstiné. Les clés
+  orphelines des configs persistées sont dépouillées par cfgOf
+  (idempotent) ; un vieux personnage garde une éventuelle clé
+  education ignorée (pas de migration d'état nécessaire) ; la
+  comparaison des anciens défauts de la migration 3a reste EXACTE
+  (le champ education y est lu en unknown) pour continuer à jouer.
+
+**Tests adaptés à la simplification** : seuils referentiel/registre
+réajustés (41 constructions, 11 à effets), témoins remplacés
+(Chapelle → Hôtel de tourisme, Moulin à vent → Ponton), tiers 2/3
+réinjectés localement pour la mécanique dormante ;
+ministres.test.ts supprimé (22 tests, module retiré) ; +2 tests
+éducation (clés orphelines dépouillées idempotent + paramètres
+supprimés). Total : 148/148 verts, tsc EXIT 0, diag exit 0
+(53 lignes, 16 ÉCHEC informatifs — sortie changée PAR DESIGN :
+le miroir perd aussi ses rangs 2+, ses ministres et son
+éducation), bundle esbuild OK (metiersBase présent, plus aucune
+trace d'educations hors le delete de nettoyage).
+
+Push en six commits (A référentiel, B moteur, C UI, D tests,
+E diag, F docs) + miroirs v4. NB : les textes de récompenses
+(rangs de pays, progrès) mentionnant encore des Ministres sont
+inertes (plus aucun ministre nommable) — nettoyage référentiel
+reporté. Vague suivante VALIDÉE par Thibaut : redécoupage
+engine.ts (S) + couche ports/contrats (D), design au prochain
+tour.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

@@ -612,6 +612,26 @@ rang 1). Arbitrages actés lors de la session :
   scalabilité (mémoïsation) remise à plus tard par Thibaut ;
   vagues 2-3 de la refonte SOLID (import cycles / classe mère /
   ports, Ponton→proximité, Grand bailli) en attente d'arbitrage.
+- **Simplification provisoire (2026-10-23, retour Thibaut « alléger
+  pour dérouiller »)** : la SANTÉ est ignorée pour l'instant ; les
+  constructions de rang d'habitation 2+ sont SUPPRIMÉES du
+  référentiel (118 → 41 — bâtiments et aménagements, tiers 2/3 et
+  Chapelle compris ; la mécanique d'amélioration reste en place,
+  les tests la couvrent avec des defs réinjectées localement) ;
+  les derniers reliquats des RÈGLES DE FACTIONS partent des fiches
+  peuples ; les MINISTRES sont supprimés EN TOTAL (module, effets,
+  UI, table référentiel, colonne paysRangs — migration d'état v2
+  no-op, l'étiquette « Ministre » des vieux états est inoffensive) ;
+  la mécanique d'ÉDUCATION est supprimée EN TOTAL (labels,
+  événements, table educations, champ des métiers, attribution
+  'Education', contrainte de validation, paramètres
+  chanceEduc*/profBonusEduc) — les Professeurs, les écoles
+  (ecoleRang) et la migration scolaire RESTENT. Points ouverts
+  mis à jour : Guilde des médecins CLOSE (santé ignorée) ;
+  scalabilité toujours remise à plus tard ; retour des rangs 2+ /
+  ministres / éducations à arbitrer quand le jeu sera dérouillé ;
+  vague suivante VALIDÉE par Thibaut : redécoupage engine.ts (S) et
+  couche ports/contrats (D) — design à présenter au prochain tour.
 
 ### Déménagement : perte du métier ET du domicile (arbitré 2026-10-21, vague 3a ; complément Dirigeant/Héritier le même soir)
 
