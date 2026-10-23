@@ -46,7 +46,6 @@ export function RecapParTour({ joueur, p, C, prodDetail, impotPopPrev, impotsVas
           ['Commerce', prodDetail.commerce],
           ['Proximité', prodDetail.proximite],
           ['Vassalité', prodDetail.vassalite],
-          ['Ministères', prodDetail.ministeres],
           ['Progrès', prodDetail.progres],
         ]
         // « Nourr - été » en LIGNE (comme dans le classeur), pas en

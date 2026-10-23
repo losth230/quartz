@@ -35,7 +35,7 @@
 //  (construire + sélecteur par famille) vit dans pays/Constructions.ts.
 // ══════════════════════════════════════════════════════════════════════
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useGame } from '../state/store'
 import type { GameState, Player } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
@@ -45,15 +45,12 @@ import {
 import { Card } from './ui'
 import { RessourcesBar } from './pays/RessourcesBar'
 import { AideAuto } from './pays/AideAuto'
-import { SurintendantFinances } from './pays/SurintendantFinances'
 import { CulturePays } from './pays/CulturePays'
 import { VillesCarte } from './pays/VillesCarte'
 import { CommerceRoutes } from './pays/CommerceRoutes'
 import { RecapParTour } from './pays/RecapParTour'
 import { RecapDernierTour } from './pays/RecapDernierTour'
 import { NotesJoueur } from './pays/NotesJoueur'
-import { type ChoixSurintendant } from './pays/pays-utils'
-
 export function PlayerView({ joueur }: { joueur: number }) {
   // ── MARQUEUR (a) — RÈGLES DE HOOKS REACT : tous les useState AVANT tout
   //    retour anticipé. Les retours anticipés (`return null`, « Joueur
@@ -62,13 +59,6 @@ export function PlayerView({ joueur }: { joueur: number }) {
   //    complet, l'ORDRE DES HOOKS changeait → erreur React « Rendered
   //    more hooks than during the previous render » → PAGE ENTIÈREMENT
   //    BLANCHE sans message. Les retours sont déplacés SOUS les hooks. ──
-  //    (Surintendant des finances, marqueur (y)) : choix en attente
-  //    après une construction — l'état vit ICI car il est partagé
-  //    entre la carte Villes (qui le déclenche en construisant) et la
-  //    carte Surintendant (qui le résout).
-  const [surint, setSurint] = useState<ChoixSurintendant | null>(null)
-  const [surintRes, setSurintRes] = useState('')
-
   const { state, update } = useGame()
   if (!state) return null
   const C = cfgOf(state.config)
@@ -108,20 +98,13 @@ export function PlayerView({ joueur }: { joueur: number }) {
           (a)) — bloc repliable en tête de page Pays. */}
       <AideAuto C={C} />
 
-      {/* Surintendant des finances (marqueur (y)) : carte éphémère du
-          choix en attente (déclenché par une construction en Villes). */}
-      <SurintendantFinances
-        surint={surint} surintRes={surintRes} setSurintRes={setSurintRes}
-        setSurint={setSurint} joueur={joueur} p={p} update={update}
-      />
-
       {/* Culture du pays : règle de pays chiffrée + bonus adapté. */}
       <CulturePays state={state} p={p} C={C} />
 
       {/* Villes : aménagements, bâtiments, autres, cultures, taxes. */}
       <VillesCarte
         joueur={joueur} p={p} C={C}
-        setPlayer={setPlayer} setSurint={setSurint} setSurintRes={setSurintRes}
+        setPlayer={setPlayer}
       />
 
       {/* Commerce (marqueur (t)) : routes des marchands. */}

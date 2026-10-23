@@ -93,7 +93,7 @@ export function CitesLibresView() {
   }
 
   /** Recrute un émissaire pour un joueur (coût/rythme arbitres au
-   *  plateau : la réserve est libre d'édition, les ministres et
+   *  plateau : la réserve est libre d'édition, les
    *  merveilles en octroient automatiquement). */
   const recruterEmissaire = (joueur: number, delta: number) =>
     update((s) => {
@@ -172,7 +172,7 @@ export function CitesLibresView() {
     <div className="stack">
       {/* ═══ Réserves d'émissaires (revue 2026-10-15) : ressource
           de chaque joueur, dépensée en plaçant un émissaire dans une
-          cité libre. Les ministres (Chancelier des émissaires) et les
+          cité libre. Les
           merveilles (Antre de la déesse araignée) créditent automatiquement. */}
       <Card title="✉ Réserves d'émissaires">
         {state.players.map((p) => (

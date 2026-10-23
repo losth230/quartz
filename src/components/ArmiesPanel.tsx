@@ -49,8 +49,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (target) fn(target, s)
     })
 
-  // Prix avec réductions automatiques : Grand écuyer (ministre,
-  //  −10 Or par rang de pays) et Vengeance de la terre (Sylvains,
+  // Prix avec réductions automatiques : Vengeance de la terre (Sylvains,
   //  −10 Or par apiculture) — mêmes paramètres que le débit.
   const villeLeveeObj = p.villes.find((v) => v.nom === villeLevee)
   const prix = prixArmee(puissance, C, p, state, villeLeveeObj)

@@ -9,18 +9,9 @@ import type React from 'react'
 import { fmt } from '../ui'
 import type { Cfg } from '../../engine/gameData'
 
-/** Choix en attente du Surintendant des finances (marqueur (y)) :
- *  après la construction d'un bâtiment, 1 ressource au choix × rang
- *  de l'habitation — carte éphémère portée par PlayerView. */
-export interface ChoixSurintendant {
-  idx: number
-  options: string[]
-  qty: number
-}
 
 export const ORIGINE_LABEL: Record<string, string> = {
   base: 'rang', 'bâtiment': 'bâtiment', technologie: 'techno', régime: 'régime',
-  ministre: 'ministre',
 }
 
 export const RESSOURCES_ETAT = ['Garnison']

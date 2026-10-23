@@ -28,18 +28,16 @@ import { ChoicePicker } from '../Picker'
 import { faireConstruire, faireBatParFamille } from './Constructions'
 import {
   Field, ORIGINE_LABEL, RESSOURCES_FLUX, FAM_BADGES,
-  fmtEffets, fmtCout, fmtNum, type ChoixSurintendant,
+  fmtEffets, fmtCout, fmtNum,
 } from './pays-utils'
 
-export function VilleCarte({ idx, ville, joueur, p, C, setPlayer, setSurint, setSurintRes }: {
+export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   idx: number
   ville: City
   joueur: number
   p: Player
   C: Cfg
   setPlayer: (fn: (p: Player, s: GameState) => void) => void
-  setSurint: (v: ChoixSurintendant | null) => void
-  setSurintRes: (v: string) => void
 }) {
   const { state, update, salon } = useGame()
   // Garde-fou type : PlayerView ne rend cette carte QUE si une partie
@@ -67,7 +65,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer, setSurint, set
   }
   const reducBatisseurs = aCampDeBatisseurs(p)
   // Mutateurs (fabriques de Constructions.ts) :
-  const construire = faireConstruire({ update, joueur, C, setSurint, setSurintRes })
+  const construire = faireConstruire({ update, joueur, C })
   const batParFamillePour = faireBatParFamille({ state, p, C })
     const nbVivants = (state.population[p.n] ?? [])
       .filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom).length

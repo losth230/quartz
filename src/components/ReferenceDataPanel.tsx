@@ -19,7 +19,7 @@ import { Card, Badge } from './ui'
 const ONGLETS = [
   'Métiers', 'Traits gén.', 'Peuples', 'Bâtiments', 'Aménagements', 'Progrès',
   'Pays & rangs', 'Habitations', 'Cultures & régimes', 'Tourisme & dogmes', 'Cités libres',
-  'Victoires', 'Crises', 'Rappels règles', 'Offrandes', 'Ministères',
+  'Victoires', 'Crises', 'Rappels règles', 'Offrandes',
   'Couleurs', 'Aide-mémoire',
 ] as const
 
@@ -323,11 +323,11 @@ export function ReferenceDataPanel() {
         <Card title="Wiki — rangs de pays (échelle féodale)">
           <p className="muted small">
             Montée par <strong>sacre</strong> : payer Or + Nourriture et posséder les
-            <strong> serments</strong> requis. Chaque rang fixe le nombre de <strong>Ministres</strong>.
+            <strong> serments</strong> requis.
           </p>
           <div className="table-wrap">
             <table className="tbl small">
-              <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments</th><th>Ministres</th><th>Bonus (plateau)</th></tr></thead>
+              <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments</th><th>Bonus (plateau)</th></tr></thead>
               <tbody>
                 {(cfg.paysRangs ?? []).map((r, i) => (
                   <tr key={i}>
@@ -335,7 +335,6 @@ export function ReferenceDataPanel() {
                     <td>{r.coutOr}</td>
                     <td>{r.coutNourriture}</td>
                     <td>{r.serments}</td>
-                    <td>{r.ministres}</td>
                     <td className="muted">{r.bonus || '—'}</td>
                   </tr>
                 ))}
@@ -517,29 +516,6 @@ export function ReferenceDataPanel() {
         </Card>
       )}
 
-      {onglet === 'Ministères' && (
-        <Card title="Wiki — ministères">
-          <p className="muted small">
-            Chaque rang de pays octroie <strong>1 Ministre</strong> (nomination : nobles et
-            dynasties). Portefeuilles <strong>cumulables</strong>.
-          </p>
-          <div className="table-wrap">
-            <table className="tbl small">
-              <thead><tr><th>Ministère</th><th>Rang minimum</th><th>Mode</th><th>Effet</th></tr></thead>
-              <tbody>
-                {cfg.ministeres.map((m, i) => (
-                  <tr key={i}>
-                    <td><strong>{m.ministere}</strong></td>
-                    <td>{m.rangMinimum ?? '—'}</td>
-                    <td><Badge tone={m.mode === 'Auto' ? 'info' : 'neutral'}>{m.mode ?? 'Plateau'}</Badge></td>
-                    <td className="muted">{m.effet || '—'}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      )}
 
       {onglet === 'Couleurs' && (
         <>
@@ -600,7 +576,6 @@ export function ReferenceDataPanel() {
         <Card title="Aide-mémoire">
           <div className="grid-2 small">
             <div><strong>Ressources ({C.ressources.length}) :</strong> {C.ressources.join(', ')}</div>
-            <div><strong>Éducations :</strong> {C.educations.join(', ')}</div>
             <div><strong>Orientations (pondérées) :</strong> {C.orientations.map((o) => `${o.nom} ×${o.poids}`).join(' · ')}</div>
             <div><strong>Genres :</strong> {C.genres.map((o) => `${o.nom} ×${o.poids}`).join(' · ')}</div>
             <div><strong>Régimes :</strong> {C.regimes.map((r) => r.nom).join(', ')}</div>
