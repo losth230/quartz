@@ -345,8 +345,7 @@ export interface PeupleRef {
   lignes: { label: string; texte: string }[]
 }
 export interface FicheLigne { label: string; texte: string }
-export interface BatimentRef { categorie: string; nom: string; cout: string; effet: string }
-export interface AmenagementRef { amenagement: string; type: string; rang: string; effet: string }
+// (Retrait 2026-10-23 : interfaces des tables legacy supprimées.)
 export interface ProgresArbre { arbre: string; entrees: { texte: string; prerequis: string }[] }
 
 export interface EffetDef { ressource: string; base: number }
@@ -400,10 +399,6 @@ export interface GameConfig {
   titresEffets: { titre: string; effet: string; revocation: string }[]
   peuplesLibres: PeupleRef[]
   peuplesAutres: PeupleRef[]
-  batimentsVille: BatimentRef[]
-  batimentsChateau: BatimentRef[]
-  batimentsCouts: Record<string, unknown>[]
-  amenagements: AmenagementRef[]
   progres: ProgresArbre[]
   paysRangs: { bloc: string; nom: string; cout: string; bonus: string; succession: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
@@ -472,34 +467,32 @@ function normaliserCultures(): CultureDef[] {
 }
 
 function normaliserBatiments(): BuildingDef[] {
-  // Effets moteur (santé / écoles) — valeurs issues du livret, modifiables
-  const effets: Record<string, Partial<BuildingDef>> = {
-    'Herboristerie': { categorie: 'Santé', malContraction: 0.05, bonusGuerison: 0.05 },
-    'Clinique': { categorie: 'Santé', malContraction: 0.10, bonusGuerison: 0.10 },
-    'Guilde des médecins': { categorie: 'Santé', bonusGuerisonGlobal: 0.10 },
-    'Ecole élémentaire': { categorie: 'Éducation', ecoleRang: 1 },
-    'École élémentaire': { categorie: 'Éducation', ecoleRang: 1 },
-    'Ecole intermédiaire': { categorie: 'Éducation', ecoleRang: 2 },
-    'École intermédiaire': { categorie: 'Éducation', ecoleRang: 2 },
-    'Ecole supérieure': { categorie: 'Éducation', ecoleRang: 3 },
-    'École supérieure': { categorie: 'Éducation', ecoleRang: 3 },
-  }
-  const vus = new Set<string>()
+  // (Retrait 2026-10-23, retour Thibaut : les effets moteur vivent en
+  //  DONNÉES dans la table canonique constructions — la vue batiments
+  //  est dérivée, plus de lecture des tables legacy supprimées.)
   const out: BuildingDef[] = []
-  const push = (nom: string, categorie: string, effet: string) => {
-    if (!nom || vus.has(nom)) return
-    // lignes parasites du classeur (effets seuls, numéros de colonne)
-    if (/^\d+$/.test(nom) || nom.startsWith('Consomme ')) return
-    vus.add(nom)
+  for (const c of ref.constructions) {
+    const moteur = (c.ecoleRang ?? 0) > 0 || (c.malContraction ?? 0) > 0
+      || (c.bonusGuerison ?? 0) > 0 || (c.bonusGuerisonGlobal ?? 0) > 0
+    if (!moteur) continue
+    if (out.some((b) => b.nom === c.nom)) continue
     out.push({
-      nom, categorie, effet,
-      ecoleRang: 0, malContraction: 0, bonusGuerison: 0, bonusGuerisonGlobal: 0,
-      ...(effets[nom] ?? {}),
+      nom: c.nom,
+      categorie: (c.ecoleRang ?? 0) > 0 ? 'Éducation' : 'Santé',
+      effet: c.description,
+      ecoleRang: c.ecoleRang ?? 0,
+      malContraction: c.malContraction ?? 0,
+      bonusGuerison: c.bonusGuerison ?? 0,
+      bonusGuerisonGlobal: c.bonusGuerisonGlobal ?? 0,
     })
   }
-  for (const b of ref.batimentsVille) push(b.nom, b.categorie || 'Ville', b.effet || '')
-  for (const b of ref.batimentsChateau) push(b.nom, b.categorie || 'Château', b.effet || '')
-  for (const nom of Object.keys(effets)) if (!vus.has(nom)) push(nom, effets[nom].categorie as string, 'Bâtiment à effet moteur (santé / éducation).')
+  if (!out.some((b) => b.nom === 'Guilde des médecins')) {
+    out.push({
+      nom: 'Guilde des médecins', categorie: 'Santé',
+      effet: 'Bâtiment à effet moteur (santé / éducation).',
+      ecoleRang: 0, malContraction: 0, bonusGuerison: 0, bonusGuerisonGlobal: 0.10,
+    })
+  }
   return out
 }
 
@@ -594,10 +587,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   titresEffets: (ref.metiersEffets ?? ref.titresEffets),
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  batimentsVille: ref.batimentsVille,
-  batimentsChateau: ref.batimentsChateau,
-  batimentsCouts: ref.batimentsCouts,
-  amenagements: ref.amenagements,
   progres: ref.progres,
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
