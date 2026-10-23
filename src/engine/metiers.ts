@@ -13,7 +13,6 @@ import { bump, fullName, isNobleDyn } from './shared'
 import { constructionRef, emplacementsConstructionRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
-import { invaliderIndexPopulation } from './indexPopulation'
 
 // ── Professeurs ─────────────────────────────────────────────────────────
 
@@ -60,7 +59,10 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
   )
   const mariesIds = new Set<string>()
   const marier = (a: Character, b: Character) => {
-    invaliderIndexPopulation()
+    // Vague scalabilité : un mariage NE TOUCHE PAS l'index de
+    //  population (id -> objet vivant : les mutations de champs
+    //  mariage/mariageId y sont visibles) — plus d'invalidation O(N)
+    //  suivie d'une reconstruction par mariage.
     a.mariage = fullName(b)
     b.mariage = fullName(a)
     // M1 (2026-10-19) : identité du conjoint par id (nom = affichage).
@@ -154,7 +156,10 @@ function characterMarriageMod(c: Character, C: Cfg = cfgOf()): number {
 
 // ── Metier automatique à l'âge adulte ────────────────────────────────────
 
-export function assignAdultMetier(state: GameState, p: Player, c: Character, recap: PlayerRecap) {
+export function assignAdultMetier(
+  state: GameState, p: Player, c: Character, recap: PlayerRecap,
+  vivantsParVille?: Map<string, Character[]>,
+) {
   const C = cfgOf(state.config)
   // Vague 3a (rework métiers & emplacements, 2026-10-21) : AUCUNE
   //  éducation n'est requise — un habitant qui atteint l'âge adulte
@@ -167,7 +172,7 @@ export function assignAdultMetier(state: GameState, p: Player, c: Character, rec
   const ville = p.villes.find((v) => v.nom === c.ville)
   let metier: string | null = null
   if (ville) {
-    metier = premierPosteLibre(state, p, ville, C)
+    metier = premierPosteLibre(state, p, ville, C, vivantsParVille)
   }
   c.metier = metier
   if (metier) bump(recap.metiersAttribues, metier)
@@ -359,9 +364,19 @@ function postesLibresVille(vivants: Character[], ville: City, C: Cfg): Array<{ m
 }
 
 /** Premier poste libre pour un habitant (priorisation : métier autre
- *  que Chasseur d'abord, ordre du référentiel ; null = aucun). */
-function premierPosteLibre(state: GameState, p: Player, ville: City, C: Cfg): string | null {
-  const vivants = (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
+ *  que Chasseur d'abord, ordre du référentiel ; null = aucun).
+ *  vivantsParVille (vague scalabilité) : partition des vivants du
+ *  joueur précalculée par l'appelant — évite de refiltrer TOUTE la
+ *  population par habitant venant à l'âge adulte. Le filtre sur le
+ *  statut reste joué à l'appel (morts plus tôt dans le tour exclus) :
+ *  sémantique identique. */
+function premierPosteLibre(
+  state: GameState, p: Player, ville: City, C: Cfg,
+  vivantsParVille?: Map<string, Character[]>,
+): string | null {
+  const vivants = vivantsParVille
+    ? (vivantsParVille.get(ville.nom) ?? []).filter((c) => c.statut !== 'Décédé')
+    : (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
   const postes = postesLibresVille(vivants, ville, C)
   const premier = postes.find((x) => x.libres > 0)
   return premier ? premier.metier : null
@@ -429,8 +444,19 @@ export function occupationsMetierVille(
 export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)): void {
   for (const p of state.players) {
     const pop = state.population[p.n] ?? []
+    // Vague scalabilité (arbitrage Thibaut) : partition des vivants
+    //  par ville UNE fois par joueur (O(pop)) — l'ancien filtre par
+    //  ville coûtait O(pop × villes). Ordre intra-bucket préservé :
+    //  le tri stable par âge des candidats donne le même résultat.
+    const vivantsParVille = new Map<string, Character[]>()
+    for (const c of pop) {
+      if (c.statut === 'Décédé') continue
+      const l = vivantsParVille.get(c.ville)
+      if (l) l.push(c)
+      else vivantsParVille.set(c.ville, [c])
+    }
     for (const ville of p.villes) {
-      const vivants = pop.filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
+      const vivants = vivantsParVille.get(ville.nom) ?? []
       // 1. surnombre : par métier plafonné, les plus âgés sortent.
       //    Exception (spec vague 3 « Marchand & routes ») : les
       //    emplacements de Marchand viennent des Mines d'Or ET des

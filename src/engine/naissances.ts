@@ -11,7 +11,7 @@ import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
 import { bump, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
 import { killCharacter } from './sante'
-import { indexPopulationMonde, invaliderIndexPopulation } from './indexPopulation'
+import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
 
 
 // Index de population (vague 2) : module bas dédié indexPopulation.ts.
@@ -202,7 +202,10 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
     if (batard) ensureTraitPresent(enfant, C.p.traitBatard)
     if (consanguin) ensureTraitPresent(enfant, C.p.traitConsanguin)
     pop.push(enfant)
-    invaliderIndexPopulation()
+    // Vague scalabilité : ajout CHIRURGICAL du nouveau-né (O(1)) —
+    //  plus d'invalidation suivie d'une reconstruction O(N) par
+    //  naissance (fratries comprises).
+    ajouterALIndexPopulation(state, enfant)
     bump(recap.naissances, enfant.dynastie)
     state.log.push({
       turn: state.turn + 1, type: 'Naissance', joueur: p.n,

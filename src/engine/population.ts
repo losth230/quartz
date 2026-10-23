@@ -34,6 +34,17 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
 
   // 3.3 Boucle principale sur chaque vivant
   const vivants = pop.filter((c) => c.statut !== 'Décédé')
+  // Vague scalabilité : partition des vivants par ville UNE fois par
+  //  joueur (O(pop)) — assignAdultMetier → premierPosteLibre ne
+  //  refiltre plus la population entière PAR habitant venant à l'âge
+  //  adulte (~5 500 appels à 16 000 habitants). Le filtre sur le
+  //  statut reste joué à l'appel : sémantique identique.
+  const vivantsParVille = new Map<string, Character[]>()
+  for (const c of vivants) {
+    const l = vivantsParVille.get(c.ville)
+    if (l) l.push(c)
+    else vivantsParVille.set(c.ville, [c])
+  }
   for (const c of vivants) {
     // statut vide → Sain
     if (!c.statut) c.statut = 'Sain'
@@ -43,7 +54,7 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
     // fécondité affichée
     c.fecondite = computeFecondite(state, p, c)
     // métier automatique à l'âge adulte
-    if (c.age >= C.p.adultAge && !c.metier) assignAdultMetier(state, p, c, recap)
+    if (c.age >= C.p.adultAge && !c.metier) assignAdultMetier(state, p, c, recap, vivantsParVille)
     // maladie
     maladieStep(state, p, c, rng, recap)
   }
