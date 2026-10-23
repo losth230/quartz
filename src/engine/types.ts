@@ -246,20 +246,23 @@ export interface CiteLibre {
   population?: Character[]
 }
 
-/** Route commerciale DISSOCIÉE du Marchand (vague 3b, arbitrage
- *  Thibaut 2026-10-24 « on peut passer à la vague 3b ») : ouverte par
+/** Route commerciale DISSOCIÉE (vague 3b, arbitrage Thibaut
+ *  2026-10-24 « on peut passer à la vague 3b ») : ouverte par
  *  le joueur (gratuit — arbitrage), indépendamment de tout personnage,
  *  elle relie une ville d'ORIGINE du joueur à la ville d'un AUTRE
  *  joueur ou à une CITÉ LIBRE (arbitrage). Effets : le joueur à
  *  l'origine COPIE exactement UN aménagement de la ville ciblée —
  *  sa production ET ses emplacements de population (matérialisés dans
- *  la ville d'origine) — et la route ouvre +1 emplacement de
- *  Marchand de CHAQUE côté (ville d'origine + ville ciblée / cité).
- *  L'ancien bonus d'Or passif des deux côtés (marchandOrTour)
- *  DISPARAÎT (arbitrage) : le Marchand est un métier de production
- *  (+2 Or / tour) dont les emplacements viennent des Mines d'Or et
- *  des routes. Fermeture : bouton ✕ du seul joueur à l'ORIGINE
- *  (arbitrage) + nettoyage automatique (ville/aménagement disparus).
+ *  la ville d'origine). Une route vers une CITÉ LIBRE ne copie rien :
+ *  elle octroie +1 émissaire auprès de la cité TANT QUE LA ROUTE EST
+ *  ACTIVE (arbitrage Thibaut 2026-10-24 « suppression du métier de
+ *  Marchand »). L'ancien bonus d'Or passif (marchandOrTour) a
+ *  disparu avec la vague 3b, puis le MÉTIER DE MARCHAND lui-même a
+ *  été RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut : « supprime
+ *  carrément le métier de marchand ») : les routes n'ouvrent plus
+ *  aucun emplacement de Marchand. Fermeture : bouton ✕ du seul
+ *  joueur à l'ORIGINE (arbitrage) + nettoyage automatique
+ *  (ville/aménagement disparus).
  *  HISTORIQUE (règle 9) : l'ancien modèle « un marchand tient la
  *  route » (champ marchandId) a été retiré le 2026-10-24 ; les
  *  routes des anciennes sauvegardes sont SUPPRIMÉES à la migration
@@ -271,8 +274,8 @@ export interface RouteCommerce {
   id: string
   /** N° du joueur à l'ORIGINE de la route (encaisse la copie). */
   joueur: number
-  /** Ville d'origine chez le joueur (reçoit le +1 emplacement
-   *  Marchand et les emplacements de l'aménagement copié). */
+  /** Ville d'origine chez le joueur (reçoit les emplacements de
+   *  l'aménagement copié). */
   villeOrigine: string
   /** N° du joueur propriétaire de la ville ciblée — null si la
    *  cible est une cité libre. */

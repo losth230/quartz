@@ -23,8 +23,10 @@ export function CarteMetiersPlaces({
   C: Cfg
   descMetier: (t: string) => string
   /** Sous-vague 3b (2026-10-24) : ctx routes commerciales pour les
-   *  emplacements de Marchand (+1 par route, chaque côté) — absent
-   *  pour une cité libre (hors du champ des caps). */
+   *  emplacements de l'aménagement copié (matérialisés dans la ville
+   *  d'ORIGINE) — absent pour une cité libre (hors du champ des caps).
+   *  Plus d'emplacement de Marchand : le métier a été retiré du jeu
+   *  le 2026-10-24 (arbitrage Thibaut). */
   state?: GameState
   joueur?: number
 }) {
@@ -76,10 +78,11 @@ export function CarteMetiersPlaces({
         la ville (ex. Poste de garde : +4 Garde). Les métiers sans base, sans
         emplacement et non productifs (Banquier, Troubadour, Dirigeant/Héritier,
         rôles de cour/armée) ne sont pas plafonnés ici (∞ = règles propres) ;
-        chaque route commerciale ouvre +1 emplacement de Marchand de chaque
-        côté (sous-vague 3b « routes dissociées », 2026-10-24 — plus de
-        marchand titulaire : les emplacements des routes sont portés par le
-        cap lui-même). La
+        une route commerciale sortante copie aussi les emplacements de
+        l'aménagement visé dans la ville d'ORIGINE (sous-vague 3b « routes
+        dissociées », 2026-10-24 ; le métier de Marchand a été retiré du jeu
+        le même jour — arbitrage Thibaut : les routes n'ouvrent plus
+        d'emplacement de Marchand). La
         réaffectation automatique tourne à chaque fin de tour : surnombre →
         les plus âgés passent Sans-emploi ; places libres (ordre « n'importe quel
         métier → Chasseur → sans métier ») → les Sans-emploi adultes prennent un

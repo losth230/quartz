@@ -185,9 +185,14 @@ export function assignAdultMetier(
 /** Metiers accessibles aux habitants d'un joueur (vague 3a) : TOUS
  *  les métiers du référentiel sans éducation requise — métiers de
  *  production (Chasseur, Pêcheur, Bûcheron, Mineur…), Garde,
- *  Banquier, Troubadour, Gouverneur, Marchand, Dirigeant,
+ *  Banquier, Troubadour, Gouverneur, Dirigeant,
  *  Héritier (nomination manuelle, remplacement automatique par
- *  l'interface). Sont exclus du picker les métiers à attribution
+ *  l'interface). Le Marchand a été RETIRÉ du jeu le 2026-10-24
+ *  (arbitrage Thibaut : « supprime carrément le métier de
+ *  marchand ») — il n'apparaît plus dans le picker ; les éventuels
+ *  porteurs des parties en cours perdent le titre au premier fin
+ *  de tour (reaffecterMetiers purge les métiers disparus).
+ *  Sont exclus du picker les métiers à attribution
  *  Armée (Soldat, Commandant — engagement militaire), Succession et
  *  Ville, ainsi que le Professeur (nomination automatique par les
  *  écoles). L'avertissement de places est une aide, jamais bloquant
@@ -202,15 +207,6 @@ export function metiersAccessibles(state: GameState, _p: Player, C: Cfg = cfgOf(
   //  validation (unicité, dynastie) reste un AVERTISSEMENT, jamais
   //  bloquant — convention du jeu.
   out.push(C.p.metierDirigeant, C.p.metierHeritierStr)
-  // « Marchand » (marqueur (t)) : attribution manuelle comme Chasseur
-  //  ou Gouverneur. Sous-vague 3b (2026-10-24, arbitrage Thibaut) :
-  //  les routes commerciales sont DISSOCIÉES du métier — le Marchand
-  //  est un métier de production à part entière (+2 Or / tour) dont
-  //  les emplacements viennent des Mines d'Or (bâtiment) et des
-  //  routes commerciales (+1 par route, chaque côté —
-  //  emplacementsRoutesVille ci-dessous). Le littéral « Marchand »
-  //  est le doublet moteur de TITRE_MARCHAND (engine/commerce.ts).
-  out.push('Marchand')
   // Vague 3a (2026-10-21) : AUCUNE éducation n'est requise — les métiers
   //  de production (Pêcheur, Bûcheron, Mineur…), la Garde, le Banquier
   //  et le Troubadour sont attribuables manuellement (l'avertissement
@@ -329,16 +325,19 @@ export function emplacementsMetierVille(
 
 /** Emplacements de `metier` ouverts par les routes commerciales
  *  dissociées (sous-vague 3b, 2026-10-24, arbitrage Thibaut) dans la
- *  ville `villeNom` du joueur `joueur` : +1 Marchand par route
- *  SORTANTE (joueur à l'origine) et +1 Marchand par route ENTRANTE
- *  (joueur ciblé), plus les emplacements du métier copié dans
- *  l'aménagement visé par chaque route sortante (la copie vit dans
- *  la ville d'ORIGINE — engine/commerce.ts, effetsRouteProprietaire).
- *  Lecture INLINE de state.routesCommerce, sans import de
- *  commerce.ts (anti-cycle) : le titre « Marchand » y vit en
- *  doublet du littéral ci-dessous (TITRE_MARCHAND). Les vieilles
- *  routes du modèle « marchand titulaire » (champ marchandId,
- *  retiré du modèle le 2026-10-24) ne comptent PAS. */
+ *  ville `villeNom` du joueur `joueur` : uniquement les emplacements
+ *  du métier copié dans l'aménagement visé par chaque route
+ *  SORTANTE (la copie vit dans la ville d'ORIGINE —
+ *  engine/commerce.ts, effetsRouteProprietaire). Les routes
+ *  ENTRANTES n'ouvrent plus RIEN côté cible : le +1 Marchand par
+ *  route (chaque côté), ajouté par la sous-vague 3b, a été RETIRÉ le
+ *  2026-10-24 avec le métier de Marchand lui-même (arbitrage Thibaut
+ *  : « supprime carrément le métier de marchand ») ; une route vers
+ *  une cité libre octroie désormais +1 émissaire (citesLibres.ts,
+ *  emissairesEffectifsCite). Lecture INLINE de state.routesCommerce,
+ *  sans import de commerce.ts (anti-cycle). Les vieilles routes du
+ *  modèle « marchand titulaire » (champ marchandId, retiré du
+ *  modèle le 2026-10-24) ne comptent PAS. */
 function emplacementsRoutesVille(
   metier: string, state: GameState, joueur: number, villeNom: string, C: Cfg,
 ): number {
@@ -348,16 +347,12 @@ function emplacementsRoutesVille(
   for (const r of routes) {
     if ('marchandId' in r) continue
     if (r.joueur === joueur && r.villeOrigine === villeNom) {
-      if (metier === 'Marchand') total += 1
       const ref = r.amenagement ? constructionRef(r.amenagement, C.config) : null
       if (ref) {
         for (const e of emplacementsConstructionRef(ref)) {
           if (e.metier === metier) total += e.places
         }
       }
-    }
-    if (r.joueurCible === joueur && r.villeCible === villeNom && metier === 'Marchand') {
-      total += 1
     }
   }
   return total
@@ -514,15 +509,32 @@ export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)
     }
     for (const ville of p.villes) {
       const vivants = vivantsParVille.get(ville.nom) ?? []
+      // 0. purge des métiers RETIRÉS du référentiel (2026-10-24,
+      //    arbitrage Thibaut : « supprime carrément le métier de
+      //    marchand ») : le Marchand n'existe plus — ses porteurs des
+      //    parties en cours perdent le titre (passage Sans-emploi),
+      //    AVANT le surnombre ; la passe places libres ci-dessous
+      //    leur redonne un poste aux places disponibles. Garde « si
+      //    le métier n'est plus dans C.metiers » : une config future
+      //    qui le réintroduirait ne serait pas purgée.
+      if (!C.metiers.some((t) => t.metier === 'Marchand')) {
+        const exMarchands = vivants.filter((c) => c.metier === 'Marchand')
+        if (exMarchands.length > 0) {
+          for (const c of exMarchands) c.metier = null
+          state.log.push({
+            turn: state.turn + 1, type: 'Métier', joueur: p.n,
+            texte: `${ville.nom} : le métier de Marchand a été retiré du jeu — ${exMarchands.length} habitant(s) perd(ent) le titre (sans emploi, puis reprise d'un poste aux places libres).`,
+          })
+        }
+      }
       // 1. surnombre : par métier plafonné, les plus âgés sortent.
       //    Sous-vague 3b (2026-10-24, arbitrage Thibaut) : les routes
       //    commerciales dissociées ne portent PLUS de marchand
       //    titulaire — l'ancienne exemption « tientRoute » (un
       //    marchand qui tient une route n'est jamais en surnombre)
-      //    est retirée ; les emplacements de Marchand ouverts par les
-      //    routes sont désormais portés par le cap lui-même (ctx
-      //    routes ci-dessous), donc le surnombre ne peut plus vider
-      //    une route de son titulaire.
+      //    est retirée ; les emplacements ouverts par les routes
+      //    (copie d'aménagement à l'origine) sont portés par le cap
+      //    lui-même (ctx routes ci-dessous).
       const enPoste: Record<string, Character[]> = {}
       for (const c of vivants) {
         if (!c.metier) continue

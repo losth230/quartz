@@ -21,7 +21,7 @@ export function AideAuto() {
             <li><strong>Consommation des habitations</strong> (rang de chaque ville) et <strong>bonus de proximité</strong> (Rivière / Mer).</li>
             <li><strong>Règles de pays & culture</strong> (ex. +N par ville de ta culture dans le monde) et <strong>lois de régime</strong>.</li>
             <li><strong>Tribut des vassaux</strong> et <strong>taxes des cités libres</strong> sous ta suzeraineté.</li>
-            <li><strong>Routes commerciales</strong> (dissociées, sous-vague 3b) : +1 emplacement de Marchand chaque côté + copie de l'aménagement dans la ville d'origine (une production d'été n'est copiée qu'en été) — plus d'Or passif.</li>
+            <li><strong>Routes commerciales</strong> (dissociées, sous-vague 3b) : copie de l'aménagement dans la ville d'origine, y compris ses emplacements de métier (une production d'été n'est copiée qu'en été) ; vers une cité libre, +1 émissaire auprès de la cité tant que la route est active — plus d'Or passif, plus de métier de Marchand (retiré du jeu le 2026-10-24).</li>
             <li><strong>Gouverneur</strong> : le noble le plus âgé est nommé automatiquement, +10 % d'impôts sur sa ville.</li>
             <li><strong>Tourisme = comme le Bois, sauf qu'il ne s'accumule pas</strong> : sa production est affichée et comptée partout (récaps de ville et de tour, canaux, tableaux) — bâtiments (Chapelle +35), Artistes, lois de culture, techs, vassalité — mais à chaque fin de tour le stock est RECALCULÉ pour égaler la production courante (stock = prod, jamais cumulé). Garnison : valeur d'état.</li>
             <li><strong>Démographie des joueurs</strong> : naissances (modulées par les taxes), vieillissement, décès, migrations scolaires (vers un Professeur).</li>

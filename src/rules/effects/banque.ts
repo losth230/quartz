@@ -153,7 +153,9 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     case 'fluxParMetier': {
       // Production par TITULAIRE VIVANT du metier dans la population
       //  du joueur (générique `prodParMetier` du référentiel — ex.
-      //  Commerce lointain : +3 Or par Marchand vivant).
+      //  historique : Commerce lointain +3 Or par Marchand vivant,
+      //  avant le retrait du métier le 2026-10-24, arbitrage
+      //  Thibaut ; l'effet est générique et survit au métier).
       const vivants = (ctx.state.population[ctx.joueur.n] ?? []).filter((c) => c.statut !== 'Décédé')
       const nb = vivants.filter((c) => c.metier === e.metier).length
       if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb

@@ -245,7 +245,9 @@ const PROGRES_FLUX: RegleBanque[] = [
 export function reglesProgres(C: Cfg): RegleBanque[] {
   const out: RegleBanque[] = PROGRES_FLUX.map((r) => ({ ...r, effets: [...r.effets] }))
   // Génériques prodParMetier du référentiel (+N ressource par
-  //  TITULAIRE vivant — ex. Commerce lointain : +3 Or par Marchand).
+  //  TITULAIRE vivant — ex. historique : Commerce lointain +3 Or par
+  //  Marchand, avant le retrait du métier le 2026-10-24 ; le mécanisme
+  //  est générique, aucune tech ne l'utilise à ce jour).
   const techs: Array<{ nom: string; cle: string; effets?: Array<{ type?: string; montant?: number; ressource?: string; metier?: string }> | undefined }> = []
   C.config.progres.forEach((a, i) => {
     ;(a.brancheA ?? []).forEach((t, j) => techs.push({ nom: t.nom, cle: `${i}:a${j + 1}`, effets: t.effets }))

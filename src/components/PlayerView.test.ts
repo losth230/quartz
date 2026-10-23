@@ -27,7 +27,7 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
 
   assert.ok(html.length > 2000, `page trop courte pour être complète : ${html.length} caractères`)
   assert.ok(html.includes('Culture du pays'), 'carte « Culture du pays » absente')
-  assert.ok(html.includes('Commerce — routes des marchands'), 'carte « Commerce » absente')
+  assert.ok(html.includes('Commerce — routes commerciales'), 'carte « Commerce » absente')
   assert.ok(html.includes('Récap des ressources par tour'), 'carte « Récap par tour » absente')
   assert.ok(html.includes('Récap ressources du dernier tour'), 'carte « Récap dernier tour » absente')
   assert.ok(html.includes('grid-villes'), 'grille des villes absente')

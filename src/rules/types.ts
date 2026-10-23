@@ -163,12 +163,15 @@ export interface EffetFluxParGarnisonHabitation {
 
 /** Production par tour, PAR TITULAIRE VIVANT du metier donné dans la
  *  population du joueur (générique des techs `prodParMetier` du
- *  référentiel — ex. Commerce lointain : +3 Or par Marchand). */
+ *  référentiel — ex. historique : Commerce lointain +3 Or par
+ *  Marchand, avant le retrait du métier le 2026-10-24, arbitrage
+ *  Thibaut ; le mécanisme reste disponible). */
 export interface EffetFluxParMetier {
   type: 'fluxParMetier'
   ressource: string
   valeur: number
-  /** metier exact (ex. 'Marchand', 'Ministre') */
+  /** metier exact (ex. 'Ministre' ; le Marchand a été retiré du
+   *   jeu le 2026-10-24) */
   metier: string
 }
 
@@ -248,12 +251,17 @@ export interface EffetReductionLeveeArmee {
 }
 
 /** Émissaires : gain immédiat (Pacifisme : 1 émissaire cité libre au
- *  choix) ou capacité maximale augmentée (Capitalisme : +1 marchand). */
+ *  choix) ou capacité maximale augmentée. Le champ `marchandsMax`
+ *  (Capacité de marchands, ex. Capitalisme : +1) est HISTORIQUE et
+ *  sans lecteur — le métier de Marchand a été retiré du jeu le
+ *  2026-10-24 (arbitrage Thibaut) ; conservé pour ne pas casser les
+ *  vieilles configs. */
 export interface EffetEmissaires {
   type: 'emissaires'
   /** nombre d'émissaires gagnés immédiatement */
   gain: number
-  /** capacité maximale de marchands +N (0 = sans effet) */
+  /** ANCIENNE capacité maximale de marchands +N (sans lecteur
+   *   depuis le retrait du métier le 2026-10-24) */
   marchandsMax?: number
 }
 

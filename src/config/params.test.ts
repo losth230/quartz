@@ -68,13 +68,17 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   assert.equal(C.config.schemaVersion, 4, 'tampon posé à la version courante')
   // referentiel converti : table metiers, champ metier — la vague 3a
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
-  //  du nouveau référentiel derrière la table convertie : 1 Testeur + 24.
-  assert.equal(C.metiers.length, 25)
+  //  du nouveau référentiel derrière la table convertie : 1 Testeur +
+  //  23 (le Marchand est retiré du jeu le 2026-10-24, arbitrage
+  //  Thibaut — la purge de cfgOf le retire aussi des configs v2).
+  assert.equal(C.metiers.length, 24)
   assert.equal(C.metiers[0].metier, 'Testeur', 'le champ interne titre devient metier')
   assert.ok(C.metiers.some((m) => m.metier === 'Fermier'), 'vague 3a : les métiers manquants sont ajoutés')
   assert.ok(!C.metiers.some((m) => m.metier === 'Propagandiste'), 'vague 3a : Propagandiste retiré')
-  // banque convertie : champ interne renommé aussi (Testeur + 12 défauts)
-  assert.equal(C.config.metiersEffets.length, 13)
+  assert.ok(!C.metiers.some((m) => m.metier === 'Marchand'), 'Marchand retiré du jeu (2026-10-24) : purge de cfgOf')
+  // banque convertie : champ interne renommé aussi (Testeur + 11 défauts
+  //  — l entrée Marchand a disparu du référentiel avec le métier)
+  assert.equal(C.config.metiersEffets.length, 12)
   assert.equal(C.config.metiersEffets[0].metier, 'Testeur')
   // effet de tech converti
   const techApres = (C.config.progres?.[0]?.brancheA?.[0] ?? {}) as unknown as { effets?: Array<{ type?: string; metier?: string }> }

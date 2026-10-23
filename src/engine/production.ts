@@ -174,8 +174,9 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
     }
   }
 
-  // Commerce : routes commerciales des marchands — routes possédées
-  //  (Or + copie) et routes entrantes (Or passif), saisonnières.
+  // Commerce : routes possédées (copie de l'aménagement visé —
+  //  plus de Marchand depuis le retrait du métier le 2026-10-24,
+  //  arbitrage Thibaut), saisonnières.
   const commerce: Record<string, number> = {}
   for (const [res, v] of Object.entries(effetsCommerceJoueur(state, p, saison, C))) {
     if (v !== 0) commerce[res] = v
@@ -389,8 +390,9 @@ export function provenancesApports(
     }
   }
 
-  // Commerce : routes commerciales des marchands — possédées (Or +
-  //  copie d'un aménagement de la ville ciblée) et entrantes (Or passif).
+  // Commerce : routes possédées (copie d'un aménagement de la ville
+  //  ciblée — les routes entrantes ne créditent plus rien depuis la
+  //  vague 3b, puis le retrait du métier de Marchand le 2026-10-24).
   for (const d of detailCommerceJoueur(state, p, saison, C)) {
     for (const [res, v] of Object.entries(d.effets)) {
       push(res, 'Commerce', d.origine, v)
