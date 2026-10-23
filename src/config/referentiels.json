@@ -2751,989 +2751,6 @@
       ]
     }
   ],
-  "batimentsVille": [
-    {
-      "categorie": "",
-      "nom": "Hameau : 20 Or + 10 Bois  + 6 Bétail",
-      "cout": "",
-      "effet": ""
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Poste de garde",
-      "cout": "25 Or + 4 Fer",
-      "effet": "+4 emplacements de Garde."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Herses",
-      "cout": "4 Or  +  2  Bois",
-      "effet": "Ajoute deux Herses lors de bataille de siège, aux endroits choisis par le défenseur."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de bûcheron",
-      "cout": "5 Or + 1 Bétail.",
-      "effet": "+2 emplacements de Bûcheron."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de mineur",
-      "cout": "5 Or + 1 Charbon.",
-      "effet": "+2 emplacements de Mineur."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Echoppe",
-      "cout": "10 Or + 3 Bois.",
-      "effet": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Grange",
-      "cout": "10 Or + 3 Bétail + 3 Bois.",
-      "effet": "+2 emplacements d'Éleveur, +4 emplacements de Fermier."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Herboristerie",
-      "cout": "10 Or + 2 Pierre",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 5%"
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Ponton",
-      "cout": "5 Or + 5 Bois.",
-      "effet": "+2 emplacements de Pêcheur. Les pêcheurs de cette habitation produisent également +0,5 Bétail par tour. Habitations côtières uniquement (proximité Rivière ou Mer)."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Caserne",
-      "cout": "Poste de garde requis. 25 Or + 4 Fer.",
-      "effet": "Consomme 10 Nourritures par tour. Garnison +40."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Réseau de routes",
-      "cout": "15 Or + 4 Soie.",
-      "effet": "Les cases dans l'enceinte de cette habitation ne coûtent qu'un PM à franchir."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Tour de sorcier",
-      "cout": "40 Or + 12 Pierres.",
-      "effet": "Une armée amie peut se téléporter à une autre Tour de sorcier amie pour 1 Or par case traversée et 1 PM."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de bâtisseurs",
-      "cout": "10 Or + 4 Pierre.",
-      "effet": "Réduit le coût de construction des aménagements de 5 Or et 1 Bois."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de travailleurs",
-      "cout": "10 Or + 4 Pierre.",
-      "effet": "Remplace le Camp de bûcherons ou de mineurs.\n+1 Bois et +1 Pierre par tour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Etable",
-      "cout": "Grange requise. \n10 Or + 4 Bois + 4 Bétail.",
-      "effet": "Vous pouvez dépenser 8 Bétails pour ajouter une ressource de Bétail dans l'enceinte de la Cité."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Moulin à vent",
-      "cout": "Silot à grain requis.\n15 Or + 4 Bois + 4 Bétail.",
-      "effet": "Remplace le Silo à grain. Consomme 1 Charbon par tour.\n+ 45 Nourriture par tour.\nCette cité ne peut être améliorée en Grande Cité."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Clinique",
-      "cout": "Herboristerie requise.\n30 Or + 6 Pierre",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 10%"
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Place du marché",
-      "cout": "Echoppe requise.\n20 Or + 6 Soie.",
-      "effet": "+4 Or par tour. Les marchands en provenance de cette ville produisent +1 ressource."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Port de commerce",
-      "cout": "Ponton requis.\n20 Or + 6 Bois +4 Fer.",
-      "effet": "+1 Or par case maritime, Coût des Bâteaux -15 Or."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Port de pêche",
-      "cout": "20 Or + 4 Bétail + 4 Bois.",
-      "effet": "Ponton requis. Les ressources maritimes aménagées rapportent +4 Nourritures par tour, vous pouvez dépenser 8 Bétails pour ajouter une ressource de Crabe dans l’enceinte de la Cité."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Silo à grain",
-      "cout": "20 Or + 8 Bois.",
-      "effet": "Remplace la Grange.\n+ 25 Nourriture par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des artisans de la terre.",
-      "cout": "40 Or + 16 Bois + 6 Bétails",
-      "effet": "Remplace le moulin à vent. Consomme 1 Charbon par tour. + 45 Nourriture par tour et réduit de 10 la consommation en nourriture de toutes vos Habitations. Cette cité ne peut être améliorée en Grande Cité."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Grande Cité : 40 Or + 12 Bétail + 12 Charbons, 200 habitants requis",
-      "cout": "",
-      "effet": ""
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Barraquements",
-      "cout": "Caserne requise.\n25 Or + 4 Fer.",
-      "effet": "Consomme 10 Nourritures par tour. Garnison +40."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Responsable des voiries",
-      "cout": "30 Or + 6 Soie.",
-      "effet": "Les cases à 3 cases ou moins de cette habitation ne coûtent qu'un PM à franchir."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Complexe d'exploitation maritime",
-      "cout": "Ressource maritime aménagée requise.\n35 Or + 6 Fer.",
-      "effet": "+12 Or par tour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Complexe d'exploitation terrestre",
-      "cout": "Camp de travailleurs requis.\n20 Or + 6 Fer + 8 Charbon",
-      "effet": "+1 Bois, +1 Pierre, +1 Fer, +1 Soie, +1 Charbon par pour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Plateforme commerciale",
-      "cout": "Place du marché requise.\n40 Or + 12 Bois +4 Soie.",
-      "effet": "Octroi un marchand. Les marchands en provenance de cette ville produisent +4 Or par tour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Hôpital",
-      "cout": "Pavillon requis.\n40 Or + 10 Pierre +4 Fer.",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 15%"
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des bourgeois",
-      "cout": "Quartier requis.\n60 Or + 6 Charbon + 6 Soie.",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 15% et un bonus jsplus ce que c'est"
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des marchands",
-      "cout": "Plateforme commerciale requise.\n30 Or + 8 Charbon + 8 Soie.",
-      "effet": "Remplace la plateforme commerciale. Consomme 1 Charbon par tour. Octroi un marchand supplémentaire. Les marchands en provenance de cette ville produisent +1 Or par case traversée. La portée de vos routes commerciale est augmentée de 6 cases."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des marins",
-      "cout": "Complexe d'exploitation maritime requis.\n50 Or + 4 Fer + 6 Charbon.",
-      "effet": "Remplace le Complexe d'exploitation maritime. Consomme 1 Charbon par tour.\n+ 18 Or par tour. Toutes vos bâteaux possèdent +2 PM."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "2",
-      "cout": "Jardin Flamboyants",
-      "effet": "+10 Nourriture par tour.\n+10 habitants à la construction d'une habitation."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "3",
-      "cout": "Pic Ascendant",
-      "effet": "+1 Science par tour.\nLorsque vous attaquez une habitation, sa garnison est réduite de 30."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "4",
-      "cout": "Ruines de Seth",
-      "effet": "+2 Or par case de désert dans votre pays."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "5",
-      "cout": "Sépulcre du \nRayonnant",
-      "effet": "+15 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "6",
-      "cout": "Trésor du Roi Sorcier",
-      "effet": "+4 Or par rang de l'habitation."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "7",
-      "cout": "Fontaine des Miracles",
-      "effet": "Chaque fois qu'un personnage à votre cour tombe malade, jetez un dé, sur 8+ il est guérit.\nTourisme + 8."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "8",
-      "cout": "Larme Divine",
-      "effet": "+20 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "9",
-      "cout": "Pilliers Célestes",
-      "effet": "Augmente la garnison de l'ensemble de vos habitations de 20."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "10",
-      "cout": "Echine du Dragon",
-      "effet": "+1 Fer et +1 Charbon par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "11",
-      "cout": "Bassin des Reflets",
-      "effet": "Vos habitations côtières fournissent +2 Or par tour. \n+1 Science par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "12",
-      "cout": "Griffes de la Bête",
-      "effet": "Coût de recrutement des armées dans cette habitation réduit de 10 Or."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "13",
-      "cout": "L'Œil Endormi",
-      "effet": "+1 Science par tour. +8 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "14",
-      "cout": "Cœur Ancestral",
-      "effet": "+1 Gemme par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "15",
-      "cout": "L'Ecaille rugissante",
-      "effet": "Augmente la garnison de l'habitation de 20.\n+1 Pierre par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "16",
-      "cout": "La Dent Rocheuse",
-      "effet": "Garnison +15, +12 Tourisme."
-    }
-  ],
-  "batimentsChateau": [
-    {
-      "categorie": "",
-      "nom": "Motte : 20 Or + 12 Bois  + 2 Bétail",
-      "cout": "",
-      "effet": ""
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Poste de garde",
-      "cout": "25 Or + 4 Fer",
-      "effet": "+4 emplacements de Garde."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Herses",
-      "cout": "4 Or + 2 Bois",
-      "effet": "Ajoute deux Herses lors de bataille de siège, aux endroits choisis par le défenseur."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de bûcheron",
-      "cout": "5 Or + 1 Bétail.",
-      "effet": "+2 emplacements de Bûcheron."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp de mineur",
-      "cout": "5 Or + 1 Charbon.",
-      "effet": "+2 emplacements de Mineur."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Camp d'ingénieur",
-      "cout": "10 Or + 2 Bois +2 Fer.",
-      "effet": "Les améliorations de fortifications (rouges) coûtent 6 Or et 2 Bois de moins."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Conjuratoire",
-      "cout": "10 Or + 2 Pierre.",
-      "effet": "Tourisme +15."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Ecole élémentaire",
-      "cout": "10 Or + 2 Bétail.",
-      "effet": "Consomme 1 Or par tour.\n+1 emplacement de Professeur et +1 emplacement de chercheur (Scientifique)."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Echoppe",
-      "cout": "12 Or + 2 Bois.",
-      "effet": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Herboristerie",
-      "cout": "10 Or + 2 Pierre",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 5%"
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Terrain d'entrainement",
-      "cout": "12 Or + 3 Bois.",
-      "effet": "Si vous levez une armée dans cette habitation, dépensez 10 Or de moins."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Caserne",
-      "cout": "Poste de garde requis. 25 Or + 4 Fer.",
-      "effet": "Consomme 10 Nourritures par tour. Garnison +40."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Réseau de routes",
-      "cout": "15 Or + 4 Soie.",
-      "effet": "Les cases dans l'enceinte de cette habitation ne coûtent qu'un PM à franchir."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Tour de sorcier",
-      "cout": "40 Or + 12 Pierres.",
-      "effet": "Une armée amie peut se téléporter à une autre Tour de sorcier amie pour 1 Or par case traversée et 1 PM."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Cabinet d'astronomie",
-      "cout": "5 Or + 4 Pierre + 2 Soie.",
-      "effet": "+1 Science par tour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Chapelle",
-      "cout": "Conjuratoire requis.\n10 Or + 8 Pierre",
-      "effet": "Tourisme +35."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Ecole intermédiaire",
-      "cout": "16 Or + 6 Pierre",
-      "effet": "Remplace l'école élémentaire. Consomme 3 Or par tour, peut accueillir 2 Professeurs. Coût des Progrès \n-2 Science."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Ecole militaire",
-      "cout": "Terrain d'entrainement requis.\n20 Or + 6 Bois + 4 Fer.",
-      "effet": "Si vous levez une armée dans cette habitation, dépensez 25 Or de moins."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Clinique",
-      "cout": "Herboristerie requise.\n30 Or + 6 Pierre",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 10%"
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des explorateurs",
-      "cout": "Ecole militaire et responsable des voiries requis.\n60 Or + 6 Pierre + 12 Soie.",
-      "effet": "Consomme 1 Charbon par tour. Vos armées possèdent +1 PM. Coût de levée d'armée -20 Or."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Forteresse : 120 Or + 10 Pierres + 12  Fer, 200 habitants requis",
-      "cout": "",
-      "effet": ""
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Barraquements",
-      "cout": "Caserne requise.\n25 Or + 4 Fer.",
-      "effet": "Consomme 10 Nourritures par tour. Garnison +40."
-    },
-    {
-      "categorie": "Militaire",
-      "nom": "Responsable des voiries",
-      "cout": "30 Or + 6 Soie.",
-      "effet": "Les cases à 3 cases ou moins de cette habitation ne coûtent qu'un PM à franchir."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Commanderie",
-      "cout": "Chapelle requise.\n40 Or + 12 Pierre + 6 Fer.",
-      "effet": "Tourisme +50."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Ecole supérieure",
-      "cout": "Ecole intermédiaire requise. 20 Or + 10 Pierre + 4 soie.",
-      "effet": "Remplace l'école élémentaire. Consomme 6 Or par tour, peut accueillir 3 Professeurs. Coût des Progrès \n-4 Science."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Institut de recherche",
-      "cout": "Cabinet d'astronomie requis 20 Or +6 Pierre + 8 Soie",
-      "effet": "+3 Science par tour."
-    },
-    {
-      "categorie": "Economique",
-      "nom": "Hôpital",
-      "cout": "Pavillon requis.\n40 Or + 10 Pierre +4 Fer.",
-      "effet": "Chances de contracter une maladie et de guérir  d'une maladie augmentées de 15%"
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des diplomates",
-      "cout": "Ecole supérieure requise. 120 Or + 12 Pierre.",
-      "effet": "+2 Soie par tour. À la construction : +3 émissaires en réserve (automatique)."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des évangiles",
-      "cout": "Commanderie requise.\n60 Or + 12 Fer.",
-      "effet": "Remplace le conjuratoire. Consomme 1 Charbon par tour. Tourisme +70. Vos propagandistes poddèdent une charge supplémentaire."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Guilde des savants",
-      "cout": "Institut de recherche requis.\n50 Or + 6 Charbon + 8 Soie",
-      "effet": "Remplace l'institut de recherche. Consomme 1 Charbon par tour.\n+6 Science par tour. Gagnez 20  Science lors de sa construction."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Merveilles Mondiales",
-      "cout": "",
-      "effet": ""
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Antichambre d'Alexandrie",
-      "cout": "Habitation rang 3.\n70 Or + 50 Pierre.",
-      "effet": "Lors de sa construction, augmentez votre réserve d'Or de 50%.\n+14 Or par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Antre de la déesse araignée",
-      "cout": "Habitation rang 3.\n80 Or + 30 Soie + 20 Charbon.",
-      "effet": "+2 Soie par tour. À la construction : +3 émissaires en réserve (automatique)."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Laboratoire d'expérimentations de Falheim",
-      "cout": "Habitation rang 3.\n90 Or + 40 Pierre +20 Fer.",
-      "effet": "Double la Science générée par votre capitale."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Ordre des chevaliers d'Orcre",
-      "cout": "Habitation rang 3.\n70 Or + 40 Fer + 20 Charbon",
-      "effet": "Lors de sa construction, recrutez une armée avec un coût réduit de 50 Or. Lorsqu'une de vos armées attaque une habitation, réduit sa garnison de 150."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Palais des empereurs de Lun",
-      "cout": "Habitation rang 3.\n100 Or + 30 Bois + 30 Pierre",
-      "effet": "Lors se sa construction, chaque habitation de chaque joueur voit se convertir 5 habitants.\n+20 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Tour de Crystal",
-      "cout": "Habitation rang 3.\n80 Or + 10 Soie + 30 Pierre",
-      "effet": "Lorsque vous découvrez un progrès, générez 3 d'une ressource de base aléatoire. +5 Science par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Temple de bahamutt",
-      "cout": "Habitation rang 2+.\n40 Or + 20 Fer.",
-      "effet": "Recruter des armées coûte 20 Or de moins.\n+16 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Mont Caracole",
-      "cout": "Habitation rang 1+.\n30 Or + 15 Fer.",
-      "effet": "Cette merveille est considérée comme une tour de défense. L'habitation est protégée contre les tremblements de terre et éruptions volcaniques. Garnison + 40."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Sanctuaire de Salmodiva",
-      "cout": "Habitation rang 1+.\n20 Or + 20 Bois.",
-      "effet": "+25 Nourriture par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Grands bains",
-      "cout": "Habitation rang 1+.\n30 Or + 10 Fer.",
-      "effet": "Les marais à 5 cases ou moins sont protégés contre les innondations.\n+8 Tourisme. +4 Or par tour."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Musée d'Archéologie",
-      "cout": "Habitation rang 2+. 40 Or +30 Pierre +20 Soie.",
-      "effet": "+30 Tourisme."
-    },
-    {
-      "categorie": "Guilde",
-      "nom": "Jardins d'Alexandrie",
-      "cout": "Habitation rang 1+.\n40 Or + 10 Bétail + 40 Nourriture.",
-      "effet": "+40 Habitants lors de sa construction."
-    }
-  ],
-  "batimentsCouts": [
-    {
-      "batiment": "Cabinet d'astronomie",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Camp de bâtisseurs",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Pierre": 4,
-      "Nourriture": 10
-    },
-    {
-      "batiment": "Camp de bûcheron",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Bétail": 1,
-      "Nourriture": 8
-    },
-    {
-      "batiment": "Camp de mineur",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Charbon": 1,
-      "Nourriture": 8
-    },
-    {
-      "batiment": "Camp de travailleurs",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Fer": 4,
-      "Nourriture": 15
-    },
-    {
-      "batiment": "Camp d'ingénieur",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Chapelle",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Clinique",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Commanderie",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Complexe d'exploitation maritime",
-      "habitation": "Ville",
-      "rang": "3",
-      "type": "Economique",
-      "prerequis": "",
-      "Fer": 6,
-      "Nourriture": 35
-    },
-    {
-      "batiment": "Complexe d'exploitation terrestre",
-      "habitation": "Ville",
-      "rang": "3",
-      "type": "Economique",
-      "prerequis": "",
-      "Charbon": 6,
-      "Fer": 6,
-      "Soie": 6,
-      "Nourriture": 20
-    },
-    {
-      "batiment": "Conjuratoire",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Echoppe",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Bois": 3,
-      "Nourriture": 8
-    },
-    {
-      "batiment": "Ecole élémentaire",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Ecole intermédiaire",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Ecole militaire",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Ecole supérieure",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Etable",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Bétail": 4,
-      "Bois": 4,
-      "Nourriture": 10
-    },
-    {
-      "batiment": "Grange",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Bétail": 3,
-      "Bois": 3,
-      "Nourriture": 5
-    },
-    {
-      "batiment": "Guilde des  médecins",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des diplomates",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des évangiles",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des explorateurs",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des marchands",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des marins",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guilde des savants",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Guile des artisans de la terre",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Guilde",
-      "prerequis": "",
-      "Bétail": 6,
-      "Bois": 16,
-      "Nourriture": 40
-    },
-    {
-      "batiment": "Herboristerie",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Hôpital",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Institut de recherche",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    },
-    {
-      "batiment": "Moulin à vent",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Bétail": 4,
-      "Bois": 6,
-      "Nourriture": 15
-    },
-    {
-      "batiment": "Place du marché",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Soie": 6,
-      "Nourriture": 20
-    },
-    {
-      "batiment": "Plateforme commerciale",
-      "habitation": "Ville",
-      "rang": "3",
-      "type": "Economique",
-      "prerequis": "",
-      "Bois": 12,
-      "Soie": 4,
-      "Nourriture": 40
-    },
-    {
-      "batiment": "Ponton",
-      "habitation": "Ville",
-      "rang": "1",
-      "type": "Economique",
-      "prerequis": "",
-      "Bois": 5,
-      "Nourriture": 5
-    },
-    {
-      "batiment": "Port de commerce",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Bois": 6,
-      "Fer": 4,
-      "Nourriture": 20
-    },
-    {
-      "batiment": "Port de pêche",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Bétail": 4,
-      "Bois": 4,
-      "Nourriture": 20
-    },
-    {
-      "batiment": "Silo à grain",
-      "habitation": "Ville",
-      "rang": "2",
-      "type": "Economique",
-      "prerequis": "",
-      "Bois": 8,
-      "Nourriture": 20
-    },
-    {
-      "batiment": "Terrain d'entrainement",
-      "habitation": "",
-      "rang": "",
-      "type": "",
-      "prerequis": ""
-    }
-  ],
-  "amenagements": [
-    {
-      "amenagement": "Baleine",
-      "type": "",
-      "rang": "Rang I 1",
-      "effet": ""
-    },
-    {
-      "amenagement": "Brasserie",
-      "type": "",
-      "rang": "Rang II 2",
-      "effet": ""
-    },
-    {
-      "amenagement": "Carrière",
-      "type": "",
-      "rang": "Rang III 3",
-      "effet": ""
-    },
-    {
-      "amenagement": "Champ",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Crabe",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Foire",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Mine de Charbon",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Mine de Fer",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Mine d'Or",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Observatoire",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Pâturage",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Rizière",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Ruines",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Scierie",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Sériculture",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Bâtiment",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Banque centrale",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Grande caserne",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Hôtel de tourisme",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Jardin intérieur",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    },
-    {
-      "amenagement": "Observatoire",
-      "type": "",
-      "rang": " ",
-      "effet": ""
-    }
-  ],
   "progres": [
     {
       "nom": "Progrès du développement côtier",
@@ -5183,7 +4200,9 @@
       "cout": "10 Or + 2 Pierre",
       "production": "",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
-      "rangMinHabitation": 1
+      "rangMinHabitation": 1,
+      "malContraction": 0.05,
+      "bonusGuerison": 0.05
     },
     {
       "categorie": "Bâtiment",
@@ -5310,7 +4329,9 @@
       "cout": "Herboristerie requise. 30 Or + 6 Pierre",
       "production": "",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 10%.",
-      "rangMinHabitation": 2
+      "rangMinHabitation": 2,
+      "malContraction": 0.1,
+      "bonusGuerison": 0.1
     },
     {
       "categorie": "Bâtiment",
@@ -5656,7 +4677,8 @@
           "metier": "Scientifique",
           "places": 1
         }
-      ]
+      ],
+      "ecoleRang": 1
     },
     {
       "categorie": "Bâtiment",
@@ -5683,7 +4705,9 @@
       "cout": "10 Or + 2 Pierre",
       "production": "",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
-      "rangMinHabitation": 1
+      "rangMinHabitation": 1,
+      "malContraction": 0.05,
+      "bonusGuerison": 0.05
     },
     {
       "categorie": "Bâtiment",
@@ -5781,7 +4805,8 @@
           "quantite": -3
         }
       ],
-      "rangMinHabitation": 2
+      "rangMinHabitation": 2,
+      "ecoleRang": 2
     },
     {
       "categorie": "Bâtiment",
@@ -5801,7 +4826,9 @@
       "cout": "Herboristerie requise. 30 Or + 6 Pierre",
       "production": "",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 10%.",
-      "rangMinHabitation": 2
+      "rangMinHabitation": 2,
+      "malContraction": 0.1,
+      "bonusGuerison": 0.1
     },
     {
       "categorie": "Bâtiment",
@@ -5879,7 +4906,8 @@
           "quantite": -6
         }
       ],
-      "rangMinHabitation": 3
+      "rangMinHabitation": 3,
+      "ecoleRang": 3
     },
     {
       "categorie": "Bâtiment",
@@ -7061,48 +6089,130 @@
       "rang": "Hameau",
       "cout": "20 Or + 10 Bois + 6 Bétail",
       "habitantsRequis": 0,
-      "metiersDisponibles": "50 Chasseurs, 2 Gardes, 1 Commerçant, 1 Gouverneur",
-      "domicilesDisponibles": "50 maisons, 10 Auberge"
+      "domicilesDisponibles": "50 maisons, 10 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Chasseur",
+          "places": 50
+        },
+        {
+          "metier": "Garde",
+          "places": 2
+        },
+        {
+          "metier": "Commerçant",
+          "places": 1
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     },
     {
       "type": "Ville",
       "rang": "Cité",
       "cout": "40 Or + 8 Bétail + 6 Pierres",
       "habitantsRequis": 120,
-      "metiersDisponibles": "30 Chasseurs, 4 Gardes, 5 Commerçants, 1 Gouverneur",
-      "domicilesDisponibles": "100 maisons, 50 Auberge"
+      "domicilesDisponibles": "100 maisons, 50 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Chasseur",
+          "places": 30
+        },
+        {
+          "metier": "Garde",
+          "places": 4
+        },
+        {
+          "metier": "Commerçant",
+          "places": 5
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     },
     {
       "type": "Ville",
       "rang": "Grande Cité",
       "cout": "40 Or + 12 Bétail + 12 Charbons",
       "habitantsRequis": 200,
-      "metiersDisponibles": "8 Gardes, 10 Commerçants, 1 Gouverneur",
-      "domicilesDisponibles": "150 maisons, 100 Auberge"
+      "domicilesDisponibles": "150 maisons, 100 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Garde",
+          "places": 8
+        },
+        {
+          "metier": "Commerçant",
+          "places": 10
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     },
     {
       "type": "Château",
       "rang": "Motte",
       "cout": "20 Or + 12 Bois + 2 Bétail",
       "habitantsRequis": 0,
-      "metiersDisponibles": "40 Chasseurs, 4 Gardes, 1 Gouverneur",
-      "domicilesDisponibles": "50 maisons, 10 Auberge"
+      "domicilesDisponibles": "50 maisons, 10 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Chasseur",
+          "places": 40
+        },
+        {
+          "metier": "Garde",
+          "places": 4
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     },
     {
       "type": "Château",
       "rang": "Donjon",
       "cout": "40 Or + 2 Bétail + 12 Pierres",
       "habitantsRequis": 120,
-      "metiersDisponibles": "20 Chasseurs, 8 Gardes, 1 Gouverneur",
-      "domicilesDisponibles": "100 maisons, 50 Auberge"
+      "domicilesDisponibles": "100 maisons, 50 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Chasseur",
+          "places": 20
+        },
+        {
+          "metier": "Garde",
+          "places": 8
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     },
     {
       "type": "Château",
       "rang": "Forteresse",
       "cout": "120 Or + 10 Pierres + 12 Fer",
       "habitantsRequis": 200,
-      "metiersDisponibles": "16 Gardes, 1 Gouverneur",
-      "domicilesDisponibles": "150 maisons, 100 Auberge"
+      "domicilesDisponibles": "150 maisons, 100 Auberge",
+      "metiersBase": [
+        {
+          "metier": "Garde",
+          "places": 16
+        },
+        {
+          "metier": "Gouverneur",
+          "places": 1
+        }
+      ]
     }
   ],
   "metiers": [
