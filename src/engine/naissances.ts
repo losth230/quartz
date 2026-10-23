@@ -11,41 +11,10 @@ import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
 import { bump, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
 import { killCharacter } from './sante'
+import { indexPopulationMonde, invaliderIndexPopulation } from './indexPopulation'
 
 
-/**
- * INDEX DE POPULATION MONDE (optimisation 2026-10-16) : carte
- * nomComplet -> personnage vivant, reconstruite UNE fois par tour
- * (invalidée à chaque appel pour rester correcte après migrations,
- * mariages et naissances — mais construite en O(N) au lieu d'être
- * rescannée en O(N) PAR APPEL). Les 16 000+ personnages de fin de
- * partie rendaient computeFecondite quadratique (≈ 3,5 s/tour).
- */
-let cacheIndexPop: { state: object; index: Map<string, Character> } | null = null
-function indexPopulationMonde(state: GameState): Map<string, Character> {
-  if (cacheIndexPop && cacheIndexPop.state === state) return cacheIndexPop.index
-  // M1 (2026-10-19) : index par ID (l'identité démographique n'est plus
-  //  le nom complet — collisions possibles à 16 000 habitants).
-  const index = new Map<string, Character>()
-  for (const liste of Object.values(state.population ?? {})) {
-    for (const c of liste ?? []) {
-      if (c.statut !== 'Décédé') index.set(c.id, c)
-    }
-  }
-  for (const cite of state.citesLibres ?? []) {
-    for (const c of cite.population ?? []) {
-      if (c.statut !== 'Décédé') index.set(c.id, c)
-    }
-  }
-  cacheIndexPop = { state, index }
-  return index
-}
-
-/** Invalide l'index (mariage, migration, naissance, mort : les noms
- *  complets changent d'état). Coût O(1). */
-export function invaliderIndexPopulation(): void {
-  cacheIndexPop = null
-}
+// Index de population (vague 2) : module bas dédié indexPopulation.ts.
 
 export function computeFecondite(state: GameState, p: Player, c: Character): number {
   // Retour Thibaut (revue 2026-10-15) : le champ affiché doit refléter

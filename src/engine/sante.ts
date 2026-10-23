@@ -5,7 +5,7 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import { invaliderIndexPopulation } from './naissances'
+import { invaliderIndexPopulation } from './indexPopulation'
 import type { Character, GameState, Player, PlayerRecap } from './types'
 import { makeRng, type Rng } from './rng'
 import { cfgOf, traitDef, type Cfg } from './gameData'

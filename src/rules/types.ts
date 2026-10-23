@@ -17,6 +17,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player, City } from '../engine/types'
+import type { Cfg } from '../config/defaultConfig'
 
 // ── Contexte d'application ────────────────────────────────────────────────
 
@@ -33,6 +34,22 @@ export interface ContexteEffet {
   ville?: City
   /** Saison du tour en cours. */
   saison: string
+  /** PORTS MOTEUR (vague 2, arbitrage Thibaut 2026-10-23 « tout dans
+   *  la vague 2 » — inversion de dépendance) : services injectés par le
+   *  site d'application (le MOTEUR construit le contexte). La couche
+   *  rules n'importe plus le moteur : plus de cfgOf/factions/regimes
+   *  dans src/rules — le cycle moteur→rules→moteur est cassé. Les
+   *  closures capturent joueur/C/state du site. */
+  ports: {
+    /** Config CONVERGÉE du site (cfgOf(state.config)). */
+    C: Cfg
+    /** Capitale du joueur (factions.ts). */
+    capitaleDe: (joueur: Player) => City | undefined
+    /** Rang d'habitation d'une ville (regimes.ts). */
+    rangNiveau: (ville: City) => number
+    /** Garnison des habitants d'une ville (regimes.ts). */
+    garnisonVille: (ville: City) => number
+  }
 }
 
 // ── Types d'effets de la banque ────────────────────────────────────────────
@@ -210,7 +227,7 @@ export interface EffetMigrationPoids {
 }
 
 /** Réduction du coût de construction (Or et/ou ressources de base) —
- *  ex. Grand bailli : −8 Or −3 Bois sur fondation d'habitation. */
+ *  ex. techs de fondation : −5 Bois, −20 Or (reductionFondation). */
 export interface EffetReductionCout {
   type: 'reductionCout'
   /** Type de construction concernée : 'habitation' | 'batiment' | 'amenagement' | 'merveille' | 'leveeArmee' */

@@ -9,7 +9,7 @@
 import type { Character, Player, GameState } from './types'
 import { cfgOf, cultureDef, metierDef } from './gameData'
 import { schoolRankOf } from './gameData2'
-import { isNobleDyn } from './engine'
+import { isNobleDyn } from './shared'
 
 export interface MetierIssue {
   ok: boolean

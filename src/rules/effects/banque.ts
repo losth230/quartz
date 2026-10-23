@@ -14,9 +14,6 @@
 import type {
   ContexteEffet, ContributionEffets, ConditionRegle, Effet, RegleBanque,
 } from '../types'
-import { cfgOf } from '../../engine/gameData'
-import { capitaleDe } from '../../engine/factions'
-import { rangNiveau, garnisonHabitationVille } from '../../engine/regimes'
 import { clesTechsParNom } from '../registry'
 
 // ── Conditions ─────────────────────────────────────────────────────────────
@@ -36,7 +33,7 @@ export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: Contex
   // Technologie débloquée par NOM (source 'tech', brûlage #3 source
   //  3/3) : la clé `<arbre>:<slot>` est résolue par le registre, les
   //  homonymes de plusieurs arbres matchent (comme l'historique aTech).
-  if (cond.techNom && !clesTechsParNom(ctx.state.config, cond.techNom).some((k) => (joueur.progresDebloques ?? []).includes(k))) return false
+  if (cond.techNom && !clesTechsParNom(ctx.ports.C, cond.techNom).some((k) => (joueur.progresDebloques ?? []).includes(k))) return false
   // Suzerain d'au moins une cité libre (relations diplomatiques).
   if (cond.suzerainDeCite === true && !(ctx.state.citesLibres ?? []).some((c) => c.suzerain === joueur.n)) return false
   // cond.ageMin : suivi manuel au plateau (arbitre) — documentaire
@@ -100,7 +97,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       // Production à condition que le joueur possède une capitale
       //  (canal historique « prodCapitale » des techs, source 3/3 du
       //  brûlage #3 — ex. Musées : +30 Tourisme par tour).
-      if (capitaleDe(ctx.joueur)) {
+      if (ctx.ports.capitaleDe(ctx.joueur)) {
         out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       }
       break
@@ -125,9 +122,8 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       // Production par RANG d'habitation cumulé sur les villes du
       //  joueur (ex. Surconsommation : +1 Science +5 Tourisme par
       //  rang — la consommation de Nourriture reste un coût moteur).
-      const C = cfgOf(ctx.state.config)
       let rangs = 0
-      for (const v of ctx.joueur.villes) rangs += rangNiveau(v, C)
+      for (const v of ctx.joueur.villes) rangs += ctx.ports.rangNiveau(v)
       if (rangs > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * rangs
       break
     }
@@ -135,7 +131,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       // Production par BÂTIMENT des villes, limité à une FAMILLE du
       //  référentiel si fournie (ex. Industrialisation : +1 Charbon
       //  par bâtiment ; Merveilleux : +1 Science par Merveille).
-      const refs = cfgOf(ctx.state.config).config.constructions ?? []
+      const refs = ctx.ports.C.config.constructions ?? []
       let nb = 0
       for (const v of ctx.joueur.villes) {
         for (const b of v.batiments) {
@@ -149,9 +145,8 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       // Production proportionnelle à la garnison d'habitants :
       //  valeur × Σ garnisonHabitationVille (ex. Service militaire
       //  avancé : +0,5 Habitants par point de garnison).
-      const C = cfgOf(ctx.state.config)
       let total = 0
-      for (const v of ctx.joueur.villes) total += garnisonHabitationVille(ctx.joueur, v, C, ctx.state)
+      for (const v of ctx.joueur.villes) total += ctx.ports.garnisonVille(v)
       if (total > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * total
       break
     }
@@ -166,7 +161,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     }
     case 'fluxCapitale': {
       // Ne s'applique QUE si la ville du contexte est la capitale.
-      if (ctx.ville && capitaleDe(ctx.joueur)?.nom === ctx.ville.nom) {
+      if (ctx.ville && ctx.ports.capitaleDe(ctx.joueur)?.nom === ctx.ville.nom) {
         out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       }
       break
@@ -178,7 +173,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     case 'garnisonParRang': {
       // Le rang est déduit de la ville du contexte ; sans ville, effet nul.
       if (ctx.ville?.rang) {
-        out.garnison += e.valeur * rangNiveau(ctx.ville, cfgOf(ctx.state.config))
+        out.garnison += e.valeur * ctx.ports.rangNiveau(ctx.ville)
       }
       break
     }
