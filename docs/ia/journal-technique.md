@@ -2131,6 +2131,136 @@ seulement les effets non nuls — la copie seule reste visible, rien ne
 change pour `regimes.ts` (tourismeCourant) ni `production.ts` ;
 l'influence culturelle et `cp_events` (synchro) ne sont pas touchés.
 
+## Suppression du métier de Marchand (2026-10-24, arbitrage Thibaut « supprime carrément le métier de marchand »)
+
+Clôture de la 3b par voie d'arbitre : le métier disparaît du jeu ;
+les routes commerciales RESTENT (modèle dissocié : gratuites, sans
+personnage, fermeture origine seule). Arbitrages obtenus en session :
+(1) **Mine d'Or gardée SANS effet** ; (2) **tech « Commerce lointain »
+gardée SANS effet** ; (3) **routes vers cités libres = +1 émissaire
+auprès de la cité TANT QUE la route est active** (nouvelle mécanique
+d'`emissairesEffectifsCite`). Défauts assumés : les porteurs du
+titre dans les parties en cours perdent le titre au premier fin de
+tour (Sans-emploi avec log dédié, puis reprise d'un poste aux places
+libres) ; le cap `maxRoutesJoueur` et la purge des vieilles routes
+`marchandId` ne changent pas.
+
+Découverte en cours de route : la CI « jeu » des deux commits de la
+3b (cace059c code et b90a9677 docs) était ROUGE — le test de rendu
+`PlayerView.test.ts` affirmait encore l'ancien titre de carte
+« Commerce — routes des marchands », renommé « Commerce — routes
+commerciales » par la 3b sans mise à jour du test (le harnais local
+ne joue pas les tests `.tsx` — hooks sans résolution d'extension, et
+le `npm test` de la CI (tsx) les inclut). Corrigé ici : assertion
+réalignée sur le titre courant.
+
+Distinction critique : « Guilde des marchands » (bâtiment,
+remplaçable par la Plateforme commerciale) et « Commerçant » (métier
+renommé d'Artisan) ne sont PAS touchés ; `marchandsMax`
+(règles/doctrines, champ historique sans lecteur) conservé pour les
+vieilles configs, docblock corrigé.
+
+Modifications fichier par fichier :
+
+- **`config/referentiels.json`** : entrée métier Marchand SUPPRIMÉE
+  (24 → 23 métiers) ; entrée Marchand de `metiersEffets` SUPPRIMÉE
+  (12 → 11) ; Mine d'Or → production/description « aucun effet »,
+  `emplacements: []` ; tech « Commerce lointain » → description
+  « aucun effet », `effets: []` ; trait Éloquent : clause marchand
+  retirée ; notes « marchand de base » et « un marchand ne peut
+  exploiter une merveille » supprimées.
+- **`config/defaultConfig.ts`** : purge ciblée dans `cfgOf` (patron
+  dogmes/événements, idempotente, SANS bump — règle (x)) de TROIS
+  familles : entrée Marchand de `merged.metiers` (sinon elle
+  REVENAIT par la fusion `{...DEFAULT_CONFIG, ...c}` : les configs
+  convergées sauvegardées embarquent le référentiel fusionné, et le
+  picker parcourt `C.metiers`), entrée Marchand de
+  `merged.metiersEffets` (wiki), effets `fluxParMetier` de métier
+  Marchand des arbres de progrès (aligne les configs sur « Commerce
+  lointain » sans effet) ; bloc legacy `metiersAmenagements2026` :
+  branche morte de mise à jour du texte Marchand retirée (le
+  référentiel n'a plus d'entrée à compléter), ligne Marchand du
+  snapshot ANCIENS conservée avec NB daté.
+- **`engine/commerce.ts`** : SUPPRIMÉS `TITRE_MARCHAND` et
+  `capMarchandsCite` (GARDÉ `routesCommerceVersCite`, consommé par
+  l'UI cités et `emissairesEffectifsCite`) ; import `CiteLibre`
+  retiré ; docblocks datés (route vers cité = +1 émissaire tant
+  qu'active ; plus d'emplacement de Marchand) ; log d'ouverture
+  vers une cité reformulé (+1 émissaire), log d'ouverture vers une
+  ville recentré sur la copie.
+- **`engine/citesLibres.ts`** : `metiersAccessiblesCite` revient à
+  [Chasseur, Gouverneur] (paramètre `_cite` inutilisé conservé pour
+  la compatibilité des appelants) ; NOUVEAU
+  `emissairesEffectifsCite(state, cite, joueur)` = émissaires
+  placés + nombre de routes ACTIVES du joueur vers la cité
+  (`routesCommerceVersCite` filtré sur `r.joueur` — pas de cycle :
+  commerce.ts n'importe pas citesLibres.ts), docblock daté.
+- **`engine/metiers.ts`** : `emplacementsRoutesVille` ne compte plus
+  QUE les emplacements de l'aménagement copié des routes SORTANTES
+  (les +1 Marchand sortants/entrants et le littéral 'Marchand'
+  disparaissent) ; `metiersAccessibles` ne pousse plus 'Marchand'
+  (docblock daté) ; `reaffecterMetiers` : PASSE 0 de purge des
+  porteurs de métiers ABSENTS du référentiel (garde
+  `!C.metiers.some('Marchand')` — une config future qui
+  réintroduirait le métier ne serait pas purgée), titre → null +
+  log dédié AVANT le surnombre (la passe places libres redonne un
+  poste), docblocks datés.
+- **`engine/types.ts`** : docblock `RouteCommerce` réécrit (copie à
+  l'origine seule, cité = +1 émissaire tant qu'active, métier de
+  Marchand retiré).
+- **`engine/production.ts` + `engine/tour.ts`** : commentaires du
+  canal Commerce et de l'étape de fin de tour mis à jour (plus
+  d'emplacement de Marchand par route).
+- **`rules/types.ts`, `rules/registry.ts`, `rules/effects/banque.ts`** :
+  docblocks du générique `fluxParMetier` passés en exemple
+  HISTORIQUE (le mécanisme reste disponible, aucune tech ne
+  l'utilise) ; champ `marchandsMax` marqué historique sans lecteur.
+- **`config/params.ts`** : docblock de `maxMarchands` complété
+  (compte les routes — plus les marchands, métier retiré).
+- **UI** : `CommerceRoutes.tsx` (intro/état vide/table : plus de
+  « +1 emplacement de Marchand » ; cité = « +1 émissaire tant que la
+  route est active » ; entrantes « aucun effet pour toi ») ;
+  `CarteCite.tsx` (bloc émissaires : placés + badge « +N par
+  route(s) » du bonus, chip/badge « suzerain possible » sur les
+  EFFECTIFS, boutons +/- toujours sur les placés, règle des 3
+  émissaires reformulée avec le bonus routes ; routes entrantes :
+  texte émissaire) ; `CarteMetiersPlaces.tsx` (docblock du ctx +
+  paragraphe explicatif : copie = emplacements à l'origine seule,
+  Marchand retiré) ; `AideAuto.tsx` (ligne routes commerciales
+  reformulée).
+- **Tests** : `commerce.test.ts` réécrit (B4 Tourisme conservé ; pas
+  d'Or passif ; NOUVEAU « copie ouvre les emplacements du métier
+  copié à l'ORIGINE SEULE + Marchand cap ∞ » ; fermeture origine ;
+  NOUVEAU cité libre sur `emissairesEffectifsCite` — placés, +1 par
+  route active, retour aux placés à la fermeture, Marchand jamais
+  accessible ; purge `marchandId` avec Scierie copiée) ;
+  `metiers.test.ts` (cap Marchand/Mine d'Or → ∞ « titre mort » ; ctx
+  routes : copie Scierie à l'origine, plus de +1 Marchand, vieilles
+  routes ignorées via Bûcheron ; occupations : Fermier remplace le
+  Marchand ; NOUVEAU réaffectation « purge du titre » — les porteurs
+  purgés reprennent poste, Commerçant puis Bûcheron de la copie) ;
+  `params.test.ts` (conversion v2 : 25→24 métiers, 13→12 effets —
+  purge verrouillée) ; `progres.test.ts` (registre 33→32 règles
+  « Commerce lointain » gardée sans effet : plus de règle, flux vide
+  même débloquée avec porteurs).
+- **`components/PlayerView.test.ts`** : assertion « Commerce — routes
+  des marchands » → « Commerce — routes commerciales » (correction
+  de la CI rouge du HEAD précédent, cf. ci-dessus).
+
+**Validation** : 140/140 tests (6 réécrits/1 assertion de rendu
+réalignée, compte total inchangé), diag exit 0, tsc strict 0 erreur
+(hors stub supabase), garde cycles 0 (0 réciproque, 0 SCC>1), diff -rq
+vs tarball HEAD limité aux 21 fichiers attendus + docs, JSON
+référentiel validé (jq), grep résiduel « Marchand » = docblocks
+historiques datés uniquement.
+
+**NB compatibilité** : les configs SAUVEGARDÉES ne nécessitent AUCUN
+bump (purge idempotente dans `cfgOf`, les suppressions persistent —
+règle (x)) ; les porteurs du titre des parties en cours sont purgés
+au premier fin de tour ; la migration d'état v4 laisse passer le
+string « Marchand » (donnée de conversion des vieux `titres`), le
+moteur le purge ensuite — cohérent avec le défaut assumé.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

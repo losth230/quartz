@@ -585,6 +585,42 @@ Emplacements du **tier 3** (coût 35 Or + 3 Fer) :
     disparaît, les emplacements des routes sont portés par le cap
     lui-même (ctx routes de `capMetierVille`).
 
+### Suppression du métier de Marchand (ACTÉ le 2026-10-24)
+
+Retour arbitre de Thibaut en clôture de la sous-vague 3b : « supprime
+carrément le métier de marchand ». Le métier disparaît du référentiel
+et du picker ; les routes commerciales RESTENT (modèle dissocié de la
+3b : gratuites, sans personnage, fermeture origine seule).
+
+- **Mine d'Or** : GARDÉE sans effet (plus d'emplacements de
+  Marchand, pas de production directe — bâtiment en attente de
+  reconversion éventuelle).
+- **Tech « Commerce lointain »** : GARDÉE sans effet (l'ancien
+  « +3 Or par Marchand vivant » disparaît avec le métier ; la tech
+  reste débloquable dans l'arbre, aucune règle ne la représente).
+- **Routes vers cités libres** : NOUVELLE MÉCANIQUE — une route vers
+  une cité libre octroie **+1 émissaire** auprès de ladite cité
+  **TANT QUE la route est active**. `emissairesEffectifsCite`
+  (engine/citesLibres.ts) = émissaires placés + routes actives du
+  joueur ; le badge « suzerain possible » (3 émissaires) et
+  l'affichage lisent les EFFECTIFS, les boutons +/- ne touchent que
+  les émissaires placés ; fermer la route retire le bonus.
+- **Porteurs du titre en cours de partie** (défaut assumé) : au
+  premier fin de tour, `reaffecterMetiers` purge les porteurs de
+  métiers absents du référentiel (passage Sans-emploi avec log
+  dédié), puis la passe places libres leur redonne un poste.
+- **Compatibilité configs** : purge ciblée dans `cfgOf` (patron
+  dogmes/événements, SANS bump de `SCHEMA_VERSION_CONFIG` — règle
+  (x)) : entrée `Marchand` de `metiers` et `metiersEffets`, effets
+  `prodParMetier` de métier `Marchand` des arbres de progrès —
+  retirés des configs SAUVEGARDÉES (qui embarquent le référentiel
+  fusionné) comme des anciennes.
+- **Ce qui ne change pas** : routes vers villes = copie de
+  l'aménagement ENTIER à l'origine (production + emplacements de
+  métier du bâtiment copié), RIEN côté cible ; cap `maxRoutesJoueur`
+  (annoncé, jamais bloquant) ; gratuité ; fermeture ✕ origine seule ;
+  purge des vieilles routes `marchandId` au premier fin de tour.
+
 ### Plan d'implémentation (proposé)
 
 1. **3a — métiers & emplacements** : référentiel 24 métiers +
@@ -617,6 +653,23 @@ Emplacements du **tier 3** (coût 35 Or + 3 Fer) :
    places avec ctx, fiche cité avec routes entrantes) + tests
    (commerce.test.ts réécrit, 140 verts). Voir journal-technique.md,
    entrée « routes commerciales dissociées — sous-vague 3b (2) ».
+   NB (soir 2026-10-24) : les extensions PROPRES au Marchand de ce
+   point (emplacements +1 par route chaque côté, `capMarchandsCite`,
+   Marchand accessible aux habitants des cités) sont ABROGÉES le
+   jour même par la suppression du métier — point 3 ci-dessous.
+3. **Suppression du métier de Marchand** (retour arbitre
+   2026-10-24, cf. section dédiée ci-dessus).
+   **→ IMPLÉMENTÉE le 2026-10-24** : référentiel (métier + effet wiki
+   + notes Marchand retirés, Mine d'Or et « Commerce lointain »
+   gardés sans effet, trait Éloquent nettoyé) ; moteur (commerce.ts
+   sans `TITRE_MARCHAND`/`capMarchandsCite` ;
+   citesLibres.ts `emissairesEffectifsCite` ; metiers.ts sans
+   emplacements de Marchand par route + purge des titres disparus
+   dans `reaffecterMetiers` ; purge `cfgOf` des entrées Marchand des
+   configs) ; UI (CommerceRoutes, CarteCite émissaires+routes,
+   CarteMetiersPlaces, AideAuto) ; tests réécrits (140 verts). Voir
+   journal-technique.md, entrée « suppression du métier de
+   Marchand ».
 
 ### Rangs d'habitation & bâtiments tier 1 — VAGUE 3b (actée 2026-10-22)
 
