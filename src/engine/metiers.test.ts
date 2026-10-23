@@ -110,7 +110,7 @@ test('reaffecterMetiers : surnombre — les plus âgés perdent leur métier, le
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
-  C.config.typesHabitation[0].metiersDisponibles = '2 Chasseurs' // rang Hameau : cap de test (vague 3b)
+  C.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 2 }] // rang Hameau : cap de test (vague 3b)
   state.population[p.n] = [
     perso('c-50', 50, { metier: C.p.metierChasseur }),
     perso('c-40', 40, { metier: C.p.metierChasseur }),
@@ -136,7 +136,7 @@ test('reaffecterMetiers : places libres — adultes sans emploi deviennent Chass
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
-  C.config.typesHabitation[0].metiersDisponibles = '3 Chasseurs' // rang Hameau : 2 chasseurs en place → 1 place libre (vague 3b)
+  C.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 3 }] // rang Hameau : 2 chasseurs en place → 1 place libre (vague 3b)
   state.population[p.n] = [
     perso('c-1', 30, { metier: C.p.metierChasseur }),
     perso('c-2', 28, { metier: C.p.metierChasseur }),
@@ -159,7 +159,7 @@ test('reaffecterMetiers : cap Château indépendante de la cap Ville', () => {
   p.villes[0].type = 'Château'
   p.villes[0].rang = 'Motte'
   // vague 3b : la cap vient du rang Motte (base) — plus de caps Ville/Château séparées
-  C.config.typesHabitation.find((d) => d.type === 'Château')!.metiersDisponibles = '1 Chasseur'
+  C.config.typesHabitation.find((d) => d.type === 'Château')!.metiersBase = [{ metier: 'Chasseur', places: 1 }]
   state.population[p.n] = [
     perso('ch-60', 60, { metier: C.p.metierChasseur }),
     perso('ch-30', 30, { metier: C.p.metierChasseur }),
@@ -255,7 +255,7 @@ test('reaffecterMetiers (vague 3a) : priorisation — un sans-emploi prend un po
   const C = cfgOf(state.config)
   const p = state.players[0]
   p.villes[0].amenagements = ['Bâteau de pêche']
-  C.config.typesHabitation[0].metiersDisponibles = '1 Chasseur' // rang Hameau (vague 3b)
+  C.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 1 }] // rang Hameau (vague 3b)
   state.population[p.n] = [
     perso('s-40', 40),
     perso('s-30', 30),
@@ -427,7 +427,7 @@ test('vague 3b : ordre de prise de poste « n\'importe quel métier → Chasseur
   const C = cfgOf(state.config)
   const p = state.players[0]
   // rang Hameau : 1 Commerçant, 3 Chasseurs (cap de test)
-  C.config.typesHabitation[0].metiersDisponibles = '3 Chasseurs, 1 Commerçant'
+  C.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 3 }, { metier: 'Commerçant', places: 1 }]
   // un Chasseur en poste, un sans-emploi adulte, un enfant sans-emploi
   state.population[p.n] = [
     perso('ch-40', 40, { metier: C.p.metierChasseur }),
@@ -443,10 +443,10 @@ test('vague 3b : ordre de prise de poste « n\'importe quel métier → Chasseur
   assert.ok(state.log.some((l) => l.type === 'Métier' && l.texte.includes('change(nt) de métier')),
     'un log Métier raconte le changement de métier du Chasseur')
   // sans autre poste disponible : les Chasseurs restent Chasseurs
-  C.config.typesHabitation[0].metiersDisponibles = '3 Chasseurs'
+  C.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 3 }]
   const state2 = partie()
   const C2 = cfgOf(state2.config)
-  C2.config.typesHabitation[0].metiersDisponibles = '3 Chasseurs'
+  C2.config.typesHabitation[0].metiersBase = [{ metier: 'Chasseur', places: 3 }]
   state2.population[p.n] = [
     perso('ch-50', 50, { metier: C2.p.metierChasseur }),
     perso('ch-20', 20, { metier: C2.p.metierChasseur }),
