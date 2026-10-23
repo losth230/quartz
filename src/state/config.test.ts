@@ -112,7 +112,7 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
   // Config d'avant la vague 3a (production → emplacements) et avant la
   //  vague 3c : le Baleinier porte l'ANCIENNE description, les ANCIENS
   //  effets structurés (encore lus par le moteur !) et PAS de champ
-  //  emplacements ; les tiers 2/3 n'existent pas.
+  //  emplacements ; le Champ est retiré (la complétion doit le remettre).
   const iB = c.constructions.findIndex((x) => x.nom === 'Baleinier')
   assert.ok(iB >= 0, 'Baleinier dans les défauts')
   c.constructions[iB] = {
@@ -121,7 +121,7 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
     effets: [{ ressource: 'Or', quantite: 2 }, { ressource: 'Nourriture', quantite: 10 }],
   } as typeof c.constructions[number]
   delete (c.constructions[iB] as { emplacements?: unknown }).emplacements
-  c.constructions = c.constructions.filter((x) => !x.nom.includes('tier'))
+  c.constructions = c.constructions.filter((x) => x.nom !== 'Champ')
   // un aménagement PERSO doit survivre au réalignement
   c.constructions.push({
     categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Mon aménagement perso',
@@ -137,8 +137,10 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
     'emplacements de la vague 3a récupérés (caps conformes)')
   assert.equal((b.effets ?? []).length, 0,
     'les anciens effets de production directe (Or, Nourriture) disparaissent')
-  assert.ok(C.config.constructions.some((x) => x.nom === 'Baleinier (tier 2)'),
-    'les tiers 2/3 sont ajoutés par la complétion')
+  assert.ok(C.config.constructions.some((x) => x.nom === 'Champ'),
+    'les entrées manquantes du référentiel sont ajoutées par la complétion')
+  assert.ok(!C.config.constructions.some((x) => x.nom.includes('tier')),
+    'simplification 2026-10-23 : plus de tiers 2/3 dans le référentiel')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon aménagement perso'),
     'un aménagement perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 4, 'tampon v4 apposé')
@@ -161,21 +163,21 @@ test('config : descriptions des aménagements vidées une bonne fois pour toutes
   const c = cloneDefaultConfig()
   c.schemaVersion = 4
   const iB = c.constructions.findIndex((x) => x.nom === 'Baleinier')
-  const iT2 = c.constructions.findIndex((x) => x.nom === 'Baleinier (tier 2)')
-  assert.ok(iB >= 0 && iT2 >= 0, 'Baleinier et tier 2 dans les défauts')
+  const iC = c.constructions.findIndex((x) => x.nom === 'Champ')
+  assert.ok(iB >= 0 && iC >= 0, 'Baleinier et Champ dans les défauts')
   c.constructions[iB].description = 'texte hérité obsolète'
-  c.constructions[iT2].description = 'Amélioration (remplace le Baleinier de tier 1) : 5 emplacements…'
-  const iM = c.constructions.findIndex((x) => x.nom === 'Moulin à vent')
+  c.constructions[iC].description = 'Aménagement de contrôle : 3 emplacements de Fermier…'
+  const iM = c.constructions.findIndex((x) => x.nom === 'Ponton')
   assert.ok(iM >= 0 && c.constructions[iM].categorie !== 'Aménagement',
-    'un bâtiment de contrôle existe (Moulin à vent)')
+    'un bâtiment de contrôle existe (Ponton)')
   c.constructions[iM].description = 'Bâtiment : description conservée.'
   delete (c as { descriptionsAmenagementsVides?: boolean }).descriptionsAmenagementsVides
   const C = cfgOf(c)
   assert.equal(C.config.constructions.find((x) => x.nom === 'Baleinier')!.description, '',
     'tier 1 : description vidée sur config déjà v4')
-  assert.equal(C.config.constructions.find((x) => x.nom === 'Baleinier (tier 2)')!.description, '',
-    'tier 2 : description vidée sur config déjà v4')
-  assert.equal(C.config.constructions.find((x) => x.nom === 'Moulin à vent')!.description,
+  assert.equal(C.config.constructions.find((x) => x.nom === 'Champ')!.description, '',
+    'Champ : description vidée sur config déjà v4')
+  assert.equal(C.config.constructions.find((x) => x.nom === 'Ponton')!.description,
     'Bâtiment : description conservée.',
     'les descriptions de BÂTIMENTS ne sont pas touchées')
   assert.ok(C.config.descriptionsAmenagementsVides,
@@ -191,26 +193,6 @@ test('config : descriptions des aménagements vidées une bonne fois pour toutes
 // ── Nettoyage du code mort (retour Thibaut 2026-10-22, points 5 et 6
 //    de la revue critique des habitations) ─────────────────────────
 
-test('config : le Grand veneur (office sans effet depuis la vague 3b) est retiré des ministères, même sur une config convergée', () => {
-  const c = cloneDefaultConfig()
-  c.schemaVersion = 4 // config déjà convergée : aucune migration de complétion ne rejoue
-  assert.ok(
-    !c.ministeres.some((m) => m.ministere === 'Grand veneur' || m.ministere === 'Ecologie'),
-    'les défauts ne portent plus le Grand veneur (17 portefeuilles)')
-  // une config sauvegardée qui le porte encore (pré-nettoyage) :
-  c.ministeres = [...c.ministeres, {
-    ministere: 'Grand veneur',
-    effet: '-5 Nourriture × rang de pays sur la consommation des habitations.',
-    rangMinimum: 'Baronnie', mode: 'Auto',
-  }]
-  const C = cfgOf(c)
-  assert.ok(!C.config.ministeres.some((m) => m.ministere === 'Grand veneur'),
-    'le Grand veneur est retiré d une config convergée')
-  assert.equal(C.config.ministeres.length, 17, '17 portefeuilles après filtrage')
-  // idempotence : re-lecture stable (rien d autre retiré)
-  const C2 = cfgOf(C.config)
-  assert.equal(C2.config.ministeres.length, 17, 're-lecture : le filtre est idempotent')
-})
 
 test('config : rangsHabitation (table dupliquée, morte) absente des défauts et supprimée des configs sauvegardées', () => {
   const c = cloneDefaultConfig()
@@ -268,4 +250,27 @@ test('config : les effets moteur (écoles / santé) vivent en DONNÉES dans la t
   assert.ok(!('batimentsVille' in c) && !('batimentsChateau' in c)
     && !('batimentsCouts' in c) && !('amenagements' in c),
     'les défauts ne portent plus les tables legacy')
+})
+
+// ── Simplification (retour Thibaut 2026-10-23) : la mécanique
+//    d'ÉDUCATION est retirée ────────────────────────────────────
+
+test('config : la mécanique d éducation est retirée — table educations absente, champ education des métiers dépouillé (idempotent)', () => {
+  const c = cloneDefaultConfig()
+  assert.ok(!('educations' in c),
+    'les défauts ne portent plus la table educations (mécanique supprimée)')
+  assert.ok(c.metiers.every((m) => !('education' in m)),
+    'les métiers n ont plus de champ education')
+  // une config sauvegardée qui les porte encore (clés orphelines) :
+  ;(c as unknown as Record<string, unknown>).educations = ['Agricole']
+  ;(c.metiers[0] as unknown as Record<string, unknown>).education = 'Agricole'
+  const C = cfgOf(c)
+  assert.ok(!('educations' in C.config),
+    'educations est supprimée par cfgOf (clé orpheline non persistée)')
+  assert.ok(C.config.metiers.every((m) => !('education' in m)),
+    'le champ education est dépouillé des métiers')
+  // idempotence : la re-lecture d une config déjà nettoyée est stable
+  const C2 = cfgOf(C.config)
+  assert.ok(!('educations' in C2.config) && C2.config.metiers.every((m) => !('education' in m)),
+    're-lecture : toujours absentes')
 })

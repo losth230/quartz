@@ -30,7 +30,7 @@ function perso(age: number, traits: [string, string, string] = ['Obstin√©', 'St√
     traits, statut: 'Sain', mariage: null, mariageId: null,
     mere: null, mereId: null, pere: null, pereId: null,
     pereBio: null, pereBioId: null, enfantBatard: false,
-    metier: null, education: null, fecondite: 0, armee: null, ministere: null,
+    metier: null, fecondite: 0, armee: null,
   }
 }
 

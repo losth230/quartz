@@ -26,7 +26,7 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 
 /** Types d'effets que la banque sait appliquer (contrat de types.ts). */
 const TYPES_CONNUSS = new Set([
-  'fluxVille', 'fluxJoueur', 'fluxCapitale', 'fluxJoueurParMinistre',
+  'fluxVille', 'fluxJoueur', 'fluxCapitale',
   'fluxParAmenagement', 'fluxParVilleCultureMonde',
   'fluxSiCapitale', 'fluxParVille', 'fluxParVilleProximite',
   'fluxParRangHabitation', 'fluxParBatiment', 'fluxParGarnisonHabitation', 'fluxParMetier',
@@ -110,7 +110,9 @@ test('registre : le chemin moteur EST la banque (voie unique de production)', ()
     assert.equal(attenduInst['Tourisme'], undefined, 'le Tourisme n’est plus un instantané')
     void tourismeBanque
   }
-  assert.ok(verifiees > 20, `trop peu de règles vérifiées contre le moteur (${verifiees})`)
+  assert.ok(verifiees > 5, `trop peu de règles vérifiées contre le moteur (${verifiees})`)
+  // (simplification 2026-10-23 : les constructions de rang 2+ sont
+  //  retirées du référentiel, il reste 11 constructions à effets).
 })
 
 test('doublons Ville/Château : le moteur rend les effets de la BONNE version (bug réel)', () => {

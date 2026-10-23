@@ -115,3 +115,10 @@ test('cfgOf : suppression de la martialité (arbitrage 2026-10-21) — regleGenr
   const C2 = cfgOf(C.config)
   assert.ok(C2.metiers.every((m) => m.regleGenre !== 'Martialité'))
 })
+
+test('params : les paramètres d éducation (chanceEduc*, profBonusEduc) sont supprimés — professeurBaseChance reste (Professeurs conservés)', () => {
+  assert.ok(!('chanceEducRoturier' in DEFAULT_PARAMS), 'chanceEducRoturier supprimé (mécanique d éducation retirée)')
+  assert.ok(!('chanceEducNoble' in DEFAULT_PARAMS), 'chanceEducNoble supprimé')
+  assert.ok(!('profBonusEduc' in DEFAULT_PARAMS), 'profBonusEduc supprimé')
+  assert.ok('professeurBaseChance' in DEFAULT_PARAMS, 'professeurBaseChance reste (les Professeurs restent)')
+})
