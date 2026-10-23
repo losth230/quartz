@@ -1566,6 +1566,53 @@ reporté. Vague suivante VALIDÉE par Thibaut : redécoupage
 engine.ts (S) + couche ports/contrats (D), design au prochain
 tour.
 
+## Hotfix : les bâtiments rang 2+ des configs monde sauvegardées (2026-10-23, retour Thibaut « pourquoi je vois encore le moulin à vent »)
+
+**Bug constaté par Thibaut** : « je viens de créer une nouvelle
+partie en local et j'ai toujours les bâtiments de rang 2+ (ex.
+Moulin à vent) ». CAUSE : la config MONDE est persistée par
+navigateur (clé dédiée, COMMUNE à toutes les parties — storage.ts)
+et la convergence `cfgOf` n'AJOUTE que les constructions
+manquantes du référentiel : elle ne RETIRE JAMAIS les disparues
+(règle (x) : les suppressions persistent) — une config monde
+sauvegardée AVANT la simplification gardait donc les 118
+constructions À VIE, y compris pour une NOUVELLE partie (le
+sélecteur « + Construire » lit la config convergée). Seul le
+retrait des factions avait son filtre explicite ; il en manquait
+un pour le rang.
+
+**Correctif** : filtre inconditionnel en fin de `cfgOf`
+(defaultConfig.ts), même patron que rangsHabitation —
+`merged.constructions` perd ses entrées `rangMinHabitation >= 2`,
+quelle que soit la version de schéma de la config. Idempotent ;
+pour réactiver les rangs 2/3 plus tard : les ré-ajouter au
+référentiel ET retirer ce filtre.
+
+**Tests adaptés** : les tests vague 3c réinjectaient les defs tier
+AVANT cfgOf (dans state.config) — le filtre les retirait. Ils
+réinjectent désormais APRÈS convergence (dans C.config) :
+Constructions.test.ts (defs TIERS_23 poussées dans construireDe)
+et metiers.test.ts (test caps). +1 test de non-régression dans
+config.test.ts : le « Moulin à vent » rang 2 d'une config
+convergée est retiré, re-lecture stable (idempotent).
+
+**Validation — INCIDENT D'OUTILLAGE** : le bac de validation
+interdit désormais l'installation de paquets (npm install
+refusé) : tsc, tsx et esbuild INDISPONIBLES dans ce bac. La
+validation a été faite via node natif (v22)
+`--experimental-strip-types` + hooks ESM maison (résolution
+d'extensions, .json sans assert, stubs des 2 modules JSX purs
+pour les tests moteur de faireConstruire) : **137/137 tests
+verts** (les 12 tests de rendu react, non exécutables sans
+react, ne touchent pas au patch — la config par défaut est
+inchangée par le filtre), syntaxe des 4 fichiers vérifiée,
+diag exit 0 (sortie identique — le défaut n'a pas de rang 2+).
+tsc/esbuild sont rejoués par la CI au push (statut vérifié
+après déploiement).
+
+**Push** en trois commits (refactor(moteur) filtre, test,
+docs(ia)) + miroirs v4 (code seulement).
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

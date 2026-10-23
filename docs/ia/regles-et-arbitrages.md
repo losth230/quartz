@@ -617,7 +617,11 @@ rang 1). Arbitrages actés lors de la session :
   constructions de rang d'habitation 2+ sont SUPPRIMÉES du
   référentiel (118 → 41 — bâtiments et aménagements, tiers 2/3 et
   Chapelle compris ; la mécanique d'amélioration reste en place,
-  les tests la couvrent avec des defs réinjectées localement) ;
+  les tests la couvrent avec des defs réinjectées localement).
+  Hotfix du soir : `cfgOf` FILTRE AUSSI les rangs 2+ des configs
+  MONDE sauvegardées avant (la complétion n'ajoutait que les
+  manquantes sans retirer les disparues — un « Moulin à vent »
+  restait constructible dans une NOUVELLE partie) ;
   les derniers reliquats des RÈGLES DE FACTIONS partent des fiches
   peuples ; les MINISTRES sont supprimés EN TOTAL (module, effets,
   UI, table référentiel, colonne paysRangs — migration d'état v2
