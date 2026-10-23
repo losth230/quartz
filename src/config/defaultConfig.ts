@@ -1573,6 +1573,23 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  sont plus persistés (même patron que rangsHabitation).
   delete (merged as { educations?: unknown }).educations
   for (const m of merged.metiers) delete (m as { education?: unknown }).education
+  //  Simplification (retour Thibaut 2026-10-23 — santé ignorée) :
+  //  bâtiments ET aménagements de rang d'habitation ≥ 2 retirés
+  //  PROVISOIREMENT (« Rangs 2 et 3, tout sauf rang 1 »). Le
+  //  référentiel ne les contient plus (41 entrées, toutes rang ≤ 1),
+  //  mais une config MONDE sauvegardée avant les garde POUR TOUJOURS :
+  //  la complétion (gardeFous) n'AJOUTE que les constructions du
+  //  référentiel, elle ne RETIRE JAMAIS les disparues — d'où un
+  //  « Moulin à vent » (rang 2) encore constructible dans une
+  //  NOUVELLE partie (bug constaté par Thibaut 2026-10-23 : « je
+  //  vois encore tous les bâtiments de rang 2+ »). Filtre
+  //  inconditionnel, même patron que rangsHabitation : les entrées
+  //  rangMinHabitation >= 2 disparaissent de toute config convergée,
+  //  ancienne ou non. Idempotent. Pour RÉACTIVER plus tard les rangs
+  //  2/3 : les ré-ajouter au référentiel ET retirer ce filtre.
+  merged.constructions = (merged.constructions ?? []).filter(
+    (c) => (c.rangMinHabitation ?? 0) < 2,
+  )
   return {
     p: merged.params,
     ressources: merged.ressources,
