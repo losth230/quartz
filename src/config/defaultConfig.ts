@@ -91,16 +91,21 @@ export interface HabitationDef {
   /** domiciles disponibles (affichage seul, ex. « 50 maisons, 10 Auberge ») */
   domicilesDisponibles: string
 }
-export interface EventDef {
-  nom: string
-  saison: string
-  poids: number
-  faible: string
-  moyenne: string
-  forte: string
-  extreme: string
-}
-export interface DynastieDef { nom: string; poids: number; description: string }
+/** Événements de saison (été/hiver) RETIRÉS du référentiel le
+ *  2026-10-24 (retour arbitre Thibaut) : la table `events` (18
+ *  entrées, textes des 4 niveaux de danger) et son annexe d'effets
+ *  chiffrés `eventEffets` ont disparu du classeur, du type et du
+ *  moteur (plus de tirage au changement de saison — saisons.ts).
+ *  Les clés encore portées par les configs sauvegardées sont purgées
+ *  par des deletes ciblés dans cfgOf (patron taxes25, sans bump de
+ *  SCHEMA_VERSION_CONFIG — règle (x)). L'ancien contenu reste dans
+ *  l'historique git. */
+/** Cartes dynastie RETIRÉES du référentiel le 2026-10-24 (retour
+ *  arbitre) : la table `dynasties` (38 événements de dynastie tirés
+ *  à chaque tour) et son annexe `dynastieEffets` ont disparu du
+ *  classeur, du type et du moteur. NB : ne pas confondre avec le
+ *  champ Character.dynastie (le NOM DE FAMILLE du personnage), qui
+ *  reste un concept noyau du jeu. */
 export interface OffrandeDef { nom: string; poids: number; description: string }
 export interface BanqueNoms { nom: string; noms: string[]; prenomsM: string[]; prenomsF: string[] }
 export interface BuildingDef {
@@ -249,18 +254,10 @@ export interface ProgresArbre {
   techC: ProgresTechDef
 }
 
-export interface EffetDef { ressource: string; base: number }
-export interface EventEffetsDef {
-  nom: string
-  effets: EffetDef[]   // base × multiplicateur de niveau (params evMult*)
-  maladieRisque: number // risque de maladie supplémentaire ce tour (× mult)
-  modDanger: number     // bonus permanent de dangerosité (ex. Sombres présages)
-}
-export interface DynastieEffetsDef {
-  nom: string
-  effets: EffetDef[]    // base fixe (pas de multiplicateur de niveau)
-  guerison: boolean     // true = guérit un personnage malade du pays
-}
+/** (EffetDef, EventEffetsDef et DynastieEffetsDef retirés le
+ *  2026-10-24 avec les tables events/dynasties — effets chiffrés
+ *  des événements de saison et des cartes dynastie, plus aucun
+ *  producteur.) */
 export interface GameConfig {
   ressources: string[]
   params: GameParams & GameParamStrings
@@ -268,8 +265,9 @@ export interface GameConfig {
   traits: TraitDef[]
   cultures: CultureDef[]
   regimes: RegimeDef[]
-  events: EventDef[]
-  dynasties: DynastieDef[]
+  // (events / dynasties / eventEffets / dynastieEffets retirés le
+  //  2026-10-24, retour arbitre — cf. docblocks ci-dessus ; purge
+  //  des clés stale par delete ciblé dans cfgOf)
   offrandes: OffrandeDef[]
   orientations: PoidsNom[]
   genres: PoidsNom[]
@@ -278,8 +276,6 @@ export interface GameConfig {
   peupleBanque: Record<string, number>
   peuples: string[]
   batiments: BuildingDef[]
-  eventEffets: EventEffetsDef[]
-  dynastieEffets: DynastieEffetsDef[]
   // ── données de référence « fiches » (affichage, 100% éditables) ──
   init: {
     nbPerso: number
@@ -620,45 +616,11 @@ function peupleBanqueOf(): Record<string, number> {
   return out
 }
 
-// ── Effets chiffrés des événements et cartes dynastie (annexe du livret) ──
-// '(aléatoire)' = une ressource de base tirée au sort. Tout est éditable
-// depuis l'onglet « Paramètres ».
-const BASE_EVENT_EFFECTS: Record<string, { effets: EffetDef[]; maladieRisque?: number; modDanger?: number }> = {
-  'Sécheresse': { effets: [{ ressource: 'Nourriture', base: -10 }] },
-  'Explosion volcanique': { effets: [{ ressource: 'Nourriture', base: -6 }, { ressource: 'Bois', base: -2 }] },
-  'Innondation': { effets: [{ ressource: 'Nourriture', base: -8 }, { ressource: 'Or', base: -2 }] },
-  'Barbarisme': { effets: [{ ressource: 'Bétail', base: -4 }] },
-  'Brigandage': { effets: [{ ressource: 'Or', base: -7 }] },
-  'Incendie': { effets: [{ ressource: 'Bois', base: -5 }] },
-  'Radiations solaires': { effets: [{ ressource: 'Science', base: 3 }] },
-  'Ouragan': { effets: [{ ressource: 'Bois', base: -3 }, { ressource: 'Or', base: -2 }] },
-  'Eclipse': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Famine': { effets: [{ ressource: 'Nourriture', base: -12 }] },
-  'Avalanche': { effets: [{ ressource: 'Nourriture', base: -6 }, { ressource: 'Bois', base: -2 }] },
-  'Blizzard': { effets: [{ ressource: 'Nourriture', base: -8 }] },
-  'Ere glaciaire': { effets: [{ ressource: 'Nourriture', base: -15 }] },
-  'Hiver prolongé': { effets: [{ ressource: 'Nourriture', base: -5 }, { ressource: 'Or', base: -2 }] },
-  'Peste': { effets: [{ ressource: 'Habitants', base: -3 }], maladieRisque: 0.04 },
-  'Gel': { effets: [{ ressource: 'Nourriture', base: -6 }] },
-  'Redoux': { effets: [{ ressource: 'Bétail', base: 2 }] },
-  'Sombres présages': { effets: [], modDanger: 1 },
-}
-
-const BASE_DYNASTIE_EFFECTS: Record<string, { effets: EffetDef[]; guerison?: boolean }> = {
-  'Bénédiction de Samodiva': { effets: [{ ressource: 'Nourriture', base: 5 }] },
-  'Brigandage': { effets: [{ ressource: 'Or', base: -4 }] },
-  'Découverte': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Hommage au roi': { effets: [{ ressource: '(aléatoire)', base: 2 }] },
-  'Merveille architecturale': { effets: [{ ressource: 'Tourisme', base: 5 }] },
-  'Troupe de troubadours': { effets: [{ ressource: 'Tourisme', base: 5 }] },
-  'Miracle': { effets: [], guerison: true },
-  'Migration': { effets: [{ ressource: 'Habitants', base: 2 }] },
-  'tempête magique': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Sombre proposition': { effets: [{ ressource: 'Science', base: 2 }, { ressource: 'Or', base: 5 }] },
-  'Système de prévention': { effets: [{ ressource: 'Or', base: 5 }] },
-  'Découverte archéologique': { effets: [{ ressource: 'Science', base: 5 }] },
-  'incendie': { effets: [{ ressource: '(aléatoire)', base: -1 }] },
-}
+// (Effets chiffrés des événements de saison et des cartes dynastie — annexe du
+//  livret — RETIRÉS le 2026-10-24 avec les tables events/dynasties,
+//  retour arbitre : BASE_EVENT_EFFECTS / BASE_DYNASTIE_EFFECTS et les
+//  tables eventEffets / dynastieEffets ont disparu ; contenu dans
+//  l'historique git.)
 
 export const DEFAULT_CONFIG: GameConfig = {
   ressources: ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie', 'Or', 'Nourriture', 'Science', 'Habitants', 'Tourisme', 'Garnison'],
@@ -667,8 +629,8 @@ export const DEFAULT_CONFIG: GameConfig = {
   traits: normaliserTraits(),
   cultures: normaliserCultures(),
   regimes: ref.regimes,
-  events: ref.events,
-  dynasties: ref.dynasties,
+  // (events / dynasties / eventEffets / dynastieEffets retirés le
+  //  2026-10-24, retour arbitre — cf. docblocks plus haut)
   offrandes: ref.offrandes,
   orientations: ref.orientations,
   genres: ref.genres,
@@ -677,17 +639,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   peupleBanque: peupleBanqueOf(),
   peuples: peuplesNoms(),
   batiments: normaliserBatiments(),
-  eventEffets: ref.events.map((e: any) => ({
-    nom: e.nom,
-    effets: BASE_EVENT_EFFECTS[e.nom]?.effets ?? [],
-    maladieRisque: BASE_EVENT_EFFECTS[e.nom]?.maladieRisque ?? 0,
-    modDanger: BASE_EVENT_EFFECTS[e.nom]?.modDanger ?? 0,
-  })),
-  dynastieEffets: ref.dynasties.map((d: any) => ({
-    nom: d.nom,
-    effets: BASE_DYNASTIE_EFFECTS[d.nom]?.effets ?? [],
-    guerison: !!BASE_DYNASTIE_EFFECTS[d.nom]?.guerison,
-  })),
   init: ref.init,
   traitsGenetiques: ref.traitsGenetiques,
   metiersEffets: ref.metiersEffets,
@@ -733,8 +684,6 @@ export interface Cfg {
   traits: TraitDef[]
   cultures: CultureDef[]
   regimes: RegimeDef[]
-  events: EventDef[]
-  dynasties: DynastieDef[]
   offrandes: OffrandeDef[]
   orientations: PoidsNom[]
   genres: PoidsNom[]
@@ -1120,6 +1069,33 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  idempotent — une fois purgée au point de sauvegarde, la clé ne
   //  revient jamais (rien ne la ré-écrit).
   delete (merged as { dogmes?: unknown }).dogmes
+  // RETRAIT DES ÉVÉNEMENTS DE SAISON ET DES CARTES DYNASTIE (retour
+  //  arbitre Thibaut 2026-10-24) : les tables `events`, `dynasties`,
+  //  `eventEffets` et `dynastieEffets` n'existent plus dans le type
+  //  ni le référentiel, mais les configs sauvegardées AVANT les
+  //  portent encore (fusion {...DEFAULT_CONFIG, ...c}). Même patron
+  //  que le retrait des dogmes : deletes ciblés, SANS bump de
+  //  SCHEMA_VERSION_CONFIG (un bump renverrait les configs v4
+  //  convergées dans la branche de migration complète qui ré-ajoute
+  //  les entrées supprimées, règle (x)). Idempotents.
+  const purgeEvt = merged as {
+    events?: unknown; dynasties?: unknown; eventEffets?: unknown; dynastieEffets?: unknown
+  }
+  delete purgeEvt.events
+  delete purgeEvt.dynasties
+  delete purgeEvt.eventEffets
+  delete purgeEvt.dynastieEffets
+  // PURGE DE L'INFLUENCE (retour arbitre Thibaut 2026-10-24, suite
+  //  de l'arbitrage fondateur « Influence → émissaires ») : le texte
+  //  de la règle des cités libres parlait encore de « gagner de
+  //  l'influence » — reformulé en émissaires dans le référentiel.
+  //  Migration ciblée (patron taxes25) : seule la formulation
+  //  ANCIENNE est remplacée, un texte personnalisé est conservé.
+  if (typeof merged.regleCitesLibres === 'string') {
+    merged.regleCitesLibres = merged.regleCitesLibres
+      .replace('de l\u2019influence auprès des différentes cités libres', 'des émissaires auprès des différentes cités libres')
+      .replace('gagner en influence qu\u2019une seule fois', 'gagner un émissaire qu\u2019une seule fois')
+  }
   if ((c?.schemaVersion ?? 0) >= SCHEMA_VERSION_CONFIG) {
     // Déjà convergée (marqueur (x)) : PAS de re-migration — les
     // suppressions et renommements d'entrées du référentiel
@@ -1630,8 +1606,6 @@ export function cfgOf(config?: GameConfig): Cfg {
     traits: merged.traits,
     cultures: merged.cultures,
     regimes: merged.regimes,
-    events: merged.events,
-    dynasties: merged.dynasties,
     offrandes: merged.offrandes,
     orientations: merged.orientations,
     genres: merged.genres,

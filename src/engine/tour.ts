@@ -1,7 +1,9 @@
 // ══════════════════════════════════════════════════════════════════════
 //  CHASSE & PÊCHE — ORCHESTRATION DU TOUR (module tour.ts)
 //  Portage TypeScript des macros VBA :
-//    · FinDeTour (ressources, saisons, événements, dynasties)
+//    · FinDeTour (ressources, saisons)
+//      (événements de saison et cartes dynastie RETIRÉS le 2026-10-24,
+//      retour arbitre Thibaut — historique dans git et le journal)
 //    · PersonnagesPourJoueur (moteur de population)
 //    · CalculerGainsPopulation (gains par ville : metiers, taxes, conso)
 //    · RecruitForArmies (armées)
@@ -9,7 +11,9 @@
 //
 //  ARCHITECTURE (découpage SOLID — une responsabilité par module) :
 //    shared.ts      outils transversaux (ids, noms, noblesse, récap)
-//    saisons.ts     saisons, événements, cartes dynastie
+//    saisons.ts     saisons (Été/Hiver alternés) — les événements et
+//                  cartes dynastie qui y vivaient ont été retirés le
+//                  2026-10-24 (retour arbitre Thibaut)
 //    economie.ts    gains de population par ville, taxes (toutes ressources)
 //    batiments.ts   bâtiments — production exacte du référentiel
 //    amenagements.ts aménagements de terrain — production exacte du référentiel
@@ -33,7 +37,7 @@
 import type { ApportsTour, GameState, Player } from './types'
 import { makeRng } from './rng'
 import { cfgOf } from './gameData'
-import { saisonForTurn, applyEventEffect, applyDynastieCard } from './saisons'
+import { saisonForTurn } from './saisons'
 import { calculerGainsPopulation } from './economie'
 import { designerGouverneurs, reaffecterMetiers } from './metiers'
 import { appliquerEffetsBatiments } from './batiments'
@@ -76,39 +80,14 @@ export function runTurn(state: GameState): GameState {
   const turnBefore = state.turn
   const newSaison = saisonForTurn(turnBefore + 1, C)
 
-  // 1. Événement de saison (si la saison change au tour qui commence)
-  if (newSaison !== state.saison) {
-    const ev = rng.pickWeighted(
-      C.events.filter((e) => e.saison === newSaison),
-      (e) => e.poids,
-    )
-    // Garde-fou (revue 2026-10-15) : un référentiel vidé de ses
-    //  événements ne doit pas faire crasher le fin de tour — on
-    //  passe la saison SANS événement.
-    if (ev) {
-    const danger = rng.die(6) + state.modDanger
-    const level: 'faible' | 'moyenne' | 'forte' | 'extreme' =
-      danger <= 5 ? 'faible' : danger <= 8 ? 'moyenne' : danger < C.p.dangerSeuilForte ? 'forte' : 'extreme'
-    const texte = ev[level as 'faible' | 'moyenne' | 'forte' | 'extreme']
-    state.log.push({
-      turn: turnBefore + 1, type: 'Événement', joueur: null,
-      texte: `【${newSaison}】 ${ev.nom} (danger ${danger}/6) : ${texte}`,
-    })
-    applyEventEffect(state, ev.nom, level)
-    }
-    state.saison = newSaison
-  }
-
-  // 2. Carte dynastie pour chaque joueur (TirerDynastie)
-  for (const p of state.players) {
-    const card = rng.pick(C.dynasties)
-    p.dynastie = { nom: card.nom, description: card.description }
-    state.log.push({
-      turn: turnBefore + 1, type: 'Dynastie', joueur: p.n,
-      texte: `${p.nom} — Dynastie « ${card.nom} » : ${card.description}`,
-    })
-    applyDynastieCard(state, p, card.nom, rng)
-  }
+  // 1. Changement de saison (si la saison change au tour qui commence).
+  //    RETIRÉ le 2026-10-24 (retour arbitre Thibaut) : plus de tirage
+  //    d'événement de saison ni de carte dynastie — l'ancienne étape
+  //    tirait un événement dans la table `events` du référentiel et
+  //    l'ancienne étape 2 une carte dans `dynasties` pour chaque
+  //    joueur (tables supprimées, l'historique vit dans git et le
+  //    journal technique). La saison change désormais à sec.
+  if (newSaison !== state.saison) state.saison = newSaison
 
   // 2bis. Gouverneurs automatiques (marqueur (w), retour Thibaut) :
   //    une ville sans gouverneur qui abrite un noble prend pour

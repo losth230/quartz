@@ -118,13 +118,9 @@ export interface GameParams {
   maxLog: number
   maxHistory: number
   saisonLongueur: number
-  // ── Effets chiffrés des événements (multiplicateurs par niveau) ──
-  evMultFaible: number
-  evMultMoyenne: number
-  evMultForte: number
-  evMultExtreme: number
-  dangerSeuilForte: number
-  dangerSeuilExtreme: number
+  // (evMult* / dangerSeuil* retirés le 2026-10-24 avec les événements
+  //  de saison, retour arbitre — multiplicateurs de niveau et seuils
+  //  de dangerosité du tirage d'événement, plus aucun lecteur)
   proxRiviereNourriture: number
   proxMerNourriture: number
 }
@@ -206,12 +202,6 @@ export const DEFAULT_PARAMS: GameParams = {
   maxLog: 4000,
   maxHistory: 120,
   saisonLongueur: 3,
-  evMultFaible: 1,
-  evMultMoyenne: 2,
-  evMultForte: 3,
-  evMultExtreme: 5,
-  dangerSeuilForte: 9,
-  dangerSeuilExtreme: 11,
 }
 
 // champs texte (éditables aussi) — gérés sépartement pour l'UI
@@ -289,12 +279,6 @@ export const PARAM_META: {
   { key: 'maxLog', label: 'Taille maximale du journal', groupe: 'Système' },
   { key: 'maxHistory', label: 'Tours d’historique conservés (snapshots)', groupe: 'Système', aide: 'Chaque tour ajoute un snapshot par joueur (stocks + apports). Les plus anciens au-delà du plafond sont retirés.' },
   { key: 'saisonLongueur', label: 'Durée d\'une saison (tours)', groupe: 'Système', aide: 'Un tour = 2 ans de temps de jeu ; Été/Hiver alternent toutes les N saisons… modifiable à volonté.' },
-  { key: 'evMultFaible', label: 'Multiplicateur événement — faible (dé 1-5)', groupe: 'Événements' },
-  { key: 'evMultMoyenne', label: 'Multiplicateur événement — moyenne (6-8)', groupe: 'Événements' },
-  { key: 'evMultForte', label: 'Multiplicateur événement — forte (9-10)', groupe: 'Événements' },
-  { key: 'evMultExtreme', label: 'Multiplicateur événement — extrême (11+)', groupe: 'Événements' },
-  { key: 'dangerSeuilForte', label: 'Seuil de dangerosité — effet fort', groupe: 'Événements' },
-  { key: 'dangerSeuilExtreme', label: 'Seuil de dangerosité — effet extrême', groupe: 'Événements' },
 ]
 
 export const PARAM_STRINGS_META: { key: keyof GameParamStrings; label: string; groupe: string }[] = [

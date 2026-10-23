@@ -53,7 +53,6 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
     rngState: rng.state(),
     turn: 1,
     saison: 'Été',
-    modDanger: 0,
     config: startConfig,
     players: [],
     population: {},
@@ -322,7 +321,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
   // 5. Fécondités calculées pour les adultes
   const fakeState: GameState = {
     config: C.config,
-    version: 1, seed: 0, rngState: 0, turn: 1, saison: 'Été', modDanger: 0,
+    version: 1, seed: 0, rngState: 0, turn: 1, saison: 'Été',
     players: [player], population: { [player.n]: pop }, log: [], history: [],
   } as GameState
   for (const c of pop) {
