@@ -12,7 +12,7 @@ import type { EffetProgres } from '../../config/defaultConfig'
 // pour le rendu des boutons et le typage de l'état local).
 export const ONGLETS = [
   'Métiers', 'Traits gén.', 'Peuples', 'Bâtiments', 'Aménagements', 'Progrès',
-  'Pays & rangs', 'Habitations', 'Cultures & régimes', 'Tourisme & dogmes', 'Cités libres',
+  'Pays & rangs', 'Habitations', 'Cultures & régimes', 'Tourisme', 'Cités libres',
   'Victoires', 'Crises', 'Rappels règles', 'Offrandes',
   'Couleurs', 'Aide-mémoire',
 ] as const

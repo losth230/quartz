@@ -3519,33 +3519,6 @@
       "bonus": "Pontificat Rang III"
     }
   ],
-  "dogmes": [
-    {
-      "dogme": "Dogme des Lumières",
-      "bonusPontife": "Rang 1 : Votre capitale produit +1 Science par tour.\nRang 2 : Votre capitale produit +1 Science par tour.\nRang 3 : Chacune de vos habitations produit +1 Science par tour.",
-      "bonusFideles": "Rang 1 : Votre capitale produit +1 Science par tour.\nRang 2 : Votre capitale produit +1 Science par tour.\nRang 3 : Votre capitale produit +2 Science par tour."
-    },
-    {
-      "dogme": "Dogme du Capitalisme",
-      "bonusPontife": "Rang 1 : Votre capitale produit +4 Or par tour.\nRang 2 : Votre capitale produit +6 Or par tour.\nRang 3 : Votre capitale peut accueillir un bâtiment supplémentaire.",
-      "bonusFideles": "Rang 1 : Portée des routes commerciales +2.\nRang 2 : Capacité de marchands +1.\nRang 3 : Votre capitale produit +20 Or par tour."
-    },
-    {
-      "dogme": "Dogme des Guerres-Saintes",
-      "bonusPontife": "Rang 1 : Garnison dans vos habitations +30.\nRang 2 : Tourisme +20.\nRang 3 : Garnison +20 et Tourisme +5 dans chacune de vos habitations.",
-      "bonusFideles": "Rang 1 : Réduit les garnisons de culture adverse de 20.\nRang 2 : Taille max des armées +50 pts.\nRang 3 :  Taille max des armées +50 pts, coût de levée d'armée -20 Or."
-    },
-    {
-      "dogme": "Dogme du Pacifisme",
-      "bonusPontife": "Rang 1 : Gagnez immédiatement 1 émissaire avec la cité libre de votre choix, puis gagnez 1 émissaire supplémentaire avec la cité libre de votre choix à chaque nouveau passage d'âge.\nRang 2 : Chaque serment que vous possédez (vassaux et cités libres dont vous êtes le suzerain) vous rapporte +3 Or et +3 Nourriture par tour (maximum 4 serments).\nRang 3 : Vous devenez suzerain d'une cité libre dès 2 émissaires (au lieu de 3).",
-      "bonusFideles": "Rang 1 : Votre tribut de vassalité est allégé : vous reversez 40 % des revenus de vos habitants à votre suzerain (au lieu de 50 %).\nRang 2 : Tant que vous êtes vassal : vos habitations gagnent +10 Garnison et vous gagnez +2 Or par tour.\nRang 3 : Tant que vous êtes vassal : vos habitations gagnent +10 Garnison supplémentaires et vous gagnez +2 Nourriture et +2 Or par tour supplémentaires."
-    },
-    {
-      "dogme": "Dogme du Socialisme",
-      "bonusPontife": "Rang 1 : Votre capitale reçoit 15 habitants.\nRang 2 : Vous gagnez +5 Or par tour pour chacun de vos Ministres.\nRang 3 : Vos gouverneurs rapportent 1 Science par tour.",
-      "bonusFideles": "Rang 1 : Votre capitale reçoit 15 habitants.\nRang 2 : Vous pouvez posséder un Ministre supplémentaire.\nRang 3 : Votre capitale reçoit 35 habitants."
-    }
-  ],
   "citesLibres": [
     {
       "type": "Industrielles - Ville\n(cases forêts ou marais)",

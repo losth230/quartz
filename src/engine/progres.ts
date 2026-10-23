@@ -2,7 +2,9 @@
 //  PROGRÈS — DÉBLOCAGE DES TECHNOLOGIES
 //  Arbitrage Thibaut (2026-10-14) : les effets des technologies ne sont
 //  PLUS appliqués automatiquement par le moteur — TOUT s'applique au
-//  plateau, à la main (philosophie des dogmes). Le COÛT EN SCIENCE de
+//  plateau, à la main (application manuelle, historiquement « la
+//  philosophie des dogmes », retirés du référentiel le 2026-10-24).
+//  Le COÛT EN SCIENCE de
 //  chaque technologie (champ « cout » du référentiel, ex. « 12 ») est en
 //  revanche déduit AUTOMATIQUEMENT du stock de Science au déblocage
 //  (et remboursé si la tech est reprise — bouton « − Reprendre »).

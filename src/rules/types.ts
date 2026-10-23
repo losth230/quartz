@@ -1,7 +1,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  BANQUE D'EFFETS — CONTRAT COMMUN (refactor 2026-10-18)
 //
-//  Principe : une règle (bâtiment, aménagement, dogme, règle de faction,
+//  Principe : une règle (bâtiment, aménagement, règle de faction,
 //  technologie, régime…) = une DONNÉE qui combine des effetspiochés dans
 //  la BANQUE. Modifier une règle = modifier son appel à la banque ;
 //  le code du moteur ne change JAMAIS quand une règle change.
@@ -12,7 +12,7 @@
 //   2. src/rules/effects/ — l'implémentation de chaque type d'effet,
 //      écrite UNE fois, testée UNE fois ;
 //   3. src/rules/registry.ts — associe les règles du référentiel
-//      (bâtiments, dogmes…) à leurs effets. C'est LA seule couche à
+//      (bâtiments…) à leurs effets. C'est LA seule couche à
 //      éditer pour changer une règle.
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -204,15 +204,20 @@ export interface EffetTourismeInstantane {
   valeur: number
 }
 
-/** Habitants ajoutés immédiatement à la ville (Socialisme dogme :
- *  « votre capitale reçoit 15 habitants »). */
+/** Habitants ajoutés immédiatement à la ville. Exemple historique : le
+ *  bonus « votre capitale reçoit 15 habitants » du dogme du
+ *  Socialisme — dogmes retirés du référentiel le 2026-10-24
+ *  (retour arbitre), l'effet reste au contrat pour compatibilité
+ *  des règles déjà saisies. */
 export interface EffetHabitantsVille {
   type: 'habitantsVille'
   valeur: number
 }
 
 /** Poids supplémentaire dans la pression de conversion culturelle de
- *  la culture concernée (dogmes, merveilles culturelles…). */
+ *  la culture concernée (merveilles culturelles… ; les dogmes,
+ *  source historique, sont retirés du référentiel depuis le
+ *  2026-10-24). */
 export interface EffetConversionPoids {
   type: 'conversionPoids'
   culture: string
@@ -335,12 +340,14 @@ export interface ConditionRegle {
 
 // ── Règle de la banque ─────────────────────────────────────────────────────
 
-/** Source d'une règle : où elle vit dans le référentiel. */
+/** Source d'une règle : où elle vit dans le référentiel.
+ *  'dogme' RETIRÉ le 2026-10-24 (retour arbitre : suppression de
+ *  tous les dogmes) — la valeur n'est jamais à réutiliser (stabilité
+ *  des règles déjà saisies). */
 export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
   | 'merveille'      // table constructions, famille Merveille
-  | 'dogme'           // table dogmes (bonus Pontife / Fidèles)
   | 'faction'         // règles de faction (base, Âge II, Âge III)
   | 'regime'          // loi chiffrée du régime politique
   | 'culture'         // règle de pays culturelle
@@ -354,7 +361,7 @@ export type SourceRegle =
  *  dans le référentiel sans casser la règle. */
 export interface RegleBanque {
   /** Identifiant stable de la règle (ex. 'batiment.poste-de-garde',
-   *  'dogme.capitalisme.pontife.r1'). */
+   *  'tech.comprendre-la-soie'). */
   id: string
   /** Source dans le référentiel. */
   source: SourceRegle
@@ -364,7 +371,7 @@ export interface RegleBanque {
   /** Groupe de la source (constructions : 'Ville' | 'Château' | 'Capitale' | 'Terrain')
    *  — 15 constructions existent en double (Ville ET Château), le
    *  groupe distingue leurs règles. Optionnel pour les sources sans
-   *  groupe (dogmes, factions…). */
+   *  groupe (factions…). */
   groupe?: string
   /** Conditions d'activation (toutes en ET). Vide = toujours actif
    *  quand la source est possédée. */

@@ -1,7 +1,9 @@
 // ══════════════════════════════════════════════════════════════════════
 //  VAGUE QUALITÉ (2026-10-24) — extrait de ReferenceDataPanel.tsx.
-//  Onglets « Cultures & régimes », « Tourisme & dogmes » et
-//  « Cités libres ».
+//  Onglets « Cultures & régimes », « Tourisme » et
+//  « Cités libres ». (Dogmes retirés du référentiel le 2026-10-24,
+//  retour arbitre Thibaut — l'onglet redevient « Tourisme », la
+//  carte « Dogmes » disparaît.)
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
@@ -72,32 +74,21 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
   )
 }
 
-export function OngletsTourismeDogmes({ C }: { C: Cfg }) {
+export function OngletTourisme({ C }: { C: Cfg }) {
   const cfg = C.config
   return (
-    <>
-      <Card title="Seuils de tourisme">
-        <div className="table-wrap">
-          <table className="tbl small">
-            <thead><tr><th>Seuil</th><th>Bonus</th></tr></thead>
-            <tbody>
-              {cfg.tourismeSeuils.map((t, i) => (
-                <tr key={i}><td>{t.seuil}</td><td>{t.bonus}</td></tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </Card>
-      <Card title="Dogmes">
-        {cfg.dogmes.map((d, i) => (
-          <div key={i} className="mini">
-            <strong>{d.dogme}</strong>
-            <div className="small">Pontife : {d.bonusPontife}</div>
-            <div className="small">Fidèles : {d.bonusFideles}</div>
-          </div>
-        ))}
-      </Card>
-    </>
+    <Card title="Seuils de tourisme">
+      <div className="table-wrap">
+        <table className="tbl small">
+          <thead><tr><th>Seuil</th><th>Bonus</th></tr></thead>
+          <tbody>
+            {cfg.tourismeSeuils.map((t, i) => (
+              <tr key={i}><td>{t.seuil}</td><td>{t.bonus}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
   )
 }
 

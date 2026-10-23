@@ -100,7 +100,7 @@ test('conditions peuple / saison / vassal (ET logique)', () => {
   assert.equal(appliquerRegles([regle], vertsHiver).flux['Or'], 10)
   // condition vassal : le joueur de base n'est vassal de personne
   const regleVassal: RegleBanque = {
-    id: 'test.vassal', source: 'dogme', nom: 'Test',
+    id: 'test.vassal', source: 'evenement', nom: 'Test',
     conditions: { vassal: true },
     effets: [{ type: 'fluxJoueur', ressource: 'Or', valeur: 5 }],
   }

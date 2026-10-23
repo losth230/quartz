@@ -2,7 +2,7 @@
 //  REGISTRE DE RÈGLES — référentiel → banque d'effets (refactor 2026-10-18)
 //
 //  LA couche à éditer pour changer une règle : chaque entrée du
-//  référentiel (bâtiment, aménagement, dogme…) est traduite en une
+//  référentiel (bâtiment, aménagement…) est traduite en une
 //  règle de banque (id stable + effets structurés). Les textes du
 //  référentiel restent de l'AFFICHAGE ; les effets deviennent des
 //  DONNÉES interprétées par la banque.
@@ -14,8 +14,8 @@
 //  retour Thibaut « toute production passe par la banque »), puis les
 //  FLUX DE PROGRÈS (source 3/3, 2026-10-20 — les technologies dont
 //  la production par tour vivait codée en dur dans
-//  engine/progresAuto.ts) sont traduits. Les autres sources (dogmes,
-//  factions…) migrent ensuite une par une ; le moteur continue
+//  engine/progresAuto.ts) sont traduits. Les autres sources
+//  (factions…) migrent ensuite une par une ; le moteur continue
 //  d'utiliser ses fonctions historiques pour tout ce qui n'est pas
 //  encore migré.
 // ═══════════════════════════════════════════════════════════════════════════
@@ -85,7 +85,7 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
  *  aux sites d'application (une fois par tour, cacheable). */
 export function registreComplet(C: Cfg): RegleBanque[] {
   return [...reglesConstructions(C), ...reglesRegimes(C), ...reglesCultures(C), ...reglesProgres(C)]
-  // Les sources suivantes migrent une par une (dogmes, factions…) :
+  // Les sources suivantes migrent une par une (factions…) :
   //  […, ...reglesProgres(config), …]
 }
 
