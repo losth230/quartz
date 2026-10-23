@@ -1,16 +1,22 @@
 // ══════════════════════════════════════════════════════════════════════
-//  Commerce (marqueur (t)) : routes commerciales des marchands — un
-//  marchand = UNE route (sa ville ↔ ville d'un autre joueur),
-//  +marchandOrTour Or pour les deux joueurs + copie de l'aménagement
-//  ENTIER (marqueur (u)). Le formulaire d'ouverture et son état vivent
-//  ici. (Extrait de PlayerView.tsx — un fichier par UI.)
+//  Commerce (marqueur (t)) : routes commerciales DISSOCIÉES (sous-vague
+//  3b, arbitrage Thibaut 2026-10-24) — une route relie une de tes villes
+//  à la ville d'un autre joueur ou à une cité libre, SANS personnage :
+//  +1 emplacement de Marchand de chaque côté, copie de l'aménagement
+//  ENTIER choisi (marqueur (u)) dans la ville d'ORIGINE, plus d'Or
+//  passif (marchandOrTour retiré). Ouverture gratuite ; fermeture par
+//  la seule ville d'origine. Le formulaire d'ouverture et son état
+//  vivent ici. (Extrait de PlayerView.tsx — un fichier par UI.)
 // ══════════════════════════════════════════════════════════════════════
 
 import { useState } from 'react'
 import type { Player } from '../../engine/types'
 import { useGame } from '../../state/store'
-import { routesCommerceDe, routesCommerceVers, marchandsDe, maxMarchandsJoueur, amenagementsCopiables, ressourcesCopiables, changerCopieRoute, supprimerRouteCommerce, creerRouteCommerce } from '../../engine/commerce'
-import { fullName } from '../../engine/shared'
+import {
+  routesCommerceDe, routesCommerceVers, maxRoutesJoueur,
+  amenagementsCopiables, ressourcesCopiables,
+  changerCopieRoute, supprimerRouteCommerce, creerRouteCommerce,
+} from '../../engine/commerce'
 import type { Cfg } from '../../engine/gameData'
 import { Card, Badge, Select, Button, fmt } from '../ui'
 import { Field } from './pays-utils'
@@ -18,9 +24,11 @@ import { Field } from './pays-utils'
 export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
   const { state, update } = useGame()
   // ── Commerce (marqueur (t)) : formulaire d'ouverture d'une route
-  //    commerciale — marchand libre, joueur/ville ciblés, aménagement
-  //    copié (marqueur (u) : aménagement ENTIER). ────────────────────
-  const [rcMarchand, setRcMarchand] = useState('')
+  //    commerciale dissociée — ville d'origine, cible (joueur OU cité
+  //    libre), ville ciblée, aménagement copié (marqueur (u) :
+  //    aménagement ENTIER ; une cité libre n'a rien à copier).
+  const [rcOrigine, setRcOrigine] = useState('')
+  const [rcType, setRcType] = useState<'joueur' | 'cite'>('joueur')
   const [rcJoueur, setRcJoueur] = useState('')
   const [rcVille, setRcVille] = useState('')
   const [rcAmen, setRcAmen] = useState('')
@@ -29,47 +37,44 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
   //  est chargée (state non-null côté App).
   if (!state) return null
   return (
-    <Card title="Commerce — routes des marchands">
+    <Card title="Commerce — routes commerciales">
       {(() => {
         const mes = routesCommerceDe(state, p.n)
         const entrantes = routesCommerceVers(state, p.n)
-        const libres = marchandsDe(state, p.n)
-          .filter((c) => !mes.some((r) => r.marchandId === c.id))
-        // Options du formulaire (cascade joueur → ville →
-        // aménagement copiable) + VALEURS EFFECTIVES : l'état OU la
-        // première option — correctif (u) du bug « Marchand
-        // introuvable » (les Selects contrôlés jamais touchés
-        // gardaient '' comme valeur).
+        // Options du formulaire (cascade origine → type de cible →
+        //  joueur/ville ou cité libre → aménagement copiable) +
+        //  VALEURS EFFECTIVES : l'état OU la première option —
+        //  correctif du bug des Selects contrôlés jamais touchés qui
+        //  gardaient '' comme valeur.
         const autresJoueurs = state.players.filter((q) => q.n !== p.n)
-        const mEff = rcMarchand ?? ''
+        const cites = state.citesLibres ?? []
+        const oEff = rcOrigine || p.villes[0]?.nom || ''
         const jEff = rcJoueur || String(autresJoueurs[0]?.n ?? '')
         const joueurCibleForm = state.players.find((q) => String(q.n) === jEff)
-        const vEff = rcVille || joueurCibleForm?.villes[0]?.nom || ''
-        const villeCibleForm = joueurCibleForm?.villes.find((v) => v.nom === vEff)
+        const cEff = rcVille || joueurCibleForm?.villes[0]?.nom || ''
+        const villeCibleForm = joueurCibleForm?.villes.find((v) => v.nom === cEff)
         const amenForm = villeCibleForm ? amenagementsCopiables(villeCibleForm, C.config) : []
         const aEff = rcAmen || amenForm[0] || ''
-        const cap = maxMarchandsJoueur(p, C)
-        const nbMarchands = marchandsDe(state, p.n).length
-        const nbRoutes = mes.length
+        const cap = maxRoutesJoueur(p, C)
         return (
           <>
             <p className="small">
-              <Badge tone={nbRoutes > cap ? 'warn' : 'good'}>
-                {nbMarchands} marchand(s) · {nbRoutes} route(s) ouverte(s) · cap conseillé : {cap}
+              <Badge tone={mes.length > cap ? 'warn' : 'good'}>
+                {mes.length} route(s) ouverte(s) · cap conseillé : {cap}
               </Badge>{' '}
               <span className="muted small">
-                Les marchands sont nommés automatiquement. Le cap est indicatif —
-                tu peux ouvrir autant de routes que tu veux (dépassement annoncé au journal).
+                Chaque route ouvre +1 emplacement de Marchand de chaque côté et
+                copie la production d'un aménagement de la ville ciblée dans ta
+                ville d'origine. Le cap est indicatif — tu peux ouvrir autant de
+                routes que tu veux (dépassement annoncé au journal).
               </span>
             </p>
             {mes.length === 0 && entrantes.length === 0 && (
               <p className="muted">
-                Aucune route commerciale. Les marchands sont nommés
-                automatiquement (comme les soldats et professeurs) : ouvre
-                une route vers la ville d'un autre joueur — chaque tour, les
-                deux joueurs reliés gagnent {fmt(C.p.marchandOrTour)} Or et
-                ton marchand copie la production entière d'un aménagement de
-                la ville ciblée.
+                Aucune route commerciale. Ouvre une route gratuite depuis une de
+                tes villes vers la ville d'un autre joueur (copie d'un
+                aménagement) ou vers une cité libre (rien à copier) — chaque
+                extrémité gagne +1 emplacement de Marchand.
               </p>
             )}
             {mes.length > 0 && (
@@ -77,41 +82,42 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                 <table className="tbl small">
                   <thead>
                     <tr>
-                      <th>Marchand (sa ville)</th>
-                      <th>Ville ciblée</th>
+                      <th>Ville d'origine</th>
+                      <th>Cible</th>
                       <th>Aménagement copié</th>
-                      <th>Gain / tour</th>
+                      <th>Production copiée / tour</th>
                       <th></th>
                     </tr>
                   </thead>
                   <tbody>
                     {mes.map((route) => {
-                      const m = (state.population[p.n] ?? []).find((c) => c.id === route.marchandId)
                       const cible = state.players.find((q) => q.n === route.joueurCible)
                       const villeCible = cible?.villes.find((v) => v.nom === route.villeCible)
                       const amenList = villeCible ? amenagementsCopiables(villeCible, C.config) : []
-                      const copList = ressourcesCopiables(route.amenagement, C.config)
+                      const copList = route.amenagement ? ressourcesCopiables(route.amenagement, C.config) : []
                       return (
                         <tr key={route.id}>
+                          <td><strong>{route.villeOrigine}</strong></td>
                           <td>
-                            <strong>{m ? fullName(m) : '—'}</strong>
-                            <br />
-                            <span className="muted small">{m?.ville ?? '—'}</span>
+                            {route.joueurCible === null
+                              ? <>↔ <strong>{route.citeCible}</strong> <span className="muted small">(cité libre)</span></>
+                              : <>↔ <strong>{route.villeCible}</strong><br /><span className="muted small">{cible?.nom ?? '?'}</span></>}
                           </td>
-                          <td>↔ <strong>{route.villeCible}</strong><br /><span className="muted small">{cible?.nom ?? '?'}</span></td>
                           <td>
-                            <Select
-                              value={route.amenagement}
-                              options={amenList.map((a) => ({ value: a, label: a }))}
-                              onChange={(v) => {
-                                let err: string | null = null
-                                update((s) => { err = changerCopieRoute(s, route.id, v) })
-                                setRcErr(err)
-                              }}
-                            />
+                            {route.joueurCible === null
+                              ? <span className="muted">— (rien à copier)</span>
+                              : <Select
+                                  value={route.amenagement ?? ''}
+                                  options={amenList.map((a) => ({ value: a, label: a }))}
+                                  onChange={(v) => {
+                                    let err: string | null = null
+                                    update((s) => { err = changerCopieRoute(s, route.id, v) })
+                                    setRcErr(err)
+                                  }}
+                                />}
                           </td>
                           <td className="small">
-                            +{fmt(C.p.marchandOrTour)} Or
+                            {copList.length === 0 && <span className="muted">—</span>}
                             {copList.map((x, i) => (
                               (!x.ete || state.saison === 'Été')
                                 ? <div key={i}>+{fmt(x.valeur)} {x.ressource}</div>
@@ -119,7 +125,7 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                             ))}
                           </td>
                           <td>
-                            <Button tone="danger" title="Fermer la route" onClick={() => {
+                            <Button tone="danger" title="Fermer la route (ville d'origine seule)" onClick={() => {
                               let err: string | null = null
                               update((s) => { err = supprimerRouteCommerce(s, route.id) })
                               setRcErr(err)
@@ -134,51 +140,66 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
             )}
             {entrantes.length > 0 && (
               <p className="small">
-                <strong>Routes entrantes</strong> — tu encaisses
-                +{fmt(C.p.marchandOrTour)} Or / tour par route :
-                {' '}
+                <strong>Routes entrantes</strong> — +1 emplacement de Marchand
+                par route (aucune fermeture possible : tu n'es pas à
+                l'origine) :{' '}
                 {entrantes.map((route) => {
-                  const m = (state.population[route.joueur] ?? []).find((c) => c.id === route.marchandId)
                   const prop = state.players.find((q) => q.n === route.joueur)
-                  return `${m?.ville ?? '?'} (${prop?.nom ?? '?'}) → ${route.villeCible}`
+                  return `${route.villeOrigine} (${prop?.nom ?? '?'}) → ${route.villeCible}`
                 }).join(' · ')}
               </p>
             )}
-            {true ? (
-              <div className="filters" style={{ alignItems: 'flex-end', flexWrap: 'wrap' }}>
-                <Field label="Marchand">
+            <div className="filters" style={{ alignItems: 'flex-end', flexWrap: 'wrap' }}>
+              <Field label="Ville d'origine">
+                <Select
+                  value={oEff}
+                  options={p.villes.map((v) => ({ value: v.nom, label: v.nom }))}
+                  onChange={setRcOrigine}
+                />
+              </Field>
+              <Field label="Type de cible">
+                <Select
+                  value={rcType}
+                  options={[
+                    { value: 'joueur', label: 'Ville d\u2019un autre joueur' },
+                    { value: 'cite', label: 'Cité libre' },
+                  ]}
+                  onChange={(v) => { setRcType(v === 'cite' ? 'cite' : 'joueur'); setRcVille(''); setRcAmen('') }}
+                />
+              </Field>
+              {rcType === 'joueur' ? (
+                <>
+                  <Field label="Joueur ciblé">
+                    <Select value={jEff} options={autresJoueurs.map((q) => ({ value: String(q.n), label: q.nom }))} onChange={(v) => { setRcJoueur(v); setRcVille(''); setRcAmen('') }} />
+                  </Field>
+                  <Field label="Ville ciblée">
+                    <Select value={cEff} options={(joueurCibleForm?.villes ?? []).map((v) => ({ value: v.nom, label: v.nom }))} onChange={(v) => { setRcVille(v); setRcAmen('') }} />
+                  </Field>
+                  <Field label="Aménagement copié (production entière)">
+                    <Select value={aEff} options={amenForm.map((a) => ({ value: a, label: a }))} onChange={setRcAmen} />
+                  </Field>
+                </>
+              ) : (
+                <Field label="Cité libre ciblée">
                   <Select
-                    value={mEff}
-                    options={[
-                      { value: '', label: '— Automatique (un roturier sera promu)' },
-                      ...libres.map((c) => ({ value: c.id, label: `${fullName(c)} (${c.ville})` })),
-                    ]}
-                    onChange={setRcMarchand}
+                    value={rcVille || cites[0]?.nom || ''}
+                    options={cites.map((c) => ({ value: c.nom, label: c.nom }))}
+                    onChange={setRcVille}
                   />
                 </Field>
-                <Field label="Joueur ciblé">
-                  <Select value={jEff} options={autresJoueurs.map((q) => ({ value: String(q.n), label: q.nom }))} onChange={(v) => { setRcJoueur(v); setRcVille(''); setRcAmen('') }} />
-                </Field>
-                <Field label="Ville ciblée">
-                  <Select value={vEff} options={(joueurCibleForm?.villes ?? []).map((v) => ({ value: v.nom, label: v.nom }))} onChange={(v) => { setRcVille(v); setRcAmen('') }} />
-                </Field>
-                <Field label="Aménagement copié (production entière)">
-                  <Select value={aEff} options={amenForm.map((a) => ({ value: a, label: a }))} onChange={setRcAmen} />
-                </Field>
-                <Button onClick={() => {
-                  let err: string | null = null
-                  update((s) => { err = creerRouteCommerce(s, p.n, mEff, Number(jEff), vEff, aEff) })
-                  setRcErr(err)
-                  if (!err) { setRcMarchand(''); setRcJoueur(''); setRcVille(''); setRcAmen('') }
-                }}>Ouvrir la route</Button>
-              </div>
-            ) : (
-              <p className="muted small">
-                Aucun marchand titré pour l'instant — laisse « — Automatique » :
-                un roturier de ta population recevra le métier de Marchand en
-                ouvrant la route.
-              </p>
-            )}
+              )}
+              <Button onClick={() => {
+                let err: string | null = null
+                if (rcType === 'joueur') {
+                  update((s) => { err = creerRouteCommerce(s, p.n, oEff, Number(jEff), null, cEff, aEff) })
+                } else {
+                  const cite = rcVille || cites[0]?.nom || ''
+                  update((s) => { err = creerRouteCommerce(s, p.n, oEff, null, cite, cite, null) })
+                }
+                setRcErr(err)
+                if (!err) { setRcOrigine(''); setRcJoueur(''); setRcVille(''); setRcAmen('') }
+              }}>Ouvrir la route (gratuit)</Button>
+            </div>
             {rcErr && <p className="small" style={{ color: '#E74C3C', marginBottom: 0 }}>{rcErr}</p>}
           </>
         )

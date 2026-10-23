@@ -91,15 +91,17 @@ export interface GameParams {
    *  plus aucun hardcap d'armées). Champ conservé pour la compatibilité
    *  des sauvegardes existantes, mais ignoré par le moteur et l'UI. */
   maxArmees: number
-  /** Nombre maximal de marchands par joueur (retour Thibaut : 0 par défaut,
-   *  certaines techs en octroient). */
+  /** Nombre maximal de ROUTES commerciales par joueur (sous-vague 3b
+   *  2026-10-24 : compte les routes détenues, plus les marchands —
+   *  retour Thibaut : 0 par défaut, certaines techs en octroient). */
   maxMarchands: number
   // ── Vassaux ──
   vassalPrelevement: number  // part des revenus d'habitants (Or) reversée au suzerain
   // ── Commerce (marqueur (t)) ──
-  /** Or par tour généré par une route commerciale de marchand, pour
-   *  CHACUN des deux joueurs reliés (retour Thibaut 2026-10-15). */
-  marchandOrTour: number
+  // (marchandOrTour retiré le 2026-10-24, sous-vague 3b « routes
+  //  dissociées », arbitrage Thibaut : les routes ne rapportent plus
+  //  d'Or passif — seul effet du propriétaire : la copie de
+  //  l'aménagement visé, cf. engine/commerce.ts)
   // ── Noms des entités système (chaînes) ──
   metierDirigeant: string
   metierGouverneur: string
@@ -183,7 +185,6 @@ export const DEFAULT_PARAMS: GameParams = {
   maxArmees: 2,
   maxMarchands: 0,
   vassalPrelevement: 0.5,
-  marchandOrTour: 4,
   proxRiviereNourriture: 12,
   proxMerNourriture: 7,
   metierDirigeant: 'Dirigeant',
@@ -263,7 +264,6 @@ export const PARAM_META: {
   { key: 'conversionMemeCulture', label: 'Poids de sa propre culture', groupe: 'Culture' },
   { key: 'taxOrFaibles', label: 'Taxes faibles — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
   { key: 'taxOrHautes', label: 'Taxes fortes — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
-  { key: 'marchandOrTour', label: 'Marchand — Or / tour par route commerciale', groupe: 'Commerce', aide: 'Or gagné CHAQUE tour par les DEUX joueurs reliés par une route de marchand (propriétaire + ville ciblée).' },
   { key: 'taxNaissFaibles', label: 'Taxes faibles — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'taxNaissHautes', label: 'Taxes fortes — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'proxRiviereNourriture', label: 'Proximité rivière — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord d\'une rivière » (marqueur (y)).' },
@@ -272,7 +272,7 @@ export const PARAM_META: {
   { key: 'puissanceSoldat', label: 'Puissance d\'un soldat', groupe: 'Armées' },
   { key: 'armeePrixOr', label: 'Prix de levée — Or par tranche de force', groupe: 'Armées', aide: 'Levée d\'une armée : ce prix est facturé pour chaque tranche de points de force de la puissance cible (règle du classeur : 1 Or tous les 2 points) — payé UNE FOIS à la levée, pas d\'entretien.' },
   { key: 'armeePriXPuissance', label: 'Prix de levée — points de force par tranche', groupe: 'Armées' },
-  { key: 'maxMarchands', label: 'Nombre maximal de marchands par joueur', groupe: 'Armées', aide: '0 par défaut. Les règles qui accordent un marchand supplémentaire l\'augmentent.' },
+  { key: 'maxMarchands', label: 'Nombre maximal de routes commerciales par joueur', groupe: 'Armées', aide: '0 par défaut. Compte les ROUTES détenues (ville d\'origine), pas les marchands — renommé le 2026-10-24 (sous-vague 3b « routes dissociées ») ; la clé maxMarchands est conservée pour les configs existantes. Les règles qui accordent une route supplémentaire l\'augmentent.' },
   { key: 'soldatAgeMin', label: 'Âge minimal de recrutement', groupe: 'Armées' },
   { key: 'soldatAgeMax', label: 'Âge maximal de recrutement', groupe: 'Armées' },
   { key: 'vassalPrelevement', label: "Part des revenus d'habitants reversée au suzerain", groupe: 'Vassaux', unite: 'proportion', aide: "Un vassal prête serment à un autre joueur : à chaque fin de tour, il reverse cette part des gains d'Or de ses habitants à son suzerain (0,5 = 50 %)." },

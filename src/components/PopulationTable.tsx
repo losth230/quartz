@@ -347,6 +347,8 @@ export function PopulationTable({ joueur }: { joueur: number }) {
         estCite={!!cite}
         C={C}
         descMetier={descMetier}
+        state={!cite ? state : undefined}
+        joueur={!cite ? joueur : undefined}
       />
 
       <CarteAjoutHabitants

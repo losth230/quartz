@@ -45,7 +45,7 @@ import { appliquerEffetsAmenagements, effetsNourrEteAmenagementsVille } from './
 import { appliquerEffetsAutres, effetsNourrEteAutresVille } from './autres'
 import { appliquerEffetsRegimesCultures, resynchroniserTourisme } from './regimes'
 import { nbVassaux } from './factions'
-import { appliquerEffetsCommerce, nettoyerRoutesCommerce, peuplerMarchands } from './commerce'
+import { appliquerEffetsCommerce, nettoyerRoutesCommerce } from './commerce'
 import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
 import { appliquerBonusProximite } from './villes'
@@ -231,18 +231,19 @@ export function runTurn(state: GameState): GameState {
   const proximiteParJoueur: Record<number, Record<string, number>> =
     appliquerBonusProximite(state, C)
 
-  // 3terdecies. Commerce (marqueur (t)) : les routes commerciales des
-  //  marchands génèrent marchandOrTour Or pour CHAQUE joueur relié
-  //  (propriétaire du marchand + joueur ciblé) ; le propriétaire copie
-  //  en plus la production de l'aménagement ENTIER choisi dans la
-  //  ville ciblée, marqueur (u) (engine/commerce.ts — comme les bâtiments : pas de
-  //  taxes, pas de coefficient gainsCrediteStock, pas de tribut). Les
-  //  routes mortes (marchand décédé ou déchu) sont d'abord fermées.
+  // 3terdecies. Commerce (marqueur (t)) : les routes commerciales
+  //  dissociées (sous-vague 3b, 2026-10-24, arbitrage Thibaut) ne
+  //  rapportent plus d'Or passif — le seul effet du propriétaire est
+  //  la copie de l'aménagement choisi dans la ville ciblée, marqueur
+  //  (u) (engine/commerce.ts — comme les bâtiments : pas de taxes,
+  //  pas de coefficient gainsCrediteStock, pas de tribut) ; les
+  //  emplacements Marchand (+1 par route, chaque côté) sont calculés à
+  //  la demande par le moteur des métiers (engine/metiers.ts, ctx
+  //  routes). Les routes mortes (origine perdue, cible disparue,
+  //  copie disparue) et les vieilles routes du modèle « marchand
+  //  titulaire » (marchandId, retiré du modèle le 2026-10-24) sont
+  //  fermées ici avec un log dédié.
   nettoyerRoutesCommerce(state)
-  // Marchands automatiques (revue 2026-10-16, homogénéisation soldats /
-  //  professeurs) : chaque route reprend un marchand si le sien est
-  //  tombé, et les routes disponibles (cap) sont pré-pourvues.
-  for (const p of state.players) peuplerMarchands(state, p)
   const commerceParJoueur: Record<number, Record<string, number>> =
     appliquerEffetsCommerce(state, C)
 

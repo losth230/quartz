@@ -1085,6 +1085,14 @@ export function cfgOf(config?: GameConfig): Cfg {
   delete purgeEvt.dynasties
   delete purgeEvt.eventEffets
   delete purgeEvt.dynastieEffets
+  // RETRAIT DE marchandOrTour (sous-vague 3b « routes commerciales
+  //  dissociées », arbitrage Thibaut 2026-10-24) : les routes ne
+  //  rapportent plus d'Or passif, le paramètre n'a plus aucun
+  //  lecteur — les configs sauvegardées AVANT le portent encore
+  //  (fusion {...DEFAULT_CONFIG, ...c}). Même patron que dogmes/
+  //  événements : delete ciblé, SANS bump de SCHEMA_VERSION_CONFIG
+  //  (règle (x)). Idempotent.
+  delete (merged as { params?: { marchandOrTour?: unknown } }).params?.marchandOrTour
   // PURGE DE L'INFLUENCE (retour arbitre Thibaut 2026-10-24, suite
   //  de l'arbitrage fondateur « Influence → émissaires ») : le texte
   //  de la règle des cités libres parlait encore de « gagner de

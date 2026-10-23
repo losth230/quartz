@@ -32,7 +32,9 @@ export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, re
     // Candidats : SANS metier ou roturier (metier Chasseur) — le setup
     //  metier tous les adultes Chasseur, l'ancien filtre !c.metier
     //  rendait la liste TOUJOURS vide (bug : aucun professeur n'était
-    //  jamais nommé automatiquement). Même logique que peuplerMarchands.
+    //  jamais nommé automatiquement). Même logique que les Marchands
+    //  automatiques d'avant la sous-vague 3b (peuplerMarchands,
+    //  retiré le 2026-10-24 avec la dissociation des routes).
     const candidats = vivants.filter((c) =>
       c.age >= C.p.adultAge &&
       (!c.metier || c.metier === C.p.metierChasseur) &&
@@ -201,10 +203,13 @@ export function metiersAccessibles(state: GameState, _p: Player, C: Cfg = cfgOf(
   //  bloquant — convention du jeu.
   out.push(C.p.metierDirigeant, C.p.metierHeritierStr)
   // « Marchand » (marqueur (t)) : attribution manuelle comme Chasseur
-  //  ou Gouverneur — le metier ouvre UNE route commerciale
-  //  (engine/commerce.ts : +marchandOrTour Or pour les 2 joueurs
-  //  reliés + copie d'une ressource d'un aménagement de la ville
-  //  ciblée). Pas de gain par tour dans la table des metiers.
+  //  ou Gouverneur. Sous-vague 3b (2026-10-24, arbitrage Thibaut) :
+  //  les routes commerciales sont DISSOCIÉES du métier — le Marchand
+  //  est un métier de production à part entière (+2 Or / tour) dont
+  //  les emplacements viennent des Mines d'Or (bâtiment) et des
+  //  routes commerciales (+1 par route, chaque côté —
+  //  emplacementsRoutesVille ci-dessous). Le littéral « Marchand »
+  //  est le doublet moteur de TITRE_MARCHAND (engine/commerce.ts).
   out.push('Marchand')
   // Vague 3a (2026-10-21) : AUCUNE éducation n'est requise — les métiers
   //  de production (Pêcheur, Bûcheron, Mineur…), la Garde, le Banquier
@@ -294,7 +299,10 @@ export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.confi
  *  vague 3b 2026-10-22 : les BÂTIMENTS comptent aussi, ex. Poste de
  *  garde +4 Garde — somme des `emplacements` des constructions de la
  *  ville, format référentiel `emplacements: [{ metier, places }]`). */
-export function emplacementsMetierVille(metier: string, ville: City, C: Cfg = cfgOf()): number {
+export function emplacementsMetierVille(
+  metier: string, ville: City, C: Cfg = cfgOf(),
+  ctx?: { state: GameState; joueur: number },
+): number {
   let total = 0
   for (const nom of [...(ville.batiments ?? []), ...(ville.amenagements ?? [])]) {
     const ref = constructionRef(nom, C.config)
@@ -310,12 +318,57 @@ export function emplacementsMetierVille(metier: string, ville: City, C: Cfg = cf
       if (e.metier === metier) total += e.places
     }
   }
+  // Sous-vague 3b (2026-10-24, arbitrage Thibaut) : les routes
+  //  commerciales dissociées ouvrent aussi des emplacements (cf.
+  //  emplacementsRoutesVille) — ctx optionnel car les cités libres
+  //  sont hors du champ des caps et certains appelants n'ont pas le
+  //  state sous la main.
+  if (ctx) total += emplacementsRoutesVille(metier, ctx.state, ctx.joueur, ville.nom, C)
   return total
 }
 
-export function capMetierVille(metier: string | null, ville: City, C: Cfg = cfgOf()): number {
+/** Emplacements de `metier` ouverts par les routes commerciales
+ *  dissociées (sous-vague 3b, 2026-10-24, arbitrage Thibaut) dans la
+ *  ville `villeNom` du joueur `joueur` : +1 Marchand par route
+ *  SORTANTE (joueur à l'origine) et +1 Marchand par route ENTRANTE
+ *  (joueur ciblé), plus les emplacements du métier copié dans
+ *  l'aménagement visé par chaque route sortante (la copie vit dans
+ *  la ville d'ORIGINE — engine/commerce.ts, effetsRouteProprietaire).
+ *  Lecture INLINE de state.routesCommerce, sans import de
+ *  commerce.ts (anti-cycle) : le titre « Marchand » y vit en
+ *  doublet du littéral ci-dessous (TITRE_MARCHAND). Les vieilles
+ *  routes du modèle « marchand titulaire » (champ marchandId,
+ *  retiré du modèle le 2026-10-24) ne comptent PAS. */
+function emplacementsRoutesVille(
+  metier: string, state: GameState, joueur: number, villeNom: string, C: Cfg,
+): number {
+  const routes = state.routesCommerce ?? []
+  if (routes.length === 0) return 0
+  let total = 0
+  for (const r of routes) {
+    if ('marchandId' in r) continue
+    if (r.joueur === joueur && r.villeOrigine === villeNom) {
+      if (metier === 'Marchand') total += 1
+      const ref = r.amenagement ? constructionRef(r.amenagement, C.config) : null
+      if (ref) {
+        for (const e of emplacementsConstructionRef(ref)) {
+          if (e.metier === metier) total += e.places
+        }
+      }
+    }
+    if (r.joueurCible === joueur && r.villeCible === villeNom && metier === 'Marchand') {
+      total += 1
+    }
+  }
+  return total
+}
+
+export function capMetierVille(
+  metier: string | null, ville: City, C: Cfg = cfgOf(),
+  ctx?: { state: GameState; joueur: number },
+): number {
   if (!metier) return Number.POSITIVE_INFINITY
-  const empl = emplacementsMetierVille(metier, ville, C)
+  const empl = emplacementsMetierVille(metier, ville, C, ctx)
   const td = metierDef(metier, C.config)
   if (td?.capParVille !== undefined) return td.capParVille + empl
   // Vague 3b : cap CUMULATIVE = base du RANG d'habitation
@@ -338,7 +391,10 @@ export function capMetierVille(metier: string | null, ville: City, C: Cfg = cfgO
  *  Thibaut 2026-10-22 : « n'importe quel métier → Chasseur → sans
  *  métier »), avec leurs places libres (cap − en poste, vivants
  *  seulement). */
-function postesLibresVille(vivants: Character[], ville: City, C: Cfg): Array<{ metier: string; libres: number }> {
+function postesLibresVille(
+  vivants: Character[], ville: City, C: Cfg,
+  ctx?: { state: GameState; joueur: number },
+): Array<{ metier: string; libres: number }> {
   const enPoste: Record<string, number> = {}
   for (const c of vivants) {
     if (c.metier) enPoste[c.metier] = (enPoste[c.metier] ?? 0) + 1
@@ -353,13 +409,13 @@ function postesLibresVille(vivants: Character[], ville: City, C: Cfg): Array<{ m
     //  nominations automatiques. Ces postes restent plafonnés (le
     //  surnombre s'applique), mais jamais ATTRIBUÉS ici.
     if (t.nobleSeul || t.attribution === 'Armée' || t.attribution === 'Succession' || t.attribution === 'Ville') continue
-    if (Number.isFinite(capMetierVille(t.metier, ville, C))) plafonnes.push(t.metier)
+    if (Number.isFinite(capMetierVille(t.metier, ville, C, ctx))) plafonnes.push(t.metier)
   }
   // priorisation : le Chasseur passe en dernier (poste de repli — arbitrage 2026-10-22)
   plafonnes.sort((a, b) => (a === C.p.metierChasseur ? 1 : 0) - (b === C.p.metierChasseur ? 1 : 0))
   return plafonnes.map((m) => ({
     metier: m,
-    libres: Math.max(0, Math.floor(capMetierVille(m, ville, C)) - (enPoste[m] ?? 0)),
+    libres: Math.max(0, Math.floor(capMetierVille(m, ville, C, ctx)) - (enPoste[m] ?? 0)),
   }))
 }
 
@@ -377,7 +433,7 @@ function premierPosteLibre(
   const vivants = vivantsParVille
     ? (vivantsParVille.get(ville.nom) ?? []).filter((c) => c.statut !== 'Décédé')
     : (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
-  const postes = postesLibresVille(vivants, ville, C)
+  const postes = postesLibresVille(vivants, ville, C, { state, joueur: p.n })
   const premier = postes.find((x) => x.libres > 0)
   return premier ? premier.metier : null
 }
@@ -402,6 +458,7 @@ export interface OccupationMetier {
  *  toutes les caps sont infinies. */
 export function occupationsMetierVille(
   habitants: Character[], ville: City | null, C: Cfg = cfgOf(),
+  ctx?: { state: GameState; joueur: number },
 ): OccupationMetier[] {
   const vivants = habitants.filter((c) => c.statut !== 'Décédé')
   const par: Record<string, number> = {}
@@ -413,10 +470,10 @@ export function occupationsMetierVille(
   const lignes: OccupationMetier[] = []
   const ajoute = (m: string) => lignes.push({
     metier: m, enPoste: par[m] ?? 0,
-    cap: ville ? capMetierVille(m, ville, C) : Number.POSITIVE_INFINITY,
+    cap: ville ? capMetierVille(m, ville, C, ctx) : Number.POSITIVE_INFINITY,
   })
   for (const m of C.metiers) {
-    const cap = ville ? capMetierVille(m.metier, ville, C) : Number.POSITIVE_INFINITY
+    const cap = ville ? capMetierVille(m.metier, ville, C, ctx) : Number.POSITIVE_INFINITY
     if ((par[m.metier] ?? 0) > 0 || Number.isFinite(cap)) ajoute(m.metier)
   }
   for (const m of Object.keys(par)) {
@@ -458,25 +515,23 @@ export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)
     for (const ville of p.villes) {
       const vivants = vivantsParVille.get(ville.nom) ?? []
       // 1. surnombre : par métier plafonné, les plus âgés sortent.
-      //    Exception (spec vague 3 « Marchand & routes ») : les
-      //    emplacements de Marchand viennent des Mines d'Or ET des
-      //    routes commerciales — un marchand qui TIENT une route occupe
-      //    un poste créé par elle : il n'est JAMAIS en surnombre (sans
-      //    cette exemption, toute route perdrait son titulaire à
-      //    chaque fin de tour — contrat B4 « la route vit toujours »).
-      //    La dissociation complète des routes (sous-vague 3b)
-      //    remplacera ce pont.
-      const routes = state.routesCommerce ?? []
-      const tientRoute = (id: string) => routes.some((r) => r.marchandId === id)
+      //    Sous-vague 3b (2026-10-24, arbitrage Thibaut) : les routes
+      //    commerciales dissociées ne portent PLUS de marchand
+      //    titulaire — l'ancienne exemption « tientRoute » (un
+      //    marchand qui tient une route n'est jamais en surnombre)
+      //    est retirée ; les emplacements de Marchand ouverts par les
+      //    routes sont désormais portés par le cap lui-même (ctx
+      //    routes ci-dessous), donc le surnombre ne peut plus vider
+      //    une route de son titulaire.
       const enPoste: Record<string, Character[]> = {}
       for (const c of vivants) {
         if (!c.metier) continue
         ;(enPoste[c.metier] ?? (enPoste[c.metier] = [])).push(c)
       }
       for (const t of C.metiers) {
-        const cap = capMetierVille(t.metier, ville, C)
+        const cap = capMetierVille(t.metier, ville, C, { state, joueur: p.n })
         if (!Number.isFinite(cap)) continue
-        const occupants = (enPoste[t.metier] ?? []).filter((c) => !tientRoute(c.id))
+        const occupants = enPoste[t.metier] ?? []
         if (occupants.length <= Math.floor(cap)) continue
         const perdants = [...occupants].sort((x, y) => y.age - x.age)
           .slice(0, occupants.length - Math.floor(cap))
@@ -501,7 +556,7 @@ export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)
       if (candidats.length > 0) {
         // postes recalculés APRÈS le surnombre (les perdants ci-dessus
         //  sont déjà Sans-emploi et ne comptent plus comme en poste)
-        const postes = postesLibresVille(vivants, ville, C)
+        const postes = postesLibresVille(vivants, ville, C, { state, joueur: p.n })
         for (const c of candidats) {
           const etaitChasseur = c.metier === C.p.metierChasseur
           // un Chasseur ne « prend » pas son propre poste : il ne

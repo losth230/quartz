@@ -53,9 +53,11 @@ export interface ProductionDetail {
   citesLibres: Record<string, number>
   /** tribut de vassalité (négatif = payé, positif = reçu) */
   vassalite: Record<string, number>
-  /** routes commerciales des marchands (engine/commerce.ts — étape
-   *  3terdecies : +marchandOrTour Or pour chaque joueur relié + copie
-   *  de l'aménagement entier de la ville ciblée, saisonnière (u)) */
+  /** routes commerciales dissociées (engine/commerce.ts — étape
+   *  3terdecies : copie de la production de l'aménagement entier de
+   *  la ville ciblée, dans la ville d'origine, saisonnière (u) ; le
+   *  bonus d'Or passif marchandOrTour a été retiré le 2026-10-24 —
+   *  sous-vague 3b, arbitrage Thibaut) */
   commerce: Record<string, number>
   /** bonus de proximité des villes (marqueur (y) : Rivière +12, Mer
    *  +7 Nourriture/tour par défaut — engine/villes.ts bonusProximite) */

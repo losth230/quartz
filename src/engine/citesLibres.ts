@@ -34,6 +34,7 @@ import { cfgOf, peupleDef, metierDef, type Cfg } from './gameData'
 import { rangPaysNiveau } from './factions'
 import { isNobleDyn, perteDemenagement } from './shared'
 import { resynchroniserTourisme } from './regimes'
+import { TITRE_MARCHAND, capMarchandsCite } from './commerce'
 
 /** Consommation d'une cité libre : même règle qu'une ville de joueur —
  *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour. */
@@ -305,13 +306,19 @@ function ajouterCiteLibre(
 // ── Population « comme un joueur » (onglet 👥 Population) ────────────
 
 /** Métiers accessibles pour la population d'une cité libre (comme
- *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur.
- *  Pas de Dirigeant : une cité libre n'a ni conseil ni dirigeant
- *  (son suzerain est un joueur). */
+ *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur, et
+ *  Marchand dès qu'au moins une route commerciale entrante existe
+ *  (sous-vague 3b, 2026-10-24, arbitrage Thibaut : les routes
+ *  dissociées ouvrent +1 emplacement de Marchand à CHAQUE extrémité,
+ *  la cité incluse — capMarchandsCite, engine/commerce.ts). Pas de
+ *  Dirigeant : une cité libre n'a ni conseil ni dirigeant (son
+ *  suzerain est un joueur). */
 export function metiersAccessiblesCite(
-  state: GameState, _cite: CiteLibre, C: Cfg = cfgOf(state.config),
+  state: GameState, cite: CiteLibre, C: Cfg = cfgOf(state.config),
 ): string[] {
-  return [C.p.metierChasseur, C.p.metierGouverneur]
+  const out = [C.p.metierChasseur, C.p.metierGouverneur]
+  if (capMarchandsCite(state, cite) > 0) out.push(TITRE_MARCHAND)
+  return out
 }
 
 /** Pseudo-joueur représentant une cité libre pour la VALIDATION des
