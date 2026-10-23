@@ -206,7 +206,8 @@ export function rejouerTransfertVille(
  *  (y)) : « Rivière » → proxRiviereNourriture, « Mer » →
  *  proxMerNourriture, « Plaine » (ou absent) → 0. Crédité
  *  automatiquement à chaque fin de tour (canal « Proximité » du récap
- *  ressources — appliquerBonusProximite dans engine.ts) ; montants
+ *  ressources — appliquerBonusProximite appelée par runTurn
+ *  dans tour.ts) ; montants
  *  paramétrables dans Paramètres → Formules → Villes. */
 export function bonusProximite(ville: City, C: Cfg): number {
   if (ville.proximite === 'Rivière') return C.p.proxRiviereNourriture

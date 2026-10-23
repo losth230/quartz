@@ -85,7 +85,7 @@ test('migrations : un état migré reste jouable (runTurn s exécute)', async ()
   migrerEtat(state)
   const avant = state.turn
   // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { runTurn } = await import('./engine')
+  const { runTurn } = await import('./tour')
   runTurn(state)
   assert.equal(state.turn, avant + 1, 'l état migré doit rester jouable')
 })

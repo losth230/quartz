@@ -5,8 +5,8 @@
 //  sites d'application de règles (progresAuto, garnisons) puissent
 //  injecter les PORTS sans importer regimes (qui importe progresAuto
 //  — cycle réciproque interdit). habitations.ts et regimes.ts
-//  ré-exportent ces symboles : la façade engine.ts et l'UI restent
-//  inchangées (compat arrière).
+//  ré-exportent ces symboles : les consommateurs (UI, progresAuto,
+//  garnisons) restent inchangés (compat arrière).
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City } from './types'
