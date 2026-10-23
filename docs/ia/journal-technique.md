@@ -1613,6 +1613,84 @@ après déploiement).
 **Push** en trois commits (refactor(moteur) filtre, test,
 docs(ia)) + miroirs v4 (code seulement).
 
+## Refonte SOLID VAGUE 2 — cycles d'imports cassés, ports rules→moteur, graphe acyclique (2026-10-23/24, arbitrages Thibaut)
+
+**Arbitrages Thibaut** (présentation du design vague 2) : ordre = VAGUE 2
+SOLID D'ABORD, scalabilité (mémoïsation) APRÈS ; périmètre = « tout dans
+la vague 2 » ; règle de config actée : « il doit exister une seule
+config globale modifiable en dehors des parties et jamais remodifiée
+après » — c'est la condition de sûreté du futur cache cfgOf (toute
+édition crée une nouvelle référence) ; Ponton→proximité : à faire
+maintenant ; Grand bailli : « c'est un ministre, on supprime pour
+l'instant ».
+
+**Étapes** (patchs v2a→v2g, tous idempotents, asserts de convention) :
+1. **v2a** — `engine/indexPopulation.ts` extrait de naissances.ts
+   (indexPopulationMonde + invaliderIndexPopulation ; metiers/sante
+   importent le module bas) ; validation.ts importe isNobleDyn de
+   `shared` → les 2 cycles RÉCIPROQUES (engine↔validation,
+   naissances↔sante) CASSÉS.
+2. **v2b — port (D)** : `ContexteEffet.ports { C, capitaleDe, rangNiveau,
+   garnisonVille }` (rules/types.ts) ; usines du registre re-signées
+   `C: Cfg` REQUIS (reglesConstructions, registreComplet, reglesRegimes,
+   reglesCultures, clesTechsParNom, reglesProgres, reglePourConstruction
+   — cache par RÉFÉRENCE de C, sûr grâce à la règle de config) ;
+   contexteLectureSeule DÉMÉNAGÉ de rules/registry vers
+   engine/constructions (C_LECTURE, ports factices — effets de
+   constructions inconditionnels) ; banque.ts lit TOUT via ctx.ports :
+   la couche rules n'importe plus le moteur (inversion).
+3. **v2c** — adaptation des appels : sites moteur manqués par v2b
+   (regimes/progresAuto passaient `C.config` au lieu du Cfg complet —
+   crash `C.config.config` ; constructions sans argument) + 4 fichiers
+   de tests (C_DEFAUT = cfgOf(undefined) ; contexteLectureSeule
+   importé de engine/constructions).
+4. **v2d — ports RÉELS** aux 3 sites d'application
+   (fluxProgresJoueur, effetsRegime, effetsCulturePays) via 3 modules
+   BAS NIVEAU (dé-cyclage par arête — importer regimes depuis
+   progresAuto aurait recréé un cycle réciproque, regimes important
+   déjà progresAuto) : `rangs.ts` (nomRang, rangsDefsType, rangNiveau),
+   `progresTech.ts` (aTech + trio garnison des techs),
+   `garnisons.ts` (garnisonHabitationVille) — tous ré-exportés par
+   leurs modules d'origine (façade engine.ts, UI et mocks
+   INCHANGÉS). Graphe final : progresAuto → garnisons →
+   {batiments, progresTech, rangs}, aucun retour.
+5. **v2e** — dernier anneau (regimes→economie→metiers→villes→regimes)
+   cassé : `villeCotiere` extraite de villes.ts dans `geographie.ts`
+   (feuille pure), economie et metiers importent la feuille.
+6. **v2f — Ponton→proximité** : villeCotiere = TOUTE proximité autre
+   que « Plaine » (l'ARBITRAGE LITTÉRAL du 2026-10-22, déjà cité dans
+   les docblocks, mais le code n'acceptait que Rivière||Mer) —
+   comportement identique sur le domaine actuel
+   (Plaine/Rivière/Mer/absent) ; une future proximité (Colline,
+   Montagne…) comptera SANS toucher au code. Test « Colline » ajouté.
+   **Grand bailli** : purge des doccomments résiduels (EffetReductionCout
+   dans rules/types.ts, fondation=techs dans habitations.ts) — plus
+   AUCUN effet moteur ni mention code ; l'histoire des arbitrages
+   reste dans le doc de design.
+7. **v2g** — nettoyage des imports inutilisés révélés par le tsc
+   (noUnusedLocals) : City (progresAuto), nomRang/rangsDefsType
+   (regimes), garnisonProgresVille/garnisonMinimaleProgres (regimes).
+
+**Métriques** : cycles d'imports 25 → **0** (graphe ENTIÈREMENT
+acyclique : aucun fichier dans un cycle, 0 réciproque). Validation :
+108/108 tests (node strip-types + hooks ESM maison), diag exit 0,
+`tsc --noEmit` strict **0 nouvelle erreur** (diff contre la base —
+reproduit par tarballs typescript 5.9.3 + react 18.3.1 + @types/react
++ csstype + @types/node 25.0.3 du package-lock ; les « erreurs » du
+bac sans @types/node sont des faux positifs, assert.ok ne narrow pas),
+diff -rq contre tarball HEAD frais = 18 modifiés + 5 nouveaux attendus.
+
+**Reste à faire (vague 2)** : le redécoupage de la façade engine.ts
+(runTurn + sermentsPossedes → tour.ts, suppression de la façade,
+re-câblage des ~15 consommateurs UI) — à faire en propre : il touche
+des .tsx que seule la CI valide. Scalabilité (mémoïsation) : vague
+SUIVANTE — cache cfgOf par référence (WeakMap — condition de sûreté
+actée par Thibaut), groupement par ville dans reaffecterMetiers, bench
+16k habitants avant/après.
+
+**Push** en trois commits (refactor(moteur), test, docs(ia)) +
+miroirs v4 (code seulement).
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

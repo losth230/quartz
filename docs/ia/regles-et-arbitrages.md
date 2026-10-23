@@ -126,7 +126,12 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
   (« Auto »), les complexes appliqués au plateau (« Plateau »).
 - **Portefeuilles CUMULABLES** (2× le même = OK) ; le catalogue doit couvrir toutes
   les voies de victoire.
-- Les 7 ministères du classeur ont été renommés en offices de cour :
+- Les 7 ministères du classeur ont été renommés en offices de cour
+  (SIMPLIFICATION 2026-10-23 : les ministres/offices sont RETIRÉS du
+  jeu pour l'instant, arbitrage Thibaut « alléger pour dérouiller » ;
+  vague 2, arbitrage 2026-10-23 : « Grand bailli : c'est un ministre,
+  on supprime pour l'instant » — l'office et son effet sont supprimés,
+  il ne reste plus aucune mention moteur) :
   Colonial→**Grand bailli**, Culture→**Maître des arts**, Défense→**Grand prévôt**,
   Economie→**Surintendant des finances**,
   Guerre→**Grand écuyer**, Recherche→**Grand bibliothécaire**.
@@ -609,9 +614,13 @@ rang 1). Arbitrages actés lors de la session :
 - **Points ouverts** : garnisons hors-rang (régimes, ministères,
   bâtiments rang 2+) inchangées ; **Guilde des médecins**
   (bonusGuerisonGlobal 0,10) — arbitrer coût et constructibilité ;
-  scalabilité (mémoïsation) remise à plus tard par Thibaut ;
-  vagues 2-3 de la refonte SOLID (import cycles / classe mère /
-  ports, Ponton→proximité, Grand bailli) en attente d'arbitrage.
+  scalabilité (mémoïsation) : vague SUIVANTE après la vague 2
+  (arbitrage Thibaut 2026-10-23 : vague 2 SOLID d'abord).
+  Vague 2 SOLID ARBITRÉE le 2026-10-23 et IMPLÉMENTÉE le
+  2026-10-24 (cycles d'imports 25 → 0, ports ctx.ports,
+  Ponton→proximité, Grand bailli supprimé — cf. bullet vague 2
+  ci-dessous) ; le redécoupage de la façade engine.ts reste à
+  faire en propre.
 - **Simplification provisoire (2026-10-23, retour Thibaut « alléger
   pour dérouiller »)** : la SANTÉ est ignorée pour l'instant ; les
   constructions de rang d'habitation 2+ sont SUPPRIMÉES du
@@ -705,3 +714,20 @@ rang 1). Arbitrages actés lors de la session :
 4. Vague qualité suivante : assainissement des cycles d'imports `rules/ ↔ engine/`
    (13 cycles) et découpage des 5 grosses vues restantes (PopulationTable ~800 l.,
    ReferenceDataPanel ~650, RoyaumeView ~630, ConfigTables ~600, CitesLibresView ~430).
+- **Refonte SOLID vague 2 (2026-10-23/24, arbitrages Thibaut « tout
+  dans la vague 2 », « une seule config globale modifiable en dehors
+  des parties et jamais remodifiée après »)** : la couche rules
+  (registre d'effets) n'importe plus le moteur — les usines de règles
+  prennent la config convergée en argument (`C: Cfg` requis) et les
+  effets lisent des PORTS injectés par le moteur dans le contexte
+  (`ctx.ports { C, capitaleDe, rangNiveau, garnisonVille }`) ; les
+  25 cycles d'imports du moteur sont cassés (graphe entièrement
+  acyclique : indexPopulation, rangs, progresTech, garnisons,
+  geographie — nouveaux modules bas niveau ré-exportés par leurs
+  modules d'origine, façade et UI inchangées) ; **Ponton→proximité** :
+  « côtière » = TOUTE proximité autre que « Plaine » (l'arbitrage
+  2026-10-22 câblé littéralement — une future proximité comptera sans
+  toucher au code) ; **Grand bailli** supprimé (« c'est un ministre,
+  on supprime pour l'instant ») — plus aucun effet moteur ni mention
+  code. Scalabilité (mémoïsation du cfgOf par référence) : vague
+  suivante.
