@@ -1891,6 +1891,61 @@ sur chaque rejeu. Leçon rangée en règle 15. État final vérifié :
 live = 5 vues découpées + docs ; v4 = 5 miroirs, `src/` octet-identique
 v4 ↔ live.
 
+## Suppression de tous les dogmes (2026-10-24, arbitrage Thibaut « on supprime tous les dogmes pour l'instant »)
+
+Retrait PROVISOIRE (décision d'arbitre, « pour l'instant ») de tout le
+système de dogmes. État des lieux avant retrait (grep exhaustif src/ +
+scripts/ + tests) : la table `dogmes` du référentiel était une table
+d'AFFICHAGE — bonus Pontife/Fidèles en texte libre, jamais branchés sur
+le moteur, aucune règle de banque n'en produisait d'effets. Les dogmes
+n'apparaissaient que comme piste future dans les commentaires rules/.
+
+**Modifications (sémantique moteur inchangée — il n'y avait rien à
+désactiver) :**
+
+- `src/config/referentiels.json` : bloc `"dogmes"` (5 entrées : Lumières,
+  Capitalisme, Guerres-Saintes, Pacifisme, Socialisme) supprimé.
+- `src/config/defaultConfig.ts` : champ `dogmes` retiré du type
+  `GameConfig` (docblock de retrait à sa place, règle 9), ligne
+  `dogmes: ref.dogmes` retirée de `DEFAULT_CONFIG`.
+- **Purge des configs existantes** : `delete (merged).dogmes` ciblé dans
+  `cfgOf`, juste après la fusion — patron taxes25. **SANS bump de
+  SCHEMA_VERSION_CONFIG** : un bump 4→5 renverrait les configs v4
+  convergées dans la branche de migration complète, qui ré-ajoute les
+  entrées du référentiel supprimées (règle (x) « les suppressions
+  persistent ») — le delete est idempotent et ne touche à rien d'autre.
+  Vérifié fonctionnellement : config sauvegardée avec clé `dogmes` →
+  `convergerConfig` la purge ; config par défaut sans la clé.
+- Wiki (onglet Référentiels) : « Tourisme & dogmes » → « Tourisme » ;
+  `OngletsTourismeDogmes` renommée `OngletTourisme`, carte « Dogmes »
+  supprimée (seuils de tourisme conservés).
+- `pays/AideAuto.tsx` : mention « Dogmes, levées d'armées… » →
+  « Levées d'armées… ».
+- `rules/types.ts` : `'dogme'` retiré de l'union `SourceRegle` (valeur
+  jamais réutilisée — ids stables) ; docblocks d'`EffetHabitantsVille`
+  (exemple Socialisme) et d'`EffetConversionPoids` passés au passé
+  historique daté ; exemple d'id `'dogme.capitalisme.pontife.r1'` →
+  `'tech.comprendre-la-soie'` (id réel).
+- `rules/banque.test.ts` : `source: 'dogme'` du test « condition vassal »
+  (décorative) → `source: 'evenement'`.
+- Commentaires au présent passés au futur sans dogmes : `registry.ts`
+  (3), `effects/banque.ts` (1), `rules/types.ts` en-tête (2).
+- `engine/progres.ts` : « (philosophie des dogmes) » reformulé en
+  application manuelle avec trace historique datée.
+- `scripts/diag.ts` : type local dupliqué + `ref.dogmes` retirés (le
+  script a sa propre copie historique du DEFAULT_CONFIG).
+- Docs : arbitrage acté dans `regles-et-arbitrages.md` (section
+  « Arbitrages de jeu au fil des sessions ») ; suites possibles 1
+  (harmonisation des dogmes) et 2 (Pacifisme moteur) marquées CADUQUES ;
+  mention « orientations/dogmes » des ministres annotée.
+
+**Validation** : 134/134 tests, diag exit 0, tsc strict 0 erreur (hors
+stub supabase), diff -rq vs tarball HEAD limité aux 12 fichiers
+attendus + docs, purge vérifiée fonctionnellement. NB consigné : le mot
+« Pontificat » reste dans des textes d'affichage (seuils de tourisme,
+voie Culturelle) — concept plateau, à réarbitrer si les dogmes
+reviennent ; l'ancien contenu reste dans l'historique git.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

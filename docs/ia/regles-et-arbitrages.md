@@ -91,7 +91,8 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
 - **Aucune référence aux Terres** dans les rangs (un vassal peut détenir plus de
   terres que son suzerain sans être forcé de monter).
 - **Octroi : 1 Ministre par rang** (cap cumulé 1→5). Les bonus « +1 Ministre
-  supplémentaire » (voie diplomatique, orientations/dogmes) = dépassements de
+  supplémentaire » (voie diplomatique, orientations/dogmes — sources historiques,
+  les dogmes sont retirés du référentiel depuis le 2026-10-24) = dépassements de
   plafond, toujours valides.
 - Table : **Baronnie** = départ, 1 Ministre · **Comté** = 20 Or + 40 Nourriture +
   1 serment, 2 Ministres · **Duché** = 30 Or + 60 Nourriture + 2 serments, 3
@@ -259,6 +260,23 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
   migration ciblée `martialiteSupprimee` (pattern (z), sans incrémenter
   SCHEMA_VERSION_CONFIG — les configs v3 convergées ne rejouent pas les
   migrations v3).
+- **Tous les dogmes supprimés** (arbitrage 2026-10-24, « pour l'instant » —
+  retrait provisoire décidé par l'arbitre) : la table `dogmes` du
+  référentiel (Lumières, Capitalisme, Guerres-Saintes, Pacifisme,
+  Socialisme — bonus Pontife/Fidèles en texte libre, jamais branchés sur
+  le moteur) disparaît du classeur, du type `GameConfig` et du wiki
+  (l'onglet « Tourisme & dogmes » redevient « Tourisme », seule la carte
+  des seuils de tourisme reste). La valeur `'dogme'` quitte l'union
+  `SourceRegle` sans être réutilisée (stabilité des ids) ; les docblocks
+  concernés documentent le retrait (règle 9). Les configs sauvegardées
+  sont purgées par un `delete` ciblé dans `cfgOf` (patron taxes25, SANS
+  bump de SCHEMA_VERSION_CONFIG — un bump renverrait les configs v4
+  convergées dans la branche de migration complète qui ré-ajoute les
+  entrées supprimées). Le contenu reste dans l'historique git : un
+  éventuel retour des dogmes repartira de zéro. NB : le mot
+  « Pontificat » reste présent dans des TEXTES d'affichage (seuils de
+  tourisme, condition de la voie Culturelle) — concept plateau à
+  réarbitrer si les dogmes reviennent.
 
 ## Rework des habitants (design arbitré 2026-10-20 — VAGUES 1 & 2 IMPLÉMENTÉES)
 
@@ -705,9 +723,13 @@ rang 1). Arbitrages actés lors de la session :
 
 ## Suites possibles (proposées à l'arbitre, non tranchées)
 
-1. Harmonisation des autres dogmes (le Pacifisme seul est refondu).
-2. Implémentation moteur des effets automatiques du Pacifisme (tribut 40 % par
-   joueur via override de `vassalPrelevement`, flux par serment, saisons/âges connus).
+1. ~~Harmonisation des autres dogmes (le Pacifisme seul est refondu).~~
+   **CADUC le 2026-10-24** : tous les dogmes sont supprimés du
+   référentiel (cf. arbitrages de sessions).
+2. ~~Implémentation moteur des effets automatiques du Pacifisme (tribut 40 % par
+   joueur via override de `vassalPrelevement`, flux par serment, saisons/âges connus).~~
+   **CADUC le 2026-10-24** : le Pacifisme disparaît avec les dogmes ; ne
+   redevient d'actualité qu'en cas de retour refondu des dogmes.
 3. Purge de l'Influence de tout le référentiel : voie diplomatique, seuils
    « 10 Influence/été », décisions, progrès Délégation/Ambassade/Vassalisation,
    universités, marchands.
