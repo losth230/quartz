@@ -1878,6 +1878,19 @@ villes d'ajout `[cite.nom]` vs villes du joueur, aiguillage un-onglet-une-carte.
 **Push** : refactor(ui) × 5 (un commit par vue, diffs relisibles) +
 docs(ia), miroirs v4 (code seulement, suffixe « (miroir v4) »).
 
+**Incident de push (documenté, sans impact contenu)** : le programme de
+push poussait les 6 commits en une seule exécution ; à court de budget,
+le bac l'a REJOUÉ depuis le début et `push_files` — non idempotent — a
+ré-exécuté les 5 commits refactor, poussés donc DEUX FOIS sur
+chasse-et-peche-web (contenus identiques, arbre final EXACT : diff -rq
+tarball live ↔ bac = 0, docs poussés une seule fois). Les miroirs v4
+ont été poussés ensuite UN commit par programme, avec garde
+anti-doublon (list_commits du HEAD de la branche cible avant chaque
+push : si le message y figure déjà, SKIP) — la garde a fonctionné
+sur chaque rejeu. Leçon rangée en règle 15. État final vérifié :
+live = 5 vues découpées + docs ; v4 = 5 miroirs, `src/` octet-identique
+v4 ↔ live.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
@@ -1951,6 +1964,17 @@ docs(ia), miroirs v4 (code seulement, suffixe « (miroir v4) »).
     seuls les ids diffèrent). Les tests couvrent les unités ; l'A/B
     couvre la composition entière du tour (bench + scripts/_ab-run du
     bac, non poussés).
+
+15. **push_files n'est PAS idempotent sous rejeu du bac** (incident
+    vague qualité, 2026-10-24) : un programme run_typescript qui
+    dépasse son budget est REJOUÉ depuis le début et ses appels à
+    effets de bord (push_files) s'exécutent À NOUVEAU — un script
+    poussant 6 commits en a poussé 11 (5 en double). Toujours :
+    (1) UN commit par programme run_typescript ; (2) garde anti-doublon
+    AVANT chaque push (list_commits du HEAD de la branche ciblée ;
+    si le message du commit y figure déjà → SKIP) ; (3) après un échec
+    ProgramBudgetExceeded, vérifier l'état réel de la branche
+    (list_commits) avant de relancer quoi que ce soit.
 
 ## Raccourci git
 
