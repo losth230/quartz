@@ -22,35 +22,31 @@
 //  nobles, métiers, dons et mariages. Seules différences : pas de
 //  Ministres ni d'arbre dynastique, et le STATUT reste éditable
 //  (les cités libres ne passent pas au moteur démographique).
+//  ── VAGUE QUALITÉ (2026-10-24) : la vue est découpée en sous-modules
+//  population/ — logique pure (logiquePopulation.ts), ligne de
+//  personnage (LignePersonnage.tsx), cartes autonomes (récap tour,
+//  métiers et places par ville, ajout d'habitants). Ce fichier garde
+//  l'ORCHESTRATION : filtres, callbacks du moteur, tableaux cour /
+//  population, dynasties cliquables, arbre généalogique.
 // ══════════════════════════════════════════════════════════════════════
 
 import { useMemo, useState } from 'react'
 import { useGame } from '../state/store'
-import type { Character, CiteLibre, GameState } from '../engine/types'
+import type { Character, CiteLibre } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
-import { metiersAccessibles, occupationsMetierVille } from '../engine/metiers'
-import { isNobleDyn, fullName, deplacerPersonnage, toutesLesPopulations, type Detenteur } from '../engine/shared'
+import { metiersAccessibles } from '../engine/metiers'
+import { isNobleDyn, fullName, deplacerPersonnage, toutesLesPopulations } from '../engine/shared'
 import { marierPersonnages } from '../engine/cour'
 import { metiersAccessiblesCite, pseudoJoueurDeCite, ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre } from '../engine/citesLibres'
 import { GenealogyTree } from './GenealogyTree'
-import { Card, Select, TextInput, Button, NumberInput, fmt } from './ui'
-import { ChoicePicker } from './Picker'
-import { traitDef } from '../engine/gameData'
-
-type SortKey = 'nom' | 'age' | 'dynastie' | 'ville' | 'metier' | 'statut'
-
-const STATUTS: Character['statut'][] = ['Sain', 'Malade', 'Décédé']
-
-/** « clé : n » trié par valeur décroissante — carte « Récap du
- *  dernier tour », déplacée de la page Pays vers l'onglet Population
- *  (retour Thibaut 2026-10-14). */
-function dictToString(dict: Record<string, number>): string {
-  const entries = Object.entries(dict).sort((a, b) => b[1] - a[1])
-  if (entries.length === 0) return '—'
-  return entries.map(([k, v]) => `${k} : ${v}`).join(', ')
-}
+import { Card, Select, TextInput, Button, fmt } from './ui'
+import { filtrerEtTrier, detenteurDeCle, optionsDon, eligibleMariage, type SortKey } from './population/logiquePopulation'
+import { LignePersonnage } from './population/LignePersonnage'
+import { CarteRecapTour } from './population/CarteRecapTour'
+import { CarteMetiersPlaces } from './population/CarteMetiersPlaces'
+import { CarteAjoutHabitants } from './population/CarteAjoutHabitants'
 
 export function PopulationTable({ joueur }: { joueur: number }) {
   const { state, update } = useGame()
@@ -65,8 +61,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const [filtreStatut, setFiltreStatut] = useState('Vivants')
   const [tri, setTri] = useState<SortKey>('age')
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [addVille, setAddVille] = useState('')
-  const [addNb, setAddNb] = useState(1)
 
   // ── Cible de l'onglet : un JOUEUR (joueur > 0) ou une CITÉ LIBRE
   //  (joueur = -(index+1) — onglets 🗼 de la section Population,
@@ -105,28 +99,10 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const estNoble = (c: Character) => isNobleDyn(c.dynastie, C)
 
   const { rowsCour, rowsClassique } = useMemo(() => {
-    const filtre = (liste: Character[]) => {
-      let list = [...liste]
-      if (filtreStatut === 'Vivants') list = list.filter((c) => c.statut !== 'Décédé')
-      else if (filtreStatut === 'Décédés') list = list.filter((c) => c.statut === 'Décédé')
-      else if (filtreStatut === 'Enfants') list = list.filter((c) => c.statut !== 'Décédé' && c.age < 16)
-      if (filtreDyn) list = list.filter((c) => c.dynastie.toLowerCase().includes(filtreDyn.toLowerCase()))
-      if (filtreVille) list = list.filter((c) => c.ville === filtreVille)
-      if (filtreMetier) list = list.filter((c) => (c.metier ?? '') === filtreMetier)
-      const cmp: Record<SortKey, (a: Character, b: Character) => number> = {
-        nom: (a, b) => (a.nom + a.prenom).localeCompare(b.nom + b.prenom, 'fr'),
-        age: (a, b) => b.age - a.age,
-        dynastie: (a, b) => a.dynastie.localeCompare(b.dynastie, 'fr'),
-        ville: (a, b) => a.ville.localeCompare(b.ville, 'fr'),
-        metier: (a, b) => (a.metier ?? '').localeCompare(b.metier ?? '', 'fr'),
-        statut: (a, b) => a.statut.localeCompare(b.statut, 'fr'),
-      }
-      list.sort(cmp[tri])
-      return list
-    }
+    const filtres = { statut: filtreStatut, ville: filtreVille, metier: filtreMetier, dynastie: filtreDyn }
     return {
-      rowsCour: filtre(pop.filter(estNoble)),
-      rowsClassique: filtre(pop.filter((c) => !estNoble(c))),
+      rowsCour: filtrerEtTrier(pop.filter(estNoble), filtres, tri),
+      rowsClassique: filtrerEtTrier(pop.filter((c) => !estNoble(c)), filtres, tri),
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pop, C, filtreDyn, filtreVille, filtreMetier, filtreStatut, tri])
@@ -202,30 +178,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   //  Dons et mariages couvrent JOUEURS et CITÉS LIBRES (retour
   //  2026-10-14 : la population des cités libres est « semblable en
   //  tout point » à celle des joueurs).
-  /** Valeur d'option → détenteur (« j<n> » = joueur, « c<i> » = cité). */
-  const detenteurDeCle = (s: GameState, v: string): Detenteur | undefined => {
-    if (v.startsWith('j')) {
-      const q = s.players.find((x) => x.n === parseInt(v.slice(1), 10))
-      return q ? { kind: 'joueur', p: q } : undefined
-    }
-    const cc = (s.citesLibres ?? [])[parseInt(v.slice(1), 10)]
-    return cc ? { kind: 'cite', cite: cc } : undefined
-  }
-  /** Options « Donner à… » : les autres joueurs ET les cités libres. */
-  const optionsDon = [
-    ...state.players
-      .filter((q) => (cite ? true : q.n !== joueur))
-      .map((q) => ({ value: `j${q.n}`, label: `${q.nom} (J${q.n})` })),
-    ...(state.citesLibres ?? [])
-      .map((cc, i) => (cite === cc
-        ? null
-        : { value: `c${i}`, label: `🗼 ${cc.nom} (cité libre)` }))
-      .filter((x): x is { value: string; label: string } => x !== null),
-  ]
-  /** Nobles vivants, majeurs et célibataires (validité au moteur). */
-  const eligibleMariage = (x: Character, c: Character) =>
-    x.id !== c.id && x.statut !== 'Décédé' && !x.mariageId
-    && x.age >= C.p.adultAge && estNoble(x)
+  const lesOptionsDon = optionsDon(state, joueur, cite)
   /** Options « Marier avec… » (marqueur (z), retour Thibaut) : les
    *  nobles du porteur COURANT UNIQUEMENT (joueur ou cité libre
    *  affiché) — on ne cible plus les autres joueurs/cités. Le moteur
@@ -233,7 +186,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
    *  différents (c'est l'interface qui restreint). */
   const optionsMariage = (c: Character) =>
     pop
-      .filter((x) => eligibleMariage(x, c))
+      .filter((x) => eligibleMariage(x, c, C))
       .map((x) => ({ value: x.id, label: `${fullName(x)} (${x.dynastie})` }))
   const donnerA = (c: Character, v: string) => {
     if (!v) return
@@ -294,9 +247,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     : (cite ? metiersAccessiblesCite(state, cite) : [])
   // ── Ajout manuel d'habitants ────────────────────────────────────────
   const villesAjout = cite ? [cite.nom] : (p?.villes.map((v) => v.nom) ?? [])
-  const addVilleEff = addVille || villesAjout[0] || ''
-  const ajouter = () => {
-    const nb = Math.max(1, Math.round(addNb))
+  const ajouterRoturiers = (addVilleEff: string, nb: number) => {
     update((s) => {
       if (cite) {
         const cc = (s.citesLibres ?? [])[citeIdx]
@@ -308,8 +259,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
       ajouterHabitant(s, target, addVilleEff, false, nb)
     })
   }
-  const ajouterNobles = () => {
-    const nb = Math.max(1, Math.round(addNb))
+  const ajouterNobles = (addVilleEff: string, nb: number) => {
     update((s) => {
       if (cite) {
         const cc = (s.citesLibres ?? [])[citeIdx]
@@ -322,101 +272,20 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     })
   }
 
-  // ── Ligne d'un personnage (commune aux deux tableaux) ──────────────
-  //  avecMariage : le bouton « Marier avec… » n'apparaît que pour la
-  //  cour (le mariage manuel unit deux nobles — le reste de la
-  //  population se marie au fil des tours).
-  const renderLigne = (c: Character, avecMariage: boolean) => (
-    <tr key={c.id} className={c.statut === 'Décédé' ? 'dead' : (c.metier === C.p.metierDirigeant || c.metier === C.p.metierHeritierStr) ? 'lead' : ''}>
-      <td><strong>{c.prenom} {c.nom}</strong></td>
-      <td>{c.dynastie}</td>
-      <td>{c.sexe}</td>
-      <td>{c.age}</td>
-      <td>{c.ville}</td>
-      <td>{c.culture}</td>
-      <td>
-        {/* Marqueur (y), retour Thibaut : attribution de métier avec
-            DESCRIPTION (gains du métier, noblesse, éducation) AVANT
-            le choix — badge du métier actuel + bouton Retirer. */}
-        <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
-          <span className={`badge ${c.metier ? 'badge-info' : 'badge-neutral'}`}>
-            {c.metier ?? '(sans métier)'}
-          </span>
-          {c.statut !== 'Décédé' && (
-            <ChoicePicker
-              bouton="Attribuer…"
-              categories={[
-                {
-                  label: 'Métiers accessibles',
-                  options: accessibles
-                    .filter((t) => t !== c.metier)
-                    .map((t) => ({
-                      value: t,
-                      metier: t,
-                      droite: resumeMetier(t),
-                      description: descMetier(t),
-                    })),
-                },
-              ]}
-              onPick={(v) => changeMetier(c, v)}
-            />
-          )}
-          {c.metier && c.statut !== 'Décédé' && (
-            <Button tone="danger" title="Retirer le métier" onClick={() => changeMetier(c, '')}>✕</Button>
-          )}
-        </div>
-        {errors[c.id] && <div className="neg small">⚠ {errors[c.id]}</div>}
-      </td>
-      <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile — les bâtiments de logement arrivent (vague 3)'}>
-        {c.domicile ?? '—'}
-      </td>
-      <td className="small">
-        {(c.traits ?? []).filter(Boolean).map((t) => (
-          <span key={t} title={traitDef(t, C.config)?.description || undefined}
-            className={`badge ${t === 'Bâtard' || t === 'Consanguin' ? 'badge-bad' : 'badge-neutral'}`}>{t}</span>
-        ))}
-      </td>
-      <td>
-        {cite ? (
-          <Select
-            value={c.statut}
-            options={STATUTS.map((st) => ({ value: st, label: st }))}
-            onChange={(v) => changerStatut(c, v)}
-          />
-        ) : (
-          <span className={`badge ${c.statut === 'Sain' ? 'badge-good' : c.statut === 'Décédé' ? 'badge-bad' : 'badge-warn'}`}>
-            {c.statut}
-          </span>
-        )}
-      </td>
-      <td className="small">{c.mariage ?? '—'}</td>
-      <td>{c.fecondite > 0 ? fmt(c.fecondite, 2) : '—'}</td>
-      <td className="small">
-        {c.statut !== 'Décédé' && (
-          <div className="act-row">
-            <Select
-              value=""
-              options={[
-                { value: '' as const, label: '➡ Donner à…' },
-                ...optionsDon,
-              ]}
-              onChange={(v) => donnerA(c, v)}
-            />
-            {avecMariage && (
-              <Select
-                value=""
-                options={[
-                  { value: '' as const, label: '💍 Marier avec…' },
-                  ...optionsMariage(c),
-                ]}
-                onChange={(v) => marierAvec(c, v)}
-              />
-            )}
-          </div>
-        )}
-      </td>
-    </tr>
-  )
+  const propsLigne = {
+    estCite: !!cite,
+    C,
+    accessibles,
+    errors,
+    descMetier,
+    resumeMetier,
+    optionsDon: lesOptionsDon,
+    optionsMariage,
+    changeMetier,
+    changerStatut,
+    donnerA,
+    marierAvec,
+  }
 
   // ── Bloc de filtres (commun aux deux tableaux) ─────────────────────
   const blocFiltres = (
@@ -464,98 +333,27 @@ export function PopulationTable({ joueur }: { joueur: number }) {
 
       {/* Récap du dernier tour — carte déplacée de la page Pays (retour
           Thibaut 2026-10-14) : elle ne concerne que la population. */}
-      {p && (
-        <Card title="Récap du dernier tour">
-          {p.recap ? (
-            <div className="grid-2 small">
-              <div>Conceptions : {dictToString(p.recap.conceptions)}</div>
-              <div>Naissances : {dictToString(p.recap.naissances)}</div>
-              <div>Décès : {dictToString(p.recap.deces)} (dont maladie : {p.recap.decesMaladie})</div>
-              <div>Mariages nobles : {dictToString(p.recap.mariagesNobles)}</div>
-              <div>Conversions : {dictToString(p.recap.conversions)}</div>
-              <div>Métiers attribués : {dictToString(p.recap.metiersAttribues)}</div>
-              {(p.recap.crises.length > 0 || p.recap.commandantTombe) && (
-                <div className="neg">⚠ {p.recap.crises.join(' ; ')}{p.recap.commandantTombe ? ` Commandant tombé : ${p.recap.commandantTombe}` : ''}</div>
-              )}
-            </div>
-          ) : (
-            <p className="muted">Lancez un tour pour voir le récapitulatif.</p>
-          )}
-        </Card>
-      )}
+      {p && <CarteRecapTour recap={p.recap ?? null} />}
 
       {/* Écran « métiers et places par ville » (vague 2 UI, rework
           habitants 2026-10-20) : par ville, une ligne par métier occupé
           ou plafonné — en poste, capacité, places libres — la ligne
           Sans-emploi (rôle neutre : impôt nul, aucun effet) est toujours
           présente. Helper moteur occupationsMetierVille (testé). */}
-      <Card title="🏘️ Métiers et places par ville">
-        <div className="table-wrap">
-          <table className="tbl small">
-            <thead><tr><th>Ville</th><th>Métier</th><th>En poste</th><th>Places max</th><th>Places libres</th><th>Vivants</th></tr></thead>
-            <tbody>
-              {villesOcc.map((v) => {
-                const habitants = vivants.filter((c) => c.ville === v.nom)
-                const villeObj = p?.villes.find((vv) => vv.nom === v.nom) ?? null
-                const lignes = occupationsMetierVille(habitants, villeObj, C)
-                return lignes.map((l, i) => (
-                  <tr key={`${v.nom}-${l.metier ?? 'sans'}`}>
-                    <td>
-                      {i === 0
-                        ? <strong>{v.nom}{villeObj?.type ? ` (${villeObj.type})` : cite ? ' (cité libre)' : ''}</strong>
-                        : <span className="muted">〃</span>}
-                    </td>
-                    <td>
-                      <span
-                        className={`badge ${l.metier ? 'badge-info' : 'badge-neutral'}`}
-                        title={l.metier ? (descMetier(l.metier) || undefined) : 'Sans-emploi : rôle neutre — impôt nul, aucun effet'}
-                      >
-                        {l.metier ?? 'Sans-emploi'}
-                      </span>
-                    </td>
-                    <td>{l.enPoste}</td>
-                    <td>{Number.isFinite(l.cap) ? l.cap : '∞'}</td>
-                    <td>
-                      {Number.isFinite(l.cap)
-                        ? <span className={l.cap - l.enPoste < 0 ? 'neg' : ''}>{l.cap - l.enPoste}</span>
-                        : <span className="muted">—</span>}
-                    </td>
-                    <td>{i === 0 ? habitants.length : ''}</td>
-                  </tr>
-                ))
-              })}
-            </tbody>
-          </table>
-        </div>
-        <p className="muted small">
-          Vague 3b — caps CUMULATIVES : cap d'un métier = BASE DU RANG d'habitation
-          (colonne « Métiers disponibles », ex. Hameau : 50 Chasseurs, 2 Gardes,
-          1 Commerçant, 1 Gouverneur) + EMPLACEMENTS des bâtiments et aménagements de
-          la ville (ex. Poste de garde : +4 Garde). Les métiers sans base, sans
-          emplacement et non productifs (Banquier, Troubadour, Dirigeant/Héritier,
-          rôles de cour/armée) ne sont pas plafonnés ici (∞ = règles propres) ; un
-          marchand tenant une route commerciale occupe un poste créé par elle. La
-          réaffectation automatique tourne à chaque fin de tour : surnombre →
-          les plus âgés passent Sans-emploi ; places libres (ordre « n'importe quel
-          métier → Chasseur → sans métier ») → les Sans-emploi adultes prennent un
-          poste (autre que Chasseur en priorité ; jamais les postes nobles ni les
-          nominations d'école/armée) et les Chasseurs CHANGENT de métier dès qu'un
-          autre poste est disponible — le Chasseur n'est jamais qu'un poste de
-          repli. Les cités libres ne sont pas concernées par les caps.
-        </p>
-      </Card>
+      <CarteMetiersPlaces
+        vivants={vivants}
+        villesOcc={villesOcc}
+        villesDuJoueur={p?.villes}
+        estCite={!!cite}
+        C={C}
+        descMetier={descMetier}
+      />
 
-      <Card title="➕ Ajouter des habitants">
-        <div className="filters">
-          <Select value={addVilleEff} options={villesAjout.map((v) => ({ value: v, label: v }))} onChange={setAddVille} />
-          <NumberInput value={addNb} min={1} max={200} onChange={(v) => setAddNb(Math.round(v))} />
-          <Button onClick={ajouter}>+ Roturiers</Button>
-          <Button onClick={ajouterNobles}>+ Nouvelle famille noble</Button>
-        </div>
-        <p className="muted small">
-          Les nobles ajoutés apparaissent dans « La cour ».
-        </p>
-      </Card>
+      <CarteAjoutHabitants
+        villes={villesAjout}
+        onAjouter={ajouterRoturiers}
+        onAjouterNobles={ajouterNobles}
+      />
 
       <Card title={`👑 La cour de ${nomPorteur} — ${courVivants} vivants / ${pop.filter(estNoble).length} au total`}>
         {blocFiltres}
@@ -568,7 +366,8 @@ export function PopulationTable({ joueur }: { joueur: number }) {
             {entetes}
             <tbody>
               {rowsCour.length
-                ? rowsCour.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE).map((c) => renderLigne(c, true))
+                ? rowsCour.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
+                    .map((c) => <LignePersonnage key={c.id} c={c} avecMariage {...propsLigne} />)
                 : <tr><td colSpan={14} className="muted">aucun noble</td></tr>}
             </tbody>
           </table>
@@ -589,7 +388,8 @@ export function PopulationTable({ joueur }: { joueur: number }) {
             {entetes}
             <tbody>
               {rowsClassique.length
-                ? rowsClassique.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE).map((c) => renderLigne(c, false))
+                ? rowsClassique.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
+                    .map((c) => <LignePersonnage key={c.id} c={c} avecMariage={false} {...propsLigne} />)
                 : <tr><td colSpan={14} className="muted">aucun habitant</td></tr>}
             </tbody>
           </table>
