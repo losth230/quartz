@@ -225,3 +225,47 @@ test('config : rangsHabitation (table dupliquée, morte) absente des défauts et
   assert.ok(!('rangsHabitation' in cfgOf(C.config).config),
     're-lecture : toujours absente')
 })
+
+// ── Dette legacy & formats unifiés (retour Thibaut 2026-10-23,
+//    revue structure/SOLID) ──────────────────────────────────────
+
+test('config : migration one-shot — le TEXTE « metiersDisponibles » devient le tableau metiersBase (métiers au singulier), les tables legacy disparaissent', () => {
+  const c = cloneDefaultConfig()
+  c.schemaVersion = 4 // config déjà convergée : la migration ciblée joue quand même
+  const h = c.typesHabitation.find((t) => t.type === 'Ville' && t.rang === 'Hameau')!
+  ;(h as unknown as { metiersDisponibles: string }).metiersDisponibles =
+    '50 Chasseurs, 2 Gardes, 1 Commerçants, 3 InconnuDuReferentiel'
+  delete (h as unknown as { metiersBase?: unknown }).metiersBase
+  ;(c as unknown as Record<string, unknown>).batimentsVille = [{ nom: 'X' }]
+  ;(c as unknown as Record<string, unknown>).amenagements = [{ amenagement: 'Y' }]
+  const C = cfgOf(c)
+  const h2 = C.config.typesHabitation.find((t) => t.type === 'Ville' && t.rang === 'Hameau')!
+  assert.deepEqual(h2.metiersBase, [
+    { metier: 'Chasseur', places: 50 },
+    { metier: 'Garde', places: 2 },
+    { metier: 'Commerçant', places: 1 },
+  ], 'texte converti en tableau : pluriels au singulier, entrée inconnue ignorée')
+  assert.ok(!('metiersDisponibles' in h2), 'la clé TEXTE disparaît après conversion')
+  assert.ok(!('batimentsVille' in C.config) && !('amenagements' in C.config),
+    'les tables legacy ne sont plus persistées')
+  // idempotence : la re-lecture d une config déjà convertie est stable
+  const C2 = cfgOf(C.config)
+  const h3 = C2.config.typesHabitation.find((t) => t.type === 'Ville' && t.rang === 'Hameau')!
+  assert.equal(h3.metiersBase.length, 3, 're-lecture : le tableau converti survit tel quel')
+})
+
+test('config : les effets moteur (écoles / santé) vivent en DONNÉES dans la table canonique constructions — vue batiments dérivée', () => {
+  const c = cloneDefaultConfig()
+  const herbo = c.constructions.find((x) => x.nom === 'Herboristerie')!
+  assert.equal(herbo.malContraction, 0.05, 'malContraction en donnée dans constructions')
+  assert.equal(herbo.bonusGuerison, 0.05, 'bonusGuerison en donnée dans constructions')
+  const ecole = c.constructions.find((x) => x.nom === 'Ecole élémentaire')!
+  assert.equal(ecole.ecoleRang, 1, 'ecoleRang en donnée dans constructions')
+  assert.ok(c.batiments.some((b) => b.nom === 'Guilde des médecins' && b.bonusGuerisonGlobal === 0.10),
+    'la vue batiments garde la Guilde des médecins (livret, non constructible — arbitrage ouvert)')
+  assert.ok(c.batiments.some((b) => b.nom === 'Ecole élémentaire' && b.ecoleRang === 1),
+    'la vue batiments dérive les écoles de la table canonique')
+  assert.ok(!('batimentsVille' in c) && !('batimentsChateau' in c)
+    && !('batimentsCouts' in c) && !('amenagements' in c),
+    'les défauts ne portent plus les tables legacy')
+})
