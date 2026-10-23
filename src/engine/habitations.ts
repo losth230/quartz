@@ -14,6 +14,12 @@
 //  pour ne pas casser les appelants ont été retirées du code, avec
 //  le canal « habitations » des récaps ressources).
 //  Table entièrement paramétrable : Référentiels → « Habitations ».
+//  Nettoyage 2026-10-23 (retour Thibaut, formats unifiés) : les
+//  métiers de base vivent en TABLEAU STRUCTURÉ `metiersBase` (métiers
+//  TOUJOURS AU SINGULIER — même format que les `emplacements` des
+//  constructions) ; le parse du TEXTE historique n'existe plus côté
+//  moteur (il reste au niveau SAISIE : éditeur Référentiels +
+//  migration one-shot de cfgOf).
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
@@ -22,7 +28,6 @@ import { type Cfg } from './gameData'
 import { parseCoutTexte } from './constructions'
 import { aMinistre } from './ministeres'
 import { reductionFondation, aTech } from './progresAuto'
-import { DEFAULT_CONFIG } from '../config/defaultConfig'
 
 /** Nom court d'un rang d'habitation (« Hameau : 20 Or… » → « Hameau »). */
 export function nomRang(rang: string): string {
@@ -35,20 +40,30 @@ export function typeVille(ville: City): string {
   return ville.type ?? 'Ville'
 }
 
+/** Rangs d'habitation d'un type donné (table typesHabitation) — LE
+ *  lookup unique du domaine (retour Thibaut 2026-10-23,
+ *  déduplication : habitationDef, metiersDisponiblesRang et
+ *  rangNiveau passent tous par ici). */
+export function rangsDefsType(type: string, C: Cfg): import('./types').HabitationDef[] {
+  return (C.config.typesHabitation ?? []).filter((d) => d.type.toLowerCase() === type.toLowerCase())
+}
+
+/** Définition d'un rang précis d'un type donné (noms de rang
+ *  insensibles à la casse ; « Hameau : 20 Or… » → « Hameau »). */
+export function rangDef(type: string, rang: string, C: Cfg): import('./types').HabitationDef | undefined {
+  const nom = nomRang(rang).toLowerCase()
+  return rangsDefsType(type, C).find((d) => nomRang(d.rang).toLowerCase() === nom)
+}
+
 /** Définition du rang d'habitation d'une ville (table typesHabitation). */
 export function habitationDef(ville: City, C: Cfg): import('./types').HabitationDef | undefined {
-  const type = typeVille(ville)
-  const nom = nomRang(ville.rang ?? 'Hameau')
-  const table = C.config.typesHabitation ?? []
-  return table.find((d) => d.type.toLowerCase() === type.toLowerCase()
-    && nomRang(d.rang).toLowerCase() === nom.toLowerCase())
+  return rangDef(typeVille(ville), ville.rang ?? 'Hameau', C)
 }
 
 /** Rangs d'habitation disponibles pour un type donné
  *  (pour les listes déroulantes de la page « Pays »). */
 export function rangsDisponibles(type: string, C: Cfg): string[] {
-  const table = C.config.typesHabitation ?? []
-  return table.filter((d) => d.type.toLowerCase() === type.toLowerCase()).map((d) => d.rang)
+  return rangsDefsType(type, C).map((d) => d.rang)
 }
 
 /** Habitants requis pour le rang d'habitation d'une ville. */
@@ -110,55 +125,29 @@ export function debiterCoutHabitation(
       (requis > 0 && vivants < requis
         ? ` ⚠ habitants insuffisants (${vivants}/${requis}).`
         : '.') +
-      (def?.metiersDisponibles ? ` Métiers disponibles : ${def.metiersDisponibles}.` : '') +
+      (def?.metiersBase?.length
+      ? ` Métiers disponibles : ${def.metiersBase.map((e) => `${e.places} ${e.metier}`).join(', ')}.`
+      : '') +
       (def?.domicilesDisponibles ? ` Domiciles disponibles : ${def.domicilesDisponibles}.` : ''),
   })
   return cout
 }
 
 // ── Métiers disponibles à la base du rang (vague 3b) ────────────────────
-
-/** Normalise un nom de métier pour le parse de « Métiers
- *  disponibles » : minuscules, espaces trimés, « s » final retiré
- *  (« Gouverneurs » → « gouverneur »). */
-function normaliseMetier(nom: string): string {
-  const n = nom.trim().toLowerCase()
-  return n.endsWith('s') ? n.slice(0, -1) : n
-}
-
-/** Parse la colonne « Métiers disponibles » d'un rang (ex. « 50
- *  Chasseurs, 2 Gardes, 1 Commerçant, 1 Gouverneur ») en
- *  { metier: places } — les noms sont appariés au référentiel
- *  des métiers (insensible à la casse et au pluriel ; entrée non
- *  reconnue = ignorée). */
-export function parseMetiersDisponibles(texte: string, C: Cfg): Record<string, number> {
-  const out: Record<string, number> = {}
-  if (!texte) return out
-  const parNom = new Map(C.metiers.map((t) => [normaliseMetier(t.metier), t.metier]))
-  for (const morceau of texte.split(',')) {
-    const m = /^(\d+)\s+(.+)$/.exec(morceau.trim())
-    if (!m) continue
-    const places = Number(m[1])
-    const metier = parNom.get(normaliseMetier(m[2]))
-    if (metier) out[metier] = (out[metier] ?? 0) + places
-  }
-  return out
-}
+//  Nettoyage 2026-10-23 (retour Thibaut, formats unifiés) : la colonne
+//  vit en TABLEAU STRUCTURÉ `metiersBase` (métiers au singulier — même
+//  format que les `emplacements` des constructions). Plus de parse au
+//  runtime : la migration ciblée de cfgOf a converti les configs
+//  sauvegardées, l'éditeur Référentiels convertit la saisie texte.
 
 /** Métiers disponibles à la BASE du rang d'habitation d'une ville
  *  (vague 3b) : cap de base par métier, avant les emplacements des
- *  bâtiments (metiers.ts les AJOUTE). Repli : si la config
- *  sauvegardée (tampon de convergence) n'a pas encore la colonne
- *  « metiersDisponibles », on utilise la ligne du DEFAULT_CONFIG
- *  de même (type, rang) ; à défaut, vide. */
+ *  bâtiments (metiers.ts les AJOUTE) — lecture directe du tableau
+ *  `metiersBase` du rang (lookup unique via habitationDef). */
 export function metiersDisponiblesRang(ville: City, C: Cfg): Record<string, number> {
-  const def = habitationDef(ville, C)
-  if (def?.metiersDisponibles) return parseMetiersDisponibles(def.metiersDisponibles, C)
-  const type = typeVille(ville)
-  const nom = nomRang(ville.rang ?? 'Hameau')
-  const defDefaut = DEFAULT_CONFIG.typesHabitation.find(
-    (d) => d.type.toLowerCase() === type.toLowerCase()
-      && nomRang(d.rang).toLowerCase() === nom.toLowerCase(),
-  )
-  return parseMetiersDisponibles(defDefaut?.metiersDisponibles ?? '', C)
+  const out: Record<string, number> = {}
+  for (const e of habitationDef(ville, C)?.metiersBase ?? []) {
+    out[e.metier] = (out[e.metier] ?? 0) + e.places
+  }
+  return out
 }
