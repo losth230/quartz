@@ -300,16 +300,8 @@ export interface CultureDef {
   reglePerso: string
 }
 export interface RegimeDef { nom: string; loi: string }
-export interface EventDef {
-  nom: string
-  saison: string
-  poids: number
-  faible: string
-  moyenne: string
-  forte: string
-  extreme: string
-}
-export interface DynastieDef { nom: string; poids: number; description: string }
+// (EventDef et DynastieDef retirés le 2026-10-24 avec les tables
+//  events/dynasties du référentiel — retour arbitre Thibaut.)
 export interface MaladieDef {
   nom: string
   poids: number
@@ -339,17 +331,8 @@ export interface FicheLigne { label: string; texte: string }
 export interface ProgresArbre { arbre: string; entrees: { texte: string; prerequis: string }[] }
 
 export interface EffetDef { ressource: string; base: number }
-export interface EventEffetsDef {
-  nom: string
-  effets: EffetDef[]   // base × multiplicateur de niveau (params evMult*)
-  maladieRisque: number // risque de maladie supplémentaire ce tour (× mult)
-  modDanger: number     // bonus permanent de dangerosité (ex. Sombres présages)
-}
-export interface DynastieEffetsDef {
-  nom: string
-  effets: EffetDef[]    // base fixe (pas de multiplicateur de niveau)
-  guerison: boolean     // true = guérit un personnage malade du pays
-}
+// (EventEffetsDef et DynastieEffetsDef retirés le 2026-10-24 avec les
+//  tables events/dynasties du référentiel — retour arbitre Thibaut.)
 export interface GameConfig {
   ressources: string[]
   params: GameParams & GameParamStrings
@@ -357,8 +340,7 @@ export interface GameConfig {
   traits: TraitDef[]
   cultures: CultureDef[]
   regimes: RegimeDef[]
-  events: EventDef[]
-  dynasties: DynastieDef[]
+  // (events / dynasties retirés le 2026-10-24, retour arbitre)
   maladies: MaladieDef[]
   offrandes: OffrandeDef[]
   orientations: PoidsNom[]
@@ -368,8 +350,7 @@ export interface GameConfig {
   peupleBanque: Record<string, number>
   peuples: string[]
   batiments: BuildingDef[]
-  eventEffets: EventEffetsDef[]
-  dynastieEffets: DynastieEffetsDef[]
+  // (eventEffets / dynastieEffets retirés le 2026-10-24, retour arbitre)
   // ── données de référence « fiches » (affichage, 100% éditables) ──
   init: {
     nbPerso: number
@@ -498,45 +479,10 @@ function peupleBanqueOf(): Record<string, number> {
   return out
 }
 
-// ── Effets chiffrés des événements et cartes dynastie (annexe du livret) ──
-// '(aléatoire)' = une ressource de base tirée au sort. Tout est éditable
-// depuis l'onglet « Paramètres ».
-const BASE_EVENT_EFFECTS: Record<string, { effets: EffetDef[]; maladieRisque?: number; modDanger?: number }> = {
-  'Sécheresse': { effets: [{ ressource: 'Nourriture', base: -10 }] },
-  'Explosion volcanique': { effets: [{ ressource: 'Nourriture', base: -6 }, { ressource: 'Bois', base: -2 }] },
-  'Innondation': { effets: [{ ressource: 'Nourriture', base: -8 }, { ressource: 'Or', base: -2 }] },
-  'Barbarisme': { effets: [{ ressource: 'Bétail', base: -4 }] },
-  'Brigandage': { effets: [{ ressource: 'Or', base: -7 }] },
-  'Incendie': { effets: [{ ressource: 'Bois', base: -5 }] },
-  'Radiations solaires': { effets: [{ ressource: 'Science', base: 3 }] },
-  'Ouragan': { effets: [{ ressource: 'Bois', base: -3 }, { ressource: 'Or', base: -2 }] },
-  'Eclipse': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Famine': { effets: [{ ressource: 'Nourriture', base: -12 }] },
-  'Avalanche': { effets: [{ ressource: 'Nourriture', base: -6 }, { ressource: 'Bois', base: -2 }] },
-  'Blizzard': { effets: [{ ressource: 'Nourriture', base: -8 }] },
-  'Ere glaciaire': { effets: [{ ressource: 'Nourriture', base: -15 }] },
-  'Hiver prolongé': { effets: [{ ressource: 'Nourriture', base: -5 }, { ressource: 'Or', base: -2 }] },
-  'Peste': { effets: [{ ressource: 'Habitants', base: -3 }], maladieRisque: 0.04 },
-  'Gel': { effets: [{ ressource: 'Nourriture', base: -6 }] },
-  'Redoux': { effets: [{ ressource: 'Bétail', base: 2 }] },
-  'Sombres présages': { effets: [], modDanger: 1 },
-}
-
-const BASE_DYNASTIE_EFFECTS: Record<string, { effets: EffetDef[]; guerison?: boolean }> = {
-  'Bénédiction de Samodiva': { effets: [{ ressource: 'Nourriture', base: 5 }] },
-  'Brigandage': { effets: [{ ressource: 'Or', base: -4 }] },
-  'Découverte': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Hommage au roi': { effets: [{ ressource: '(aléatoire)', base: 2 }] },
-  'Merveille architecturale': { effets: [{ ressource: 'Tourisme', base: 5 }] },
-  'Troupe de troubadours': { effets: [{ ressource: 'Tourisme', base: 5 }] },
-  'Miracle': { effets: [], guerison: true },
-  'Migration': { effets: [{ ressource: 'Habitants', base: 2 }] },
-  'tempête magique': { effets: [{ ressource: 'Science', base: 2 }] },
-  'Sombre proposition': { effets: [{ ressource: 'Science', base: 2 }, { ressource: 'Or', base: 5 }] },
-  'Système de prévention': { effets: [{ ressource: 'Or', base: 5 }] },
-  'Découverte archéologique': { effets: [{ ressource: 'Science', base: 5 }] },
-  'incendie': { effets: [{ ressource: '(aléatoire)', base: -1 }] },
-}
+// (Effets chiffrés des événements et cartes dynastie — tables
+//  BASE_EVENT_EFFECTS / BASE_DYNASTIE_EFFECTS — RETIRÉS le 2026-10-24
+//  avec les tables events/dynasties du référentiel, retour arbitre
+//  Thibaut. L'historique vit dans git et le journal technique.)
 
 export const DEFAULT_CONFIG: GameConfig = {
   ressources: ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie', 'Or', 'Nourriture', 'Science', 'Habitants', 'Tourisme', 'Garnison'],
@@ -545,8 +491,8 @@ export const DEFAULT_CONFIG: GameConfig = {
   traits: normaliserTraits(),
   cultures: normaliserCultures(),
   regimes: ref.regimes,
-  events: ref.events,
-  dynasties: ref.dynasties,
+  // (events / dynasties / eventEffets / dynastieEffets retirés le
+  //  2026-10-24 avec les tables du référentiel, retour arbitre.)
   maladies: ref.maladies,
   offrandes: ref.offrandes,
   orientations: ref.orientations,
@@ -556,17 +502,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   peupleBanque: peupleBanqueOf(),
   peuples: peuplesNoms(),
   batiments: normaliserBatiments(),
-  eventEffets: ref.events.map((e: any) => ({
-    nom: e.nom,
-    effets: BASE_EVENT_EFFECTS[e.nom]?.effets ?? [],
-    maladieRisque: BASE_EVENT_EFFECTS[e.nom]?.maladieRisque ?? 0,
-    modDanger: BASE_EVENT_EFFECTS[e.nom]?.modDanger ?? 0,
-  })),
-  dynastieEffets: ref.dynasties.map((d: any) => ({
-    nom: d.nom,
-    effets: BASE_DYNASTIE_EFFECTS[d.nom]?.effets ?? [],
-    guerison: !!BASE_DYNASTIE_EFFECTS[d.nom]?.guerison,
-  })),
   init: ref.init,
   traitsGenetiques: ref.traitsGenetiques,
   ministeres: ref.ministeres,
@@ -583,17 +518,17 @@ export const DEFAULT_CONFIG: GameConfig = {
   rappelsRegles: ref.rappelsRegles,
 }
 
-// Rangs de pays (feuille « Pays ») : Féodal / Républicain
+// Rangs de pays (feuille « Pays ») : échelle féodale unique.
+// (Les 4 rangs républicains — Commune, District, Union, Confédération,
+//  aux bonus libellés en « Influence » — ont été retirés le 2026-10-24
+//  avec la purge de l'Influence, retour arbitre Thibaut ; rangParDefaut
+//  retombe sur rangs[0], la Baronnie, pour tous les régimes.)
 DEFAULT_CONFIG.paysRangs = [
   { bloc: 'Féodal', nom: 'Baronnie', cout: '', bonus: 'Fin été : +20 Nourriture.', succession: 'Terres : 1 habitation.' },
   { bloc: 'Féodal', nom: 'Comté', cout: '20 Or, 40 Nourriture', bonus: 'Fin été : +10 Or.', succession: 'Terres : 2' },
   { bloc: 'Féodal', nom: 'Duché', cout: '30 Or, 60 Nourriture', bonus: 'Fin hiver : +6 Science.', succession: 'Terres : 3' },
   { bloc: 'Féodal', nom: 'Royaume', cout: '50 Or, 100 Nourriture', bonus: 'Fin été : 6 ressources de base au choix.', succession: 'Terres : 4' },
   { bloc: 'Féodal', nom: 'Empire', cout: '100 Or, 200 Nourriture', bonus: 'Fin hiver : volez 5 sciences à chaque joueur de rang inférieur.', succession: 'Terres : 5' },
-  { bloc: 'Républicain', nom: 'Commune', cout: '40 Or, 20 Nourriture', bonus: 'Fin été : 2 ressources de base aléatoires.', succession: 'Terres : 2' },
-  { bloc: 'Républicain', nom: 'District', cout: '60 Or, 30 Nourriture', bonus: 'Fin hiver : 10 Influence avec une cité libre au choix.', succession: 'Terres : 2' },
-  { bloc: 'Républicain', nom: 'Union', cout: '100 Or, 50 Nourriture', bonus: 'Fin été : arrivée d\'un personnage aléatoire.', succession: 'Terres : 3' },
-  { bloc: 'Républicain', nom: 'Confédération', cout: '200 Or, 100 Nourriture', bonus: 'Fin hiver : 25 Influence avec une cité libre au choix.', succession: 'Terres : 3' },
 ]
 
 // ── Accès à la configuration effective d'une partie ───────────────────
@@ -605,8 +540,7 @@ export interface Cfg {
   traits: TraitDef[]
   cultures: CultureDef[]
   regimes: RegimeDef[]
-  events: EventDef[]
-  dynasties: DynastieDef[]
+  // (events / dynasties retirés le 2026-10-24, retour arbitre)
   maladies: MaladieDef[]
   offrandes: OffrandeDef[]
   orientations: PoidsNom[]
@@ -647,8 +581,6 @@ export function cfgOf(config: GameConfig | undefined): Cfg {
     traits: migrateTraits(merged.traits),
     cultures: merged.cultures,
     regimes: merged.regimes,
-    events: merged.events,
-    dynasties: merged.dynasties,
     maladies: merged.maladies,
     offrandes: merged.offrandes,
     orientations: merged.orientations,
@@ -734,20 +666,8 @@ export interface BuildingDef {
   effet: string                    // description lisible
 }
 
-export interface EventDef {
-  nom: string
-  saison: Saison
-  poids: number
-  faible: string
-  moyenne: string
-  forte: string
-  extreme: string
-}
-
-export interface DynastieDef {
-  nom: string
-  description: string
-}
+// (EventDef et DynastieDef retirés le 2026-10-24 avec les tables
+//  events/dynasties du référentiel — retour arbitre Thibaut.)
 
 // ── Entités de jeu ─────────────────────────────────────────────────────
 
@@ -818,7 +738,9 @@ export interface Player {
   dynastie: { nom: string; description: string } | null
   armees: Army[]
   recap: PlayerRecap | null
-  /** Rang de pays (feuille « Pays » du classeur) : Baronnie, Comté, … Commune.
+  /** Rang de pays (feuille « Pays » du classeur) : Baronnie, Comté, … Empire
+   *  (échelle féodale unique — les rangs républicains ont été retirés le
+   *  2026-10-24 avec la purge de l'Influence, retour arbitre).
    *  Champ optionnel : absent des vieilles sauvegardes → valeur par défaut
    *  dérivée du régime politique (voir rangParDefaut dans setup.ts). */
   rang?: string
@@ -865,7 +787,9 @@ export interface GameState {
   rngState: number
   turn: number                // numéro du tour en cours
   saison: Saison
-  modDanger: number
+  /** (modDanger retiré du moteur le 2026-10-24 avec les événements de
+   *  saison — champ conservé optionnel pour les vieilles sauvegardes.) */
+  modDanger?: number
   players: Player[]
   population: Record<number, Character[]> // clé = n° joueur
   log: LogEntry[]
@@ -1006,8 +930,8 @@ export function ressourcesOf(cfg?: GameConfig): string[] {
 
 
 export const BUILDINGS: BuildingDef[] = DEFAULT_CONFIG.batiments
-export const EVENTS: EventDef[] = DEFAULT_CONFIG.events
-export const DYNASTIES: DynastieDef[] = DEFAULT_CONFIG.dynasties
+// (EVENTS / DYNASTIES retirés le 2026-10-24 avec les tables
+//  events/dynasties du référentiel — retour arbitre Thibaut.)
 
 export function buildingDef(nom: string, cfg?: GameConfig): BuildingDef | undefined {
   return (cfg ?? DEFAULT_CONFIG).batiments.find((b) => b.nom === nom)
@@ -1074,8 +998,10 @@ export function bump(dict: Record<string, number>, key: string, n = 1) {
 
 // ══ src/engine/saisons.ts ══
 // ══════════════════════════════════════════════════════════════════════
-//  SAISONS, ÉVÉNEMENTS ET CARTES DYNASTIE (FinDeTour, étapes 1-2)
-//  Sélection de la saison, effets chiffrés des événements et des cartes dynastie.
+//  SAISONS (FinDeTour, étape 1)
+//  Sélection de la saison (Été / Hiver alternés).
+//  (Les événements de saison et cartes dynastie qui vivaient ici ont
+//  été retirés le 2026-10-24, retour arbitre Thibaut.)
 //  Portage des macros VBA du classeur Chasse & Pêche 7.19.
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
@@ -1085,76 +1011,8 @@ export function saisonForTurn(turn: number, C: Cfg = cfgOf()): 'Été' | 'Hiver'
   return Math.floor(turn / Math.max(1, C.p.saisonLongueur)) % 2 === 0 ? 'Été' : 'Hiver'
 }
 
-/**
- * Effets chiffrés des événements du classeur : la table eventEffets de la
- * config donne, pour chaque événement, un effet de base par ressource,
- * multiplié par le coefficient de niveau (params evMult*) ; Peste ajoute
- * un risque de maladie, Sombres présages augmente modDanger.
- * Tout est modifiable à chaud dans l'onglet « Paramètres ».
- */
-export function applyEventEffect(state: GameState, nom: string, level: 'faible' | 'moyenne' | 'forte' | 'extreme') {
-  const C = cfgOf(state.config)
-  const mult =
-    level === 'faible' ? C.p.evMultFaible
-    : level === 'moyenne' ? C.p.evMultMoyenne
-    : level === 'forte' ? C.p.evMultForte
-    : C.p.evMultExtreme
-  const def = C.config.eventEffets.find((e) => e.nom === nom)
-  if (!def) return
-  if (def.modDanger) state.modDanger += def.modDanger
-  for (const eff of def.effets) {
-    const v = eff.base * mult
-    for (const p of state.players) {
-      const rs = p.resources[eff.ressource]
-      if (rs) rs.stock += v
-    }
-  }
-  if (def.maladieRisque > 0) {
-    const risk = def.maladieRisque * mult
-    const rng = makeRng(state.rngState)
-    for (const p of state.players) {
-      for (const c of state.population[p.n] ?? []) {
-        if (c.statut === 'Sain' && c.statut !== 'Décédé' && rng.chance(risk)) {
-          c.statut = 'Malade'
-        }
-      }
-    }
-    state.rngState = rng.state()
-  }
-}
-
-/**
- * Effets chiffrés des cartes dynastie du classeur : table dynastieEffets de
- * la config ('(aléatoire)' = une ressource de base tirée au sort ;
- * guerison = guérit un personnage malade). Les cartes « à option » du
- * classeur (dépenser X pour gagner Y) ne dépensent rien automatiquement :
- * leur texte reste affiché dans le journal, le joueur applique son choix
- * en éditant ses stocks — aucune contrainte bloquante.
- */
-export function applyDynastieCard(state: GameState, p: Player, nom: string, rng: Rng) {
-  const C = cfgOf(state.config)
-  const def = C.config.dynastieEffets.find((e) => e.nom === nom)
-  if (!def) return
-  const baseRessources = C.ressources.slice(0, 7)
-  if (def.guerison) {
-    const pop = state.population[p.n] ?? []
-    const malades = pop.filter((c) => c.statut === 'Malade' && c.statut !== 'Décédé')
-    if (malades.length > 0) {
-      const elu = rng.pick(malades)
-      elu.statut = 'Sain'
-      state.log.push({
-        turn: state.turn + 1, type: 'Système', joueur: p.n,
-        texte: `Miracle : ${fullName(elu)} est guéri(e).`,
-      })
-    }
-  }
-  for (const eff of def.effets) {
-    const res = eff.ressource === '(aléatoire)' ? rng.pick(baseRessources) : eff.ressource
-    const rs = p.resources[res]
-    if (rs) rs.stock += eff.base
-  }
-}
-
+// (applyEventEffect et applyDynastieCard retirés le 2026-10-24 avec les
+//  tables events/dynasties du référentiel — retour arbitre Thibaut.)
 
 // ══ src/engine/economie.ts ══
 // ══════════════════════════════════════════════════════════════════════
@@ -2232,7 +2090,9 @@ export function findTitleIssues(state: GameState, player: Player, char: Characte
 // ══════════════════════════════════════════════════════════════════════
 //  CHASSE & PÊCHE — MOTEUR DE JEU (façade d'orchestration)
 //  Portage TypeScript des macros VBA :
-//    · FinDeTour (ressources, saisons, événements, dynasties)
+//    · FinDeTour (ressources, saisons)
+//      (événements de saison et cartes dynastie retirés le 2026-10-24,
+//      retour arbitre Thibaut)
 //    · PersonnagesPourJoueur (moteur de population)
 //    · CalculerGainsPopulation (gains par ville : titres, taxes, conso)
 //    · RecruitForArmies (armées)
@@ -2240,7 +2100,8 @@ export function findTitleIssues(state: GameState, player: Player, char: Characte
 //
 //  ARCHITECTURE (découpage SOLID — une responsabilité par module) :
 //    shared.ts      outils transversaux (ids, noms, noblesse, récap)
-//    saisons.ts     saisons, événements, cartes dynastie
+//    saisons.ts     saisons (Été/Hiver) — événements et cartes dynastie
+//                  retirés le 2026-10-24 (retour arbitre)
 //    economie.ts    gains de population par ville, taxes
 //    vassalite.ts   tribut des vassaux vers leur suzerain
 //    population.ts  orchestration démographique du tour, migration
@@ -2265,34 +2126,11 @@ export function runTurn(state: GameState): GameState {
   const turnBefore = state.turn
   const newSaison = saisonForTurn(turnBefore + 1, C)
 
-  // 1. Événement de saison (si la saison change au tour qui commence)
-  if (newSaison !== state.saison) {
-    const ev = rng.pickWeighted(
-      C.events.filter((e) => e.saison === newSaison),
-      (e) => e.poids,
-    )
-    const danger = rng.die(6) + state.modDanger
-    const level: 'faible' | 'moyenne' | 'forte' | 'extreme' =
-      danger <= 5 ? 'faible' : danger <= 8 ? 'moyenne' : danger < C.p.dangerSeuilForte ? 'forte' : 'extreme'
-    const texte = ev[level as 'faible' | 'moyenne' | 'forte' | 'extreme']
-    state.log.push({
-      turn: turnBefore + 1, type: 'Événement', joueur: null,
-      texte: `【${newSaison}】 ${ev.nom} (danger ${danger}/6) : ${texte}`,
-    })
-    applyEventEffect(state, ev.nom, level)
-    state.saison = newSaison
-  }
-
-  // 2. Carte dynastie pour chaque joueur (TirerDynastie)
-  for (const p of state.players) {
-    const card = rng.pick(C.dynasties)
-    p.dynastie = { nom: card.nom, description: card.description }
-    state.log.push({
-      turn: turnBefore + 1, type: 'Dynastie', joueur: p.n,
-      texte: `${p.nom} — Dynastie « ${card.nom} » : ${card.description}`,
-    })
-    applyDynastieCard(state, p, card.nom, rng)
-  }
+  // 1. Changement de saison (si la saison change au tour qui commence).
+  //    RETIRÉ le 2026-10-24 (retour arbitre Thibaut) : plus de tirage
+  //    d'événement de saison ni de carte dynastie — les tables
+  //    events/dynasties ont disparu du référentiel.
+  if (newSaison !== state.saison) state.saison = newSaison
 
   // 3. Boucle par joueur : gains de population puis production
   const gainsParJoueur: Record<number, Record<string, number>> = {}
@@ -2387,7 +2225,6 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
     rngState: rng.state(),
     turn: 1,
     saison: 'Été',
-    modDanger: 0,
     config: startConfig,
     players: [],
     population: {},
@@ -2435,14 +2272,14 @@ export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
   }
 }
 
-/** Rang de pays par défaut selon le régime politique :
- *  Démocratie / Socialisme → bloc Républicain (Commune),
- *  Monarchie / Autoritarisme → bloc Féodal (Baronnie).
- *  Modifiable ensuite depuis la page « Royaume ». */
+/** Rang de pays par défaut : Baronnie (échelle féodale unique —
+ *  les rangs républicains ont été retirés le 2026-10-24 avec la
+ *  purge de l'Influence, retour arbitre ; tous les régimes
+ *  démarrent Baronnie, modifiable ensuite depuis la page
+ *  « Royaume »). */
 export function rangParDefaut(regime: string, C: Cfg): string {
-  const bloc = regime === 'Démocratie' || regime === 'Socialisme' ? 'Républicain' : 'Féodal'
   const rangs = C.config.paysRangs ?? []
-  return rangs.find((r) => r.bloc === bloc)?.nom ?? rangs[0]?.nom ?? 'Baronnie'
+  return rangs[0]?.nom ?? 'Baronnie'
 }
 
 export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): Character[] {
@@ -2579,7 +2416,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
   // 5. Fécondités calculées pour les adultes
   const fakeState: GameState = {
     config: C.config,
-    version: 1, seed: 0, rngState: 0, turn: 1, saison: 'Été', modDanger: 0,
+    version: 1, seed: 0, rngState: 0, turn: 1, saison: 'Été',
     players: [player], population: { [player.n]: pop }, log: [], history: [],
   } as GameState
   for (const c of pop) {
@@ -2688,10 +2525,8 @@ try {
     { nom: 'config.ressources = []', apply: (s) => { s.config.ressources = [] } },
     { nom: 'config.banquesNoms = []', apply: (s) => { s.config.banquesNoms = [] } },
     { nom: 'config.peuples = []', apply: (s) => { s.config.peuples = [] } },
-    { nom: 'config.dynasties = []', apply: (s) => { s.config.dynasties = [] } },
-    { nom: 'config.events = []', apply: (s) => { s.config.events = [] } },
-    { nom: 'config.eventEffets = []', apply: (s) => { s.config.eventEffets = [] } },
-    { nom: 'config.dynastieEffets = []', apply: (s) => { s.config.dynastieEffets = [] } },
+    // (mutations « config.dynasties/events/eventEffets/dynastieEffets = [] »
+    //  retirées le 2026-10-24 avec les tables, retour arbitre)
     { nom: 'config.batiments = []', apply: (s) => { s.config.batiments = [] } },
     { nom: 'player.n décalés (+8)', apply: (s) => { s.players.forEach((p: any) => { p.n = p.n + 8 }) } },
     { nom: 'vassalDe = 99 (suzerain fantôme)', apply: (s) => { s.players[0].vassalDe = 99 } },

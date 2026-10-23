@@ -1,5 +1,8 @@
 // ══════════════════════════════════════════════════════════════════════
-//  Bâtiments, événements, cartes dynastie — accès via la config.
+//  Bâtiments — accès via la config.
+//  (Les événements et cartes dynastie qui vivaient ici ont été
+//  retirés le 2026-10-24 avec les tables events/dynasties du
+//  référentiel, retour arbitre Thibaut.)
 // ══════════════════════════════════════════════════════════════════════
 
 import { DEFAULT_CONFIG, type GameConfig, type BuildingDef } from '../config/defaultConfig'

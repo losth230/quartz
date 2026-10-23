@@ -74,20 +74,11 @@ export interface BuildingDef {
   effet: string                    // description lisible
 }
 
-export interface EventDef {
-  nom: string
-  saison: Saison
-  poids: number
-  faible: string
-  moyenne: string
-  forte: string
-  extreme: string
-}
-
-export interface DynastieDef {
-  nom: string
-  description: string
-}
+// (EventDef et DynastieDef retirés le 2026-10-24 avec les tables
+//  events/dynasties du référentiel, retour arbitre Thibaut — les
+//  événements de saison (été/hiver) et les cartes dynastie tirées à
+//  chaque tour n'existent plus. Ne pas confondre avec
+//  Character.dynastie, le NOM DE FAMILLE du personnage, qui reste.)
 
 // ── Entités de jeu ─────────────────────────────────────────────────────
 
@@ -247,7 +238,9 @@ export interface CiteLibre {
   /** N° du joueur suzerain de la cité (3 émissaires — plateau), sinon null. */
   suzerain?: number | null
   /** Émissaires gagnés par chaque joueur auprès de la cité (clé = n° de
-   *  joueur) — suivi manuel des tentatives d'influence du plateau. */
+   *  joueur) — suivi manuel des tentatives d'émissaires au plateau
+   *  (l'ancienne « Influence », remplacée par les émissaires, a été
+   *  purgée du référentiel le 2026-10-24). */
   emissaires?: Record<number, number>
   /** Population de la cité (habitants — metier Chasseur par défaut). */
   population?: Character[]
@@ -316,7 +309,12 @@ export interface Player {
   prochaineArmeeReduite?: boolean
   resources: Record<string, ResourceState> // clés = RESOURCES
   villes: City[]
-  dynastie: { nom: string; description: string } | null
+  /** Carte dynastie courante — RETIRÉE le 2026-10-24 (retour arbitre :
+   *  suppression des événements de dynastie). Champ conservé
+   *  OPTIONNEL uniquement pour que les VIEILLES sauvegardes qui le
+   *  portent restent chargées sans erreur ; plus aucun producteur
+   *  ni lecteur. */
+  dynastie?: { nom: string; description: string } | null
   armees: Army[]
   recap: PlayerRecap | null
   /** Rang de pays (feuille « Pays » du classeur) : Baronnie, Comté, … Commune.
@@ -346,14 +344,18 @@ export interface Player {
 
 export interface LogEntry {
   turn: number
+  /** 'Événement' et 'Dynastie' ne sont PLUS PRODUITS depuis le
+   *  2026-10-24 (suppression des événements de saison et des cartes
+   *  dynastie, retour arbitre) — les valeurs restent dans l'union
+   *  pour que les logs des vieilles sauvegardes s'affichent. */
   type: 'Événement' | 'Dynastie' | 'Crise' | 'Naissance' | 'Décès' | 'Mariage' | 'Métier' | 'Titre' | 'Armée' | 'Culture' | 'Commerce' | 'Système' | 'Conflit'
   joueur: number | null
   texte: string
 }
 
 /** Apports d'un tour, canal par canal (récap ressources du joueur).
- *  Les événements et cartes dynastie du tour ne sont pas inclus :
- *  ils figurent dans le journal du tour. */
+ *  (Historique : les événements de saison et cartes dynastie y
+ *  figuraient au journal du tour — retirés le 2026-10-24.) */
 export interface ApportsTour {
   /** production de base du pays (nourriture générale : jamais doublée) */
   production: Record<string, number>
@@ -443,7 +445,11 @@ export interface GameState {
   rngState: number
   turn: number                // numéro du tour en cours
   saison: Saison
-  modDanger: number
+  /** (modDanger RETIRÉ le 2026-10-24 avec les événements de saison —
+   *  bonus permanent de dangerosité des tirages d'événement. Champ
+   *  optionnel : les vieilles sauvegardes qui le portent restent
+   *  chargées ; plus aucun lecteur.) */
+  modDanger?: number
   players: Player[]
   population: Record<number, Character[]> // clé = n° joueur
   /** Cités libres de la partie (onglet « 🗼 Cités libres »). Champ

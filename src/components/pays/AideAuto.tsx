@@ -35,7 +35,7 @@ export function AideAuto({ C }: { C: Cfg }) {
             <li><strong>Population des cités libres</strong> : statut (Sain / Malade / Décédé), naissances et vieillissement manuels.</li>
             <li><strong>Effets des technologies</strong> : affichés en aide de jeu, à appliquer au plateau.</li>
             <li><strong>Voies de victoire</strong> : Merveilles, habitations capturées, routes de la voie Économique, Lauriers — cases à cocher sur l'Accueil.</li>
-            <li><strong>Levées d'armées, dés et événements du plateau.</strong></li>
+            <li><strong>Levées d'armées et dés du plateau.</strong></li>
           </ul>
           <p className="muted small" style={{ marginBottom: 0 }}>
             NB : les boutons « 💰 / 🤝 Générer l'impôt » de cette page AJOUTENT l'impôt d'un

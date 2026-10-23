@@ -2,8 +2,9 @@
 //  VAGUE QUALITÉ (2026-10-24) — extrait de RoyaumeView.tsx.
 //  Carte « 🏰 Royaume de X » : culture du pays (celle de la capitale),
 //  régime politique (loi chiffrée appliquée automatiquement à chaque
-//  fin de tour), rang de pays avec SACRE (Or + Nourriture + serments)
-//  et événement de dynastie (carte tirée au hasard à CHAQUE tour).
+//  fin de tour), rang de pays avec SACRE (Or + Nourriture + serments).
+//  (Le mini « Événement de dynastie » a été retiré le 2026-10-24 avec
+//  les cartes dynastie, retour arbitre Thibaut.)
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player } from '../../engine/types'
@@ -140,16 +141,11 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
             )
           })()}
         </div>
-        <div className="mini">
-          <div className="mini-title">Événement de dynastie</div>
-          <div><strong>{p.dynastie ? p.dynastie.nom : '—'}</strong></div>
-          {p.dynastie && <div className="muted small">{p.dynastie.description}</div>}
-          <div className="muted small">
-            Carte tirée au hasard à CHAQUE tour parmi les dynasties du
-            référentiel — ce n'est pas la famille au pouvoir (voir
-            « Personnages importants » pour la famille royale).
-          </div>
-        </div>
+        {/* Mini « Événement de dynastie » RETIRÉ le 2026-10-24 (retour
+            arbitre Thibaut) : plus de carte tirée à chaque tour — les
+            tables events/dynasties ont disparu du référentiel ; le
+            champ Player.dynastie est conservé optionnel dans les types
+            pour les vieilles sauvegardes. */}
       </div>
     </Card>
   )

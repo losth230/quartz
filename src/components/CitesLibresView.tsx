@@ -15,7 +15,7 @@
 //      (mêmes tableaux, ajout, métiers, dons et mariages) ;
 //    · garnison automatique : 100 + 40 par rang de pays du joueur
 //      ayant le plus haut rang (batailles au plateau : manuel) ;
-//    · émissaires : suivi manuel des tentatives d'influence (une par
+//    · émissaires : suivi manuel des tentatives d'émissaires (une par
 //      saison au plateau) — à 3 émissaires, un joueur peut devenir
 //      suzerain de la cité ;
 //    · suzerain : à chaque fin de tour, la cité verse ses taxes à

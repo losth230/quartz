@@ -8,8 +8,9 @@
 //     culture, régime) — déplacé ici depuis la page « Pays »,
 //   · culture du pays (celle de la capitale), régime politique,
 //     rang de pays (Féodal / Républicain — feuille « Pays » du
-//     classeur) avec sacre, événement de dynastie (carte tirée au
-//     hasard à CHAQUE tour — ce n'est pas la famille au pouvoir),
+//     classeur) avec sacre
+//     (l'événement de dynastie — carte tirée au hasard à CHAQUE
+//     tour — a été retiré le 2026-10-24, retour arbitre Thibaut),
 //   · vassaux : prêt de serment à un autre joueur, tribut automatique
 //     (paramètre vassalPrelevement, appliqué en fin de tour par le moteur),
 //   · personnages importants : Dirigeant, Héritier, Professeurs,

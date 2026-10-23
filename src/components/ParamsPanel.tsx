@@ -14,7 +14,7 @@ import { useGame } from '../state/store'
 import { cfgOf, cloneDefaultConfig } from '../config/defaultConfig'
 import type { GameConfig } from '../config/defaultConfig'
 import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
-import { Card, NumberInput, TextInput, Button, Badge } from './ui'
+import { Card, NumberInput, TextInput, Button } from './ui'
 import {
   BatimentsParams, AmenagementsParams, ProgresParams, PaysRangsParams,
   HabitationsParams, CouleursParams,
@@ -24,7 +24,10 @@ const ONGLETS = [
   'Formules', 'Métiers', 'Traits', 'Cultures', 'Régimes',
   'Bâtiments', 'Aménagements', 'Progrès', 'Pays & rangs', 'Habitations',
   'Couleurs',
-  'Événements', 'Effets évts', 'Dynasties', 'Cartes', 'Offrandes',
+  // (Onglets « Événements », « Effets évts », « Dynasties », « Cartes »
+  //  retirés le 2026-10-24 avec les tables events/dynasties, retour
+  //  arbitre Thibaut — l'ancien contenu vit dans git et le journal.)
+  'Offrandes',
   'Probabilités', 'Peuples & noms', 'Ressources', 'JSON',
 ] as const
 
@@ -234,99 +237,9 @@ export function ParamsPanel() {
 
       {onglet === 'Couleurs' && <CouleursParams config={config} setCfg={setCfg} />}
 
-      {onglet === 'Événements' && (
-        <Card title="Événements de saison (été/hiver) — textes des 4 niveaux de danger">
-          <div className="table-wrap">
-            <table className="tbl small">
-              <thead>
-                <tr><th>Événement</th><th>Saison</th><th>Poids</th><th>Faible (dé ≤5)</th><th>Moyenne (6-8)</th><th>Forte (9+)</th><th>Extrême (11+)</th></tr>
-              </thead>
-              <tbody>
-                {config.events.map((e, i) => (
-                  <tr key={i}>
-                    <td><TextInput value={e.nom} onChange={(v) => setCfg((c) => { c.events[i].nom = v })} /></td>
-                    <td><TextInput value={e.saison} onChange={(v) => setCfg((c) => { c.events[i].saison = v })} /></td>
-                    <td><NumberInput value={e.poids} onChange={(v) => setCfg((c) => { c.events[i].poids = v })} /></td>
-                    <td><TextInput value={e.faible} onChange={(v) => setCfg((c) => { c.events[i].faible = v })} /></td>
-                    <td><TextInput value={e.moyenne} onChange={(v) => setCfg((c) => { c.events[i].moyenne = v })} /></td>
-                    <td><TextInput value={e.forte} onChange={(v) => setCfg((c) => { c.events[i].forte = v })} /></td>
-                    <td><TextInput value={e.extreme} onChange={(v) => setCfg((c) => { c.events[i].extreme = v })} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <p className="muted small">Les multiplicateurs de niveau (faible/moyenne/forte/extrême) et les seuils de dangerosité sont dans l'onglet « Formules », groupe Événements.</p>
-        </Card>
-      )}
-
-      {onglet === 'Effets évts' && (
-        <Card title="Effets chiffrés des événements (base × multiplicateur de niveau)">
-          <p className="muted small">Ressource « (aléatoire) » = une ressource de base tirée au sort. Laissez un effet vide pour un événement purement narratif.</p>
-          {config.eventEffets.map((ev, i) => (
-            <div key={i} className="mini">
-              <div className="row">
-                <strong>{ev.nom}</strong>
-                {ev.modDanger > 0 && <Badge tone="warn">danger +{ev.modDanger}</Badge>}
-                {ev.maladieRisque > 0 && <Badge tone="bad">risque maladie ×{ev.maladieRisque}</Badge>}
-              </div>
-              {ev.effets.map((eff, j) => (
-                <div key={j} className="row">
-                  <NumberInput value={eff.base} onChange={(v) => setCfg((c) => { c.eventEffets[i].effets[j].base = v })} />
-                  <TextInput value={eff.ressource} onChange={(v) => setCfg((c) => { c.eventEffets[i].effets[j].ressource = v })} />
-                  <button className="badge-x" onClick={() => setCfg((c) => { c.eventEffets[i].effets.splice(j, 1) })}>×</button>
-                </div>
-              ))}
-              <div className="row">
-                <Button onClick={() => setCfg((c) => { c.eventEffets[i].effets.push({ ressource: 'Nourriture', base: 0 }) })}>+ effet</Button>
-                <label className="small">risque maladie <NumberInput value={ev.maladieRisque} step={0.01} onChange={(v) => setCfg((c) => { c.eventEffets[i].maladieRisque = v })} /></label>
-                <label className="small">+danger <NumberInput value={ev.modDanger} step={0.5} onChange={(v) => setCfg((c) => { c.eventEffets[i].modDanger = v })} /></label>
-              </div>
-            </div>
-          ))}
-        </Card>
-      )}
-
-      {onglet === 'Dynasties' && (
-        <Card title="Cartes dynastie (poids de tirage, texte)">
-          <div className="table-wrap">
-            <table className="tbl small">
-              <thead><tr><th>Carte</th><th>Poids</th><th>Description (texte du classeur)</th></tr></thead>
-              <tbody>
-                {config.dynasties.map((d, i) => (
-                  <tr key={i}>
-                    <td><TextInput value={d.nom} onChange={(v) => setCfg((c) => { c.dynasties[i].nom = v })} /></td>
-                    <td><NumberInput value={d.poids} onChange={(v) => setCfg((c) => { c.dynasties[i].poids = v })} /></td>
-                    <td><TextInput value={d.description} onChange={(v) => setCfg((c) => { c.dynasties[i].description = v })} /></td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-      )}
-
-      {onglet === 'Cartes' && (
-        <Card title="Effets automatiques des cartes dynastie">
-          <p className="muted small">Les cartes « à option » du classeur ne dépensent rien automatiquement : appliquez votre choix en éditant vos stocks (aucune contrainte bloquante).</p>
-          {config.dynastieEffets.map((d, i) => (
-            <div key={i} className="mini">
-              <div className="row">
-                <strong>{d.nom}</strong>
-                <label className="small">guérit un malade <input type="checkbox" checked={d.guerison} onChange={(e) => setCfg((c) => { c.dynastieEffets[i].guerison = e.target.checked })} /></label>
-              </div>
-              {d.effets.map((eff, j) => (
-                <div key={j} className="row">
-                  <NumberInput value={eff.base} onChange={(v) => setCfg((c) => { c.dynastieEffets[i].effets[j].base = v })} />
-                  <TextInput value={eff.ressource} onChange={(v) => setCfg((c) => { c.dynastieEffets[i].effets[j].ressource = v })} />
-                  <button className="badge-x" onClick={() => setCfg((c) => { c.dynastieEffets[i].effets.splice(j, 1) })}>×</button>
-                </div>
-              ))}
-              <Button onClick={() => setCfg((c) => { c.dynastieEffets[i].effets.push({ ressource: 'Or', base: 0 }) })}>+ effet</Button>
-            </div>
-          ))}
-        </Card>
-      )}
+      {/* Sections « Événements », « Effets évts », « Dynasties », « Cartes »
+          retirées le 2026-10-24 avec les tables events/dynasties du
+          référentiel (retour arbitre Thibaut). */}
 
       {onglet === 'Offrandes' && (
         <Card title="Offrandes">
