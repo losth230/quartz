@@ -12,7 +12,9 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import { DEFAULT_CONFIG, type GameConfig, type ConstructionRef, type EffetConstruction } from '../config/defaultConfig'
-import { reglePourConstruction, contexteLectureSeule } from '../rules/registry'
+import { cfgOf } from './gameData'
+import { reglePourConstruction } from '../rules/registry'
+import type { ContexteEffet } from '../rules/types'
 import type { Effet } from '../rules/types'
 import { appliquerRegles } from '../rules/effects/banque'
 
@@ -95,11 +97,36 @@ export function parseCoutTexte(texte: string): Record<string, number> {
 // a été RETIRÉ le 2026-10-19 : une construction sans règle de banque ne
 // produit RIEN — il n'existe plus de seconde interprétation des effets.
 
+/** Config convergée du DÉFAUT pour le registre des règles de
+ *  constructions (vague 2) : une seule instance, cachée par référence
+ *  dans reglePourConstruction. */
+const C_LECTURE = cfgOf(undefined)
+
+/** Contexte LECTURE SEULE pour évaluer les effets d'une construction
+ *  hors partie (récapitulatifs, coûts, UI) — DÉMÉNAGÉ de
+ *  rules/registry (vague 2, arbitrage Thibaut 2026-10-23 « tout dans
+ *  la vague 2 ») : le contexte est construit côté MOTEUR, qui injecte
+ *  ses PORTS (C, capitaleDe, rangNiveau, garnisonVille) — la couche
+ *  rules n'importe plus le moteur (inversion de dépendance, cycle
+ *  cassé). Les effets des constructions sont inconditionnels :
+ *  aucune condition (peuple, saison…) ne s'applique à cette source —
+ *  le contexte factice ne fausse donc rien. Les types sont relâchés
+ *  (never) car la production d'une construction ne dépend d'aucun
+ *  champ du contexte. */
+export function contexteLectureSeule(): ContexteEffet {
+  return {
+    state: {} as never,
+    joueur: {} as never,
+    saison: '',
+    ports: { C: C_LECTURE, capitaleDe: () => undefined, rangNiveau: () => 0, garnisonVille: () => 0 },
+  } as ContexteEffet
+}
+
 /** Contribution de la banque pour une construction (règle identifiée par
  *  (nom, groupe)). Retourne undefined si la construction n'a pas de
  *  règle — production nulle, par convention ci-dessus. */
 function contributionBanque(ref: ConstructionRef): ReturnType<typeof appliquerRegles> | undefined {
-  const regle = reglePourConstruction(ref)
+  const regle = reglePourConstruction(ref, C_LECTURE)
   if (!regle) return undefined
   return appliquerRegles([regle], contexteLectureSeule())
 }
@@ -145,7 +172,7 @@ export function instantanesConstructionRef(ref: ConstructionRef): Record<string,
 /** Une construction ne produit-t-elle qu'en Été ? (Champ, Rizière — lu
  *  sur la RÈGLE de banque : tout flux qu'elle porte est marqué été.) */
 export function eteSeulementRef(ref: ConstructionRef): boolean {
-  const regle = reglePourConstruction(ref)
+  const regle = reglePourConstruction(ref, C_LECTURE)
   const flux = (regle?.effets ?? []).filter(
     (e): e is Extract<Effet, { type: 'fluxVille' }> => e.type === 'fluxVille',
   )

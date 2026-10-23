@@ -27,60 +27,17 @@ import type { City, GameState, Player, Saison } from './types'
 import { detailGainsVille } from './economie'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { garnisonBatiment, productionTourismeBatiment } from './batiments'
-import { nomRang, rangsDefsType } from './habitations'
-import { garnisonProgresVille, lignesGarnisonProgresVille, garnisonMinimaleProgres, fluxProgresJoueur } from './progresAuto'
+import { lignesGarnisonProgresVille, fluxProgresJoueur } from './progresAuto'
 import { effetsCommerceJoueur } from './commerce'
 import { reglesRegimes, reglesCultures } from '../rules/registry'
 import { appliquerRegles } from '../rules/effects/banque'
 
-export { nomRang } from './habitations'
-
-/** Niveau du rang d'habitation d'une ville (1 = Hameau / Motte, 2 = Cité /
- *  Donjon, 3 = Grande Cité / Forteresse — ordre de la table
- *  typesHabitation pour le type de la ville). Défaut : 1. */
-export function rangNiveau(ville: City, C: Cfg): number {
-  const nom = nomRang(ville.rang ?? 'Hameau').toLowerCase()
-  // niveau DANS l'échelle du type de la ville (1er rang du type = 1)
-  // — lookup unique via rangsDefsType (habitations.ts, retour
-  // Thibaut 2026-10-23 : déduplication des lookups de rangs).
-  const idx = rangsDefsType(ville.type ?? 'Ville', C)
-    .findIndex((d) => nomRang(d.rang).toLowerCase() === nom)
-  return idx >= 0 ? idx + 1 : 1
-}
-
-/** Garnison des habitations d'une ville : garnisons statiques des
- *  bâtiments, bonus de la loi du régime (ex. Autoritarisme : +
- *  garnisonParRang × niveau du rang d'habitation), bonus de la
- *  règle de faction active (engine/factions.ts — état du jeu requis
- *  en 4e argument), Gardes en poste (vague 3a, arbitrage « les
- *  Gardes font tout » — la garnison de BASE des rangs est supprimée)
- *  et garnisons des technologies de progrès débloquées.
- *  Valeur d'état (pas un flux) : affichée sous la culture de chaque
- *  ville (page « Pays ») et du pays (page « Royaume »). */
-export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: GameState): number {
-  let g = 0
-  for (const b of ville.batiments) g += garnisonBatiment(b, C, ville.type)
-  // Garde (vague 3a, rework métiers & emplacements, arbitrage
-  //  2026-10-21) : +garnisonParGarde Garnison STATIQUE par Garde en
-  //  poste dans la ville — valeur d'ÉTAT, jamais un flux par tour
-  //  (« la Garnison n'est jamais par tour ») : le bonus disparaît de
-  //  lui-même si le Garde part, est renvoyé ou meurt.
-  if (state) {
-    const pop = state.population[p.n] ?? []
-    g += C.p.garnisonParGarde * pop.filter(
-      (c) => c.statut !== 'Décédé' && c.ville === ville.nom && c.metier === C.p.metierGarde,
-    ).length
-  }
-  // Technologies (revue 2026-10-15) : Milices civiles I/III/V, Fortifications,
-  //  Pr\u00e9 carr\u00e9, Vasselit\u00e9 \u2014 le commentaire le promettait, c'est r\u00e9el.
-  g += garnisonProgresVille(p, ville, C)
-  const regime = C.regimes.find((r) => r.nom === p.regime)
-  const bonus = regime?.garnisonParRang ?? 0
-  if (bonus) g += bonus * rangNiveau(ville, C)
-  // Plancher « Combler les lacunes » (engine/progresAuto.ts) : les
-  //  habitations ne descendent pas sous 30 si la tech est débloquée.
-  return Math.max(g, garnisonMinimaleProgres(p, C))
-}
+export { nomRang } from './rangs'
+export { rangNiveau } from './rangs'
+export { garnisonHabitationVille } from './garnisons'
+import { rangNiveau } from './rangs'
+import { garnisonHabitationVille } from './garnisons'
+import { capitaleDe } from './factions'
 
 /** Détail de la garnison d'une ville, ligne par ligne (même calibre
  *  que garnisonHabitationVille — l'interface affiche exactement ce
@@ -134,7 +91,15 @@ export function garnisonHabitationsPays(p: Player, C: Cfg, state?: GameState): n
  *  été, effet fluxParAmenagement) ; cette fonction ne fait que LIRE
  *  la banque, plus aucun montant codé ici. */
 export function effetsRegime(state: GameState, p: Player, saison: Saison, C: Cfg): Record<string, number> {
-  return appliquerRegles(reglesRegimes(C.config), { state, joueur: p, saison }).flux
+  return appliquerRegles(reglesRegimes(C), {
+    state, joueur: p, saison,
+    ports: {
+      C,
+      capitaleDe,
+      rangNiveau: (ville) => rangNiveau(ville, C),
+      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
+    },
+  }).flux
 }
 
 /** Nombre de villes d'une culture dans le monde (tous joueurs
@@ -180,7 +145,7 @@ export function detailCulturePays(state: GameState, p: Player, C: Cfg): DetailCu
   //  LUS sur les règles du registre (reglesCultures — effet
   //  fluxParVilleCultureMonde), plus aucun champ du référentiel décodé
   //  ici. L'ordre Nourriture / Tourisme / Or est conservé.
-  for (const r of reglesCultures(C.config)) {
+  for (const r of reglesCultures(C)) {
     if (r.conditions?.culture !== p.culture) continue
     for (const e of r.effets) {
       if (e.type !== 'fluxParVilleCultureMonde') continue
@@ -199,7 +164,15 @@ export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<s
   //  registre (reglesCultures — condition culture, effet
   //  fluxParVilleCultureMonde compté sur tout le monde) ; cette
   //  fonction ne fait que LIRE la banque.
-  return appliquerRegles(reglesCultures(C.config), { state, joueur: p, saison: state.saison }).flux
+  return appliquerRegles(reglesCultures(C), {
+    state, joueur: p, saison: state.saison,
+    ports: {
+      C,
+      capitaleDe,
+      rangNiveau: (ville) => rangNiveau(ville, C),
+      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
+    },
+  }).flux
 }
 
 /**

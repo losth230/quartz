@@ -26,25 +26,15 @@
 import type { City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
 import { parseCoutTexte } from './constructions'
-import { reductionFondation, aTech } from './progresAuto'
-
-/** Nom court d'un rang d'habitation (« Hameau : 20 Or… » → « Hameau »). */
-export function nomRang(rang: string): string {
-  return rang.split(':')[0].trim()
-}
+import { reductionFondation } from './progresAuto'
+import { aTech } from './progresTech'
+import { nomRang, rangsDefsType } from './rangs'
+export { nomRang, rangsDefsType } from './rangs'
 
 /** Type d'habitation d'une ville (« Ville » ou « Château » ; défaut
  *  « Ville » pour les vieilles sauvegardes). */
 export function typeVille(ville: City): string {
   return ville.type ?? 'Ville'
-}
-
-/** Rangs d'habitation d'un type donné (table typesHabitation) — LE
- *  lookup unique du domaine (retour Thibaut 2026-10-23,
- *  déduplication : habitationDef, metiersDisponiblesRang et
- *  rangNiveau passent tous par ici). */
-export function rangsDefsType(type: string, C: Cfg): import('./types').HabitationDef[] {
-  return (C.config.typesHabitation ?? []).filter((d) => d.type.toLowerCase() === type.toLowerCase())
 }
 
 /** Définition d'un rang précis d'un type donné (noms de rang
@@ -84,8 +74,12 @@ export function coutHabitation(ville: City, C: Cfg): Record<string, number> {
 export function debiterCoutHabitation(
   state: GameState, p: Player, ville: City, C: Cfg,
   /** Fondation (nouvelle ville / château) et non simple amélioration :
-   *  active la réduction du Grand bailli (marqueur (y), −8 Or et
-   *  −3 Bois — plafonnés à 0). */
+   *  active les réductions des TECHS de fondation
+   *  (reductionFondation : Colonialisme durable −5 Bois,
+   *  Colonialisme économe −20 Or — plafonnés à 0).
+   *  (Vague 2, arbitrage 2026-10-23 « Grand bailli : c'est un
+   *  ministre, on supprime pour l'instant » : l'office n'existe
+   *  plus, ce docblock ne cite que les effets réels.) */
   fondation = false,
 ): Record<string, number> {
   const def = habitationDef(ville, C)

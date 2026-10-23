@@ -11,7 +11,7 @@
 import type { City, GameState, Player } from './types'
 import { cfgOf, metierDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
-import { villeCotiere } from './villes'
+import { villeCotiere } from './geographie'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -85,8 +85,9 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   // Vague 3a : les métiers marqués `ete` (Fermier) ne produisent
   //  qu'en saison d'Été ; Sans-emploi (metier null) ne produit rien.
   const metiers: Record<string, number> = {}
-  // Vague 3b (bâtiment tier 1, 2026-10-22) : Ponton (ville CÔTIÈRE,
-  //  arbitrage Thibaut : proximité Rivière ou Mer — villeCotiere) —
+  // Vague 3b (bâtiment tier 1, 2026-10-22 ; vague 2
+  //  Ponton→proximité 2026-10-23) : Ponton (ville CÔTIÈRE —
+  //  toute proximité autre que « Plaine », villeCotiere) —
   //  chaque Pêcheur de la ville produit +0,5 Bétail par tour, AVANT
   //  le calcul des taxes (taxé comme les autres gains).
   const ponton = villeCotiere(ville) && (ville.batiments ?? []).includes('Ponton')

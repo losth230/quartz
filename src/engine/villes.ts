@@ -31,6 +31,7 @@ import { isNobleDyn, perteDemenagement } from './shared'
 //  le transfert de ville passe par resynchroniserTourisme (stock =
 //  production courante), plus de crédit « statique » manuel.
 import { resynchroniserTourisme } from './regimes'
+export { villeCotiere } from './geographie'
 
 /** MARQUEUR (a) — garde-fou ANCIENNES SAUVEGARDES / états distants : complète
  *  les tableaux et dictionnaires indispensables au moteur et au rendu.
@@ -211,16 +212,6 @@ export function bonusProximite(ville: City, C: Cfg): number {
   if (ville.proximite === 'Rivière') return C.p.proxRiviereNourriture
   if (ville.proximite === 'Mer') return C.p.proxMerNourriture
   return 0
-}
-
-/** Ville « côtière » (arbitrage Thibaut 2026-10-22) : proximité
- *  RIVIÈRE ou MER — toute proximité autre que « Plaine » (ou
- *  absente). Utilisé par le Ponton (vague 3b) : ses emplacements de
- *  Pêcheur et le bonus +0,5 Bétail/tour par Pêcheur ne comptent QUE
- *  dans une ville côtière ; hors proximité, le bâtiment reste
- *  affiché mais n'a aucun effet moteur. */
-export function villeCotiere(ville: City): boolean {
-  return ville.proximite === 'Rivière' || ville.proximite === 'Mer'
 }
 
 /** Étape moteur (marqueur (y)) : crédite au stock le bonus de

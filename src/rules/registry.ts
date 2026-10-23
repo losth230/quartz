@@ -20,10 +20,8 @@
 //  encore migré.
 // ═══════════════════════════════════════════════════════════════════════════
 
-import type { ContexteEffet, Effet, RegleBanque, SourceRegle } from './types'
-import { cfgOf } from '../engine/gameData'
-import type { GameConfig } from '../config/defaultConfig'
-import type { EffetConstruction } from '../config/defaultConfig'
+import type { Effet, RegleBanque, SourceRegle } from './types'
+import type { Cfg, EffetConstruction } from '../config/defaultConfig'
 
 /** Slug d'identifiant stable depuis un nom affiché (les accents et
  *  espaces deviennent des tirets) : 'Poste de garde' → 'poste-de-garde'.
@@ -63,8 +61,7 @@ export function effetsConstructionVersBanque(effets: EffetConstruction[]): Effet
  *  référentiel qui portent des effets structurés (bâtiments +
  *  aménagements). Les entrées sans `effets` (texte seul) ne sont PAS
  *  migrées : le moteur historique continue de les analyser. */
-export function reglesConstructions(config?: GameConfig): RegleBanque[] {
-  const C = cfgOf(config)
+export function reglesConstructions(C: Cfg): RegleBanque[] {
   const refs = C.config.constructions ?? []
   const out: RegleBanque[] = []
   for (const ref of refs) {
@@ -86,8 +83,8 @@ export function reglesConstructions(config?: GameConfig): RegleBanque[] {
 
 /** Registre complet : toutes les règles migrées. Appelé par le moteur
  *  aux sites d'application (une fois par tour, cacheable). */
-export function registreComplet(config?: GameConfig): RegleBanque[] {
-  return [...reglesConstructions(config), ...reglesRegimes(config), ...reglesCultures(config), ...reglesProgres(config)]
+export function registreComplet(C: Cfg): RegleBanque[] {
+  return [...reglesConstructions(C), ...reglesRegimes(C), ...reglesCultures(C), ...reglesProgres(C)]
   // Les sources suivantes migrent une par une (dogmes, factions…) :
   //  […, ...reglesProgres(config), …]
 }
@@ -103,8 +100,7 @@ export function registreComplet(config?: GameConfig): RegleBanque[] {
  *  garnison de l'Autoritarisme (garnisonParRang) reste une VALEUR
  *  D'ÉTAT (garnisonHabitationVille), pas une production : hors
  *  banque. */
-export function reglesRegimes(config?: GameConfig): RegleBanque[] {
-  const C = cfgOf(config)
+export function reglesRegimes(C: Cfg): RegleBanque[] {
   const out: RegleBanque[] = []
   for (const regime of C.regimes) {
     const n = regime.nourrEteChampRiziere ?? 0
@@ -126,8 +122,7 @@ export function reglesRegimes(config?: GameConfig): RegleBanque[] {
  *  +4 Tourisme par ville lunisme). Les cultures sans loi chiffrée
  *  (ex. Déisme : scienceParConstruction est un instantané de
  *  construction) ne génèrent PAS de règle. */
-export function reglesCultures(config?: GameConfig): RegleBanque[] {
-  const C = cfgOf(config)
+export function reglesCultures(C: Cfg): RegleBanque[] {
   const LOIS: Array<[string, 'capitalNourrParHabMonde' | 'capitalTourismeParHabMonde' | 'capitalOrParHabMonde']> = [
     ['Nourriture', 'capitalNourrParHabMonde'],
     ['Tourisme', 'capitalTourismeParHabMonde'],
@@ -159,8 +154,7 @@ export function reglesCultures(config?: GameConfig): RegleBanque[] {
  *  l'historique aTech). SEULE vérité de la résolution nom → clés :
  *  la banque l'utilise pour la condition `techNom`, le moteur
  *  (aTech) l'utilise pour les réductions de coût et les garnisons. */
-export function clesTechsParNom(config: GameConfig | undefined, nom: string): string[] {
-  const C = cfgOf(config)
+export function clesTechsParNom(C: Cfg, nom: string): string[] {
   const out: string[] = []
   const slots: Array<'a1' | 'a2' | 'b1' | 'b2' | 'c'> = ['a1', 'a2', 'b1', 'b2', 'c']
   C.config.progres.forEach((a, i) => {
@@ -248,8 +242,7 @@ const PROGRES_FLUX: RegleBanque[] = [
  *  fluxParMetier (montants déjà DONNÉES du côté référentiel,
  *  conditions par clé `<arbre>:<slot>` pour préserver
  *  l'application par arbre de l'historique). */
-export function reglesProgres(config?: GameConfig): RegleBanque[] {
-  const C = cfgOf(config)
+export function reglesProgres(C: Cfg): RegleBanque[] {
   const out: RegleBanque[] = PROGRES_FLUX.map((r) => ({ ...r, effets: [...r.effets] }))
   // Génériques prodParMetier du référentiel (+N ressource par
   //  TITULAIRE vivant — ex. Commerce lointain : +3 Or par Marchand).
@@ -288,12 +281,11 @@ function cleConstruction(nom: string, groupe?: string): string {
 /** Règle de banque d'une construction PAR (nom, groupe) — accès moteur.
  *  Retourne undefined si la construction n'a pas d'effets structurés
  *  (repli texte du moteur historique). */
-export function reglePourConstruction(ref: { nom: string; groupe?: string }, config?: GameConfig): RegleBanque | undefined {
-  const cfg = config ?? undefined
-  if (!cacheRegles || cacheRegles.config !== (cfg as object)) {
-    const regles = reglesConstructions(cfg)
+export function reglePourConstruction(ref: { nom: string; groupe?: string }, C: Cfg): RegleBanque | undefined {
+  if (!cacheRegles || cacheRegles.config !== C) {
+    const regles = reglesConstructions(C)
     cacheRegles = {
-      config: cfg as object,
+      config: C,
       regles,
       parCle: new Map(regles.map((r) => [cleConstruction(r.nom, r.groupe), r])),
     }
@@ -301,16 +293,3 @@ export function reglePourConstruction(ref: { nom: string; groupe?: string }, con
   return cacheRegles.parCle.get(cleConstruction(ref.nom, ref.groupe))
 }
 
-/** Contexte LECTURE SEULE pour évaluer les effets d'une construction
- *  hors partie (récapitulatifs, coûts, UI). Les effets des
- *  constructions sont inconditionnels : aucune condition (peuple,
- *  saison…) ne s'applique à cette source — le contexte factice ne
- *  fausse donc rien. Les types sont relâchés (unknown) car la
- *  production d'une ville ne dépend d'aucun champ du contexte. */
-export function contexteLectureSeule(): ContexteEffet {
-  return {
-    state: {} as never,
-    joueur: {} as never,
-    saison: '',
-  } as ContexteEffet
-}
