@@ -39,7 +39,7 @@ import { createGame, type SetupLine } from './setup'
 import type { Character, City, GameState } from './types'
 import { cfgOf } from './gameData'
 import { capMetierVille, reaffecterMetiers, occupationsMetierVille } from './metiers'
-import { invaliderIndexPopulation } from './naissances'
+import { invaliderIndexPopulation } from './indexPopulation'
 import { detailGainsVille } from './economie'
 import * as habitationsMod from './habitations'
 import { garnisonHabitationVille, detailGarnisonVille } from './regimes'
@@ -405,13 +405,17 @@ test('vague 3b : Ponton — chaque Pêcheur de la ville produit +0,5 Bétail par
     perso('p-40', 40, { metier: 'Pêcheur' }),
   ]
   invaliderIndexPopulation()
-  // arbitrage Thibaut 2026-10-22 : côtière = proximité Rivière OU Mer
-  //  (toute proximité autre que « Plaine »).
+  // arbitrage Thibaut 2026-10-22 : côtière = TOUTE proximité
+  //  autre que « Plaine » (vague 2 Ponton→proximité, 2026-10-23 :
+  //  câblé littéralement — une proximité non listée compte).
   ville.proximite = 'Mer'
   assert.equal(capMetierVille('Pêcheur', ville, C), 2, 'Mer : Ponton côtier → +2 emplacements de Pêcheur')
   assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Mer : 2 Pêcheurs × +0,5 Bétail (Ponton)')
   ville.proximite = 'Rivière'
   assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Rivière : côtière aussi (même bonus)')
+  ville.proximite = 'Colline'
+  assert.equal(capMetierVille('Pêcheur', ville, C), 2, 'Colline (proximité non listée) : côtière aussi — arbitrage littéral (vague 2)')
+  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Colline : 2 Pêcheurs × +0,5 Bétail (Ponton)')
   // Plaine (ou sans proximité) : le bâtiment n'a AUCUN effet moteur
   ville.proximite = 'Plaine'
   assert.equal(capMetierVille('Pêcheur', ville, C), 0, 'Plaine : le Ponton n ouvre aucun poste (bâtiment côtier)')

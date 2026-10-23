@@ -114,7 +114,7 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
   const refs = C.config.constructions ?? []
   assert.ok(refs.length > 30,
     'référentiel constructions attendu (41 entrées de rang 1 après la simplification 2026-10-23 : rangs 2+ supprimés)')
-  const regles = reglesConstructions(undefined)
+  const regles = reglesConstructions(C)
   assert.equal(regles.length, refs.filter((r) => r.effets?.length).length)
   const parNom = new Map(regles.map((r) => [r.nom, r]))
 
@@ -146,12 +146,13 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
 })
 
 test('SANS règle de banque : production NULLE sur tous les canaux (repli texte retiré)', () => {
-  const refs = cfgOf(undefined).config.constructions ?? []
+  const C = cfgOf(undefined)
+  const refs = C.config.constructions ?? []
   const sansEffets = refs.filter((r) => !r.effets?.length)
   assert.ok(sansEffets.length > 0, 'des constructions sans effets structurés existent')
   for (const ref of sansEffets) {
     // ces entrées n'ont PAS de règle dans la banque…
-    const regles = reglesConstructions(undefined).filter((r) => r.nom === ref.nom)
+    const regles = reglesConstructions(C).filter((r) => r.nom === ref.nom)
     assert.equal(regles.length, 0, `${ref.nom} ne doit pas être dans la banque sans effets structurés`)
     // …et le moteur ne produit RIEN pour elles : plus AUCUN repli texte
     //  (l'ancien parseProductionTexte a été retiré le 2026-10-19).
