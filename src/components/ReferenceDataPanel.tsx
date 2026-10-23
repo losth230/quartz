@@ -357,7 +357,7 @@ export function ReferenceDataPanel() {
                     <td>{h.rang}</td>
                     <td>{h.cout || '—'}</td>
                     <td>{h.habitantsRequis}</td>
-                    <td>{h.metiersDisponibles || '—'}</td>
+                    <td>{(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ') || '—'}</td>
                     <td>{h.domicilesDisponibles || '—'}</td>
                   </tr>
                 ))}
