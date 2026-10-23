@@ -1,5 +1,5 @@
 createGame OK — 8 joueurs
-4 tours OK — turn 5 · saison Hiver · log 333 entrées
+4 tours OK — turn 5 · saison Hiver · log 304 entrées
 commandants disponibles pour J1 : 7
 levée + recrutement OK — Armée 1:3 soldats, Armée 2:2 soldats
 dissolution armée idx=1 : OK
@@ -24,7 +24,7 @@ tour suivant (armées en place) : OK — turn 7
   [ÉCHEC runTurn] state.log supprimé → Cannot read properties of undefined (reading 'push')
   [ÉCHEC runTurn] state.history supprimé → Cannot read properties of undefined (reading 'push')
   [OK sans erreur]  state.rngState supprimé
-  [ÉCHEC runTurn] player.resources supprimé → Cannot read properties of undefined (reading 'Or')
+  [ÉCHEC runTurn] player.resources supprimé → Cannot read properties of undefined (reading 'Bétail')
   [OK sans erreur]  config supprimée
   [OK sans erreur]  config.cultures = []
   [ÉCHEC runTurn] config.genres = [] → Cannot read properties of undefined (reading 'nom')
@@ -34,10 +34,6 @@ tour suivant (armées en place) : OK — turn 7
   [OK sans erreur]  config.ressources = []
   [OK sans erreur]  config.banquesNoms = []
   [OK sans erreur]  config.peuples = []
-  [ÉCHEC runTurn] config.dynasties = [] → Cannot read properties of undefined (reading 'nom')
-  [OK sans erreur]  config.events = []
-  [OK sans erreur]  config.eventEffets = []
-  [OK sans erreur]  config.dynastieEffets = []
   [OK sans erreur]  config.batiments = []
   [OK sans erreur]  player.n décalés (+8)
   [OK sans erreur]  vassalDe = 99 (suzerain fantôme)
