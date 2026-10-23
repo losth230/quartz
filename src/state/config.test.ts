@@ -274,3 +274,34 @@ test('config : la mécanique d éducation est retirée — table educations abse
   assert.ok(!('educations' in C2.config) && C2.config.metiers.every((m) => !('education' in m)),
     're-lecture : toujours absentes')
 })
+
+// ── Simplification (retour Thibaut 2026-10-23) : bâtiments et
+//    aménagements de rang ≥ 2 retirés, MÊME des configs monde
+//    sauvegardées avant (« je vois encore le Moulin à vent ») ────
+
+test('config : les constructions rang >= 2 sont retirées, même d une config déjà convergée (le « Moulin à vent » d une config monde sauvegardée)', () => {
+  const c = cloneDefaultConfig()
+  assert.ok(c.constructions.every((x) => (x.rangMinHabitation ?? 0) < 2),
+    'les défauts ne portent que des constructions de rang ≤ 1 (77 retirées du référentiel)')
+  // une config monde SAUVEGARDÉE AVANT la simplification garde les
+  //  rangs 2/3 (la complétion n'ajoute que les manquantes, elle ne
+  //  retire jamais les disparues) :
+  c.schemaVersion = 4 // déjà convergée : le filtre joue quand même
+  c.constructions.push({
+    categorie: 'Bâtiment', groupe: 'Ville', famille: 'Economique',
+    nom: 'Moulin à vent', cout: '40 Bois',
+    production: 'Consomme 1 Charbon par tour. +60 Nourriture par tour.',
+    description: 'Moulin actionné par le vent.',
+    effets: [{ ressource: 'Charbon', quantite: -1 }, { ressource: 'Nourriture', quantite: 60 }],
+    rangMinHabitation: 2,
+  })
+  const C = cfgOf(c)
+  assert.ok(!C.config.constructions.some((x) => x.nom === 'Moulin à vent'),
+    'rangMinHabitation 2 : le « Moulin à vent » est retiré par cfgOf')
+  assert.ok(C.config.constructions.every((x) => (x.rangMinHabitation ?? 0) < 2),
+    'aucune construction rang ≥ 2 ne survit à la convergence')
+  // idempotence : la re-lecture d une config déjà filtrée est stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.config.constructions.length, C.config.constructions.length,
+    're-lecture : le filtre ne retire rien de plus (idempotent)')
+})
