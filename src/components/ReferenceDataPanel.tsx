@@ -13,7 +13,7 @@ import {
 } from '../config/defaultConfig'
 import type { EffetProgres } from '../config/defaultConfig'
 import { VICTORY_TEXT } from '../engine/gameData2'
-import { resumeConstruction } from '../engine/engine'
+import { resumeConstruction } from '../engine/constructions'
 import { Card, Badge } from './ui'
 
 const ONGLETS = [

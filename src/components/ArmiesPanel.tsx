@@ -9,7 +9,7 @@ import { useGame } from '../state/store'
 import type { GameState, Player } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import { prixArmee, infligerPertes, libererSoldats } from '../engine/armees'
-import { isNobleDyn } from '../engine/engine'
+import { isNobleDyn } from '../engine/shared'
 import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
 
 export function ArmiesPanel({ joueur }: { joueur: number }) {

@@ -8,11 +8,10 @@
 import { useState } from 'react'
 import type { Player } from '../../engine/types'
 import { useGame } from '../../state/store'
-import {
-  provenancesApports, genererImpotPopulation, genererImpotVassaux, impotsVassaux,
-  effetsNourrEteAmenagementsVille, effetsNourrEteAutresVille,
-  type ProductionDetail,
-} from '../../engine/engine'
+import { provenancesApports, type ProductionDetail } from '../../engine/production'
+import { genererImpotPopulation, genererImpotVassaux, impotsVassaux } from '../../engine/economie'
+import { effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
+import { effetsNourrEteAutresVille } from '../../engine/autres'
 import { fondRessource, couleurRessource, type Cfg } from '../../engine/gameData'
 import { Card, NumberInput, Button, fmt } from '../ui'
 import { RESSOURCES_FLUX, fmtNum } from './pays-utils'

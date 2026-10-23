@@ -13,7 +13,7 @@ import {
 import { Card, fmt } from './ui'
 import { HistogrammeEmpile, CourbeRessource, Radar } from './charts'
 import type { GroupeChart, SerieCourbe, SerieRadar } from './charts'
-import { productionDetaillee } from '../engine/engine'
+import { productionDetaillee } from '../engine/production'
 
 const RESSOURCES_BASE = ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie']
 

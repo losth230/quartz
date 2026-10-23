@@ -35,7 +35,7 @@ export function prepareRendu(): void {
  *  en place avant tout code applicatif. */
 export async function partieRendu(): Promise<void> {
   const { createGame } = await import('../engine/setup')
-  const { runTurn } = await import('../engine/engine')
+  const { runTurn } = await import('../engine/tour')
   const { saveLocal } = await import('../state/storage')
 
   const PEUPLES = ['Basiléens', 'PEAUX VERTES', "ELFES D'OR", 'Sylvains', 'NORLS', 'VERMINES DE KAOSS']
