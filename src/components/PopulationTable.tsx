@@ -7,9 +7,8 @@
 //  bâtiments de logement — null = « — » pour l'instant) et écran
 //  « Métiers et places par ville » (en poste / cap / places libres,
 //  helper moteur occupationsMetierVille).
-//  sont proposés (Chasseur, Gouverneur, métiers Education enseignés
-//  par un Professeur vivant) — et arbre généalogique de la famille
-//  dirigeante (déplacé ici depuis la page Royaume).
+//  sont proposés (Chasseur, Gouverneur) — et arbre généalogique de la
+//  famille dirigeante (déplacé ici depuis la page Royaume).
 //  Retour Thibaut (2026-10-14) : la population est séparée en deux
 //  tableaux — « La cour » (tous les nobles du joueur, affichés
 //  AU-DESSUS) et la population « classique ». Chaque personnage peut
@@ -32,7 +31,7 @@ import { cfgOf } from '../engine/gameData'
 import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
 import {
-  metiersAccessibles, changerPortefeuille, isNobleDyn, fullName,
+  metiersAccessibles, isNobleDyn, fullName,
   marierPersonnages, deplacerPersonnage, toutesLesPopulations,
   metiersAccessiblesCite, pseudoJoueurDeCite, occupationsMetierVille,
   ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre,
@@ -42,8 +41,6 @@ import { GenealogyTree } from './GenealogyTree'
 import { Card, Select, TextInput, Button, NumberInput, fmt } from './ui'
 import { ChoicePicker } from './Picker'
 import { traitDef } from '../engine/gameData'
-import { statutMinistre, pastilleClass } from '../engine/statutAuto'
-import { resynchroniserTourisme } from '../engine/regimes'
 
 type SortKey = 'nom' | 'age' | 'dynastie' | 'ville' | 'metier' | 'statut'
 
@@ -84,7 +81,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const pop = cite ? (cite.population ?? []) : (state?.population[joueur] ?? [])
   const C = cfgOf(state?.config)
   // Description complète d'un métier pour le picker (marqueur (y)) :
-  //  gains par habitant/tour + noblesse + éducation requise.
+  //  gains par habitant/tour + noblesse.
   const descMetier = (t: string): string => {
     const td = (C.config.metiers ?? []).find((x) => x.metier === t)
     if (!td) return ''
@@ -94,7 +91,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     return [
       parts.length ? `${parts.join(' + ')} par habitant et par tour` : '',
       td.nobleSeul ? 'Nobles seulement' : '',
-      td.education ? `Éducation requise : ${td.education}` : '',
       td.description || '',
     ].filter(Boolean).join('\n')
   }
@@ -141,51 +137,9 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   if (!state || (!p && !cite)) return null
 
   // ── Portefeuilles ministériels (refonte 2026-10-14) ──────────────────
-  // Rang actuel du joueur dans l'échelle des rangs, pour le contrôle du
-  // rang MINIMUM des portefeuilles (avertissement affiché, jamais
-  // bloquant — l'arbitre garde la main).
-  const rangsPays = C.config.paysRangs ?? []
-  const idxRangJoueur = Math.max(0, rangsPays.findIndex((r) => r.nom === (p?.rang ?? rangsPays[0]?.nom)))
-  const avertissementPortefeuille = (m: string | null | undefined): string | null => {
-    if (!p || !m) return null
-    const min = (C.config.ministeres ?? []).find((x) => x.ministere === m)?.rangMinimum
-    if (!min) return null
-    if (rangsPays.findIndex((r) => r.nom === min) > idxRangJoueur) {
-      return `Le portefeuille ${m} exige en principe le rang de pays ${min}.`
-    }
-    return null
-  }
-  // Plafond de MINISTRES (revue 2026-10-15) : paysRangs.ministres par rang
-  //  de pays + 1 si Basiléens « Suzeraineté » (Âge III) — avertissement
-  //  non bloquant (l'arbitre reste maître).
-  const maxMinistres =
-    (rangsPays[idxRangJoueur]?.ministres ?? rangsPays[0]?.ministres ?? 1)
-    + (p?.progresDebloques?.some((k) => {
-      // « Progrès du développement futur C » : +1 ministre (revue 2026-10-16)
-      const C2 = C
-      const [iStr, slot] = k.split(':')
-      const a = C2.config.progres[Number(iStr)]
-      if (!a) return false
-      const t = slot === 'c' ? a.techC : (slot[0] === 'a' ? a.brancheA : a.brancheB)[+slot[1] - 1]
-      return t?.nom === 'Progrès du développement futur C'
-    }) ? 1 : 0)
-  const nbMinistres = pop.filter((c) => c.metier === 'Ministre' && c.statut !== 'Décédé' && c.ministere).length
 
   // Aucune contrainte bloquante : le métier est TOUJOURS appliqué ;
   // le contrôle de cohérence n'affiche qu'un avertissement (ignorable).
-  /** Éducation enseignée par un professeur — modifiable à tout moment
-   *  (même le métier « sans éducation » est possible). Uniquement pour
-   *  les Professeurs vivants, comme demandé — les autres gardent leur
-   *  éducation (acquise via un professeur pendant l'enfance). */
-  const changerEducationProf = (c: Character, v: string) => {
-    update((s) => {
-      const liste = cite
-        ? ((s.citesLibres ?? [])[citeIdx]?.population ?? [])
-        : (s.population[joueur] ?? [])
-      const target = liste.find((x) => x.id === c.id)
-      if (target) target.education = v || null
-    })
-  }
   const changeMetier = (c: Character, metier: string) => {
     // Cité libre : validation via un pseudo-joueur (culture de la cité,
     // mêmes contrôles de cohérence que pour un joueur).
@@ -222,8 +176,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           }
         }
         target.metier = metier
-        // On quitte le métier « Ministre » → le portefeuille part avec.
-        if (metier !== 'Ministre') target.ministere = null
       }
     })
   }
@@ -421,20 +373,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
       <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile — les bâtiments de logement arrivent (vague 3)'}>
         {c.domicile ?? '—'}
       </td>
-      <td>
-        {c.metier === C.p.metierProfesseur && c.statut !== 'Décédé' ? (
-          <Select
-            value={c.education ?? ''}
-            options={[
-              { value: '', label: '—' },
-              ...C.educations.map((e) => ({ value: e, label: e })),
-            ]}
-            onChange={(v) => changerEducationProf(c, v)}
-          />
-        ) : (
-          (c.education ?? '—')
-        )}
-      </td>
       <td className="small">
         {(c.traits ?? []).filter(Boolean).map((t) => (
           <span key={t} title={traitDef(t, C.config)?.description || undefined}
@@ -515,7 +453,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     <thead>
       <tr>
         <th>Nom</th><th>Dynastie</th><th>Sx</th><th>Âge</th><th>Ville</th>
-        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Éducation</th><th>Traits</th>
+        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Traits</th>
         <th>Statut</th><th>Mariage</th><th>Fécondité</th><th>Actions</th>
       </tr>
     </thead>
@@ -546,127 +484,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           ) : (
             <p className="muted">Lancez un tour pour voir le récapitulatif.</p>
           )}
-        </Card>
-      )}
-      {/* 👑 Ministres du porteur (retour Thibaut, marqueur (r) : « les
-          ministres n'ont jamais été intégrés » — ils l'étaient depuis la
-          refonte du 2026-10-14 (métier « Ministre » + portefeuille +
-          effets moteur) mais restaient invisibles si on ne savait pas
-          où regarder. Cette carte affiche l'équipe en place et rappelle
-          comment nommer. Marqueur (v) : le portefeuille se choisit ICI,
-          plus dans le tableau de population (retour Thibaut).
-          — joueurs seulement (les cités libres n'ont pas de ministères). */}
-      {p && (
-        <Card title={`👑 Ministres de ${p.nom}`}>
-          {(() => {
-            const mins = pop.filter((c) => c.metier === 'Ministre' && c.statut !== 'Décédé')
-            if (mins.length === 0) {
-              return (
-                <p className="muted small">
-                  Aucun ministre en poste. Pour en nommer un : dans « La cour » ci-dessous,
-                  choisir le métier <strong>Ministre</strong> dans la colonne Métier d'un noble vivant,
-                  puis revenir choisir son <strong>portefeuille</strong> dans cette carte
-                  (Trésorier, Sénéchal, Connétable…). Les effets s'appliquent automatiquement
-                  à chaque fin de tour / fin de saison.
-                </p>
-              )
-            }
-            return (
-              <div className="badges-wrap rows">
-                {nbMinistres > maxMinistres && (
-                  <p className="neg small" style={{ flexBasis: '100%', margin: 0 }}>
-                    ⚠ {nbMinistres} ministres en poste pour un maximum de {maxMinistres}
-                    ({rangsPays[idxRangJoueur]?.ministres ?? '?'} par rang de pays
-                    {maxMinistres > (rangsPays[idxRangJoueur]?.ministres ?? 0) ? ' + Suzeraineté' : ''})
-                    — retirez un portefeuille ou montez de rang.
-                  </p>
-                )}
-                {mins.map((c) => {
-                  // Marqueur (y), retour Thibaut : portefeuilles
-                  //  CATÉGORISÉS PAR RANG DE PAYS REQUIS + description
-                  //  (effet complet) AVANT le choix — et un bouton
-                  //  « Retirer » toujours disponible (le portefeuille
-                  //  actuel est affiché en badge, plus jamais un
-                  //  <select> muet sur une valeur inconnue).
-                  const cats = rangsPays
-                    .map((r) => ({
-                      label: `${r.nom} (min.)`,
-                      options: (C.config.ministeres ?? [])
-                        .filter((m) => (m.rangMinimum ?? rangsPays[0]?.nom ?? '') === r.nom)
-                        .filter((m) => m.ministere !== c.ministere)
-                        .map((m) => ({
-                          value: m.ministere,
-                          metier: m.ministere,
-                          droite: m.mode === 'Auto' ? 'auto' : 'plateau',
-                          description: m.effet,
-                        })),
-                    }))
-                    .filter((cat) => cat.options.length > 0)
-                  return (
-                    <div key={c.id} className="row" style={{ alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-                      <span className="badge badge-info" title={`${fullName(c)} — ${c.ville}`}>
-                        {fullName(c)}
-                      </span>
-                      <span
-                        className={`badge ${c.ministere ? 'badge-good' : 'badge-neutral'}`}
-                        title={(() => {
-                          const ref = (C.config.ministeres ?? []).find((m) => m.ministere === c.ministere)
-                          return ref ? `${ref.effet} (${ref.mode === 'Auto' ? 'appliqué automatiquement' : 'à appliquer au plateau'})` : undefined
-                        })()}
-                      >
-                        {c.ministere ?? '(sans portefeuille)'}
-                      </span>
-                      <ChoicePicker
-                        bouton="Changer de portefeuille…"
-                        categories={cats}
-                        onPick={(v) => update((s2) => {
-                          const tp = s2.players.find((x) => x.n === joueur)
-                          const tc = (s2.population[joueur] ?? []).find((x) => x.id === c.id)
-                          if (!tp || !tc) return
-                          changerPortefeuille(s2, tp, tc, v || null)
-                          resynchroniserTourisme(s2, tp, 'portefeuille ministériel')
-                        })}
-                      />
-                      {c.ministere && (
-                        <Button tone="danger" title="Retirer le portefeuille" onClick={() => update((s2) => {
-                          const tp = s2.players.find((x) => x.n === joueur)
-                          const tc = (s2.population[joueur] ?? []).find((x) => x.id === c.id)
-                          if (!tp || !tc) return
-                          changerPortefeuille(s2, tp, tc, null)
-                          resynchroniserTourisme(s2, tp, 'portefeuille retiré')
-                        })}>✕ Retirer</Button>
-                      )}
-                      {avertissementPortefeuille(c.ministere) && (
-                        <div className="neg small">⚠ {avertissementPortefeuille(c.ministere)}</div>
-                      )}
-                      {/* Effet du portefeuille CHOISI (retour Thibaut
-                          2026-10-15) : le ministre en poste affiche ce
-                          qu'il fait — texte exact du référentiel + badge
-                          auto/plateau. */}
-                      {c.ministere && (() => {
-                        const ref = (C.config.ministeres ?? []).find((m) => m.ministere === c.ministere)
-                        if (!ref) return null
-                        const st = statutMinistre(ref.mode)
-                        return (
-                          <div className="small muted" style={{ flexBasis: '100%' }}>
-                            <span className={pastilleClass(st)} title={
-                              st === 'auto' ? 'Appliqué automatiquement par le moteur'
-                              : 'Impossible à automatiser (plateau)'
-                            } />
-                            {ref.effet}
-                          </div>
-                        )
-                      })()}
-                    </div>
-                  )
-                })}
-              </div>
-            )
-          })()}
-          <p className="muted small">
-            Portefeuilles et rangs minimum : onglet Référentiels → « Ministères » (paramétrable).
-            En principe autant de ministres que le rang de pays l'octroie (avertissement, jamais bloquant).
-          </p>
         </Card>
       )}
 
@@ -767,12 +584,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           Si un mariage ou un don est refusé, le motif s'affiche en rouge sous le métier
           (déjà marié, non noble, mineur…).
         </p>
-        {p && (
-          <p className="muted small">
-            👑 Pour nommer un <strong>ministre</strong> : métier « Ministre » dans la colonne
-            Métier, puis portefeuille dans la carte « 👑 Ministres » ci-dessus.
-          </p>
-        )}
       </Card>
 
       <Card title={`Population de ${nomPorteur} — ${classiqueVivants} vivants / ${pop.filter((c) => !estNoble(c)).length} au total`}>
@@ -802,7 +613,6 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           Population « classique » {cite ? 'de la cité libre' : 'du joueur'} (hors nobles){cite
             ? ' — le statut (Sain/Malade/Décédé) y est éditable : les cités libres ne passent pas au moteur démographique'
             : ' ; une ville transférée à un autre joueur emmène ses habitants classiques, la cour reste auprès de son joueur'}.
-          Metiers d'éducation « {C.p.metierProfesseur} » : enseignés par un Professeur vivant {cite ? 'de la cité' : 'du royaume'}.
         </p>
       </Card>
 

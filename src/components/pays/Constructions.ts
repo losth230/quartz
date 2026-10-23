@@ -19,11 +19,11 @@
 
 import type { City, GameState, Player } from '../../engine/types'
 import {
-  effetsTourBatiment, coutBatiment,
-  coutAmenagement, constructionRef, prerequisConstruction, detailGainsVille,
+  coutBatiment,
+  coutAmenagement, constructionRef, prerequisConstruction,
   parseCoutTexte, resumeConstruction,
   rangNiveau, batimentsConstructionsRefs, batimentsCapitale,
-  capitaleDe, aMinistre,
+  capitaleDe,
 } from '../../engine/engine'
 import { cultureDef, type Cfg } from '../../engine/gameData'
 import { statutMerveille, pastilleClass } from '../../engine/statutAuto'
@@ -33,17 +33,15 @@ import { reductionAmenagement, reductionBatiment, aTech } from '../../engine/pro
 import { resynchroniserTourisme } from '../../engine/regimes'
 import { fmt } from '../ui'
 import type { PickerCategorie } from '../Picker'
-import { FAM_BADGES, fmtCout, type ChoixSurintendant } from './pays-utils'
+import { FAM_BADGES, fmtCout } from './pays-utils'
 
 /** Fabrique le mutateur « construire » d'un joueur. */
 export function faireConstruire(o: {
   update: (m: (s: GameState) => void) => void
   joueur: number
   C: Cfg
-  setSurint: (v: ChoixSurintendant | null) => void
-  setSurintRes: (v: string) => void
 }) {
-  const { update, joueur, C, setSurint, setSurintRes } = o
+  const { update, joueur, C } = o
   const construire = (idx: number, nom: string, type: 'batiment' | 'amenagement', groupe?: string) =>
     update((s) => {
       const t = s.players.find((x) => x.n === joueur)
@@ -109,9 +107,9 @@ export function faireConstruire(o: {
         }
       }
       if (fam === 'Guilde') {
-        // Maitre des guildes (ministre, revue 2026-10-15) : la CAPITALE
-        //  peut accueillir une Guilde supplementaire (limite 2).
-        const maxGuildes = estCapitale && aMinistre(s, t, 'Maître des guildes') ? 2 : 1
+        // Retrait ministères (retour Thibaut 2026-10-23) : sans Maître
+        //  des guildes, une seule Guilde par ville (même en capitale).
+        const maxGuildes = 1
         const nbGui = ville.batiments.filter((b) => (constructionRef(b, C.config)?.famille ?? '') === 'Guilde').length
         if (nbGui >= maxGuildes) {
           s.log.push({
@@ -285,22 +283,6 @@ export function faireConstruire(o: {
         turn: s.turn, type: 'Système', joueur: t.n,
         texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}${sci > 0 ? ` — règle de culture : +${fmt(sci)} Science` : ''}${mervTxt}.`,
       })
-      // Surintendant des finances (marqueur (y)) : « Après avoir
-      //  construit un bâtiment, générez 1 Ressource de votre choix
-      //  produite par l'habitation par rang de l'habitation » — on
-      //  ouvre une carte de choix (ressources produites par les
-      //  habitants + bâtiments de la ville, nouveau bâtiment inclus).
-      if (type === 'batiment' && aMinistre(s, t, 'Surintendant des finances')) {
-        const prodVille = new Set<string>()
-        for (const r of Object.keys(detailGainsVille(s, t, ville, C).metiers)) prodVille.add(r)
-        for (const r of Object.keys(effetsTourBatiment(nom, C))) prodVille.add(r)
-        const options = [...prodVille].filter((r) => t.resources[r] !== undefined)
-        const qty = rangNiveau(ville, C)
-        if (options.length > 0 && qty > 0) {
-          setSurint({ idx, options, qty })
-          setSurintRes(options[0])
-        }
-      }
     })
   return construire
 }
@@ -308,7 +290,7 @@ export function faireConstruire(o: {
 /** Fabrique les catégories du sélecteur « + Construire » d'une ville
  *  (marqueur (y) : un bouton par famille, une catégorie par rang). */
 export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): (ville: City) => PickerCategorie[] {
-  const { state, p, C } = o
+  const { p, C } = o
   const batRefs = batimentsConstructionsRefs(C)
   // Bâtiments de capitale du référentiel (catégorie « Capitale » des
   //  cadres ville). (RETRAIT 2026-10-19, retour arbitre : les bâtiments
@@ -348,7 +330,7 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
       }
       if (fam === 'Guilde') {
         const nbGui = ville.batiments.filter((x) => (constructionRef(x, C.config)?.famille ?? '') === 'Guilde').length
-        const maxGui = estCapitale && aMinistre(state, p, 'Maître des guildes') ? 2 : 1
+        const maxGui = 1
         if (nbGui >= maxGui) warns.push(`Limite Guilde atteinte (${nbGui}/${maxGui} par ville).`)
       }
       if (fam === 'Merveille') {

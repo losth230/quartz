@@ -30,7 +30,7 @@ import type { Character, Player } from '../engine/types'
 import { cfgOf, cultureDef } from '../engine/gameData'
 import { resynchroniserTourisme } from '../engine/regimes'
 import { rangParDefaut } from '../engine/setup'
-import { citesSuzerainesDe, sermentsPossedes, facteurSacre } from '../engine/engine'
+import { citesSuzerainesDe, sermentsPossedes } from '../engine/engine'
 import { Card, Select, TextInput, Button, Badge, Field } from './ui'
 
 export function RoyaumeView({ joueur }: { joueur: number }) {
@@ -232,8 +232,7 @@ export function RoyaumeView({ joueur }: { joueur: number }) {
             </div>
             {rangDef && (
               <div className="muted small">
-                Conseil : {rangDef.ministres} Ministre(s)
-                {rangDef.bonus ? <> · Bonus : {rangDef.bonus}</> : null}
+                {rangDef.bonus ? <>Bonus : {rangDef.bonus}</> : null}
               </div>
             )}
             {(() => {
@@ -246,18 +245,15 @@ export function RoyaumeView({ joueur }: { joueur: number }) {
               const orDispo = p.resources['Or']?.stock ?? 0
               const nourrDispo = p.resources['Nourriture']?.stock ?? 0
               const okSer = nbSer >= (next.serments ?? 0)
-              // Chancelier de justice (ministère) : −25 % sur le coût du
-              // sacre (refonte 2026-10-14, appliqué au débit comme à l'affichage).
-              const fS = facteurSacre(state, p)
-              const orSacre = Math.floor((next.coutOr ?? 0) * fS)
-              const nourrSacre = Math.floor((next.coutNourriture ?? 0) * fS)
+              const orSacre = next.coutOr ?? 0
+              const nourrSacre = next.coutNourriture ?? 0
               const okOr = orDispo >= orSacre
               const okN = nourrDispo >= nourrSacre
               return (
                 <div style={{ marginTop: 8 }}>
                   <div className="muted small">
-                    Prochain rang : <strong>{next.nom}</strong> — sacre {orSacre} Or + {nourrSacre} Nourriture{fS < 1 ? ' (Chancelier de justice : −25 %)' : ''} ·
-                    {' '}{next.serments} serment(s) requis (vous en possédez {nbSer}) · conseil {next.ministres} Ministres.
+                    Prochain rang : <strong>{next.nom}</strong> — sacre {orSacre} Or + {nourrSacre} Nourriture ·
+                    {' '}{next.serments} serment(s) requis (vous en possédez {nbSer}).
                   </div>
                   {!okSer && (
                     <div className="muted small">
@@ -276,7 +272,7 @@ export function RoyaumeView({ joueur }: { joueur: number }) {
                       t.rang = next.nom
                       s.log.push({
                         turn: s.turn, type: 'Système', joueur: t.n,
-                        texte: `👑 Sacre : ${t.nom} devient ${next.nom} (sacre payé : ${orSacre} Or + ${nourrSacre} Nourriture${fS < 1 ? ' — Chancelier de justice : −25 %' : ''} ; conseil élargi à ${next.ministres} Ministres).`,
+                        texte: `👑 Sacre : ${t.nom} devient ${next.nom} (sacre payé : ${orSacre} Or + ${nourrSacre} Nourriture).`,
                       })
                     })}
                   >

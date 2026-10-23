@@ -17,13 +17,13 @@ import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
 import { Card, NumberInput, TextInput, Button, Badge } from './ui'
 import {
   BatimentsParams, AmenagementsParams, ProgresParams, PaysRangsParams,
-  HabitationsParams, MinisteresParams, CouleursParams,
+  HabitationsParams, CouleursParams,
 } from './ConfigTables'
 
 const ONGLETS = [
   'Formules', 'Métiers', 'Traits', 'Cultures', 'Régimes',
   'Bâtiments', 'Aménagements', 'Progrès', 'Pays & rangs', 'Habitations',
-  'Ministères', 'Couleurs',
+  'Couleurs',
   'Événements', 'Effets évts', 'Dynasties', 'Cartes', 'Offrandes',
   'Probabilités', 'Peuples & noms', 'Ressources', 'JSON',
 ] as const
@@ -139,7 +139,7 @@ export function ParamsPanel() {
               </tbody>
             </table>
           </div>
-          <Button onClick={() => setCfg((c) => { c.metiers.push({ metier: 'Nouveau métier', education: '', valeur1: 0, ressource1: '', valeur2: 0, ressource2: '', description: '', nobleSeul: false, regleGenre: '', attribution: 'Manuelle' }) })}>+ Ajouter un métier</Button>
+          <Button onClick={() => setCfg((c) => { c.metiers.push({ metier: 'Nouveau métier', valeur1: 0, ressource1: '', valeur2: 0, ressource2: '', description: '', nobleSeul: false, regleGenre: '', attribution: 'Manuelle' }) })}>+ Ajouter un métier</Button>
         </Card>
       )}
 
@@ -231,8 +231,6 @@ export function ParamsPanel() {
       {onglet === 'Pays & rangs' && <PaysRangsParams config={config} setCfg={setCfg} />}
 
       {onglet === 'Habitations' && <HabitationsParams config={config} setCfg={setCfg} />}
-
-      {onglet === 'Ministères' && <MinisteresParams config={config} setCfg={setCfg} />}
 
       {onglet === 'Couleurs' && <CouleursParams config={config} setCfg={setCfg} />}
 
@@ -399,13 +397,6 @@ export function ParamsPanel() {
             <TextInput
               value={config.ressources.join(', ')}
               onChange={(v) => setCfg((c) => { c.ressources = v.split(',').map((x) => x.trim()).filter(Boolean) })}
-            />
-          </label>
-          <label className="field">
-            <span className="field-label">Éducations ({config.educations.length})</span>
-            <TextInput
-              value={config.educations.join(', ')}
-              onChange={(v) => setCfg((c) => { c.educations = v.split(',').map((x) => x.trim()).filter(Boolean) })}
             />
           </label>
           <p className="muted small">Attention : les stocks existants des joueurs sont conservés ; renommer une ressource rend son stock orphelin (récupérable à la main dans l'onglet « Pays »).</p>

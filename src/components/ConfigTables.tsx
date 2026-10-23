@@ -337,7 +337,7 @@ export function EffetsTechEditor({ tech, ressources, metiers, set }: {
 export function PaysRangsParams({ config, setCfg }: TableProps) {
   // Auto-migration des rangs de pays : une configuration antérieure à la
   // refonte (ancienne table à blocs Féodal/Républicain) repasse sur la
-  // nouvelle échelle (coutOr/coutNourriture/serments/ministres) pour que
+  // nouvelle échelle (coutOr/coutNourriture/serments) pour que
   // l'éditeur écrive au bon format.
   useEffect(() => {
     const raw = config.paysRangs
@@ -355,11 +355,11 @@ export function PaysRangsParams({ config, setCfg }: TableProps) {
     <Card title="Rangs de pays — échelle féodale unique">
       <p className="muted small">
         Montée par <strong>sacre</strong> : payer Or + Nourriture et posséder les <strong>serments</strong>
-        requis (vassal ou cité libre sous suzeraineté). Chaque rang fixe le nombre de <strong>Ministres</strong>.
+        requis (vassal ou cité libre sous suzeraineté).
       </p>
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments requis</th><th>Ministres</th><th>Bonus (plateau)</th><th></th></tr></thead>
+          <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments requis</th><th>Bonus (plateau)</th><th></th></tr></thead>
           <tbody>
             {config.paysRangs.map((r, i) => (
               <tr key={i}>
@@ -367,7 +367,6 @@ export function PaysRangsParams({ config, setCfg }: TableProps) {
                 <td><NumberInput value={r.coutOr} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].coutOr = v })} /></td>
                 <td><NumberInput value={r.coutNourriture} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].coutNourriture = v })} /></td>
                 <td><NumberInput value={r.serments} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].serments = v })} /></td>
-                <td><NumberInput value={r.ministres} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].ministres = v })} /></td>
                 <td><TextInput value={r.bonus} onChange={(v) => setCfg((c) => { c.paysRangs[i].bonus = v })} /></td>
                 <td>
                   <Button tone="danger" onClick={() => setCfg((c) => { c.paysRangs.splice(i, 1) })}>✕</Button>
@@ -378,7 +377,7 @@ export function PaysRangsParams({ config, setCfg }: TableProps) {
         </table>
       </div>
       <Button onClick={() => setCfg((c) => {
-        c.paysRangs.push({ nom: 'Nouveau rang', coutOr: 0, coutNourriture: 0, serments: 0, ministres: 1, bonus: '' })
+        c.paysRangs.push({ nom: 'Nouveau rang', coutOr: 0, coutNourriture: 0, serments: 0, bonus: '' })
       })}>+ Ajouter un rang</Button>
     </Card>
   )
@@ -434,58 +433,6 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
   )
 }
 
-// ── Ministères ──────────────────────────────────────────────────────────
-
-export function MinisteresParams({ config, setCfg }: TableProps) {
-  return (
-    <Card title="Ministères — portefeuilles paramétrables">
-      <p className="muted small">
-        Chaque rang de pays octroie <strong>1 Ministre</strong> (nomination : nobles et dynasties).
-        Portefeuilles <strong>cumulables</strong>, rang minimum selon « Pays & rangs » ; mode
-        <strong> Auto</strong> = appliqué par l'application, mode <strong>Plateau</strong> = à la table.
-        Supprimer ou renommer une ligne est <strong>définitif</strong> ; seule une table vidée
-        entièrement retrouve les valeurs du classeur (marqueur (x)).
-      </p>
-      <table className="tbl small">
-        <thead><tr><th>Ministère</th><th>Rang minimum</th><th>Mode</th><th>Effet</th><th></th></tr></thead>
-        <tbody>
-          {config.ministeres.map((m, i) => (
-            <tr key={i}>
-              <td><TextInput value={m.ministere} onChange={(v) => setCfg((c) => { c.ministeres[i].ministere = v })} /></td>
-              <td>
-                <Select
-                  value={m.rangMinimum ?? (config.paysRangs ?? [])[0]?.nom ?? ''}
-                  options={(config.paysRangs ?? []).map((r) => ({ value: r.nom, label: r.nom }))}
-                  onChange={(v) => setCfg((c) => { c.ministeres[i].rangMinimum = v })}
-                />
-              </td>
-              <td>
-                <Select
-                  value={m.mode ?? 'Plateau'}
-                  options={[
-                    { value: 'Auto', label: 'Auto (application)' },
-                    { value: 'Plateau', label: 'Plateau' },
-                  ]}
-                  onChange={(v) => setCfg((c) => { c.ministeres[i].mode = v })}
-                />
-              </td>
-              <td><TextInput value={m.effet} onChange={(v) => setCfg((c) => { c.ministeres[i].effet = v })} /></td>
-              <td><Button tone="danger" onClick={() => setCfg((c) => { c.ministeres.splice(i, 1) })}>✕</Button></td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <Button onClick={() => setCfg((c) => {
-        c.ministeres.push({
-          ministere: 'Nouveau ministère',
-          effet: '',
-          rangMinimum: (c.paysRangs ?? [])[0]?.nom ?? '',
-          mode: 'Plateau',
-        })
-      })}>+ Ajouter un ministère</Button>
-    </Card>
-  )
-}
 
 // ── Couleurs ────────────────────────────────────────────────────────────
 

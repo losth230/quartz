@@ -12,15 +12,11 @@ import { peuplerNouvelleVille } from '../../engine/setup'
 import type { Cfg } from '../../engine/gameData'
 import { Card, Select, Button } from '../ui'
 import { VilleCarte } from './VilleCarte'
-import type { ChoixSurintendant } from './pays-utils'
-
-export function VillesCarte({ joueur, p, C, setPlayer, setSurint, setSurintRes }: {
+export function VillesCarte({ joueur, p, C, setPlayer }: {
   joueur: number
   p: Player
   C: Cfg
   setPlayer: (fn: (p: Player, s: GameState) => void) => void
-  setSurint: (v: ChoixSurintendant | null) => void
-  setSurintRes: (v: string) => void
 }) {
   // Type d'habitation de la prochaine ville ajoutée (retour Thibaut,
   // marqueur (r) : choisir ville ou château à la création).
@@ -35,7 +31,6 @@ export function VillesCarte({ joueur, p, C, setPlayer, setSurint, setSurintRes }
           <VilleCarte
             key={idx} idx={idx} ville={ville} joueur={joueur} p={p} C={C}
             setPlayer={setPlayer}
-            setSurint={setSurint} setSurintRes={setSurintRes}
           />
         ))}
       </div>
