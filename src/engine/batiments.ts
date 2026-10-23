@@ -21,7 +21,7 @@ import { aLaboratoireFalheim } from './merveilles'
 import { capitaleDe } from './factions'
 import {
   constructionRef, coutBatimentRef, effetsConstructionRef, garnisonConstructionRef,
-  parseCoutTexte, batimentsRefs, type ConstructionRef,
+  batimentsRefs, type ConstructionRef,
 } from './constructions'
 
 /** Référence du référentiel pour un bâtiment (coût / production / description
@@ -97,17 +97,15 @@ export function productionTourismeBatiment(nom: string, C: Cfg, groupe?: string)
   return ref ? (effetsConstructionRef(ref)['Tourisme'] ?? 0) : 0
 }
 
-// ── Coût de construction (référentiel canonique, repli classeur) ────────
+// ── Coût de construction (référentiel canonique) ────────────────────────
 
-/** Coût de construction d'un bâtiment : texte de coût EXACT du référentiel
- *  (groupe optionnel : Ville / Château / Capitale), repli sur l'ancien
- *  analyseur des textes « Coût » de batimentsVille / batimentsChateau. */
+/** Coût de construction d'un bâtiment : texte de coût EXACT du
+ *  référentiel canonique (groupe optionnel : Ville / Château /
+ *  Capitale). Plus de repli sur les anciennes tables batimentsVille /
+ *  batimentsChateau (retour Thibaut 2026-10-23, dette legacy
+ *  retirée) : une construction hors référentiel n'a pas de coût. */
 export function coutBatiment(nom: string, C: Cfg, groupe?: string): Record<string, number> {
-  const ref = constructionRef(nom, C.config, groupe)
-  if (ref) return parseCoutTexte(ref.cout)
-  const listes = [...(C.config.batimentsVille ?? []), ...(C.config.batimentsChateau ?? [])]
-  const ligne = listes.find((b: any) => b?.nom === nom)
-  return parseCoutTexte(ligne?.cout ?? '')
+  return coutBatimentRef(nom, C.config, groupe)
 }
 
 /** Bâtiments d'une ville neutralisés par un remplaçant présent. */

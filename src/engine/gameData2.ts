@@ -8,8 +8,17 @@ import type { Cfg } from '../config/defaultConfig'
 export type { Cfg }
 
 
+/** Définition moteur (santé / écoles) d'un bâtiment — vue `batiments`
+ *  dérivée de la table canonique `constructions` (retour Thibaut
+ *  2026-10-23, retrait des tables legacy). Le classeur mélange les
+ *  orthographes (« École » / « Ecole ») : appariement d'abord EXACT,
+ *  puis insensible aux accents — les vieilles parties ne perdent ni
+ *  leurs écoles ni leurs bonus de santé. */
 export function buildingDef(nom: string, cfg?: GameConfig): BuildingDef | undefined {
-  return (cfg ?? DEFAULT_CONFIG).batiments.find((b) => b.nom === nom)
+  const liste = (cfg ?? DEFAULT_CONFIG).batiments
+  const sansAccents = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()
+  return liste.find((b) => b.nom === nom)
+    ?? liste.find((b) => sansAccents(b.nom) === sansAccents(nom))
 }
 
 /** Rang d'école le plus élevé d'une ville (0 = aucune école). */

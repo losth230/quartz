@@ -83,8 +83,12 @@ export interface HabitationDef {
   rang: string
   cout: string
   habitantsRequis: number
-  /** métiers disponibles à la base du rang (vague 3b, ex. « 50 Chasseurs, 2 Gardes ») */
-  metiersDisponibles: string
+  /** métiers disponibles à la BASE du rang, format STRUCTURÉ (retour
+   *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
+   *  SINGULIER, même format que les `emplacements` des constructions ;
+   *  l'ancien TEXTE « metiersDisponibles » est converti par la
+   *  migration ciblée de cfgOf, puis la clé disparaît). */
+  metiersBase: EmplacementDef[]
   /** domiciles disponibles (affichage seul, ex. « 50 maisons, 10 Auberge ») */
   domicilesDisponibles: string
 }
@@ -126,8 +130,11 @@ export interface PeupleRef {
   ageIII?: RegleFaction[]
 }
 export interface FicheLigne { label: string; texte: string }
-export interface BatimentRef { categorie: string; nom: string; cout: string; effet: string }
-export interface AmenagementRef { amenagement: string; type: string; rang: string; effet: string }
+// Retrait 2026-10-23 (retour Thibaut, dette legacy) : les interfaces
+//  BatimentRef / AmenagementRef accompagnaient les tables
+//  pré-canonicalisation (batimentsVille, batimentsChateau,
+//  batimentsCouts, amenagements) — supprimées avec elles (la table
+//  canonique `constructions` les remplace).
 /** Table canonique des constructions (feuille « Ville » du classeur 7.19) :
  *  coût EXACT, production EXACTE (analysable par le moteur) et description
  *  EXACTE du classeur — parfois similaires. */
@@ -175,6 +182,15 @@ export interface ConstructionRef {
    *  `places` postes de `metier` (cap par ville = somme des emplacements,
    *  + cap par défaut du Chasseur). Champ optionnel : aucun emplacement. */
   emplacements?: EmplacementDef[]
+  /** Effets MOTEUR d'une construction (santé / écoles — retour
+   *  Thibaut 2026-10-23, retrait des tables legacy batimentsVille /
+   *  batimentsChateau) : rang d'école (1-3) et bonus de santé, lus
+   *  via la vue `batiments` (BuildingDef) dérivée de cette table.
+   *  Champ optionnel : aucun effet moteur. */
+  ecoleRang?: number
+  malContraction?: number
+  bonusGuerison?: number
+  bonusGuerisonGlobal?: number
 }
 /** Un emplacement de métier accordé par une construction (vague 3a). */
 export interface EmplacementDef {
@@ -295,10 +311,6 @@ export interface GameConfig {
   metiersEffets: { metier: string; effet: string; revocation: string }[]
   peuplesLibres: PeupleRef[]
   peuplesAutres: PeupleRef[]
-  batimentsVille: BatimentRef[]
-  batimentsChateau: BatimentRef[]
-  batimentsCouts: Record<string, unknown>[]
-  amenagements: AmenagementRef[]
   constructions: ConstructionRef[]
   typesHabitation: HabitationDef[]
   progres: ProgresArbre[]
@@ -561,34 +573,43 @@ function normaliserCultures(): CultureDef[] {
 }
 
 function normaliserBatiments(): BuildingDef[] {
-  // Effets moteur (santé / écoles) — valeurs issues du livret, modifiables
-  const effets: Record<string, Partial<BuildingDef>> = {
-    'Herboristerie': { categorie: 'Santé', malContraction: 0.05, bonusGuerison: 0.05 },
-    'Clinique': { categorie: 'Santé', malContraction: 0.10, bonusGuerison: 0.10 },
-    'Guilde des médecins': { categorie: 'Santé', bonusGuerisonGlobal: 0.10 },
-    'Ecole élémentaire': { categorie: 'Éducation', ecoleRang: 1 },
-    'École élémentaire': { categorie: 'Éducation', ecoleRang: 1 },
-    'Ecole intermédiaire': { categorie: 'Éducation', ecoleRang: 2 },
-    'École intermédiaire': { categorie: 'Éducation', ecoleRang: 2 },
-    'Ecole supérieure': { categorie: 'Éducation', ecoleRang: 3 },
-    'École supérieure': { categorie: 'Éducation', ecoleRang: 3 },
-  }
-  const vus = new Set<string>()
+  // Retour Thibaut 2026-10-23 (retrait de la dette legacy) : les
+  //  effets moteur (santé / écoles) vivent DÉSORMAIS dans la table
+  //  canonique `constructions` (champs ecoleRang / malContraction /
+  //  bonusGuerison / bonusGuerisonGlobal) — les anciennes tables
+  //  batimentsVille / batimentsChateau ne sont plus lues. La vue
+  //  `batiments` (BuildingDef) n'expose QUE les constructions à
+  //  effet moteur : c'est tout ce que lisent gameData2 (écoles) et
+  //  sante.ts (santé), et le wiki n'affiche que celles-ci.
   const out: BuildingDef[] = []
-  const push = (nom: string, categorie: string, effet: string) => {
-    if (!nom || vus.has(nom)) return
-    // lignes parasites du classeur (effets seuls, numéros de colonne)
-    if (/^\d+$/.test(nom) || nom.startsWith('Consomme ')) return
-    vus.add(nom)
+  for (const c of ref.constructions) {
+    const moteur = (c.ecoleRang ?? 0) > 0 || (c.malContraction ?? 0) > 0
+      || (c.bonusGuerison ?? 0) > 0 || (c.bonusGuerisonGlobal ?? 0) > 0
+    if (!moteur) continue
+    if (out.some((b) => b.nom === c.nom)) continue // doublons Ville/Château : une vue par nom
     out.push({
-      nom, categorie, effet,
-      ecoleRang: 0, malContraction: 0, bonusGuerison: 0, bonusGuerisonGlobal: 0,
-      ...(effets[nom] ?? {}),
+      nom: c.nom,
+      categorie: (c.ecoleRang ?? 0) > 0 ? 'Éducation' : 'Santé',
+      effet: c.description,
+      ecoleRang: c.ecoleRang ?? 0,
+      malContraction: c.malContraction ?? 0,
+      bonusGuerison: c.bonusGuerison ?? 0,
+      bonusGuerisonGlobal: c.bonusGuerisonGlobal ?? 0,
     })
   }
-  for (const b of ref.batimentsVille) push(b.nom, b.categorie || 'Ville', b.effet || '')
-  for (const b of ref.batimentsChateau) push(b.nom, b.categorie || 'Château', b.effet || '')
-  for (const nom of Object.keys(effets)) if (!vus.has(nom)) push(nom, effets[nom].categorie as string, 'Bâtiment à effet moteur (santé / éducation).')
+  // « Guilde des médecins » (livret 7.19 : +10 % de guérison globale)
+  //  n'a AUCUNE ligne dans la table canonique (le classeur ne lui
+  //  connaît pas de coût) : elle reste NON constructible mais son
+  //  effet moteur continue de s'appliquer aux villes qui la portent
+  //  (comportement historique conservé). POINT OUVERT (arbitrage
+  //  Thibaut) : l'ajouter au référentiel constructible avec un coût.
+  if (!out.some((b) => b.nom === 'Guilde des médecins')) {
+    out.push({
+      nom: 'Guilde des médecins', categorie: 'Santé',
+      effet: 'Bâtiment à effet moteur (santé / éducation).',
+      ecoleRang: 0, malContraction: 0, bonusGuerison: 0, bonusGuerisonGlobal: 0.10,
+    })
+  }
   return out
 }
 
@@ -682,10 +703,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   metiersEffets: ref.metiersEffets,
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  batimentsVille: ref.batimentsVille,
-  batimentsChateau: ref.batimentsChateau,
-  batimentsCouts: ref.batimentsCouts,
-  amenagements: ref.amenagements,
   constructions: ref.constructions,
   typesHabitation: ref.typesHabitation,
   progres: ref.progres,
@@ -869,18 +886,49 @@ export function realignerAmenagements(
 
 /** Table des types d'habitation (Ville / Château) d'une configuration
  *  existante — défauts du classeur si absents ou vides. */
+/** Parse le format de SAISIE TEXTE des métiers de base d'un rang
+ *  (« 50 Chasseurs, 2 Gardes » — colonne historique du classeur, champ
+ *  d'édition des Référentiels) en tableau STRUCTURÉ `metiersBase`
+ *  (retour Thibaut 2026-10-23 : métiers TOUJOURS AU SINGULIER — un
+ *  « s » final est retiré). Les entrées non reconnues dans
+ *  `metiersConnus` (quand fourni) sont ignorées. Le STOCKAGE est
+ *  structuré : ce parse ne vit qu'à la SAISIE (éditeur Référentiels)
+ *  et dans la migration one-shot de cfgOf — jamais au runtime moteur. */
+export function parseMetiersBaseTexte(
+  texte: string, metiersConnus?: string[],
+): EmplacementDef[] {
+  const out: EmplacementDef[] = []
+  if (!texte) return out
+  const connus = metiersConnus ? new Set(metiersConnus) : undefined
+  for (const morceau of texte.split(',')) {
+    const m = /^(\d+)\s+(.+)$/.exec(morceau.trim())
+    if (!m) continue
+    let nom = m[2].trim()
+    if (nom.endsWith('s')) nom = nom.slice(0, -1)
+    if (connus && !connus.has(nom)) continue
+    const existant = out.find((e) => e.metier === nom)
+    if (existant) existant.places += Number(m[1])
+    else out.push({ metier: nom, places: Number(m[1]) })
+  }
+  return out
+}
+
 export function migrerTypesHabitation(list: HabitationDef[] | undefined): HabitationDef[] {
   if (!Array.isArray(list) || list.length === 0) return DEFAULT_CONFIG.typesHabitation
   // Vague 3b (2026-10-22) : les configs sauvegardées avant le rework
-  //  portent consommation/garnison au lieu de metiersDisponibles/
+  //  portent consommation/garnison au lieu de metiersBase/
   //  domicilesDisponibles — les colonnes manquantes sont complétées
   //  depuis la ligne du DEFAULT_CONFIG de même (type, rang) ; les
   //  anciens champs sont ignorés (consommation et garnison de base
-  //  supprimées par arbitrage).
+  //  supprimées par arbitrage). Nettoyage 2026-10-23 (retour Thibaut,
+  //  formats unifiés) : les métiers de base vivent en TABLEAU
+  //  structuré `metiersBase` (métiers au singulier) — l'ancien TEXTE
+  //  « metiersDisponibles » est converti par la migration ciblée de
+  //  cfgOf, qui joue même sur les configs déjà convergées.
   for (const d of list) {
-    if (d.metiersDisponibles === undefined || d.domicilesDisponibles === undefined) {
+    if (d.metiersBase === undefined || d.domicilesDisponibles === undefined) {
       const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
-      d.metiersDisponibles = d.metiersDisponibles ?? ref?.metiersDisponibles ?? ''
+      d.metiersBase = d.metiersBase ?? ref?.metiersBase ?? []
       d.domicilesDisponibles = d.domicilesDisponibles ?? ref?.domicilesDisponibles ?? ''
     }
   }
@@ -1567,6 +1615,32 @@ export function cfgOf(config?: GameConfig): Cfg {
   //    typesHabitation, vague 3b) n'est plus lue nulle part : la clé
   //    orpheline des configs sauvegardées n'est plus persistée.
   delete (merged as { rangsHabitation?: unknown }).rangsHabitation
+  //  Nettoyage dette legacy (retour Thibaut 2026-10-23, revue
+  //  structure/SOLID — « supprime ces vieilles dettes ») :
+  //  · les métiers de base des rangs passent au format STRUCTURÉ
+  //    `metiersBase` (métiers au singulier, même format que les
+  //    `emplacements` des constructions) ; l'ancien TEXTE
+  //    « metiersDisponibles » est converti une bonne fois pour toutes,
+  //    même sur les configs déjà convergées, puis la clé disparaît ;
+  //  · les tables pré-canonicalisation (batimentsVille,
+  //    batimentsChateau, batimentsCouts, amenagements — doublées par
+  //    la table canonique `constructions`) ne sont plus lues nulle
+  //    part : leurs clés ne sont plus persistées (même patron que
+  //    rangsHabitation).
+  for (const h of merged.typesHabitation ?? []) {
+    const ancien = (h as { metiersDisponibles?: unknown }).metiersDisponibles
+    if (h.metiersBase === undefined) {
+      h.metiersBase = typeof ancien === 'string'
+        ? parseMetiersBaseTexte(ancien, merged.metiers.map((m) => m.metier))
+        : DEFAULT_CONFIG.typesHabitation.find(
+            (t) => t.type === h.type && t.rang === h.rang,
+          )?.metiersBase ?? []
+    }
+    delete (h as { metiersDisponibles?: unknown }).metiersDisponibles
+  }
+  for (const cle of ['batimentsVille', 'batimentsChateau', 'batimentsCouts', 'amenagements'] as const) {
+    delete (merged as unknown as Record<string, unknown>)[cle]
+  }
   return {
     p: merged.params,
     ressources: merged.ressources,

@@ -29,7 +29,7 @@ import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { aMinistre, fluxFinSaisonMinisteres } from './ministeres'
 import { garnisonBatiment, productionTourismeBatiment } from './batiments'
 import { rangPaysNiveau } from './factions'
-import { nomRang } from './habitations'
+import { nomRang, rangsDefsType } from './habitations'
 import { garnisonProgresVille, lignesGarnisonProgresVille, garnisonMinimaleProgres, fluxProgresJoueur } from './progresAuto'
 import { effetsCommerceJoueur } from './commerce'
 import { reglesRegimes, reglesCultures } from '../rules/registry'
@@ -41,12 +41,12 @@ export { nomRang } from './habitations'
  *  Donjon, 3 = Grande Cité / Forteresse — ordre de la table
  *  typesHabitation pour le type de la ville). Défaut : 1. */
 export function rangNiveau(ville: City, C: Cfg): number {
-  const type = ville.type ?? 'Ville'
-  const nom = nomRang(ville.rang ?? 'Hameau')
-  const table = C.config.typesHabitation ?? []
+  const nom = nomRang(ville.rang ?? 'Hameau').toLowerCase()
   // niveau DANS l'échelle du type de la ville (1er rang du type = 1)
-  const rangsType = table.filter((d) => d.type.toLowerCase() === type.toLowerCase())
-  const idx = rangsType.findIndex((d) => nomRang(d.rang).toLowerCase() === nom.toLowerCase())
+  // — lookup unique via rangsDefsType (habitations.ts, retour
+  // Thibaut 2026-10-23 : déduplication des lookups de rangs).
+  const idx = rangsDefsType(ville.type ?? 'Ville', C)
+    .findIndex((d) => nomRang(d.rang).toLowerCase() === nom)
   return idx >= 0 ? idx + 1 : 1
 }
 

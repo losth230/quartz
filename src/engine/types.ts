@@ -175,8 +175,12 @@ export interface HabitationDef {
   rang: string
   cout: string
   habitantsRequis: number
-  /** métiers disponibles à la base du rang, ex. « 50 Chasseurs, 2 Gardes » */
-  metiersDisponibles: string
+  /** métiers disponibles à la base du rang, format STRUCTURÉ (retour
+   *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
+   *  SINGULIER, même format que les `emplacements` des constructions ;
+   *  l'ancien TEXTE « metiersDisponibles » est converti une bonne fois
+   *  pour toutes par la migration ciblée de cfgOf). */
+  metiersBase: Array<{ metier: string; places: number }>
   /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » (affichage seul) */
   domicilesDisponibles: string
 }
