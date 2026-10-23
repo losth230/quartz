@@ -85,7 +85,6 @@ function perso(
     pereBioId: null,
     enfantBatard: false,
     metier: null,
-    education: null,
     fecondite: 1,
     armee: null,
   }

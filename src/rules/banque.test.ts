@@ -112,7 +112,8 @@ test('conditions peuple / saison / vassal (ET logique)', () => {
 test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la règle de banque', () => {
   const C = cfgOf(undefined)
   const refs = C.config.constructions ?? []
-  assert.ok(refs.length > 50, 'référentiel constructions attendu')
+  assert.ok(refs.length > 30,
+    'référentiel constructions attendu (41 entrées de rang 1 après la simplification 2026-10-23 : rangs 2+ supprimés)')
   const regles = reglesConstructions(undefined)
   assert.equal(regles.length, refs.filter((r) => r.effets?.length).length)
   const parNom = new Map(regles.map((r) => [r.nom, r]))
@@ -160,17 +161,20 @@ test('SANS règle de banque : production NULLE sur tous les canaux (repli texte 
   }
 })
 
-test('Tourisme = FLUX NORMAL via la banque (Chapelle +35 : ni instantané, ni stock cumulé)', () => {
+test('Tourisme = FLUX NORMAL via la banque (Hôtel de tourisme +12 : ni instantané, ni stock cumulé)', () => {
+  // (la Chapelle est partie avec les constructions de rang 2+,
+  //  simplification 2026-10-23 — l'Hôtel de tourisme, rang 1, la remplace
+  //  comme témoin du Tourisme-flux.)
   const refs = cfgOf(undefined).config.constructions ?? []
-  const chapelle = refs.find((r) => r.nom === 'Chapelle')
-  assert.ok(chapelle?.effets?.length, 'la Chapelle doit avoir des effets structurés')
+  const hotel = refs.find((r) => r.nom === 'Hôtel de tourisme')
+  assert.ok(hotel?.effets?.length, 'l Hôtel de tourisme doit avoir des effets structurés')
   // le Tourisme se lit dans le FLUX de la règle de banque…
-  assert.equal(effetsConstructionRef(chapelle)['Tourisme'], 35)
+  assert.equal(effetsConstructionRef(hotel)['Tourisme'], 12)
   // …et n'est PLUS un instantané « crédité une fois » (sémantique retirée).
-  assert.equal(instantanesConstructionRef(chapelle)['Tourisme'], undefined)
+  assert.equal(instantanesConstructionRef(hotel)['Tourisme'], undefined)
   // idem productionTourismeBatiment (voie unique du stock = production).
   const C = cfgOf(undefined)
-  assert.equal(productionTourismeBatiment('Chapelle', C, 'Ville'), 35)
+  assert.equal(productionTourismeBatiment('Hôtel de tourisme', C, 'Ville'), 12)
 })
 
 test('Champ / Rizière (vague 3a) : plus AUCUN flux direct — la production passe par les emplacements de Fermier (été)', () => {

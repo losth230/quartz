@@ -57,8 +57,6 @@ function perso(id: string, metier: string, statut: Character['statut'] = 'Sain')
     pereBioId: null,
     enfantBatard: false,
     metier,
-    ministere: null,
-    education: null,
     fecondite: 1,
     armee: null,
   }

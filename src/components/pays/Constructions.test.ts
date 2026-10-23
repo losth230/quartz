@@ -38,13 +38,30 @@ async function construireDe(state: ReturnType<typeof partie>) {
     update: (m) => m(state),
     joueur: p.n,
     C,
-    setSurint: () => { /* sans Surintendant dans ces tests */ },
-    setSurintRes: () => { /* idem */ },
   })
+}
+
+/** Simplification (retour Thibaut 2026-10-23) : les aménagements de
+ *  rang 2+ (tiers 2/3) sont retirés du RÉFÉRENTIEL, mais la mécanique
+ *  d'amélioration (remplaceAmenagement) reste en place, prête à les
+ *  recevoir à leur retour — les tests réinjectent les defs tier
+ *  localement (forme exacte de l'ancien référentiel). */
+function injecterTiers(state: ReturnType<typeof partie>) {
+  state.config!.constructions.push(
+    { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 2)',
+      terrain: 'Baleine', cout: '15 Or + 3 Pierre', production: '', description: '',
+      effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Baleinier',
+      emplacements: [{ metier: 'Pêcheur', places: 5 }, { metier: 'Commerçant', places: 5 }] },
+    { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 3)',
+      terrain: 'Baleine', cout: '35 Or + 3 Fer', production: '', description: '',
+      effets: [], rangMinHabitation: 3, remplaceAmenagement: 'Baleinier (tier 2)',
+      emplacements: [{ metier: 'Pêcheur', places: 7 }, { metier: 'Commerçant', places: 10 }] },
+  )
 }
 
 test('vague 3c : « Baleinier (tier 2) » REMPLACE le Baleinier de la ville et débite 15 Or + 3 Pierre', async () => {
   const state = partie()
+  injecterTiers(state)
   const p = state.players[0]
   const ville = p.villes[0]
   ville.type = 'Ville'
@@ -66,6 +83,7 @@ test('vague 3c : « Baleinier (tier 2) » REMPLACE le Baleinier de la ville et d
 
 test('vague 3c : « Baleinier (tier 3) » remplace le tier 2 et débite 35 Or + 3 Fer', async () => {
   const state = partie()
+  injecterTiers(state)
   const p = state.players[0]
   const ville = p.villes[0]
   ville.type = 'Ville'
@@ -83,6 +101,7 @@ test('vague 3c : « Baleinier (tier 3) » remplace le tier 2 et débite 35 Or + 
 
 test('vague 3c : garde-fous NON BLOQUANTS — rang insuffisant ⚠, tier inférieur absent ⚠ (mais enregistré)', async () => {
   const state = partie()
+  injecterTiers(state)
   const p = state.players[0]
   const ville = p.villes[0]
   ville.type = 'Ville'
