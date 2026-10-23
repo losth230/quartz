@@ -1946,6 +1946,95 @@ attendus + docs, purge vérifiée fonctionnellement. NB consigné : le mot
 voie Culturelle) — concept plateau, à réarbitrer si les dogmes
 reviennent ; l'ancien contenu reste dans l'historique git.
 
+## Suppression des événements (saison + dynastie) et purge de l'Influence (2026-10-24, retour arbitre)
+
+Arbitrage Thibaut, immédiatement après la purge des dogmes : « purge
+l'influence, purge également les événements de dynastie ainsi que les
+événements d'hiver et d'été ». Inventaire préalable (grep exhaustif,
+rien de touché avant) :
+
+- **`events`** (référentiel, 18 entrées été/hiver) : système CÂBLÉ au
+  moteur — au changement de saison, `runTurn` tirait un événement
+  pondéré, lançait un dé de danger (+ `modDanger` cumulatif,
+  « Sombres présages »), affichait le texte du niveau correspondant et
+  appliquait les effets chiffrés (`eventEffets` × params
+  `evMult*`, seuils `dangerSeuilForte/Extreme` ; Peste → risque de
+  maladie supplémentaire).
+- **`dynasties`** (référentiel, 38 cartes) : tirée à CHAQUE tour pour
+  CHAQUE joueur (étape 2 de `runTurn`), stockée dans `Player.dynastie`
+  {nom, description}, effets chiffrés via `dynastieEffets`
+  ('(aléatoire)', guérison). Le mini « Événement de dynastie » de la
+  page Royaume l'affichait, avec la mention « ce n'est pas la famille
+  au pouvoir ».
+- **Influence** : mécanique REMPLACÉE par les émissaires depuis
+  longtemps (arbitrage fondateur) — il ne restait que des RÉSIDUS de
+  texte (regleCitesLibres « gagner de l'influence », aide des cités
+  libres « tentatives d'influence ») et les 4 rangs républicains du
+  diag autonome (Commune/District/Union/Confédération, bonus
+  libellés « 10/25 Influence avec une cité libre »).
+
+Distinctions critiques respectées (vérifiées au grep avant de toucher
+quoi que ce soit) : l'INFLUENCE CULTURELLE (`applyCultureInfluence`,
+conversions de villes par le tourisme) est une mécanique réelle,
+intacte ; `Character.dynastie` est le NOM DE FAMILLE du personnage,
+concept noyau intact ; `cp_events` (fusion.ts, supabase/client.ts,
+Edge Function) est la table de SYNCHRO multijoueur, sans rapport ;
+les types de journal `'Événement'`/`'Dynastie'` restent dans l'union
+`LogEntry` et l'affichage du journal (plus produits, mais les
+vieilles parties continuent d'afficher leurs anciennes lignes).
+
+Modifications (15 fichiers code + 2 docs) :
+
+- `src/config/referentiels.json` : tables `events` et `dynasties`
+  supprimées ; `regleCitesLibres` reformulée en émissaires.
+- `src/config/defaultConfig.ts` : types EventDef/DynastieDef/
+  EffetsDef retirés (docblocks historiques datés, règle 9) ; champs
+  events/dynasties/eventEffets/dynastieEffets retirés de GameConfig,
+  de l'interface Cfg et de DEFAULT_CONFIG ; BASE_EVENT_EFFECTS /
+  BASE_DYNASTIE_EFFECTS supprimés ; purge ciblée dans `cfgOf`
+  (4 `delete` inconditionnels, patron taxes25) + migration
+  regleCitesLibres par remplacement de fragments idempotent —
+  SANS bump de SCHEMA_VERSION_CONFIG (un bump renverrait les configs
+  convergées dans la branche de migration complète qui ré-ajouterait
+  les entrées supprimées, même raisonnement que les dogmes).
+- `src/config/params.ts` : params evMultFaible/Moyenne/Forte/Extreme
+  et dangerSeuilForte/Extreme retirés (type, défauts, PARAM_META) —
+  le groupe « Événements » de l'onglet Formules disparaît.
+- `src/engine/types.ts` : EventDef/DynastieDef retirés ;
+  `Player.dynastie` → optionnel (compat vieilles saves, plus aucun
+  producteur/lecteur) ; `'Événement'`/`'Dynastie'` conservés dans
+  LogEntry avec docblock ; `GameState.modDanger` → optionnel.
+- `src/engine/setup.ts` : `modDanger: 0` retiré des états initiaux.
+- `src/engine/saisons.ts` : ne garde que `saisonForTurn` ;
+  `applyEventEffect` et `applyDynastieCard` supprimés (docblock
+  historique daté).
+- `src/engine/tour.ts` : étape 1 de `runTurn` réduite à
+  `if (newSaison !== state.saison) state.saison = newSaison` ;
+  étape 2 (carte dynastie) supprimée ; import nettoyé.
+- `src/engine/gameData2.ts` : en-tête périmé corrigé (ne mentionne
+  plus événements/cartes dynastie).
+- UI : `ParamsPanel.tsx` (4 onglets et sections retirés, import Badge
+  nettoyé), `OngletsAideMemoire.tsx` (compteurs Événements/Cartes
+  dynastie retirés), `CarteRoyaume.tsx` (mini « Événement de
+  dynastie » retiré + docblocks), `RoyaumeView.tsx` (docblock),
+  `pays/AideAuto.tsx` (« Levées d'armées et dés du plateau »),
+  `CitesLibresView.tsx` (« tentatives d'émissaires »).
+- `scripts/diag.ts` (copie autonome) : types/tables/exports
+  EVENTS/DYNASTIES, applyEventEffect/applyDynastieCard, étapes 1-2 du
+  runTurn local, mutations « config.events/dynasties = [] » et
+  BASE_*_EFFECTS retirés ; 4 rangs républicains supprimés des
+  paysRangs locaux, `rangParDefaut` retombe sur la Baronnie pour
+  tous les régimes (le vrai référentiel n'a plus que 5 rangs
+  féodaux — le diag vivait sur un format paysRangs périmé).
+
+**Validation** : 134/134 tests (aucun test ne référençait
+events/dynasties/evMult/modDanger — vérifié par grep avant, compte
+inchangé), diag exit 0, tsc strict 0 erreur (hors stub supabase),
+garde cycles 0 (0 réciproque, 0 SCC>1), diff -rq vs tarball HEAD
+limité aux 15 fichiers attendus + docs, grep résiduel : plus aucune
+mention « influence » hors influence culturelle, docblocks
+historiques datés et protocole cp_events.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

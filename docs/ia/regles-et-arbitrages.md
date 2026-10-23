@@ -277,6 +277,48 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
   « Pontificat » reste présent dans des TEXTES d'affichage (seuils de
   tourisme, condition de la voie Culturelle) — concept plateau à
   réarbitrer si les dogmes reviennent.
+- **Suppression des événements de saison et des cartes dynastie + purge
+  résiduelle de l'Influence** (arbitrage 2026-10-24, « on supprime tous
+  les dogmes pour l'instant » puis « purge l'influence, les événements
+  de dynastie, les événements d'hiver et d'été ») :
+  - La table `events` (18 événements été/hiver, 4 niveaux de texte
+    faible/moyenne/forte/extrême, tirée au CHANGEMENT de saison avec un
+    dé de danger + `modDanger`, effets chiffrés via `eventEffets` et les
+    params `evMult*`/`dangerSeuil*`) disparaît du référentiel, du type
+    `GameConfig`, du moteur (étape 1 de `runTurn` : la saison change
+    désormais à sec, sans tirage) et de l'UI (onglets Paramètres
+    « Événements » et « Effets évts », compteur de l'aide-mémoire).
+  - La table `dynasties` (38 cartes tirées à CHAQUE tour pour chaque
+    joueur, effets chiffrés via `dynastieEffets`) disparaît pareillement
+    (étape 2 de `runTurn`, onglets « Dynasties » et « Cartes », mini
+    « Événement de dynastie » de la page Royaume). NB : `Player.dynastie`
+    (la CARTE courante) devient un champ optionnel conservé pour les
+    vieilles sauvegardes, sans producteur ni lecteur ; il ne faut pas le
+    confondre avec `Character.dynastie`, le NOM DE FAMILLE du
+    personnage, qui reste un concept noyau.
+  - Les types de journal `'Événement'`/`'Dynastie'` RESTENT dans l'union
+    `LogEntry` et l'affichage du journal : plus produits, mais les
+    vieilles parties continuent d'afficher leurs anciennes lignes.
+  - Les params `evMultFaible/Moyenne/Forte/Extreme` et
+    `dangerSeuilForte/Extreme` sont retirés (le groupe « Événements »
+    de l'onglet Formules disparaît) ; `GameState.modDanger` devient
+    optionnel.
+  - **Purge résiduelle de l'Influence** : la mécanique avait été
+    remplacée par les émissaires depuis longtemps, mais il restait des
+    textes — la `regleCitesLibres` du référentiel (« gagner de
+    l'influence » → « gagner des émissaires », migration ciblée par
+    remplacement de fragments dans `cfgOf`) et l'aide des cités libres.
+    Dans le diag autonome, les 4 rangs républicains (Commune, District,
+    Union, Confédération — bonus libellés en Influence) disparaissent ;
+    `rangParDefaut` retombe sur la Baronnie pour tous les régimes.
+  - Purge des configs sauvegardées par `delete` ciblés dans `cfgOf`
+    (patron taxes25, SANS bump de SCHEMA_VERSION_CONFIG — même
+    raisonnement que pour les dogmes : un bump renverrait les configs
+    convergées dans la branche de migration complète). L'ancien contenu
+    reste dans l'historique git : un éventuel retour (événements de
+    saison refondus, cartes dynastie) repartira de zéro. L'INFLUENCE
+    CULTURELLE (conversions de villes par le tourisme) est un concept
+    distinct et n'est PAS touchée.
 
 ## Rework des habitants (design arbitré 2026-10-20 — VAGUES 1 & 2 IMPLÉMENTÉES)
 
@@ -730,9 +772,13 @@ rang 1). Arbitrages actés lors de la session :
    joueur via override de `vassalPrelevement`, flux par serment, saisons/âges connus).~~
    **CADUC le 2026-10-24** : le Pacifisme disparaît avec les dogmes ; ne
    redevient d'actualité qu'en cas de retour refondu des dogmes.
-3. Purge de l'Influence de tout le référentiel : voie diplomatique, seuils
+3. ~~Purge de l'Influence de tout le référentiel : voie diplomatique, seuils
    « 10 Influence/été », décisions, progrès Délégation/Ambassade/Vassalisation,
-   universités, marchands.
+   universités, marchands.~~ **FAITE le 2026-10-24** (retour arbitre) : la
+   mécanique avait déjà été remplacée par les émissaires (arbitrage
+   fondateur) ; les résidus de texte restants (regleCitesLibres, aide
+   des cités libres, rangs républicains du diag) sont purgés (cf.
+   arbitrages de sessions). L'influence culturelle (tourisme) reste.
 4. ~~Vague qualité : assainissement des cycles d'imports `rules/ ↔ engine/`
    (13 cycles) et découpage des 5 grosses vues restantes~~ **FAIT le
    2026-10-24** : le point « 13 cycles » était périmé — ils avaient déjà
