@@ -12,6 +12,7 @@
 import { useEffect } from 'react'
 import {
   DEFAULT_CONFIG, COULEURS_JOUEURS_DEFAUT, COULEURS_RESSOURCES_DEFAUT, TRANSPARENCE_LIGNES_DEFAUT,
+  parseMetiersBaseTexte,
 } from '../config/defaultConfig'
 import type { CouleursConfig, EffetConstruction, EffetProgres, GameConfig, ProgresTechDef } from '../config/defaultConfig'
 import { Card, TextInput, NumberInput, Button, Select } from './ui'
@@ -416,7 +417,7 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
                 <td><TextInput value={h.rang} onChange={(v) => setCfg((c) => { c.typesHabitation[i].rang = v })} /></td>
                 <td><TextInput value={h.cout} onChange={(v) => setCfg((c) => { c.typesHabitation[i].cout = v })} /></td>
                 <td><NumberInput value={h.habitantsRequis} step={10} min={0} onChange={(v) => setCfg((c) => { c.typesHabitation[i].habitantsRequis = v })} /></td>
-                <td><TextInput value={h.metiersDisponibles ?? ''} onChange={(v) => setCfg((c) => { c.typesHabitation[i].metiersDisponibles = v })} /></td>
+                <td><TextInput value={(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ')} onChange={(v) => setCfg((c) => { c.typesHabitation[i].metiersBase = parseMetiersBaseTexte(v, c.metiers.map((m) => m.metier)) })} /></td>
                 <td><TextInput value={h.domicilesDisponibles ?? ''} onChange={(v) => setCfg((c) => { c.typesHabitation[i].domicilesDisponibles = v })} /></td>
                 <td>
                   <Button tone="danger" onClick={() => setCfg((c) => { c.typesHabitation.splice(i, 1) })}>✕</Button>
@@ -427,7 +428,7 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
         </table>
       </div>
       <Button onClick={() => setCfg((c) => {
-        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', cout: '', habitantsRequis: 0, metiersDisponibles: '', domicilesDisponibles: '' })
+        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', cout: '', habitantsRequis: 0, metiersBase: [], domicilesDisponibles: '' })
       })}>+ Ajouter un rang d'habitation</Button>
     </Card>
   )
