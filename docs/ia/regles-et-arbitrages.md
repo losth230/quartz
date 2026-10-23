@@ -540,7 +540,7 @@ Emplacements du **tier 3** (coût 35 Or + 3 Fer) :
 - Sériciculture : +6 Tisseur, +5 Commerçant
 - Site archéologique : +7 Archéologue
 
-### Marchand & routes commerciales dissociées (arbitré)
+### Marchand & routes commerciales dissociées (arbitré puis ACTÉ le 2026-10-24)
 
 - Le **Marchand devient un métier de production** (+2 Or/tour) ; ses
   emplacements viennent des Mines d'Or et des routes commerciales.
@@ -551,10 +551,39 @@ Emplacements du **tier 3** (coût 35 Or + 3 Fer) :
   +1 au joueur ciblé**.
 - **Le bonus +4 Or/tour des deux côtés disparaît** : la route ne
   rapporte plus QUE la copie + les emplacements Marchand.
-- **À trancher avant la sous-vague 3b** : nombre de routes par
-  joueur/ville, coût d'ouverture, portée et destinations (cités
-  libres ?), conditions de fermeture, sort des routes existantes des
-  parties en cours.
+- **Arbitrages complémentaires actés le 2026-10-24** (clôture du « à
+  trancher », réponses Thibaut) :
+  - **Destinations** : villes des autres joueurs **et cités
+    libres**. Vers une cité : rien à copier (aucun aménagement) ;
+    +1 emplacement de Marchand à l'origine et à la cité ; le métier
+    Marchand devient accessible aux habitants de la cité dès qu'elle
+    a des routes entrantes (leur production alimente les taxes
+    versées au suzerain) ; `capMarchandsCite` = nombre de routes
+    entrantes, informatif — les cités restent hors des caps.
+  - **Coût d'ouverture** : **gratuit** (statu quo).
+  - **Fermeture manuelle** : **seulement le joueur à l'origine**
+    (bouton ✕ côté origine uniquement — la cible n'a pas de bouton).
+  - **Routes existantes des parties en cours** : **SUPPRIMÉES** — les
+    vieilles routes du modèle « marchand titulaire » (champ
+    `marchandId`) sont invisibles puis purgées au premier fin de tour
+    avec un log dédié « à rouvrir manuellement ».
+  - **Cap** (défaut assumé, continuité) : l'ancien cap
+    `maxMarchandsJoueur` devient **`maxRoutesJoueur`** (clé de paramètre
+    `maxMarchands` conservée pour les configs existantes) — il compte
+    les ROUTES détenues (même plafond et mêmes bonus tech/bâtiments
+    que l'ancien cap de marchands), toujours **annoncé, jamais
+    bloquant**.
+  - **Auto-fermeture** (garde-fou technique assumé) : ville d'origine
+    perdue, cible disparue (joueur, ville ou cité annexée),
+    aménagement copié disparu de la ville ciblée.
+  - **Copie** : les emplacements de population du métier copié se
+    matérialisent dans la **ville d'origine** (via les caps) — « copier
+    exactement un aménagement, y compris ses emplacements ».
+  - **Exception provisoire de la 3a levée** : plus de Marchand
+    « titulaire » de route — l'ancienne exemption de réaffectation
+    (« un marchand qui tient une route n'est jamais en surnombre »)
+    disparaît, les emplacements des routes sont portés par le cap
+    lui-même (ctx routes de `capMetierVille`).
 
 ### Plan d'implémentation (proposé)
 
@@ -571,8 +600,23 @@ Emplacements du **tier 3** (coût 35 Or + 3 Fer) :
    un Marchand qui TIENT une route occupe un poste créé par elle
    (jamais en surnombre — sinon toute route mourrait à chaque fin de
    tour) ; le métier « Fermier » porte le marqueur `ete` (production
-   d'été lu sur le métier, plus sur le Champ).
+   d'été lu sur le métier, plus sur le Champ). **→ exceptions LEVÉES
+   le 2026-10-24 par la sous-vague 3b (point 2)**.
 2. **3b — routes dissociées** : après les arbitrages restants.
+   **→ IMPLÉMENTÉE le 2026-10-24** (arbitrages complémentaires actés
+   le même jour, cf. section « Marchand & routes commerciales
+   dissociées » ci-dessus) : moteur (commerce.ts réécrit — routes
+   sans personnage, gratuites, joueur OU cité libre ciblée, plus
+   d'Or passif, fermeture origine seule, purge des vieilles routes
+   `marchandId` ; emplacements des routes portés par le cap
+   `capMetierVille` via ctx ; `metiersAccessiblesCite` ouvre Marchand
+   aux cités avec routes entrantes ; paramètre `marchandOrTour`
+   retiré, `maxMarchandsJoueur` renommé `maxRoutesJoueur`) + UI
+   (CommerceRoutes formulaire cascade origine → cible, routes
+   entrantes affichées sans ✕, badge cap routes, carte Métiers et
+   places avec ctx, fiche cité avec routes entrantes) + tests
+   (commerce.test.ts réécrit, 140 verts). Voir journal-technique.md,
+   entrée « routes commerciales dissociées — sous-vague 3b (2) ».
 
 ### Rangs d'habitation & bâtiments tier 1 — VAGUE 3b (actée 2026-10-22)
 

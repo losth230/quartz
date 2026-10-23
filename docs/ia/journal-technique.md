@@ -2035,6 +2035,102 @@ limité aux 15 fichiers attendus + docs, grep résiduel : plus aucune
 mention « influence » hors influence culturelle, docblocks
 historiques datés et protocole cp_events.
 
+## Routes commerciales dissociées — sous-vague 3b (2) (2026-10-24, arbitrage Thibaut)
+
+Clôture de la vague 3b : « on peut passer à la vague 3b » puis
+arbitrages complémentaires obtenus en session (destinations = villes
+des autres joueurs ET cités libres ; ouverture GRATUITE ; fermeture
+manuelle par l'ORIGINE seule ; routes existantes des parties en
+cours SUPPRIMÉES « à rouvrir manuellement »). Cap par défaut assumé
+par continuité (l'ancien `maxMarchandsJoueur` devient
+`maxRoutesJoueur`, compte les routes, annoncé non bloquant) et
+garde-fous techniques d'auto-fermeture assumés (origine perdue, cible
+disparue, copie disparue). Distinctions critiques respectées :
+« Influence culturelle » (`applyCultureInfluence`) intacte ;
+`cp_events` (synchro multijoueur) intact ; fusion.ts fusionne les
+routes par id, agnostique du modèle.
+
+Inventaire préalable : le Marchand était un métier de production
+(+2 Or/tour) SANS emplacements propres hors Mines d'Or, TITULAIRE de
+sa route (`marchandId`) ; la route rapportait `marchandOrTour` Or aux
+DEUX joueurs + copie ; `peuplerMarchands` (tour.ts) pré-pourvait les
+routes ; l'exception « tientRoute » de `reaffecterMetiers` (metiers.ts)
+empêchait le surnombre des titulaires ; `metiersAccessiblesCite`
+n'offrait que Chasseur/Gouverneur aux cités.
+
+Modifications fichier par fichier :
+
+- **`engine/types.ts`** : `RouteCommerce` réécrit (`villeOrigine`,
+  `joueurCible: number | null`, `citeCible`, `villeCible`,
+  `amenagement: string | null` ; clés obsolètes `marchandId` /
+  `ressource` optionnelles, jamais lues) — docblocks datés.
+- **`engine/commerce.ts`** (réécriture) : accesseurs filtrant l'ancien
+  modèle (`routesCommerce`, `De`, `Vers`, NOUVEAU `VersCite`) ;
+  `capMarchandsCite` ; `effetsRouteProprietaire` = copie seule ;
+  `effetsCommerceJoueur`/`detailCommerceJoueur` = routes détenues
+  (la cible ne reçoit plus rien au stock) ; `nettoyerRoutesCommerce`
+  purge ancien modèle + morts (3 familles) avec logs ;
+  `maxRoutesJoueur` (renommé) ; `creerRouteCommerce` nouvelle
+  signature en cascade joueur/cité, gratuit ; `changerCopieRoute`
+  refuse les cités ; `supprimerRouteCommerce` « origine seule ».
+  SUPPRIMÉS : `marchandsDe`, `marchandDeRoute`, `peuplerMarchands`.
+- **`engine/metiers.ts`** : helper privé `emplacementsRoutesVille`
+  (+1 Marchand par route sortante/entrante + emplacements de la
+  copie dans la ville d'ORIGINE, lecture INLINE de
+  `state.routesCommerce` — anti-cycle, littéral « Marchand » doublet
+  de `TITRE_MARCHAND`) ; param optionnel `ctx { state, joueur }` de
+  `emplacementsMetierVille`/`capMetierVille`/`postesLibresVille`/
+  `occupationsMetierVille` ; `premierPosteLibre` passe le ctx ;
+  `reaffecterMetiers` : exception tientRoute SUPPRIMÉE (les
+  emplacements des routes sont portés par le cap), ctx passé aux
+  caps ; docblock `metiersAccessibles` mis à jour.
+- **`engine/citesLibres.ts`** : `metiersAccessiblesCite` ouvre
+  Marchand dès `capMarchandsCite > 0` (import commerce.ts, pas de
+  cycle — vérifié par la garde).
+- **`engine/tour.ts`** : import et appel `peuplerMarchands` retirés ;
+  docblock de l'étape commerce mis à jour (plus d'Or passif, plus de
+  pré-pourvoison ; purge ancien modèle au nettoyer).
+- **`config/params.ts`** : `marchandOrTour` retiré (interface,
+  défauts, PARAM_META — le groupe « Commerce » disparaît de l'onglet
+  Formules) ; label/aide de `maxMarchands` renommés « routes
+  commerciales » (clé conservée) + docblock daté.
+- **`config/defaultConfig.ts`** : delete ciblé `marchandOrTour` dans
+  cfgOf (patron taxes25, SANS bump de `SCHEMA_VERSION_CONFIG` — même
+  raisonnement que dogmes/événements, règle (x)).
+- **`config/referentiels.json`** : description du métier Marchand
+  (« Métier de production (+2 Or / tour) ; emplacements par les
+  Mines d'Or et les routes commerciales »), effet Marchand de
+  l'aide-mémoire réécrit (routes dissociées, gratuites, origine
+  seule, cités libres), techs « marchand supplémentaire » → « route
+  commerciale supplémentaire » (le cap compte les routes).
+- **UI** : `CommerceRoutes.tsx` réécrit (formulaire cascade ville
+  d'origine → type de cible → joueur/ville ou cité libre →
+  aménagement copiable ; table sortantes avec copie modifiable et ✕
+  ; entrantes affichées « +1 emplacement Marchand » SANS ✕ ; badge
+  routes/cap) ; `CarteMetiersPlaces.tsx` + `PopulationTable.tsx`
+  passent le ctx routes ; `CarteCite.tsx` affiche les routes
+  entrantes de la cité ; `AideAuto.tsx` reformulé (plus de prop C) ;
+  `PlayerView.tsx` docblock.
+- **Tests** : `commerce.test.ts` réécrit (B4 Tourisme conservé +
+  5 nouveaux : pas d'Or passif/cible vide, +1 Marchand chaque côté
+  via ctx, fermeture origine seule, cible cité libre avec
+  `capMarchandsCite`/`metiersAccessiblesCite`, purge `marchandId`) ;
+  `metiers.test.ts` : test « titulaire » réécrit sur le nouveau
+  modèle (cap = route, surnombre normal) + test ctx dédié ;
+  `fusion.test.ts` : helper `route()` au nouveau format.
+- **diag.ts** : RIEN (le diag ne référence pas le commerce — grep
+  préalable vide).
+
+**Validation** : 140/140 tests (134 avant + 6 nouveaux), diag exit 0,
+tsc strict 0 erreur (hors stub supabase), garde cycles 0 (0
+réciproque, 0 SCC>1), diff -rq vs tarball HEAD limité aux 18 fichiers
+attendus + docs.
+
+**NB compatibilité** : le canal « Commerce » des récaps pousse
+seulement les effets non nuls — la copie seule reste visible, rien ne
+change pour `regimes.ts` (tourismeCourant) ni `production.ts` ;
+l'influence culturelle et `cp_events` (synchro) ne sont pas touchés.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
