@@ -95,7 +95,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
 
       {/* Aide « QU'EST-CE QUI EST COMPTÉ AUTOMATIQUEMENT ? » (marqueur
           (a)) — bloc repliable en tête de page Pays. */}
-      <AideAuto C={C} />
+      <AideAuto />
 
       {/* Culture du pays : règle de pays chiffrée + bonus adapté. */}
       <CulturePays state={state} p={p} C={C} />
@@ -106,7 +106,8 @@ export function PlayerView({ joueur }: { joueur: number }) {
         setPlayer={setPlayer}
       />
 
-      {/* Commerce (marqueur (t)) : routes des marchands. */}
+      {/* Commerce (marqueur (t)) : routes commerciales dissociées
+          (sous-vague 3b, 2026-10-24 — plus de marchand titulaire). */}
       <CommerceRoutes p={p} C={C} />
 
       {/* Récap des ressources par tour + impôts hors fin de tour. */}

@@ -23,7 +23,9 @@ function base(): GameState {
 }
 
 function route(id: string, joueur: number, cible = 'B'): RouteCommerce {
-  return { id, joueur, marchandId: 'm-' + id, joueurCible: 2, villeCible: cible, amenagement: 'Champ' }
+  // Sous-vague 3b (2026-10-24) : routes dissociées — plus de
+  //  marchandId ; villeOrigine + joueurCible/villeCible explicites.
+  return { id, joueur, villeOrigine: 'A', joueurCible: 2, citeCible: null, villeCible: cible, amenagement: 'Champ' }
 }
 
 test('ne mute pas la référence (immutabilité du contrat)', () => {

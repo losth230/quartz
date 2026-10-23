@@ -12,6 +12,7 @@
 import type { GameState, CiteLibre, TaxeNiveau } from '../../engine/types'
 import type { Cfg } from '../../engine/gameData'
 import { detailCiteLibre, emissairesDe, citeLibreDevientVille, taxesCite } from '../../engine/citesLibres'
+import { routesCommerceVersCite } from '../../engine/commerce'
 import { Card, Select, TextInput, Button, Badge, TAX_OPTIONS } from '../ui'
 import { fmtNum } from './logiqueCitesLibres'
 
@@ -33,6 +34,7 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
 }) {
   const d = detailCiteLibre(cite, C)
   const suz = cite.suzerain != null ? state.players.find((p) => p.n === cite.suzerain) : undefined
+  const routesEntrantes = routesCommerceVersCite(state, cite.nom)
   const pop = cite.population ?? []
   const vivants = pop.filter((h) => h.statut !== 'Décédé')
   const typeEffectif = typeOptions.some((o) => o.value === cite.type)
@@ -176,6 +178,24 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
           {' '}· gestion dans l'onglet « 👥 Population » (sélectionnez la cité en haut de la page)
         </span>
       </div>
+
+      {/* ── Routes commerciales entrantes (sous-vague 3b « routes
+          dissociées », arbitrage Thibaut 2026-10-24) : +1 emplacement
+          de Marchand par route — le métier devient accessible aux
+          habitants de la cité (metiersAccessiblesCite), sa
+          production alimente les taxes versées au suzerain. Une cité
+          ne peut PAS fermer ces routes (origine seule). ── */}
+      {routesEntrantes.length > 0 && (
+        <p className="small" style={{ marginTop: 0 }}>
+          <Badge tone="info">🛒 {routesEntrantes.length} route(s) commerciale(s) entrante(s)</Badge>{' '}
+          <span className="muted">
+            +1 emplacement de Marchand par route — {routesEntrantes.map((r) => {
+              const prop = state.players.find((q) => q.n === r.joueur)
+              return `${r.villeOrigine} (${prop?.nom ?? '?'})`
+            }).join(' · ')}
+          </span>
+        </p>
+      )}
 
       {/* ── Production & taxes ── */}
       <div className="mini-title">

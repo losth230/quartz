@@ -2367,7 +2367,7 @@
         {
           "nom": "Commerce",
           "cout": "6",
-          "description": "Vous pouvez posséder un marchand supplémentaire."
+          "description": "Vous pouvez posséder une route commerciale supplémentaire."
         },
         {
           "nom": "Commerce lointain",
@@ -2386,7 +2386,7 @@
       "techC": {
         "nom": "Collecte d'impôts",
         "cout": "14",
-        "description": "Vous pouvez posséder un marchand supplémentaire. Lorsque vous débloquez cette technologie, recevez 20 Or.",
+        "description": "Vous pouvez posséder une route commerciale supplémentaire. Lorsque vous débloquez cette technologie, recevez 20 Or.",
         "effets": [
           {
             "type": "gain",
@@ -4405,7 +4405,7 @@
       "ressource1": "Or",
       "valeur2": 0,
       "ressource2": "",
-      "description": "Ouvre des routes commerciales",
+      "description": "Métier de production (+2 Or / tour) ; emplacements par les Mines d'Or et les routes commerciales",
       "nobleSeul": false,
       "regleGenre": "vide",
       "attribution": "",
@@ -4477,7 +4477,7 @@
       "metier": "Mage"
     },
     {
-      "effet": "+2 Or par tour. Portée 9 PM, 4 PM par tour. Le marchand ouvre UNE route commerciale entre sa ville et la ville d'un autre joueur : chaque tour, les DEUX joueurs reliés gagnent 4 Or et le propriétaire du marchand copie la production de l'aménagement ENTIER choisi dans la ville ciblée — toutes ses ressources produites (choisi à l'ouverture de la route, modifiable à tout moment ; un marchand ne tient qu'une route, qui se ferme s'il perd son titre ou meurt). Un marchand peut traverser les cases d'eau et de rivière une fois les bateaux débloqués. Un marchand envoyé vers une cité libre ne produit pas de ressources (règle de plateau).",
+      "effet": "+2 Or par tour. Métier de production : ses emplacements viennent des Mines d'Or et des routes commerciales (+1 par route, chaque côté). Les routes commerciales sont dissociées du titre : gratuites, ouvertes depuis une de tes villes vers la ville d'un autre joueur ou une cité libre, seule la ville d'origine peut les fermer. Vers une ville, le propriétaire copie la production de l'aménagement ENTIER choisi dans la ville ciblée (modifiable à tout moment) ; vers une cité libre, rien à copier. Sur le plateau : portée 9 PM, 4 PM par tour, traversée de l'eau et des rivières une fois les bateaux débloqués.",
       "revocation": "20  Or + 6 ressources au choix",
       "metier": "Marchand"
     },

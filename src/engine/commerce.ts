@@ -1,22 +1,39 @@
 // ══════════════════════════════════════════════════════════════════════
-//  COMMERCE — ROUTES COMMERCIALES DES MARCHANDS (marqueur (t))
-//  Un personnage portant le métier « Marchand » ouvre UNE route
-//  commerciale entre SA ville (ville actuelle du personnage) et une
-//  ville d'un AUTRE joueur. Chaque tour, les DEUX joueurs reliés
-//  gagnent marchandOrTour Or (4 par défaut — Paramètres, groupe
-//  « Commerce »). Le propriétaire du marchand copie en plus, chaque
-//  tour, la production de l'aménagement ENTIER choisi dans la ville
-//  ciblée (choix fait à l'ouverture de la route, modifiable à tout
-//  moment — toutes ses ressources positives ; une production d'été
-//  n'est copiée qu'en été ; la Garnison (valeur
-//  d'état) et les effets négatifs sont exclus ; le Tourisme EST copiable —
-//  arbitrage Thibaut 2026-10-19 : stock de Tourisme = production, jamais
-//  cumulé) — marqueur (u) : plus de choix de
-//  ressource, arbitrage Thibaut « c'est l'aménagement entier qui est
-//  copié ».
-//  La route se ferme si le marchand perd son metier ou meurt.
+//  COMMERCE — ROUTES COMMERCIALES DISSOCIÉES DU MARCHAND (vague 3b)
+//  Arbitrage Thibaut 2026-10-24 (« on peut passer à la vague 3b ») :
+//  la route est OUVERTE PAR LE JOUEUR, indépendamment de tout
+//  personnage (gratuit — arbitrage). Elle relie une ville d'ORIGINE du
+//  joueur à la ville d'un AUTRE joueur ou à une CITÉ LIBRE (arbitrage).
+//  Effets :
+//    · le joueur à l'origine COPIE exactement UN aménagement de la
+//      ville ciblée — sa production ET ses emplacements de
+//      population (matérialisés dans la ville d'origine : la cap de
+//      métiers les compte, engine/metiers.ts emplacementsRoutesVille) ;
+//    · +1 emplacement de Marchand de CHAQUE côté (ville d'origine +
+//      ville ciblée, ou la cité ciblée) — le Marchand est un métier de
+//      production (+2 Or / tour) dont les emplacements viennent des
+//      Mines d'Or et des routes ;
+//    · l'ancien bonus d'Or passif des deux côtés (marchandOrTour)
+//      DISPARAÎT : la route ne rapporte plus QUE la copie et les
+//      emplacements Marchand (arbitrage).
+//  Fermeture : bouton ✕ du seul joueur à l'ORIGINE (arbitrage) ;
+//  nettoyage automatique des routes mortes (ville ou aménagement
+//  disparus, cible annexée) à chaque fin de tour.
+//  Copie (marqueur (u)) : l'aménagement ENTIER est copié — toutes ses
+//  ressources positives (flux + production d'été, créditée en été
+//  seulement) ; la Garnison (valeur d'état) et les effets négatifs
+//  sont exclus ; le Tourisme EST copiable (arbitrage Thibaut
+//  2026-10-19 : stock de Tourisme = production, jamais cumulé).
 //  Canal « Commerce » du récap ressources (engine/production.ts),
 //  étape 3terdecies de FinDeTour.
+//  HISTORIQUE (règle 9) : l'ancien modèle « un marchand tient la
+//  route » (marqueur (t), +marchandOrTour Or pour les deux joueurs,
+//  promotion automatique peuplerMarchands) a été RETIRÉ le
+//  2026-10-24 ; les routes des anciennes sauvegardes (champ
+//  marchandId) sont SUPPRIMÉES (arbitrage Thibaut : « à rouvrir
+//  manuellement ») — ignorées par les accès ci-dessous et purgées
+//  physiquement par nettoyerRoutesCommerce. L'ancien contenu vit
+//  dans l'historique git et le journal technique.
 //  HYGIÈNE D'IMPORT (règle durable, incident CI #36 du 2026-10-19) : ce
 //  module est importé par regimes.ts (canal Tourisme du commerce) — ne
 //  JAMAIS importer amenagements.ts ici (effets de bord top-level :
@@ -26,20 +43,10 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type {
-  City, GameState, Player, RouteCommerce, Saison,
+  City, CiteLibre, GameState, Player, RouteCommerce, Saison,
 } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, type Cfg } from './gameData'
-import { fullName } from './shared'
-// RETRAIT 2026-10-19 (incident CI #36, suite B4) : `import { amenagementRef }
-// from './amenagements'` — amenagementRef est un alias PUR de constructionRef
-// (constructions.ts), mais cet import créait un cycle d'évaluation
-// constructions→banque→regimes→commerce→amenagements : l'initialisation
-// top-level AMENAGEMENTS (amenagements.ts) s'exécutait alors que
-// constructions.ts n'avait pas encore initialisé RESSOURCES_INSTANTANEES
-// (ReferenceError TDZ → crash de TOUS les tests, CI #36 + bundle Edge #16).
-// commerce.ts n'importe donc PLUS amenagements.ts : constructionRef fait
-// la même recherche (nom exact, même sémantique).
 import { constructionRef, effetsConstructionRef, effetsEteConstructionRef } from './constructions'
 import { nbBatiments } from './factions'
 import { aTech } from './progresAuto'
@@ -47,33 +54,39 @@ import { aTech } from './progresAuto'
 /** Nom du metier (fixe). */
 export const TITRE_MARCHAND = 'Marchand'
 
-/** Toutes les routes commerciales du monde (champ optionnel → vide). */
+/** Toutes les routes commerciales du monde (champ optionnel → vide).
+ *  Seules les routes du modèle DISSOCIÉ (sans marchandId) sont
+ *   visibles : les routes de l'ancien modèle (marchandId) sont
+ *   supprimées à la première fin de tour (nettoyerRoutesCommerce,
+ *  arbitrage 2026-10-24 « à rouvrir manuellement »). */
 export function routesCommerce(state: GameState): RouteCommerce[] {
-  return state.routesCommerce ?? []
+  return (state.routesCommerce ?? []).filter((r) => !('marchandId' in r))
 }
 
-/** Routes dont le joueur est le PROPRIÉTAIRE du marchand. */
+/** Routes dont le joueur est à l'ORIGINE (il encaisse la copie). */
 export function routesCommerceDe(state: GameState, joueur: number): RouteCommerce[] {
   return routesCommerce(state).filter((r) => r.joueur === joueur)
 }
 
-/** Routes qui visent une ville DU joueur (il encaisse l'Or passif). */
+/** Routes qui visent une ville DU joueur (la ville gagne +1
+ *  emplacement de Marchand — rien n'est crédité au stock : l'ancien
+ *  Or passif a disparu, arbitrage 2026-10-24). */
 export function routesCommerceVers(state: GameState, joueur: number): RouteCommerce[] {
   return routesCommerce(state).filter((r) => r.joueurCible === joueur)
 }
 
-/** Marchands vivants d'un joueur (porteurs du métier). */
-export function marchandsDe(state: GameState, joueur: number) {
-  return (state.population[joueur] ?? [])
-    .filter((c) => c.statut !== 'Décédé' && c.metier === TITRE_MARCHAND)
+/** Routes qui visent une CITÉ LIBRE (la cité gagne +1 emplacement
+ *  Marchand par route — sa population peut porter le métier, la
+ *  production alimente ses taxes, cf. capMarchandsCite). */
+export function routesCommerceVersCite(state: GameState, cite: string): RouteCommerce[] {
+  return routesCommerce(state).filter((r) => r.joueurCible === null && (r.citeCible ?? r.villeCible) === cite)
 }
 
-/** Personnage marchand d'une route : null s'il est mort, introuvable
- *  ou a perdu son metier (la route est alors mourante → nettoyage). */
-function marchandDeRoute(state: GameState, route: RouteCommerce) {
-  const c = (state.population[route.joueur] ?? []).find((x) => x.id === route.marchandId)
-  if (!c || c.statut === 'Décédé' || c.metier !== TITRE_MARCHAND) return null
-  return c
+/** Emplacements de Marchand « ouverts » par les routes entrantes
+ *  d'une cité libre (information affichée, jamais bloquant —
+ *  convention du jeu ; les métiers de cité sont hors caps). */
+export function capMarchandsCite(state: GameState, cite: CiteLibre): number {
+  return routesCommerceVersCite(state, cite.nom).length
 }
 
 /** Ressource copiable d'un aménagement : valeur par tour, été ou non. */
@@ -118,14 +131,19 @@ export function amenagementsCopiables(ville: City, cfg?: GameConfig): string[] {
   return out
 }
 
-/** Effets par tour d'UNE route pour son PROPRIÉTAIRE : Or pour chaque
- *  joueur relié + copie de la production de l'aménagement ENTIER
- *  choisi (valeur COURANTE du référentiel — éditable à chaud ; les
- *  productions d'été ne sont créditées qu'en été). */
+/** Effets par tour d'UNE route pour son joueur à l'ORIGINE : copie de
+ *  la production de l'aménagement ENTIER choisi (valeur COURANTE du
+ *  référentiel — éditable à chaud ; les productions d'été ne sont
+ *  créditées qu'en été). Une route vers une CITÉ LIBRE ne copie
+ *  rien (pas d'aménagement — arbitrage 2026-10-24) : son seul apport
+ *  est l'emplacement de Marchand de chaque côté. Les emplacements de
+ *  population de l'aménagement copié sont comptés par les caps
+ *  (engine/metiers.ts), pas crédités ici. */
 export function effetsRouteProprietaire(
   route: RouteCommerce, saison: Saison, C: Cfg = cfgOf(),
 ): Record<string, number> {
-  const out: Record<string, number> = { Or: C.p.marchandOrTour }
+  const out: Record<string, number> = {}
+  if (!route.amenagement) return out
   // Marqueur (u) : l'aménagement ENTIER est copié — toutes ses
   // ressources copiables (flux positifs + été en été).
   for (const cop of ressourcesCopiables(route.amenagement, C.config)) {
@@ -135,19 +153,17 @@ export function effetsRouteProprietaire(
   return out
 }
 
-/** Effets par tour du commerce pour un joueur : ses routes (Or +
- *  copie) + les routes qui visent ses villes (Or passif). Une route
- *  dont le marchand n'est plus en poste ne produit RIEN. */
+/** Effets par tour du commerce pour un joueur : la COPIE de ses
+ *  routes (ville d'origine → ville ciblée). Le joueur ciblé ne
+ *  reçoit PLUS RIEN au stock (l'ancien Or passif marchandOrTour a
+ *  disparu, arbitrage 2026-10-24) : son gain est l'emplacement de
+ *  Marchand ouvert dans sa ville ciblée. */
 export function effetsCommerceJoueur(
   state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
 ): Record<string, number> {
   const out: Record<string, number> = {}
-  for (const route of routesCommerce(state)) {
-    if (route.joueur !== p.n && route.joueurCible !== p.n) continue
-    if (!marchandDeRoute(state, route)) continue
-    const src = route.joueur === p.n
-      ? effetsRouteProprietaire(route, saison, C)
-      : { Or: C.p.marchandOrTour }
+  for (const route of routesCommerceDe(state, p.n)) {
+    const src = effetsRouteProprietaire(route, saison, C)
     for (const [res, v] of Object.entries(src)) {
       out[res] = (out[res] ?? 0) + v
     }
@@ -156,7 +172,10 @@ export function effetsCommerceJoueur(
 }
 
 /** Détail des apports de commerce d'un joueur (provenance du récap
- *  ressources) : une ligne par route possédée ou entrante. */
+ *  ressources) : une ligne par route possédée. Les routes ENTRANTES
+ *  ne sont pas listées : elles ne créditent plus rien au stock
+ *  (l'emplacement de Marchand qu'elles ouvrent est visible dans la
+ *  carte « Métiers et places »). */
 export interface DetailCommerce {
   origine: string
   effets: Record<string, number>
@@ -166,41 +185,71 @@ export function detailCommerceJoueur(
   state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
 ): DetailCommerce[] {
   const out: DetailCommerce[] = []
-  for (const route of routesCommerce(state)) {
-    if (route.joueur !== p.n && route.joueurCible !== p.n) continue
-    const m = marchandDeRoute(state, route)
-    if (!m) continue
-    const cible = state.players.find((q) => q.n === route.joueurCible)
-    const proprietaire = state.players.find((q) => q.n === route.joueur)
-    const nomVilleCible = `${route.villeCible} (${cible?.nom ?? '?'})`
-    if (route.joueur === p.n) {
+  for (const route of routesCommerceDe(state, p.n)) {
+    const nomCible = nomCibleRoute(state, route)
+    const effets = effetsRouteProprietaire(route, saison, C)
+    if (Object.keys(effets).length === 0 && !route.amenagement) {
       out.push({
-        origine: `route de ${fullName(m)} : ${m.ville} ↔ ${nomVilleCible} — copie de ${route.amenagement}`,
-        effets: effetsRouteProprietaire(route, saison, C),
+        origine: `route ${route.villeOrigine} ↔ ${nomCible} (+1 emplacement de Marchand de chaque côté)`,
+        effets: {},
       })
-    } else {
-      out.push({
-        origine: `route de ${fullName(m)} (${proprietaire?.nom ?? '?'}) vers ta ville ${nomVilleCible}`,
-        effets: { Or: C.p.marchandOrTour },
-      })
+      continue
     }
+    out.push({
+      origine: `route ${route.villeOrigine} ↔ ${nomCible} — copie de ${route.amenagement}`,
+      effets,
+    })
   }
   return out
 }
 
-/** Supprime les routes dont le marchand est mort, introuvable ou a
- *  perdu son metier (appelée à chaque FinDeTour avant le crédit, et
- *  c'est aussi la garde-fou des accès calculés). Log « Commerce ». */
+/** Nom affichable de la cible d'une route : « Ville (Joueur) » ou
+ *  « Cité (cité libre) ». */
+function nomCibleRoute(state: GameState, route: RouteCommerce): string {
+  if (route.joueurCible === null) {
+    return `${route.citeCible ?? route.villeCible} (cité libre)`
+  }
+  const cible = state.players.find((q) => q.n === route.joueurCible)
+  return `${route.villeCible} (${cible?.nom ?? '?'})`
+}
+
+/** Supprime les routes MORTES (appelée à chaque FinDeTour avant le
+ *  crédit). Trois familles :
+ *    · routes de l'ANCIEN modèle (marchandId) : supprimées sans
+ *      conditions — arbitrage Thibaut 2026-10-24 (« à rouvrir
+ *      manuellement »), la mécanique du marchand titulaire n'existe
+ *      plus ;
+ *    · ville d'origine perdue par le joueur à l'origine ;
+ *    · cible disparue : joueur ciblé ou sa ville n'existe plus, cité
+ *      ciblée annexée, ou l'aménagement copié n'est plus dans la
+ *      ville ciblée (la copie redeviendrait vide).
+ *  Log « Commerce » pour chaque route fermée. */
 export function nettoyerRoutesCommerce(state: GameState): RouteCommerce[] {
-  const avant = routesCommerce(state)
-  const mortes = avant.filter((r) => !marchandDeRoute(state, r))
+  const avant = state.routesCommerce ?? []
+  const mortes = avant.filter((r) => {
+    if ('marchandId' in r) return true
+    const proprietaire = state.players.find((q) => q.n === r.joueur)
+    if (!proprietaire || !proprietaire.villes.some((v) => v.nom === r.villeOrigine)) return true
+    if (r.joueurCible === null) {
+      // cible cité libre : elle doit exister
+      return !(state.citesLibres ?? []).some((c) => c.nom === (r.citeCible ?? r.villeCible))
+    }
+    const cible = state.players.find((q) => q.n === r.joueurCible)
+    const ville = cible?.villes.find((v) => v.nom === r.villeCible)
+    if (!ville) return true
+    if (!r.amenagement) return false
+    return !(ville.amenagements ?? []).includes(r.amenagement)
+  })
   if (mortes.length === 0) return []
   const ids = new Set(mortes.map((r) => r.id))
   state.routesCommerce = avant.filter((r) => !ids.has(r.id))
   for (const r of mortes) {
+    const motif = 'marchandId' in r
+      ? 'ancien modèle (marchand titulaire) — arbitrage 2026-10-24 : à rouvrir manuellement'
+      : `la ville d'origine ou la cible (${nomCibleRoute(state, r)}) n'existe plus, ou l'aménagement copié a disparu`
     state.log.push({
       turn: state.turn + 1, type: 'Commerce', joueur: r.joueur,
-      texte: `Route commerciale vers ${r.villeCible} fermée : le marchand n'est plus en poste.`,
+      texte: `Route commerciale ${r.villeOrigine} ↔ ${nomCibleRoute(state, r)} fermée : ${motif}.`,
     })
   }
   return mortes
@@ -225,71 +274,15 @@ export function appliquerEffetsCommerce(
   return out
 }
 
-/** Nomme automatiquement les marchands d'un joueur (revue
- *  2026-10-16, homogénéisation avec les soldats et professeurs) :
- *    · chaque ROUTE commerciale doit avoir son marchand — si un
- *      marchand est mort ou a perdu son metier, un habitant vivant de
- *      sa ville est promu pour reprendre la route ;
- *    · jusqu'au CAP de routes disponibles (maxMarchandsJoueur :
- *      paramètre + techs + échoppes/guildes), des marchands
- *      supplémentaires sont nommés, prêts à ouvrir des routes.
- *  Comme les soldats (armées) et professeurs (écoles), c'est
- *  AUTOMATIQUE : le joueur n'attribue plus le métier à la main.
- *  Dépasser le cap reste possible (annonce, jamais bloqué) — les
- *  marchands au-delà ne sont simplement pas pré-nommés. */
-export function peuplerMarchands(state: GameState, p: Player): void {
-  const C = cfgOf(state.config)
-  const pop = state.population[p.n] ?? []
-  const vivants = pop.filter((c) => c.statut !== 'Décédé')
-  const routes = routesCommerceDe(state, p.n)
-  // 1. chaque route doit avoir un marchand vivant titré
-  for (const route of routes) {
-    const m = vivants.find((c) => c.id === route.marchandId && c.metier === TITRE_MARCHAND)
-    if (m) continue
-    // marchand manquant (mort, déchu) : remplacer par un habitant de
-    //  la ville du marchand d'origine, sinon n'importe quelle ville
-    //  du joueur.
-    const ancien = pop.find((c) => c.id === route.marchandId)
-    const estCandidat = (c: typeof vivants[number]) =>
-      c.age >= C.p.adultAge &&
-      (!c.metier || c.metier === C.p.metierChasseur) &&
-      p.villes.some((v) => v.nom === c.ville)
-    const poolVille = (ancien?.ville ?? '')
-    const elu = vivants.find((c) => estCandidat(c) && c.ville === poolVille)
-      ?? vivants.find((c) => estCandidat(c))
-    if (!elu) continue
-    elu.metier = TITRE_MARCHAND
-    route.marchandId = elu.id
-    state.log.push({
-      turn: state.turn + 1, type: 'Commerce', joueur: p.n,
-      texte: `🛒 ${fullName(elu)} est promu Marchand (reprend la route vers ${route.villeCible}).`,
-    })
-  }
-  // 2. (SUPPRIMÉ — bug 2026-10-17 « marchands aléatoires
-  //    indestructibles ») l'ancienne étape promouvait des marchands
-  //    « en réserve » pour remplir le cap SANS route ouverte :
-  //    des marchands apparaissaient aléatoirement, et un metier
-  //    retiré à la main était re-promu au tour suivant. La demande
-  //    d'origine est « les marchands sont nommés automatiquement
-  //    S'IL Y A DES ROUTES commerciales » (comme les soldats avec
-  //    les armées, les professeurs avec les écoles) : un marchand
-  //    n'existe que s'il tient une route. L'étape 1 couvre ce cas —
-  //    le cap reste un ANNONCE jamais bloquant (maxMarchandsJoueur,
-  //    affiché sur la page Pays), pas un pré-provisionnement.
-}
-
-/** Ouvre une route commerciale : un marchand (une seule route par
- *  marchand), une ville d'un AUTRE joueur, un aménagement copiable de
- *  cette ville (l'aménagement ENTIER est copié, marqueur (u)).
- *  Retourne null si OK,
- *  sinon le motif d'erreur (affiché en rouge, jamais bloquant —
- *  convention « dons et mariages », marqueur (r)). */
-/** Nombre maximal de marchands d'un joueur (revue 2026-10-15) :
- *  paramètre maxMarchands (0 par défaut), +1 par technologie « marchand
+/** Nombre maximal de ROUTES commerciales d'un joueur (cap
+ *  ANNONCE, jamais bloquant — convention du jeu) : paramètre
+ *  maxMarchands (0 par défaut), +1 par technologie « route
  *  supplémentaire » (Commerce, Collecte d'impôts), +1 par Plateforme
- *  commerciale ou Guilde des marchands (qui la remplace), +1 par Echoppe
- *  (« permet d'entretenir 1 route commerciale supplémentaire »). */
-export function maxMarchandsJoueur(
+ *  commerciale ou Guilde des marchands (qui la remplace), +1 par
+ *  Echoppe (« permet d'entretenir 1 route commerciale
+ *  supplémentaire »). Renommé de maxMarchandsJoueur le 2026-10-24
+ *  (vague 3b : les routes ne sont plus portées par des marchands). */
+export function maxRoutesJoueur(
   p: Player,
   C: { p: { maxMarchands: number } } & import('./gameData').Cfg,
 ): number {
@@ -302,58 +295,60 @@ export function maxMarchandsJoueur(
   return max
 }
 
+/** Ouvre une route commerciale DISSOCIÉE (vague 3b, arbitrage
+ *  Thibaut 2026-10-24) : GRATUITE (arbitrage), ouverte par le joueur,
+ *  sans personnage — elle relie une ville d'origine du joueur à la
+ *  ville d'un autre joueur (aménagement copiable copié : production +
+ *  emplacements de population dans la ville d'origine) ou à une cité
+ *  libre (rien à copier ; +1 emplacement de Marchand de chaque côté).
+ *  Retourne null si OK, sinon le motif d'erreur (affiché en rouge,
+ *  jamais bloquant — convention « dons et mariages », marqueur (r)). */
 export function creerRouteCommerce(
   state: GameState,
-  joueur: number, marchandId: string,
-  joueurCible: number, villeCible: string,
-  amenagement: string,
+  joueur: number, villeOrigine: string,
+  joueurCible: number | null, citeCible: string | null, villeCible: string,
+  amenagement: string | null,
 ): string | null {
   const C = cfgOf(state.config)
-  // Plafond de marchands (revue 2026-10-16, homogénéisation soldats /
-  //  professeurs) : le cap est une ANNONCE, jamais un blocage — le
-  //  joueur peut dépasser le nombre de routes « disponibles » ; les
-  //  marchands manants sont nommés automatiquement (peuplerMarchands).
   const pj = state.players.find((q) => q.n === joueur)
-  if (pj) {
-    const nb = marchandsDe(state, joueur).length
-    const cap = maxMarchandsJoueur(pj, C)
-    if (nb > cap) {
-      state.log.push({
-        turn: state.turn, type: 'Commerce', joueur,
-        texte: `🛒 ${pj.nom} dépasse son cap de routes commerciales (${nb} marchand(s) pour ${cap} disponibles).`,
-      })
-    }
-  }
-  // Revue 2026-10-16 (retour Thibaut) : une route commerciale peut
-  //  être créée EN TOUTE SITUATION. Si le marchand fourni est
-  //  invalide (absent, décédé, non titré, tient déjà une route), un
-  //  ROTURIER VIVANT reçoit automatiquement le métier de Marchand pour
-  //  tenir la route — plus aucun refus lié au personnage.
-  const popJoueur = state.population[joueur] ?? []
-  let m = marchandId ? popJoueur.find((c) => c.id === marchandId) : undefined
-  const invalide = !m || m.statut === 'Décédé' || m.metier !== TITRE_MARCHAND
-    || routesCommerceDe(state, joueur).some((r) => r.marchandId === marchandId)
-  if (invalide) {
-    // roturier disponible : adulte vivant sans metier ni metier
-    //  spécialisé, dans une ville du joueur.
-    const roturier = popJoueur.find((c) =>
-      c.statut !== 'Décédé' && c.age >= C.p.adultAge &&
-      (!c.metier || c.metier === C.p.metierChasseur) &&
-      pj?.villes.some((v) => v.nom === c.ville))
-    if (!roturier) {
-      return 'Aucun roturier disponible pour tenir la route (population adulte vide).'
-    }
-    roturier.metier = TITRE_MARCHAND
-    m = roturier
+  if (!pj) return 'Joueur à l\'origine introuvable.'
+  // Plafond de routes : cap ANNONCE, jamais un blocage — le joueur
+  //  peut dépasser le nombre de routes « disponibles » (dépassement
+  //  annoncé au journal, comme l'ancien cap de marchands).
+  const nb = routesCommerceDe(state, joueur).length
+  const cap = maxRoutesJoueur(pj, C)
+  if (nb > cap) {
     state.log.push({
       turn: state.turn, type: 'Commerce', joueur,
-      texte: `🛒 ${fullName(roturier)} reçoit le métier de Marchand pour tenir la nouvelle route.`,
+      texte: `🛒 ${pj.nom} dépasse son cap de routes commerciales (${nb} route(s) pour ${cap} conseillées).`,
     })
   }
-  if (joueurCible === joueur) return "La route doit viser la ville d'un autre joueur."
+  if (!pj.villes.some((v) => v.nom === villeOrigine)) {
+    return `« ${villeOrigine} » n'est pas une de tes villes.`
+  }
+  if (joueurCible === null) {
+    // ── cible CITÉ LIBRE (arbitrage 2026-10-24) ──
+    const cite = (state.citesLibres ?? []).find((c) => c.nom === (citeCible ?? villeCible))
+    if (!cite) return 'Cité libre ciblée introuvable.'
+    const nbMarchandsCite = capMarchandsCite(state, cite)
+    ;(state.routesCommerce ?? (state.routesCommerce = [])).push({
+      id: `rc-${joueur}-${nb}-${cite.nom}`,
+      joueur, villeOrigine,
+      joueurCible: null, citeCible: cite.nom, villeCible: cite.nom,
+      amenagement: null,
+    })
+    state.log.push({
+      turn: state.turn, type: 'Commerce', joueur,
+      texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${cite.nom} (cité libre) — +1 emplacement de Marchand de chaque côté (${nbMarchandsCite + 1} pour la cité).`,
+    })
+    return null
+  }
+  // ── cible VILLE D'UN AUTRE JOUEUR ──
+  if (joueurCible === joueur) return "La route doit viser la ville d'un autre joueur ou une cité libre."
   const cible = state.players.find((q) => q.n === joueurCible)
   const ville = cible?.villes.find((v) => v.nom === villeCible)
   if (!ville) return 'Ville ciblée introuvable chez ce joueur.'
+  if (!amenagement) return 'Choisis un aménagement à copier.'
   if (!(ville.amenagements ?? []).includes(amenagement)) {
     return `${villeCible} ne possède pas l'aménagement « ${amenagement} ».`
   }
@@ -361,26 +356,30 @@ export function creerRouteCommerce(
   if (cops.length === 0) {
     return `« ${amenagement} » n'a aucune production copiable.`
   }
-  if (!m) return 'Aucun personnage disponible pour tenir la route.'
   ;(state.routesCommerce ?? (state.routesCommerce = [])).push({
-    id: `rc-${m.id}-${joueurCible}-${villeCible}`,
-    joueur, marchandId: m.id, joueurCible, villeCible, amenagement,
+    id: `rc-${joueur}-${nb}-${villeCible}`,
+    joueur, villeOrigine,
+    joueurCible, citeCible: null, villeCible,
+    amenagement,
   })
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur,
-    texte: `🛒 ${fullName(m)} ouvre une route commerciale : ${m.ville} ↔ ${villeCible} (${cible?.nom ?? '?'}) — +${C.p.marchandOrTour} Or / tour pour chaque joueur, copie de « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
+    texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${villeCible} (${cible?.nom ?? '?'}) — copie de « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}) + 1 emplacement de Marchand de chaque côté.`,
   })
   return null
 }
 
 /** Change l'aménagement copié d'une route — modifiable à tout moment
- *  (arbitrage Thibaut 2026-10-15 ; marqueur (u) : aménagement entier). */
+ *  (arbitrage Thibaut 2026-10-15 ; marqueur (u) : aménagement entier).
+ *  Une route vers une cité libre n'a RIEN à copier : la fonction
+ *  refuse (elle n'a jamais rien copié). */
 export function changerCopieRoute(
   state: GameState, routeId: string, amenagement: string,
 ): string | null {
   const C = cfgOf(state.config)
   const route = routesCommerce(state).find((r) => r.id === routeId)
   if (!route) return 'Route introuvable.'
+  if (route.joueurCible === null) return 'Cette route vise une cité libre : rien à copier.'
   const cible = state.players.find((q) => q.n === route.joueurCible)
   const ville = cible?.villes.find((v) => v.nom === route.villeCible)
   if (!ville) return 'Ville ciblée introuvable chez ce joueur.'
@@ -392,15 +391,16 @@ export function changerCopieRoute(
     return `« ${amenagement} » n'a aucune production copiable.`
   }
   route.amenagement = amenagement
-  const m = (state.population[route.joueur] ?? []).find((c) => c.id === route.marchandId)
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur: route.joueur,
-    texte: `🛒 Route de ${m ? fullName(m) : 'marchand'} : copie désormais « ${amenagement} » sur ${route.villeCible} (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
+    texte: `🛒 Route ${route.villeOrigine} ↔ ${nomCibleRoute(state, route)} : copie désormais « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
   })
   return null
 }
 
-/** Ferme une route commerciale (bouton ✕ de la page Pays). */
+/** Ferme une route commerciale — bouton ✕ de la page Pays, réservé
+ *  au joueur à l'ORIGINE (arbitrage Thibaut 2026-10-24 : seul
+ *  l'origine peut fermer sa route ; la cible n'a pas de bouton). */
 export function supprimerRouteCommerce(state: GameState, routeId: string): string | null {
   const routes = routesCommerce(state)
   const route = routes.find((r) => r.id === routeId)
@@ -408,7 +408,7 @@ export function supprimerRouteCommerce(state: GameState, routeId: string): strin
   state.routesCommerce = routes.filter((r) => r.id !== routeId)
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur: route.joueur,
-    texte: `🛒 Route commerciale vers ${route.villeCible} fermée.`,
+    texte: `🛒 Route commerciale ${route.villeOrigine} ↔ ${nomCibleRoute(state, route)} fermée par son origine.`,
   })
   return null
 }

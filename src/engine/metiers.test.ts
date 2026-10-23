@@ -106,6 +106,32 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   assert.equal(capMetierVille(null, ville, C), Number.POSITIVE_INFINITY)
 })
 
+test('capMetierVille + ctx routes (sous-vague 3b 2026-10-24) : +1 Marchand par route sortante ET entrante, emplacements de la copie, vieilles routes ignorées', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  const ville: City = { ...p.villes[0], type: 'Ville', amenagements: [] }
+  assert.equal(capMetierVille('Marchand', ville, C), 0, 'sans ctx : cap inchangée (appelants sans routes)')
+  state.routesCommerce = [
+    // sortante (p à l'origine) avec une copie de Scierie (2 Bûcheron)
+    { id: 'r-out', joueur: p.n, villeOrigine: 'Capitale', joueurCible: 1, citeCible: null, villeCible: 'Ailleurs', amenagement: 'Scierie' },
+    // entrante (p ciblé par le joueur 1)
+    { id: 'r-in', joueur: 1, villeOrigine: 'Loin', joueurCible: p.n, citeCible: null, villeCible: 'Capitale', amenagement: null },
+  ]
+  const ctx = { state, joueur: p.n }
+  assert.equal(capMetierVille('Marchand', ville, C, ctx), 2, '+1 par route sortante + 1 par route entrante')
+  assert.equal(capMetierVille('Bûcheron', ville, C, ctx), 2, 'la copie de la Scierie ouvre SES emplacements dans la ville d origine (2 Bûcheron)')
+  // vieilles routes du modèle « marchand titulaire » (marchandId) : ignorées
+  state.routesCommerce.push({
+    id: 'r-old', joueur: p.n, villeOrigine: 'Capitale', joueurCible: 1,
+    citeCible: null, villeCible: 'Ailleurs', amenagement: "Mine d'Or", marchandId: 'm-x',
+  } as import('./types').RouteCommerce)
+  assert.equal(capMetierVille('Marchand', ville, C, ctx), 2, 'la vieille route marchandId ne compte pas (purge au prochain fin de tour)')
+  // une autre ville ne compte PAS les routes d'ailleurs
+  const autre: City = { ...ville, nom: 'Periphery' }
+  assert.equal(capMetierVille('Marchand', autre, C, ctx), 0, 'les routes ne comptent que pour leur ville d origine / cible')
+})
+
 test('reaffecterMetiers : surnombre — les plus âgés perdent leur métier, les décédés ne comptent pas', () => {
   const state = partie()
   const C = cfgOf(state.config)
@@ -325,7 +351,7 @@ test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, 
   assert.equal(avecTrouv.bonusTaxes['Tourisme'], undefined, 'aucun bonus sur une ressource non produite')
 })
 
-test('reaffecterMetiers (vague 3) : un Marchand qui tient une route n est pas décoiffé (poste créé par la route)', () => {
+test('reaffecterMetiers (sous-vague 3b 2026-10-24) : une route sortante OUVRE un emplacement de Marchand — le cap compte la route, plus de titulaire', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -334,14 +360,14 @@ test('reaffecterMetiers (vague 3) : un Marchand qui tient une route n est pas d�
     perso('m-libre', 50, { metier: 'Marchand' }),
   ]
   state.routesCommerce = [{
-    id: 'rc-test', joueur: p.n, marchandId: 'm-route', joueurCible: 1,
-    villeCible: 'Ailleurs', amenagement: 'Scierie',
+    id: 'rc-test', joueur: p.n, villeOrigine: 'Capitale', joueurCible: 1,
+    citeCible: null, villeCible: 'Ailleurs', amenagement: 'Scierie',
   }]
   invaliderIndexPopulation()
   reaffecterMetiers(state, C)
   const parId = new Map(state.population[p.n].map((c) => [c.id, c]))
-  assert.equal(parId.get('m-route')!.metier, 'Marchand', 'le titulaire de la route garde son poste (emplacements Marchand = Mines d Or ET routes, spec vague 3)')
-  assert.equal(parId.get('m-libre')!.metier, 'Commerçant', 'sans Mine d Or ni route : le marchand libre perd son poste (cap 0) puis prend un poste de la base du rang (Commerçant, priorisé avant Chasseur — vague 3b)')
+  assert.equal(parId.get('m-route')!.metier, 'Marchand', 'cap Marchand = 1 (la route sortante ouvre un emplacement) : un Marchand reste en poste')
+  assert.equal(parId.get('m-libre')!.metier, 'Commerçant', 'surnombre : le plus âgé sort (l exemption « tient une route » a été retirée avec la dissociation — plus de marchand titulaire) puis prend un poste de la base du rang (Commerçant, priorisé avant Chasseur — vague 3b)')
 })
 
 test('Garde (vague 3a) : +garnisonParGarde Garnison STATIQUE par Garde en poste (valeur d état, jamais un flux)', () => {

@@ -246,31 +246,51 @@ export interface CiteLibre {
   population?: Character[]
 }
 
-/** Route commerciale (marqueur (t)) : un personnage titré « Marchand »
- *  relie SA ville à la ville d'un AUTRE joueur. Chaque tour, les deux
- *  joueurs gagnent marchandOrTour Or (4 par défaut) ; le propriétaire
- *  copie en plus la production d'UNE ressource d'UN aménagement de la
- *  ville ciblée (choix modifiable à tout moment — arbitrage Thibaut
- *  2026-10-15). Un marchand ne tient qu'une route ; elle se ferme s'il
- *  meurt ou perd son metier (nettoyerRoutesCommerce, engine/commerce.ts).
+/** Route commerciale DISSOCIÉE du Marchand (vague 3b, arbitrage
+ *  Thibaut 2026-10-24 « on peut passer à la vague 3b ») : ouverte par
+ *  le joueur (gratuit — arbitrage), indépendamment de tout personnage,
+ *  elle relie une ville d'ORIGINE du joueur à la ville d'un AUTRE
+ *  joueur ou à une CITÉ LIBRE (arbitrage). Effets : le joueur à
+ *  l'origine COPIE exactement UN aménagement de la ville ciblée —
+ *  sa production ET ses emplacements de population (matérialisés dans
+ *  la ville d'origine) — et la route ouvre +1 emplacement de
+ *  Marchand de CHAQUE côté (ville d'origine + ville ciblée / cité).
+ *  L'ancien bonus d'Or passif des deux côtés (marchandOrTour)
+ *  DISPARAÎT (arbitrage) : le Marchand est un métier de production
+ *  (+2 Or / tour) dont les emplacements viennent des Mines d'Or et
+ *  des routes. Fermeture : bouton ✕ du seul joueur à l'ORIGINE
+ *  (arbitrage) + nettoyage automatique (ville/aménagement disparus).
+ *  HISTORIQUE (règle 9) : l'ancien modèle « un marchand tient la
+ *  route » (champ marchandId) a été retiré le 2026-10-24 ; les
+ *  routes des anciennes sauvegardes sont SUPPRIMÉES à la migration
+ *  (arbitrage Thibaut : « à rouvrir manuellement ») — elles portent
+ *  encore marchandId et sont ignorées puis purgées par
+ *  nettoyerRoutesCommerce (engine/commerce.ts).
  *  Champ optionnel de GameState : absent des vieilles sauvegardes → []. */
 export interface RouteCommerce {
   id: string
-  /** N° du joueur PROPRIÉTAIRE du marchand (encaisse Or + copie). */
+  /** N° du joueur à l'ORIGINE de la route (encaisse la copie). */
   joueur: number
-  /** Id du personnage portant le metier « Marchand ». */
-  marchandId: string
-  /** N° du joueur propriétaire de la ville ciblée (encaisse l'Or). */
-  joueurCible: number
-  /** Ville ciblée (une ville de joueurCible — les cités libres ne
-   *  produisent rien, cf. l'effet Marchand du référentiel). */
+  /** Ville d'origine chez le joueur (reçoit le +1 emplacement
+   *  Marchand et les emplacements de l'aménagement copié). */
+  villeOrigine: string
+  /** N° du joueur propriétaire de la ville ciblée — null si la
+   *  cible est une cité libre. */
+  joueurCible: number | null
+  /** Nom de la CITÉ LIBRE ciblée (uniquement si joueurCible === null). */
+  citeCible?: string | null
+  /** Ville ciblée (une ville de joueurCible, ou le nom de la cité). */
   villeCible: string
   /** Aménagement copié (présent dans la ville ciblée) — ENTIER
-   *  (marqueur (u) : toutes ses ressources positives). */
-  amenagement: string
-  /** OBSOLÈTE (marqueur (u)) : ne plus lire ni écrire — l'aménagement
-   *  entier est copié. Champ gardé OPTIONNEL pour les sauvegardes
-   *  faites sous le marqueur (t) (ignorez la valeur). */
+   *  (marqueur (u) : production + emplacements de population) ;
+   *  null pour une cité libre (rien à copier). */
+  amenagement: string | null
+  /** CLÉS OBSOLÈTES des anciens modèles, jamais lues : marchandId
+   *  (marchand titulaire, retiré le 2026-10-24) et ressource
+   *  (marqueur (u)). Conservées OPTIONNELLES pour que les vieilles
+   *  sauvegardes restent chargeables telles quelles (les routes
+   *  anciennes sont purgées par nettoyerRoutesCommerce). */
+  marchandId?: string
   ressource?: string
 }
 
@@ -393,10 +413,12 @@ export interface ApportsTour {
    *  (engine/citesLibres.ts — étape 3decies). Champ optionnel : absent
    *  des historiques d'avant l'ajout du canal. */
   citesLibres?: Record<string, number>
-  /** routes commerciales des marchands (engine/commerce.ts — étape
-   *  3terdecies : +marchandOrTour Or pour chaque joueur relié + copie
-   *  d'une ressource d'un aménagement de la ville ciblée). Champ
-   *  optionnel : absent des historiques d'avant le canal. */
+  /** routes commerciales dissociées (engine/commerce.ts — étape
+   *  3terdecies : copie de la production de l'aménagement entier de
+   *  la ville ciblée dans la ville d'origine ; l'Or passif
+   *  marchandOrTour a été retiré le 2026-10-24 — sous-vague 3b,
+   *  arbitrage Thibaut). Champ optionnel : absent des historiques
+   *  d'avant le canal. */
   commerce?: Record<string, number>
   /** bonus de proximité des villes (marqueur (y) : Rivière
    *  +proxRiviereNourriture, Mer +proxMerNourriture Nourriture/tour —
