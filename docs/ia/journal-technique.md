@@ -1455,6 +1455,57 @@ B = refactor(moteur) code+config, C = test+diag, D = docs(ia) ;
 miroirs v4 avec blobs identiques (15/15 md5), CI verte, déployé
 (bundle index-OaE7lVQB.js).
 
+## Refonte formats & dette legacy (2026-10-23, retour Thibaut — revue structure / SOLID)
+
+Première vague de l'arbitrage Thibaut sur l'audit structure/SOLID
+(structure 2 « supprimer les vieilles dettes » + cohérence). 12
+fichiers code touchés, comportement moteur inchangé (diag
+identique).
+
+**Dette legacy supprimée** : les tables pré-canonicalisation
+`batimentsVille`, `batimentsChateau`, `batimentsCouts`,
+`amenagements` sont retirées de referentiels.json, de l'interface
+GameConfig, des défauts et de diag.ts ; `normaliserBatiments()`
+dérive désormais tout de la table canonique `constructions` ;
+`cfgOf` supprime les 4 clés orphelines des configs persistées
+(idempotent). Le repli `coutBatiment` (texte legacy → table
+constructions) disparaît : `coutBatimentRef` devient le seul
+chemin (batiments.ts).
+
+**Formats unifiés** (règle Thibaut : « tous les métiers sont
+toujours au singulier ») : `metiersBase` remplace la chaîne
+`metiersDisponibles` par un tableau structuré
+`[{metier, places}]` au singulier ; migration ciblée dans `cfgOf`
+(texte pluriel → singulier, entrées inconnues ignorées,
+idempotente, validée vs `merged.metiers`) ; les replis
+`habitationDef`/`rangsDisponibles` « ancien format » partent avec
+(regimes.ts) ; le parsing runtime (`parseMetiersDisponibles`,
+`normaliseMetier`) est supprimé au profit du nouveau
+`parseMetiersBaseTexte` (defaultConfig.ts), utilisé par
+l'éditeur UI (ConfigTables) et le wiki (ReferenceDataPanel).
+
+**Lookups dédupliqués** : `rangsDefsType`/`rangDef` = point
+d'entrée unique (type,rang) partagé par habitationDef,
+rangsDisponibles, rangNiveau (habitations.ts, regimes.ts) ;
+`gameData2.buildingDef` apparie d'abord exactement puis sans les
+accents (École/Ecole).
+
+**Effets moteur en données** (préparation du point O) : les
+constructions portent désormais leurs champs moteur
+(`ecoleRang`, `malContraction`, `bonusGuerison`,
+`bonusGuerisonGlobal`) dans le référentiel ; littéral « Guilde
+des médecins » (`bonusGuerisonGlobal` 0,10) ajouté à la
+dérivation — POINT OUVERT : arbitrer son coût/constructibilité.
+
+Tests : +2 cas (migration texte→tableau + clés legacy disparues +
+idempotence ; effets moteur en données + vue dérivée + Guilde).
+Total : 155/155 verts, tsc EXIT 0, diag exit 0 et sortie
+identique à la base, bundle esbuild OK. Push en six commits
+(A référentiel, B moteur, C UI, D tests, E diag, F docs) ;
+miroirs v4 avec blobs identiques. Vagues 2-3 (import cycles,
+classe mère/ports, Ponton→proximité, Grand bailli) : design à
+venir, implémentation reportée à l'arbitrage Thibaut.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

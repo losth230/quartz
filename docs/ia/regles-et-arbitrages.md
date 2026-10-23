@@ -592,8 +592,26 @@ rang 1). Arbitrages actés lors de la session :
   `rangsHabitation` est retirée (referentiels.json, interface, défauts,
   replis « ancien format »). La production des habitations et leurs
   emplacements restent intacts.
+- **Dette legacy retirée (2026-10-23, retour Thibaut — revue
+  structure/SOLID)** : les tables pré-canonicalisation
+  (`batimentsVille`, `batimentsChateau`, `batimentsCouts`,
+  `amenagements`) disparaissent — `normaliserBatiments()` dérive
+  tout de la table canonique `constructions` ; le repli
+  `coutBatiment` (texte legacy) est supprimé au profit du seul
+  chemin canonique. **Formats unifiés** : les métiers sont
+  TOUJOURS au singulier ; `metiersBase` est un tableau structuré
+  `[{metier, places}]` (plus de chaîne `metiersDisponibles`, plus
+  de parsing runtime, migration idempotente des configs
+  persistées). **Lookup unique** (type,rang) partagé partout.
+  Les effets moteur des constructions sont en données dans le
+  référentiel (`ecoleRang`, `malContraction`, `bonusGuerison`,
+  `bonusGuerisonGlobal`).
 - **Points ouverts** : garnisons hors-rang (régimes, ministères,
-  bâtiments rang 2+) inchangées.
+  bâtiments rang 2+) inchangées ; **Guilde des médecins**
+  (bonusGuerisonGlobal 0,10) — arbitrer coût et constructibilité ;
+  scalabilité (mémoïsation) remise à plus tard par Thibaut ;
+  vagues 2-3 de la refonte SOLID (import cycles / classe mère /
+  ports, Ponton→proximité, Grand bailli) en attente d'arbitrage.
 
 ### Déménagement : perte du métier ET du domicile (arbitré 2026-10-21, vague 3a ; complément Dirigeant/Héritier le même soir)
 
