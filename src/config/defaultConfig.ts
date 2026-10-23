@@ -1080,8 +1080,23 @@ export function convergerConfig(c: GameConfig | undefined): GameConfig {
   return cfgOf(c).config
 }
 
+/** Cache de cfgOf par RÉFÉRENCE de configuration (vague
+ *  scalabilité 2026-10-23). Sûreté (arbitrage Thibaut : « une
+ *  seule config globale, modifiable en dehors des parties et
+ *  jamais remodifiée après adoption ») : toute édition de la
+ *  config passe par une NOUVELLE référence — le cache suit chaque
+ *  édition, il ne peut pas servir un résultat périmé. Clé WeakMap :
+ *  une config abandonnée libère son entrée au GC. Motivation :
+ *  ~47 000 appels de cfgOf par tour à 16 000 habitants (défauts de
+ *  signature « C: Cfg = cfgOf(...) » évalués par habitant), chaque
+ *  appel non caché rejouait fusion + migrations + garde-fous —
+ *  ~34 % du temps de fin de tour (profil CPU, bench 16k). */
+const CACHE_CFG = new WeakMap<GameConfig, Cfg>()
+
 export function cfgOf(config?: GameConfig): Cfg {
   const c = config ?? DEFAULT_CONFIG
+  const cache = CACHE_CFG.get(c)
+  if (cache) return cache
   const merged: GameConfig = {
     ...DEFAULT_CONFIG,
     ...c,
@@ -1590,7 +1605,7 @@ export function cfgOf(config?: GameConfig): Cfg {
   merged.constructions = (merged.constructions ?? []).filter(
     (c) => (c.rangMinHabitation ?? 0) < 2,
   )
-  return {
+  const resultat: Cfg = {
     p: merged.params,
     ressources: merged.ressources,
     metiers: merged.metiers,
@@ -1609,6 +1624,8 @@ export function cfgOf(config?: GameConfig): Cfg {
     couleurs: migrerCouleurs(merged.couleurs),
     config: merged,
   }
+  CACHE_CFG.set(c, resultat)
+  return resultat
 }
 
 /** Deep-clone la config par défaut pour une nouvelle partie. */
