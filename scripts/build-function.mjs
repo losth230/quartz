@@ -21,14 +21,14 @@ const out = join(root, 'supabase/functions/resoudre-tour/_engine.mjs')
 rmSync(out, { force: true })
 
 const result = await build({
-  entryPoints: [join(root, 'src/engine/engine.ts')],
+  entryPoints: [join(root, 'src/engine/edge.ts')],
   bundle: true,
   format: 'esm',
   platform: 'neutral',
   target: 'esnext',
   outfile: out,
   // Les tests ne sont jamais embarqués (seuls les modules importés
-  //  par engine.ts le sont — le graphe suit les imports réels).
+  //  par edge.ts le sont — le graphe suit les imports réels).
   logLevel: 'info',
 })
 

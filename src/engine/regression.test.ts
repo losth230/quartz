@@ -14,7 +14,8 @@
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { runTurn, normaliserEtat } from './engine'
+import { runTurn } from './tour'
+import { normaliserEtat } from './villes'
 import { createGame, type SetupLine } from './setup'
 import type { GameState, Player, Character } from './types'
 

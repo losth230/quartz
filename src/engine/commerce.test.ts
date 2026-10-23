@@ -11,7 +11,9 @@
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { runTurn, normaliserEtat, creerRouteCommerce } from './engine'
+import { runTurn } from './tour'
+import { normaliserEtat } from './villes'
+import { creerRouteCommerce } from './commerce'
 import { ressourcesCopiables, effetsCommerceJoueur } from './commerce'
 import { tourismeCourant } from './regimes'
 import { cfgOf } from './gameData'

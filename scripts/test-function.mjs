@@ -20,8 +20,8 @@ if (out.turn !== 2) throw new Error('le tour doit avancer (2 attendu, ' + out.tu
 console.log('✓ bundle moteur fonctionnel — runTurn: tour', out.turn, '| saison', out.saison)
 
 // ── Intégration : tour complet sur une partie réelle, bâtiments via la banque ──
-// createGame n'est pas exporté par la façade engine.ts (seule la façade
-//  est bundlée) : l'état est fabriqué comme le fait setup.ts, puis
+// createGame n'est pas exporté par le point d'entrée edge.ts (seul ce
+//  module minimal est bundlé) : l'état est fabriqué comme le fait setup.ts, puis
 //  runTurn l'exécute — les effets de construction passent par la
 //  banque d'effets (constructions.ts → rules/).
 const state2 = {
