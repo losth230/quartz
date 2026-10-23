@@ -1812,6 +1812,72 @@ embarque Date.now(), cf. shared.ts : un rejeu produit les mêmes
 **Push** : perf(config) + perf(moteur) + bench(scripts) + docs(ia),
 miroirs v4 (code seulement, suffixe « (miroir v4) »).
 
+## Vague qualité — cycles rules↔engine déjà cassés, découpage des 5 grosses vues (2026-10-24, arbitrage Thibaut)
+
+**Découverte préalable — le point « 13 cycles rules↔engine » était PÉRIMÉ.**
+Avant d'attaquer la vague qualité, la vérification d'usage a révélé que
+les « 13 cycles d'imports `rules/` ↔ `engine/` » cités au journal
+(entry 2026-10-13) et dans les suites possibles de
+regles-et-arbitrages.md **n'existent plus** : analyse exhaustive des
+imports statiques, re-exports et imports dynamiques (tests inclus) →
+**0 paire réciproque, 0 composante fortement connexe de plus d'un
+fichier**. Ils ont été cassés par la vague 2 SOLID (2026-10-23/24,
+« cycles 25 → 0, graphe entièrement acyclique ») sans que les entrées
+plus anciennes du journal et la liste des suites ne soient mises à
+jour. Le point de regles-et-arbitrages.md est corrigé dans ce commit
+(le journal garde ses entrées historiques telles quelles : c'est un
+journal). La vague qualité se réduit donc au **découpage des 5
+grosses vues**.
+
+**Découpage des 5 vues (mécanique, sémantique STRICTEMENT identique)** —
+patron unique : un sous-dossier par vue dans `src/components/`, une
+carte/section = un composant autonome, la logique pure (filtres,
+formatage, chaînes de suzerains…) dans un `logique*.ts` sans React,
+l'orchestrateur garde les filtres + l'aiguillage + les mutations du
+store (passées aux cartes par props), l'état local `useState` vit
+dans la carte qui le sert, et les docblocks d'arbitrage sont DÉPLACÉS
+avec leur code (règle 9). Aucun comportement modifié, aucune ligne
+moteur touchée.
+
+- **PopulationTable.tsx** 632 → 432 l. + `population/` (logiquePopulation.ts
+  93, LignePersonnage 132, CarteMetiersPlaces 83, CarteAjoutHabitants
+  37 — état local du formulaire inclus, CarteRecapTour 32).
+- **ReferenceDataPanel.tsx** 609 → 71 l. + `reference/` (logiqueReference.ts
+  33 : ONGLETS + fmtEffetTech ; 9 fichiers d'onglets, aiguillage une
+  ligne par onglet — les onglets « Crises », « Rappels règles » et
+  « Offrandes » restent trois composants DISTINCTS comme trois onglets).
+- **ConfigTables.tsx** 544 → 19 l. de BARREL (API publique ré-exportée à
+  l'identique, ParamsPanel inchangé) + `params/` (logiqueParams.ts 18 :
+  TableProps + GROUPES_BAT ; EditeursEffets 123 ; ConstructionsParams
+  105 ; ProgresParams 95 ; PaysHabitationsParams 109 ; CouleursParams 121).
+- **RoyaumeView.tsx** 430 → 60 l. + `royaume/` (logiqueRoyaume.ts 26 :
+  chaineSuz + pers ; CarteIdentite 66, CarteRoyaume 156 — sacre inclus,
+  CarteVassalite 138, CartePersonnagesImportants 81).
+- **CitesLibresView.tsx** 426 → 176 l. + `citesLibres/`
+  (logiqueCitesLibres.ts 9 : fmtNum ; CarteReservesEmissaires 28,
+  CarteRegle 43, CarteCreation 74 — état local du formulaire inclus,
+  CarteCite 217 : fiche d'une cité, identité + émissaires + annexion).
+
+Choix d'ingénierie à noter : le barrel ConfigTables (vs. re-câblage du
+consommateur) parce que son API est publique et ré-exportée proprement ;
+la garde anti-cycle du harnais vérifie aussi les nouveaux sous-dossiers.
+
+**Non-régression** : 134/134 tests verts, diag exit 0, **0 cycle**
+(0 réciproque, 0 SCC>1 — sous-dossiers inclus), `tsc --noEmit` strict
+0 erreur (env tarballs registry reconstruit : typescript 5.9.3,
+react 18.3.1, react-dom 18.3.1, @types/react 18.3.31,
+@types/react-dom 18.3.31, csstype 3.2.3, @types/node 25.0.3) et
+**parité vs tarball HEAD frais : 0 nouvelle erreur** (`comm -13` des
+sorties filtrées `grep -v "TS2307\|supabase"`). diff -rq : 5 fichiers
+modifiés + 5 sous-dossiers nouveaux, RIEN d'autre (moteur intact →
+bench 16k non rejoué, aucune ligne moteur touchée). Équivalence
+vérifiée à la main sur les points de friction : clamp
+`Math.max(1, Math.round(addNb))` de l'ajout d'habitants conservé,
+villes d'ajout `[cite.nom]` vs villes du joueur, aiguillage un-onglet-une-carte.
+
+**Push** : refactor(ui) × 5 (un commit par vue, diffs relisibles) +
+docs(ia), miroirs v4 (code seulement, suffixe « (miroir v4) »).
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

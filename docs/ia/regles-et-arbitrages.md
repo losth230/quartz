@@ -711,9 +711,14 @@ rang 1). Arbitrages actés lors de la session :
 3. Purge de l'Influence de tout le référentiel : voie diplomatique, seuils
    « 10 Influence/été », décisions, progrès Délégation/Ambassade/Vassalisation,
    universités, marchands.
-4. Vague qualité suivante : assainissement des cycles d'imports `rules/ ↔ engine/`
-   (13 cycles) et découpage des 5 grosses vues restantes (PopulationTable ~800 l.,
-   ReferenceDataPanel ~650, RoyaumeView ~630, ConfigTables ~600, CitesLibresView ~430).
+4. ~~Vague qualité : assainissement des cycles d'imports `rules/ ↔ engine/`
+   (13 cycles) et découpage des 5 grosses vues restantes~~ **FAIT le
+   2026-10-24** : le point « 13 cycles » était périmé — ils avaient déjà
+   été cassés par la vague 2 SOLID (2026-10-23/24, 0 cycle, graphe
+   acyclique) ; le découpage des 5 vues (PopulationTable,
+   ReferenceDataPanel, ConfigTables, RoyaumeView, CitesLibresView) est
+   fait, sémantique strictement identique (cf. journal technique,
+   section « Vague qualité »).
 - **Refonte SOLID vague 2 (2026-10-23/24, arbitrages Thibaut « tout
   dans la vague 2 », « une seule config globale modifiable en dehors
   des parties et jamais remodifiée après »)** : la couche rules
