@@ -464,11 +464,14 @@ test('vague 3b : ordre de prise de poste « n\'importe quel métier → Chasseur
 test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compte plus, les emplacements propres si', () => {
   const state = partie()
   // Simplification (retour Thibaut 2026-10-23) : les aménagements de
-  //  rang 2+ (tiers 2/3) sont retirés du RÉFÉRENTIEL, mais la mécanique
-  //  d'amélioration (remplaceAmenagement) reste en place, prête à les
-  //  recevoir à leur retour — les tests réinjectent les defs tier
-  //  localement (forme exacte de l'ancien référentiel).
-  state.config!.constructions.push(
+  //  rang 2+ (tiers 2/3) sont retirés du RÉFÉRENTIEL et cfgOf FILTRE
+  //  désormais les constructions rang ≥ 2 des configs convergées —
+  //  la mécanique d'amélioration (remplaceAmenagement) reste en
+  //  place, prête à les recevoir à leur retour : les defs tier sont
+  //  réinjectées APRÈS convergence (dans C.config, une fois cfgOf
+  //  passé — forme exacte de l'ancien référentiel).
+  const C = cfgOf(state.config)
+  C.config.constructions.push(
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 2)',
       terrain: 'Baleine', cout: '15 Or + 3 Pierre', production: '', description: '',
       effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Baleinier',
@@ -479,7 +482,7 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
       emplacements: [{ metier: 'Pêcheur', places: 7 }, { metier: 'Commerçant', places: 10 }] },
   )
   // Simplification : les defs tiers 2/3 également utiles aux caps.
-  state.config!.constructions.push(
+  C.config.constructions.push(
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Champ (tier 2)',
       terrain: 'Plaine', cout: '15 Or + 3 Pierre', production: '', description: '',
       effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Champ',
@@ -489,7 +492,6 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
       effets: [], rangMinHabitation: 3, remplaceAmenagement: 'Scierie (tier 2)',
       emplacements: [{ metier: 'Bûcheron', places: 6 }, { metier: 'Tisseur', places: 2 }] },
   )
-  const C = cfgOf(state.config)
   const p = state.players[0]
   // Baleinier (tier 2) : +5 Pêcheur, +5 Commerçant (caps CUMULATIVES :
   //  le Commerçant = base du rang 1 + 5 emplacements du tier 2).
