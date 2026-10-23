@@ -619,8 +619,8 @@ rang 1). Arbitrages actés lors de la session :
   Vague 2 SOLID ARBITRÉE le 2026-10-23 et IMPLÉMENTÉE le
   2026-10-24 (cycles d'imports 25 → 0, ports ctx.ports,
   Ponton→proximité, Grand bailli supprimé — cf. bullet vague 2
-  ci-dessous) ; le redécoupage de la façade engine.ts reste à
-  faire en propre.
+  ci-dessous) ; la façade engine.ts est SUPPRIMÉE le 2026-10-24
+  (tour.ts + edge.ts — fin de la vague 2).
 - **Simplification provisoire (2026-10-23, retour Thibaut « alléger
   pour dérouiller »)** : la SANTÉ est ignorée pour l'instant ; les
   constructions de rang d'habitation 2+ sont SUPPRIMÉES du
@@ -724,7 +724,9 @@ rang 1). Arbitrages actés lors de la session :
   25 cycles d'imports du moteur sont cassés (graphe entièrement
   acyclique : indexPopulation, rangs, progresTech, garnisons,
   geographie — nouveaux modules bas niveau ré-exportés par leurs
-  modules d'origine, façade et UI inchangées) ; **Ponton→proximité** :
+  modules d'origine) ; **façade engine.ts supprimée** le 2026-10-24 :
+  runTurn + sermentsPossedes → tour.ts, entrée bundle Edge → edge.ts,
+  20 consommateurs recâblés vers les modules sources ; **Ponton→proximité** :
   « côtière » = TOUTE proximité autre que « Plaine » (l'arbitrage
   2026-10-22 câblé littéralement — une future proximité comptera sans
   toucher au code) ; **Grand bailli** supprimé (« c'est un ministre,

@@ -1691,6 +1691,56 @@ actée par Thibaut), groupement par ville dans reaffecterMetiers, bench
 **Push** en trois commits (refactor(moteur), test, docs(ia)) +
 miroirs v4 (code seulement).
 
+## Suppression de la façade engine.ts — fin de la vague 2 (2026-10-24, arbitrage Thibaut « tout dans la vague 2 »)
+
+**Arbitrage Thibaut** (2026-10-23) : la façade fait partie de la vague 2
+(« tout dans la vague 2 »), scalabilité/mémoïsation en vague SUIVANTE.
+
+La façade `src/engine/engine.ts` (451 lignes : 30 blocs de ré-exports,
+211 symboles vers 22 modules sources, + `runTurn` et `sermentsPossedes`
+en propre) est SUPPRIMÉE :
+
+1. **`src/engine/tour.ts`** (nouveau) : `runTurn` (séquence FinDeTurn)
+   et `sermentsPossedes` extraits verbatim, en-tête réécrit.
+2. **`src/engine/edge.ts`** (nouveau) : découverte de session —
+   engine.ts n'était pas qu'une façade, c'était AUSSI le point d'entrée
+   du bundle Edge Function (`scripts/build-function.mjs` bundlait
+   engine.ts ; le handler `resoudre-tour` consomme runTurn,
+   fusionnerSections, rejouerEvenementsPartages, migrerEtat,
+   appliquerConfigMondiale, etatReseau ; son test d'exécution
+   normaliserEtat). edge.ts exporte exactement ces 8 symboles —
+   toute évolution du handler = UNE ligne dans edge.ts.
+   `scripts/build-function.mjs` : entrée → edge.ts.
+3. **Re-câblage des 20 consommateurs** vers les modules sources
+   directs : 15 fichiers UI/state + testRendu.ts + setup.ts
+   (consommateur oublié révélé par la garde du patch) + les 3 tests
+   moteur (statiques et dynamiques — `import('./engine')` →
+   `import('./tour')`). Le mapping symbole→module a été PARSÉ depuis
+   les 30 blocs de ré-export de la façade elle-même (aucune table
+   manuelle), via patch-v3a.py idempotent avec asserts.
+4. Docblocks obsolètes mis à jour (mentions engine.ts/façade dans
+   villes.ts, rangs.ts, build-function.mjs, test-function.mjs) — les
+   docblocks d'arbitrage historiques sont conservés.
+
+**Métriques** : 0 cycle (inchangé), plus aucune référence à la façade
+dans src (garde grep). Validation : 127/127 tests (node strip-types +
+hooks ESM), diag exit 0 sortie identique, `tsc --noEmit` strict
+**0 nouvelle erreur** (diff contre tarball HEAD frais — types
+reproduits par tarballs registry : typescript 5.9.3, react 18.3.1,
+@types/react 18.3.31, csstype 3.2.3, @types/node 25.0.3 ; un double
+marqueur `import type { type X }` a été révélé par la parité dans
+RessourcesBar.tsx et corrigé), diff -rq : 24 modifiés + 2 nouveaux
+(tour.ts, edge.ts) + 1 supprimé (engine.ts), rien d'inattendu.
+
+**Vague suivante (annoncée)** : scalabilité — mémoïsation cfgOf par
+référence (WeakMap — sûreté actée par Thibaut : « une seule config
+globale, jamais remodifiée après adoption »), groupement par ville
+dans reaffecterMetiers, bench 16k habitants avant/après.
+
+**Push** en trois commits (refactor(moteur) + test inclus,
+refactor(scripts) entrée edge, docs(ia)) + miroirs v4 (code seulement,
+delete_file engine.ts par branche).
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
