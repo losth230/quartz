@@ -49,7 +49,7 @@ export function fluxProgresJoueur(state: GameState, p: Player, C: Cfg): Record<s
 /** One-shot au DÉBLOCAGE d'une technologie (appelé par ProgresView) :
  *  crédite Science / Or / Habitants / Émissaires et retourne un texte
  *  de log (vide = rien à créditer). */
-export function gainDeblocageProgres(state: GameState, p: Player, nomTech: string): string {
+export function gainDeblocageProgres(_state: GameState, p: Player, nomTech: string): string {
   const credit = (res: string, v: number): string => {
     if (res === '\u00c9missaires') {
       p.emissaires = (p.emissaires ?? 0) + v
@@ -82,11 +82,10 @@ export function gainDeblocageProgres(state: GameState, p: Player, nomTech: strin
     case 'Taxes n\u00e9c\u00e9ssaire II': return credit('Or', 300)
     case '\u00c9missaires de cour': return credit('\u00c9missaires', 1)
     case 'Progrès du développement économique C': {
-      // Revue 2026-10-16 : 50 Or par ministre en poste au déblocage
-      //  (la montée de rang est gérée par ProgresView, qui a l'état).
-      const nbMinistres = (state.population[p.n] ?? [])
-        .filter((c) => c.statut !== 'Décédé' && c.metier === 'Ministre' && c.ministere).length
-      return nbMinistres > 0 ? credit('Or', 50 * nbMinistres) : ''
+      // Retrait ministères (retour Thibaut 2026-10-23) : l'effet
+      //  « 50 Or par ministre en poste » n'a plus de ministres à
+      //  compter — plus rien à créditer au déblocage.
+      return ''
     }
     case 'Geste': return credit('\u00c9missaires', 1)
     case 'Hommage solennel': return credit('\u00c9missaires', 2)

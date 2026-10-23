@@ -17,7 +17,6 @@ import type {
 import { cfgOf } from '../../engine/gameData'
 import { capitaleDe } from '../../engine/factions'
 import { rangNiveau, garnisonHabitationVille } from '../../engine/regimes'
-import { aMinistre, portefeuillesDuJoueur } from '../../engine/ministeres'
 import { clesTechsParNom } from '../registry'
 
 // ── Conditions ─────────────────────────────────────────────────────────────
@@ -31,7 +30,6 @@ export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: Contex
   if (cond.saison && ctx.saison !== cond.saison) return false
   if (cond.vassal === true && joueur.vassalDe == null) return false
   if (cond.vassal === false && joueur.vassalDe != null) return false
-  if (cond.ministre && !aMinistre(ctx.state, joueur, cond.ministre)) return false
   if (cond.tech && !(joueur.progresDebloques ?? []).includes(cond.tech)) return false
   if (cond.regime && joueur.regime !== cond.regime) return false
   if (cond.culture && joueur.culture !== cond.culture) return false
@@ -70,15 +68,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       }
       break
     }
-    case 'fluxJoueurParMinistre': {
-      // Production CUMULABLE : valeur × nombre de ministres VIVANTS
-      //  portant le portefeuille (arbitrage Thibaut : deux fois le
-      //  même portefeuille = effet doublé).
-      const nb = portefeuillesDuJoueur(ctx.state, ctx.joueur)
-        .filter((m) => m === e.portefeuille).length
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
+
     case 'fluxParAmenagement': {
       // Production CUMULABLE : valeur × nombre d'aménagements portant
       //  l'un des noms listés dans TOUTES les villes du joueur (ex.
@@ -190,10 +180,6 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       if (ctx.ville?.rang) {
         out.garnison += e.valeur * rangNiveau(ctx.ville, cfgOf(ctx.state.config))
       }
-      break
-    }
-    case 'garnisonJoueur': {
-      out.garnison += e.valeur
       break
     }
     case 'tourismeInstantane':

@@ -26,7 +26,6 @@
 import type { City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
 import { parseCoutTexte } from './constructions'
-import { aMinistre } from './ministeres'
 import { reductionFondation, aTech } from './progresAuto'
 
 /** Nom court d'un rang d'habitation (« Hameau : 20 Or… » → « Hameau »). */
@@ -91,12 +90,6 @@ export function debiterCoutHabitation(
 ): Record<string, number> {
   const def = habitationDef(ville, C)
   const cout = coutHabitation(ville, C)
-  let reducBailli = false
-  if (fondation && aMinistre(state, p, 'Grand bailli')) {
-    reducBailli = true
-    if (cout['Or'] !== undefined) cout['Or'] = Math.max(0, cout['Or'] - 8)
-    if (cout['Bois'] !== undefined) cout['Bois'] = Math.max(0, cout['Bois'] - 3)
-  }
   // Technologies (revue 2026-10-15) : Colonialisme durable (-5 Bois)
   //  et economome (-20 Or) sur les FONDATIONS d'habitation.
   // Expansion maritime s'applique aux côtières pour la fondation ET
@@ -121,7 +114,6 @@ export function debiterCoutHabitation(
     turn: state.turn, type: 'Système', joueur: p.n,
     texte: `🏰 ${ville.nom} — ${def?.rang ?? typeVille(ville)} (${typeVille(ville)})` +
       (parts ? ` — coût débité du stock : ${parts}` : ' — gratuit') +
-      (reducBailli ? ' (Grand bailli : −8 Or, −3 Bois).' : '') +
       (requis > 0 && vivants < requis
         ? ` ⚠ habitants insuffisants (${vivants}/${requis}).`
         : '.') +

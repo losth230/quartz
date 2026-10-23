@@ -10,7 +10,6 @@ import type { Character, Player, GameState } from './types'
 import { cfgOf, cultureDef, metierDef } from './gameData'
 import { schoolRankOf } from './gameData2'
 import { isNobleDyn } from './engine'
-import { rangPaysNiveau } from './factions'
 
 export interface MetierIssue {
   ok: boolean
@@ -56,10 +55,6 @@ export function validateMetierAssignment(
       return { ok: false, message: `La culture ${player.culture} (hérédité féminine) réserve en principe ce poste aux femmes.` }
     }
   }
-  // éducation requise
-  if (td.education && char.education !== td.education) {
-    return { ok: false, message: `Éducation attendue : ${td.education} (ce personnage a : ${char.education ?? 'aucune'}).` }
-  }
   // règles d'unicité (Dirigeant, Héritier, Gouverneur, Professeurs)
   const pop = (state.population[player.n] ?? []).filter((c) => c.statut !== 'Décédé')
   if (metier === C.p.metierDirigeant && pop.some((c) => c.id !== char.id && c.metier === C.p.metierDirigeant)) {
@@ -87,19 +82,6 @@ export function validateMetierAssignment(
     if (rank === 0) return { ok: false, message: `${char.ville} ne possède pas d'école.` }
     if (nbProfs >= rank) {
       return { ok: false, message: `${char.ville} a déjà ${nbProfs} ${C.p.metierProfesseur}(s) pour une école de rang ${rank}.` }
-    }
-  }
-  // conseil de Ministres indexé sur le rang de pays (échelle féodale unique) :
-  // chaque rang de la table paysRangs fixe le nombre de Ministres autorisés.
-  if (metier === 'Ministre') {
-    const rangs = C.config.paysRangs ?? []
-    const cap = rangs[rangPaysNiveau(player, C) - 1]?.ministres ?? 0
-    const nbMin = pop.filter((c) => c.id !== char.id && c.metier === 'Ministre').length
-    if (nbMin >= cap) {
-      return {
-        ok: false,
-        message: `Le rang de pays ${player.rang || rangs[0]?.nom || 'de départ'} n'autorise que ${cap} Ministre(s) — montez de rang (sacre) pour agrandir votre conseil.`,
-      }
     }
   }
   return { ok: true, message: `« ${metier} » attribué à ${char.prenom} ${char.nom}.` }

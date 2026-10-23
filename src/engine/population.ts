@@ -9,7 +9,7 @@ import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { emptyRecap, fullName, perteDemenagement } from './shared'
-import { maybeAssignProfesseurs, gestionMariages, tryEducateMinor, assignAdultMetier } from './metiers'
+import { maybeAssignProfesseurs, gestionMariages, assignAdultMetier } from './metiers'
 import { maladieStep } from './sante'
 import { computeFecondite, conceptionEtNaissances } from './naissances'
 import { applyCultureInfluence, updateCityCultures } from './culture'
@@ -40,8 +40,6 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
     // vieillissement : +2 ans par tour
     // (rework habitants 2026-10-20 : plus d'âge-plafond, la maladie seule tue)
     c.age += 2
-    // éducation des mineurs
-    if (c.age < C.p.adultAge) tryEducateMinor(state, p, c, rng)
     // fécondité affichée
     c.fecondite = computeFecondite(state, p, c)
     // métier automatique à l'âge adulte
@@ -156,8 +154,7 @@ export function migrerPopulation(state: GameState, p: Player, rng: Rng) {
 
   for (const c of [...pop]) {
     if (c.statut === 'Décédé' || c.age >= C.p.adultAge) continue
-    if (c.education) continue
-    // VBA : les « Obstinés » ne migrent pas — l'éducation ne les tentera jamais.
+    // VBA : les « Obstinés » ne migrent pas.
     if ((c.traits ?? []).includes(C.p.traitObstine)) continue
     if (deplaces.has(c.id)) continue
     // un Professeur dans SA ville → pas de migration scolaire

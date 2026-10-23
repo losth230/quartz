@@ -13,7 +13,7 @@ export type Saison = 'Été' | 'Hiver'
 export type TaxeNiveau = 'Faible' | 'Moyenne' | 'Forte'
 export type Heredite = 'Masculine' | 'Féminine' | 'Parité'
 export type RegleGenre = 'Aucune' | 'Masculine' | 'Féminine' | 'Culture'
-export type Attribution = 'Manuelle' | 'Education' | 'Armée' | 'Aléatoire'
+export type Attribution = 'Manuelle' | 'Armée' | 'Aléatoire'
 
 // ── Référentiels (tables du classeur → seeds éditables) ────────────────
 
@@ -30,7 +30,6 @@ export interface TraitDef {
 
 export interface MetierDef {
   metier: string
-  education: string            // éducation requise ('' = aucune)
   valeur1: number              // gain par tour
   ressource1: string           // ressource du gain 1
   valeur2: number
@@ -127,19 +126,13 @@ export interface Character {
   enceinteMalade?: boolean
   /** Métier du personnage (rework habitants 2026-10-20) : l'ancien champ
    *  `titre` devient `metier` — les rôles de cour (Dirigeant, Héritier,
-   *  Gouverneur, Ministre…) vivent DANS le champ métier. null = Sans-
+   *  Gouverneur…) vivent DANS le champ métier. null = Sans-
    *  emploi : NEUTRE, aucun effet au plateau, impôt nul. */
   metier: string | null
   /** Domicile du personnage (rework habitants 2026-10-20, vague 2 UI) :
    *  null = sans domicile, AUCUN effet en vague 1. Champ optionnel :
    *  absent des états migrés (compressé quand null). */
   domicile?: string | null
-  /** Portefeuille ministériel si le metier est « Ministre » (table
-   *  `ministeres` du référentiel : Sénéchal, Trésorier… — refonte
-   *  2026-10-14). Champ optionnel : absent des vieilles sauvegardes →
-   *  aucun portefeuille. */
-  ministere?: string | null
-  education: string | null
   fecondite: number
   armee: string | null        // nom de l'armée de rattachement
 }
@@ -341,12 +334,6 @@ export interface Player {
    *  d'une même branche, un arbre est terminé à EXACTEMENT 3 techs,
    *  et l'âge N exige 3 arbres complétés de l'âge N-1. */
   progresDebloques?: string[]
-  /** Bonus de garnison des ministères (refonte 2026-10-14) : crédité
-   *  une fois à la prise de fonction d'un Connétable (+5 par ville,
-   *  engine/ministeres.ts) et ajouté à la garnison calculée de chaque
-   *  ville (garnisonHabitationVille). Champ optionnel : absent des
-   *  vieilles sauvegardes → 0. */
-  garnisonMinisteres?: number
   /** Lauriers de victoire validés (refonte 2026-10-14) : clé = nom de la
    *  voie (table victoires du référentiel), valeur = nombre de Lauriers
    *  validés 0-4, en ORDRE STRICT (un Laurier ne se valide que si le
@@ -404,11 +391,6 @@ export interface ApportsTour {
    *  (engine/citesLibres.ts — étape 3decies). Champ optionnel : absent
    *  des historiques d'avant l'ajout du canal. */
   citesLibres?: Record<string, number>
-  /** effets automatiques par tour des portefeuilles ministériels
-   *  (engine/ministeres.ts — étape 3duodecies : Trésorier +5 Or,
-   *  Grand Précepteur +1 Science, cumulables). Champ optionnel :
-   *  absent des historiques d'avant l'ajout du canal. */
-  ministeres?: Record<string, number>
   /** routes commerciales des marchands (engine/commerce.ts — étape
    *  3terdecies : +marchandOrTour Or pour chaque joueur relié + copie
    *  d'une ressource d'un aménagement de la ville ciblée). Champ
