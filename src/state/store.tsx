@@ -13,7 +13,7 @@ import React, {
   createContext, useCallback, useContext, useEffect, useMemo, useRef, useState,
 } from 'react'
 import type { GameState } from '../engine/types'
-import { runTurn } from '../engine/engine'
+import { runTurn } from '../engine/tour'
 import { migrerEtat } from '../engine/migrations'
 import { fusionnerSections, rejouerEvenementsPartages, appliquerConfigMondiale } from '../engine/fusion'
 import type { SetupLine } from '../engine/setup'

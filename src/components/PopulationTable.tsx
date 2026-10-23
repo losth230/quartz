@@ -30,13 +30,10 @@ import type { Character, CiteLibre, GameState } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
-import {
-  metiersAccessibles, isNobleDyn, fullName,
-  marierPersonnages, deplacerPersonnage, toutesLesPopulations,
-  metiersAccessiblesCite, pseudoJoueurDeCite, occupationsMetierVille,
-  ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre,
-  type Detenteur,
-} from '../engine/engine'
+import { metiersAccessibles, occupationsMetierVille } from '../engine/metiers'
+import { isNobleDyn, fullName, deplacerPersonnage, toutesLesPopulations, type Detenteur } from '../engine/shared'
+import { marierPersonnages } from '../engine/cour'
+import { metiersAccessiblesCite, pseudoJoueurDeCite, ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre } from '../engine/citesLibres'
 import { GenealogyTree } from './GenealogyTree'
 import { Card, Select, TextInput, Button, NumberInput, fmt } from './ui'
 import { ChoicePicker } from './Picker'

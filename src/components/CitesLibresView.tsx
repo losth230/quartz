@@ -25,10 +25,7 @@
 import { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf } from '../engine/gameData'
-import {
-  citesLibresDe, garnisonCiteLibre, detailCiteLibre, emissairesDe, citeLibreDevientVille,
-  ajouterHabitantsCiteLibre, taxesCite,
-} from '../engine/engine'
+import { citesLibresDe, garnisonCiteLibre, detailCiteLibre, emissairesDe, citeLibreDevientVille, ajouterHabitantsCiteLibre, taxesCite } from '../engine/citesLibres'
 import type { CiteLibre, TaxeNiveau } from '../engine/types'
 import { Card, Select, TextInput, Button, NumberInput, Badge, TAX_OPTIONS } from './ui'
 

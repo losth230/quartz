@@ -8,7 +8,7 @@
 
 import type { GameState, Player } from '../../engine/types'
 import { cultureDef, type Cfg } from '../../engine/gameData'
-import { detailCulturePays } from '../../engine/engine'
+import { detailCulturePays } from '../../engine/regimes'
 import { Badge, Card, fmt } from '../ui'
 
 export function CulturePays({ state, p, C }: { state: GameState; p: Player; C: Cfg }) {

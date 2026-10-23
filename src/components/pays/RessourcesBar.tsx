@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState } from 'react'
 import type { GameState, Player } from '../../engine/types'
 import { fondRessource, type Cfg } from '../../engine/gameData'
-import type { ProductionDetail } from '../../engine/engine'
+import type { ProductionDetail } from '../../engine/production'
 import { NumberInput } from '../ui'
 import { fmtNum } from './pays-utils'
 export function RessourcesBar({ p, C, prodDetail, setPlayer }: {

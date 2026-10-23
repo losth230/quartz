@@ -18,13 +18,11 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from '../../engine/types'
-import {
-  coutBatiment,
-  coutAmenagement, constructionRef, prerequisConstruction,
-  parseCoutTexte, resumeConstruction,
-  rangNiveau, batimentsConstructionsRefs, batimentsCapitale,
-  capitaleDe,
-} from '../../engine/engine'
+import { coutBatiment, batimentsConstructionsRefs } from '../../engine/batiments'
+import { coutAmenagement } from '../../engine/amenagements'
+import { constructionRef, prerequisConstruction, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
+import { rangNiveau } from '../../engine/regimes'
+import { batimentsCapitale, capitaleDe } from '../../engine/factions'
 import { cultureDef, type Cfg } from '../../engine/gameData'
 import { statutMerveille, pastilleClass } from '../../engine/statutAuto'
 import { villeCotiere } from '../../engine/villes'

@@ -12,15 +12,14 @@
 import type { AutreDef, City, GameState, Player } from '../../engine/types'
 import { useGame } from '../../state/store'
 import * as remote from '../../supabase/client'
-import {
-  effetsTourBatiment, garnisonBatiment, constructionsRefs, amenagementRef,
-  aCampDeBatisseurs, parseCoutTexte, garnisonHabitationVille,
-  detailGarnisonVille, typeVille, habitationDef, rangsDisponibles,
-  resumeConstruction, productionVille,
-  effetsNourrEteAmenagementsVille,
-  effetsNourrEteAutresVille, supprimerVille, transfererVille,
-  debiterCoutHabitation, rangNiveau,
-} from '../../engine/engine'
+import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
+import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
+import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
+import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
+import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
+import { productionVille } from '../../engine/production'
+import { effetsNourrEteAutresVille } from '../../engine/autres'
+import { supprimerVille, transfererVille } from '../../engine/villes'
 import { couleurRessource, fondRessource, type Cfg } from '../../engine/gameData'
 import { villeDevientCiteLibre } from '../../engine/citesLibres'
 import { NumberInput, Select, TextInput, Button, fmt, TAX_OPTIONS } from '../ui'

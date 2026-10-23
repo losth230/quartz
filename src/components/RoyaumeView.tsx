@@ -30,7 +30,8 @@ import type { Character, Player } from '../engine/types'
 import { cfgOf, cultureDef } from '../engine/gameData'
 import { resynchroniserTourisme } from '../engine/regimes'
 import { rangParDefaut } from '../engine/setup'
-import { citesSuzerainesDe, sermentsPossedes } from '../engine/engine'
+import { citesSuzerainesDe } from '../engine/citesLibres'
+import { sermentsPossedes } from '../engine/tour'
 import { Card, Select, TextInput, Button, Badge, Field } from './ui'
 
 export function RoyaumeView({ joueur }: { joueur: number }) {

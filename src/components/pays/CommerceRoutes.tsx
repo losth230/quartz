@@ -9,11 +9,8 @@
 import { useState } from 'react'
 import type { Player } from '../../engine/types'
 import { useGame } from '../../state/store'
-import {
-  routesCommerceDe, routesCommerceVers, marchandsDe, maxMarchandsJoueur,
-  amenagementsCopiables, ressourcesCopiables, fullName,
-  changerCopieRoute, supprimerRouteCommerce, creerRouteCommerce,
-} from '../../engine/engine'
+import { routesCommerceDe, routesCommerceVers, marchandsDe, maxMarchandsJoueur, amenagementsCopiables, ressourcesCopiables, changerCopieRoute, supprimerRouteCommerce, creerRouteCommerce } from '../../engine/commerce'
+import { fullName } from '../../engine/shared'
 import type { Cfg } from '../../engine/gameData'
 import { Card, Badge, Select, Button, fmt } from '../ui'
 import { Field } from './pays-utils'

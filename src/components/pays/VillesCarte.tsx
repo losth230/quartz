@@ -7,7 +7,7 @@
 
 import { useState } from 'react'
 import type { GameState, Player } from '../../engine/types'
-import { rangsDisponibles, debiterCoutHabitation } from '../../engine/engine'
+import { rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
 import { peuplerNouvelleVille } from '../../engine/setup'
 import type { Cfg } from '../../engine/gameData'
 import { Card, Select, Button } from '../ui'
