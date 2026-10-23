@@ -18,10 +18,12 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { reglesConstructions, registreComplet, effetsConstructionVersBanque } from './registry'
-import { contexteLectureSeule } from './registry'
+import { contexteLectureSeule } from '../engine/constructions'
 import { appliquerRegles } from './effects/banque'
 import type { Effet } from './types'
 import { cfgOf } from '../engine/gameData'
+
+const C_DEFAUT = cfgOf(undefined)
 import { effetsConstructionRef, garnisonConstructionRef, instantanesConstructionRef } from '../engine/constructions'
 
 /** Types d'effets que la banque sait appliquer (contrat de types.ts). */
@@ -38,7 +40,7 @@ const TYPES_CONNUSS = new Set([
 
 test('registre : TOUTE construction à effets du référentiel a SA règle', () => {
   const refs = cfgOf(undefined).config.constructions ?? []
-  const regles = reglesConstructions(undefined)
+  const regles = reglesConstructions(C_DEFAUT)
   const cle = (nom: string, groupe?: string) => `${nom}|${groupe ?? ''}`
   const parCle = new Map(regles.map((r) => [cle(r.nom, r.groupe), r]))
   const avecEffets = refs.filter((r) => r.effets?.length)
@@ -53,7 +55,7 @@ test('registre : TOUTE construction à effets du référentiel a SA règle', () 
 })
 
 test('registre : ids uniques et stables (slug du nom affiché)', () => {
-  const regles = registreComplet(undefined)
+  const regles = registreComplet(C_DEFAUT)
   const vus = new Set<string>()
   for (const r of regles) {
     assert.ok(!vus.has(r.id), `id dupliqué dans la banque : ${r.id}`)
@@ -63,7 +65,7 @@ test('registre : ids uniques et stables (slug du nom affiché)', () => {
 })
 
 test('registre : chaque effet des règles est un type CONNU de la banque', () => {
-  const regles = registreComplet(undefined)
+  const regles = registreComplet(C_DEFAUT)
   assert.ok(regles.length > 20, 'le registre doit contenir les constructions à effets')
   for (const r of regles) {
     assert.ok(Array.isArray(r.effets) && r.effets.length > 0, `règle sans effet : ${r.id}`)
@@ -87,7 +89,7 @@ test('registre : la traduction referentiels → banque est exhaustive (aucun eff
 test('registre : le chemin moteur EST la banque (voie unique de production)', () => {
   const refs = cfgOf(undefined).config.constructions ?? []
   const cle = (nom: string, groupe?: string) => `${nom}|${groupe ?? ''}`
-  const regles = new Map(reglesConstructions(undefined).map((r) => [cle(r.nom, r.groupe), r]))
+  const regles = new Map(reglesConstructions(C_DEFAUT).map((r) => [cle(r.nom, r.groupe), r]))
   let verifiees = 0
   for (const ref of refs) {
     const regle = regles.get(cle(ref.nom, ref.groupe))

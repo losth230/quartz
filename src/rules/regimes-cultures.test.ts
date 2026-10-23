@@ -26,12 +26,14 @@ import {
 } from '../engine/regimes'
 import { cfgOf } from '../engine/gameData'
 import { reglesRegimes, reglesCultures, registreComplet } from './registry'
+
+const C_DEFAUT = cfgOf(undefined)
 import { partieMock } from './mocks'
 
 // ── registre : contenu exact des règles régimes ────────────────────────────
 
 test('registre régimes : 1 règle regime.socialisme, conditions dans la règle', () => {
-  const regles = reglesRegimes()
+  const regles = reglesRegimes(C_DEFAUT)
   assert.equal(regles.length, 1, 'seul le Socialisme a une loi de production chiffrée')
   const soc = regles.find((r) => r.id === 'regime.socialisme')
   assert.ok(soc, 'règle regime.socialisme présente')
@@ -49,7 +51,7 @@ test('registre régimes : 1 règle regime.socialisme, conditions dans la règle'
 // ── registre : contenu exact des règles cultures ───────────────────────────
 
 test('registre cultures : 3 règles exactes, Déisme absent (instantané)', () => {
-  const regles = reglesCultures()
+  const regles = reglesCultures(C_DEFAUT)
   assert.equal(regles.length, 3, 'seules les cultures à lois chiffrées ont une règle')
   const com = regles.find((r) => r.id === 'culture.communautarisme')
   assert.equal(com?.conditions?.culture, 'Communautarisme', 'condition de culture dans la RÈGLE')
@@ -62,7 +64,7 @@ test('registre cultures : 3 règles exactes, Déisme absent (instantané)', () =
 })
 
 test('registreComplet : ids uniques, les 4 nouvelles règles intégrées', () => {
-  const ids = registreComplet().map((r) => r.id)
+  const ids = registreComplet(C_DEFAUT).map((r) => r.id)
   assert.equal(new Set(ids).size, ids.length, 'ids uniques')
   for (const id of ['regime.socialisme', 'culture.communautarisme', 'culture.lunisme', 'culture.zelotisme']) {
     assert.ok(ids.includes(id), 'id manquant dans le registre complet : ' + id)

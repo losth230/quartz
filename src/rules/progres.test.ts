@@ -24,11 +24,13 @@ import type { Character } from '../engine/types'
 import { fluxProgresJoueur, aTech, gainDeblocageProgres } from '../engine/progresAuto'
 import { cfgOf } from '../engine/gameData'
 import { reglesProgres, clesTechsParNom, registreComplet } from './registry'
+
+const C_DEFAUT = cfgOf(undefined)
 import { partieMock } from './mocks'
 
 /** Débloque la tech portant ce nom (clés réelles via le registre). */
 function debloquer(nom: string): string[] {
-  const cles = clesTechsParNom(undefined, nom)
+  const cles = clesTechsParNom(C_DEFAUT, nom)
   assert.ok(cles.length > 0, `tech absente du référentiel : ${nom}`)
   return cles
 }
@@ -65,18 +67,18 @@ function perso(id: string, metier: string, statut: Character['statut'] = 'Sain')
 // ── registre : contenu exact des règles de progrès ─────────────────────────
 
 test('registre progrès : 30 règles éditoriales + 3 génériques prodParMetier', () => {
-  const regles = reglesProgres(undefined)
+  const regles = reglesProgres(C_DEFAUT)
   assert.equal(regles.length, 33, '30 règles de PROGRES_FLUX + 3 prodParMetier du référentiel')
   for (const r of regles) assert.equal(r.source, 'tech', `source de ${r.id}`)
   const ids = regles.map((r) => r.id)
   assert.equal(new Set(ids).size, ids.length, 'ids uniques')
   // les règles progrès sont intégrées au registre complet
-  const complet = registreComplet(undefined).map((r) => r.id)
+  const complet = registreComplet(C_DEFAUT).map((r) => r.id)
   for (const id of ids) assert.ok(complet.includes(id), `id absent du registre complet : ${id}`)
 })
 
 test('registre progrès : Surconsommation = 2 effets par RANG, condition techNom', () => {
-  const soc = reglesProgres(undefined).find((r) => r.id === 'tech.surconsommation')
+  const soc = reglesProgres(C_DEFAUT).find((r) => r.id === 'tech.surconsommation')
   assert.ok(soc, 'règle tech.surconsommation présente')
   assert.equal(soc.conditions?.techNom, 'Surconsommation', 'la tech est désignée par NOM dans la règle')
   assert.deepEqual(soc.effets, [
@@ -86,7 +88,7 @@ test('registre progrès : Surconsommation = 2 effets par RANG, condition techNom
 })
 
 test('registre progrès : génériques prodParMetier traduits en fluxParMetier', () => {
-  const regles = reglesProgres(undefined)
+  const regles = reglesProgres(C_DEFAUT)
   const commerce = regles.find((r) => r.nom === 'Commerce lointain')
   assert.ok(commerce, 'règle Commerce lointain présente')
   assert.ok(commerce.conditions?.tech, 'condition = clé réelle <arbre>:<slot>')
@@ -102,11 +104,11 @@ test('registre progrès : génériques prodParMetier traduits en fluxParMetier',
 // ── résolution nom → clés (une seule vérité, registre) ─────────────────────
 
 test('clesTechsParNom : clés réelles <arbre>:<slot>, tech absente → []', () => {
-  const cles = clesTechsParNom(undefined, 'Parcs naturels')
+  const cles = clesTechsParNom(C_DEFAUT, 'Parcs naturels')
   assert.equal(cles.length, 1, '« Parcs naturels » existe à UN seul emplacement (l’homonyme 18:b2 a été renommé)')
   assert.ok(/^\d+:b2$/.test(cles[0]), `clé au format <arbre>:<slot> : ${cles[0]}`)
-  assert.ok(clesTechsParNom(undefined, 'Surconsommation').length >= 1)
-  assert.deepEqual(clesTechsParNom(undefined, 'Tech inexistante'), [])
+  assert.ok(clesTechsParNom(C_DEFAUT, 'Surconsommation').length >= 1)
+  assert.deepEqual(clesTechsParNom(C_DEFAUT, 'Tech inexistante'), [])
 })
 
 test('aTech délègue au registre : déblocage = condition techNom remplie', () => {
@@ -201,7 +203,7 @@ test('Merveilleux : +1 Science par bâtiment de famille Merveille', () => {
 test('Commerce lointain : +3 Or par Marchand VIVANT (générique prodParMetier)', () => {
   const ctx = partieMock()
   const { state, joueur } = ctx
-  const regle = reglesProgres(state.config).find((r) => r.nom === 'Commerce lointain')
+  const regle = reglesProgres(cfgOf(state.config)).find((r) => r.nom === 'Commerce lointain')
   assert.ok(regle?.conditions?.tech, 'condition tech = clé réelle')
   joueur.progresDebloques = [regle.conditions.tech]
   state.population[joueur.n] = [
@@ -231,6 +233,6 @@ test('one-shot au déblocage : gainDeblocageProgres reste INSTANTANÉ (hors banq
   assert.equal(log, '+6 Science', 'crédit immédiat, pas un flux de banque')
   assert.equal(joueur.resources['Science'].stock, avant + 6)
   // ce one-shot n'apparaît PAS comme règle de flux du registre
-  assert.ok(!reglesProgres(state.config).some((r) => r.nom === 'Progrès technologiques I'),
+  assert.ok(!reglesProgres(cfgOf(state.config)).some((r) => r.nom === 'Progrès technologiques I'),
     'un one-shot n’est pas une production par tour : pas de règle')
 })
