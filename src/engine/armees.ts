@@ -8,8 +8,6 @@
 import type { GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
-import { aMinistre } from './ministeres'
-import { rangPaysNiveau } from './factions'
 import { emptyRecap, fullName } from './shared'
 import { reductionLeveeArmeesMerveilles } from './merveilles'
 import { reductionLevee } from './progresAuto'
@@ -182,10 +180,8 @@ export function prixArmee(
   if (puissanceCible <= 0) return 0
   let prix = (puissanceCible / tranche) * C.p.armeePrixOr
   // Réductions automatiques (revue 2026-10-15) :
-  //  · Grand écuyer (ministre) : −10 Or par rang de pays du joueur.
   if (p && state) {
     const cfg = cfgOf(state.config)
-    if (aMinistre(state, p, 'Grand écuyer')) prix -= 10 * rangPaysNiveau(p, cfg)
     // Merveilles (retour Thibaut 2026-10-15) : Temple de Bahamutt et
     //  Ordre des chevaliers de Notan : -20/-25 Or sur les levées.
     prix -= reductionLeveeArmeesMerveilles(p)

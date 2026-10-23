@@ -1,6 +1,6 @@
 // ══════════════════════════════════════════════════════════════════════
-//  MÉTIERS, PROFESSEURS, MARIAGES ET ÉDUCATION
-//  Professeurs, mariages, éducation des mineurs, metiers automatiques et règles d'attribution.
+//  MÉTIERS, PROFESSEURS ET MARIAGES
+//  Professeurs, mariages, metiers automatiques et règles d'attribution.
 //  Portage des macros VBA du classeur Chasse & Pêche 7.19.
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
@@ -41,7 +41,6 @@ export function maybeAssignProfesseurs(state: GameState, p: Player, rng: Rng, re
     if (candidats.length === 0) continue
     const elu = rng.pick(candidats)
     elu.metier = C.p.metierProfesseur
-    if (!elu.education) elu.education = rng.pick(C.educations)
     nbProfs++
     bump(recap.metiersAttribues, C.p.metierProfesseur)
     state.log.push({
@@ -153,33 +152,6 @@ function characterMarriageMod(c: Character, C: Cfg = cfgOf()): number {
   return Math.min(C.p.mariageTraitMax, Math.max(-C.p.mariageTraitMax, total))
 }
 
-// ── Éducation des mineurs (TryEducateMinor) ─────────────────────────────
-
-export function tryEducateMinor(state: GameState, p: Player, c: Character, rng: Rng) {
-  const C = cfgOf(state.config)
-  // VBA : le trait « Obstiné » refuse toute éducation.
-  if ((c.traits ?? []).includes(C.p.traitObstine)) return
-  const ville = p.villes.find((v) => v.nom === c.ville)
-  if (!ville) return
-  const rank = schoolRankOf(ville.batiments, C.config)
-  if (rank <= 0) return
-  const pop = state.population[p.n] ?? []
-  const profs = pop.filter((x) => x.statut !== 'Décédé' && x.ville === ville.nom && x.metier === C.p.metierProfesseur)
-  if (profs.length === 0) return
-  const base = isNobleDyn(c.dynastie, C) ? C.p.chanceEducNoble : C.p.chanceEducRoturier
-  let chance = base * rank * (1 + C.p.profBonusEduc * (profs.length - 1))
-  chance = Math.min(0.95, chance)
-  if (!rng.chance(chance)) return
-  const edus = new Set<string>()
-  for (const prof of profs) if (prof.education) edus.add(prof.education)
-  if (edus.size === 0) return
-  c.education = rng.pick([...edus])
-  state.log.push({
-    turn: state.turn + 1, type: 'Système', joueur: p.n,
-    texte: `${fullName(c)} (${c.age} ans) reçoit une éducation ${c.education.toLowerCase()} à ${ville.nom}.`,
-  })
-}
-
 // ── Metier automatique à l'âge adulte ────────────────────────────────────
 
 export function assignAdultMetier(state: GameState, p: Player, c: Character, recap: PlayerRecap) {
@@ -206,7 +178,7 @@ export function assignAdultMetier(state: GameState, p: Player, c: Character, rec
 /** Metiers accessibles aux habitants d'un joueur (vague 3a) : TOUS
  *  les métiers du référentiel sans éducation requise — métiers de
  *  production (Chasseur, Pêcheur, Bûcheron, Mineur…), Garde,
- *  Banquier, Troubadour, Gouverneur, Ministre, Marchand, Dirigeant,
+ *  Banquier, Troubadour, Gouverneur, Marchand, Dirigeant,
  *  Héritier (nomination manuelle, remplacement automatique par
  *  l'interface). Sont exclus du picker les métiers à attribution
  *  Armée (Soldat, Commandant — engagement militaire), Succession et
@@ -223,14 +195,8 @@ export function metiersAccessibles(state: GameState, _p: Player, C: Cfg = cfgOf(
   //  validation (unicité, dynastie) reste un AVERTISSEMENT, jamais
   //  bloquant — convention du jeu.
   out.push(C.p.metierDirigeant, C.p.metierHeritierStr)
-  // « Ministre » (refonte 2026-10-14) : nomination manuelle — le cap
-  //  (nombre de Ministres = rang de pays, table paysRangs) et la règle
-  //  « nobleSeul » sont contrôlés par validateMetierAssignment
-  //  (avertissement affiché, jamais bloquant). Le portefeuille se
-  //  choisit ensuite dans la page Population.
-  out.push('Ministre')
-  // « Marchand » (marqueur (t)) : attribution manuelle comme Chasseur,
-  //  Gouverneur ou Ministre — le metier ouvre UNE route commerciale
+  // « Marchand » (marqueur (t)) : attribution manuelle comme Chasseur
+  //  ou Gouverneur — le metier ouvre UNE route commerciale
   //  (engine/commerce.ts : +marchandOrTour Or pour les 2 joueurs
   //  reliés + copie d'une ressource d'un aménagement de la ville
   //  ciblée). Pas de gain par tour dans la table des metiers.

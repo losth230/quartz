@@ -37,7 +37,6 @@ import { appliquerEffetsAmenagements, effetsNourrEteAmenagementsVille } from './
 import { appliquerEffetsAutres, effetsNourrEteAutresVille } from './autres'
 import { appliquerEffetsRegimesCultures, resynchroniserTourisme } from './regimes'
 import { nbVassaux } from './factions'
-import { appliquerEffetsMinisteres, effetsFinSaisonMinisteres } from './ministeres'
 import { appliquerEffetsCommerce, nettoyerRoutesCommerce, peuplerMarchands } from './commerce'
 import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
@@ -93,10 +92,6 @@ export function runTurn(state: GameState): GameState {
     })
     applyEventEffect(state, ev.nom, level)
     }
-    // Fin de la saison qui se termine : effets automatiques des
-    // portefeuilles ministériels (Sénéchal fin d'été, Maître de cour
-    // chaque saison — engine/ministeres.ts).
-    effetsFinSaisonMinisteres(state, state.saison)
     state.saison = newSaison
   }
 
@@ -245,13 +240,6 @@ export function runTurn(state: GameState): GameState {
   const citesLibresParJoueur: Record<number, Record<string, number>> =
     appliquerTaxesCitesLibres(state, C)
 
-  // 3duodecies. Ministères : effets automatiques par tour des
-  //  portefeuilles ministériels (Trésorier +5 Or, Grand Précepteur
-  //  +1 Science — engine/ministeres.ts, cumulables), canal
-  //  « Ministères » du récap ressources.
-  const ministeresParJoueur: Record<number, Record<string, number>> =
-    appliquerEffetsMinisteres(state)
-
   // 3quaterdecies. Proximité des villes (marqueur (y), retour Thibaut
   //  2026-10-15) : bonus automatique de Nourriture par tour de chaque
   //  ville « au bord d'une rivière » (+12) ou « au bord de la mer »
@@ -329,7 +317,6 @@ export function runTurn(state: GameState): GameState {
       autres: autresParJoueur[p.n] ?? {},
       regimesCultures: regimesCulturesParJoueur[p.n] ?? {},
       citesLibres: citesLibresParJoueur[p.n] ?? {},
-      ministeres: ministeresParJoueur[p.n] ?? {},
       commerce: commerceParJoueur[p.n] ?? {},
       proximite: proximiteParJoueur[p.n] ?? {},
       population,
@@ -428,11 +415,6 @@ export {
 export { transfererTributVassal } from './vassalite'
 export { villeDevientCiteLibre, citeLibreDevientVille } from './citesLibres'
 export {
-  aMinistre, portefeuillesDuJoueur, appliquerEffetsMinisteres,
-  effetsFinSaisonMinisteres, facteurSacre, facteurAvencement,
-  changerPortefeuille, migrerNomsMinisteres,
-} from './ministeres'
-export {
   techDefArbre, effetsTech, coutScienceTech, debiterScienceTech,
   rembourserScienceTech, resumeEffetsTech,
   type SlotProgres,
@@ -440,7 +422,7 @@ export {
 export { populationTurn, migrerPopulation } from './population'
 export {
   maybeAssignProfesseurs, gestionMariages, formatDynastyPair,
-  computeMarriageProbability, tryEducateMinor, assignAdultMetier,
+  computeMarriageProbability, assignAdultMetier,
   metierAllowedForCharacter, metiersAccessibles,
   gouverneurDeVille, designerGouverneurs, capMetierVille, emplacementsMetierVille, reaffecterMetiers,
   occupationsMetierVille, type OccupationMetier,

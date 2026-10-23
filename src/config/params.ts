@@ -50,11 +50,8 @@ export interface GameParams {
    *  « la Garnison n'est jamais par tour » — valeur d'état de la ville,
    *  retirée si le Garde part ou meurt). */
   garnisonParGarde: number
-  // ── Éducation ──
-  chanceEducRoturier: number
-  chanceEducNoble: number
+  // ── Professeurs ──
   professeurBaseChance: number
-  profBonusEduc: number
   // ── Mariage ──
   mariageRoturiers: number
   mariageNobles: number
@@ -155,10 +152,7 @@ export const DEFAULT_PARAMS: GameParams = {
   probaGuerison: 0.25,
   modGuerisonAge: 0.003,
   garnisonParGarde: 10,
-  chanceEducRoturier: 0.08,
-  chanceEducNoble: 0.15,
   professeurBaseChance: 0.9,
-  profBonusEduc: 0.1,
   mariageRoturiers: 0.3,
   mariageNobles: 0.15,
   mariageMesalliance: 0.03,
@@ -257,10 +251,7 @@ export const PARAM_META: {
   { key: 'probaGuerison', label: 'Probabilité de guérison (base)', groupe: 'Maladie', unite: 'proba' },
   { key: 'modGuerisonAge', label: 'Guérison — modificateur par année d\'âge', groupe: 'Maladie' },
   { key: 'garnisonParGarde', label: 'Garnison par Garde en poste', groupe: 'Métiers' },
-  { key: 'chanceEducRoturier', label: 'Chance d\'éducation — roturier', groupe: 'Éducation', unite: 'proba' },
-  { key: 'chanceEducNoble', label: 'Chance d\'éducation — noble', groupe: 'Éducation', unite: 'proba' },
   { key: 'professeurBaseChance', label: 'Chance de base d\'attribution Professeur', groupe: 'Éducation' },
-  { key: 'profBonusEduc', label: 'Bonus d\'éducation par professeur supplémentaire', groupe: 'Éducation' },
   { key: 'mariageRoturiers', label: 'Proba mariage roturier × roturier', groupe: 'Mariage', unite: 'proba' },
   { key: 'mariageNobles', label: 'Proba mariage noble × noble', groupe: 'Mariage', unite: 'proba' },
   { key: 'mariageMesalliance', label: 'Proba mésalliance noble × roturier', groupe: 'Mariage', unite: 'proba' },

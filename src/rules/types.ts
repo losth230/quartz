@@ -48,24 +48,13 @@ export interface EffetFluxVille {
 }
 
 /** Production par tour créditée au joueur entier (toutes ses villes,
- *  canal « Régimes & cultures » / « Ministres »…). */
+ *  canal « Régimes & cultures »…). */
 export interface EffetFluxJoueur {
   type: 'fluxJoueur'
   ressource: string
   valeur: number
   /** true = uniquement en été. */
   ete?: boolean
-}
-
-/** Production par tour du portefeuille ministériel donné — CUMULABLE :
- *  la valeur s'applique PAR MINISTRE porteur vivant (deux Trésoriers =
- *  +10 Or). Retour Thibaut (arbitrage portefeuilles cumulables). */
-export interface EffetFluxJoueurParMinistre {
-  type: 'fluxJoueurParMinistre'
-  /** Portefeuille concerné (nom exact de la table `ministeres`). */
-  portefeuille: string
-  ressource: string
-  valeur: number
 }
 
 /** Production par tour, par AMÉNAGEMENT portant l'un des noms listés,
@@ -187,12 +176,6 @@ export interface EffetGarnisonParRang {
   valeur: number
 }
 
-/** Garnison ajoutée à TOUTES les habitations du joueur (ministre
- *  Connétable : +15 par ville à la prise de fonction). */
-export interface EffetGarnisonJoueur {
-  type: 'garnisonJoueur'
-  valeur: number
-}
 
 /** TYPE HISTORIQUE — plus AUCUN producteur depuis le retour Thibaut
  *  2026-10-16 : le Tourisme est un FLUX NORMAL (fluxVille ; stock
@@ -279,7 +262,6 @@ export interface EffetDemographieVille {
 export type Effet =
   | EffetFluxVille
   | EffetFluxJoueur
-  | EffetFluxJoueurParMinistre
   | EffetFluxParAmenagement
   | EffetFluxParVilleCultureMonde
   | EffetFluxSiCapitale
@@ -292,7 +274,6 @@ export type Effet =
   | EffetFluxCapitale
   | EffetGarnisonVille
   | EffetGarnisonParRang
-  | EffetGarnisonJoueur
   | EffetTourismeInstantane
   | EffetHabitantsVille
   | EffetConversionPoids
@@ -319,8 +300,6 @@ export interface ConditionRegle {
   saison?: string
   /** Le joueur doit être vassal (Pacifisme Fidèles rang 2). */
   vassal?: boolean
-  /** Le joueur doit détenir ce ministre (nom EXACT). */
-  ministre?: string
   /** Technologie débloquée requise (clé `<arbre>:<slot>`). */
   tech?: string
   /** Régime politique du joueur requis (ex. Socialisme). */
@@ -349,7 +328,6 @@ export type SourceRegle =
   | 'regime'          // loi chiffrée du régime politique
   | 'culture'         // règle de pays culturelle
   | 'tech'            // technologies de progrès
-  | 'ministre'         // portefeuille automatique
   | 'evenement'        // événement de saison
   | 'laurier'          // bonus one-shot de Laurier
 

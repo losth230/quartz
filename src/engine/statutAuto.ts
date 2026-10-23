@@ -61,13 +61,6 @@ export function statutTech(nom: string): StatutAuto {
   return TECHS[nom] ?? 'possible'
 }
 
-/** Statut d'un MINISTRE par son mode du r\u00e9f\u00e9rentiel. */
-export function statutMinistre(mode: string | undefined): StatutAuto {
-  // 'Auto' = appliqu\u00e9 ; 'Plateau' = reste au plateau (Mar\u00e9chal : +1 PM,
-  //  non mod\u00e9lis\u00e9 \u2014 impossible).
-  return mode === 'Auto' ? 'auto' : 'impossible'
-}
-
 /** Statut d'une MERVEILLE par son nom. */
 export function statutMerveille(nom: string): StatutAuto {
   switch (nom) {

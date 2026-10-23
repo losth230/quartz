@@ -14,7 +14,6 @@ import { mergeParams, type GameParams, type GameParamStrings } from './params'
 
 export interface MetierDef {
   metier: string
-  education: string
   valeur1: number
   ressource1: string
   valeur2: number
@@ -264,7 +263,6 @@ export interface DynastieEffetsDef {
 }
 export interface GameConfig {
   ressources: string[]
-  educations: string[]
   params: GameParams & GameParamStrings
   metiers: MetierDef[]
   traits: TraitDef[]
@@ -296,25 +294,13 @@ export interface GameConfig {
     marriageMod: number; fertAdd: number; lifeDelta: number
     resurrectionMinRoll: number; description: string
   }[]
-  ministeres: {
-    ministere: string
-    effet: string
-    /** Rang de pays minimum pour tenir le portefeuille (refonte
-     *  2026-10-14) — avertissement non bloquant à la nomination.
-     *  Champ optionnel : anciens formats → « Baronnie » (toujours
-     *  disponible). */
-    rangMinimum?: string
-    /** « Auto » (appliqué par le moteur) ou « Plateau » (appliqué à
-     *  la table). Champ optionnel : anciens formats → « Plateau ». */
-    mode?: string
-  }[]
   metiersEffets: { metier: string; effet: string; revocation: string }[]
   peuplesLibres: PeupleRef[]
   peuplesAutres: PeupleRef[]
   constructions: ConstructionRef[]
   typesHabitation: HabitationDef[]
   progres: ProgresArbre[]
-  paysRangs: { nom: string; coutOr: number; coutNourriture: number; serments: number; ministres: number; bonus: string }[]
+  paysRangs: { nom: string; coutOr: number; coutNourriture: number; serments: number; bonus: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
   dogmes: { dogme: string; bonusPontife: string; bonusFideles: string }[]
   citesLibres: { type: string; effet: string }[]
@@ -543,7 +529,6 @@ function normaliserTraits(): TraitDef[] {
 function normaliserMetiers(): MetierDef[] {
   return ref.metiers.map((t: any) => ({
     metier: t.metier,
-    education: t.education || '',
     valeur1: Number(t.valeur1) || 0,
     ressource1: t.ressource1 || '',
     valeur2: Number(t.valeur2) || 0,
@@ -670,7 +655,6 @@ const BASE_DYNASTIE_EFFECTS: Record<string, { effets: EffetDef[]; guerison?: boo
 
 export const DEFAULT_CONFIG: GameConfig = {
   ressources: ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie', 'Or', 'Nourriture', 'Science', 'Habitants', 'Tourisme', 'Garnison'],
-  educations: ['Agricole', 'Scientifique', 'Militaire', 'Économique', 'Culturelle'],
   params: mergeParams(undefined),
   metiers: normaliserMetiers(),
   traits: normaliserTraits(),
@@ -699,7 +683,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   })),
   init: ref.init,
   traitsGenetiques: ref.traitsGenetiques,
-  ministeres: ref.ministeres,
   metiersEffets: ref.metiersEffets,
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
@@ -727,11 +710,11 @@ export const DEFAULT_CONFIG: GameConfig = {
 //   (nombre de Ministres autorisés). Le bonus de fin de saison reste à gérer
 //   au plateau. Entièrement paramétrable dans Référentiels → « Pays & rangs ».
 DEFAULT_CONFIG.paysRangs = [
-  { nom: 'Baronnie', coutOr: 0, coutNourriture: 0, serments: 0, ministres: 1, bonus: '' },
-  { nom: 'Comté', coutOr: 20, coutNourriture: 40, serments: 1, ministres: 2, bonus: '' },
-  { nom: 'Duché', coutOr: 30, coutNourriture: 60, serments: 2, ministres: 3, bonus: '' },
-  { nom: 'Royaume', coutOr: 50, coutNourriture: 100, serments: 3, ministres: 4, bonus: '' },
-  { nom: 'Empire', coutOr: 100, coutNourriture: 200, serments: 4, ministres: 5, bonus: '' },
+  { nom: 'Baronnie', coutOr: 0, coutNourriture: 0, serments: 0, bonus: '' },
+  { nom: 'Comté', coutOr: 20, coutNourriture: 40, serments: 1, bonus: '' },
+  { nom: 'Duché', coutOr: 30, coutNourriture: 60, serments: 2, bonus: '' },
+  { nom: 'Royaume', coutOr: 50, coutNourriture: 100, serments: 3, bonus: '' },
+  { nom: 'Empire', coutOr: 100, coutNourriture: 200, serments: 4, bonus: '' },
 ]
 
 // ── Accès à la configuration effective d'une partie ───────────────────
@@ -739,7 +722,6 @@ DEFAULT_CONFIG.paysRangs = [
 export interface Cfg {
   p: GameParams & GameParamStrings
   ressources: string[]
-  educations: string[]
   metiers: MetierDef[]
   traits: TraitDef[]
   cultures: CultureDef[]
@@ -951,12 +933,12 @@ export function migrerProgres(list: ProgresArbre[] | undefined): ProgresArbre[] 
 
 // Rangs de pays : migration de l'ancienne table à blocs Féodal/Républicain
 // (champs bloc/cout/succession en texte libre) vers l'échelle féodale
-// unique (champs coutOr/coutNourriture/serments/ministres). Les parties
+// unique (champs coutOr/coutNourriture/serments). Les parties
 // sauvegardées avec l'ancien format repassent sur la table par défaut.
 function migrerPaysRangs(rangs: GameConfig['paysRangs']): GameConfig['paysRangs'] {
   if (!Array.isArray(rangs) || rangs.length === 0) return DEFAULT_CONFIG.paysRangs
   const r0 = rangs[0] as Record<string, unknown>
-  if (typeof r0.coutOr !== 'number' || typeof r0.serments !== 'number' || typeof r0.ministres !== 'number') {
+  if (typeof r0.coutOr !== 'number' || typeof r0.serments !== 'number') {
     return DEFAULT_CONFIG.paysRangs
   }
   return rangs
@@ -979,63 +961,6 @@ function migrerVictoires(list: GameConfig['victoires']): GameConfig['victoires']
   return list.map(convert)
 }
 
-// Ministères (feuille « Référentiel », table ministeres) : migration des
-// anciens formats sans rangMinimum/mode (refonte 2026-10-14) — les
-// portefeuilles d'origine restent intacts, seuls les champs manquants
-// sont complétés par leurs valeurs par défaut.
-// Marqueur (v) 2026-10-15 : les 7 portefeuilles « du classeur » prennent
-// des noms d'offices de cour (comme les 16 autres). Les configurations
-// sauvegardées portent encore les anciens noms → renommage ci-dessous,
-// puis fusion avec les 23 défauts du référentiel : les portefeuilles
-// manquants d'une vieille config (ex. les 16 offices de cour arrivés au
-// marqueur (h)) sont réintégrés ; les personnalisations de même nom
-// sont conservées ; les entrées perso hors référentiel restent en queue.
-// (Nettoyage 2026-10-22, retour Thibaut : l'office « Grand veneur »
-//  (ex-Ecologie) n'a plus d'effet depuis la suppression de la
-//  consommation des rangs d'habitation (vague 3b) — il est retiré du
-//  référentiel ET filtré des configs (cf. cfgOf), le renommage
-//  Ecologie→Grand veneur disparaît avec lui.)
-export const RENOMMAGES_MINISTERES: Record<string, string> = {
-  Colonial: 'Grand bailli',
-  Culture: 'Maître des arts',
-  'Défense': 'Grand prévôt',
-  Economie: 'Surintendant des finances',
-  Guerre: 'Grand écuyer',
-  Recherche: 'Grand bibliothécaire',
-}
-
-function migrerMinisteres(list: GameConfig['ministeres']): GameConfig['ministeres'] {
-  if (!Array.isArray(list) || list.length === 0) return DEFAULT_CONFIG.ministeres
-  // (a) renommage des anciens noms du classeur
-  const rentrees = list.map((m) => ({
-    ...m,
-    ministere: RENOMMAGES_MINISTERES[m.ministere] ?? m.ministere,
-  }))
-  // (b) fusion avec les défauts du référentiel : chaque portefeuille
-  // connu prend sa place par défaut (entrée utilisateur conservée si
-  // elle existe), les portefeuilles manquants sont réintégrés.
-  const parNom = new Map(rentrees.map((m) => [m.ministere, m]))
-  const defauts = DEFAULT_CONFIG.ministeres.map((d) => {
-    const u = parNom.get(d.ministere)
-    if (!u) return d
-    const f = { ...d, ...u }
-    return {
-      ...f,
-      rangMinimum: f.rangMinimum ?? 'Baronnie',
-      mode: f.mode ?? 'Plateau',
-    } as typeof d
-  })
-  // (c) entrées personnalisées hors référentiel : conservées à la suite.
-  const connus = new Set(DEFAULT_CONFIG.ministeres.map((d) => d.ministere))
-  const persos = rentrees
-    .filter((m) => !connus.has(m.ministere))
-    .map((m) => ({
-      ...m,
-      rangMinimum: m.rangMinimum ?? 'Baronnie',
-      mode: m.mode ?? 'Plateau',
-    }))
-  return [...defauts, ...persos]
-}
 
 /** Version de schéma de la configuration (marqueur (x), 2026-10-15).
  *  Une configuration convergée (fusion + migrations + tampon
@@ -1097,7 +1022,6 @@ function gardeFous(m: GameConfig): void {
     }
   }
   m.paysRangs = ouDefauts(m.paysRangs, DEFAULT_CONFIG.paysRangs)
-  m.ministeres = ouDefauts(m.ministeres, DEFAULT_CONFIG.ministeres)
   m.victoires = ouDefauts(m.victoires, DEFAULT_CONFIG.victoires)
   // Mise à jour des CONDITIONS de victoire (retour Thibaut 2026-10-15) :
   //  les nouvelles voies du référentiel REMPLACENT celles d'une config
@@ -1222,7 +1146,6 @@ export function cfgOf(config?: GameConfig): Cfg {
     // rangs de pays : échelle féodale unique (refonte 2026-10-14)
     merged.paysRangs = migrerPaysRangs(merged.paysRangs)
     // ministères : complétion rangMinimum/mode (refonte 2026-10-14)
-    merged.ministeres = migrerMinisteres(merged.ministeres)
     // couleurs d'affichage : complétion depuis les défauts (marqueur (o))
     merged.couleurs = migrerCouleurs(c.couleurs)
     // voies de victoire : rangs → lauriers (refonte 2026-10-14)
@@ -1514,8 +1437,12 @@ export function cfgOf(config?: GameConfig): Cfg {
       ['Soldat', '', 0, '', 0, '', '', false, '', 'Armée'],
       ['Commandant', '', 0, '', 0, '', '', true, '', 'Armée'],
     ]
-    const cle = (m: { education: string; valeur1: number; ressource1: string; valeur2: number; ressource2: string; description: string; nobleSeul: boolean; regleGenre: string; attribution: string }) =>
-      JSON.stringify([m.education, m.valeur1, m.ressource1, m.valeur2, m.ressource2, m.description, m.nobleSeul, m.regleGenre, m.attribution])
+    // NB (simplification 2026-10-23) : le champ education est retiré du
+    //  type mais les vieilles configs le portent encore au runtime — la
+    //  comparaison des anciens défauts doit rester IDENTIQUE pour que la
+    //  migration « ancien défaut exact → nouveau défaut » joue encore.
+    const cle = (m: { education?: unknown; valeur1: number; ressource1: string; valeur2: number; ressource2: string; description: string; nobleSeul: boolean; regleGenre: string; attribution: string }) =>
+      JSON.stringify([m.education ?? '', m.valeur1, m.ressource1, m.valeur2, m.ressource2, m.description, m.nobleSeul, m.regleGenre, m.attribution])
     const nouveaux = new Map(DEFAULT_CONFIG.metiers.map((d) => [d.metier, d]))
     const parAncienNom = new Map(ANCIENS.map((a2) => [a2[0], a2]))
     const out: MetierDef[] = []
@@ -1608,9 +1535,6 @@ export function cfgOf(config?: GameConfig): Cfg {
   //    faction). Idempotent. Un éventuel Grand veneur déjà nommé dans
   //    une partie en cours garde son badge mais n'a plus d'effet (il
   //    n'en avait déjà plus).
-  merged.ministeres = (merged.ministeres ?? []).filter(
-    (m) => m.ministere !== 'Grand veneur' && m.ministere !== 'Ecologie',
-  )
   //  · l'ancienne table rangsHabitation (doublon historique de
   //    typesHabitation, vague 3b) n'est plus lue nulle part : la clé
   //    orpheline des configs sauvegardées n'est plus persistée.
@@ -1641,10 +1565,17 @@ export function cfgOf(config?: GameConfig): Cfg {
   for (const cle of ['batimentsVille', 'batimentsChateau', 'batimentsCouts', 'amenagements'] as const) {
     delete (merged as unknown as Record<string, unknown>)[cle]
   }
+  //  Simplification (retour Thibaut 2026-10-23 — santé ignorée) : la
+  //  mécanique d'ÉDUCATION est retirée (labels d'éducation, événement
+  //  « reçoit une éducation », contrainte par métier) — les écoles
+  //  (ecoleRang) et les Professeurs RESTENT. La table educations et le
+  //  champ education des métiers ne sont plus lus nulle part : ils ne
+  //  sont plus persistés (même patron que rangsHabitation).
+  delete (merged as { educations?: unknown }).educations
+  for (const m of merged.metiers) delete (m as { education?: unknown }).education
   return {
     p: merged.params,
     ressources: merged.ressources,
-    educations: merged.educations,
     metiers: merged.metiers,
     traits: merged.traits,
     cultures: merged.cultures,

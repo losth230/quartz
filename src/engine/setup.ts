@@ -215,7 +215,6 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       pereBio: null,
       enfantBatard: false,
       metier: null,
-      education: null,
       fecondite: 0,
       armee: null,
     }
@@ -233,7 +232,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
     mariageId: null, mereId: null, pereId: null, pereBioId: null,
-    pereBio: null, enfantBatard: false, metier: null, education: null,
+    pereBio: null, enfantBatard: false, metier: null,
     fecondite: 0, armee: null,
   }
   const reine: Character = {
@@ -242,7 +241,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
     mariageId: null, mereId: null, pereId: null, pereBioId: null,
-    pereBio: null, enfantBatard: false, metier: null, education: null,
+    pereBio: null, enfantBatard: false, metier: null,
     fecondite: 0, armee: null,
   }
   roi.mariage = `${reine.prenom} ${reine.nom}`
@@ -267,7 +266,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
         orientation: randomOrientation(), traits: randomTraits(), statut: 'Sain',
         mariage: null, mere: null, pere: null, pereBio: null, enfantBatard: false,
         mariageId: null, mereId: null, pereId: null, pereBioId: null,
-        metier: C.p.metierChasseur, education: null, fecondite: 0, armee: null,
+        metier: C.p.metierChasseur, fecondite: 0, armee: null,
       }
       pop.push(frere)
     }
@@ -290,7 +289,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       orientation: randomOrientation(), traits: randomTraits(), statut: 'Sain',
       mariage: null, mere: fullName(reine), pere: fullName(roi), pereBio: null,
       mariageId: null, mereId: reine.id, pereId: roi.id, pereBioId: null,
-      enfantBatard: false, metier: null, education: null, fecondite: 0, armee: null,
+      enfantBatard: false, metier: null, fecondite: 0, armee: null,
     }
     pop.push(enfant)
   }
@@ -415,7 +414,6 @@ export function ajouterHabitant(
       pereBio: null,
       enfantBatard: false,
       metier: C.p.metierChasseur,
-      education: null,
       fecondite: 0,
       armee: null,
     }
@@ -483,7 +481,6 @@ export function peuplerNouvelleVille(
       pereBio: null,
       enfantBatard: false,
       metier: null,
-      education: null,
       fecondite: 0,
       armee: null,
     }

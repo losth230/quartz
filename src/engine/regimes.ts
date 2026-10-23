@@ -26,9 +26,7 @@
 import type { City, GameState, Player, Saison } from './types'
 import { detailGainsVille } from './economie'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
-import { aMinistre, fluxFinSaisonMinisteres } from './ministeres'
 import { garnisonBatiment, productionTourismeBatiment } from './batiments'
-import { rangPaysNiveau } from './factions'
 import { nomRang, rangsDefsType } from './habitations'
 import { garnisonProgresVille, lignesGarnisonProgresVille, garnisonMinimaleProgres, fluxProgresJoueur } from './progresAuto'
 import { effetsCommerceJoueur } from './commerce'
@@ -61,15 +59,6 @@ export function rangNiveau(ville: City, C: Cfg): number {
  *  ville (page « Pays ») et du pays (page « Royaume »). */
 export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: GameState): number {
   let g = 0
-  // Ministères : bonus permanent crédité à la prise de fonction d'un
-  //  Connétable (+15 par ville — engine/ministeres.ts, marqueur (y)).
-  g += p.garnisonMinisteres ?? 0
-  // Grand prévôt (marqueur (y)) : « +10 Garnison dans vos habitations
-  //  par rang de pays » — bonus DYNAMIQUE (suit le rang courant du
-  //  pays), nécessite l'état (population) pour vérifier le ministre.
-  if (state && aMinistre(state, p, 'Grand prévôt')) {
-    g += 10 * rangPaysNiveau(p, C)
-  }
   for (const b of ville.batiments) g += garnisonBatiment(b, C, ville.type)
   // Garde (vague 3a, rework métiers & emplacements, arbitrage
   //  2026-10-21) : +garnisonParGarde Garnison STATIQUE par Garde en
@@ -101,7 +90,7 @@ export interface LigneDetailGarnison {
   valeur: number
   /** catégorie affichable : bâtiment / technologie /
    *  régime / ministre / métier (Garde) */
-  origine: 'bâtiment' | 'technologie' | 'régime' | 'ministre' | 'métier'
+  origine: 'bâtiment' | 'technologie' | 'régime' | 'métier'
 }
 
 export function detailGarnisonVille(
@@ -127,12 +116,6 @@ export function detailGarnisonVille(
       (c) => c.statut !== 'Décédé' && c.ville === ville.nom && c.metier === C.p.metierGarde,
     ).length
     if (gardes > 0) push('métier', `${gardes} ${C.p.metierGarde}(s) en poste (statique)`, gardes * C.p.garnisonParGarde)
-  }
-  // 5. Ministres : Connétable (+15 par ville, crédité à la prise de
-  //    fonction) et Grand prévôt (+10 × rang de pays).
-  if (p.garnisonMinisteres) push('ministre', 'Connétable (prise de fonction)', p.garnisonMinisteres)
-  if (state && aMinistre(state, p, 'Grand prévôt')) {
-    push('ministre', 'Grand prévôt : 10 × rang de pays', 10 * rangPaysNiveau(p, C))
   }
   return out
 }
@@ -257,12 +240,7 @@ export function tourismeCourant(state: GameState, p: Player, C: Cfg): number {
   total += effetsCulturePays(state, p, C)['Tourisme'] ?? 0
   // 4. technologies (Surconsommation, Stands de goodies)
   total += fluxProgresJoueur(state, p, C)['Tourisme'] ?? 0
-  // 5. ministres (Maître de cour +2, Légat +20) — fin de saison :
-  //  production équivalente par tour, LUE SUR LA RÈGLE DE BANQUE
-  //  (voie unique ministres → fluxJoueurParMinistre, montants dans le
-  //  registre MINISTERES_AUTO — plus aucun chiffre codé ici).
-  total += fluxFinSaisonMinisteres(state, p)['Tourisme'] ?? 0
-  // 6. CONSTRUCTIONS (Chapelle +35, Bahamutt +16…) : production Tourisme
+  // 5. CONSTRUCTIONS (Chapelle +35, Bahamutt +16…) : production Tourisme
   //  des bâtiments/aménagements, lue sur la règle de BANQUE (voie unique
   //  depuis le 2026-10-19 — même valeur que le canal Bâtiments du récap).
   for (const v of p.villes) {

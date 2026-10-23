@@ -25,7 +25,6 @@ import { effetsRegime, effetsCulturePays, detailCulturePays } from './regimes'
 import { citesLibresDe, detailCiteLibre } from './citesLibres'
 import { bonusProximite } from './villes'
 import { effetsCommerceJoueur, detailCommerceJoueur } from './commerce'
-import { portefeuillesDuJoueur } from './ministeres'
 import { fluxProgresJoueur } from './progresAuto'
 
 export interface ProductionDetail {
@@ -61,10 +60,6 @@ export interface ProductionDetail {
   /** bonus de proximité des villes (marqueur (y) : Rivière +12, Mer
    *  +7 Nourriture/tour par défaut — engine/villes.ts bonusProximite) */
   proximite: Record<string, number>
-  /** effets automatiques par tour des portefeuilles ministériels
-   *  (Trésorier +5 Or, Grand Précepteur +1 Science… — engine/
-   *  ministeres.ts, cumulables) — canal « Ministères » du récap. */
-  ministeres: Record<string, number>
   /** flux par tour des technologies d\u00e9bloqu\u00e9es (engine/progresAuto.ts \u2014 canal \u00ab Progr\u00e8s \u00bb). */
   progres: Record<string, number>
   /** Entretien des armées : canal vide (règle du classeur — prix payé
@@ -199,27 +194,17 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
   for (const [res, v] of Object.entries(fluxProgresJoueur(state, p, C))) {
     if (v !== 0) progres[res] = v
   }
-  // Ministères : effets par tour des portefeuilles (Trésorier +5 Or,
-  //  Grand Précepteur +1 Science, Grand prévôt +1 Fer — cumulables,
-  //  même logique qu'appliquerEffetsMinisteres mais SANS créditer
-  //  le stock : vue pure pour le récap « prochain tour »).
-  const ministeres: Record<string, number> = {}
-  for (const m of portefeuillesDuJoueur(state, p)) {
-    if (m === 'Trésorier') ministeres['Or'] = (ministeres['Or'] ?? 0) + 5
-    else if (m === 'Grand Précepteur') ministeres['Science'] = (ministeres['Science'] ?? 0) + 1
-    else if (m === 'Grand prévôt') ministeres['Fer'] = (ministeres['Fer'] ?? 0) + 1
-  }
   // Armées : entretien déjà payé à la LEVÉE (règle du classeur,
   //  retour Thibaut : pas d'entretien par tour) — canal vide ici.
   const armees: Record<string, number> = {}
   // Total
   const total: Record<string, number> = {}
-  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, ministeres, progres, armees]) {
+  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, progres, armees]) {
     for (const [res, v] of Object.entries(canal)) {
       total[res] = (total[res] ?? 0) + v
     }
   }
-  return { base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, ministeres, progres, armees, total }
+  return { base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, progres, armees, total }
 }
 
 // ══════════════════════════════════════════════════════════════════════

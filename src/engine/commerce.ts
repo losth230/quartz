@@ -44,7 +44,7 @@ import { constructionRef, effetsConstructionRef, effetsEteConstructionRef } from
 import { nbBatiments } from './factions'
 import { aTech } from './progresAuto'
 
-/** Nom du metier (fixe, comme « Ministre » dans engine/ministeres.ts). */
+/** Nom du metier (fixe). */
 export const TITRE_MARCHAND = 'Marchand'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide). */

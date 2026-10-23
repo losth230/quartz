@@ -10,7 +10,6 @@
 
 import type { City, GameState, Player } from './types'
 import { cfgOf, metierDef, type Cfg } from './gameData'
-import { aMinistre } from './ministeres'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './villes'
 
@@ -114,9 +113,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  Professeur +10 % Science, Banquier +10 % Or, Troubadour +10 %
   //  Tourisme (présence d'au moins un titulaire vivant dans la ville ;
   //  ex. Gouverneur + Professeur = +20 % sur la Science).
-  const taxeMult =
-    facteurTaxes(ville, C)
-    * (aMinistre(state, p, 'Grand Chambellan') ? 1.1 : 1)
+  const taxeMult = facteurTaxes(ville, C)
   const bonusTaxes: Record<string, number> = {}
   const ajouteBonus = (res: string, part: number) => {
     bonusTaxes[res] = (bonusTaxes[res] ?? 0) + part

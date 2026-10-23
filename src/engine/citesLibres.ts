@@ -32,7 +32,6 @@ import type { Character, CiteLibre, GameState, Player, TaxeNiveau } from './type
 import { makeRng } from './rng'
 import { cfgOf, peupleDef, metierDef, type Cfg } from './gameData'
 import { rangPaysNiveau } from './factions'
-import { aMinistre } from './ministeres'
 import { isNobleDyn, perteDemenagement } from './shared'
 import { resynchroniserTourisme } from './regimes'
 
@@ -159,13 +158,9 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
  *  par tour (somme des transferts — vue « prochain tour » du récap). */
 export function taxesCitesLibresRecues(state: GameState, p: Player, C: Cfg): Record<string, number> {
   const out: Record<string, number> = {}
-  // Grand Chambellan : +10 % sur les taxes reçues (même formule que
-  //  l'étape moteur appliquerTaxesCitesLibres — l'aperçu du récap
-  //  doit afficher la même valeur que le prochain débit réel).
-  const boostChambellan = aMinistre(state, p, 'Grand Chambellan') ? 1.1 : 1
   for (const cite of citesSuzerainesDe(state, p)) {
     for (const [res, v] of Object.entries(detailCiteLibre(cite, C).transfert)) {
-      out[res] = (out[res] ?? 0) + v * boostChambellan
+      out[res] = (out[res] ?? 0) + v
     }
   }
   return out
@@ -189,12 +184,9 @@ export function appliquerTaxesCitesLibres(
     const d = detailCiteLibre(cite, C)
     const gains = out[suz.n] ?? (out[suz.n] = {})
     const parts: string[] = []
-    // Grand Chambellan (ministère, refonte 2026-10-14) : +10 % sur les
-    // taxes reçues des cités libres (cumulable avec les taxes des villes).
-    const boostChambellan = aMinistre(state, suz, 'Grand Chambellan') ? 1.1 : 1
     for (const [res, v] of Object.entries(d.transfert)) {
       if (v === 0) continue
-      const vv = v * boostChambellan
+      const vv = v
       gains[res] = (gains[res] ?? 0) + vv
       const rs = suz.resources[res]
       if (rs) rs.stock += vv
@@ -296,7 +288,6 @@ function ajouterCiteLibre(
       pereBio: null,
       enfantBatard: false,
       metier: ageTiree >= C.p.adultAge ? C.p.metierChasseur : null,
-      education: null,
       fecondite: 0,
       armee: null,
     }
@@ -314,33 +305,19 @@ function ajouterCiteLibre(
 // ── Population « comme un joueur » (onglet 👥 Population) ────────────
 
 /** Métiers accessibles pour la population d'une cité libre (comme
- *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur, plus
- *  les métiers d'éducation enseignés par un Professeur VIVANT DE LA
- *  CITÉ. Pas de Ministre ni de Dirigeant : une cité libre n'a ni
- *  conseil ni dirigeant (son suzerain est un joueur). */
+ *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur.
+ *  Pas de Dirigeant : une cité libre n'a ni conseil ni dirigeant
+ *  (son suzerain est un joueur). */
 export function metiersAccessiblesCite(
-  state: GameState, cite: CiteLibre, C: Cfg = cfgOf(state.config),
+  state: GameState, _cite: CiteLibre, C: Cfg = cfgOf(state.config),
 ): string[] {
-  const out: string[] = [C.p.metierChasseur, C.p.metierGouverneur]
-  const pop = cite.population ?? []
-  const educations = new Set<string>()
-  for (const c of pop) {
-    if (c.statut !== 'Décédé' && c.metier === C.p.metierProfesseur && c.education) {
-      educations.add(c.education)
-    }
-  }
-  for (const t of C.metiers) {
-    if (t.attribution === 'Education' && t.education && educations.has(t.education)) {
-      out.push(t.metier)
-    }
-  }
-  return [...new Set(out)]
+  return [C.p.metierChasseur, C.p.metierGouverneur]
 }
 
 /** Pseudo-joueur représentant une cité libre pour la VALIDATION des
  *  metiers (validateMetierAssignment, validation.ts) : la population de
  *  la cité est semblable en tout point à celle d'un joueur — les
- *  contrôles de cohérence (noblesse, genre, éducation, culture) y
+ *  contrôles de cohérence (noblesse, genre, culture) y
  *  sont appliqués avec la culture de la cité. NB : les règles
  *  d'unicité du classeur (Dirigeant/Gouverneur/Professeur) restent
  *  vacantes pour une cité (pas d'école, pas de dirigeant). */

@@ -225,7 +225,6 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
       pereBioId: null,
       enfantBatard: batard,
       metier: null,
-      education: null,
       fecondite: 0,
       armee: null,
     }

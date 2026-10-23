@@ -12,7 +12,6 @@ import { cfgOf, traitDef, type Cfg } from './gameData'
 import { buildingDef } from './gameData2'
 import { bump, fullName, isNobleDyn, toutesLesPopulations } from './shared'
 import { metierAllowedForCharacter } from './metiers'
-import { facteurSacre, facteurAvencement } from './ministeres'
 
 // ── Mortalité (rework habitants 2026-10-20) ──────────────────────────────
 //  Plus d'âge-plafond ni de résurrection : la maladie est la SEULE cause
@@ -134,11 +133,10 @@ export function handleDirigeantSuccession(state: GameState, p: Player, defunt: C
     if (rangDef) {
       // Sacre d'Avènement (refonte des rangs) : le nouveau dirigeant paie
       // la MOITIÉ du prix de son rang de pays, débité automatiquement.
-      // Réductions ministérielles (refonte 2026-10-14) : Chancelier de
-      // justice −25 % (facteurSacre) et Archichancelier « sacre réduit de
-      // moitié » (facteurAvencement → quart du prix) — cumulables.
-      const fS = facteurSacre(state, p)
-      const fA = facteurAvencement(state, p)
+      // Retrait ministères (retour Thibaut 2026-10-23) : plus de
+      // réduction de sacre d'avènement (Chancelier/Archichancelier).
+      const fS = 1
+      const fA = 0.5
       // Démocratie (retour Thibaut 2026-10-15 : loi non prise en
       //  compte) : « Elections : le sacre d'avènement est gratuit » —
       //  facteur 0 appliqué automatiquement.

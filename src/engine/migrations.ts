@@ -22,7 +22,6 @@
 
 import type { GameState } from './types'
 import { normaliserEtat } from './villes'
-import { migrerNomsMinisteres } from './ministeres'
 import { toutesLesPopulations } from './shared'
 
 /** Une migration de schéma : numéro unique croissant + transformation
@@ -53,8 +52,11 @@ export const MIGRATIONS: MigrationSchema[] = [
   {
     v: 2,
     quoi: 'portefeuilles renommés (classeur → offices de cour)',
-    // Historiquement « migrerNomsMinisteres ».
-    appliquer: migrerNomsMinisteres,
+    // Retrait ministères (retour Thibaut 2026-10-23) : la fonction
+    //  migrerNomsMinisteres est partie avec engine/ministeres.ts —
+    //  migration devenue un no-op, NUMÉRO CONSERVÉ (les sauvegardes
+    //  tamponnent leur v ; ne jamais renuméroter).
+    appliquer: () => {},
   },
   {
     v: 3,
