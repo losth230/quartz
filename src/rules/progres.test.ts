@@ -6,9 +6,11 @@
 //  le REGISTRE (PROGRES_FLUX + génériques prodParMetier du référentiel)
 //  et le moteur (fluxProgresJoueur) ne fait que LIRE la banque. Ces
 //  tests verrouillent :
-//   · le contenu exact du registre (30 règles éditoriales + 3
-//     génériques prodParMetier, conditions techNom/tech dans les
-//     règles, montants = données) ;
+//   · le contenu exact du registre (30 règles éditoriales + 2
+//     génériques prodParMetier — l'effet Marchand de « Commerce
+//     lointain » a disparu avec le métier le 2026-10-24, arbitrage
+//     Thibaut « suppression du métier de Marchand » ; conditions
+//     techNom/tech dans les règles, montants = données) ;
 //   · la résolution nom → clés (clesTechsParNom : homonymes
 //     « Parcs naturels » des deux arbres Tourisme) ;
 //   · les valeurs produites (capitale, par ville, côtier, par rang
@@ -66,9 +68,13 @@ function perso(id: string, metier: string, statut: Character['statut'] = 'Sain')
 
 // ── registre : contenu exact des règles de progrès ─────────────────────────
 
-test('registre progrès : 30 règles éditoriales + 3 génériques prodParMetier', () => {
+test('registre progrès : 30 règles éditoriales + 2 génériques prodParMetier', () => {
   const regles = reglesProgres(C_DEFAUT)
-  assert.equal(regles.length, 33, '30 règles de PROGRES_FLUX + 3 prodParMetier du référentiel')
+  // 2026-10-24 (arbitrage Thibaut « suppression du métier de
+  //  Marchand ») : la tech « Commerce lointain » est gardée SANS
+  //  effet — son générique prodParMetier (Marchand) a disparu du
+  //  référentiel, il ne reste que 2 génériques.
+  assert.equal(regles.length, 32, '30 règles de PROGRES_FLUX + 2 prodParMetier du référentiel')
   for (const r of regles) assert.equal(r.source, 'tech', `source de ${r.id}`)
   const ids = regles.map((r) => r.id)
   assert.equal(new Set(ids).size, ids.length, 'ids uniques')
@@ -87,15 +93,16 @@ test('registre progrès : Surconsommation = 2 effets par RANG, condition techNom
   ], 'montants = données (la consommation de Nourriture reste un coût moteur)')
 })
 
-test('registre progrès : génériques prodParMetier traduits en fluxParMetier', () => {
+test('registre progrès : génériques prodParMetier traduits en fluxParMetier (Commerce lointain gardée SANS effet)', () => {
   const regles = reglesProgres(C_DEFAUT)
-  const commerce = regles.find((r) => r.nom === 'Commerce lointain')
-  assert.ok(commerce, 'règle Commerce lointain présente')
-  assert.ok(commerce.conditions?.tech, 'condition = clé réelle <arbre>:<slot>')
-  assert.deepEqual(commerce.effets, [
-    { type: 'fluxParMetier', ressource: 'Or', valeur: 3, metier: 'Marchand' },
-  ], 'montant lu sur le référentiel, interprété par la banque')
+  // 2026-10-24 (arbitrage Thibaut « suppression du métier de
+  //  Marchand ») : « Commerce lointain » reste dans l'arbre mais son
+  //  effet prodParMetier (Marchand) a été retiré du référentiel —
+  //  plus AUCUNE règle ne la représente (tech sans effet, assumé).
+  assert.equal(regles.find((r) => r.nom === 'Commerce lointain'), undefined,
+    'plus de règle Commerce lointain : la tech est gardée sans effet (métier de Marchand retiré du jeu le 2026-10-24)')
   const gorback = regles.find((r) => r.nom === 'Prix Gorback Nobel')
+  assert.ok(gorback?.conditions?.tech, 'condition = clé réelle <arbre>:<slot>')
   assert.deepEqual(gorback?.effets, [{ type: 'fluxParMetier', ressource: 'Science', valeur: 6, metier: 'Ministre' }])
   const culte = regles.find((r) => r.nom === 'Culte de la personnalité')
   assert.deepEqual(culte?.effets, [{ type: 'fluxParMetier', ressource: 'Tourisme', valeur: 30, metier: 'Ministre' }])
@@ -200,18 +207,22 @@ test('Merveilleux : +1 Science par bâtiment de famille Merveille', () => {
     { Science: 1 }, 'seule la Merveille compte (filtre famille = donnée de la règle)')
 })
 
-test('Commerce lointain : +3 Or par Marchand VIVANT (générique prodParMetier)', () => {
+test('Commerce lointain : tech gardée SANS effet (métier de Marchand retiré du jeu — arbitrage Thibaut 2026-10-24)', () => {
   const ctx = partieMock()
   const { state, joueur } = ctx
-  const regle = reglesProgres(cfgOf(state.config)).find((r) => r.nom === 'Commerce lointain')
-  assert.ok(regle?.conditions?.tech, 'condition tech = clé réelle')
-  joueur.progresDebloques = [regle.conditions.tech]
+  // La tech existe toujours dans l'arbre (déblocage possible) mais
+  //  son ancien effet « +3 Or par Marchand vivant » a disparu avec
+  //  le métier : même débloquée, même avec des porteurs du titre
+  //  mort dans la population, elle ne produit RIEN.
+  const cles = clesTechsParNom(C_DEFAUT, 'Commerce lointain')
+  assert.ok(cles.length >= 1, 'la tech existe toujours dans l arbre')
+  joueur.progresDebloques = cles
   state.population[joueur.n] = [
     ...(state.population[joueur.n] ?? []),
-    perso('m1', 'Marchand'), perso('m2', 'Marchand'), perso('m3', 'Marchand', 'Décédé'),
+    perso('m1', 'Marchand'), perso('m2', 'Marchand'),
   ]
   assert.deepEqual(fluxProgresJoueur(state, joueur, cfgOf(state.config)),
-    { Or: 6 }, '2 Marchands vivants × 3 Or — le défunt ne produit rien')
+    {}, 'tech débloquée + porteurs du titre : AUCUN flux (l effet a été retiré du référentiel)')
 })
 
 test('sans tech débloquée : fluxProgresJoueur vide (aucune production hors banque)', () => {

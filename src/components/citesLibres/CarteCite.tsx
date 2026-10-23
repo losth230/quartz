@@ -11,7 +11,7 @@
 
 import type { GameState, CiteLibre, TaxeNiveau } from '../../engine/types'
 import type { Cfg } from '../../engine/gameData'
-import { detailCiteLibre, emissairesDe, citeLibreDevientVille, taxesCite } from '../../engine/citesLibres'
+import { detailCiteLibre, emissairesDe, emissairesEffectifsCite, citeLibreDevientVille, taxesCite } from '../../engine/citesLibres'
 import { routesCommerceVersCite } from '../../engine/commerce'
 import { Card, Select, TextInput, Button, Badge, TAX_OPTIONS } from '../ui'
 import { fmtNum } from './logiqueCitesLibres'
@@ -134,18 +134,30 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
           {state.players.map((p) => {
             const e = emissairesDe(cite, p.n)
             const reserve = p.emissaires ?? 0
+            // 2026-10-24 (arbitrage Thibaut « suppression du métier de
+            //  Marchand ») : une route commerciale du joueur vers la
+            //  cité octroie +1 émissaire TANT QUE la route est active
+            //  (emissairesEffectifsCite). Les boutons +/- ne touchent
+            //  QUE les émissaires placés (suivi manuel du plateau).
+            const effectifs = emissairesEffectifsCite(state, cite, p.n)
+            const bonusRoutes = effectifs - e
             return (
               <div key={p.n} className="cl-emiss">
-                <span className={`player-chip ${e >= 3 ? 'chip-active' : ''}`}>
+                <span className={`player-chip ${effectifs >= 3 ? 'chip-active' : ''}`}>
                   J{p.n} · {p.nom}
                 </span>
                 <span className="badge badge-neutral">{e} placé(s)</span>
+                {bonusRoutes > 0 && (
+                  <span className="badge badge-info" title="Bonus des routes commerciales actives vers cette cité">
+                    +{bonusRoutes} par route(s)
+                  </span>
+                )}
                 <span className="badge badge-info" title="Émissaires disponibles (ressource du joueur)">
                   {reserve} en réserve
                 </span>
                 <Button onClick={() => changerEmissaires(cite.nom, p.n, -1)}>−</Button>
                 <Button disabled={reserve <= 0} onClick={() => changerEmissaires(cite.nom, p.n, +1)}>+</Button>
-                {e >= 3 && <Badge tone="good">suzerain possible</Badge>}
+                {effectifs >= 3 && <Badge tone="good">suzerain possible</Badge>}
               </div>
             )
           })}
@@ -160,10 +172,12 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
             ]}
             onChange={(v) => changerSuzerain(cite.nom, v)}
           />
-          {(cite.suzerain == null || emissairesDe(cite, cite.suzerain) < 3) && (
+          {(cite.suzerain == null || emissairesEffectifsCite(state, cite, cite.suzerain) < 3) && (
             <p className="muted small">
-              Règle : le suzerain s'obtient à 3 émissaires (aucune contrainte bloquante
-              ici — le suivi des émissaires reflète le plateau).
+              Règle : le suzerain s'obtient à 3 émissaires placés — une route
+              commerciale active vers la cité compte comme un émissaire
+              (2026-10-24, arbitrage Thibaut). Aucune contrainte bloquante
+              ici — le suivi reflète le plateau.
             </p>
           )}
         </div>
@@ -180,16 +194,18 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
       </div>
 
       {/* ── Routes commerciales entrantes (sous-vague 3b « routes
-          dissociées », arbitrage Thibaut 2026-10-24) : +1 emplacement
-          de Marchand par route — le métier devient accessible aux
-          habitants de la cité (metiersAccessiblesCite), sa
-          production alimente les taxes versées au suzerain. Une cité
-          ne peut PAS fermer ces routes (origine seule). ── */}
+          dissociées », arbitrage Thibaut 2026-10-24 ; arbitrage
+          « suppression du métier de Marchand » du 2026-10-24) :
+          chaque route octroie +1 émissaire au joueur à l'origine
+          TANT QUE la route est active (emissairesEffectifsCite —
+          le métier de Marchand n'existe plus, les routes n'ouvrent
+          plus aucun emplacement). Une cité ne peut PAS fermer ces
+          routes (origine seule). ── */}
       {routesEntrantes.length > 0 && (
         <p className="small" style={{ marginTop: 0 }}>
           <Badge tone="info">🛒 {routesEntrantes.length} route(s) commerciale(s) entrante(s)</Badge>{' '}
           <span className="muted">
-            +1 emplacement de Marchand par route — {routesEntrantes.map((r) => {
+            +1 émissaire par route tant qu'elle est active — {routesEntrantes.map((r) => {
               const prop = state.players.find((q) => q.n === r.joueur)
               return `${r.villeOrigine} (${prop?.nom ?? '?'})`
             }).join(' · ')}

@@ -1093,6 +1093,36 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  événements : delete ciblé, SANS bump de SCHEMA_VERSION_CONFIG
   //  (règle (x)). Idempotent.
   delete (merged as { params?: { marchandOrTour?: unknown } }).params?.marchandOrTour
+  // SUPPRESSION DU MÉTIER DE MARCHAND (arbitrage Thibaut 2026-10-24 :
+  // « supprime carrément le métier de marchand ») : l'entrée est
+  //  retirée du RÉFÉRENTIEL (metiers + metiersEffets), mais les
+  //  configs CONVERGÉES sauvegardées AVANT embarquent la table entière
+  //  (convergerConfig sauve la structure fusionnée) — sans purge, le
+  //  Marchand reviendrait par la fusion {...DEFAULT_CONFIG, ...c} et
+  //  réapparaîtrait dans le picker (metiersAccessibles parcourt
+  //  C.metiers). Même patron que dogmes/événements/marchandOrTour :
+  //  purge ciblée TOUJOURS appliquée (idempotente), SANS bump de
+  //  SCHEMA_VERSION_CONFIG (règle (x)). Trois familles :
+  //    · entrée « Marchand » de merged.metiers (le picker, les caps) ;
+  //    · entrée « Marchand » de merged.metiersEffets (le wiki) ;
+  //    · effets fluxParMetier de métier « Marchand » (ex. la tech
+  //      « Commerce lointain », gardée SANS effet — arbitrage
+  //      Thibaut 2026-10-24) : le métier n'existe plus, l'effet est
+  //      mort quelle que soit sa valeur — purgé pour aligner la
+  //      config sur le référentiel.
+  if (Array.isArray(merged.metiers)) {
+    merged.metiers = merged.metiers.filter((m) => m.metier !== 'Marchand')
+  }
+  if (Array.isArray(merged.metiersEffets)) {
+    merged.metiersEffets = merged.metiersEffets.filter((e) => e.metier !== 'Marchand')
+  }
+  for (const arbre of merged.progres ?? []) {
+    const techs = [...(arbre.brancheA ?? []), ...(arbre.brancheB ?? []), ...(arbre.techC ? [arbre.techC] : [])] as unknown as Array<{ effets?: Array<Record<string, unknown>> }>
+    for (const tech of techs) {
+      if (!Array.isArray(tech.effets)) continue
+      tech.effets = tech.effets.filter((e) => !(e.type === 'fluxParMetier' && e.metier === 'Marchand'))
+    }
+  }
   // PURGE DE L'INFLUENCE (retour arbitre Thibaut 2026-10-24, suite
   //  de l'arbitrage fondateur « Influence → émissaires ») : le texte
   //  de la règle des cités libres parlait encore de « gagner de
@@ -1448,6 +1478,12 @@ export function cfgOf(config?: GameConfig): Cfg {
       ['Dirigeant', '', 0, '', 0, '', 'Chef de faction · 1 par joueur', true, 'Hérédité', 'Succession'],
       ['Gouverneur', '', 0, '', 0, '', 'Max 1 par ville', true, '', 'Manuelle'],
       ['Héritier', '', 0, '', 0, '', 'Même dynastie que le Dirigeant', true, 'Hérédité', 'Manuelle'],
+      // NB : le Marchand (retiré du jeu le 2026-10-24, arbitrage
+      //  Thibaut « supprime carrément le métier de marchand ») reste
+      //  dans ce tableau HISTORIQUE : il décrit les défauts d'avant
+      //  la 3a ; la purge de cfgOf retire déjà ses entrées de
+      //  merged.metiers AVANT ce bloc — la ligne ne peut plus être
+      //  appariée, elle ne sert qu'à la lisibilité du snapshot.
       ['Marchand', '', 0, '', 0, '', '', false, '', 'Manuelle'],
       ['Ministre', '', 0, '', 0, '', 'Plusieurs autorisés', true, '', 'Manuelle'],
       ['Propagandiste', '', 0, '', 0, '', '', false, '', 'Manuelle'],
@@ -1483,15 +1519,15 @@ export function cfgOf(config?: GameConfig): Cfg {
     }
     merged.metiers = out
     // metiersEffets (wiki) : Propagandiste retiré, Garde/Banquier/
-    //  Troubadour/Professeur ajoutés, texte Marchand mis à jour.
+    //  Troubadour/Professeur ajoutés. Le Marchand n'a plus de texte
+    //  à mettre à jour : le métier est SUPPRIMÉ du jeu le
+    //  2026-10-24 (arbitrage Thibaut) — la purge de cfgOf (ci-
+    //  dessus) retire déjà son entrée des configs, et le
+    //  référentiel n'en contient plus (rien à compléter ici).
     merged.metiersEffets = (merged.metiersEffets ?? []).filter((e) => e.metier !== 'Propagandiste')
     for (const d of DEFAULT_CONFIG.metiersEffets) {
       if (!merged.metiersEffets.some((e) => e.metier === d.metier)) {
         merged.metiersEffets.push(structuredClone(d))
-      } else if (d.metier === 'Marchand') {
-        const e = merged.metiersEffets.find((x) => x.metier === 'Marchand')
-        const ANCIEN_M = 'Portée 9 PM, 4 PM par tour. Le marchand ouvre UNE route commerciale entre sa ville et la ville d\'un autre joueur : chaque tour, les DEUX joueurs reliés gagnent 4 Or et le propriétaire du marchand copie la production de l\'aménagement ENTIER choisi dans la ville ciblée — toutes ses ressources produites (choisi à l\'ouverture de la route, modifiable à tout moment ; un marchand ne tient qu\'une route, qui se ferme s\'il perd son titre ou meurt). Un marchand peut traverser les cases d\'eau et de rivière une fois les bateaux débloqués. Un marchand envoyé vers une cité libre ne produit pas de ressources (règle de plateau).'
-        if (e && e.effet === ANCIEN_M) e.effet = d.effet
       }
     }
     // Constructions : les 14 aménagements tier 1 passent production →

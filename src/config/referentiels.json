@@ -118,7 +118,7 @@
       "weight": 3,
       "heritable": false,
       "fertAdd": 0,
-      "description": "Si ce personnage est marchand, il génère 2 Or par tour, si ce personnage est propagandiste il génère 6 Tourisme à sa mort."
+      "description": "Si ce personnage est propagandiste, il génère 6 Tourisme à sa mort."
     },
     {
       "name": "Enfant Sauvage",
@@ -2372,15 +2372,8 @@
         {
           "nom": "Commerce lointain",
           "cout": "10",
-          "description": "Vos marchands vous rapportent 3 Or par tour supplémentaires.",
-          "effets": [
-            {
-              "type": "prodParMetier",
-              "montant": 3,
-              "ressource": "Or",
-              "metier": "Marchand"
-            }
-          ]
+          "description": "Aucun effet pour l'instant (l'Or par marchand a disparu avec le métier).",
+          "effets": []
         }
       ],
       "techC": {
@@ -3355,7 +3348,6 @@
     "Les armées :",
     "On peut choisir le professeur dans l'école, si niveau d'école suffisant, deux professeurs identiques possible.",
     "les évolutions de rangs ne sont plus en rapport avec les progrès",
-    "On n'a pas de marchand de base, sauf règles contraire.",
     "modifier la culture des autres villes :",
     "1/ dans les titres nommer un propagandiste",
     "2/ le déplacer dans une ville d'une autre culture",
@@ -3857,15 +3849,10 @@
       "nom": "Mine d'Or",
       "terrain": "Or",
       "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Marchand.",
-      "description": "",
+      "production": "Aucun effet pour l'instant.",
+      "description": "Ses emplacements de Marchand ont disparu avec le métier (retiré du jeu).",
       "effets": [],
-      "emplacements": [
-        {
-          "metier": "Marchand",
-          "places": 3
-        }
-      ]
+      "emplacements": []
     },
     {
       "categorie": "Aménagement",
@@ -4401,17 +4388,6 @@
       "metier": "Héritier"
     },
     {
-      "valeur1": 2,
-      "ressource1": "Or",
-      "valeur2": 0,
-      "ressource2": "",
-      "description": "Métier de production (+2 Or / tour) ; emplacements par les Mines d'Or et les routes commerciales",
-      "nobleSeul": false,
-      "regleGenre": "vide",
-      "attribution": "",
-      "metier": "Marchand"
-    },
-    {
       "valeur1": 0,
       "ressource1": "",
       "valeur2": 0,
@@ -4475,11 +4451,6 @@
       "effet": "Il s'agit d'un unité de type Lanceur de sorts.",
       "revocation": "5  Or",
       "metier": "Mage"
-    },
-    {
-      "effet": "+2 Or par tour. Métier de production : ses emplacements viennent des Mines d'Or et des routes commerciales (+1 par route, chaque côté). Les routes commerciales sont dissociées du titre : gratuites, ouvertes depuis une de tes villes vers la ville d'un autre joueur ou une cité libre, seule la ville d'origine peut les fermer. Vers une ville, le propriétaire copie la production de l'aménagement ENTIER choisi dans la ville ciblée (modifiable à tout moment) ; vers une cité libre, rien à copier. Sur le plateau : portée 9 PM, 4 PM par tour, traversée de l'eau et des rivières une fois les bateaux débloqués.",
-      "revocation": "20  Or + 6 ressources au choix",
-      "metier": "Marchand"
     },
     {
       "effet": "Octroie un ministre qui appartient à un ministère, maximum 1.",

@@ -1,21 +1,23 @@
 // ══════════════════════════════════════════════════════════════════════
-//  COMMERCE — ROUTES COMMERCIALES DISSOCIÉES DU MARCHAND (vague 3b)
+// COMMERCE — ROUTES COMMERCIALES DISSOCIÉES (vague 3b)
 //  Arbitrage Thibaut 2026-10-24 (« on peut passer à la vague 3b ») :
 //  la route est OUVERTE PAR LE JOUEUR, indépendamment de tout
 //  personnage (gratuit — arbitrage). Elle relie une ville d'ORIGINE du
 //  joueur à la ville d'un AUTRE joueur ou à une CITÉ LIBRE (arbitrage).
 //  Effets :
-//    · le joueur à l'origine COPIE exactement UN aménagement de la
-//      ville ciblée — sa production ET ses emplacements de
-//      population (matérialisés dans la ville d'origine : la cap de
-//      métiers les compte, engine/metiers.ts emplacementsRoutesVille) ;
-//    · +1 emplacement de Marchand de CHAQUE côté (ville d'origine +
-//      ville ciblée, ou la cité ciblée) — le Marchand est un métier de
-//      production (+2 Or / tour) dont les emplacements viennent des
-//      Mines d'Or et des routes ;
+//    · JOUEUR → VILLE : le joueur à l'origine COPIE exactement UN
+//      aménagement de la ville ciblée — sa production ET ses
+//      emplacements de population (matérialisés dans la ville
+//      d'origine : la cap de métiers les compte, engine/metiers.ts
+//      emplacementsRoutesVille). Le joueur ciblé ne reçoit RIEN.
+//    · JOUEUR → CITÉ LIBRE : rien à copier ; la route octroie +1
+//      émissaire auprès de la cité TANT QUE LA ROUTE EST ACTIVE
+//      (arbitrage Thibaut 2026-10-24 « suppression du métier de
+//      Marchand » — cf. citesLibres.ts emissairesEffectifsCite).
 //    · l'ancien bonus d'Or passif des deux côtés (marchandOrTour)
-//      DISPARAÎT : la route ne rapporte plus QUE la copie et les
-//      emplacements Marchand (arbitrage).
+//      a DISPARU (vague 3b) ; le métier de Marchand lui-même a été
+//      RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut : « supprime
+//      carrément le métier de marchand »).
 //  Fermeture : bouton ✕ du seul joueur à l'ORIGINE (arbitrage) ;
 //  nettoyage automatique des routes mortes (ville ou aménagement
 //  disparus, cible annexée) à chaque fin de tour.
@@ -43,16 +45,13 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type {
-  City, CiteLibre, GameState, Player, RouteCommerce, Saison,
+  City, GameState, Player, RouteCommerce, Saison,
 } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, type Cfg } from './gameData'
 import { constructionRef, effetsConstructionRef, effetsEteConstructionRef } from './constructions'
 import { nbBatiments } from './factions'
 import { aTech } from './progresAuto'
-
-/** Nom du metier (fixe). */
-export const TITRE_MARCHAND = 'Marchand'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
  *  Seules les routes du modèle DISSOCIÉ (sans marchandId) sont
@@ -68,25 +67,20 @@ export function routesCommerceDe(state: GameState, joueur: number): RouteCommerc
   return routesCommerce(state).filter((r) => r.joueur === joueur)
 }
 
-/** Routes qui visent une ville DU joueur (la ville gagne +1
- *  emplacement de Marchand — rien n'est crédité au stock : l'ancien
- *  Or passif a disparu, arbitrage 2026-10-24). */
+/** Routes qui visent une ville DU joueur (affichage de la page
+ *  Commerce : le joueur ciblé ne reçoit RIEN au stock ni en
+ *  emplacements — l'ancien Or passif a disparu avec la vague 3b, et
+ *  le métier de Marchand a été retiré du jeu le 2026-10-24). */
 export function routesCommerceVers(state: GameState, joueur: number): RouteCommerce[] {
   return routesCommerce(state).filter((r) => r.joueurCible === joueur)
 }
 
-/** Routes qui visent une CITÉ LIBRE (la cité gagne +1 emplacement
- *  Marchand par route — sa population peut porter le métier, la
- *  production alimente ses taxes, cf. capMarchandsCite). */
+/** Routes qui visent une CITÉ LIBRE : chaque route octroie +1
+ *  émissaire auprès de la cité TANT QUE la route est active
+ *  (arbitrage Thibaut 2026-10-24 « suppression du métier de
+ *  Marchand » — cf. citesLibres.ts emissairesEffectifsCite). */
 export function routesCommerceVersCite(state: GameState, cite: string): RouteCommerce[] {
   return routesCommerce(state).filter((r) => r.joueurCible === null && (r.citeCible ?? r.villeCible) === cite)
-}
-
-/** Emplacements de Marchand « ouverts » par les routes entrantes
- *  d'une cité libre (information affichée, jamais bloquant —
- *  convention du jeu ; les métiers de cité sont hors caps). */
-export function capMarchandsCite(state: GameState, cite: CiteLibre): number {
-  return routesCommerceVersCite(state, cite.nom).length
 }
 
 /** Ressource copiable d'un aménagement : valeur par tour, été ou non. */
@@ -136,9 +130,9 @@ export function amenagementsCopiables(ville: City, cfg?: GameConfig): string[] {
  *  référentiel — éditable à chaud ; les productions d'été ne sont
  *  créditées qu'en été). Une route vers une CITÉ LIBRE ne copie
  *  rien (pas d'aménagement — arbitrage 2026-10-24) : son seul apport
- *  est l'emplacement de Marchand de chaque côté. Les emplacements de
- *  population de l'aménagement copié sont comptés par les caps
- *  (engine/metiers.ts), pas crédités ici. */
+ *  est le +1 émissaire auprès de la cité (tant que la route est
+ *  active). Les emplacements de population de l'aménagement copié
+ *  sont comptés par les caps (engine/metiers.ts), pas crédités ici. */
 export function effetsRouteProprietaire(
   route: RouteCommerce, saison: Saison, C: Cfg = cfgOf(),
 ): Record<string, number> {
@@ -155,9 +149,9 @@ export function effetsRouteProprietaire(
 
 /** Effets par tour du commerce pour un joueur : la COPIE de ses
  *  routes (ville d'origine → ville ciblée). Le joueur ciblé ne
- *  reçoit PLUS RIEN au stock (l'ancien Or passif marchandOrTour a
- *  disparu, arbitrage 2026-10-24) : son gain est l'emplacement de
- *  Marchand ouvert dans sa ville ciblée. */
+ *  reçoit RIEN (l'ancien Or passif marchandOrTour a disparu avec la
+ *  vague 3b, puis le métier de Marchand a été retiré du jeu le
+ *  2026-10-24, arbitrage Thibaut). */
 export function effetsCommerceJoueur(
   state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
 ): Record<string, number> {
@@ -174,8 +168,7 @@ export function effetsCommerceJoueur(
 /** Détail des apports de commerce d'un joueur (provenance du récap
  *  ressources) : une ligne par route possédée. Les routes ENTRANTES
  *  ne sont pas listées : elles ne créditent plus rien au stock
- *  (l'emplacement de Marchand qu'elles ouvrent est visible dans la
- *  carte « Métiers et places »). */
+ *  (le métier de Marchand a été retiré du jeu le 2026-10-24). */
 export interface DetailCommerce {
   origine: string
   effets: Record<string, number>
@@ -190,7 +183,7 @@ export function detailCommerceJoueur(
     const effets = effetsRouteProprietaire(route, saison, C)
     if (Object.keys(effets).length === 0 && !route.amenagement) {
       out.push({
-        origine: `route ${route.villeOrigine} ↔ ${nomCible} (+1 emplacement de Marchand de chaque côté)`,
+        origine: `route ${route.villeOrigine} ↔ ${nomCible} (+1 émissaire auprès de la cité tant que la route est active)`,
         effets: {},
       })
       continue
@@ -300,7 +293,9 @@ export function maxRoutesJoueur(
  *  sans personnage — elle relie une ville d'origine du joueur à la
  *  ville d'un autre joueur (aménagement copiable copié : production +
  *  emplacements de population dans la ville d'origine) ou à une cité
- *  libre (rien à copier ; +1 emplacement de Marchand de chaque côté).
+ *  libre (rien à copier ; +1 émissaire auprès de la cité tant que
+ *  la route est active — arbitrage Thibaut 2026-10-24, métier de
+ *  Marchand retiré du jeu).
  *  Retourne null si OK, sinon le motif d'erreur (affiché en rouge,
  *  jamais bloquant — convention « dons et mariages », marqueur (r)). */
 export function creerRouteCommerce(
@@ -330,7 +325,6 @@ export function creerRouteCommerce(
     // ── cible CITÉ LIBRE (arbitrage 2026-10-24) ──
     const cite = (state.citesLibres ?? []).find((c) => c.nom === (citeCible ?? villeCible))
     if (!cite) return 'Cité libre ciblée introuvable.'
-    const nbMarchandsCite = capMarchandsCite(state, cite)
     ;(state.routesCommerce ?? (state.routesCommerce = [])).push({
       id: `rc-${joueur}-${nb}-${cite.nom}`,
       joueur, villeOrigine,
@@ -339,7 +333,7 @@ export function creerRouteCommerce(
     })
     state.log.push({
       turn: state.turn, type: 'Commerce', joueur,
-      texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${cite.nom} (cité libre) — +1 emplacement de Marchand de chaque côté (${nbMarchandsCite + 1} pour la cité).`,
+      texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${cite.nom} (cité libre) — +1 émissaire auprès de la cité tant que la route est active (métier de Marchand retiré du jeu, arbitrage 2026-10-24).`,
     })
     return null
   }
@@ -364,7 +358,7 @@ export function creerRouteCommerce(
   })
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur,
-    texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${villeCible} (${cible?.nom ?? '?'}) — copie de « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}) + 1 emplacement de Marchand de chaque côté.`,
+    texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${villeCible} (${cible?.nom ?? '?'}) — copie de « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
   })
   return null
 }

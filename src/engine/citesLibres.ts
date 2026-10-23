@@ -34,7 +34,7 @@ import { cfgOf, peupleDef, metierDef, type Cfg } from './gameData'
 import { rangPaysNiveau } from './factions'
 import { isNobleDyn, perteDemenagement } from './shared'
 import { resynchroniserTourisme } from './regimes'
-import { TITRE_MARCHAND, capMarchandsCite } from './commerce'
+import { routesCommerceVersCite } from './commerce'
 
 /** Consommation d'une cité libre : même règle qu'une ville de joueur —
  *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour. */
@@ -69,6 +69,21 @@ export function facteurTaxesCite(cite: CiteLibre, C: Cfg): number {
 /** Émissaires d'un joueur auprès d'une cité (suivi manuel du plateau). */
 export function emissairesDe(cite: CiteLibre, joueur: number): number {
   return cite.emissaires?.[joueur] ?? 0
+}
+
+/** Émissaires EFFECTIFS d'un joueur auprès d'une cité : émissaires
+ *  placés (suivi manuel) + UN PAR ROUTE COMMERCIALE ACTIVE du joueur
+ *  vers la cité (2026-10-24, arbitrage Thibaut « suppression du métier
+ *  de Marchand » : une route vers une cité libre octroie +1 émissaire
+ *  auprès de ladite cité TANT QUE la route est active — la fermeture
+ *  de la route retire le bonus). Utilisé pour le badge « suzerain
+ *  possible » (3 émissaires) et l'affichage ; les boutons +/- ne
+ *  touchent QUE les émissaires placés. */
+export function emissairesEffectifsCite(
+  state: GameState, cite: CiteLibre, joueur: number,
+): number {
+  return emissairesDe(cite, joueur)
+    + routesCommerceVersCite(state, cite.nom).filter((r) => r.joueur === joueur).length
 }
 
 /** Cités libres dont un joueur est le suzerain. */
@@ -306,19 +321,18 @@ function ajouterCiteLibre(
 // ── Population « comme un joueur » (onglet 👥 Population) ────────────
 
 /** Métiers accessibles pour la population d'une cité libre (comme
- *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur, et
- *  Marchand dès qu'au moins une route commerciale entrante existe
- *  (sous-vague 3b, 2026-10-24, arbitrage Thibaut : les routes
- *  dissociées ouvrent +1 emplacement de Marchand à CHAQUE extrémité,
- *  la cité incluse — capMarchandsCite, engine/commerce.ts). Pas de
- *  Dirigeant : une cité libre n'a ni conseil ni dirigeant (son
- *  suzerain est un joueur). */
+ *  metiersAccessibles pour un joueur) : Chasseur et Gouverneur.
+ *  Le Marchand, ajouté le 2026-10-24 par la sous-vague 3b (routes
+ *  entrantes), a été RETIRÉ le 2026-10-24 avec le métier lui-même
+ *  (arbitrage Thibaut : « supprime carrément le métier de
+ *  marchand ») ; les routes vers une cité octroient désormais des
+ *  émissaires (emissairesEffectifsCite). Pas de Dirigeant : une
+ *  cité libre n'a ni conseil ni dirigeant (son suzerain est un
+ *  joueur). */
 export function metiersAccessiblesCite(
-  state: GameState, cite: CiteLibre, C: Cfg = cfgOf(state.config),
+  state: GameState, _cite: CiteLibre, C: Cfg = cfgOf(state.config),
 ): string[] {
-  const out = [C.p.metierChasseur, C.p.metierGouverneur]
-  if (capMarchandsCite(state, cite) > 0) out.push(TITRE_MARCHAND)
-  return out
+  return [C.p.metierChasseur, C.p.metierGouverneur]
 }
 
 /** Pseudo-joueur représentant une cité libre pour la VALIDATION des

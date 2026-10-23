@@ -83,10 +83,14 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   assert.equal(capMetierVille(C.p.metierChasseur, scierie, C), 52, 'Chasseur : cap défaut 50 + 2 emplacements de la Scierie')
   assert.equal(capMetierVille('Bûcheron', scierie, C), 2, 'Bûcheron : 2 emplacements (Scierie)')
   assert.equal(capMetierVille('Bûcheron', ville, C), 0, 'métier productif sans aménagement : cap 0')
-  // Mine d'Or : 3 emplacements de Marchand
-  assert.equal(capMetierVille('Marchand', ville, C), 0, 'Marchand sans Mine d Or : cap 0')
+  // Marchand RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut) : titre
+  //  mort → cap ∞ (plus plafonné) ; la Mine d'Or est gardée SANS
+  //  effet (plus d'emplacement de Marchand).
+  assert.equal(capMetierVille('Marchand', ville, C), Number.POSITIVE_INFINITY,
+    'Marchand retiré du jeu : titre mort, cap ∞ (plus plafonné)')
   const mineOr: City = { ...p.villes[0], type: 'Ville', amenagements: ["Mine d'Or"] }
-  assert.equal(capMetierVille('Marchand', mineOr, C), 3, 'Mine d Or : 3 emplacements de Marchand')
+  assert.equal(capMetierVille('Marchand', mineOr, C), Number.POSITIVE_INFINITY,
+    "Mine d'Or gardée sans effet : plus d'emplacement de Marchand (arbitrage Thibaut 2026-10-24)")
   // Fermier (ete) : plafonné comme les productifs — Champ 3, Rizière 4
   const champ: City = { ...p.villes[0], type: 'Ville', amenagements: ['Champ'] }
   assert.equal(capMetierVille('Fermier', champ, C), 3, 'Champ : 3 emplacements de Fermier')
@@ -106,30 +110,32 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   assert.equal(capMetierVille(null, ville, C), Number.POSITIVE_INFINITY)
 })
 
-test('capMetierVille + ctx routes (sous-vague 3b 2026-10-24) : +1 Marchand par route sortante ET entrante, emplacements de la copie, vieilles routes ignorées', () => {
+test('capMetierVille + ctx routes (sous-vague 3b 2026-10-24) : la copie ouvre les emplacements du métier copié à l ORIGINE, vieilles routes ignorées, plus d emplacement de Marchand', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
   const ville: City = { ...p.villes[0], type: 'Ville', amenagements: [] }
-  assert.equal(capMetierVille('Marchand', ville, C), 0, 'sans ctx : cap inchangée (appelants sans routes)')
+  assert.equal(capMetierVille('Bûcheron', ville, C), 0, 'sans ctx : cap inchangée (appelants sans routes)')
   state.routesCommerce = [
     // sortante (p à l'origine) avec une copie de Scierie (2 Bûcheron)
     { id: 'r-out', joueur: p.n, villeOrigine: 'Capitale', joueurCible: 1, citeCible: null, villeCible: 'Ailleurs', amenagement: 'Scierie' },
-    // entrante (p ciblé par le joueur 1)
+    // entrante (p ciblé par le joueur 1) — n'ouvre PLUS rien côté
+    //  cible depuis le retrait du métier de Marchand (2026-10-24)
     { id: 'r-in', joueur: 1, villeOrigine: 'Loin', joueurCible: p.n, citeCible: null, villeCible: 'Capitale', amenagement: null },
   ]
   const ctx = { state, joueur: p.n }
-  assert.equal(capMetierVille('Marchand', ville, C, ctx), 2, '+1 par route sortante + 1 par route entrante')
   assert.equal(capMetierVille('Bûcheron', ville, C, ctx), 2, 'la copie de la Scierie ouvre SES emplacements dans la ville d origine (2 Bûcheron)')
+  assert.equal(capMetierVille('Marchand', ville, C, ctx), Number.POSITIVE_INFINITY,
+    "plus d'emplacement de Marchand par route (sortante ou entrante) : métier retiré du jeu le 2026-10-24 — titre mort, cap ∞")
   // vieilles routes du modèle « marchand titulaire » (marchandId) : ignorées
   state.routesCommerce.push({
     id: 'r-old', joueur: p.n, villeOrigine: 'Capitale', joueurCible: 1,
-    citeCible: null, villeCible: 'Ailleurs', amenagement: "Mine d'Or", marchandId: 'm-x',
+    citeCible: null, villeCible: 'Ailleurs', amenagement: 'Scierie', marchandId: 'm-x',
   } as import('./types').RouteCommerce)
-  assert.equal(capMetierVille('Marchand', ville, C, ctx), 2, 'la vieille route marchandId ne compte pas (purge au prochain fin de tour)')
+  assert.equal(capMetierVille('Bûcheron', ville, C, ctx), 2, 'la vieille route marchandId ne compte pas (purge au prochain fin de tour)')
   // une autre ville ne compte PAS les routes d'ailleurs
   const autre: City = { ...ville, nom: 'Periphery' }
-  assert.equal(capMetierVille('Marchand', autre, C, ctx), 0, 'les routes ne comptent que pour leur ville d origine / cible')
+  assert.equal(capMetierVille('Bûcheron', autre, C, ctx), 0, 'les routes ne comptent que pour leur ville d origine')
 })
 
 test('reaffecterMetiers : surnombre — les plus âgés perdent leur métier, les décédés ne comptent pas', () => {
@@ -220,21 +226,25 @@ test('occupationsMetierVille (vague 3a) : emplacements par aménagement, métier
     perso('o1', 30, { metier: C.p.metierChasseur }),
     perso('o2', 40, { metier: C.p.metierChasseur }),
     perso('o3', 50, { metier: C.p.metierChasseur }),
-    perso('m1', 35, { metier: 'Marchand' }),
+    perso('m1', 35, { metier: 'Fermier' }),
     perso('s1', 20, {}),
     perso('s2', 25, {}),
-    perso('d1', 80, { metier: 'Marchand', statut: 'Décédé' }),
+    perso('d1', 80, { metier: 'Fermier', statut: 'Décédé' }),
   ]
-  const ville: City = { ...p.villes[0], type: 'Ville', amenagements: ["Mine d'Or"] }
+  const ville: City = { ...p.villes[0], type: 'Ville', amenagements: [] }
   const lignes = occupationsMetierVille(habitants, ville, C)
   const chasseur = lignes.find((l) => l.metier === C.p.metierChasseur)
   assert.ok(chasseur, 'Chasseur listé (plafonné → toujours affiché, même à 0)')
   assert.equal(chasseur!.enPoste, 3, '3 Chasseurs en poste')
   assert.equal(chasseur!.cap, 50, 'cap Ville 50 (aucun emplacement Chasseur ici)')
-  const marchand = lignes.find((l) => l.metier === 'Marchand')
-  assert.ok(marchand, 'Marchand listé (occupé)')
-  assert.equal(marchand!.enPoste, 1, 'le Marchand décédé ne compte pas')
-  assert.equal(marchand!.cap, 3, 'Mine d Or : 3 emplacements de Marchand')
+  // (l'ex-Marchand de ce test est remplacé par un Fermier le
+  //  2026-10-24 : le métier de Marchand est retiré du jeu — le
+  //  Fermier occupe la même niche de métier productif plafonné par
+  //  ses aménagements, ici cap 0 sans Champ/Rizière)
+  const fermierOcc = lignes.find((l) => l.metier === 'Fermier')
+  assert.ok(fermierOcc, 'Fermier listé (occupé)')
+  assert.equal(fermierOcc!.enPoste, 1, 'le Fermier décédé ne compte pas')
+  assert.equal(fermierOcc!.cap, 0, 'cap finie 0 sans Champ/Rizière — l occupé reste listé')
   // vague 3a : chaque métier productif a une cap FINIE (0 sans
   //  aménagement) et apparaît donc dans la liste — l'écran « Métiers
   //  et places » montre TOUTES les caps d'emplacement.
@@ -351,10 +361,15 @@ test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, 
   assert.equal(avecTrouv.bonusTaxes['Tourisme'], undefined, 'aucun bonus sur une ressource non produite')
 })
 
-test('reaffecterMetiers (sous-vague 3b 2026-10-24) : une route sortante OUVRE un emplacement de Marchand — le cap compte la route, plus de titulaire', () => {
+test('reaffecterMetiers (2026-10-24) : le métier de Marchand RETIRÉ du jeu — ses porteurs perdent le titre, puis reprennent un poste aux places libres', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
+  // Deux porteurs du titre Marchand dans une partie en cours (le
+  //  métier n'est plus dans le référentiel — arbitrage Thibaut
+  //  « supprime carrément le métier de marchand ») ; la route
+  //  sortante copie une Scierie → 2 emplacements de Bûcheron à
+  //  l'origine : la passe places libres leur redonne un poste.
   state.population[p.n] = [
     perso('m-route', 30, { metier: 'Marchand' }),
     perso('m-libre', 50, { metier: 'Marchand' }),
@@ -366,8 +381,12 @@ test('reaffecterMetiers (sous-vague 3b 2026-10-24) : une route sortante OUVRE un
   invaliderIndexPopulation()
   reaffecterMetiers(state, C)
   const parId = new Map(state.population[p.n].map((c) => [c.id, c]))
-  assert.equal(parId.get('m-route')!.metier, 'Marchand', 'cap Marchand = 1 (la route sortante ouvre un emplacement) : un Marchand reste en poste')
-  assert.equal(parId.get('m-libre')!.metier, 'Commerçant', 'surnombre : le plus âgé sort (l exemption « tient une route » a été retirée avec la dissociation — plus de marchand titulaire) puis prend un poste de la base du rang (Commerçant, priorisé avant Chasseur — vague 3b)')
+  assert.ok(state.log.some((l) => l.type === 'Métier' && l.texte.includes('métier de Marchand a été retiré du jeu')),
+    'log dédié de purge du titre Marchand')
+  assert.equal(parId.get('m-libre')!.metier, 'Commerçant',
+    'purge du titre AVANT le surnombre, puis prise de poste aux places libres (les plus âgés d abord) : Commerçant, priorisé avant Chasseur (vague 3b)')
+  assert.equal(parId.get('m-route')!.metier, 'Bûcheron',
+    'la copie de la Scierie (route sortante) ouvre 2 emplacements de Bûcheron à l origine — le second purgé en prend un')
 })
 
 test('Garde (vague 3a) : +garnisonParGarde Garnison STATIQUE par Garde en poste (valeur d état, jamais un flux)', () => {

@@ -2,9 +2,12 @@
 //  Commerce (marqueur (t)) : routes commerciales DISSOCIÉES (sous-vague
 //  3b, arbitrage Thibaut 2026-10-24) — une route relie une de tes villes
 //  à la ville d'un autre joueur ou à une cité libre, SANS personnage :
-//  +1 emplacement de Marchand de chaque côté, copie de l'aménagement
-//  ENTIER choisi (marqueur (u)) dans la ville d'ORIGINE, plus d'Or
-//  passif (marchandOrTour retiré). Ouverture gratuite ; fermeture par
+//  copie de l'aménagement ENTIER choisi (marqueur (u)) dans la ville
+//  d'ORIGINE, plus d'Or passif (marchandOrTour retiré). Le métier de
+//  Marchand a été RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut) :
+//  une route vers une CITÉ LIBRE octroie +1 émissaire auprès de la
+//  cité tant que la route est active (citesLibres.ts,
+//  emissairesEffectifsCite). Ouverture gratuite ; fermeture par
 //  la seule ville d'origine. Le formulaire d'ouverture et son état
 //  vivent ici. (Extrait de PlayerView.tsx — un fichier par UI.)
 // ══════════════════════════════════════════════════════════════════════
@@ -63,18 +66,20 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                 {mes.length} route(s) ouverte(s) · cap conseillé : {cap}
               </Badge>{' '}
               <span className="muted small">
-                Chaque route ouvre +1 emplacement de Marchand de chaque côté et
-                copie la production d'un aménagement de la ville ciblée dans ta
-                ville d'origine. Le cap est indicatif — tu peux ouvrir autant de
-                routes que tu veux (dépassement annoncé au journal).
+                Chaque route vers une ville copie la production d'un
+                aménagement de la ville ciblée dans ta ville d'origine ; une
+                route vers une cité libre octroie +1 émissaire auprès de la
+                cité tant que la route est active. Le cap est indicatif — tu
+                peux ouvrir autant de routes que tu veux (dépassement annoncé
+                au journal).
               </span>
             </p>
             {mes.length === 0 && entrantes.length === 0 && (
               <p className="muted">
                 Aucune route commerciale. Ouvre une route gratuite depuis une de
                 tes villes vers la ville d'un autre joueur (copie d'un
-                aménagement) ou vers une cité libre (rien à copier) — chaque
-                extrémité gagne +1 emplacement de Marchand.
+                aménagement) ou vers une cité libre (+1 émissaire auprès de la
+                cité tant que la route est active).
               </p>
             )}
             {mes.length > 0 && (
@@ -105,7 +110,7 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                           </td>
                           <td>
                             {route.joueurCible === null
-                              ? <span className="muted">— (rien à copier)</span>
+                              ? <span className="muted">— (rien à copier · +1 émissaire tant que la route est active)</span>
                               : <Select
                                   value={route.amenagement ?? ''}
                                   options={amenList.map((a) => ({ value: a, label: a }))}
@@ -140,9 +145,9 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
             )}
             {entrantes.length > 0 && (
               <p className="small">
-                <strong>Routes entrantes</strong> — +1 emplacement de Marchand
-                par route (aucune fermeture possible : tu n'es pas à
-                l'origine) :{' '}
+                <strong>Routes entrantes</strong> — d'autres joueurs ont ouvert
+                une route vers tes villes (aucun effet pour toi, aucune
+                fermeture possible : tu n'es pas à l'origine) :{' '}
                 {entrantes.map((route) => {
                   const prop = state.players.find((q) => q.n === route.joueur)
                   return `${route.villeOrigine} (${prop?.nom ?? '?'}) → ${route.villeCible}`

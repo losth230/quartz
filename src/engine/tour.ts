@@ -237,9 +237,11 @@ export function runTurn(state: GameState): GameState {
   //  la copie de l'aménagement choisi dans la ville ciblée, marqueur
   //  (u) (engine/commerce.ts — comme les bâtiments : pas de taxes,
   //  pas de coefficient gainsCrediteStock, pas de tribut) ; les
-  //  emplacements Marchand (+1 par route, chaque côté) sont calculés à
-  //  la demande par le moteur des métiers (engine/metiers.ts, ctx
-  //  routes). Les routes mortes (origine perdue, cible disparue,
+  //  emplacements de population de l'aménagement copié (à l'origine
+  //  seule) sont calculés à la demande par le moteur des métiers
+  //  (engine/metiers.ts, ctx routes ; plus d'emplacement de Marchand
+  //  — le métier a été retiré du jeu le 2026-10-24, arbitrage
+  //  Thibaut). Les routes mortes (origine perdue, cible disparue,
   //  copie disparue) et les vieilles routes du modèle « marchand
   //  titulaire » (marchandId, retiré du modèle le 2026-10-24) sont
   //  fermées ici avec un log dédié.
