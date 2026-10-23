@@ -2,7 +2,7 @@
 //  BANQUE D'EFFETS — IMPLÉMENTATION (refactor 2026-10-18)
 //
 //  Chaque type d'effet est implémenté UNE fois ici. Les règles
-//  (bâtiments, dogmes, factions…) combinent ces effets par DONNÉES ;
+//  (bâtiments, factions…) combinent ces effets par DONNÉES ;
 //  changer une règle = changer ses données, jamais ce fichier.
 //
 //  CONTRAT D'IMMUABILITÉ : un effet ne mute JAMAIS l'état. Il renvoie

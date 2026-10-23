@@ -21,7 +21,7 @@ import { OngletTraitsGen, OngletPeuples } from './reference/OngletsTraitsPeuples
 import { OngletBatiments, OngletAmenagements } from './reference/OngletsBatiments'
 import { OngletProgres } from './reference/OngletsProgres'
 import { OngletPaysRangs, OngletHabitations } from './reference/OngletsPaysHabitations'
-import { OngletsCulturesRegimes, OngletsTourismeDogmes, OngletCitesLibres } from './reference/OngletsCultures'
+import { OngletsCulturesRegimes, OngletTourisme, OngletCitesLibres } from './reference/OngletsCultures'
 import { OngletVictoires, OngletCrises, OngletRappelsRegles, OngletOffrandes } from './reference/OngletsVictoires'
 import { OngletCouleurs } from './reference/OngletsCouleurs'
 import { OngletAideMemoire } from './reference/OngletsAideMemoire'
@@ -57,7 +57,7 @@ export function ReferenceDataPanel() {
       {onglet === 'Pays & rangs' && <OngletPaysRangs C={C} />}
       {onglet === 'Habitations' && <OngletHabitations C={C} />}
       {onglet === 'Cultures & régimes' && <OngletsCulturesRegimes C={C} />}
-      {onglet === 'Tourisme & dogmes' && <OngletsTourismeDogmes C={C} />}
+      {onglet === 'Tourisme' && <OngletTourisme C={C} />}
       {onglet === 'Cités libres' && <OngletCitesLibres C={C} />}
       {onglet === 'Victoires' && <OngletVictoires C={C} />}
       {onglet === 'Crises' && <OngletCrises C={C} />}

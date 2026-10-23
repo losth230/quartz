@@ -391,7 +391,6 @@ export interface GameConfig {
   progres: ProgresArbre[]
   paysRangs: { bloc: string; nom: string; cout: string; bonus: string; succession: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
-  dogmes: { dogme: string; bonusPontife: string; bonusFideles: string }[]
   citesLibres: { type: string; effet: string }[]
   regleCitesLibres: string
   victoires: { voie: string; rangs: { rang: string; condition: string; bonus: string }[] }[]
@@ -577,7 +576,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   progres: ref.progres,
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
-  dogmes: ref.dogmes,
   citesLibres: ref.citesLibres,
   regleCitesLibres: ref.regleCitesLibres,
   victoires: ref.victoires,

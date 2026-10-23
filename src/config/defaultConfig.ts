@@ -302,7 +302,14 @@ export interface GameConfig {
   progres: ProgresArbre[]
   paysRangs: { nom: string; coutOr: number; coutNourriture: number; serments: number; bonus: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
-  dogmes: { dogme: string; bonusPontife: string; bonusFideles: string }[]
+  /** Dogmes RETIRÉS du référentiel le 2026-10-24 (retour arbitre
+   *  Thibaut « on supprime tous les dogmes pour l'instant ») :
+   *  table du classeur à effets d'AFFICHAGE uniquement (bonus Pontife /
+   *  Fidèles en texte libre — jamais branchée sur le moteur). La clé
+   *  encore portée par les configs sauvegardées est purgée par un
+   *  delete ciblé dans cfgOf (patron taxes25, sans bump de
+   *  SCHEMA_VERSION_CONFIG). L'ancien contenu reste dans l'historique
+   *  git ; un éventuel retour des dogmes repartira de zéro. */
   citesLibres: { type: string; effet: string }[]
   regleCitesLibres: string
   victoires: {
@@ -691,7 +698,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   progres: ref.progres,
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
-  dogmes: ref.dogmes,
+  // (dogmes retirés du référentiel le 2026-10-24, retour arbitre)
   citesLibres: ref.citesLibres,
   regleCitesLibres: ref.regleCitesLibres,
   victoires: ref.victoires,
@@ -1102,6 +1109,17 @@ export function cfgOf(config?: GameConfig): Cfg {
     ...c,
     params: mergeParams(c.params as unknown as Record<string, unknown>),
   }
+  // RETRAIT DES DOGMES (retour arbitre Thibaut 2026-10-24) : la table
+  //  « dogmes » n'existe plus dans le type ni le référentiel, mais les
+  //  configs sauvegardées AVANT la portent encore (la fusion
+  //  {...DEFAULT_CONFIG, ...c} la fait réapparaître). Migration ciblée
+  //  (patron taxes25), SANS bump de SCHEMA_VERSION_CONFIG : un bump
+  //  renverrait les configs v4 convergées dans la branche de migration
+  //  complète, qui ré-ajoute les entrées du référentiel supprimées
+  //  (règle (x) : les suppressions persistent). Le delete est
+  //  idempotent — une fois purgée au point de sauvegarde, la clé ne
+  //  revient jamais (rien ne la ré-écrit).
+  delete (merged as { dogmes?: unknown }).dogmes
   if ((c?.schemaVersion ?? 0) >= SCHEMA_VERSION_CONFIG) {
     // Déjà convergée (marqueur (x)) : PAS de re-migration — les
     // suppressions et renommements d'entrées du référentiel
