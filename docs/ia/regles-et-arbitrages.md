@@ -733,3 +733,15 @@ rang 1). Arbitrages actés lors de la session :
   on supprime pour l'instant ») — plus aucun effet moteur ni mention
   code. Scalabilité (mémoïsation du cfgOf par référence) : vague
   suivante.
+- **Vague scalabilité (2026-10-24, mémoïsation actée)** : la condition
+  de sûreté actée vague 2 (« une seule config globale, jamais
+  remodifiée après adoption ») est désormais PORTANTE — cfgOf est
+  mémoïsé par RÉFÉRENCE de config (WeakMap) : une config éditée EN
+  PLACE au lieu d'être remplacée par une nouvelle référence servirait
+  un cache périmé, la règle de remplacement doit donc rester
+  intangible. L'index de population (id → vivant) devient chirurgical
+  (naissance/décès en O(1), le mariage n'y touche plus) et la
+  réaffectation des métiers partitionne les vivants par ville une
+  fois par joueur. Bench 16 000 habitants : fin de tour ~9,8 s →
+  ~2,0 s, état du jeu strictement identique (A/B déterministe
+  3 tours). Détail : docs/ia/journal-technique.md.

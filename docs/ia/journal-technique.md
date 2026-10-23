@@ -1741,6 +1741,77 @@ dans reaffecterMetiers, bench 16k habitants avant/après.
 refactor(scripts) entrée edge, docs(ia)) + miroirs v4 (code seulement,
 delete_file engine.ts par branche).
 
+## Vague scalabilité — mémoïsation cfgOf, index chirurgical, partitions par ville (2026-10-24, arbitrage Thibaut « vague 2 SOLID d'abord, scalabilité ensuite »)
+
+**Arbitrage Thibaut** (2026-10-23) : l'ordre des vagues — vague 2 SOLID
+d'abord, scalabilité ensuite ; bench 16k habitants avant/après ; règle de
+config actée : « il doit exister une seule config globale modifiable en
+dehors des parties et jamais remodifiée après » — c'est la condition de
+sûreté du cache ci-dessous.
+
+**Bench** (`scripts/bench-scalabilite.ts`, nouveau) : partie sur les
+peuples libres du référentiel (4 joueurs), gonflée à 16 000 habitants
+(répartis par joueur) ; 3 tours chronométrés + coût d'un appel cfgOf +
+reaffecterMetiers seul.
+
+**Diagnostic AVANT** : tour 2 : 6,3 s ; tour 3 : 9,8 s. Profil CPU :
+1. **cfgOf ≈ 34 % du temps du tour** : 47 291 appels/tour (les défauts
+   de signature `C: Cfg = cfgOf(state.config)` sont évalués PAR
+   habitant) — et `state.config` n'a pas de tampon `schemaVersion`
+   (DEFAULT_CONFIG n'en porte pas non plus), donc CHAQUE appel
+   rejouait fusion + migrations + garde-fous (~0,1 ms).
+2. **indexPopulationMonde ≈ 19 %** : l'index id→vivant était invalidé
+   à chaque mort, naissance ET mariage, puis reconstruit en O(N) à
+   l'accès suivant (~500 reconstructions par tour).
+3. **reaffecterMetiers / premierPosteLibre** : filtres O(pop) par
+   ville, le second appelé PAR habitant venant à l'âge adulte
+   (~5 500 appels à 16k via assignAdultMetier).
+
+**Correctifs** (patch-v4a/b/c.py, idempotents avec asserts) :
+1. **v4a — mémoïsation cfgOf** : `WeakMap<GameConfig, Cfg>` par
+   RÉFÉRENCE (config `undefined` cléée sur DEFAULT_CONFIG). Sûreté :
+   toute édition de la config crée une NOUVELLE référence
+   (setGlobalCfg « la remplace par un nouvel objet, jamais mutée ») —
+   le cache suit chaque édition, il ne peut pas servir un résultat
+   périmé ; une config abandonnée libère son entrée au GC. A/B
+   canonique : sortie de cfgOf(cloneDefaultConfig()) identique octet
+   par octet avant/après.
+2. **v4b — index de population chirurgical** : l'index mappe id →
+   OBJET vivant (les mutations de champs y sont visibles) : naissance
+   = ajout O(1) (`ajouterALIndexPopulation`), décès = retrait O(1)
+   (`retirerDeLIndexPopulation`), mariage = RIEN (invalidation
+   supprimée). `invaliderIndexPopulation` reste pour les changements
+   structurels (tests, import), le moteur de fin de tour n'en fait
+   plus usage.
+3. **v4c — partitions par ville** : reaffecterMetiers partitionne les
+   vivants par ville UNE fois par joueur (O(pop), ordre intra-bucket
+   préservé → tri stable par âge identique) ; premierPosteLibre
+   reçoit la partition en paramètre optionnel — le filtre sur le
+   statut reste joué à l'appel (morts plus tôt dans le tour exclus) :
+   sémantique strictement identique.
+
+**Résultats (bench 16k)** : tour 2 : 6,3 → 1,5 s ; tours 3-4 : ~9,8 →
+~2,0 s (≈ 5×). cfgOf : 0,07 → 0,00 ms/appel. reaffecterMetiers : ~4 ms.
+Reste (candidats d'une future vague, mesurés) : influence culturelle
+(14 % du profil), veuvage au décès — `toutesLesPopulations(state).find`
+O(N) PAR décès (reverse-lookup mariageId possible dans l'index), boucle
+des mariages (metiers.ts), capMetierVille par appel.
+
+**Non-régression** : 134/134 tests verts, diag exit 0, 0 cycle
+(inchangé), tsc --noEmit strict parité **0 nouvelle erreur** (env
+tarballs registry reconstruit : typescript 5.9.3, react 18.3.1,
+react-dom 18.3.1, @types/react 18.3.31, @types/react-dom 18.3.1,
+csstype 3.2.3, @types/node 25.0.3), diff -rq contre tarball HEAD
+frais : 6 fichiers modifiés + bench-scalabilite.ts nouveau, rien
+d'autre. **Preuve déterministe** : 3 tours de la partie 16k rejoués
+sur l'arbre AVANT et le bac APRÈS (même graine) → état final IDENTIQUE
+octet par octet (ids normalisés par ordre d'apparition — newId
+embarque Date.now(), cf. shared.ts : un rejeu produit les mêmes
+événements, seuls les ids diffèrent).
+
+**Push** : perf(config) + perf(moteur) + bench(scripts) + docs(ia),
+miroirs v4 (code seulement, suffixe « (miroir v4) »).
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
@@ -1803,6 +1874,17 @@ delete_file engine.ts par branche).
     @supabase/supabase-js absent du bac, présent en CI — le fichier
     n'a pas changé) ; toute AUTRE erreur est réelle. À lancer avant
     tout push de .ts/.tsx (seul filet sur les .tsx, cf. règle 2).
+
+14. **Mémoïsation/cache : prouver par A/B déterministe** (vague
+    scalabilité, 2026-10-24) : une optimisation qui « ne change rien »
+    se PROUVE en rejouant un scénario déterministe (graine fixe, partie
+    16k habitants, 3 tours) sur l'arbre d'avant (tarball HEAD frais) et
+    le bac d'après, puis en comparant l'état final canonique octet par
+    octet — ids normalisés par ordre d'apparition, car `newId` embarque
+    `Date.now()` (shared.ts : un rejeu produit les mêmes événements,
+    seuls les ids diffèrent). Les tests couvrent les unités ; l'A/B
+    couvre la composition entière du tour (bench + scripts/_ab-run du
+    bac, non poussés).
 
 ## Raccourci git
 
