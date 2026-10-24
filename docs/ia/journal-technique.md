@@ -2542,9 +2542,10 @@ dégradés que le vrai moteur n'a pas à gérer : le jeu répare via
 normaliserEtat à l'ingestion) ; tsc strict diff VIDE vs base
 (scripts/ hors tsconfig — aucun impact) ; 126/126 tests natifs.
 
-R4 (fluxParMetier orphelin) reste de la dette assumée ; R3 (tests de
-rendu fumée) est résolu dans la section suivante (même journée,
-retour arbitre « passe à R3 »).
+R3 (tests de
+rendu fumée) et R4 (fluxParMetier orphelin) sont résolus dans les
+sections suivantes (même journée, retours arbitre « passe à R3 »
+puis « passe à R4 »).
 
 
 ## Tests de rendu : du « fumée » aux données — résolution R3 (2026-10-24, retour arbitre « passe à R3 »)
@@ -2597,7 +2598,69 @@ côté bac. Les tests `.ts` sous `src/` SONT type-checkés en CI
 (tsconfig `include: ["src"]`) — c'est ce qui a motivé la réplique
 exacte des versions. AGENTS.md réaligné (« 126 natifs + 11 rendu »).
 
-R4 (fluxParMetier orphelin) reste de la dette assumée.
+R4 (fluxParMetier orphelin) est résolu dans la section suivante
+(même journée, retour arbitre « passe à R4 »).
+
+## Banque d'effets : purge complète des orphelins — résolution R4 (2026-10-24, retour arbitre « passe à R4 »)
+
+L'audit relevait que `fluxParMetier` (et son champ `marchandsMax`)
+avait un producteur mais aucun lecteur — le mécanisme Marchand avait
+été emporté par la purge des progrès. Retour arbitre : purge complète
+de la couche rules/ (ne garder que les types réellement produits) et
+suppression du rappel « un marchand ne peut exploiter une merveille »
+(onglet Victoires).
+
+**Inventaire purgé** (tout retrait = docblock « RETRAIT » daté,
+règle 9 — le code reste dans l'historique git) :
+- `src/rules/types.ts` : union `Effet` réduite aux 4 types PRODUITS
+  (fluxVille, garnisonVille via constructions ; fluxParAmenagement via
+  régimes ; fluxParVilleCultureMonde via cultures) — 13 interfaces
+  retirées (dont EffetEmissaires) ; `ContexteEffet.ports` supprimé
+  (import Cfg retiré) ; `ConditionRegle` réduite à saison/regime/
+  culture (peuple, pontificatMin, ageMin, vassal, suzerainDeCite :
+  sans producteur) ; `SourceRegle` à 5 valeurs ('faction',
+  'evenement', 'laurier' : déclarées vides) ; `RegleBanque.declencheur`
+  retiré (sans producteur ni lecteur) ; `ContributionEffets` réduite
+  à flux/fluxEte/garnison (canaux conversion, migration, reductions,
+  instantanes : sans lecteur moteur) ;
+- `src/rules/effects/banque.ts` : switch réduit aux 4 types,
+  conditionsRemplies épuré, contributionVide → { flux, fluxEte,
+  garnison } ; `src/rules/mocks.ts` : partieMock sans ports, imports
+  morts retirés ;
+- `src/engine/regimes.ts` : 2 appels appliquerRegles sans ports
+  (import morte capitaleDe retirée) ; `src/engine/constructions.ts` :
+  contexteLectureSeule sans ports (C_LECTURE conservé pour
+  reglePourConstruction) ;
+- `src/rules/registry.ts` : docblock clarifié — `garnisonParRang` est
+  un champ RÉFÉRENTIEL des régimes, pas le type retiré ;
+- `src/rules/registre.test.ts` : TYPES_CONNUSS → 4 types, fantôme
+  garnisonJoueur retiré ; `src/rules/banque.test.ts` : 3 tests
+  réécrits (« garnisonVille accumule » (55), « conditions saison /
+  regime (ET logique) », mock base Autoritarisme/Été) ; test
+  tourismeInstantane SUPPRIMÉ → 126→125 natifs ;
+- `src/config/defaultConfig.ts` : commentaire « Trois familles »
+  simplifié (3e famille fluxParMetier muette, note R4 datée) ;
+- `src/config/referentiels.json` : rappel marchand retiré des
+  rappelsRegles (20→19) via `jq -j` — round-trip byte-identique
+  vérifié AVANT, diff limité à cette ligne ;
+- AGENTS.md : compteurs 126→125 natifs + NB R4 daté sur la banque à
+  4 types.
+
+**Homonymes légitimes CONSERVÉS** (documentés pour ne pas repurger
+par erreur) : `garnisonParRang` (champ référentiel des régimes, lu par
+OngletsCultures/ParamsPanel/CarteRoyaume/regimes.ts/garnisons.ts) ;
+`conversionPoidsLocal` (param de config) ;
+`reductionLeveeArmeesMerveilles` (fonction moteur). Grep résiduel
+vivant après purge : AUCUN (les mentions restantes sont les docblocks
+RETRAIT datés uniquement).
+
+**Validation** : 125/125 tests natifs (126−1 : test tourismeInstantane
+retiré), 11/11 tests de rendu, tsc strict répliqué CI (ts 5.9.3 +
+@types/node 25.0.3, versions du lock) : 4 lignes côté jeu dont 3
+stubs supabase attendus, diff normalisé base/jeu VIDE ; diag exit 0,
+57 lignes, IDENTIQUE base/jeu, déterministe (2 runs cmp) ; `jq empty`
+sur referentiels.json OK. Le CODE moteur a changé (regimes,
+constructions) → le hash du bundle live bougera au déploiement.
 
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
