@@ -123,6 +123,11 @@ export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C:
  *  avec les statuts de dynastie. Pour l'instant tout le monde peut
  *  habiter partout (simple, lisible). */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
+  // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
+  //  existante dont les villes n'ont pas de stock (sauvegardées avant
+  //  la vague, tampon schema déjà à jour → migrerEtat ne rejouera
+  //  pas la v1) se voit initialiser le stock au rang courant.
+  if (!Array.isArray(ville.domiciles)) initStockVille(ville, C)
   const foyers = foyersDeVille(state, p.n, ville, C)
   // stock restant : copie de travail
   const stock = new Map<string, number>()

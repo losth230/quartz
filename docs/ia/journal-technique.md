@@ -2940,3 +2940,39 @@ modifiées compile). Le système domiciles/bonheur/statut social
 est COMPLET et branché : les parties existantes gagnent le
 prestige au premier fin de tour (génération fondatrice à 0, les
 naissances hériteront).
+
+## Audit de merge (2026-10-24) — 1 bug critique attrapé avant la prod
+
+L'audit d'avant-merge (partie réelle de 20 tours) a révélé que
+** personne n'était logé et aucun prestige ne s'accumulait** :
+`createGame` ne posait pas `City.domiciles` (le stock du rang),
+et `normaliserEtat` ne répare que les VIEILLES sauvegardes (via
+migrerEtat v1, tampon schema) — les parties NEUVES restaient
+sans stock, l'attribution ne logeait personne, le facteur
+logement du bonheur restait à 0 et le prestige plafonnait.
+
+**Correctifs (3 sites)** :
+1. `createGame` : stock initialisé au rang de création de chaque
+   ville (stockRang) ;
+2. changement de rang (UI VilleCarte) : `initStockVille` après le
+   débit du coût (le rang DÉFINIT l'offre) ;
+3. DÉFENSE EN PROFONDEUR dans `attribuerDomicilesVille` : une
+   ville sans stock (partie sauvegardée avant la vague, tampon à
+   jour → migrerEtat ne rejoue pas la v1) se voit initialiser le
+   stock au rang courant.
+
+**Vérification post-correctif** (partie réelle 20 tours) :
+612/1521 habitants logés (l'offre du rang est le goulot — voulu :
+il faut monter en rang), 3 bourgeois avec événements journalisés
+(« 📈 Prisca Ferbois accède à la bourgeoisie »), vieille partie
+tamponnée réparée au premier tour (293 logés, 288 prestiges).
+2 tests de régression ajoutés (165/165 verts).
+
+**Leçon (règle de plus)** : les tests unitaires appelaient
+l'attribution EXPLICITEMENT avec un stock posé à la main — le
+chaînage complet createGame→runTurn n'était couvert par aucun
+test d'intégration sur ce chemin. La régression 20 tours
+vérifie les invariants GÉNÉRAUX mais pas « le système nouveau
+vit en vrai ». Toute nouvelle mécanique branchée au tour gagne
+un test « partie réelle : la mécanique produit ses effets
+attendus au bout de N tours ».

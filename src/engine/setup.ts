@@ -7,6 +7,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, CiteLibre, GameState, Player } from './types'
+import { stockRang } from './domiciles'
 import { makeRng, type Rng } from './rng'
 import { cfgOf, cloneDefaultConfig, peupleDef, type Cfg } from './gameData'
 import type { GameConfig } from '../config/defaultConfig'
@@ -130,6 +131,12 @@ export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
       // typesHabitation, Référentiels → « Habitations »).
       type: idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville',
       rang: rangsDisponibles(idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville', C)[0] ?? 'Hameau',
+      // VAGUE C (design domiciles 2026-10-24) : stock de domiciles
+      //  initialisé au rang de création — l'offre de logements de la
+      //  ville (audit de merge : SANS cette ligne, le stock restait
+      //  indéfini dans les parties neuves et personne n'était logé).
+      domiciles: stockRang(idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville',
+        rangsDisponibles(idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville', C)[0] ?? 'Hameau', C),
       // Retour Thibaut (marqueur (r)) : PLUS AUCUN bâtiment par défaut
       // dans la capitale — tout se construit au plateau.
       batiments: [],

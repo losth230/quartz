@@ -17,6 +17,7 @@ import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../eng
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
+import { initStockVille } from '../../engine/domiciles'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
@@ -269,6 +270,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 const ville = x.villes[idx]
                 ville.rang = v
                 debiterCoutHabitation(s, x, ville, C)
+                // VAGUE C (2026-10-24) : le rang DÉFINIT l'offre de
+                //  domiciles — le stock suit le changement de rang.
+                initStockVille(ville, C)
               })}
             />
           </Field>

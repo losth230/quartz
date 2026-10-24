@@ -165,3 +165,29 @@ test('normaliserEtat + attribuer : les vieilles parties gagnent leurs domiciles 
   assert.equal(state.turn, avant, 'pas de mutation du tour')
   assert.ok(foyersDeVille(state, p.n, ville, C).every((f) => f.domicile), 'tout le monde logé')
 })
+
+
+// ── Régression audit de merge (2026-10-24) ────────────────────────────
+
+test('audit merge : createGame initialise le stock (régression — parties neuves logées)', () => {
+  // BUG DE L'AUDIT : createGame ne posait pas City.domiciles — le
+  //  stock restait indéfini, l'attribution ne logeait PERSONNE et
+  //  le facteur logement du bonheur restait à 0 partout. Corrigé :
+  //  stock initial au rang de création + défense en profondeur dans
+  //  attribuerDomicilesVille.
+  const { p } = partieTemoin()
+  assert.ok(Array.isArray(p.villes[0].domiciles), 'createGame pose le stock')
+  assert.ok(totalLogementsVille(p.villes[0]) >= 50, 'stock du rang initial')
+})
+
+test('audit merge : vieille partie tamponnée (v4) sans stock — attribution répare (défense en profondeur)', () => {
+  const { state, p, ville, C } = partieTemoin()
+  // simuler une sauvegarde d'avant la vague, tampon déjà à jour
+  delete (ville as { domiciles?: unknown }).domiciles
+  state.schema = 4
+  migrerEtat(state) // ne rejoue PAS la v1 (tampon à jour)
+  assert.equal(ville.domiciles, undefined, 'migrerEtat ne touche pas (tampon)')
+  const loges = attribuerDomicilesVille(state, p, ville, C)
+  assert.ok(loges > 0, `l'attribution initialise le stock et loge (${loges})`)
+  assert.ok(Array.isArray(ville.domiciles), 'stock posé par défense en profondeur')
+})
