@@ -4,8 +4,16 @@
 //
 //  PRINCIPES (arbitrages Thibaut) :
 //   · SIMPLE : un type de domicile porte un nom + une qualité 1-5 ;
-//     pas de capacité ni coût — 1 domicile = 1 logement (1 foyer) ;
-//     les bâtiments constructibles viendront plus tard ;
+//     pas de capacité ni coût — les bâtiments constructibles
+//     viendront plus tard ;
+//   · UNITÉ (arbitrage final Thibaut 2026-10-24 : « 1 personne =
+//     1 maison ») : le BONHEUR compare le stock aux HABITANTS de
+//     la ville. L'ATTRIBUTION, elle, loge des FOYERS (une maison
+//     par famille — un foyer occupe 1 place) : l'unité de
+//     l'attribution est le foyer, l'unité de mesure du bonheur
+//     est la personne — deux échelles VOLONTAIRES (la maison
+//     familiale abrite plusieurs personnes, le score mesure la
+//     pression immobilière par tête).
 //   · le stock d'une ville vit DANS la ville (City.domiciles :
 //     [{domicile: 'Maison', nombre: 50}, …]) — initialisé du rang
 //     d'habitation à la création/changement de rang (normaliserEtat

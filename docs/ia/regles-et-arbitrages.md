@@ -935,10 +935,13 @@ rang 1). Arbitrages actés lors de la session :
 
 **Domiciles** — SIMPLE : un type = un nom + une qualité 1-5
 (Masure 1, Maison 2, Auberge 3, Maison de notable 4, Palais 5) ;
-pas de capacité ni coût (1 domicile = 1 logement, les bâtiments
-constructibles viendront) ; le rang de la ville DÉFINIT l'offre
-(stock `City.domiciles`, posé à la création et au changement de
-rang).
+pas de capacité ni coût (les bâtiments constructibles viendront) ;
+le rang de la ville DÉFINIT l'offre (stock `City.domiciles`,
+posé à la création et au changement de rang). **Unité (arbitrage
+final 2026-10-24, confirmé après l'audit B3 : « 1 personne =
+1 maison »)** — l'ATTRIBUTION loge par FOYER (une maison par
+famille, 1 place), le BONHEUR mesure par HABITANT (pression
+immobilière par tête) : deux échelles volontaires.
 
 **Qualité des métiers** — aménagement = roturier, bâtiment =
 bourgeois (Commerçant/Scientifique/Banquier/Troubadour/Professeur/

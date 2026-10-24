@@ -3020,3 +3020,21 @@ code, TOUS avérés :
   d'arbitrages.
 
 166/166 tests verts après correctifs.
+
+## B3 clôturé — arbitrage final : « 1 personne = 1 maison » (2026-10-24)
+
+Retour de l'arbitre sur l'incohérence d'unité logement relevée
+par l'audit B3 : **on reste sur 1 personne = 1 maison** (l'arbitrage
+initial du bonheur est conservé). Conséquence assumée : le score
+logement d'une ville densément peuplée est bas (23/100 sur la
+capitale témoin — 60 logements pour 257 habitants), et c'est
+VOLONTAIRE : la pression immobilière par tête pousse à monter en
+rang (Hameau 60 → Cité 150 → Grande Cité 250 logements) et, plus
+tard, à construire des bâtiments de logement. Les DEUX échelles
+sont désormais explicites et datées partout :
+- ATTRIBUTION : par FOYER (une maison par famille, 1 place) ;
+- BONHEUR : par HABITANT (pression par tête).
+Docblocks réalignés (domiciles.ts, types.ts, defaultConfig.ts) et
+règle consignée dans regles-et-arbitrages.md. Le code du bonheur
+était déjà conforme — aucun changement de comportement, purement
+documentation + clôture d'audit. 166/166 verts.
