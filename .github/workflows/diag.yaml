@@ -24,7 +24,10 @@ jobs:
         with:
           node-version: 22
       - name: Run diag.ts
-        run: node --experimental-strip-types scripts/diag.ts > diag-out.txt 2>&1 || true
+        # (R2, 2026-10-24 : diag.ts importe le VRAI moteur (src/engine/*)
+        #  — le loader résout les imports sans extension et sert les
+        #  .json en modules ES, comme tsx pour les tests.)
+        run: node --experimental-strip-types --import ./scripts/diag-loader.mjs scripts/diag.ts > diag-out.txt 2>&1 || true
       - name: Commit du résultat
         run: |
           git config user.name "github-actions[bot]"
