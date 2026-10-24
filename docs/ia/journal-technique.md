@@ -2261,6 +2261,116 @@ au premier fin de tour ; la migration d'état v4 laisse passer le
 string « Marchand » (donnée de conversion des vieux `titres`), le
 moteur le purge ensuite — cohérent avec le défaut assumé.
 
+## Suppression du système de progrès (2026-10-24, retour arbitre « supprimer proprement les progrès et qu'il ne reste rien »)
+
+Purge COMPLÈTE du système de techs/arbres/déblocages, même patron que
+les purges précédentes (dogmes, événements saison/dynastie, Influence,
+Marchand) : RETRAIT daté dans les docblocks (règle 9 — l'ancien
+contenu reste dans l'historique git), purge par `delete` ciblé dans
+`cfgOf` SANS bump de `SCHEMA_VERSION_CONFIG` (règle (x) — une config
+tamponnée qui garde la clé `progres` ne la fait plus lire par
+personne ; toute config repassant par `cfgOf` la voit retirée).
+
+**Périmètre acté** : seul le système disparaît ; la **ressource
+Science RESTE** (canaux de production indépendants : impôts
+`economie.ts`, métiers Chercheur/Scientifique, `scienceParConstruction`
+des cultures, bâtiments Observatoire / Laboratoire de Falheim,
+Dashboard). Les **textes des Lauriers II/III/IV de la voie
+Scientifique** (Cabinet d'astronomie, arbres d'Âge III, « Progrès du
+développement futur ») restent tels quels dans les référentiels avec
+note **CADUQUE — redesign à arbitrer** (décision de design, pas
+d'ingénierie : les conditions référencent des arbres qui n'existent
+plus). `Player.progresDebloques?` et `ApportsTour.progres?` deviennent
+des champs OPTIONNELS morts (« RETRAIT, plus lus, compat vieilles
+sauvegardes »).
+
+**Fichiers SUPPRIMÉS (8)** : `src/engine/progres.ts`,
+`src/engine/progresAuto.ts`, `src/engine/progresTech.ts`,
+`src/components/ProgresView.tsx`, `src/components/ProgresView.test.ts`,
+`src/rules/progres.test.ts`, `src/components/params/ProgresParams.tsx`,
+`src/components/reference/OngletsProgres.tsx`.
+
+**Moteur** : `tour.ts` — bloc 3undecies-bis PROGRES (canal + log 🔬)
+retiré, `progres:` retiré des apports ; la re-synchronisation
+Tourisme qui vivait dans ce bloc est CONSERVÉE (elle doit courir APRÈS
+les apports de commerce qui créditent le stock directement — cf.
+incidents). `production.ts` — canal progres (interface
+`ProductionDetail`, calcul, listes, type `CanalApport`) retiré.
+`garnisons.ts` — `garnisonProgresVille` + plancher « Combler les
+lacunes » retirés. `regimes.ts` — flux Tourisme des techs retirés
+(l'origine `'technologie'` reste dans l'union des lignes de détail,
+lue des vieilles sauvegardes sans être produite). `habitations.ts` —
+`reductionFondation`/`aTech` retirés, le 5e paramètre `fondation` de
+`debiterCoutHabitation` SUPPRIMÉ de la signature (appelant mis à jour
+dans `VillesCarte.tsx`). `armees.ts` — `reductionLevee` (Conscription
+I −10 Or) retirée. `commerce.ts` — `aTech` retiré, +1 routes des techs
+retiré de `maxRoutesJoueur` (le cap `maxMarchands` reste).
+`merveilles.ts` — `bonusTourDeCrystalProgres` supprimé (la Tour de
+Crystal reste sans effet ; Laboratoire de Falheim conservé).
+`statutAuto.ts` — table TECHS + `statutTech` supprimées.
+`setup.ts` — `progresDebloques: []` retiré de `createGame`.
+`types.ts` — docblocks RETRAIT sur les champs morts. `gameData2.ts` —
+NB CADUQUE avant `VICTORY_TEXT`.
+
+**Config & couche rules** : `defaultConfig.ts` — interfaces
+`EffetProgres`/`ProgresTechDef`/`ProgresArbre` supprimées, champ
+`GameConfig.progres` retiré, drapeaux `renommagesTechs2026` /
+`techsManquantes2026` / `muraille40_2026` / `slotsVides2026` retirés
+du type, `migrerProgres` supprimée, garde-fous + boucles
+Marchand/`prodParTitre` sur `merged.progres` supprimées, 4 blocs de
+migration techs remplacés par des commentaires datés, purge ajoutée
+en tête de `cfgOf` (`delete (merged as { progres?: unknown }).progres`,
+patron dogmes). `referentiels.json` — clé « progres » (23 arbres)
+supprimée. `rules/registry.ts` — `reglesProgres` + `clesTechsParNom` +
+`PROGRES_FLUX` supprimées, source 'tech' retirée du registre.
+`rules/effects/banque.ts` — conditions `tech`/`techNom` + 7 cases de
+switch des flux techs supprimées. `rules/types.ts` — 7 interfaces
+`EffetFlux*` + membres de l'union `Effet` + conditions + `'tech'` de
+`SourceRegle` retirés (note style dogme : jamais à réutiliser).
+
+**UI** : `App.tsx` — section 'progres' du type, entrée nav 🧪 et rendu
+retirés ; `ConfigTables.tsx` (re-export `ProgresParams` puis
+`EffetsTechEditor` retirés) ; `ParamsPanel.tsx` (onglet Progrès) ;
+`ReferenceDataPanel.tsx` (onglet référentiel) ;
+`logiqueReference.ts` (`fmtEffetTech`, onglet) ;
+`params/EditeursEffets.tsx` (`EffetsTechEditor` + `TYPES_EFFETS`,
+import `TextInput` mort) ; `pays/Constructions.ts` (bonus Urbanisme
+×2, réductions Développement durable/économe/Viser le ciel, bloc
+merveilles « Progrès du Tourisme ») ; `pays/RecapParTour.tsx` (ligne
+canal Progrès) ; `pays/AideAuto.tsx` (mentions technologies des coûts
+auto) ; `RoyaumeView.tsx` (docblock). `state/store.tsx` : le docblock
+d'incident « déblocage d'une tech » est CONSERVÉ (mémoire, règle 9).
+
+**Tests & scripts** : `params.test.ts` — l'effet de tech du test v2
+remplacé par : config v2 avec `progres` posé puis purge `undefined`
+après `cfgOf`. `registre.test.ts` — `TYPES_CONNUSS` sans les 7 types
+techs, seuil du registre 20→10 (le compte 14 sans les règles 'tech').
+`scripts/diag.ts` — copie autonome nettoyée (interface, champ,
+mention feuille Progrès du header). `AGENTS.md` — structure à jour.
+
+**Incidents de purge corrigés avant push** (la validation locale les
+a tous attrapés — aucun n'a atteint la CI) : (1) re-export mort
+`EffetsTechEditor` dans `ConfigTables.tsx` (TS2305 en CI) et import
+`TextInput` mort dans `EditeursEffets.tsx` (TS6133) ; (2)
+`reglePourConstruction` (lookup constructions, INDEPENDANT des techs)
+avait été emporté par la purge de la source 'tech' → 1 TS2724 + 2
+TS7006 en cascade dans `engine/constructions.ts` — restauré ; (3) la
+re-synchronisation Tourisme de fin de bloc PROGRES manquait →
+l'invariant « stock = production » cassait (le commerce crédite le
+stock après les resyncs 3septies/3nonies ; test commerce B4 rouge :
+stock 24 ≠ prod 12) — l'appel est conservé au point historique
+(dans le commentaire RETRAIT du 3undecies-bis) ; (4) seuil périmé du
+test registre (le registre sans les techs compte 14 règles, pas >20).
+
+**Validation** : tsc strict diff NUL vs tarball HEAD (les seules
+lignes restantes du diff sont les erreurs des fichiers de tests
+supprimés, présentes sur la base uniquement) ; 124/124 tests natifs
+verts (node strip-types + hooks, `.tsx` de rendu couverts par la CI —
+le parse JSX de tous les `.tsx` est de toute façon couvert par tsc
+lui-même) ; diag exit 0 ; `jq` OK sur `referentiels.json` (clé
+progres absente) ; grep résiduel « progres/tech » = docblocks
+RETRAIT/historiques datés uniquement.
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

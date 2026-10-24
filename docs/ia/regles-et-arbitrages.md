@@ -77,7 +77,9 @@ cochent eux-mêmes dans l'application (pas d'auto-détection).
 - **Scientifique** : I = revenu de 7 Science/tour (bonus : +30 Science) · II = Donjon
   doté d'un Cabinet d'astronomie (bonus : terminer gratuitement un arbre de Progrès
   d'Âge I) · III = 3 arbres de Progrès d'Âge III terminés · IV = terminer l'arbre
-  « Progrès du développement futur ».
+  « Progrès du développement futur ». **(CADUQUE 2026-10-24 : les conditions
+  II/III/IV référencent le système de Progrès SUPPRIMÉ — le Laurier I reste
+  valide, les suivants sont à redésigner ; arbitrage en attente.)**
 
 ## Rangs de pays (refonte arbitrée 2026-10-14)
 
@@ -164,19 +166,26 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
 - Le catalogue est **entièrement éditable** dans Paramètres → Ministères
   (nom, rang minimum, mode Auto/Plateau, effet, +/− lignes).
 
-## Progrès technologiques (règles actées)
+## Progrès technologiques (SUPPRIMÉS le 2026-10-24 — arbitrage « supprimer proprement les progrès et qu'il ne reste rien »)
 
-- Tech 2 exige la tech 1 de sa branche ; la tech C exige les 2 techs d'une même
-  branche ; un arbre est TERMINÉ à EXACTEMENT 3 technologies (tech C optionnelle) ;
-  3 arbres complétés de l'âge N-1 ouvrent l'âge N.
-- **AUCUN effet automatique dans le moteur** : les effets des technologies
-  s'appliquent TOUS au plateau (les textes d'effets sont une aide de jeu purement
-  indicative). Seule exception : le **coût en Science est déduit automatiquement**
-  du stock au déblocage, puis **remboursé** si la tech est reprise.
-- Référentiel : 21 arbres (7 colonnes × 3 âges), entièrement paramétrable dans
-  Paramètres → Progrès. Restent à remplir par l'arbitre : tech C de « Progrès du
-  développement futur » (Âge III), tech C de « Progrès du développement
-  économique » (Âge III), a.1 de « Progrès de la défense nationale » (Âge III).
+**Décision actée 2026-10-24** : le système de progrès (arbres par âge,
+techs A1/A2/B1/B2/C, déblocages, effets, onglet Progrès, éditeur de
+paramètres) est SUPPRIMÉ du jeu. Historique des règles qu'il portait
+(pour mémoire, tout est dans l'historique git au 2026-10-23 et avant) :
+tech 2 exigeait la tech 1 de sa branche ; la tech C exigeait les 2
+techs d'une même branche ; un arbre était terminé à exactement 3
+technologies (tech C optionnelle) ; 3 arbres complétés de l'âge N-1
+ouvraient l'âge N ; les effets s'appliquaient au plateau sauf le coût
+en Science, déduit automatiquement puis remboursé à la reprise ;
+21 arbres (7 colonnes × 3 âges), paramétrables dans Paramètres →
+Progrès.
+
+Ce qui RESTE : la **ressource Science** (impôts, métiers
+Chercheur/Scientifique, `scienceParConstruction`, Observatoire,
+Laboratoire de Falheim, Dashboard) et les textes des Lauriers
+Scientifique — dont les conditions II/III/IV sont **CADUQUES** (elles
+référencent des arbres qui n'existent plus) : redesign de la voie à
+arbitrer.
 
 ## Barème d'équilibrage de référence (validé en approche)
 

@@ -61,7 +61,8 @@ src/
 │                              cour.ts (dons/mariages), commerce.ts (routes de marchands),
 │                              titres.ts, naissances.ts, sante.ts (démographie), ministeres.ts,
 │                              factions.ts (utilitaires peuples : nbAmenagements, nbVassaux,
-│                              rangPaysNiveau, capitaleDe — bonus RETIRÉS), regimes.ts, progresAuto.ts,
+│                              rangPaysNiveau, capitaleDe — bonus RETIRÉS), regimes.ts,
+│                              (progresAuto.ts RETIRÉ le 2026-10-24 — système de progrès supprimé),
 │                              constructions.ts/batiments.ts/amenagements.ts (effets du référentiel),
 │                              fusion.ts (multijoueur par sections), migrations.ts (registre versionné),
 │                              victory.ts (Lauriers I à IV), validation.ts, types.ts
@@ -71,7 +72,8 @@ src/
 ├── supabase/client.ts        — multijoueur : salon, sections par joueur, barrière de fin de tour,
 │                              résolution serveur (Edge Function Deno `supabase/functions/resoudre-tour`)
 ├── components/              — une vue par onglet (Dashboard, PlayerView ~150 lignes = assemblage,
-│                              PopulationTable, RoyaumeView, ProgresView, CitesLibresView, ArmiesPanel,
+│                              PopulationTable, RoyaumeView, CitesLibresView, ArmiesPanel,
+│                              (ProgresView RETIRÉ le 2026-10-24),
 │                              EventLogPanel, HistoryPanel, ParamsPanel, SetupPanel, ReferenceDataPanel…)
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
