@@ -2759,3 +2759,47 @@ constructions) → le hash du bundle live bougera au déploiement.
 Les messages de commit sont rédigés en français et documentent chaque refonte : pour
 comprendre une zone de code, `git log --oneline -- <fichier>` et les messages de
 commit sont la source la plus rapide (chaque marqueur/commit cite ses arbitrages).
+
+## Bonheur des villes — 5 facteurs, implémentation vague B (2026-10-24, arbitrages Thibaut v3)
+
+**Design** (simulé AVANT implémentation — `scripts/sim-bonheur.ts`,
+partie réelle 8 joueurs, sorties courbes + 15 scénarios) : le bonheur
+d'une ville est la MOYENNE SIMPLE de 5 scores [0-100] :
+
+| Facteur | Formule (arbitrages v3) |
+|---|---|
+| Emploi | OPTIMUM symétrique : 100 si offres = travailleurs EXACTEMENT ; malus IDENTIQUE en manque et en excès (±25 % → 75, ×2 → 0). Moyenne de deux écarts : structure (offres vs travailleurs) et postes pourvus |
+| Logement | OPTIMUM symétrique PAR HABITANT : 1 logement = 1 habitant logé ; 100 si chacun a le sien, 0 si personne n'en a ou à 2× plus de logements que d'habitants |
+| Sécurité | OPTIMUM symétrique : garnison vs 100 × rang d'habitation (0 si nulle, 0 aussi à 2× la cible) |
+| Santé | 100 − pourcentage de malades (linéaire) |
+| Tourisme | 100 × tourisme du joueur / tourisme MONDIAL (plafonné) — une course entre joueurs |
+
+**Décisions d'arbitre consignées** : (1) malus symétrique identique
+manque/excès — une ville trop bâtisseuse est pénalisée comme une
+ville pauvre ; (2) logement par habitant (le parse des 60 logements
+d'un Hameau de 53 habitants donne 87 — la donnée existante colle) ;
+(3) cible sécurité 100×rang maintenue malgré la rareté de la
+Garnison au plateau (pousse à construire des Postes de garde) ;
+(4) tourisme mondial = course (à 8 joueurs égaux, 12,5 chacun).
+
+**Implémentation** (`src/engine/bonheur.ts`, fonction PURE — aucun
+état stocké, calculé à la demande) : formules pures testées
+(`scoreOptimum`, `scoreSante`, `scoreTourisme`, `bonheurVille`) +
+lecture des données réelles (`scoresVille` : emplois via
+`capMetierVille`/`metiersDisponiblesRang`, logements via
+`rangsDefsType`/`domicilesDisponibles`, garnison via
+`garnisonHabitationVille`, tourisme via `tourismeCourant`, malades
+via `statut === 'Malade'`) + agrégats `bonheurVilleComplete` et
+`bonheurJoueur`. AUCUN branchement moteur pour l'instant (pas
+d'effet natalité/impôts — à arbitrer en vague E).
+
+**Tests** (`src/engine/bonheur.test.ts`, 10) : courbes pures
+(100/exact, symétrie ±25 % → 75, ×2 → 0, cas limites), parse des
+logements, partie témoin (bornes + santé 100/tourisme 0 au tour 1),
+épidémie 30 % → santé 70, moyennes ville/joueur cohérentes,
+déterminisme (fonction pure). **146/146 natifs** verts, tsc strict 0.
+
+**Suites** (domiciles/bonheur/ascension) : vague A (table domiciles
+structurée + qualité des métiers), vague C (attribution des
+domiciles aux foyers + UI), vague D (ascension/chute sociales),
+vague E (effets du bonheur + UI jauges).
