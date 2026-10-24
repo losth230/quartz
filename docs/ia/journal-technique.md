@@ -2904,3 +2904,39 @@ tour (ou à l'UI), jauges bonheur/prestige dans la page Population
 et Pays, effets du bonheur (natalité/impôts — à arbitrer),
 l'anoblissement manuel du Dirigeant (action + coût) — et la
 question des mariages par condition (à arbitrer).
+
+## Vague E — branchement complet et arbitrages finaux (2026-10-24, retour arbitre)
+
+**Arbitrages Thibaut** :
+1. **Anoblissement AUTOMATIQUE** pour l'instant (noblesse à
+   prestige ≥ 250 sans action du Dirigeant — la grâce du souverain
+   reste une piste si le volume de nobles devient un problème) ;
+2. **Mariages LIBRES + bonus de même condition** : nouveau
+   paramètre `mariageMemeRang` (+0.10 de probabilité quand les
+   deux époux sont de même rang social — même patron que
+   `mariageMemeCulture` ; aucune interdiction inter-conditions) ;
+3. **Bonheur INDICATEUR PUR** pour l'instant (aucun effet
+   natalité/impôts — les jauges s'affichent, on regarde vivre le
+   système avant d'arbitrer des effets).
+
+**Branchement complet du fin de tour** (populationTurn) :
+- étape 3.6ter : ATTRIBUTION des domiciles aux foyers de toutes
+  les villes du joueur — après la démographie (les nouveaux
+  foyers de l'année prennent les places libres), avant le statut
+  social (le prestige du tour compte le domicile attribué) ;
+- étape 3.7 : évaluation du prestige (inchangée).
+
+**UI** :
+- carte de ville (pays/VilleCarte) : jauge « Bonheur : N / 100 »
+  colorée (vert ≥ 70, ambre ≥ 40, rouge), détail des 5 facteurs
+  en info-bulle au survol ;
+- page Population : nouvelle colonne « Rang » (badge
+  roturier/bourgeois/noble + valeur de prestige, seuils en
+  info-bulle) à côté de la colonne Domicile.
+
+**Validation** : 163/163 natifs, tsc strict 0, handler Deno 0,
+bundle OK, diag exit 0, build vite OK (JSX des deux vues
+modifiées compile). Le système domiciles/bonheur/statut social
+est COMPLET et branché : les parties existantes gagnent le
+prestige au premier fin de tour (génération fondatrice à 0, les
+naissances hériteront).

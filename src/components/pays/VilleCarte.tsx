@@ -16,6 +16,7 @@ import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
 import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
+import { scoresVille, bonheurVille } from '../../engine/bonheur'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
@@ -195,6 +196,20 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             ))}
           </div>
         )}
+        {/* BONHEUR de la ville (vague E, design bonheur 2026-10-24) :
+            moyenne simple des 5 facteurs — jauge compacte avec le
+            détail au survol (info-bulle). */}
+        {(() => {
+          const s = scoresVille(state, p, ville, C)
+          const b = bonheurVille(s)
+          const couleur = b >= 70 ? 'var(--green, green)' : b >= 40 ? 'var(--yellow, #b8860b)' : 'var(--red, #b22222)'
+          return (
+            <div className="small" title={`Bonheur ${b}/100 — emploi ${s.emploi}, logement ${s.logement}, sécurité ${s.securite}, tourisme ${s.tourisme}, santé ${s.sante}`}>
+              Bonheur : <strong style={{ color: couleur }}>{b}</strong>{' '}
+              <span className="muted">/ 100</span>
+            </div>
+          )
+        })()}
         {/* Garnison des habitations, notée sous la culture —
             VALEUR D'ÉTAT (pas un flux) : base du rang + bâtiments
             + loi éventuelle du régime ; ne change pas à chaque tour. */}

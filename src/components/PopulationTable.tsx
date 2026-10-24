@@ -319,7 +319,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     <thead>
       <tr>
         <th>Nom</th><th>Dynastie</th><th>Sx</th><th>Âge</th><th>Ville</th>
-        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Traits</th>
+        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Rang</th><th>Traits</th>
         <th>Statut</th><th>Mariage</th><th>Fécondité</th><th>Actions</th>
       </tr>
     </thead>

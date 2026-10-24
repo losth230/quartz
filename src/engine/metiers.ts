@@ -10,6 +10,7 @@ import type { Rng } from './rng'
 import { cfgOf, metierDef, cultureDef, traitDef, type Cfg } from './gameData'
 import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
+import { rangSocial, prestigeDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
@@ -133,6 +134,10 @@ export function computeMarriageProbability(f: Character, h: Character, C: Cfg = 
       ? C.p.mariageMemeCulture
       : C.p.mariageAutreCulture
   }
+  // MÊME RANG SOCIAL (vague E, arbitrage Thibaut 2026-10-24 : les
+  //  mariages restent LIBRES — un bonus favorise les unions de
+  //  même condition, aucune interdiction entre conditions).
+  if (rangSocial(prestigeDe(f)) === rangSocial(prestigeDe(h))) score += C.p.mariageMemeRang
   // écart d'âge
   score -= Math.abs(f.age - h.age) * C.p.mariageParAnEcart
   // bâtards
