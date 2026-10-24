@@ -2371,6 +2371,46 @@ lui-même) ; diag exit 0 ; `jq` OK sur `referentiels.json` (clé
 progres absente) ; grep résiduel « progres/tech » = docblocks
 RETRAIT/historiques datés uniquement.
 
+## Suppression des textes de conditions de victoire (2026-10-24, retour arbitre « je t'avais dit de supprimer les conditions de victoire »)
+
+Suite directe de la purge des progrès : les textes des conditions de
+victoire restants (Lauriers des 6 voies) sont SUPPRIMÉS — périmètre
+arbitré par Thibaut : « juste le texte des systèmes de victoire,
+garder le radar et des Lauriers vides ». La ressource **Science
+reste telle quelle** (arbitrage explicite).
+
+**Ce qui disparaît** : les textes `condition`/`bonus` des 24 Lauriers
+(6 voies × 4) de `referentiels.json` (champs vidés, structure
+conservée) ; `VICTORY_TEXT` (textes des Laurier IV, chapitre XII) de
+`engine/gameData2.ts` ET de sa copie autonome `scripts/diag.ts` ;
+sa liste d'affichage sur l'accueil (`Dashboard.tsx`), le pied de
+l'onglet Victoires du wiki (`reference/OngletsVictoires.tsx`), la
+ligne « Conditions de victoire » de l'aide-mémoire
+(`reference/OngletsAideMemoire.tsx`) ; l'énumération des conditions
+dans l'aide auto (`pays/AideAuto.tsx`).
+
+**Ce qui reste (structure intacte)** : les 6 voies × 4 Lauriers à
+cocher sur l'accueil (ordre strict, `cocherLaurier` — le rappel de
+crise au log ne porte plus de texte de bonus), le radar
+(`victoryProgress`, repli « … » au survol quand la condition est
+vide), les crises (table `crises` du référentiel), les Lauriers déjà
+validés des parties en cours (seuls les TEXTES sont actualisés).
+
+**Propagation aux configs sauvegardées SANS bump de schéma** : le
+garde-fou « mise à jour des CONDITIONS de victoire » (retour
+Thibaut 2026-10-15, appliqué à CHAQUE `cfgOf` même convergée)
+remplace une voie dont les textes diffèrent du référentiel — avec le
+référentiel vidé, les configs existantes (dont la partie en ligne)
+reprennent automatiquement des Lauriers vides, idempotent. Aucun
+`SCHEMA_VERSION_CONFIG` à incrémenter : le mécanisme préexistant
+fait le travail.
+
+**Validation** : tsc strict diff nul vs base, tests natifs verts,
+diag exit 0, `jq` OK sur le référentiel (24 conditions + 24 bonus
+vidés, aucune autre ligne touchée), grep résiduel `VICTORY_TEXT` =
+commentaires RETRAIT datés uniquement.
+
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild

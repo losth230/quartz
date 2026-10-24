@@ -46,40 +46,29 @@ quel suzerain » :
 - Interprétation à confirmer : R1 pontife lu comme « 1 émissaire par cité libre de
   son choix » (pas un émissaire global).
 
-## Voies de victoire — « Lauriers » (structure actée, validation MANUELLE)
+## Voies de victoire — « Lauriers » (structure actée, validation MANUELLE, textes RETIRÉS)
 
 Chaque voie a **4 Lauriers** ; validation en **ordre strict** ; **crise à chaque
 Laurier I-III** validé ; bonus one-shot uniquement si le Laurier est complété pendant
 l'âge de même numéro ; Laurier III sans bonus ; **Laurier IV = victoire**. Les joueurs
 cochent eux-mêmes dans l'application (pas d'auto-détection).
 
-- **Diplomatique** (réécrite) : I = 3 émissaires (bonus Âge I : +1 émissaire avec la
-  cité de votre choix) · II = 5 émissaires au total (bonus Âge II : 1 Ministre
-  au-delà du plafond du rang) · III = rang de pays Royaume · IV = 10 émissaires =
-  Victoire. « 2 Professeurs » abandonné.
-- **Culturelle** : I = Pontificat Rang I (100 Tourisme ; bonus : prochaine Merveille
-  −20 Or −10 ressources de base) · II = 3 Merveilles (bonus : +40 Tourisme au total) ·
-  III = Pontificat Rang III (340 Tourisme) · IV = 360 Tourisme + 5 Merveilles.
-  Les Merveilles se jouent au plateau (aucune Merveille dans le référentiel ; règle
-  « une par ville »).
-- **Démographique** : I = 3 habitations (bonus : prochaine habitation −5 Bois et
-  +15 habitants de départ) · II = 1 habitation ≥ 300 habitants (bonus : capitale
-  +25 habitants) · III = 3 habitations de rang III (Grande Cité ou Forteresse) ·
-  IV = 1500 habitants au total.
-- **Économique** : I = 4 aménagements de ressources naturelles (bonus : 5 ressources
-  de base au choix) · II = 3 routes commerciales (**compteur manuel** ; bonus :
-  capitale +1 emplacement de bâtiment) · III = revenu de 80 Or/tour · IV = 5 Guildes
-  différentes.
-- **Militaire** : I = capturer 1 habitation (bonus : prochaine levée −60 Or) ·
-  II = Donjon doté d'une Caserne (bonus : levée −10 Or pour le reste de la partie,
-  cumul avec le portefeuille Guerre accepté) · III = 800 pts d'armée · IV = 5
-  habitations capturées (compteurs manuels I/IV).
-- **Scientifique** : I = revenu de 7 Science/tour (bonus : +30 Science) · II = Donjon
-  doté d'un Cabinet d'astronomie (bonus : terminer gratuitement un arbre de Progrès
-  d'Âge I) · III = 3 arbres de Progrès d'Âge III terminés · IV = terminer l'arbre
-  « Progrès du développement futur ». **(CADUQUE 2026-10-24 : les conditions
-  II/III/IV référencent le système de Progrès SUPPRIMÉ — le Laurier I reste
-  valide, les suivants sont à redésigner ; arbitrage en attente.)**
+**(RETRAIT 2026-10-24, arbitrage « supprimer les conditions de victoire » :**
+les TEXTES de conditions et de bonus des 6 voies (Culturelle, Démographique,
+Diplomatique, Économique, Militaire, Scientifique — 24 Lauriers) sont SUPPRIMÉS
+du référentiel et de l'application (Lauriers VIDÉS). La structure reste
+INTACTE : 6 voies × 4 Lauriers à cocher sur l'accueil (ordre strict),
+radar de progression, crises au plateau, Laurier IV = victoire. Les
+nouveaux textes de conditions sont **à redéfinir par l'arbitre**.
+Historique des conditions de l'époque (table `victoires` de
+`referentiels.json` — l'ancien contenu reste dans l'historique git) :
+**Diplomatique** (émissaires, suzeraineté, Empereur) · **Culturelle**
+(Pontificat, Merveilles, Tourisme) · **Démographique** (habitations,
+population) · **Économique** (aménagements, routes, Or, Guildes) ·
+**Militaire** (captures, Donjon/Caserne, armée) · **Scientifique**
+(Science/tour, Cabinet d'astronomie, arbres de Progrès — conditions
+caduques dès la suppression du système de progrès, plus tôt dans la
+journée.)
 
 ## Rangs de pays (refonte arbitrée 2026-10-14)
 
