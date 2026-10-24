@@ -2803,3 +2803,51 @@ déterminisme (fonction pure). **146/146 natifs** verts, tsc strict 0.
 structurée + qualité des métiers), vague C (attribution des
 domiciles aux foyers + UI), vague D (ascension/chute sociales),
 vague E (effets du bonheur + UI jauges).
+
+## Vagues A+C — table domiciles, qualité des métiers, foyers et attribution (2026-10-24)
+
+**Vague A — données** :
+- Référentiel : table `domiciles` (5 types, qualité 1-5 :
+  Masure/Maison/Auberge/Maison de notable/Palais — arbitrage
+  SIMPLE : pas de capacité ni coût, 1 domicile = 1 logement, les
+  bâtiments constructibles viendront) ; `domicilesRang` STRUCTURÉ
+  sur chaque rang des typesHabitation (conversion du texte
+  « 50 maisons, 10 Auberge » → [{Maison, 50}, {Auberge, 10}],
+  données existantes inchangées en compte) ; champ `qualite`
+  ('roturier'|'bourgeois'|'noble') sur les 23 métiers —
+  arbitrage : aménagement→roturier, bâtiment→bourgeois
+  (Commerçant/Scientifique/Banquier/Troubadour/Professeur/Garde),
+  lignée nobleSeul→noble. NE CHANGE RIEN à l'affectation (sert à
+  la vague D ascension).
+- Config : `DomicileDefConfig`, `domiciles` dans GameConfig,
+  `domicilesRang` optionnel dans HabitationDef, complété par
+  migrerTypesHabitation (idempotent, patron metiersBase).
+
+**Vague C — stock et attribution** (`src/engine/domiciles.ts`) :
+- `City.domiciles` : le stock VIT DANS LA VILLE (complété par
+  normaliserEtat pour les vieilles sauvegardes — via migrerEtat
+  v1, tampon schema) ; `initStockVille` (le rang DÉFINIT l'offre,
+  appelé à la création/changement de rang).
+- `foyersDeVille` : partition PAR FOYER (adulte marié = couple ;
+  célibataire seul ; enfants mineurs suivent mère puis père ;
+  garde-fou premier adulte). `attribuerDomicilesVille` :
+  meilleure qualité disponible d'abord, sans dépasser le stock,
+  foyer déjà logé garde son logement (on ne déloge personne),
+  stock insuffisant → foyer sans domicile (champ null), pas de
+  surbooking.
+- `Character.domicile` (posé en vague 2 rework habitants) devient
+  la clé vivante — le champ est déjà AFFICHÉ dans la page
+  Population (LignePersonnage), l'attribution le remplit.
+
+**Tests** (`domiciles.test.ts`, 11) : table et lookup, stockRang
+converti (50+10=60 Hameau, 100+50=150 Cité), qualités des métiers
+par catégorie, complétion des vieilles sauvegardes (tampon schema
+retiré = rejoue v1), initStockVille écrase au changement de rang,
+partition des foyers sans doublon + couverture complète,
+attribution complète/meilleure d'abord/sans surbooking/idempotente.
+**157/157 natifs** verts, tsc strict 0, bundle OK.
+
+NB : l'attribution n'est pas encore APPELÉE par le fin de tour —
+c'est un choix (vague D : l'ascension appellera attribution +
+évaluation à chaque fin de tour). Pour l'instant les tests
+l'appellent explicitement.

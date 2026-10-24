@@ -168,8 +168,26 @@ export interface HabitationDef {
    *  l'ancien TEXTE « metiersDisponibles » est converti une bonne fois
    *  pour toutes par la migration ciblée de cfgOf). */
   metiersBase: Array<{ metier: string; places: number }>
-  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » (affichage seul) */
+  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
+   *  HISTORIQUE conservé pour l'affichage de repli ; la donnée
+   *  vit désormais dans `domicilesRang` (vague A, 2026-10-24). */
   domicilesDisponibles: string
+  /** domiciles du rang au format STRUCTURÉ (vague A, design
+   *  domiciles 2026-10-24) : [{domicile: 'Maison', nombre: 50}, …].
+   *  Champ optionnel : absent des vieilles configs → parsé de
+   *  `domicilesDisponibles` par les garde-fous de cfgOf. */
+  domicilesRang?: Array<{ domicile: string; nombre: number }>
+}
+
+/** Type de domicile (table `domiciles` du référentiel — vague A,
+ *  design domiciles/ascension 2026-10-24) : nom + qualité 1-5.
+ *  SIMPLE par arbitrage : pas de capacité ni coût (les bâtiments
+ *  constructibles viendront plus tard) — 1 domicile = 1 logement
+ *  (1 foyer), 50 maisons = 50 logements. */
+export interface DomicileDef {
+  domicile: string
+  /** confort objectif du domicile, échelle 1 (précaire) → 5 (noble) */
+  qualite: number
 }
 
 export interface City {
@@ -195,6 +213,13 @@ export interface City {
    *  Utilisé par la garnison des habitations (loi Autoritarisme) et
    *  l'affichage page « Pays ». */
   rang?: string
+  /** STOCK de domiciles de la ville (vague A/C, design domiciles
+   *  2026-10-24) : [{domicile: 'Maison', nombre: 50}, …] — l'offre
+   *  de logements du rang (initStockVille à la création/changement
+   *  de rang ; complété par normaliserEtat pour les vieilles
+   *  sauvegardes). 1 domicile = 1 logement (1 foyer). Champ
+   *  optionnel : absent → []. */
+  domiciles?: Array<{ domicile: string; nombre: number }>
   batiments: string[]
   /** Aménagements de terrain (Baleinier, Champ, Mine d'Or… — feuille
    *  « Aménagements » du classeur). Champ optionnel : absent des

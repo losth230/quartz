@@ -32,6 +32,15 @@ export interface MetierDef {
    *  valeur2/ressource2 ne sont crédités qu'en saison d'Été. */
   ete?: boolean
   capParVille?: number
+  /** QUALITÉ DU MÉTIER (design domiciles/ascension 2026-10-24,
+   *  vague A) : 'roturier' | 'bourgeois' | 'noble'. Arbitrage : les
+   *  métiers liés aux AMÉNAGEMENTS sont roturiers, ceux liés aux
+   *  BÂTIMENTS bourgeois (Commerçant/Scientifique/Banquier/
+   *  Troubadour/Professeur/Garde — fonction publique qualifiée) ;
+   *  la lignée nobleSeul (Dirigeant, Gouverneur…) reste 'noble'.
+   *  Champ DONNÉE du référentiel — sert à l'ascension sociale
+   *  (vague D) et ne change RIEN à l'affectation actuelle. */
+  qualite?: 'roturier' | 'bourgeois' | 'noble'
 }
 export interface TraitDef {
   name: string
@@ -90,8 +99,15 @@ export interface HabitationDef {
    *  l'ancien TEXTE « metiersDisponibles » est converti par la
    *  migration ciblée de cfgOf, puis la clé disparaît). */
   metiersBase: EmplacementDef[]
-  /** domiciles disponibles (affichage seul, ex. « 50 maisons, 10 Auberge ») */
+  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
+   *  historique conservé pour l'affichage de repli ; la donnée vit
+   *  dans `domicilesRang` (vague A, design domiciles 2026-10-24). */
   domicilesDisponibles: string
+  /** domiciles du rang STRUCTURÉS (vague A, 2026-10-24) :
+   *  [{domicile: 'Maison', nombre: 50}, …] — 1 domicile = 1 logement.
+   *  Optionnel : absent des vieilles configs → complété par
+   *  migrerTypesHabitation (garde-fou idempotent). */
+  domicilesRang?: Array<{ domicile: string; nombre: number }>
 }
 /** Événements de saison (été/hiver) RETIRÉS du référentiel le
  *  2026-10-24 (retour arbitre Thibaut) : la table `events` (18
@@ -214,6 +230,15 @@ export interface EmplacementDef {
  *  2026-10-24 avec les tables events/dynasties — effets chiffrés
  *  des événements de saison et des cartes dynastie, plus aucun
  *  producteur.) */
+/** Type de domicile (table `domiciles` du référentiel — vague A,
+ *  design domiciles/ascension 2026-10-24) : nom + qualité 1-5.
+ *  SIMPLE par arbitrage : pas de capacité ni coût — 1 domicile = 1
+ *  logement ; les bâtiments constructibles viendront plus tard. */
+export interface DomicileDefConfig {
+  domicile: string
+  qualite: number
+}
+
 export interface GameConfig {
   ressources: string[]
   params: GameParams & GameParamStrings
@@ -251,6 +276,8 @@ export interface GameConfig {
   peuplesAutres: PeupleRef[]
   constructions: ConstructionRef[]
   typesHabitation: HabitationDef[]
+  /** Table des types de domicile (vague A, 2026-10-24) : nom + qualité 1-5. */
+  domiciles: DomicileDefConfig[]
   // (progres — arbres de progrès — retiré le 2026-10-24, retour arbitre :
   //  suppression du système de progrès. La clé encore portée par les
   //  configs sauvegardées est purgée par delete ciblé dans cfgOf,
@@ -497,6 +524,7 @@ function normaliserMetiers(): MetierDef[] {
     attribution: t.attribution || '',
     capParVille: t.capParVille === undefined ? undefined : Number(t.capParVille),
     ete: t.ete === true ? true : undefined,
+    qualite: t.qualite === 'bourgeois' || t.qualite === 'noble' ? t.qualite : 'roturier',
   }))
 }
 
@@ -601,6 +629,10 @@ export const DEFAULT_CONFIG: GameConfig = {
   peuplesAutres: ref.peuplesAutres,
   constructions: ref.constructions,
   typesHabitation: ref.typesHabitation,
+  domiciles: (ref.domiciles ?? []).map((d: { domicile?: string; qualite?: number | string }) => ({
+    domicile: String(d.domicile ?? ''),
+    qualite: Number(d.qualite) || 1,
+  })),
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
   // (dogmes retirés du référentiel le 2026-10-24, retour arbitre)
@@ -822,6 +854,13 @@ export function migrerTypesHabitation(list: HabitationDef[] | undefined): Habita
       const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
       d.metiersBase = d.metiersBase ?? ref?.metiersBase ?? []
       d.domicilesDisponibles = d.domicilesDisponibles ?? ref?.domicilesDisponibles ?? ''
+    }
+    // Vague A (2026-10-24) : domicilesRang structuré — complété depuis
+    //  la ligne du défaut de même (type, rang) si absent (config
+    //  sauvegardée avant la vague). Idempotent.
+    if (d.domicilesRang === undefined) {
+      const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
+      d.domicilesRang = ref?.domicilesRang ? [...ref.domicilesRang] : []
     }
   }
   return list
