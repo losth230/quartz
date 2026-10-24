@@ -13,6 +13,7 @@ import { traitDef } from '../../engine/gameData'
 import { Select, Button, fmt } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { STATUTS } from './logiquePopulation'
+import { rangSocial } from '../../engine/statutSocial'
 
 export interface PropsLignePersonnage {
   c: Character
@@ -79,8 +80,14 @@ export function LignePersonnage({
         </div>
         {errors[c.id] && <div className="neg small">⚠ {errors[c.id]}</div>}
       </td>
-      <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile — les bâtiments de logement arrivent (vague 3)'}>
+      <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile'}>
         {c.domicile ?? '—'}
+      </td>
+      <td className="small" title={`Prestige ${c.prestige ?? 0} — rang ${rangSocial(c.prestige ?? 0)} (roturier < 100 ≤ bourgeois < 250 ≤ noble)`}>
+        <span className={`badge ${rangSocial(c.prestige ?? 0) === 'noble' ? 'badge-info' : rangSocial(c.prestige ?? 0) === 'bourgeois' ? 'badge-neutral' : ''}`}>
+          {rangSocial(c.prestige ?? 0)}
+        </span>{' '}
+        <span className="muted">{c.prestige ?? 0}</span>
       </td>
       <td className="small">
         {(c.traits ?? []).filter(Boolean).map((t) => (

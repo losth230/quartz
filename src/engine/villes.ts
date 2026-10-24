@@ -25,6 +25,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
+import { stockRang } from './domiciles'
 import { cfgOf, type Cfg } from './gameData'
 import { isNobleDyn, perteDemenagement } from './shared'
 // (M6 2026-10-19) : productionTourismeBatiment n'est plus importé ici —
@@ -43,6 +44,7 @@ export { villeCotiere } from './geographie'
  *  local, salon rejoint, mise à jour realtime, import JSON).
  *  Idempotent, ne touche à rien d'autre. */
 export function normaliserEtat(state: GameState): void {
+  const C = cfgOf(state.config)
   if (!Array.isArray(state.history)) state.history = []
   if (!Array.isArray(state.log)) state.log = []
   if (!Array.isArray(state.routesCommerce)) state.routesCommerce = []
@@ -53,6 +55,10 @@ export function normaliserEtat(state: GameState): void {
       if (!Array.isArray(v.batiments)) v.batiments = []
       if (!Array.isArray(v.amenagements)) v.amenagements = []
       if (!Array.isArray(v.autres)) v.autres = []
+      // Vague A/C (design domiciles 2026-10-24) : stock de domiciles
+      //  de la ville — complété depuis le rang si absent (vieilles
+      //  sauvegardes), idempotent.
+      if (!Array.isArray(v.domiciles)) v.domiciles = stockRang(v.type ?? 'Ville', v.rang ?? 'Hameau', C)
     }
   }
 }

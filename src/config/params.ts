@@ -58,6 +58,13 @@ export interface GameParams {
   mariageMesalliance: number
   mariageBonusMetier: number
   mariageMemeCulture: number
+  /** Bonus de probabilité de mariage pour deux personnages de MÊME
+   *  RANG SOCIAL (vague E statut social, arbitrage Thibaut
+   *  2026-10-24 : « les mariages sont LIBRES avec bonus pour des
+   *  personnages de conditions similaires »). Les unions restent
+   *  possibles entre conditions (pas d'interdiction) — le bonus
+   *  favorise simplement les mariages de même milieu. */
+  mariageMemeRang: number
   mariageAutreCulture: number
   mariageParAnEcart: number
   mariageTraitMax: number
@@ -159,6 +166,7 @@ export const DEFAULT_PARAMS: GameParams = {
   mariageMesalliance: 0.03,
   mariageBonusMetier: 0.1,
   mariageMemeCulture: 0.1,
+  mariageMemeRang: 0.1,
   mariageAutreCulture: -0.1,
   mariageParAnEcart: 0.005,
   mariageTraitMax: 0.2,
@@ -251,6 +259,7 @@ export const PARAM_META: {
   { key: 'mariageMesalliance', label: 'Proba mésalliance noble × roturier', groupe: 'Mariage', unite: 'proba' },
   { key: 'mariageBonusMetier', label: 'Bonus par époux avec métier (non-Chasseur)', groupe: 'Mariage' },
   { key: 'mariageMemeCulture', label: 'Bonus même culture', groupe: 'Mariage' },
+  { key: 'mariageMemeRang', label: 'Bonus même rang social (roturier/bourgeois/noble)', groupe: 'Mariage' },
   { key: 'mariageAutreCulture', label: 'Malus culture différente', groupe: 'Mariage' },
   { key: 'mariageParAnEcart', label: 'Malus par année d\'écart d\'âge', groupe: 'Mariage' },
   { key: 'mariageTraitMax', label: 'Plafond des modificateurs de traits', groupe: 'Mariage' },
