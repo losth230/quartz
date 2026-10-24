@@ -2851,3 +2851,56 @@ NB : l'attribution n'est pas encore APPELÉE par le fin de tour —
 c'est un choix (vague D : l'ascension appellera attribution +
 évaluation à chaque fin de tour). Pour l'instant les tests
 l'appellent explicitement.
+
+## Vague D — statut social : prestige des familles, héritage, rangs (2026-10-24, arbitrages Thibaut)
+
+**Design** (arbitrages exacts, après refonte RP — les « cases à
+cocher » v1 abandonnées pour un score CONTINU) :
+- le PRESTIGE est FAMILIAL : convergence des couples (moyenne des
+  deux + gain commun), un personnage monte/descend AVEC ses
+  enfants ;
+- HÉRITAGE : à l'âge adulte, 50 % du prestige MOYEN des parents
+  (un seul parent → 50 % de ce parent), joué UNE fois (marqueur
+  prestigeHerite) ;
+- RANG DÉRIVÉ (fonction pure) : < 100 roturier, ≥ 100 bourgeois,
+  ≥ 250 noble — un enfant de deux nobles à 250 naît bourgeois ;
+- CALCUL PAR TOUR : sans emploi −2, sans domicile −2, malade −2,
+  domicile +0..+4 (qualité −1 : Masure 0, Maison 1, Auberge 2,
+  notable 3, Palais 4), métier +2 bourgeois / +5 noble, +1 si
+  bonheur de la ville > 50 (remplace le tourisme — arbitrage :
+  le tourisme est déjà un facteur du bonheur, pas de double
+  comptage) ;
+- journal des changements de rang (📈 bourgeoisie, 👑 noblesse,
+  📉 chutes).
+
+**BUG ATTRAPÉ PAR LES TESTS (consigné)** : l'héritage tournait
+sur TOUS les adultes sans marqueur — la génération FONDATRICE
+(sans parents connus) recevait un « héritage 0 » qui ÉCRASAIT le
+prestige du tour, remettant toute la population à 0 chaque tour.
+Correctif : l'héritage ne concerne que les personnages NÉS DANS
+LA PARTIE (parents connus via mereId/pereId). La génération
+fondatrice part de 0 et fait ses preuves.
+
+**Implémentation** : `statutSocial.ts` (rangSocial, prestigeDe,
+gainPrestigeTour, evaluerFamilles — champ `prestige` +
+`prestigeHerite` sur Character, docblocks arbitrages) ;
+branchement fin de tour étape 3.7 de populationTurn (après la
+démographie : les naissances/morts/maladies du tour comptent).
+Vagues précédentes branchées : l'attribution des domiciles
+(vague C) n'est PAS encore appelée par le tour — les domiciles
+s'attribuent à la création/changement de rang (initStockVille),
+l'attribution dynamique (foyers) viendra avec l'UI vague E.
+
+**Tests** (`statutSocial.test.ts`, 6) : seuils rangSocial, formule
+exacte du gain (tous cas : −4 sans rien, +9 Gouverneur au Palais,
+bonheur strictement > 50), accumulation tour après tour,
+convergence des couples (200/0 → ~100 partagé), héritage 50 %
+moyenne + pas de double héritage, runTurn 10 tours sans crash ni
+prestige négatif. **163/163 natifs** verts, tsc strict 0, bundle
+OK, diag exit 0.
+
+**Reste (vague E)** : appeler attribuerDomicilesVille au fin de
+tour (ou à l'UI), jauges bonheur/prestige dans la page Population
+et Pays, effets du bonheur (natalité/impôts — à arbitrer),
+l'anoblissement manuel du Dirigeant (action + coût) — et la
+question des mariages par condition (à arbitrer).

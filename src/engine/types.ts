@@ -121,9 +121,24 @@ export interface Character {
    *  emploi : NEUTRE, aucun effet au plateau, impôt nul. */
   metier: string | null
   /** Domicile du personnage (rework habitants 2026-10-20, vague 2 UI) :
-   *  null = sans domicile, AUCUN effet en vague 1. Champ optionnel :
-   *  absent des états migrés (compressé quand null). */
+   *  null = sans domicile. Rempli par l'attribution aux foyers
+   *  (vague C, engine/domiciles.ts). Champ optionnel : absent des
+   *  états migrés (compressé quand null). */
   domicile?: string | null
+  /** PRESTIGE du personnage (vague D ascension sociale, 2026-10-24) :
+   *  la trajectoire sociale de la FAMILLE. Calculé chaque fin de
+   *  tour (statutSocial.ts) : sans emploi -2, sans domicile -2,
+   *  malade -2, domicile +0/+4 selon le type, métier +2 bourgeois /
+   *  +5 noble, +1 si bonheur de la ville > 50. À l'âge adulte, un
+   *  enfant HÉRITE de 50 % du prestige moyen de ses parents. Rang
+   *  DÉRIVÉ : 0-100 roturier, 100-250 bourgeois, 250+ noble.
+   *  Champ optionnel : absent des vieilles sauvegardes → 0
+   *  (l'héritage des nouvelles générations fera le reste). */
+  prestige?: number
+  /** Héritage de prestige DÉJÀ JOUÉ (vague D) : valeur reçue à
+   *  l'âge adulte (50 % du prestige moyen des parents). Champ
+   *  marqueur : présent = héritage fait, jamais rejoué. */
+  prestigeHerite?: number
   fecondite: number
   armee: string | null        // nom de l'armée de rattachement
 }

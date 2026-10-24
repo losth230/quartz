@@ -14,6 +14,7 @@ import { maladieStep } from './sante'
 import { computeFecondite, conceptionEtNaissances } from './naissances'
 import { applyCultureInfluence, updateCityCultures } from './culture'
 import { writeRecap } from './journal'
+import { evaluerFamilles } from './statutSocial'
 
 // ══════════════════════════════════════════════════════════════════════
 //  MOTEUR DE POPULATION (PersonnagesPourJoueur)
@@ -68,6 +69,17 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
 
   // 3.6bis Migration (scolarité)
   migrerPopulation(state, p, rng)
+
+  // 3.7 STATUT SOCIAL (vague D, design domiciles/ascension
+  //  2026-10-24) : prestige des familles — calcul du gain du tour,
+  //  convergence des couples, héritage des enfants devenus
+  //  adultes. Les changements de rang (roturier ↔ bourgeois ↔
+  //  noble) sont journalisés ici même (après la démographie du
+  //  tour : les naissances/morts/maladies de CE tour comptent).
+  const evenementsRang = evaluerFamilles(state, p, C)
+  for (const ev of evenementsRang) {
+    state.log.push({ turn: state.turn + 1, type: 'Système', joueur: p.n, texte: ev.texte })
+  }
 
   // Récap dans le journal
   writeRecap(state, p, recap)
