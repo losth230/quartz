@@ -2491,6 +2491,61 @@ la ligne titre vidée, les docblocks RETRAIT/HISTORIQUE et les
 témoins de conversion titre→métier des migrations d'état).
 
 
+## diag.ts branché sur le vrai moteur — résolution R2 (2026-10-24, retour arbitre « fait R2 »)
+
+**Résolution de R2** (audit résiduels 2026-10-24 : « scripts/diag.ts
+est un miroir autonome du moteur qui vivra en dérive permanente ;
+alternative un jour : le brancher sur le vrai bundle »). Thibaut
+arbitre le 2026-10-24 : « fait R2 ».
+
+**Ce qui change** (4 fichiers) :
+- `scripts/diag.ts` — le miroir de ~2 440 lignes (copies embarquées
+  de params/defaultConfig/types/rng/gameData/shared/saisons/
+  economie/vassalite/titres/sante/naissances/culture/armees/journal/
+  victory/validation/engine/setup) est SUPPRIMÉ : le script importe
+  désormais le VRAI moteur (`runTurn` de `src/engine/tour.ts`,
+  `createGame`/`defaultSetups` de `src/engine/setup.ts`, `cfgOf`,
+  `isNobleDyn`). Le harnais (partie saine : createGame + 4 tours +
+  levée d'armées + dissolution/renommage ; scénarios de dégradation ;
+  mutateurs ArmiesPanel) est conservé en esprit, réaligné sur
+  l'API réelle : `metier` (ex-titre), `config.metiers` (ex-titres),
+  `config.constructions` (ex-batiments), + NOUVEAUX scénarios couvrant
+  la surface actuelle du moteur (ville.amenagements, ville.autres,
+  citesLibres, cite.population, routesCommerce, char.metier,
+  config.typesHabitation, config.victoires) — 42 scénarios au lieu
+  de 36. Plus AUCUN re-patch ne sera nécessaire aux vagues futures :
+  le diag exécute ce que le jeu exécute.
+- `scripts/diag-loader.mjs` NOUVEAU — loader Node committé (hooks
+  registerHooks : resolve sans extension .ts/.tsx/.json + .json en
+  module ES), même rôle que tsx pour les tests ; le workflow diag
+  n'installe AUCUNE dépendance.
+- `.github/workflows/diag.yaml` — commande :
+  `node --experimental-strip-types --import ./scripts/diag-loader.mjs
+  scripts/diag.ts` (l'ancienne commande sans loader ne pouvait pas
+  résoudre les imports sans extension du moteur).
+- `diag-out.txt` — sortie régénérée commitée (le bot du workflow
+  doit trouver « diag-out.txt inchangé » ; déterminisme vérifié par
+  2 exécutions identiques).
+
+**Preuves de la dérive dénoncée par l'audit** : l'ancien miroir
+annonçait « log 304 entrées / 7 commandants / Armée 2:2 soldats »
+après 4 tours — le VRAI moteur produit « log 567 entrées / 4
+commandants / Armée 2:3 soldats » (le miroir ne déroulait PAS les
+étapes réelles du FinDeTour : gouverneurs, réaffectation des
+métiers, bâtiments/aménagements/autres, régimes/cultures, cités
+libres, proximité…) et utilisait encore l'API d'avant le rework
+habitants (c.titre, config.titres, config.batiments).
+
+**Validation** : diag exit 0, DÉTERMINISTE (2 runs identiques), 57
+lignes, 14 ÉCHEC informatifs (12 runTurn + 2 mutators — états
+dégradés que le vrai moteur n'a pas à gérer : le jeu répare via
+normaliserEtat à l'ingestion) ; tsc strict diff VIDE vs base
+(scripts/ hors tsconfig — aucun impact) ; 126/126 tests natifs.
+
+R3 (tests de rendu fumée) et R4 (fluxParMetier orphelin) restent de
+la dette assumée.
+
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
