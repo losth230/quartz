@@ -38,6 +38,12 @@ export function schoolRankOf(batiments: string[], cfg?: GameConfig): number {
 // refonte 2026-10-14 : 4 LAURIERS par voie (ordre strict, crise à chaque
 // Laurier I-III validé, bonus si complété pendant l'âge de même numéro) ;
 // les textes ci-dessous décrivent le Laurier IV = Victoire.
+// (NB 2026-10-24, suppression du système de progrès : la condition du
+//  Laurier IV Scientifique — « Terminer l'arbre "Progrès du
+//  développement futur" » — est CADUQUE, comme les Lauriers II/III de
+//  la voie (Cabinet d'astronomie, 3 Progrès d'âge III). La voie
+//  Scientifique (Science) reste — redesign des conditions à arbitrer
+//  par Thibaut. VICTORY_TEXT conservé en l'état pour l'instant.)
 export const VICTORY_TEXT: { nom: string; texte: string }[] = [
   { nom: 'Militaire', texte: 'Capturer un total de 5 habitations (Laurier IV de la voie Militaire).' },
   { nom: 'Économique', texte: 'Posséder 5 Guildes différentes (Laurier IV de la voie Économique).' },

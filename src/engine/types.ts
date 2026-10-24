@@ -134,7 +134,10 @@ export interface Character {
 export interface AutreDef {
   /** ressource produite */
   ressource: string
-  /** origine libre (Capital, Rivière, Cité L, Progrès, Régime…) */
+  /** origine libre (Capital, Rivière, Cité L, Régime…) —
+   *  (RETRAIT 2026-10-24 : l'origine « Progrès » n'est plus produite,
+   *  système de progrès supprimé ; les vieilles valeurs restent
+   *  affichables sans effet moteur.) */
   source: string
   /** multiplicateur/nombre d'occurrences */
   nombre: number
@@ -348,12 +351,12 @@ export interface Player {
    *  Un vassal reverse chaque tour une part des revenus de ses habitants
    *  (paramètre vassalPrelevement) à son suzerain. */
   vassalDe?: number | null
-  /** Technologies de progrès débloquées par ce joueur — clés
-   *  `<indexArbre>:<slot>` (index dans Référentiels → Progrès, slot
-   *  a1|a2|b1|b2|c). Règles appliquées par la vue « Progrès » :
-   *  tech 2 exige la tech 1 de sa branche, la tech C exige 2 techs
-   *  d'une même branche, un arbre est terminé à EXACTEMENT 3 techs,
-   *  et l'âge N exige 3 arbres complétés de l'âge N-1. */
+  /** (RETRAIT 2026-10-24, retour arbitre : le système de progrès a
+   *  été supprimé du jeu — arbres, déblocages, effets, onglet
+   *  « Progrès ». Le champ (clés `<indexArbre>:<slot>` des techs
+   *  débloquées) devient optionnel SANS effet : plus lu nulle part,
+   *  il reste uniquement pour que les vieilles sauvegardes
+   *  s'ouvrent sans crash.) */
   progresDebloques?: string[]
   /** Lauriers de victoire validés (refonte 2026-10-14) : clé = nom de la
    *  voie (table victoires du référentiel), valeur = nombre de Lauriers
@@ -408,9 +411,10 @@ export interface ApportsTour {
    *  « habitations » — consommation des rangs d'habitation, vide
    *  depuis l'arbitrage vague 3b — n'est plus écrit ; la clé
    *  orpheline des vieux historiques est simplement ignorée.) */
-  /** effets par tour des technologies de progrès débloquées
-   *  (engine/progres.ts — étape 3undecies). Champ optionnel : absent
-   *  des historiques d'avant l'ajout du canal. */
+  /** (RETRAIT 2026-10-24, retour arbitre : le canal « Progrès » —
+   *  effets par tour des technologies débloquées — n'est plus écrit
+   *  (système de progrès supprimé). La clé orpheline des vieux
+   *  historiques est simplement ignorée.) */
   progres?: Record<string, number>
   /** taxes reçues des cités libres sous suzeraineté du joueur
    *  (engine/citesLibres.ts — étape 3decies). Champ optionnel : absent

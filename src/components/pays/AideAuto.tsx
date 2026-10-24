@@ -23,9 +23,10 @@ export function AideAuto() {
             <li><strong>Tribut des vassaux</strong> et <strong>taxes des cités libres</strong> sous ta suzeraineté.</li>
             <li><strong>Routes commerciales</strong> (dissociées, sous-vague 3b) : copie de l'aménagement dans la ville d'origine, y compris ses emplacements de métier (une production d'été n'est copiée qu'en été) ; vers une cité libre, +1 émissaire auprès de la cité tant que la route est active — plus d'Or passif, plus de métier de Marchand (retiré du jeu le 2026-10-24).</li>
             <li><strong>Gouverneur</strong> : le noble le plus âgé est nommé automatiquement, +10 % d'impôts sur sa ville.</li>
-            <li><strong>Tourisme = comme le Bois, sauf qu'il ne s'accumule pas</strong> : sa production est affichée et comptée partout (récaps de ville et de tour, canaux, tableaux) — bâtiments (Chapelle +35), Artistes, lois de culture, techs, vassalité — mais à chaque fin de tour le stock est RECALCULÉ pour égaler la production courante (stock = prod, jamais cumulé). Garnison : valeur d'état.</li>
+            <li><strong>Tourisme = comme le Bois, sauf qu'il ne s'accumule pas</strong> : sa production est affichée et comptée partout (récaps de ville et de tour, canaux, tableaux) — bâtiments (Chapelle +35), Artistes, lois de culture, vassalité — mais à chaque fin de tour le stock est RECALCULÉ pour égaler la production courante (stock = prod, jamais cumulé). Garnison : valeur d'état.</li>
             <li><strong>Démographie des joueurs</strong> : naissances (modulées par les taxes), vieillissement, décès, migrations scolaires (vers un Professeur).</li>
-            <li><strong>Coûts débités automatiquement</strong> : constructions, habitations (fondation / changement de rang), technologies (Science déduite au déblocage, remboursée à la reprise), sacre d'avènement (moitié du prix — gratuit avec la loi Démocratie).</li>
+            <li><strong>Coûts débités automatiquement</strong> : constructions, habitations (fondation / changement de rang), sacre d'avènement (moitié du prix — gratuit avec la loi Démocratie).
+            (RETRAIT 2026-10-24 : les technologies — Science déduite au déblocage, remboursée à la reprise — n'existent plus, système de progrès supprimé.)</li>
           </ul>
         </div>
         <div>
@@ -33,7 +34,6 @@ export function AideAuto() {
           <ul className="small">
             <li><strong>Émissaires & suzeraineté</strong> : saisie manuelle page « 🗼 Cités libres » (1 tentative par saison).</li>
             <li><strong>Population des cités libres</strong> : statut (Sain / Malade / Décédé), naissances et vieillissement manuels.</li>
-            <li><strong>Effets des technologies</strong> : affichés en aide de jeu, à appliquer au plateau.</li>
             <li><strong>Voies de victoire</strong> : Merveilles, habitations capturées, routes de la voie Économique, Lauriers — cases à cocher sur l'Accueil.</li>
             <li><strong>Levées d'armées et dés du plateau.</strong></li>
           </ul>

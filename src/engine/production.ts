@@ -25,7 +25,6 @@ import { effetsRegime, effetsCulturePays, detailCulturePays } from './regimes'
 import { citesLibresDe, detailCiteLibre } from './citesLibres'
 import { bonusProximite } from './villes'
 import { effetsCommerceJoueur, detailCommerceJoueur } from './commerce'
-import { fluxProgresJoueur } from './progresAuto'
 
 export interface ProductionDetail {
   /** production de base du pays (stockée dans resources[r].prod) — la
@@ -62,8 +61,9 @@ export interface ProductionDetail {
   /** bonus de proximité des villes (marqueur (y) : Rivière +12, Mer
    *  +7 Nourriture/tour par défaut — engine/villes.ts bonusProximite) */
   proximite: Record<string, number>
-  /** flux par tour des technologies d\u00e9bloqu\u00e9es (engine/progresAuto.ts \u2014 canal \u00ab Progr\u00e8s \u00bb). */
-  progres: Record<string, number>
+  /** (RETRAIT 2026-10-24, suppression du système de progrès : le canal
+   *  « Progrès » n'est plus calculé. La clé orpheline `progres` des
+   *  vieux historiques est simplement ignorée.) */
   /** Entretien des armées : canal vide (règle du classeur — prix payé
    *  UNE FOIS à la levée, pas d'entretien par tour). */
   armees: Record<string, number>
@@ -191,23 +191,20 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
     if (b !== 0) proximite['Nourriture'] = (proximite['Nourriture'] ?? 0) + b
   }
 
-  // Progrès : flux par tour des technologies débloquées (revue
-  //  2026-10-15 — vue calcul pur, le moteur crédite déjà).
-  const progres: Record<string, number> = {}
-  for (const [res, v] of Object.entries(fluxProgresJoueur(state, p, C))) {
-    if (v !== 0) progres[res] = v
-  }
+  // (RETRAIT 2026-10-24, suppression du système de progrès : le canal
+  //  « Progrès » — flux par tour des technologies débloquées — n'est
+  //  plus calculé.)
   // Armées : entretien déjà payé à la LEVÉE (règle du classeur,
   //  retour Thibaut : pas d'entretien par tour) — canal vide ici.
   const armees: Record<string, number> = {}
   // Total
   const total: Record<string, number> = {}
-  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, progres, armees]) {
+  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, armees]) {
     for (const [res, v] of Object.entries(canal)) {
       total[res] = (total[res] ?? 0) + v
     }
   }
-  return { base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, progres, armees, total }
+  return { base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, armees, total }
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -287,7 +284,7 @@ export function productionVille(
 /** Canal d'un apport (colonne du récap ressources). */
 export type CanalApport =
   | 'Base' | 'Habitants' | 'Bâtiments' | 'Aménagements' | 'Nourr - été' | 'Autres'
-  | 'Régimes & cultures' | 'Progrès' | 'Cités libres' | 'Commerce' | 'Proximité' | 'Vassalité'
+  | 'Régimes & cultures' | 'Cités libres' | 'Commerce' | 'Proximité' | 'Vassalité'
 
 export interface ProvenanceApport {
   /** canal de l'apport (colonne du récap) */

@@ -12,8 +12,9 @@
 // ══════════════════════════════════════════════════════════════════════
 
 export type { TableProps } from './params/logiqueParams'
-export { EffetsConstructionEditor, EffetsTechEditor } from './params/EditeursEffets'
+// (RETRAIT 2026-10-24 : EffetsTechEditor — éditeur des « effets » des
+//  techs de progrès — supprimé avec le système de progrès.)
+export { EffetsConstructionEditor } from './params/EditeursEffets'
 export { BatimentsParams, AmenagementsParams } from './params/ConstructionsParams'
-export { ProgresParams } from './params/ProgresParams'
 export { PaysRangsParams, HabitationsParams } from './params/PaysHabitationsParams'
 export { CouleursParams } from './params/CouleursParams'

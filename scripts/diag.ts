@@ -262,7 +262,9 @@ export function mergeParams(custom: Record<string, unknown> | undefined): GamePa
 //  CHASSE & PÊCHE — Configuration par défaut
 //  Toutes les données de référence du classeur Excel (feuilles init,
 //  JSON, Titres, traits_genetiques, Culture, Peuples, Ville, Bat,
-//  Progrès, Tourisme, Cités L, BDD_pop, Accueil) + paramètres moteur.
+//  Tourisme, Cités L, BDD_pop, Accueil) + paramètres moteur.
+//  (RETRAIT 2026-10-24 : la feuille « Progrès » n'est plus embarquée,
+//  système de progrès supprimé, retour arbitre.)
 //  Tout est stocké DANS la partie (state.config) et modifiable à chaud
 //  depuis l'onglet « Paramètres » — aucun redémarrage nécessaire.
 // ══════════════════════════════════════════════════════════════════════
@@ -328,7 +330,8 @@ export interface PeupleRef {
 }
 export interface FicheLigne { label: string; texte: string }
 // (Retrait 2026-10-23 : interfaces des tables legacy supprimées.)
-export interface ProgresArbre { arbre: string; entrees: { texte: string; prerequis: string }[] }
+// (RETRAIT 2026-10-24 : interface ProgresArbre supprimée avec le
+//  système de progrès, retour arbitre.)
 
 export interface EffetDef { ressource: string; base: number }
 // (EventEffetsDef et DynastieEffetsDef retirés le 2026-10-24 avec les
@@ -369,7 +372,7 @@ export interface GameConfig {
   titresEffets: { titre: string; effet: string; revocation: string }[]
   peuplesLibres: PeupleRef[]
   peuplesAutres: PeupleRef[]
-  progres: ProgresArbre[]
+  // (progres retiré le 2026-10-24 avec le système de progrès.)
   paysRangs: { bloc: string; nom: string; cout: string; bonus: string; succession: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
   citesLibres: { type: string; effet: string }[]
@@ -508,7 +511,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   titresEffets: (ref.metiersEffets ?? ref.titresEffets),
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  progres: ref.progres,
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
   citesLibres: ref.citesLibres,
@@ -748,7 +750,8 @@ export interface Player {
    *  Un vassal reverse chaque tour une part des revenus de ses habitants
    *  (paramètre vassalPrelevement) à son suzerain. */
   vassalDe?: number | null
-  /** Technologies débloquées (texte des entrées des arbres de progrès). */
+  /** (RETRAIT 2026-10-24 : système de progrès supprimé — champ
+   *  optionnel, plus lu, gardé pour compat des vieilles sauvegardes.) */
   progresDebloques?: string[]
 }
 
@@ -2268,7 +2271,6 @@ export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
     recap: null,
     rang: rangParDefaut(s.regime || C.regimes[0]?.nom || 'Monarchie', C),
     vassalDe: null,
-    progresDebloques: [],
   }
 }
 

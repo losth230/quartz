@@ -84,9 +84,11 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
 /** Registre complet : toutes les règles migrées. Appelé par le moteur
  *  aux sites d'application (une fois par tour, cacheable). */
 export function registreComplet(C: Cfg): RegleBanque[] {
-  return [...reglesConstructions(C), ...reglesRegimes(C), ...reglesCultures(C), ...reglesProgres(C)]
-  // Les sources suivantes migrent une par une (factions…) :
-  //  […, ...reglesProgres(config), …]
+  return [...reglesConstructions(C), ...reglesRegimes(C), ...reglesCultures(C)]
+  // (RETRAIT 2026-10-24, retour arbitre : la source 'tech' — règles de
+  //  banque des technologies de progrès — est supprimée avec le
+  //  système de progrès, plus aucun producteur ni consommateur.)
+  // Les sources suivantes migrent une par une (factions…).
 }
 
 // ── Régimes & cultures (sources 'regime' / 'culture' — brûlage #3 source 2/3) ──
@@ -147,129 +149,6 @@ export function reglesCultures(C: Cfg): RegleBanque[] {
   return out
 }
 
-// ── Technologies de progrès (source 'tech' — brûlage #3 source 3/3) ──────
-
-/** Clés de déblocage `<arbre>:<slot>` de TOUTES les techs portant ce
- *  NOM, tous arbres confondus (les homonymes matchent, comme
- *  l'historique aTech). SEULE vérité de la résolution nom → clés :
- *  la banque l'utilise pour la condition `techNom`, le moteur
- *  (aTech) l'utilise pour les réductions de coût et les garnisons. */
-export function clesTechsParNom(C: Cfg, nom: string): string[] {
-  const out: string[] = []
-  const slots: Array<'a1' | 'a2' | 'b1' | 'b2' | 'c'> = ['a1', 'a2', 'b1', 'b2', 'c']
-  C.config.progres.forEach((a, i) => {
-    for (const slot of slots) {
-      const t = slot === 'c' ? a.techC : (slot[0] === 'a' ? a.brancheA : a.brancheB)[+slot[1] - 1]
-      if (t?.nom === nom) out.push(`${i}:${slot}`)
-    }
-  })
-  return out
-}
-
-/** FLUX par tour des technologies débloquées — la couche d'édition
- *  (source 3/3 du brûlage #3, 2026-10-20, principe Thibaut « TOUTE
- *  production passe par la banque ») : les montants qui vivaient
- *  codés en dur dans engine/progresAuto.ts deviennent des DONNÉES
- *  ici ; la condition `techNom` désigne la tech par nom (homonymes
- *  matchés comme l'historique aTech) et la banque interprète.
- *  Hors banque, en conscience :
- *   · gainDeblocageProgres = ONE-SHOT au déblocage (instantané) ;
- *   · reductions de coût + garnisons + plancher = valeurs d'état ;
- *   · Surconsommation consomme +10 Nourriture/rang : un COÛT
- *     (consommation des rangs d'habitation), pas une production —
- *     INERT depuis l'arbitrage vague 3b (plus aucune consommation
- *     de rang n'existe au moteur) ; seule sa production
- *     (fluxParRangHabitation Science/Tourisme) reste vivante. */
-const PROGRES_FLUX: RegleBanque[] = [
-  // ── canal historique « prodCapitale » (capitale requise) ──
-  { id: 'tech.comprendre-la-soie', source: 'tech', nom: 'Comprendre la soie', conditions: { techNom: 'Comprendre la soie' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Science', valeur: 1 }] },
-  { id: 'tech.technologies-futures-i', source: 'tech', nom: 'Technologies futures I', conditions: { techNom: 'Technologies futures I' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Science', valeur: 3 }] },
-  { id: 'tech.etude-astronomique', source: 'tech', nom: 'Etude astronomique', conditions: { techNom: 'Etude astronomique' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Science', valeur: 1 }] },
-  { id: 'tech.lumiere', source: 'tech', nom: 'Lumière', conditions: { techNom: 'Lumière' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Science', valeur: 1 }] },
-  { id: 'tech.deforestation', source: 'tech', nom: 'Déforestation', conditions: { techNom: 'Déforestation' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Bois', valeur: 1 }] },
-  { id: 'tech.carrieristes', source: 'tech', nom: 'Carrieristes', conditions: { techNom: 'Carrieristes' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Pierre', valeur: 1 }] },
-  { id: 'tech.organisation-fiscale', source: 'tech', nom: 'Organisation fiscale', conditions: { techNom: 'Organisation fiscale' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Or', valeur: 2 }] },
-  { id: 'tech.granges', source: 'tech', nom: 'Granges', conditions: { techNom: 'Granges' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Nourriture', valeur: 10 }] },
-  { id: 'tech.usinage', source: 'tech', nom: 'Usinage', conditions: { techNom: 'Usinage' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Charbon', valeur: 1 }] },
-  { id: 'tech.musees', source: 'tech', nom: 'Musées', conditions: { techNom: 'Musées' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Tourisme', valeur: 30 }] },
-  { id: 'tech.hausse-du-loyer', source: 'tech', nom: 'Hausse du loyer', conditions: { techNom: 'Hausse du loyer' }, effets: [{ type: 'fluxSiCapitale', ressource: 'Or', valeur: 15 }] },
-  // relations diplomatiques (Âge 1) : capitale ET cité suzeraine requise
-  { id: 'tech.garde-suzeraine', source: 'tech', nom: 'Garde suzeraine', conditions: { techNom: 'Garde suzeraine', suzerainDeCite: true }, effets: [{ type: 'fluxSiCapitale', ressource: 'Nourriture', valeur: 12 }] },
-  { id: 'tech.patronage', source: 'tech', nom: 'Patronage', conditions: { techNom: 'Patronage', suzerainDeCite: true }, effets: [{ type: 'fluxSiCapitale', ressource: 'Science', valeur: 1 }] },
-  // ── canal historique « par habitation » (par ville) ──
-  { id: 'tech.assemblees-scientifiques', source: 'tech', nom: 'Assemblées scientifiques', conditions: { techNom: 'Assemblées scientifiques' }, effets: [{ type: 'fluxParVille', ressource: 'Science', valeur: 1 }] },
-  { id: 'tech.technologies-futures-ii', source: 'tech', nom: 'Technologies futures II', conditions: { techNom: 'Technologies futures II' }, effets: [{ type: 'fluxParVille', ressource: 'Science', valeur: 1 }] },
-  // ── canal historique « côtier » (villes à proximité de la Mer) ──
-  { id: 'tech.cours-de-peche', source: 'tech', nom: 'Cours de pêche', conditions: { techNom: 'Cours de pêche' }, effets: [{ type: 'fluxParVilleProximite', ressource: 'Nourriture', valeur: 4, proximite: 'Mer' }] },
-  { id: 'tech.commerce-maritime-i', source: 'tech', nom: 'Commerce maritime I', conditions: { techNom: 'Commerce maritime I' }, effets: [{ type: 'fluxParVilleProximite', ressource: 'Or', valeur: 2, proximite: 'Mer' }] },
-  { id: 'tech.peche-de-culture', source: 'tech', nom: 'Pêche de culture', conditions: { techNom: 'Pêche de culture' }, effets: [{ type: 'fluxParVilleProximite', ressource: 'Nourriture', valeur: 3, proximite: 'Mer' }] },
-  // ── par RANG d'habitation (production ; la consommation de
-  //    Nourriture de Surconsommation reste un coût au moteur) ──
-  { id: 'tech.surconsommation', source: 'tech', nom: 'Surconsommation', conditions: { techNom: 'Surconsommation' }, effets: [
-    { type: 'fluxParRangHabitation', ressource: 'Science', valeur: 1 },
-    { type: 'fluxParRangHabitation', ressource: 'Tourisme', valeur: 5 },
-  ] },
-  // ── par AMÉNAGEMENT ──
-  { id: 'tech.engrais-naturels-i', source: 'tech', nom: 'Engrais naturels I', conditions: { techNom: 'Engrais naturels I' }, effets: [{ type: 'fluxParAmenagement', ressource: 'Nourriture', valeur: 2, noms: ['Champ', 'Rizière'] }] },
-  { id: 'tech.engrais-naturels-ii', source: 'tech', nom: 'Engrais naturels II', conditions: { techNom: 'Engrais naturels II' }, effets: [{ type: 'fluxParAmenagement', ressource: 'Nourriture', valeur: 3, noms: ['Champ', 'Rizière'] }] },
-  { id: 'tech.charues', source: 'tech', nom: 'Charues', conditions: { techNom: 'Charues' }, effets: [
-    { type: 'fluxParAmenagement', ressource: 'Nourriture', valeur: 5, noms: ['Champ', 'Rizière'] },
-    { type: 'fluxParAmenagement', ressource: 'Or', valeur: 1, noms: ['Champ', 'Rizière'] },
-  ] },
-  { id: 'tech.exploitation-forestiere', source: 'tech', nom: 'Exploitation forestière', conditions: { techNom: 'Exploitation forestière' }, effets: [
-    // les Scieries produisent du Charbon AU LIEU du Bois : −1 Bois +1 Charbon
-    { type: 'fluxParAmenagement', ressource: 'Bois', valeur: -1, noms: ['Scierie'] },
-    { type: 'fluxParAmenagement', ressource: 'Charbon', valeur: 1, noms: ['Scierie'] },
-  ] },
-  { id: 'tech.stands-de-goodies', source: 'tech', nom: 'Stands de goodies', conditions: { techNom: 'Stands de goodies' }, effets: [
-    { type: 'fluxParAmenagement', ressource: 'Or', valeur: 2, noms: ['Foire'] },
-    { type: 'fluxParAmenagement', ressource: 'Tourisme', valeur: 2, noms: ['Foire'] },
-  ] },
-  { id: 'tech.fascination-culturelle', source: 'tech', nom: 'Fascination culturelle', conditions: { techNom: 'Fascination culturelle' }, effets: [{ type: 'fluxParAmenagement', ressource: 'Tourisme', valeur: 2, noms: ['Foire'] }] },
-  { id: 'tech.parcs-naturels', source: 'tech', nom: 'Parcs naturels', conditions: { techNom: 'Parcs naturels' }, effets: [{ type: 'fluxParAmenagement', ressource: 'Tourisme', valeur: 8, noms: ['site archéologique', 'Site archéologique'] }] },
-  // ── par BÂTIMENT ──
-  { id: 'tech.industrialisation', source: 'tech', nom: 'Industrialisation', conditions: { techNom: 'Industrialisation' }, effets: [{ type: 'fluxParBatiment', ressource: 'Charbon', valeur: 1 }] },
-  { id: 'tech.merveilles-naturelles', source: 'tech', nom: 'Merveilles naturelles', conditions: { techNom: 'Merveilles naturelles' }, effets: [{ type: 'fluxParBatiment', ressource: 'Tourisme', valeur: 10, famille: 'Merveille' }] },
-  { id: 'tech.merveilleux', source: 'tech', nom: 'Merveilleux', conditions: { techNom: 'Merveilleux' }, effets: [{ type: 'fluxParBatiment', ressource: 'Science', valeur: 1, famille: 'Merveille' }] },
-  // ── proportional à la garnison d'habitants ──
-  { id: 'tech.service-militaire-avance', source: 'tech', nom: 'Service militaire avancé', conditions: { techNom: 'Service militaire avancé' }, effets: [{ type: 'fluxParGarnisonHabitation', ressource: 'Habitants', valeur: 0.5 }] },
-]
-
-/** Règles de banque des FLUX des technologies débloquées (source 3/3
- *  du brûlage #3, 2026-10-20) : table éditoriale PROGRES_FLUX (les
- *  montants sont des DONNÉES — plus aucun codage moteur) + les
- *  génériques `prodParMetier` du référentiel traduits en
- *  fluxParMetier (montants déjà DONNÉES du côté référentiel,
- *  conditions par clé `<arbre>:<slot>` pour préserver
- *  l'application par arbre de l'historique). */
-export function reglesProgres(C: Cfg): RegleBanque[] {
-  const out: RegleBanque[] = PROGRES_FLUX.map((r) => ({ ...r, effets: [...r.effets] }))
-  // Génériques prodParMetier du référentiel (+N ressource par
-  //  TITULAIRE vivant — ex. historique : Commerce lointain +3 Or par
-  //  Marchand, avant le retrait du métier le 2026-10-24 ; le mécanisme
-  //  est générique, aucune tech ne l'utilise à ce jour).
-  const techs: Array<{ nom: string; cle: string; effets?: Array<{ type?: string; montant?: number; ressource?: string; metier?: string }> | undefined }> = []
-  C.config.progres.forEach((a, i) => {
-    ;(a.brancheA ?? []).forEach((t, j) => techs.push({ nom: t.nom, cle: `${i}:a${j + 1}`, effets: t.effets }))
-    ;(a.brancheB ?? []).forEach((t, j) => techs.push({ nom: t.nom, cle: `${i}:b${j + 1}`, effets: t.effets }))
-    techs.push({ nom: a.techC.nom, cle: `${i}:c`, effets: a.techC.effets })
-  })
-  for (const t of techs) {
-    const effets = (t.effets ?? [])
-      .filter((e) => e.type === 'prodParMetier' && !!e.metier && !!e.montant && !!e.ressource)
-      .map((e): Effet => ({ type: 'fluxParMetier', ressource: e.ressource!, valeur: e.montant!, metier: e.metier! }))
-    if (effets.length === 0) continue
-    out.push({
-      id: 'tech.' + slug(t.nom) + '-' + t.cle,
-      source: 'tech',
-      nom: t.nom,
-      conditions: { tech: t.cle },
-      effets,
-    })
-  }
-  return out
-}
-
 /** Cache du registre par référence de config (les règles ne dépendent
  *  que du référentiel — recalculées seulement si la config change). */
 let cacheRegles: { config: object; regles: RegleBanque[]; parCle: Map<string, RegleBanque> } | null = null
@@ -282,7 +161,9 @@ function cleConstruction(nom: string, groupe?: string): string {
 
 /** Règle de banque d'une construction PAR (nom, groupe) — accès moteur.
  *  Retourne undefined si la construction n'a pas d'effets structurés
- *  (repli texte du moteur historique). */
+ *  (repli texte du moteur historique). (Restauré le 2026-10-24 : ce
+ *  bloc indépendant des techs avait été emporté par la purge de la
+ *  source 'tech'.) */
 export function reglePourConstruction(ref: { nom: string; groupe?: string }, C: Cfg): RegleBanque | undefined {
   if (!cacheRegles || cacheRegles.config !== C) {
     const regles = reglesConstructions(C)
@@ -295,3 +176,12 @@ export function reglePourConstruction(ref: { nom: string; groupe?: string }, C: 
   return cacheRegles.parCle.get(cleConstruction(ref.nom, ref.groupe))
 }
 
+// ── (RETRAIT 2026-10-24, retour arbitre) ──────────────────────────────
+//  Source 'tech' — technologies de progrès : SUPPRIMÉE avec le
+//  système (clesTechsParNom, table PROGRES_FLUX et reglesProgres).
+//  Historique : les flux par tour des techs débloquées vivaient ici
+//  (brûlage #3 source 3/3, 2026-10-20) et étaient interprétés par la
+//  banque (fluxSiCapitale, fluxParVille, fluxParVilleProximite,
+//  fluxParRangHabitation, fluxParAmenagement, fluxParBatiment,
+//  fluxParGarnisonHabitation, fluxParMetier). L'ancien contenu reste
+//  dans l'historique git (règle 9).

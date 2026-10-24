@@ -9,7 +9,6 @@ import { Dashboard } from './components/Dashboard'
 import { PlayerView } from './components/PlayerView'
 import { RoyaumeView } from './components/RoyaumeView'
 import { PopulationTable } from './components/PopulationTable'
-import { ProgresView } from './components/ProgresView'
 import { CitesLibresView } from './components/CitesLibresView'
 import { ArmiesPanel } from './components/ArmiesPanel'
 import { EventLogPanel } from './components/EventLogPanel'
@@ -21,14 +20,15 @@ import { ParamsPanel } from './components/ParamsPanel'
 //  affiche une carte rouge lisible au lieu d'une page toute blanche.
 import { ErrorBoundary } from './components/ErrorBoundary'
 
-type Section = 'accueil' | 'royaume' | 'joueur' | 'population' | 'progres' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
+// (RETRAIT 2026-10-24, retour arbitre : la section « progres » est
+//  supprimée avec le système de progrès.)
+type Section = 'accueil' | 'royaume' | 'joueur' | 'population' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'accueil', label: '🏛 Accueil' },
   { key: 'royaume', label: '🏰 Royaume' },
   { key: 'joueur', label: '👑 Pays' },
   { key: 'population', label: '👥 Population' },
-  { key: 'progres', label: '🧪 Progrès' },
   { key: 'citeslibres', label: '🗼 Cités libres' },
   { key: 'armees', label: '⚔ Armées' },
   { key: 'journal', label: '📜 Journal' },
@@ -141,7 +141,7 @@ export default function App() {
         ))}
       </nav>
 
-      {(section === 'royaume' || section === 'joueur' || section === 'population' || section === 'progres' || section === 'armees') && joueursBars}
+      {(section === 'royaume' || section === 'joueur' || section === 'population' || section === 'armees') && joueursBars}
 
       <main className="main">
         {!state && section !== 'setup' && section !== 'referentiels' && section !== 'parametres' ? (
@@ -156,7 +156,6 @@ export default function App() {
             {section === 'royaume' && <RoyaumeView joueur={joueur} />}
             {section === 'joueur' && <PlayerView joueur={joueur} />}
             {section === 'population' && <PopulationTable joueur={joueur} />}
-            {section === 'progres' && <ProgresView joueur={joueur} />}
             {section === 'citeslibres' && <CitesLibresView />}
             {section === 'armees' && <ArmiesPanel joueur={joueur} />}
             {section === 'journal' && <EventLogPanel />}

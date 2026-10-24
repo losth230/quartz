@@ -96,84 +96,14 @@ export interface EffetFluxParVilleCultureMonde {
   valeur: number
 }
 
-// ── Effets des technologies de progrès (source 'tech', brûlage #3
-//  source 3/3 : TOUTE production passe par la banque) ──────────────────
-
-/** Production par tour SI le joueur possède une capitale (canal
- *  historique « prodCapitale » des techs — ex. Musées : +30 Tourisme
- *  par tour si capitale ; ex. Garde suzeraine : +12 Nourriture si
- *  capitale ET cité suzeraine, la suzeraineté étant une CONDITION
- *  de la règle). */
-export interface EffetFluxSiCapitale {
-  type: 'fluxSiCapitale'
-  ressource: string
-  valeur: number
-}
-
-/** Production par tour, PAR VILLE du joueur (canal historique
- *  « prodParHabitation » des techs — ex. Assemblées scientifiques :
- *  +1 Science par ville). */
-export interface EffetFluxParVille {
-  type: 'fluxParVille'
-  ressource: string
-  valeur: number
-}
-
-/** Production par tour, PAR VILLE dont la proximité est la donnée
- *  `proximite` (canal historique « côtier » des techs — ex. Cours de
- *  pêche : +4 Nourriture par ville à proximité de la Mer). */
-export interface EffetFluxParVilleProximite {
-  type: 'fluxParVilleProximite'
-  ressource: string
-  valeur: number
-  /** proximité requise (ex. 'Mer') */
-  proximite: string
-}
-
-/** Production par tour, PAR RANG d'habitation cumulé sur toutes les
- *  villes (ex. Surconsommation : +1 Science et +5 Tourisme par rang —
- *  la consommation de Nourriture reste un coût, pas une production). */
-export interface EffetFluxParRangHabitation {
-  type: 'fluxParRangHabitation'
-  ressource: string
-  valeur: number
-}
-
-/** Production par tour, PAR BÂTIMENT des villes du joueur, limité à
- *  une famille du référentiel si `famille` est fournie (ex.
- *  Industrialisation : +1 Charbon par bâtiment ; Merveilleux :
- *  +1 Science par bâtiment de famille Merveille). */
-export interface EffetFluxParBatiment {
-  type: 'fluxParBatiment'
-  ressource: string
-  valeur: number
-  /** famille de la table constructions (ex. 'Merveille') — absent =
-   *  tous les bâtiments comptent */
-  famille?: string
-}
-
-/** Production par tour proportionnelle à la GARNISON d'habitants :
- *  valeur × Σ garnisonHabitationVille sur les villes du joueur (ex.
- *  Service militaire avancé : +0,5 Habitants par point de garnison). */
-export interface EffetFluxParGarnisonHabitation {
-  type: 'fluxParGarnisonHabitation'
-  ressource: string
-  valeur: number
-}
-
-/** Production par tour, PAR TITULAIRE VIVANT du metier donné dans la
- *  population du joueur (générique des techs `prodParMetier` du
- *  référentiel — ex. historique : Commerce lointain +3 Or par
- *  Marchand, avant le retrait du métier le 2026-10-24, arbitrage
- *  Thibaut ; le mécanisme reste disponible). */
-export interface EffetFluxParMetier {
-  type: 'fluxParMetier'
-  ressource: string
-  valeur: number
-  /** metier exact (ex. 'Ministre' ; le Marchand a été retiré du
-   *   jeu le 2026-10-24) */
-  metier: string
-}
+// ── (RETRAIT 2026-10-24, retour arbitre) ──────────────────────────────
+//  Effets des technologies de progrès (source 'tech', brûlage #3
+//  source 3/3) : les types EffetFluxSiCapitale, EffetFluxParVille,
+//  EffetFluxParVilleProximite, EffetFluxParRangHabitation,
+//  EffetFluxParBatiment, EffetFluxParGarnisonHabitation et
+//  EffetFluxParMetier sont supprimés avec le système de progrès —
+//  plus aucun producteur. L'ancien contenu reste dans l'historique
+//  git (règle 9).
 
 /** Production par tour de la CAPITALE du joueur. */
 export interface EffetFluxCapitale {
@@ -235,7 +165,9 @@ export interface EffetMigrationPoids {
 }
 
 /** Réduction du coût de construction (Or et/ou ressources de base) —
- *  ex. techs de fondation : −5 Bois, −20 Or (reductionFondation). */
+ *  ex. règles de construction à coût réduit (reductionCout).
+ *  (RETRAIT 2026-10-24 : les effets de techs de fondation
+ *  « −5 Bois, −20 Or » sont supprimés avec le système de progrès.) */
 export interface EffetReductionCout {
   type: 'reductionCout'
   /** Type de construction concernée : 'habitation' | 'batiment' | 'amenagement' | 'merveille' | 'leveeArmee' */
@@ -243,8 +175,9 @@ export interface EffetReductionCout {
   reductions: Record<string, number>
 }
 
-/** Réduction du coût de levée d'armée (Or) — ex. Grand écuyer, techs,
- *  bâtiments de la ville de levée. */
+/** Réduction du coût de levée d'armée (Or) — ex. Grand écuyer,
+ *  bâtiments de la ville de levée. (RETRAIT 2026-10-24 : les
+ *  réductions des techs, supprimées avec le système de progrès.) */
 export interface EffetReductionLeveeArmee {
   type: 'reductionLeveeArmee'
   valeur: number
@@ -294,13 +227,6 @@ export type Effet =
   | EffetFluxJoueur
   | EffetFluxParAmenagement
   | EffetFluxParVilleCultureMonde
-  | EffetFluxSiCapitale
-  | EffetFluxParVille
-  | EffetFluxParVilleProximite
-  | EffetFluxParRangHabitation
-  | EffetFluxParBatiment
-  | EffetFluxParGarnisonHabitation
-  | EffetFluxParMetier
   | EffetFluxCapitale
   | EffetGarnisonVille
   | EffetGarnisonParRang
@@ -330,17 +256,13 @@ export interface ConditionRegle {
   saison?: string
   /** Le joueur doit être vassal (Pacifisme Fidèles rang 2). */
   vassal?: boolean
-  /** Technologie débloquée requise (clé `<arbre>:<slot>`). */
-  tech?: string
   /** Régime politique du joueur requis (ex. Socialisme). */
   regime?: string
   /** Culture du joueur requise (ex. Lunisme — règle de pays). */
   culture?: string
-  /** Technologie débloquée requise, désignée par NOM (la clé réelle
-   *  `<arbre>:<slot>` est résolue par le registre — les homonymes de
-   *  plusieurs arbres matchent, comme l'historique aTech ; source
-   *  'tech', brûlage #3 source 3/3). */
-  techNom?: string
+  // (RETRAIT 2026-10-24 : les conditions `tech` et `techNom` —
+  //  technologie débloquée requise — sont supprimées avec le
+  //  système de progrès, retour arbitre.)
   /** Le joueur doit posséder au moins une CITÉ LIBRE suzeraine
    *  (ex. Garde suzeraine, Patronage — relations diplomatiques). */
   suzerainDeCite?: boolean
@@ -359,7 +281,9 @@ export type SourceRegle =
   | 'faction'         // règles de faction (base, Âge II, Âge III)
   | 'regime'          // loi chiffrée du régime politique
   | 'culture'         // règle de pays culturelle
-  | 'tech'            // technologies de progrès
+  //  'tech' RETIRÉ le 2026-10-24 (retour arbitre : suppression du
+  //  système de progrès) — la valeur n'est jamais à réutiliser
+  //  (stabilité des règles déjà saisies).
   | 'evenement'        // événement de saison
   | 'laurier'          // bonus one-shot de Laurier
 

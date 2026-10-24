@@ -141,7 +141,6 @@ export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
     recap: null,
     rang: rangParDefaut(s.regime || C.regimes[0]?.nom || 'Monarchie', C),
     vassalDe: null,
-    progresDebloques: [],
   }
 }
 

@@ -20,9 +20,9 @@
 //   système de bonus de faction ; le champ Peuple reste une identité
 //   sans effets mécaniques. Système à refaire.)
 //  L'arbre généalogique de la famille dirigeante est affiché sur la
-//  page « Population ». Les technologies (feuille « Progrès ») sont
-//  retirées de cette page — elles restent consultables dans
-//  « 📚 Référentiels » → « Progrès ».
+//  page « Population ». (RETRAIT 2026-10-24, retour arbitre : les
+//  technologies — feuille « Progrès » — sont supprimées du jeu avec
+//  le système de progrès, plus aucun onglet ne les affiche.)
 // ══════════════════════════════════════════════════════════════════════
 
 import { useGame } from '../state/store'

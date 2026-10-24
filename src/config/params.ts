@@ -94,8 +94,9 @@ export interface GameParams {
   /** Nombre maximal de ROUTES commerciales par joueur (sous-vague 3b
    *  2026-10-24 : compte les routes détenues — plus les marchands, le
    *  métier de Marchand a été RETIRÉ du jeu le 2026-10-24 (arbitrage
-   *  Thibaut) ; retour Thibaut : 0 par défaut, certaines techs en
-   *  octroient). */
+   *  Thibaut) ; retour Thibaut : 0 par défaut, les techs qui en
+   *  octroyaient ont été supprimées le 2026-10-24 avec le système
+   *  de progrès). */
   maxMarchands: number
   // ── Vassaux ──
   vassalPrelevement: number  // part des revenus d'habitants (Or) reversée au suzerain

@@ -19,7 +19,6 @@ import { ONGLETS } from './reference/logiqueReference'
 import { OngletsMetiers } from './reference/OngletsMetiers'
 import { OngletTraitsGen, OngletPeuples } from './reference/OngletsTraitsPeuples'
 import { OngletBatiments, OngletAmenagements } from './reference/OngletsBatiments'
-import { OngletProgres } from './reference/OngletsProgres'
 import { OngletPaysRangs, OngletHabitations } from './reference/OngletsPaysHabitations'
 import { OngletsCulturesRegimes, OngletTourisme, OngletCitesLibres } from './reference/OngletsCultures'
 import { OngletVictoires, OngletCrises, OngletRappelsRegles, OngletOffrandes } from './reference/OngletsVictoires'
@@ -53,7 +52,6 @@ export function ReferenceDataPanel() {
       {onglet === 'Peuples' && <OngletPeuples C={C} />}
       {onglet === 'Bâtiments' && <OngletBatiments C={C} />}
       {onglet === 'Aménagements' && <OngletAmenagements C={C} />}
-      {onglet === 'Progrès' && <OngletProgres C={C} />}
       {onglet === 'Pays & rangs' && <OngletPaysRangs C={C} />}
       {onglet === 'Habitations' && <OngletHabitations C={C} />}
       {onglet === 'Cultures & régimes' && <OngletsCulturesRegimes C={C} />}

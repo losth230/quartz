@@ -442,7 +442,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             />
             <TextInput
               value={l.source}
-              placeholder="Source (Rivière, Progrès, Régime…)"
+              placeholder="Source (Rivière, Régime…)"
               onChange={(v) => setPlayer((x) => { (x.villes[idx].autres ?? (x.villes[idx].autres = []))[li].source = v })}
             />
             <NumberInput

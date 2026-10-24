@@ -27,11 +27,13 @@ const C_DEFAUT = cfgOf(undefined)
 import { effetsConstructionRef, garnisonConstructionRef, instantanesConstructionRef } from '../engine/constructions'
 
 /** Types d'effets que la banque sait appliquer (contrat de types.ts). */
+// (RETRAIT 2026-10-24 : les types d'effets des TECHS — fluxSiCapitale,
+//  fluxParVille, fluxParVilleProximite, fluxParRangHabitation,
+//  fluxParBatiment, fluxParGarnisonHabitation, fluxParMetier — sont
+//  retirés du contrat avec le système de progrès.)
 const TYPES_CONNUSS = new Set([
   'fluxVille', 'fluxJoueur', 'fluxCapitale',
   'fluxParAmenagement', 'fluxParVilleCultureMonde',
-  'fluxSiCapitale', 'fluxParVille', 'fluxParVilleProximite',
-  'fluxParRangHabitation', 'fluxParBatiment', 'fluxParGarnisonHabitation', 'fluxParMetier',
   'garnisonVille', 'garnisonParRang', 'garnisonJoueur',
   'tourismeInstantane', 'habitantsVille', 'conversionPoids', 'migrationPoids',
   'reductionCout', 'reductionLeveeArmee', 'emissaires',
@@ -66,7 +68,10 @@ test('registre : ids uniques et stables (slug du nom affiché)', () => {
 
 test('registre : chaque effet des règles est un type CONNU de la banque', () => {
   const regles = registreComplet(C_DEFAUT)
-  assert.ok(regles.length > 20, 'le registre doit contenir les constructions à effets')
+  // (RETRAIT 2026-10-24 : le seuil était > 20 AVEC les règles des
+  //  technologies de progrès (source 'tech') — sans elles, le registre
+  //  des constructions/régimes/cultures en compte 14.)
+  assert.ok(regles.length > 10, 'le registre doit contenir les constructions à effets')
   for (const r of regles) {
     assert.ok(Array.isArray(r.effets) && r.effets.length > 0, `règle sans effet : ${r.id}`)
     for (const e of r.effets as Effet[]) {
