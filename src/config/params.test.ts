@@ -6,7 +6,8 @@
 //     jamais écraser une clé nouvelle déjà fournie ;
 //   · les défauts Gompertz (0.0025 / 0.08 / 0.9) et les caps Chasseur
 //     (Ville 50 / Château 25) sont verrouillés, ageMax est rayé ;
-//   · cfgOf convertit une config v2 (titres/titresEffets/prodParTitre)
+//   · cfgOf convertit une config v2 (titres/titresEffets — l'effet de
+//     tech prodParTitre a été retiré avec le système de progrès)
 //     une seule fois et tamponne schemaVersion = 3 ; une config déjà
 //     convergée (schemaVersion 3) ignore les vieux champs.
 // ═══════════════════════════════════════════════════════════════════════════
@@ -46,7 +47,7 @@ test('défauts v3 : Gompertz 0.0025/0.08/0.9, caps Chasseur supprimées (vague 3
   assert.ok(!('ageMaxAla' in DEFAULT_PARAMS))
 })
 
-test('cfgOf : conversion v2 → courante (titres → metiers, champ interne renommé, prodParTitre → prodParMetier), tampon schemaVersion', () => {
+test('cfgOf : conversion v2 → courante (titres → metiers, champ interne renommé, purge de la table progres), tampon schemaVersion', () => {
   const cfg = cloneDefaultConfig()
   const asAny = cfg as unknown as Record<string, unknown>
   // referentiel v2 : table `titres` avec champ `titre`
@@ -59,9 +60,10 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   // banque v2 : `titresEffets` avec champ `titre`
   asAny.titresEffets = [{ titre: 'Testeur', effet: 'Riche', revocation: 'Aucune' }]
   delete asAny.metiersEffets
-  // effet de tech v2 : prodParTitre avec champ `titre`
-  const tech = (cfg.progres?.[0]?.brancheA?.[0] ?? {}) as unknown as Record<string, unknown>
-  tech.effets = [{ type: 'prodParTitre', titre: 'Testeur', montant: 1, ressource: 'Or' }]
+  // (RETRAIT 2026-10-24 : l'effet de tech v2 prodParTitre n'est plus
+  //  testé — la table `progres` est purgée par cfgOf avec le système
+  //  de progrès, l'ancienne config ne porte plus que la clé morte.)
+  asAny.progres = [{ nom: 'Arbre v2', age: 1, brancheA: [], brancheB: [], techC: { nom: '', cout: '', description: '' } }]
   asAny.schemaVersion = 2
   const C = cfgOf(cfg)
   assert.equal(SCHEMA_VERSION_CONFIG, 4)
@@ -80,10 +82,9 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   //  — l entrée Marchand a disparu du référentiel avec le métier)
   assert.equal(C.config.metiersEffets.length, 12)
   assert.equal(C.config.metiersEffets[0].metier, 'Testeur')
-  // effet de tech converti
-  const techApres = (C.config.progres?.[0]?.brancheA?.[0] ?? {}) as unknown as { effets?: Array<{ type?: string; metier?: string }> }
-  assert.equal(techApres.effets?.[0]?.type, 'prodParMetier')
-  assert.equal(techApres.effets?.[0]?.metier, 'Testeur')
+  // (RETRAIT 2026-10-24 : la table `progres` de la config v2 est
+  //  purgée par cfgOf — plus rien ne reste du système de progrès.)
+  assert.equal((C.config as unknown as { progres?: unknown }).progres, undefined)
   // convergée : un second passage ne casse rien (le tampon tient)
   const C2 = cfgOf(C.config)
   assert.equal(C2.metiers[0].metier, 'Testeur')

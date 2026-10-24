@@ -305,3 +305,64 @@ test('config : les constructions rang >= 2 sont retirées, même d une config d�
   assert.equal(C2.config.constructions.length, C.config.constructions.length,
     're-lecture : le filtre ne retire rien de plus (idempotent)')
 })
+
+// ── Retrait intégral des règles de factions + textes « Ministre »
+//    vidés (retour arbitre Thibaut 2026-10-24) ─────────────────────
+
+test('config : fiches de peuples vidées (règles de factions retirées intégralement), même d une config déjà convergée', () => {
+  const c = cloneDefaultConfig()
+  // les défauts ne portent plus que les noms (description + lignes vides)
+  assert.ok(c.peuplesLibres.every((p) => p.description === '' && (p.lignes ?? []).length === 0),
+    'défauts peuplesLibres : descriptions et lignes vides, noms conservés')
+  assert.ok(c.peuplesAutres.every((p) => p.description === '' && (p.lignes ?? []).length === 0),
+    'défauts peuplesAutres : descriptions et lignes vides')
+  // une config SAUVEGARDÉE AVANT garde ses fiches pleines + les
+  //  reliquats structurés (reglesBase/ageII/ageIII d'avant le
+  //  2026-10-19, encore rendus par l'onglet Peuples)
+  c.schemaVersion = 4 // déjà convergée : le garde-fou joue quand même
+  c.peuplesLibres = [{
+    nom: 'Basiléens', description: 'Fiche ancienne',
+    lignes: [{ label: 'Âge III — Suzeraineté', texte: 'Vous pouvez posséder 1 Ministre supplémentaire.' }],
+    reglesBase: [{ nom: 'Vieille règle', texte: 'reliquat' }],
+    ageII: [{ nom: 'Savoir ancestral', texte: 'reliquat' }],
+  } as GameConfig['peuplesLibres'][number]]
+  const C = cfgOf(c)
+  const bas = C.config.peuplesLibres.find((p) => p.nom === 'Basiléens')
+  assert.ok(bas, 'la fiche Basiléens reste (nom conservé)')
+  assert.equal(bas!.description, '', 'description vidée par le garde-fou')
+  assert.equal((bas!.lignes ?? []).length, 0, 'lignes de règles vidées')
+  assert.ok(bas && !('reglesBase' in bas), 'reliquats structurés (reglesBase/ageII) retirés')
+  assert.ok(C.config.peuplesLibres.every((p) => p.description === '' && (p.lignes ?? []).length === 0),
+    'aucune fiche peuplesLibres ne garde de règles')
+  assert.ok(C.config.peuplesAutres.every((p) => p.description === '' && (p.lignes ?? []).length === 0),
+    'aucune fiche peuplesAutres ne garde de règles')
+  // idempotence : la re-lecture d une config déjà vidée est stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.config.peuplesLibres.length, C.config.peuplesLibres.length,
+    're-lecture : le garde-fou ne retire rien de plus (idempotent)')
+})
+
+test('config : la ligne titre « Ministre » reste, ses textes sont vidés (retour arbitre 2026-10-24)', () => {
+  const c = cloneDefaultConfig()
+  const min = c.metiers.find((t) => t.metier === 'Ministre')
+  assert.ok(min, 'la ligne titre « Ministre » reste dans la table métiers')
+  assert.equal(min!.description, '', 'description vide dans les défauts')
+  // une config SAUVEGARDÉE AVANT garde les anciens textes morts
+  c.schemaVersion = 4 // déjà convergée : le garde-fou joue quand même
+  min!.description = 'Plusieurs autorisés'
+  const eff = c.metiersEffets.find((t) => t.metier === 'Ministre')!
+  eff.effet = 'Octroie un ministre qui appartient à un ministère, maximum 1.'
+  eff.revocation = '30 Or\n+ 6  Soie'
+  const C = cfgOf(c)
+  const mMin = C.metiers.find((t) => t.metier === 'Ministre')!
+  assert.equal(mMin.description, '', 'description vidée par le garde-fou')
+  assert.equal(mMin.attribution, 'Manuelle', 'la ligne titre reste attribuable (inerte)')
+  const eMin = C.config.metiersEffets.find((t) => t.metier === 'Ministre')!
+  assert.equal(eMin.effet, '', 'effet vidé')
+  assert.equal(eMin.revocation, '', 'coût de révocation vidé')
+  assert.ok(C.metiers.some((t) => t.metier === 'Ministre'), 'la ligne titre reste dans la table convergée')
+  // idempotence : la re-lecture d une config déjà vidée est stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.metiers.find((t) => t.metier === 'Ministre')!.description, '',
+    're-lecture : le garde-fou ne change rien de plus (idempotent)')
+})

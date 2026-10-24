@@ -6,7 +6,6 @@
 import React from 'react'
 import { useGame } from '../state/store'
 import { cfgOf, couleurRessource, fondRessource } from '../engine/gameData'
-import { VICTORY_TEXT } from '../engine/gameData2'
 import {
   cocherLaurier, victoireAtteinte, victoryProgress, victoryLabels,
 } from '../engine/victory'
@@ -231,7 +230,7 @@ export function Dashboard() {
                           return (
                             <span
                               key={niveau}
-                              title={actif ? `${l.laurier} — ${l.condition}` : l.condition}
+                              title={l.condition ? `${l.laurier} — ${l.condition}` : l.laurier}
                               onClick={actif ? () => update((s) => {
                                 const t = s.players.find((q) => q.n === p.n)
                                 if (t) cocherLaurier(s, t, v.voie, coche ? niveau - 1 : niveau)
@@ -256,9 +255,10 @@ export function Dashboard() {
           </table>
           </div>
         </div>
-        <ul className="muted small">
-          {VICTORY_TEXT.map((v) => <li key={v.nom}><strong>{v.nom}</strong> — {v.texte}</li>)}
-        </ul>
+        {/* (RETRAIT 2026-10-24 : la liste « Conditions de victoire »
+            (VICTORY_TEXT, textes du Laurier IV par voie) est supprimée
+            — retour arbitre : suppression des textes de conditions de
+            victoire, Lauriers laissés vides à redéfinir.) */}
       </Card>
     </div>
   )

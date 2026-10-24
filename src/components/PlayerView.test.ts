@@ -1,21 +1,25 @@
-// ═══════════════════════════════════════════════════════════════════════════
+// ═════════════════════════════════════════════════════════════════════════
 //  TEST DE RENDU — page « Pays » (PlayerView, assemblage des cartes de
 //  components/pays/). Retour de revue critique n°3 : « un test de rendu
 //  par vue » — aucun écran blanc de régression ne doit plus passer la CI.
 //  Méthode : vraie partie à 8 joueurs, 2 tours joués, rendu serveur via
 //  react-dom/server (renderToString — les useEffect ne sont pas joués,
 //  seule la voie de rendu est testée).
-// ═══════════════════════════════════════════════════════════════════════════
+//  R3 (audit résiduels 2026-10-24) : les données de la page sont
+//  vérifiées CONTRE L'ÉTAT du joueur 1 — villes, stocks de la barre
+//  de ressources, population de la capitale — et une assertion
+//  NÉGATIVE garantit que la page ne rend PAS les données d'un autre
+//  joueur.
+// ═════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { prepareRendu, partieRendu } from './testRendu'
+import { prepareRendu, partieRendu, esc, aplatir } from './testRendu'
 
-// Le shim doit être en place AVANT tout import applicatif (dynamique).
 prepareRendu()
 
 test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de components/pays/)', async () => {
-  await partieRendu()
+  const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
   const { GameProvider } = await import('../state/store')
@@ -31,5 +35,35 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
   assert.ok(html.includes('Récap des ressources par tour'), 'carte « Récap par tour » absente')
   assert.ok(html.includes('Récap ressources du dernier tour'), 'carte « Récap dernier tour » absente')
   assert.ok(html.includes('grid-villes'), 'grille des villes absente')
-  assert.ok(html.includes('Capitale 1'), 'ville du joueur 1 absente')
+
+  // ── R3 : données réelles dérivées de l'état du joueur 1 ──
+  const h = aplatir(html)
+  const p1 = etat.players.find((p) => p.n === 1)
+  assert.ok(p1, 'joueur 1 introuvable dans l’état')
+  // Les villes du joueur 1 (issues de l'état) sont rendues.
+  for (const v of p1.villes) {
+    assert.ok(html.includes(esc(v.nom)), `ville « ${v.nom} » du joueur 1 absente`)
+  }
+  // La barre de ressources porte LES stocks de l'état (chaque puce
+  // rend un NumberInput de valeur = stock de la ressource).
+  for (const r of ['Or', 'Nourriture', 'Science']) {
+    const stock = p1.resources[r]?.stock ?? 0
+    assert.ok(
+      h.includes(`value="${String(stock)}"`),
+      `stock ${r} du joueur 1 (${stock}) absent de la barre de ressources`,
+    )
+  }
+  // La carte de la capitale affiche le compte d'habitants vivants
+  // ET la culture majoritaire calculés depuis l'état (VilleCarte).
+  const cap = p1.villes[0]
+  const nbVivants = (etat.population[1] ?? [])
+    .filter((c) => c.statut !== 'Décédé' && c.ville === cap.nom).length
+  assert.ok(
+    h.includes(`${String(nbVivants)} habitant(s) vivant(s)`),
+    `compte d'habitants vivants de ${cap.nom} (${nbVivants}) non rendu`,
+  )
+  assert.ok(
+    h.includes(`Culture majoritaire : <strong>${esc(cap.culture)}</strong>`),
+    `culture majoritaire « ${cap.culture} » de ${cap.nom} non rendue`,
+  )
 })

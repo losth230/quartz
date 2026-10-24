@@ -27,7 +27,6 @@ import type { City, GameState, Player, Saison } from './types'
 import { detailGainsVille } from './economie'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { garnisonBatiment, productionTourismeBatiment } from './batiments'
-import { lignesGarnisonProgresVille, fluxProgresJoueur } from './progresAuto'
 import { effetsCommerceJoueur } from './commerce'
 import { reglesRegimes, reglesCultures } from '../rules/registry'
 import { appliquerRegles } from '../rules/effects/banque'
@@ -37,7 +36,9 @@ export { rangNiveau } from './rangs'
 export { garnisonHabitationVille } from './garnisons'
 import { rangNiveau } from './rangs'
 import { garnisonHabitationVille } from './garnisons'
-import { capitaleDe } from './factions'
+// (RETRAIT 2026-10-24, purge R4 : l'import morte `capitaleDe` (factions)
+//  part avec les PORTS du contexte — plus aucun effet conservé ne
+//  consomme de service moteur.)
 
 /** Détail de la garnison d'une ville, ligne par ligne (même calibre
  *  que garnisonHabitationVille — l'interface affiche exactement ce
@@ -45,8 +46,10 @@ import { capitaleDe } from './factions'
 export interface LigneDetailGarnison {
   label: string
   valeur: number
-  /** catégorie affichable : bâtiment / technologie /
-   *  régime / ministre / métier (Garde) */
+  /** catégorie affichable : bâtiment / régime /
+   *  ministre / métier (Garde) — (RETRAIT 2026-10-24 : « technologie »,
+   *  supprimée avec le système de progrès, reste lue dans les
+   *  vieilles sauvegardes sans être produite) */
   origine: 'bâtiment' | 'technologie' | 'régime' | 'métier'
 }
 
@@ -59,8 +62,8 @@ export function detailGarnisonVille(
   }
   // 1. Bâtiments de la ville (Poste de garde +40, Caserne +40…)
   for (const b of ville.batiments) push('bâtiment', b, garnisonBatiment(b, C, ville.type))
-  // 2. Technologies (Milices civiles, Fortifications, Pré carré…)
-  for (const l of lignesGarnisonProgresVille(p, ville, C)) push('technologie', l.label, l.valeur)
+  // 2. (RETRAIT 2026-10-24 : technologies — lignes de garnison des
+  //  techs supprimées avec le système de progrès.)
   // 3. Loi du régime (ex. Autoritarisme : +15 par rang d'habitation)
   const regime = C.regimes.find((r) => r.nom === p.regime)
   const bonus = regime?.garnisonParRang ?? 0
@@ -91,14 +94,10 @@ export function garnisonHabitationsPays(p: Player, C: Cfg, state?: GameState): n
  *  été, effet fluxParAmenagement) ; cette fonction ne fait que LIRE
  *  la banque, plus aucun montant codé ici. */
 export function effetsRegime(state: GameState, p: Player, saison: Saison, C: Cfg): Record<string, number> {
+  // (RETRAIT 2026-10-24, purge R4 : plus de PORTS injectés au contexte —
+  //  les types d'effets conservés ne consomment aucun service moteur.)
   return appliquerRegles(reglesRegimes(C), {
     state, joueur: p, saison,
-    ports: {
-      C,
-      capitaleDe,
-      rangNiveau: (ville) => rangNiveau(ville, C),
-      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
-    },
   }).flux
 }
 
@@ -166,12 +165,6 @@ export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<s
   //  fonction ne fait que LIRE la banque.
   return appliquerRegles(reglesCultures(C), {
     state, joueur: p, saison: state.saison,
-    ports: {
-      C,
-      capitaleDe,
-      rangNiveau: (ville) => rangNiveau(ville, C),
-      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
-    },
   }).flux
 }
 
@@ -189,7 +182,8 @@ export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<s
  *
  * `tourismeCourant` calcule la production Tourisme d'un joueur à
  * partir des mêmes canaux que le récap (bâtiments & aménagements
- * statiques + gains d'habitants + lois de culture + techs
+ * statiques + gains d'habitants + lois de culture (RETRAIT 2026-10-24 :
+ * les flux Tourisme des techs sont supprimés avec le système de progrès)
 
  * + ministres de fin de saison + COMMERCE (arbitrage Thibaut 2026-10-19 : le
 
@@ -211,8 +205,8 @@ export function tourismeCourant(state: GameState, p: Player, C: Cfg): number {
   }
   // 3. lois de culture & régime — composante Tourisme seulement
   total += effetsCulturePays(state, p, C)['Tourisme'] ?? 0
-  // 4. technologies (Surconsommation, Stands de goodies)
-  total += fluxProgresJoueur(state, p, C)['Tourisme'] ?? 0
+  // 4. (RETRAIT 2026-10-24 : technologies — flux Tourisme des techs
+  //  supprimé avec le système de progrès.)
   // 5. CONSTRUCTIONS (Chapelle +35, Bahamutt +16…) : production Tourisme
   //  des bâtiments/aménagements, lue sur la règle de BANQUE (voie unique
   //  depuis le 2026-10-19 — même valeur que le canal Bâtiments du récap).

@@ -27,7 +27,6 @@ import { cultureDef, type Cfg } from '../../engine/gameData'
 import { statutMerveille, pastilleClass } from '../../engine/statutAuto'
 import { villeCotiere } from '../../engine/villes'
 import { effetImmediatMerveille } from '../../engine/merveilles'
-import { reductionAmenagement, reductionBatiment, aTech } from '../../engine/progresAuto'
 import { resynchroniserTourisme } from '../../engine/regimes'
 import { fmt } from '../ui'
 import type { PickerCategorie } from '../Picker'
@@ -90,12 +89,12 @@ export function faireConstruire(o: {
       //    par ville.
       const fam = ref?.famille ?? ''
       if (fam === 'Economique') {
-        // « Urbanisme » : la capitale accueille un bâtiment
-        //  supplémentaire (+1 slot économique de la capitale).
+        // (RETRAIT 2026-10-24 : le bonus « Urbanisme » — +1 slot
+        //  économique de la capitale — est supprimé avec le système de
+        //  progrès, retour arbitre.)
         //  (RETRAIT 2026-10-19 : bonus Elfes d'Or « Cité d'Or » /
         //  « Palais des Dieux » retirés avec les factions.)
-        const bonusCapitale = (aTech(t, 'Urbanisme', C) ? 1 : 0)
-        const maxEco = rangNiveau(ville, C) + (estCapitale ? bonusCapitale : 0)
+        const maxEco = rangNiveau(ville, C)
         const nbEco = ville.batiments.filter((b) => (constructionRef(b, C.config)?.famille ?? '') === 'Economique').length
         if (nbEco >= maxEco) {
           s.log.push({
@@ -168,51 +167,11 @@ export function faireConstruire(o: {
       const cout = type === 'batiment'
         ? coutBatiment(nom, C, groupe)
         : coutAmenagement(t, C.config, type === 'amenagement' ? nom : undefined)
-      // Réductions des TECHNOLOGIES (revue 2026-10-15) :
-      //  · Développement durable : aménagements −1 Bois ;
-      //  · Développement économe : aménagements −3 Or ;
-      //  · Viser le ciel : bâtiments −15 Or.
-      if (type === 'amenagement') {
-        for (const [r, v] of Object.entries(reductionAmenagement(t, C))) {
-          if (cout[r] !== undefined) cout[r] = Math.max(0, cout[r] - v)
-        }
-      }
-      if (type === 'batiment') {
-        for (const [r, v] of Object.entries(reductionBatiment(t, C))) {
-          if (cout[r] !== undefined) cout[r] = Math.max(0, cout[r] - v)
-        }
-      }
-      // Merveilles & progrès « Tourisme » (retour Thibaut 2026-10-15) :
-      //  a.1 Trésor public : merveilles −20 Or ; a.2 Matériaux de
-      //  prestige : merveilles −4 de CHAQUE ressource du coût
-      //  (plancher 0). Techs débloquées du joueur, cumulables.
-      if (ref?.famille === 'Merveille') {
-        // Exposition universelle (ouverture culturelle) : merveilles de
-        //  la CAPITALE −30 Or de plus.
-        if (estCapitale && aTech(t, 'Exposition universelle', C) && cout['Or'] !== undefined) {
-          cout['Or'] = Math.max(0, cout['Or'] - 30)
-        }
-        const debloquees = new Set(t.progresDebloques ?? [])
-        const possede = (nomTech: string) => {
-          for (let ai = 0; ai < C.config.progres.length; ai++) {
-            const a = C.config.progres[ai]
-            if (a.nom !== 'Progrès du Tourisme') continue
-            for (const slot of ['a1', 'a2', 'b1', 'b2', 'c'] as const) {
-              const td = slot === 'c' ? a.techC : (slot[0] === 'a' ? a.brancheA : a.brancheB)[+slot[1] - 1]
-              if (td?.nom === nomTech && debloquees.has(`${ai}:${slot}`)) return true
-            }
-          }
-          return false
-        }
-        let reducOr = 0
-        let reducParRessource = 0
-        if (possede('Trésor public')) reducOr += 20
-        if (possede('Matériaux de prestige')) reducParRessource += 4
-        if (reducOr > 0 && cout['Or'] !== undefined) cout['Or'] = Math.max(0, cout['Or'] - reducOr)
-        if (reducParRessource > 0) {
-          for (const r of Object.keys(cout)) cout[r] = Math.max(0, cout[r] - reducParRessource)
-        }
-      }
+      // (RETRAIT 2026-10-24, retour arbitre : les réductions de coût des
+      //  TECHNOLOGIES — Développement durable/économe, Viser le ciel —
+      //  et les réductions des merveilles par les techs « Progrès du
+      //  Tourisme » (Trésor public, Matériaux de prestige, Exposition
+      //  universelle) sont supprimées avec le système de progrès.)
       const cible = type === 'batiment'
         ? ville.batiments
         : (ville.amenagements ?? (ville.amenagements = []))
@@ -322,8 +281,9 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
       const fam = b.famille ?? ''
       if (fam === 'Economique') {
         const nbEco = ville.batiments.filter((x) => (constructionRef(x, C.config)?.famille ?? '') === 'Economique').length
-        const bonusCap = (aTech(p, 'Urbanisme', C) ? 1 : 0)
-        const maxEco = rang + (estCapitale ? bonusCap : 0)
+        // (RETRAIT 2026-10-24 : bonus « Urbanisme » supprimé avec le
+        //  système de progrès.)
+        const maxEco = rang
         if (nbEco >= maxEco) warns.push(`Limite Économique atteinte (${nbEco}/${maxEco} — un par rang).`)
       }
       if (fam === 'Guilde') {

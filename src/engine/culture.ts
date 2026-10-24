@@ -40,8 +40,10 @@ export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, rec
   const pop = state.population[p.n] ?? []
   // Pression touristique (revue 2026-10-16, retour Thibaut) : pour
   //  CHAQUE culture, pression = tourisme GÉNÉRAL des joueurs qui la
-  //  pratiquent (technologies, lois de culture, régimes…
-  //  — tout ce qui n'est pas rattachable à une habitation) + le
+  //  pratiquent (lois de culture, régimes… — tout ce qui n'est pas
+  //  rattachable à une habitation ; RETRAIT 2026-10-24 : les
+  //  technologies ne produisent plus de tourisme, système de
+  //  progrès supprimé) + le
   //  tourisme de CHAQUE HABITATION de cette culture (bâtiments,
   //  aménagements et production locale de la ville). Un joueur qui
   //  a une capitale culturelle puissante pousse sa culture partout,

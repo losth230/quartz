@@ -46,7 +46,7 @@ export function VillesCarte({ joueur, p, C, setPlayer }: {
         <Button onClick={() => setPlayer((x, s) => {
           const nom = `${typeAjout} ${x.villes.length + 1}`
           x.villes.push({ nom, culture: x.culture, taxes: 'Moyenne', type: typeAjout, rang: rangsDisponibles(typeAjout, C)[0] ?? 'Hameau', batiments: [], amenagements: [], autres: [] })
-          debiterCoutHabitation(s, x, x.villes[x.villes.length - 1], C, true)
+          debiterCoutHabitation(s, x, x.villes[x.villes.length - 1], C)
           // Marqueur (w), retour Thibaut : une nouvelle ville (ou un
           // nouveau château) démarre avec 50 habitants SANS noble,
           // paramètres similaires à la première ville.

@@ -14,31 +14,26 @@
 import type {
   ContexteEffet, ContributionEffets, ConditionRegle, Effet, RegleBanque,
 } from '../types'
-import { clesTechsParNom } from '../registry'
 
 // ── Conditions ─────────────────────────────────────────────────────────────
 
 /** Vérifie les conditions d'une règle pour un contexte donné.
- *  Toutes les conditions présentes sont combinées en ET. */
+ *  Toutes les conditions présentes sont combinées en ET.
+ *  (RETRAIT 2026-10-24, purge R4 : les conditions SANS PRODUCTEUR —
+ *  peuple, vassal, suzerainDeCite (plus les notes documentaires
+ *  ageMin/pontificatMin « suivi manuel au plateau ») — sont
+ *  supprimées avec leurs champs de ConditionRegle ; seules restent
+ *  saison, regime et culture, les seules produites par le registre.
+ *  L'ancien contenu reste dans l'historique git, règle 9.) */
 export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: ContexteEffet): boolean {
   if (!cond) return true
   const { joueur } = ctx
-  if (cond.peuple && joueur.peuple !== cond.peuple) return false
   if (cond.saison && ctx.saison !== cond.saison) return false
-  if (cond.vassal === true && joueur.vassalDe == null) return false
-  if (cond.vassal === false && joueur.vassalDe != null) return false
-  if (cond.tech && !(joueur.progresDebloques ?? []).includes(cond.tech)) return false
+  // (RETRAIT 2026-10-24 : les conditions `tech` / `techNom` — tech
+  //  débloquée requise — sont supprimées avec le système de
+  //  progrès, retour arbitre.)
   if (cond.regime && joueur.regime !== cond.regime) return false
   if (cond.culture && joueur.culture !== cond.culture) return false
-  // Technologie débloquée par NOM (source 'tech', brûlage #3 source
-  //  3/3) : la clé `<arbre>:<slot>` est résolue par le registre, les
-  //  homonymes de plusieurs arbres matchent (comme l'historique aTech).
-  if (cond.techNom && !clesTechsParNom(ctx.ports.C, cond.techNom).some((k) => (joueur.progresDebloques ?? []).includes(k))) return false
-  // Suzerain d'au moins une cité libre (relations diplomatiques).
-  if (cond.suzerainDeCite === true && !(ctx.state.citesLibres ?? []).some((c) => c.suzerain === joueur.n)) return false
-  // cond.ageMin : suivi manuel au plateau (arbitre) — documentaire
-  //  tant que l'âge n'est pas suivi dans Player.
-  // cond.pontificatMin : suivi manuel au plateau — documentaire.
   return true
 }
 
@@ -50,16 +45,6 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     case 'fluxVille': {
       if (e.ete) {
         out.fluxEte[e.ressource] = (out.fluxEte[e.ressource] ?? 0) + e.valeur
-      } else {
-        out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
-      }
-      break
-    }
-    case 'fluxJoueur': {
-      // Un flux joueur s'applique au joueur même si le site est une
-      //  ville (il est crédité une fois, pas par ville).
-      if (e.ete) {
-        if (ctx.saison === 'Été') out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       } else {
         out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       }
@@ -93,126 +78,25 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
       break
     }
-    case 'fluxSiCapitale': {
-      // Production à condition que le joueur possède une capitale
-      //  (canal historique « prodCapitale » des techs, source 3/3 du
-      //  brûlage #3 — ex. Musées : +30 Tourisme par tour).
-      if (ctx.ports.capitaleDe(ctx.joueur)) {
-        out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
-      }
-      break
-    }
-    case 'fluxParVille': {
-      // Production par VILLE du joueur (canal historique « par
-      //  habitation » des techs — ex. Assemblées scientifiques :
-      //  +1 Science par ville).
-      const nb = ctx.joueur.villes.length
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
-    case 'fluxParVilleProximite': {
-      // Production par ville dont la proximité est `proximite` (canal
-      //  historique « côtier » des techs — ex. Cours de pêche :
-      //  +4 Nourriture par ville à proximité de la Mer).
-      const nb = ctx.joueur.villes.filter((v) => v.proximite === e.proximite).length
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
-    case 'fluxParRangHabitation': {
-      // Production par RANG d'habitation cumulé sur les villes du
-      //  joueur (ex. Surconsommation : +1 Science +5 Tourisme par
-      //  rang — la consommation de Nourriture reste un coût moteur).
-      let rangs = 0
-      for (const v of ctx.joueur.villes) rangs += ctx.ports.rangNiveau(v)
-      if (rangs > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * rangs
-      break
-    }
-    case 'fluxParBatiment': {
-      // Production par BÂTIMENT des villes, limité à une FAMILLE du
-      //  référentiel si fournie (ex. Industrialisation : +1 Charbon
-      //  par bâtiment ; Merveilleux : +1 Science par Merveille).
-      const refs = ctx.ports.C.config.constructions ?? []
-      let nb = 0
-      for (const v of ctx.joueur.villes) {
-        for (const b of v.batiments) {
-          if (!e.famille || refs.find((c) => c.nom === b)?.famille === e.famille) nb++
-        }
-      }
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
-    case 'fluxParGarnisonHabitation': {
-      // Production proportionnelle à la garnison d'habitants :
-      //  valeur × Σ garnisonHabitationVille (ex. Service militaire
-      //  avancé : +0,5 Habitants par point de garnison).
-      let total = 0
-      for (const v of ctx.joueur.villes) total += ctx.ports.garnisonVille(v)
-      if (total > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * total
-      break
-    }
-    case 'fluxParMetier': {
-      // Production par TITULAIRE VIVANT du metier dans la population
-      //  du joueur (générique `prodParMetier` du référentiel — ex.
-      //  historique : Commerce lointain +3 Or par Marchand vivant,
-      //  avant le retrait du métier le 2026-10-24, arbitrage
-      //  Thibaut ; l'effet est générique et survit au métier).
-      const vivants = (ctx.state.population[ctx.joueur.n] ?? []).filter((c) => c.statut !== 'Décédé')
-      const nb = vivants.filter((c) => c.metier === e.metier).length
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
-    case 'fluxCapitale': {
-      // Ne s'applique QUE si la ville du contexte est la capitale.
-      if (ctx.ville && ctx.ports.capitaleDe(ctx.joueur)?.nom === ctx.ville.nom) {
-        out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
-      }
-      break
-    }
+    // (RETRAIT 2026-10-24, retour arbitre : les types d'effets des
+    //  TECHS — fluxSiCapitale, fluxParVille, fluxParVilleProximite,
+    //  fluxParRangHabitation, fluxParBatiment,
+    //  fluxParGarnisonHabitation, fluxParMetier — sont supprimés
+    //  avec le système de progrès. L'ancien contenu reste dans
+    //  l'historique git, règle 9.)
+    // (RETRAIT 2026-10-24, purge R4 « complète » : les types restants
+    //  SANS PRODUCTEUR — fluxJoueur, fluxCapitale, garnisonParRang,
+    //  tourismeInstantane, habitantsVille, conversionPoids,
+    //  migrationPoids, reductionCout, reductionLeveeArmee,
+    //  emissaires, scienceInstantanee, ressourcesInstantanees,
+    //  demographieVille (et les canaux instantanes/conversion/
+    //  migration/reductions de la contribution) — sont supprimés :
+    //  le référentiel ne produit que fluxVille, garnisonVille,
+    //  fluxParAmenagement et fluxParVilleCultureMonde, et le moteur
+    //  ne lit que flux/fluxEte/garnison. L'ancien contenu reste dans
+    //  l'historique git, règle 9.)
     case 'garnisonVille': {
       out.garnison += e.valeur
-      break
-    }
-    case 'garnisonParRang': {
-      // Le rang est déduit de la ville du contexte ; sans ville, effet nul.
-      if (ctx.ville?.rang) {
-        out.garnison += e.valeur * ctx.ports.rangNiveau(ctx.ville)
-      }
-      break
-    }
-    case 'tourismeInstantane':
-    case 'habitantsVille':
-    case 'scienceInstantanee':
-    case 'ressourcesInstantanees':
-    case 'emissaires': {
-      out.instantanes.push(e)
-      break
-    }
-    case 'conversionPoids': {
-      out.conversion[e.culture] = (out.conversion[e.culture] ?? 0) + e.valeur
-      break
-    }
-    case 'migrationPoids': {
-      out.migration += e.valeur
-      break
-    }
-    case 'reductionCout': {
-      const cible = out.reductions[e.cible] ?? {}
-      for (const [res, v] of Object.entries(e.reductions)) {
-        cible[res] = (cible[res] ?? 0) + v
-      }
-      out.reductions[e.cible] = cible
-      break
-    }
-    case 'reductionLeveeArmee': {
-      const cible = out.reductions['leveeArmee'] ?? {}
-      cible['Or'] = (cible['Or'] ?? 0) + e.valeur
-      out.reductions['leveeArmee'] = cible
-      break
-    }
-    case 'demographieVille': {
-      // Les modificateurs démographiques passent par les instantanés :
-      //  le site démographique les relit (population.ts).
-      out.instantanes.push(e)
       break
     }
   }
@@ -221,7 +105,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
 // ── Application de la banque ───────────────────────────────────────────────
 
 export function contributionVide(): ContributionEffets {
-  return { flux: {}, fluxEte: {}, garnison: 0, conversion: {}, migration: 0, reductions: {}, instantanes: [] }
+  return { flux: {}, fluxEte: {}, garnison: 0 }
 }
 
 /** Applique un ensemble de règles de la banque à un contexte et renvoie

@@ -10,7 +10,6 @@ import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { emptyRecap, fullName } from './shared'
 import { reductionLeveeArmeesMerveilles } from './merveilles'
-import { reductionLevee } from './progresAuto'
 
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
 
@@ -181,12 +180,11 @@ export function prixArmee(
   let prix = (puissanceCible / tranche) * C.p.armeePrixOr
   // Réductions automatiques (revue 2026-10-15) :
   if (p && state) {
-    const cfg = cfgOf(state.config)
     // Merveilles (retour Thibaut 2026-10-15) : Temple de Bahamutt et
     //  Ordre des chevaliers de Notan : -20/-25 Or sur les levées.
     prix -= reductionLeveeArmeesMerveilles(p)
-    // Conscription I (revue 2026-10-15) : -10 Or sur les levées.
-    prix -= reductionLevee(p, cfg)
+    // (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
+    //  système de progrès, retour arbitre.)
     // Stratégies militaires I : la PROCHAINE armée coûte 50 Or de moins
     if (p.prochaineArmeeReduite) prix -= 50
     //  (one-shot — flag consommé à la levée ; consommé par ArmiesPanel).

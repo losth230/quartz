@@ -52,7 +52,6 @@ import { appliquerBonusProximite } from './villes'
 import { populationTurn } from './population'
 import { recruitForArmies } from './armees'
 import { snapshotRessources } from './journal'
-import { fluxProgresJoueur } from './progresAuto'
 
 // ══════════════════════════════════════════════════════════════════════
 //  RANGS DE PAYS — condition de sacre (serments possédés)
@@ -249,28 +248,16 @@ export function runTurn(state: GameState): GameState {
   const commerceParJoueur: Record<number, Record<string, number>> =
     appliquerEffetsCommerce(state, C)
 
-  // 3undecies-bis. PROGRES (retour Thibaut 2026-10-15 : effets
-  //  automatiques) : flux par tour des technologies debloquees (canal
-  //  « Progrès » du récap ressources — engine/progresAuto.ts).
-  const progresParJoueur: Record<number, Record<string, number>> = {}
+  // 3undecies-bis. (RETRAIT 2026-10-24, retour arbitre : suppression
+  //  du système de progrès — arbres, déblocages et flux par tour des
+  //  technologies. Le canal « Progrès » n'est plus calculé ni écrit ;
+  //  la clé orpheline `progres` des vieux historiques est ignorée.)
+  //  Tourisme : l'invariant « stock = production » doit être
+  //  réévalué APRÈS les apports de commerce (3undecies), qui
+  //  créditent le stock directement — ce point d'appel, historiquement
+  //  porté par le bloc PROGRES, est conservé.
   for (const p of state.players) {
-    const flux = fluxProgresJoueur(state, p, C)
-    progresParJoueur[p.n] = flux
-    for (const [res, v] of Object.entries(flux)) {
-      const rs = p.resources[res]
-      if (rs && v !== 0) rs.stock += v
-    }
-    // Tourisme : même règle — les flux Tourisme des techs
-    //  (Surconsommation, Stands de goodies, Musées…) ne se
-    //  cumulent pas : le stock reste égal à la production.
     resynchroniserTourisme(state, p, 'fin de tour')
-    if (Object.keys(flux).length > 0) {
-      const parts = Object.entries(flux).map(([r, v]) => `${v > 0 ? '+' : ''}${Math.round(v * 10) / 10} ${r}`).join(', ')
-      state.log.push({
-        turn: state.turn + 1, type: 'Système', joueur: p.n,
-        texte: `🔬 ${p.nom} — progrès technologiques : ${parts}.`,
-      })
-    }
   }
   // 4. Moteur de population (PersonnagesPourJoueur) pour chaque joueur
   for (const p of state.players) {
@@ -307,7 +294,6 @@ export function runTurn(state: GameState): GameState {
       proximite: proximiteParJoueur[p.n] ?? {},
       population,
       vassalite,
-      progres: progresParJoueur[p.n] ?? {},
     }
   }
   snapshotRessources(state, turnBefore + 1, apportsParJoueur)

@@ -26,8 +26,6 @@
 import type { City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
 import { parseCoutTexte } from './constructions'
-import { reductionFondation } from './progresAuto'
-import { aTech } from './progresTech'
 import { nomRang, rangsDefsType } from './rangs'
 export { nomRang, rangsDefsType } from './rangs'
 
@@ -73,28 +71,17 @@ export function coutHabitation(ville: City, C: Cfg): Record<string, number> {
  *  habitants requis manquent. Retourne le coût débité. */
 export function debiterCoutHabitation(
   state: GameState, p: Player, ville: City, C: Cfg,
-  /** Fondation (nouvelle ville / château) et non simple amélioration :
-   *  active les réductions des TECHS de fondation
-   *  (reductionFondation : Colonialisme durable −5 Bois,
-   *  Colonialisme économe −20 Or — plafonnés à 0).
-   *  (Vague 2, arbitrage 2026-10-23 « Grand bailli : c'est un
-   *  ministre, on supprime pour l'instant » : l'office n'existe
-   *  plus, ce docblock ne cite que les effets réels.) */
-  fondation = false,
 ): Record<string, number> {
+  // (Historique : le 5e argument `fondation` (réductions des TECHS de
+  //  fondation — Colonialisme durable/économe, Expansion maritime) a
+  //  été retiré le 2026-10-24 avec le système de progrès, retour
+  //  arbitre. Vague 2, arbitrage 2026-10-23 « Grand bailli : c'est un
+  //  ministre, on supprime pour l'instant » : l'office n'existe plus.)
   const def = habitationDef(ville, C)
   const cout = coutHabitation(ville, C)
-  // Technologies (revue 2026-10-15) : Colonialisme durable (-5 Bois)
-  //  et economome (-20 Or) sur les FONDATIONS d'habitation.
-  // Expansion maritime s'applique aux côtières pour la fondation ET
-  //  l'amélioration ; Colonialisme pour la fondation seule.
-  const reducTechs = fondation
-    ? reductionFondation(p, C, ville)
-    : (ville.proximite === 'Mer' && aTech(p, 'Expansion maritime', C)
-        ? { Bois: 3, Pierre: 3 } : {})
-  for (const [r, v] of Object.entries(reducTechs)) {
-    if (cout[r] !== undefined) cout[r] = Math.max(0, cout[r] - v)
-  }
+  // (RETRAIT 2026-10-24, retour arbitre : plus de réduction de coût par
+  //  les technologies — Colonialisme durable/économe, Expansion
+  //  maritime — supprimées avec le système de progrès.)
   for (const [res, v] of Object.entries(cout)) {
     const rs = p.resources[res]
     if (rs && v !== 0) rs.stock -= v

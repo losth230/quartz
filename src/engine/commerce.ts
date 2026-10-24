@@ -51,7 +51,6 @@ import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, type Cfg } from './gameData'
 import { constructionRef, effetsConstructionRef, effetsEteConstructionRef } from './constructions'
 import { nbBatiments } from './factions'
-import { aTech } from './progresAuto'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
  *  Seules les routes du modèle DISSOCIÉ (sans marchandId) sont
@@ -280,8 +279,9 @@ export function maxRoutesJoueur(
   C: { p: { maxMarchands: number } } & import('./gameData').Cfg,
 ): number {
   let max = C.p.maxMarchands
-  if (aTech(p, 'Commerce', C)) max += 1
-  if (aTech(p, "Collecte d'impôts", C)) max += 1
+  // (RETRAIT 2026-10-24 : les techs Commerce / Collecte d'impôts
+  //  (+1 route chacune) sont supprimées avec le système de progrès,
+  //  retour arbitre.)
   max += nbBatiments(p, 'Plateforme commerciale')
   max += nbBatiments(p, 'Guilde des marchands')
   max += nbBatiments(p, 'Echoppe')

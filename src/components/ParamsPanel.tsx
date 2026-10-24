@@ -16,13 +16,13 @@ import type { GameConfig } from '../config/defaultConfig'
 import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
 import { Card, NumberInput, TextInput, Button } from './ui'
 import {
-  BatimentsParams, AmenagementsParams, ProgresParams, PaysRangsParams,
+  BatimentsParams, AmenagementsParams, PaysRangsParams,
   HabitationsParams, CouleursParams,
 } from './ConfigTables'
 
 const ONGLETS = [
   'Formules', 'Métiers', 'Traits', 'Cultures', 'Régimes',
-  'Bâtiments', 'Aménagements', 'Progrès', 'Pays & rangs', 'Habitations',
+  'Bâtiments', 'Aménagements', 'Pays & rangs', 'Habitations',
   'Couleurs',
   // (Onglets « Événements », « Effets évts », « Dynasties », « Cartes »
   //  retirés le 2026-10-24 avec les tables events/dynasties, retour
@@ -229,7 +229,6 @@ export function ParamsPanel() {
 
       {onglet === 'Aménagements' && <AmenagementsParams config={config} setCfg={setCfg} />}
 
-      {onglet === 'Progrès' && <ProgresParams config={config} setCfg={setCfg} />}
 
       {onglet === 'Pays & rangs' && <PaysRangsParams config={config} setCfg={setCfg} />}
 

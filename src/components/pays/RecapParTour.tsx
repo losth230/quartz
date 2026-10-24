@@ -45,7 +45,9 @@ export function RecapParTour({ joueur, p, C, prodDetail, impotPopPrev, impotsVas
           ['Commerce', prodDetail.commerce],
           ['Proximité', prodDetail.proximite],
           ['Vassalité', prodDetail.vassalite],
-          ['Progrès', prodDetail.progres],
+          // (RETRAIT 2026-10-24 : canal « Progrès » supprimé avec le
+          //  système de progrès — les vieilles sauvegardes gardent la
+          //  clé orpheline, ignorée à l'affichage.)
         ]
         // « Nourr - été » en LIGNE (comme dans le classeur), pas en
         // colonne : sources séparées — Aménagements (Champ, Rizière) +

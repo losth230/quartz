@@ -8,58 +8,9 @@
 
 export type StatutAuto = 'auto' | 'possible' | 'impossible'
 
-/** Technologies : statut d'automatisme par nom. */
-const TECHS: Record<string, StatutAuto> = {
-  // ── VERT : flux, one-shots, réductions, garnisons (progresAuto.ts) ──
-  'Comprendre la soie': 'auto', 'Etude astronomique': 'auto', 'Lumi\u00e8re': 'auto',
-  'D\u00e9forestation': 'auto', 'Carrieristes': 'auto', 'Organisation fiscale': 'auto',
-  'Granges': 'auto', 'Usinage': 'auto', 'Garde suzeraine': 'auto', 'Patronage': 'auto',
-  'Assembl\u00e9es scientifiques': 'auto', 'Technologies futures II': 'auto',
-  'Cours de p\u00eache': 'auto', 'Commerce maritime I': 'auto',
-  'Engrais naturels I': 'auto', 'Engrais naturels II': 'auto',
-  'Merveilleux': 'auto', 'Prix Gorback Nobel': 'auto', 'Stands de goodies': 'auto',
-  'Progr\u00e8s technologiques I': 'auto', 'Progr\u00e8s technologiques II': 'auto',
-  'Progr\u00e8s technologiques III': 'auto', 'S\u00e9dentarisation': 'auto',
-  'Pr\u00e9fectures': 'auto', 'Greniers': 'auto', 'Recyclage': 'auto',
-  'Taxe n\u00e9c\u00e9ssaire I': 'auto', 'Taxes n\u00e9c\u00e9ssaire II': 'auto',
-  '\u00c9missaires de cour': 'auto', 'Geste': 'auto', 'Offrande': 'auto',
-  'D\u00e9veloppement durable': 'auto', 'D\u00e9veloppement \u00e9conome': 'auto',
-  'Colonialisme durable': 'auto', 'Colonialisme \u00e9conome': 'auto',
-  'Viser le ciel': 'auto', 'Conscription I': 'auto',
-  'Milices civiles I': 'auto', 'Fortifications solides': 'auto',
-  'Milices civiles III': 'auto', 'Milices civiles V': 'auto',
-  'Pr\u00e9 carr\u00e9': 'auto', 'Vasselit\u00e9': 'auto',
-  'Grande arm\u00e9e': 'auto', "L'Art de la Guerre": 'auto', 'Collecte d\'imp\u00f4ts': 'auto',
-  // ── ROUGE : plateau / non mod\u00e9lis\u00e9 ──
-  'P\u00eache de culture': 'auto', 'Expansion maritime': 'auto',
-  'Rations': 'impossible', 'Service militaire': 'impossible',
-  // Revue 2026-10-16 (techs manquantes) : Muraille et Défense
-  //  nationale A1 = garnisons automatiques ; éco C = rang + Or
-  //  automatiques ; futur C = ministre supplémentaire (avertissement).
-  'Muraille': 'auto', 'Progrès de la défense nationale A1': 'auto',
-  'Progrès du développement économique C': 'auto',
-  'Progrès du développement futur C': 'auto',
-  // Art de la Guerre : choix de liste APRÈS l'adversaire — plateau.
-  'Art de la Guerre': 'impossible',
-  'Raliement ! I': 'impossible', 'Strat\u00e9gies militaires I': 'auto',
-  'Eriger des murs': 'impossible', 'Quadrilat\u00e8re strat\u00e9gique': 'impossible',
-  'Conqu\u00eate maritime': 'impossible', 'D\u00e9l\u00e9gation': 'impossible', 'Ambassade': 'impossible',
-  'Vassalisation': 'impossible',
-  'Identit\u00e9 commune': 'auto', 'Une ville magnifique': 'auto', 'Identit\u00e9 statique': 'auto',
-  'Gestion de crise': 'impossible', 'Combler les lacunes': 'auto',
-  'Fascination culturelle': 'auto', 'Safaris': 'impossible', 'Parcs naturels': 'auto',
-  'Grande arm\u00e9e I': 'auto', 'Corps d\'arm\u00e9e': 'possible', 'Croisade': 'impossible',
-  'Barrage': 'impossible', 'Projet anti incendie': 'impossible',
-  'Assembl\u00e9e de penseurs': 'auto', 'Assembl\u00e9e de savants': 'auto',
-  'Charues': 'auto', 'Surconsommation': 'auto',
-  'Culte de la personnalit\u00e9': 'auto', 'Urbanisme': 'auto',
-  'R\u00e9servistes': 'possible', 'Exposition universelle': 'auto',
-}
-
-/** Statut d'une TECHNOLOGIE par son nom (d\u00e9faut : possible). */
-export function statutTech(nom: string): StatutAuto {
-  return TECHS[nom] ?? 'possible'
-}
+// (RETRAIT 2026-10-24, retour arbitre : la table TECHS et statutTech ont
+//  été retirées avec le système de progrès — les pastilles de statut ne
+//  concernent plus que les merveilles.)
 
 /** Statut d'une MERVEILLE par son nom. */
 export function statutMerveille(nom: string): StatutAuto {

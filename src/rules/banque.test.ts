@@ -52,59 +52,43 @@ test('fluxVille ete va dans le canal été, pas dans le flux normal', () => {
   assert.equal(out.flux['Nourriture'], undefined)
 })
 
-test('garnisonVille et garnisonParRang s’additionnent', () => {
+test('garnisonVille accumule les valeurs d’état', () => {
+  // (RETRAIT 2026-10-24, purge R4 : garnisonParRang — plomberie des
+  //  doctrines — n'existe plus au contrat ; le test couvre la
+  //  somme des garnisonsVille, seul type de garnison produit.)
   const ctx = partieMock({ villeRang: 'Cité' })
   const regle: RegleBanque = {
     id: 'test.garnison', source: 'batiment', nom: 'Test',
     effets: [
       { type: 'garnisonVille', valeur: 40 },
-      { type: 'garnisonParRang', valeur: 15 },
+      { type: 'garnisonVille', valeur: 15 },
     ],
   }
   const out = appliquerRegles([regle], ctx)
-  // 40 + 15 × rang(Cité = 2)
-  assert.equal(out.garnison, 40 + 15 * 2)
+  assert.equal(out.garnison, 55)
 })
 
-test('tourismeInstantane passe par les instantanés (jamais un flux)', () => {
-  const ctx = partieMock()
+test('conditions saison / regime (ET logique)', () => {
+  // (RETRAIT 2026-10-24, purge R4 : les conditions peuple/vassal/
+  //  suzerainDeCite n'existent plus au contrat — leurs producteurs
+  //  (factions/dogmes) sont supprimés. Restent saison/regime/culture,
+  //  les seules posées par le registre. Le mock de base est
+  //  Autoritarisme / Été.)
   const regle: RegleBanque = {
-    id: 'test.tourisme', source: 'batiment', nom: 'Test',
-    effets: [{ type: 'tourismeInstantane', valeur: 35 }],
+    id: 'test.cond', source: 'regime', nom: 'Test',
+    conditions: { regime: 'Socialisme', saison: 'Hiver' },
+    effets: [{ type: 'fluxVille', ressource: 'Or', valeur: 10 }],
   }
-  const out = appliquerRegles([regle], ctx)
-  assert.equal(out.flux['Tourisme'], undefined)
-  assert.equal(out.instantanes.length, 1)
-  assert.deepEqual(out.instantanes[0], { type: 'tourismeInstantane', valeur: 35 })
-})
-
-test('conditions peuple / saison / vassal (ET logique)', () => {
-  // Le mock de base est NORLS / Été : on utilise des conditions qu'il
-  //  ne satisfait PAS pour vérifier le blocage, puis on les satisfait.
-  const regle: RegleBanque = {
-    id: 'test.cond', source: 'faction', nom: 'Test',
-    conditions: { peuple: 'PEAUX VERTES', saison: 'Hiver' },
-    effets: [{ type: 'fluxJoueur', ressource: 'Or', valeur: 10 }],
-  }
-  // ni le peuple ni la saison → rien
+  // ni le régime ni la saison → rien
   const base = partieMock()
   assert.equal(appliquerRegles([regle], base).flux['Or'], undefined)
-  // peuple OK mais saison fausse → rien (ET)
-  const vertsEte = partieMock({ peuple: 'PEAUX VERTES', saison: 'Été' })
-  assert.equal(appliquerRegles([regle], vertsEte).flux['Or'], undefined)
-  // saison OK mais peuple faux → rien (ET)
-  const norlsHiver = partieMock({ peuple: 'NORLS', saison: 'Hiver' })
+  // saison OK mais régime faux → rien (ET)
+  const norlsHiver = partieMock({ saison: 'Hiver' })
   assert.equal(appliquerRegles([regle], norlsHiver).flux['Or'], undefined)
   // tout OK → effet
-  const vertsHiver = partieMock({ peuple: 'PEAUX VERTES', saison: 'Hiver' })
-  assert.equal(appliquerRegles([regle], vertsHiver).flux['Or'], 10)
-  // condition vassal : le joueur de base n'est vassal de personne
-  const regleVassal: RegleBanque = {
-    id: 'test.vassal', source: 'evenement', nom: 'Test',
-    conditions: { vassal: true },
-    effets: [{ type: 'fluxJoueur', ressource: 'Or', valeur: 5 }],
-  }
-  assert.equal(appliquerRegles([regleVassal], base).flux['Or'], undefined)
+  const socialiste = partieMock({ saison: 'Hiver' })
+  socialiste.joueur.regime = 'Socialisme'
+  assert.equal(appliquerRegles([regle], socialiste).flux['Or'], 10)
 })
 
 // ── 2. Voie unique : le moteur ne lit QUE la banque ───────────────────────

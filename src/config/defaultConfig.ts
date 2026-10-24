@@ -2,7 +2,9 @@
 //  CHASSE & PÊCHE — Configuration par défaut
 //  Toutes les données de référence du classeur Excel (feuilles init,
 //  JSON, Metiers, traits_genetiques, Culture, Peuples, Ville, Bat,
-//  Progrès, Tourisme, Cités L, BDD_pop, Accueil) + paramètres moteur.
+//  Tourisme, Cités L, BDD_pop, Accueil) + paramètres moteur.
+//  (RETRAIT 2026-10-24 : la feuille « Progrès » du classeur n'est
+//  plus embarquée — système de progrès supprimé, retour arbitre.)
 //  Tout est stocké DANS la partie (state.config) et modifiable à chaud
 //  depuis l'onglet « Paramètres » — aucun redémarrage nécessaire.
 // ══════════════════════════════════════════════════════════════════════
@@ -201,58 +203,12 @@ export interface EmplacementDef {
   metier: string
   places: number
 }
-/** Effet AUTOMATIQUE d'une technologie de progrès (paramétrable dans
- *  Référentiels → Progrès, champ « effets » de chaque tech) :
- *    gain               — crédit unique au déblocage (« recevez 20 Or »),
- *    prodCapitale       — +N ressource par tour (capitale du joueur),
- *    prodParHabitation  — +N ressource par tour et par habitation,
- *    prodParMetier       — +N ressource par tour et par habitant titré,
- *    prodParAmenagement — +N ressource par tour et par aménagement listé,
- *    garnison           — +N garnison statique (capitale ou habitations).
- *  AIDE DE JEU UNIQUEMENT (arbitrage Thibaut 2026-10-14) : AUCUN effet
- *  moteur — le résumé est affiché sous la tech, tout s'applique au
- *  plateau (bataille, coûts de construction, limites… inclus). */
-export interface EffetProgres {
-  type: 'gain' | 'prodCapitale' | 'prodParHabitation' | 'prodParMetier' | 'prodParAmenagement' | 'garnison'
-  /** ressource concernée (tous les types sauf garnison) */
-  ressource?: string
-  /** valeur de l'effet (négative = malus) */
-  montant: number
-  /** metier des habitants concernés (prodParMetier) */
-  metier?: string
-  /** aménagements concernés (prodParAmenagement) */
-  amenagements?: string[]
-  /** cible de la garnison (garnison) */
-  cible?: 'capitale' | 'habitations'
-}
-
-/** Une technologie d'un arbre de progrès : nom, coût (Science — DÉDUITE
- *  automatiquement du stock au déblocage), description de l'effet et
- *  effets chiffrés (AIDE DE JEU : résumé affiché, application au
- *  plateau uniquement). */
-export interface ProgresTechDef {
-  nom: string
-  cout: string
-  description: string
-  /** Effets chiffrés (AIDE DE JEU — aucun effet moteur, application au
-   *  plateau) ; champ optionnel : absent → aucun résumé affiché. */
-  effets?: EffetProgres[]
-}
-/** Un arbre de progrès (feuille « Progrès » du classeur) : 2 branches de
- *  2 technologies (la tech 2 exige la tech 1) + une technologie C
- *  (exigée après 2 techs d'une même branche, optionnelle). Un arbre est
- *  TERMINÉ à EXACTEMENT 3 technologies débloquées ; 3 arbres de l'âge
- *  N-1 complétés ouvrent l'âge N. */
-export interface ProgresArbre {
-  nom: string
-  /** 1..3 — l'âge auquel l'arbre appartient. */
-  age: number
-  /** Tags indicatifs du classeur (ex. « C, PV, Aurore N »). */
-  tags?: string
-  brancheA: ProgresTechDef[]
-  brancheB: ProgresTechDef[]
-  techC: ProgresTechDef
-}
+/** (EffetProgres, ProgresTechDef et ProgresArbre retirés le
+ *  2026-10-24 avec le système de progrès, retour arbitre Thibaut —
+ *  types des effets chiffrés des technologies et des arbres de
+ *  progrès, plus aucun producteur. La clé `progres` encore portée
+ *  par les configs sauvegardées est purgée par un delete ciblé dans
+ *  cfgOf, patron taxes25, sans bump de SCHEMA_VERSION_CONFIG.) */
 
 /** (EffetDef, EventEffetsDef et DynastieEffetsDef retirés le
  *  2026-10-24 avec les tables events/dynasties — effets chiffrés
@@ -295,7 +251,10 @@ export interface GameConfig {
   peuplesAutres: PeupleRef[]
   constructions: ConstructionRef[]
   typesHabitation: HabitationDef[]
-  progres: ProgresArbre[]
+  // (progres — arbres de progrès — retiré le 2026-10-24, retour arbitre :
+  //  suppression du système de progrès. La clé encore portée par les
+  //  configs sauvegardées est purgée par delete ciblé dans cfgOf,
+  //  patron taxes25, sans bump de SCHEMA_VERSION_CONFIG.)
   paysRangs: { nom: string; coutOr: number; coutNourriture: number; serments: number; bonus: string }[]
   tourismeSeuils: { seuil: number; bonus: string }[]
   /** Dogmes RETIRÉS du référentiel le 2026-10-24 (retour arbitre
@@ -315,7 +274,15 @@ export interface GameConfig {
      *  d'habitation). Validation manuelle au radar de l'accueil,
      *  ordre strict ; crise à chaque Laurier I-III validé ; bonus
      *  one-shot si complété pendant l'âge de même numéro ; le
-     *  Laurier IV = Victoire. */
+     *  Laurier IV = Victoire.
+     *  (RETRAIT 2026-10-24, retour arbitre « supprimer les conditions
+     *  de victoire » : les TEXTES de conditions/bonus sont vidés dans
+     *  le référentiel — Lauriers VIDÉS, structure conservée (voies +
+     *  coches + radar). Les textes d'une config sauvegardée sont
+     *  actualisés par le garde-fou de cfgOf (bloc « mise à jour des
+     *  conditions », qui remplace une voie différant du référentiel),
+     *  SANS bump de SCHEMA_VERSION_CONFIG. L'ancien contenu reste
+     *  dans l'historique git (règle 9).) */
     lauriers: { laurier: string; condition: string; bonus: string }[]
   }[]
   crises: string[]
@@ -341,12 +308,9 @@ export interface GameConfig {
    *  schemaVersion (les suppressions/renommages du référentiel
    *  persistent — règle (x)). */
   taxes25?: boolean
-  /** Migration renommages de techs doublons (2026-10-16) — rejouée
-   *  tant que false/absente, puis tamponnée. */
-  renommagesTechs2026?: boolean
-  /** Migration techs manquantes (2026-10-16) — slots vides complétés
-   *  depuis le référentiel, descriptions corrigées. */
-  techsManquantes2026?: boolean
+  // (renommagesTechs2026 / techsManquantes2026 retirés le 2026-10-24 :
+  //  migrations ciblées des TECHS de progrès, supprimées avec le
+  //  système — les drapeaux restants des vieilles configs sont inertes.)
   /** Migration Laurier IV Militaire (2026-10-16) — condition mise à
    *  jour « Contrôler 6 des habitations de départ ». */
   laurier4Militaire2026?: boolean
@@ -361,17 +325,8 @@ export interface GameConfig {
    *  « crédité automatiquement » du palier 220 Tourisme : tous les
    *  paliers sont des aides de jeu au plateau (décision Thibaut). */
   pontificats2026?: boolean
-  /** Migration Muraille +40 Garnison (2026-10-17) — les configs
-   *  tamponnées avant le passage +10 Défense → +40 Garnison gardent
-   *  l'ancienne description (la migration techsManquantes2026 était
-   *  déjà jouée et ne se rejoue pas). Ne remplace QUE l'ancien
-   *  texte exact — les éditions personnalisées sont préservées. */
-  muraille40_2026?: boolean
-  /** Migration slots vides (2026-10-18) — TOUT slot vide d'un arbre
-   *  existant reçoit la tech du référentiel à jour (clé : nom+âge
-   *  de l'arbre, indépendant des index). Couvre les trous laissés
-   *  par les techs ajoutées après la création de la partie. */
-  slotsVides2026?: boolean
+  // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
+  //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
    *  Soldat/Commandant passent de regleGenre « Martialité » à vide
    *  (aucune restriction de sexe), la clé martialite disparaît des
@@ -646,7 +601,6 @@ export const DEFAULT_CONFIG: GameConfig = {
   peuplesAutres: ref.peuplesAutres,
   constructions: ref.constructions,
   typesHabitation: ref.typesHabitation,
-  progres: ref.progres,
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
   // (dogmes retirés du référentiel le 2026-10-24, retour arbitre)
@@ -873,19 +827,10 @@ export function migrerTypesHabitation(list: HabitationDef[] | undefined): Habita
   return list
 }
 
-/** Arbres de progrès d'une configuration existante : l'ANCIEN format
- *  du classeur ({ arbre, entrees } à plat) est remplacé par le
- *  référentiel courant (structure par branches a/b + tech C). Les
- *  configs déjà au nouveau format (nom/age/branches) sont conservées
- *  telles quelles (éditables dans Référentiels → Progrès). */
-export function migrerProgres(list: ProgresArbre[] | undefined): ProgresArbre[] {
-  if (!Array.isArray(list) || list.length === 0) return DEFAULT_CONFIG.progres
-  const vieuxFormat = (list as unknown[]).some(
-    (t: any) => t && (t.entrees !== undefined || t.arbre !== undefined) && t.brancheA === undefined,
-  )
-  if (vieuxFormat) return DEFAULT_CONFIG.progres
-  return list
-}
+// (migrerProgres retiré le 2026-10-24 avec le système de progrès :
+//  migration de l'ancien format à plat du classeur vers les arbres
+//  par branches — plus nécessaire, la table entière est purgée par
+//  cfgOf et n'existe plus dans le référentiel.)
 
 // Rangs de pays : migration de l'ancienne table à blocs Féodal/Républicain
 // (champs bloc/cout/succession en texte libre) vers l'échelle féodale
@@ -904,6 +849,8 @@ function migrerPaysRangs(rangs: GameConfig['paysRangs']): GameConfig['paysRangs'
 // des anciens formats (refonte 2026-10-14) — « Rang I-IV » devient
 // « Laurier I-IV » ; les vieilles sauvegardes avec `rangs` repassent
 // automatiquement sur `lauriers` (textes du classeur conservés).
+// (NB 2026-10-24 : depuis le retrait des textes de conditions, les
+//  valeurs de repli sont vides — Lauriers VIDÉS, retour arbitre.)
 function migrerVictoires(list: GameConfig['victoires']): GameConfig['victoires'] {
   const convert = (m: any) => ({
     voie: m.voie ?? '',
@@ -965,24 +912,22 @@ function gardeFous(m: GameConfig): void {
   m.cultures = ouDefauts(m.cultures, DEFAULT_CONFIG.cultures)
   m.regimes = ouDefauts(m.regimes, DEFAULT_CONFIG.regimes)
   m.typesHabitation = ouDefauts(m.typesHabitation, DEFAULT_CONFIG.typesHabitation)
-  m.progres = ouDefauts(m.progres, DEFAULT_CONFIG.progres)
-  // Ajout d'arbres du référentiel manquants dans une config déjà convergée
-  //  (marqueur (aa) 2026-10-15) : les NOUVEAUX arbres du référentiel
-  //  (ex. « Relations diplomatiques » et « Tourisme », âge 1) sont AJOUTÉS
-  //  sans toucher aux arbres existants — la personnalisation (édition,
-  //  suppression) persiste. Clé : (nom, âge).
-  if (Array.isArray(m.progres)) {
-    const connus = new Set(m.progres.map((a) => `${a.nom}|${a.age}`))
-    for (const def of DEFAULT_CONFIG.progres) {
-      if (!connus.has(`${def.nom}|${def.age}`)) m.progres.push(def)
-    }
-  }
+  // (RETRAIT 2026-10-24 : le garde-fou des arbres de progrès et la
+  //  réintégration (aa) des nouveaux arbres du référentiel sont
+  //  supprimés avec le système de progrès — la clé `progres` d'une
+  //  config existante est purgée par le delete ciblé de cfgOf, elle
+  //  ne doit SURTOUT pas être re-remplie par un défaut.)
   m.paysRangs = ouDefauts(m.paysRangs, DEFAULT_CONFIG.paysRangs)
   m.victoires = ouDefauts(m.victoires, DEFAULT_CONFIG.victoires)
   // Mise à jour des CONDITIONS de victoire (retour Thibaut 2026-10-15) :
   //  les nouvelles voies du référentiel REMPLACENT celles d'une config
   //  convergée — mais les Lauriers VALIDÉS par les joueurs (p.lauriers)
   //  sont conservés : seul le texte des conditions/bonus est actualisé.
+  //  (2026-10-24 : c'est ce bloc, appliqué à CHAQUE cfgOf, qui propage
+  //  le RETRAIT des textes de conditions (retour arbitre) vers les
+  //  configs sauvegardées — une voie aux textes non vides diffère du
+  //  référentiel vide et est remplacée ; idempotent, sans bump de
+  //  SCHEMA_VERSION_CONFIG.)
   if (Array.isArray(m.victoires)) {
     const voies = new Map(m.victoires.map((v) => [v.voie, v]))
     for (const def of DEFAULT_CONFIG.victoires) {
@@ -1078,6 +1023,17 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  SCHEMA_VERSION_CONFIG (un bump renverrait les configs v4
   //  convergées dans la branche de migration complète qui ré-ajoute
   //  les entrées supprimées, règle (x)). Idempotents.
+  // RETRAIT DU SYSTÈME DE PROGRÈS (retour arbitre Thibaut 2026-10-24 :
+  //  « supprimer proprement les progrès, qu'il ne reste rien ») : les
+  //  arbres de progrès, technologies, effets et déblocages n'existent
+  //  plus dans le type ni le référentiel, mais les configs
+  //  sauvegardées AVANT portent encore la clé (fusion
+  //  {...DEFAULT_CONFIG, ...c}). Même patron que dogmes/événements :
+  //  delete ciblé, SANS bump de SCHEMA_VERSION_CONFIG (un bump
+  //  renverrait les configs v4 convergées dans la branche de
+  //  migration complète qui ré-ajoute les entrées supprimées,
+  //  règle (x)). Idempotent — rien ne ré-écrit la clé ensuite.
+  delete (merged as { progres?: unknown }).progres
   const purgeEvt = merged as {
     events?: unknown; dynasties?: unknown; eventEffets?: unknown; dynastieEffets?: unknown
   }
@@ -1105,23 +1061,17 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  SCHEMA_VERSION_CONFIG (règle (x)). Trois familles :
   //    · entrée « Marchand » de merged.metiers (le picker, les caps) ;
   //    · entrée « Marchand » de merged.metiersEffets (le wiki) ;
-  //    · effets fluxParMetier de métier « Marchand » (ex. la tech
-  //      « Commerce lointain », gardée SANS effet — arbitrage
-  //      Thibaut 2026-10-24) : le métier n'existe plus, l'effet est
-  //      mort quelle que soit sa valeur — purgé pour aligner la
-  //      config sur le référentiel.
+  //    · (RETRAIT 2026-10-24, purge R4 : la troisième famille —
+  //      « effets fluxParMetier de métier Marchand dans les TECHS »
+  //      (ex. « Commerce lointain », gardée SANS effet) — est
+  //      devenue muette : la table `progres` entière est purgée
+  //      ci-dessous avec le système de progrès, retour arbitre.
+  //      Aucune purge dédiée nécessaire.)
   if (Array.isArray(merged.metiers)) {
     merged.metiers = merged.metiers.filter((m) => m.metier !== 'Marchand')
   }
   if (Array.isArray(merged.metiersEffets)) {
     merged.metiersEffets = merged.metiersEffets.filter((e) => e.metier !== 'Marchand')
-  }
-  for (const arbre of merged.progres ?? []) {
-    const techs = [...(arbre.brancheA ?? []), ...(arbre.brancheB ?? []), ...(arbre.techC ? [arbre.techC] : [])] as unknown as Array<{ effets?: Array<Record<string, unknown>> }>
-    for (const tech of techs) {
-      if (!Array.isArray(tech.effets)) continue
-      tech.effets = tech.effets.filter((e) => !(e.type === 'fluxParMetier' && e.metier === 'Marchand'))
-    }
   }
   // PURGE DE L'INFLUENCE (retour arbitre Thibaut 2026-10-24, suite
   //  de l'arbitrage fondateur « Influence → émissaires ») : le texte
@@ -1170,26 +1120,14 @@ export function cfgOf(config?: GameConfig): Cfg {
       })
       delete ancienM.titresEffets
     }
-    for (const arbre of merged.progres ?? []) {
-      const techs = [...(arbre.brancheA ?? []), ...(arbre.brancheB ?? []), ...(arbre.techC ? [arbre.techC] : [])] as unknown as Array<{ effets?: Array<Record<string, unknown>> }>
-      for (const tech of techs) {
-        for (const e of tech.effets ?? []) {
-          if (e.type === 'prodParTitre') {
-            const ancienTitre = e.titre
-            delete e.titre
-            e.type = 'prodParMetier'
-            if (e.metier === undefined && ancienTitre !== undefined) e.metier = ancienTitre
-          }
-        }
-      }
-    }
+    // (2026-10-24 : la migration des effets de techs prodParTitre →
+    //  prodParMetier est supprimée avec le système de progrès — la
+    //  table `progres` est purgée en tête de cfgOf, rien à migrer.)
     // migrations : traits (V2), cultures et régimes (champs chiffrés)
     merged.traits = migrateTraits(merged.traits)
     merged.cultures = migrerCultures(merged.cultures)
     merged.regimes = migrerRegimes(merged.regimes)
     merged.typesHabitation = migrerTypesHabitation(merged.typesHabitation)
-    // arbres de progrès : migration de l'ancien format à plat du classeur
-    merged.progres = migrerProgres(merged.progres)
     // rangs de pays : échelle féodale unique (refonte 2026-10-14)
     merged.paysRangs = migrerPaysRangs(merged.paysRangs)
     // ministères : complétion rangMinimum/mode (refonte 2026-10-14)
@@ -1213,6 +1151,61 @@ export function cfgOf(config?: GameConfig): Cfg {
     merged.constructions = migrerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.schemaVersion = SCHEMA_VERSION_CONFIG
   }
+  // RETRAIT INTÉGRAL DES RÈGLES DE FACTIONS (retour arbitre Thibaut
+  //  2026-10-24 : « vide toutes les lignes de règles + les
+  //  descriptions, ne garde que les noms ») : le référentiel ne porte
+  //  plus que le NOM de chaque peuple (description et lignes VIDÉES —
+  //  la structure reste pour les recevoir à nouveau). Ce bloc
+  //  remplace, dans les configs sauvegardées, toute fiche PORTÉE PAR
+  //  LE RÉFÉRENTIEL par la fiche courante (vide) : les reliquats des
+  //  vagues précédentes (lignes, descriptions, champs structurés
+  //  reglesBase/ageII/ageIII des configs d'avant le 2026-10-19 que
+  //  l'onglet Peuples rendait encore) disparaissent. Un peuple HORS
+  //  référentiel (personnalisé) est conservé tel quel. Même patron
+  //  que la « mise à jour des CONDITIONS » de victoire : appliqué à
+  //  CHAQUE cfgOf, idempotent, SANS bump de SCHEMA_VERSION_CONFIG
+  //  (règle (x)).
+  {
+    const parNomPeuple = new Map(
+      [...DEFAULT_CONFIG.peuplesLibres, ...DEFAULT_CONFIG.peuplesAutres].map((d) => [d.nom, d]))
+    const alignerPeuples = (list: PeupleRef[] | undefined): PeupleRef[] =>
+      (list ?? []).map((p) => {
+        const def = parNomPeuple.get(p.nom)
+        return def ? structuredClone(def) : p
+      })
+    merged.peuplesLibres = alignerPeuples(merged.peuplesLibres)
+    merged.peuplesAutres = alignerPeuples(merged.peuplesAutres)
+  }
+  // VIDAGE DES TEXTES « MINISTRE » (retour arbitre Thibaut 2026-10-24
+  //  : « garder la ligne titre, vider ses textes ») : le système des
+  //  ministères a été retiré le 2026-10-23 ; la ligne « Ministre »
+  //  RESTE dans la table métiers (titre attribuable manuellement,
+  //  sans aucun effet moteur — l'étiquette des vieux états est
+  //  inoffensive) mais ses textes morts — description (« Plusieurs
+  //  autorisés »), effet (« Octroie un ministre… ») et coût de
+  //  révocation (« 30 Or + 6 Soie ») — sont VIDÉS dans le
+  //  référentiel. Ce bloc propage le vide aux configs sauvegardées
+  //  (une config convergée AVANT garde sinon ses textes affichés
+  //  dans Référence → Métiers). Même patron que la « mise à jour des
+  //  CONDITIONS » : appliqué à CHAQUE cfgOf, idempotent, SANS bump
+  //  de SCHEMA_VERSION_CONFIG (règle (x)).
+  if (Array.isArray(merged.metiers)) {
+    const defMin = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Ministre')
+    for (const t of merged.metiers) {
+      if (t.metier === 'Ministre' && defMin && t.description !== defMin.description) {
+        t.description = defMin.description
+      }
+    }
+  }
+  if (Array.isArray(merged.metiersEffets)) {
+    const defMinEff = DEFAULT_CONFIG.metiersEffets.find((t) => t.metier === 'Ministre')
+    for (const t of merged.metiersEffets) {
+      if (t.metier === 'Ministre' && defMinEff && (t.effet !== defMinEff.effet || t.revocation !== defMinEff.revocation)) {
+        t.effet = defMinEff.effet
+        t.revocation = defMinEff.revocation
+      }
+    }
+  }
   // Effet des taxes ±50 % → ±25 % (marqueur (z), retour Thibaut
   //  2026-10-15) : migration CIBLÉE des paramètres, indépendante du
   //  tampon schemaVersion — on ne re-joue PAS les autres migrations
@@ -1221,68 +1214,12 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  (0.5 / 1.5) ; toute valeur personnalisée est conservée. Le
   //  champ taxes25 marque la migration faite (persisté par
   //  convergerConfig aux points de sauvegarde).
-  // RENOMMAGES DE TECHS DOUBLONS (revue 2026-10-16) : les homonymes
-  //  du r\u00e9f\u00e9rentiel ont \u00e9t\u00e9 renomm\u00e9s. Une config sauvegard\u00e9e AVANT
-  //  embarque encore les anciens noms \u2014 aTech/gainDeblocage ne
-  //  reconnaissent plus les effets. Migration cibl\u00e9e par SLOT (comme
-  //  taxes25, ind\u00e9pendante du tampon schemaVersion), marqu\u00e9e
-  //  renommagesTechs2026 pour n'\u00eatre pas rejou\u00e9e. Le nom n'est
-  //  remplac\u00e9 QUE s'il vaut encore l'ancien homonyme : une \u00e9dition
-  //  personnalis\u00e9e dans ConfigTables est pr\u00e9serv\u00e9e. Les cl\u00e9s de
-  //  d\u00e9blocage (i:slot) ne changent pas \u2014 les parties en cours
-  //  gardent leurs d\u00e9blocages.
-  if (!merged.renommagesTechs2026) {
-    // [index d'arbre, slot, ancien nom, nouveau nom]
-    const RENOMS: Array<[number, string, string, string]> = [
-      [17, 'b2', 'Service militaire', 'Service militaire avanc\u00e9'],
-      [21, 'a2', 'D\u00e9forestation', 'Exploitation foresti\u00e8re'],
-      [21, 'b2', 'Usinage', 'Industrialisation'],
-      [22, 'a1', 'Geste', 'Hommage solennel'],
-      [22, 'b1', 'D\u00e9l\u00e9gation', 'Cartes de dynastie'],
-      [22, 'b2', 'Ambassade', 'Diplomatie effr\u00e9n\u00e9e'],
-      [22, 'c', 'Vassalisation', 'Vassalit\u00e9 \u00e9largie'],
-      [18, 'b2', 'Parcs naturels', 'Merveilles naturelles'],
-      [16, 'b2', 'Sappeurs', 'Grand d\u00e9ploiement'],
-    ]
-    for (const [iArbre, slot, ancien, nouveau] of RENOMS) {
-      const a = merged.progres?.[iArbre]
-      if (!a) continue
-      const t = slot === 'c' ? a.techC : (slot[0] === 'a' ? a.brancheA : a.brancheB)?.[+slot[1] - 1]
-      if (t && t.nom === ancien) t.nom = nouveau
-    }
-    merged.renommagesTechs2026 = true
-  }
-  // TECHS MANQUANTES (revue 2026-10-16) : Muraille (+40 Garnison),
-  //  Art de la Guerre (16:c), D\u00e9fense nationale A1 (17:a1), d\u00e9veloppement
-  //  \u00e9conomique C (19:c) et futur C (18:c) ont \u00e9t\u00e9 ajout\u00e9es au
-  //  r\u00e9f\u00e9rentiel du bundle \u2014 mais une config sauvegard\u00e9e AVANT garde
-  //  ces slots vides (ou la vieille description). Copie cibl\u00e9e depuis
-  //  DEFAULT_CONFIG : un slot VIDE re\u00e7oit la tech ; Muraille et Art
-  //  de la Guerre voient leur description mise \u00e0 jour si le nom
-  //  correspond (une \u00e9dition personnalis\u00e9e d'un autre slot n'est pas
-  //  touch\u00e9e). Marqu\u00e9e techsManquantes2026.
-  if (!merged.techsManquantes2026) {
-    const FIX: Array<[number, string]> = [
-      [11, 'c'], [16, 'c'], [17, 'a1'], [18, 'c'], [19, 'c'],
-    ]
-    for (const [iArbre, slot] of FIX) {
-      const a = merged.progres?.[iArbre]
-      const d = DEFAULT_CONFIG.progres?.[iArbre]
-      if (!a || !d) continue
-      const t = slot === 'c' ? a.techC : (slot[0] === 'a' ? a.brancheA : a.brancheB)?.[+slot[1] - 1]
-      const dt = slot === 'c' ? d.techC : (slot[0] === 'a' ? d.brancheA : d.brancheB)?.[+slot[1] - 1]
-      if (!t || !dt) continue
-      if (!t.nom) {
-        // slot vide : la tech manquante est copi\u00e9e enti\u00e8rement
-        Object.assign(t, dt)
-      } else if (t.nom === dt.nom) {
-        // m\u00eame tech : description \u00e0 jour (Muraille +40 Garnison,
-        // Art de la Guerre liste d'arm\u00e9e apr\u00e8s l'adversaire)
-        t.description = dt.description
-      }
-    }
-    merged.techsManquantes2026 = true
-  }
+  // (2026-10-24 : le bloc de migration renommagesTechs2026 — renommage
+  //  des techs doublons des configs sauvegardées — est supprimé avec le
+  //  système de progrès ; la table `progres` est purgée en tête de cfgOf.)
+  // (2026-10-24 : le bloc de migration techsManquantes2026 — copie des
+  //  techs manquantes du référentiel dans les configs sauvegardées —
+  //  est supprimé avec le système de progrès.)
   // LAURIER IV MILITAIRE (revue 2026-10-16) : « Capturer un total de
   //  3 Capitales » \u2192 \u00ab Contr\u00f4ler 6 des habitations de d\u00e9part \u00bb.
   //  Migration cibl\u00e9e (m\u00eame sch\u00e9ma que taxes25) : le texte n'est
@@ -1367,56 +1304,12 @@ export function cfgOf(config?: GameConfig): Cfg {
     }
     merged.pontificats2026 = true
   }
-  // MIGRATION MURAILLE (2026-10-17) : « +10 Défense dans vos
-  //  habitations. » → « +40 Garnison dans vos habitations. » —
-  //  les configs sauvegardées AVANT le changement de valeur
-  //  gardaient l'ancienne description (le tampon techsManquantes2026
-  //  était déjà posé et le bloc ne se rejoue pas). Remplacement
-  //  ciblé : uniquement si la description vaut ENCORE l'ancien
-  //  texte exact (une édition personnalisée est préservée).
-  if (!merged.muraille40_2026) {
-    const ANCIENNE_MURAILLE = '+10 Défense dans vos habitations.'
-    const NOUVELLE_MURAILLE = '+40 Garnison dans vos habitations.'
-    for (const arbre of merged.progres ?? []) {
-      for (const t of [...(arbre.brancheA ?? []), ...(arbre.brancheB ?? []), ...(arbre.techC ? [arbre.techC] : [])]) {
-        if (t?.nom === 'Muraille' && t.description === ANCIENNE_MURAILLE) {
-          t.description = NOUVELLE_MURAILLE
-        }
-      }
-    }
-    merged.muraille40_2026 = true
-  }
-  // MIGRATION SLOTS VIDES (2026-10-18) : les « — emplacement
-  //  vide — » dans Référentiels → Progrès venaient des configs
-  //  tamponnées dont les arbres dataient d'avant l'ajout de techs
-  //  au référentiel. La migration techsManquantes2026 ne couvrait
-  //  que 5 slots prédéfinis et ne se rejoue pas (tampon). Ici :
-  //  pour CHAQUE arbre de la config (retrouvé par nom+âge dans le
-  //  référentiel à jour), tout slot VIDE reçoit la tech du
-  //  référentiel. Les slots remplis (éditions personnalisées
-  //  comprises) ne sont JAMAIS touchés.
-  if (!merged.slotsVides2026) {
-    for (const arbre of merged.progres ?? []) {
-      const ref = DEFAULT_CONFIG.progres.find((d) => d.nom === arbre.nom && d.age === arbre.age)
-      if (!ref) continue
-      arbre.brancheA = arbre.brancheA ?? []
-      arbre.brancheB = arbre.brancheB ?? []
-      while (arbre.brancheA.length < 2) arbre.brancheA.push({ nom: '', cout: '', description: '' } as never)
-      while (arbre.brancheB.length < 2) arbre.brancheB.push({ nom: '', cout: '', description: '' } as never)
-      for (let k = 0; k < 2; k++) {
-        if (!arbre.brancheA[k]?.nom && ref.brancheA?.[k]?.nom) {
-          arbre.brancheA[k] = ref.brancheA[k]
-        }
-        if (!arbre.brancheB[k]?.nom && ref.brancheB?.[k]?.nom) {
-          arbre.brancheB[k] = ref.brancheB[k]
-        }
-      }
-      if (!arbre.techC?.nom && ref.techC?.nom) {
-        arbre.techC = ref.techC
-      }
-    }
-    merged.slotsVides2026 = true
-  }
+  // (2026-10-24 : le bloc de migration muraille40_2026 — description
+  //  « +40 Garnison » de la tech Muraille dans les configs — est
+  //  supprimé avec le système de progrès.)
+  // (2026-10-24 : le bloc de migration slotsVides2026 — complétion
+  //  des slots vides d'arbres depuis le référentiel — est supprimé
+  //  avec le système de progrès.)
   if (!merged.taxes25) {
     const pm = merged.params as unknown as Record<string, unknown>
     if (pm.taxOrFaibles === 0.5) pm.taxOrFaibles = 0.75
@@ -1485,6 +1378,14 @@ export function cfgOf(config?: GameConfig): Cfg {
       //  merged.metiers AVANT ce bloc — la ligne ne peut plus être
       //  appariée, elle ne sert qu'à la lisibilité du snapshot.
       ['Marchand', '', 0, '', 0, '', '', false, '', 'Manuelle'],
+      // NB : le Ministre (textes VIDÉS le 2026-10-24, retour arbitre
+      //  « garder la ligne titre, vider ses textes » — le système
+      //  des ministères a été retiré le 2026-10-23, la ligne titre
+      //  reste) est conservé dans ce tableau HISTORIQUE avec ses
+      //  défauts d'avant la 3a (« Plusieurs autorisés ») : c'est ce
+      //  portrait qu'apparie la migration « ancien défaut exact →
+      //  nouveau défaut » ; le garde-fou de cfgOf vide ensuite la
+      //  description de l'entrée « Ministre » des configs.
       ['Ministre', '', 0, '', 0, '', 'Plusieurs autorisés', true, '', 'Manuelle'],
       ['Propagandiste', '', 0, '', 0, '', '', false, '', 'Manuelle'],
       ['Soldat', '', 0, '', 0, '', '', false, '', 'Armée'],

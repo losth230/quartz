@@ -105,20 +105,21 @@ const C_LECTURE = cfgOf(undefined)
 /** Contexte LECTURE SEULE pour évaluer les effets d'une construction
  *  hors partie (récapitulatifs, coûts, UI) — DÉMÉNAGÉ de
  *  rules/registry (vague 2, arbitrage Thibaut 2026-10-23 « tout dans
- *  la vague 2 ») : le contexte est construit côté MOTEUR, qui injecte
- *  ses PORTS (C, capitaleDe, rangNiveau, garnisonVille) — la couche
- *  rules n'importe plus le moteur (inversion de dépendance, cycle
- *  cassé). Les effets des constructions sont inconditionnels :
- *  aucune condition (peuple, saison…) ne s'applique à cette source —
- *  le contexte factice ne fausse donc rien. Les types sont relâchés
- *  (never) car la production d'une construction ne dépend d'aucun
- *  champ du contexte. */
+ *  la vague 2 »). (RETRAIT 2026-10-24, purge R4 : les PORTS moteur
+ *  injectés ici (C, capitaleDe, rangNiveau, garnisonVille) sont
+ *  supprimés — plus AUCUN type d'effet conservé ne consomme de
+ *  service moteur, le contexte se réduit à ses champs factices.
+ *  L'ancien contenu reste dans l'historique git, règle 9.) Les
+ *  effets des constructions sont inconditionnels : aucune condition
+ *  (saison…) ne s'applique à cette source — le contexte factice ne
+ *  fausse donc rien. Les types sont relâchés (never) car la
+ *  production d'une construction ne dépend d'aucun champ du
+ *  contexte. */
 export function contexteLectureSeule(): ContexteEffet {
   return {
     state: {} as never,
     joueur: {} as never,
     saison: '',
-    ports: { C: C_LECTURE, capitaleDe: () => undefined, rangNiveau: () => 0, garnisonVille: () => 0 },
   } as ContexteEffet
 }
 

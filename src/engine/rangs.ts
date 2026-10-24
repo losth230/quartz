@@ -1,12 +1,13 @@
 // ══════════════════════════════════════════════════════════════════════
 //  RANGS D'HABITATION — module FEUILLE (vague 2, dé-cyclage par arête)
 //  Lookups purs sur la table typesHabitation : nomRang, rangsDefsType,
-//  rangNiveau. Extraits de habitations.ts / regimes.ts pour que les
-//  sites d'application de règles (progresAuto, garnisons) puissent
-//  injecter les PORTS sans importer regimes (qui importe progresAuto
-//  — cycle réciproque interdit). habitations.ts et regimes.ts
-//  ré-exportent ces symboles : les consommateurs (UI, progresAuto,
-//  garnisons) restent inchangés (compat arrière).
+//  rangNiveau. Extraits de habitations.ts / regimes.ts (historique :
+//  pour que les sites d'application de règles puissent injecter les
+//  PORTS sans importer regimes — cycle réciproque interdit ;
+//  progresAuto.ts, consommateur d'origine, supprimé le 2026-10-24
+//  avec le système de progrès). habitations.ts et regimes.ts
+//  ré-exportent ces symboles : les consommateurs (UI, garnisons)
+//  restent inchangés (compat arrière).
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City } from './types'

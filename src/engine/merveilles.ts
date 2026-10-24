@@ -13,12 +13,11 @@
 //    · bonusScienceCapitale : Laboratoire de Falheim — double le
 //      flux de Science des bâtiments de la capitale (appliqué au
 //      canal Bâtiments du fin de tour) ;
-//    · bonusProgrèsAléatoire : Tour de Crystal — +3 d'une
-//      ressource de base aléatoire à chaque technologie découverte.
+//    · (RETRAIT 2026-10-24 : bonusProgrèsAléatoire — Tour de Crystal —
+//      supprimé avec le système de progrès, retour arbitre.)
 // ═════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player } from './types'
-import type { Rng as RngType } from './rng'
 import { cfgOf } from './gameData'
 import { nbBatiments } from './factions'
 
@@ -101,14 +100,7 @@ export function aLaboratoireFalheim(p: Player): boolean {
   return nbBatiments(p, "Laboratoire d'expérimentations de Falheim") > 0
 }
 
-/** Bonus de la Tour de Crystal à la découverte d'une technologie :
- *  +3 d'une ressource de base aléatoire (le constructeur choisit au
- *  hasard parmi Bétail, Bois, Charbon, Fer, Pierre, Soie). */
-export function bonusTourDeCrystalProgres(
-  p: Player,
-  rng: RngType,
-): { ressource: string; montant: number } | null {
-  if (nbBatiments(p, 'Tour de Crystal') === 0) return null
-  const base = ['Bétail', 'Bois', 'Charbon', 'Fer', 'Pierre', 'Soie']
-  return { ressource: rng.pick(base), montant: 3 * nbBatiments(p, 'Tour de Crystal') }
-}
+// (RETRAIT 2026-10-24, retour arbitre : bonusTourDeCrystalProgres — +3
+//  d'une ressource de base aléatoire à chaque technologie découverte —
+//  retirée avec le système de progrès. La Tour de Crystal reste une
+//  merveille constructible sans cet effet.)

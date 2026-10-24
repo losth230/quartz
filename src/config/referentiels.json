@@ -1790,1336 +1790,35 @@
   "peuplesLibres": [
     {
       "nom": "Basiléens",
-      "description": "Faction fière de sa culture et de ses constructions, les Basiléens par leur noblesse. Leur société est scindée en deux, ceux qui travaillent la terre, et ceux qui administrent, prient et défendent leur territoire. Chevalerie et noblesse de cœur sont les deux maitre-mot de ces guerriers sacrés.",
-      "lignes": [
-        {
-          "label": "Victoire de faction (désactivée)",
-          "texte": "Au début de la partie, désignez 2 cultures différentes. Vous remportez la partie si vous possédez Notre-Dame du Palatinat et qu'aucune habitation n'est d'une de ces cultures."
-        },
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Église (5 Pierres + 10 Or) : peut uniquement être construite dans une habitation de votre culture. L'église génère +8 Tourisme et +1 Or par tour.\nGrande Cathédrale (remplace une Église, 12 Pierres + 30 Or) : peut uniquement être construite dans votre capitale. Génère +16 Tourisme et +3 Or par tour.\nPalais de Notre-Dame du Palatinat (remplace la Grande Cathédrale, 25 Pierres + 80 Or) : génère +35 Tourisme et +8 Or par tour."
-        },
-        {
-          "label": "Paysans dévoués",
-          "texte": "Les champs produisent +5 Nourriture par tour ; lorsque vous aménagez un champ, générez 5 habitants. La garnison de vos habitations de type cité est réduite de 20."
-        },
-        {
-          "label": "Temps de paix",
-          "texte": "Si vous êtes suzerain, vous générez +5 Nourriture et +2 Or par tour pour chaque ville vassale. Lorsque vous acquérez un nouveau vassal, vous recevez 10 fois votre rang de pays sous forme d'habitants dans votre capitale. Si vous êtes un vassal, vous générez 15 Tourisme par rang de votre suzerain."
-        },
-        {
-          "label": "Âge II — Distribution des richesses",
-          "texte": "Lorsque vous fondez ou améliorez une habitation, elle reçoit 50 habitants."
-        },
-        {
-          "label": "Âge II — Heure de la prière",
-          "texte": "Vos bâtiments coûtent 3 Pierres de moins à construire et à améliorer. Les merveilles coûtent 5 Pierres de moins à construire et à améliorer et rapportent 5 Tourisme."
-        },
-        {
-          "label": "Âge II — Émissaires efficaces",
-          "texte": "Lorsque vous réalisez une succession, gagnez 1 Émissaire à placer dans la cité libre de votre choix. Générez immédiatement 1 Émissaire."
-        },
-        {
-          "label": "Âge III — Suzeraineté",
-          "texte": "Vous pouvez posséder 1 Ministre supplémentaire. Votre capitale reçoit immédiatement 150 habitants."
-        },
-        {
-          "label": "Âge III — Héritage familial",
-          "texte": "Lorsque vous améliorez une habitation, elle reçoit 50 habitants."
-        },
-        {
-          "label": "Âge III — Abuser des serfs",
-          "texte": "Vos champs produisent +3 Tourisme et sont également considérés comme des foires en ce qui concerne les bonus de technologie."
-        }
-      ]
+      "description": "",
+      "lignes": []
     },
     {
       "nom": "PEAUX VERTES",
-      "description": "Violents, les peaux vertes sont la force brutale de ce monde. Vivant du pillage et de la guerre, ils compensent leurs faiblesses en construction en capturant directement les habitations des autres peuplades.",
-      "lignes": [
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Autel eud Guer' (8 Bois + 4 Fer) : réduit le coût de levée d'armée de 20 Or."
-        },
-        {
-          "label": "Barbares primitifs",
-          "texte": "Fonder une nouvelle ville requiert 8 Or et 2 Bois de moins, mais améliorer une habitation requiert 3 Pierres de plus."
-        },
-        {
-          "label": "Union du klan !",
-          "texte": "Les Peaux Vertes sont réparties en clans ; plus vous en asservissez, plus le vôtre sera puissant. Vous pouvez asservir des clans comme suit :\n• chaque village tribal que vous explorez compte comme un clan asservi ;\n• chaque habitation que vous fondez compte comme un clan asservi ;\n• chaque habitation que vous améliorez au rang III compte comme un clan asservi.\nChaque fois que vous asservissez un clan, générez 5 habitants dans l'habitation de votre choix. Le coût de levée de vos armées est réduit de 5 Or par clan asservi."
-        },
-        {
-          "label": "Âge II — Diriger par la peur",
-          "texte": "Le coût de levée d'armée de vos vassaux est augmenté de 10 Or par rang de votre royaume. Les cartes d'impôts sont doublées."
-        },
-        {
-          "label": "Âge II — Cé partou à nou !",
-          "texte": "Chaque ville que vous possédez réduit le coût de levée d'armée de 5 Or et produit +5 Nourriture par tour."
-        },
-        {
-          "label": "Âge II — Moa tapé Toa",
-          "texte": "La première crise de chaque âge est annulée."
-        },
-        {
-          "label": "Âge III — Tous avek moa !",
-          "texte": "Vos armées bénéficient de +1 PM. Vous pouvez posséder une armée supplémentaire."
-        },
-        {
-          "label": "Âge III — Donné à mangé",
-          "texte": "Vos vassaux et vos villes vous rapportent +5 Nourriture et +1 Science par tour."
-        },
-        {
-          "label": "Âge III — Multiculturalisme",
-          "texte": "Vous êtes immunisé aux révoltes."
-        }
-      ]
+      "description": "",
+      "lignes": []
     },
     {
       "nom": "ELFES D'OR",
-      "description": "Hautains ou simplement supérieurs, les Elfes d'Or sont les maîtres incontestés de la magie, à tel point qu'ils en sont devenus dépendants.",
-      "lignes": [
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Puit de mana (5 Pierres + 6 Soie) : votre capitale produit +1 Science par tour. Si ce bâtiment se trouve dans votre capitale, il génère +1 Science par rang de l'habitation à la place."
-        },
-        {
-          "label": "Là avant les autres",
-          "texte": "Votre première habitation peut être construite en mer et commence avec 30 habitants supplémentaires."
-        },
-        {
-          "label": "Accros à la magie",
-          "texte": "Vous commencez la partie avec 8 Science. Si, à n'importe quel moment, votre réserve de Science est inférieure à votre production de Science, vous perdez 2 fois le carré du rang de votre royaume sous forme de Population, qui deviennent des Honnîs.\n• 2 Honnîs : gagnez 5 de la ressource de base de votre choix.\n• 10 Honnîs : votre capitale produit +8 Or par tour.\n• 20 Honnîs : +1 Science par tour dans votre capitale.\n• 50 Honnîs : +1 Science par tour dans votre capitale.\n• 100 Honnîs : +1 Science par tour dans votre capitale.\n• 200 Honnîs : +1 Science par tour dans votre capitale.\n• 500 Honnîs : +1 Science par tour dans votre capitale.\n• 1000 Honnîs : +2 Science par tour dans votre capitale."
-        },
-        {
-          "label": "Âge II — Savoir ancestral",
-          "texte": "Découvrez immédiatement deux progrès d'un même arbre."
-        },
-        {
-          "label": "Âge II — Cité d'Or",
-          "texte": "Votre capitale peut accueillir un bâtiment supplémentaire."
-        },
-        {
-          "label": "Âge II — Élevage d'esclaves",
-          "texte": "Si vous devez gagner des Honnîs pour n'importe quelle raison, vous en gagnez 100 % supplémentaires."
-        },
-        {
-          "label": "Âge III — Puit d'Or",
-          "texte": "Vos bâtiments de faction produisent +1 Science par tour et augmentent leur garnison de 40 pts."
-        },
-        {
-          "label": "Âge III — Palais des Dieux",
-          "texte": "Votre capitale peut accueillir des bâtiments de tout type (ville, château, guilde) et une Merveille supplémentaire."
-        },
-        {
-          "label": "Âge III — Opulence",
-          "texte": "Vos Honnîs comptent comme des habitants en ce qui concerne les victoires et améliorations d'habitation."
-        }
-      ]
+      "description": "",
+      "lignes": []
     },
     {
       "nom": "Sylvains",
-      "description": "Peuple des profondeurs forestières, les Sylvains vivent en harmonie avec les bois et tirent l'essentiel de leur subsistance de leur apiculture.",
-      "lignes": [
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Apiculture : aménagement unique de forêt. Produit 12 Nourriture par tour."
-        },
-        {
-          "label": "Sentiers stables",
-          "texte": "Les cases de forêt ne coûtent que 1 PM à traverser."
-        },
-        {
-          "label": "Amis de la forêt",
-          "texte": "Vous ne pouvez pas construire de scierie ni gagner de Bois d'aucune manière que ce soit. À la place, tous les coûts en Bois sont transformés en coûts en Nourriture."
-        },
-        {
-          "label": "Âge II — Don de miel",
-          "texte": "Vos apicultures ne produisent plus que 8 Nourriture par tour. Lorsque vous construisez une apiculture, placez un émissaire dans la cité libre de votre choix."
-        },
-        {
-          "label": "Âge II — Vengeance de la terre",
-          "texte": "Le coût de vos levées d'armées est réduit de 10 Or pour chaque apiculture que vous possédez. Vous pouvez posséder une armée supplémentaire."
-        },
-        {
-          "label": "Âge II — Bibliothèque enfouie",
-          "texte": "Vos apicultures produisent +1 Science par tour."
-        },
-        {
-          "label": "Âge III — Enclave d'émeraude",
-          "texte": "Pour chacun de vos vassaux, vos villes ont +20 Garnison irréductibles et vous générez +2 Or par tour."
-        },
-        {
-          "label": "Âge III — Racines du monde",
-          "texte": "Vous pouvez dépenser tous les PM d'une de vos armées située sur une case de forêt pour la replacer sur une autre case de forêt à 15 cases ou moins et à 3 cases ou plus de toute armée ou ville d'un autre joueur."
-        },
-        {
-          "label": "Âge III — Savoir ancestral",
-          "texte": "Chaque fois que vous construisez une apiculture, générez 10 Science. Générez immédiatement 10 Science par apiculture que vous possédez."
-        }
-      ]
+      "description": "",
+      "lignes": []
     }
   ],
   "peuplesAutres": [
     {
       "nom": "NORLS",
-      "description": "Les Norls sont fiers de l'héritage laissé par leurs ancêtres. Ils sont un peuple fier de leurs techniques de commerce nomade, et méprisent les grands empires de ce monde qui bâtissent au détriment des paysages magnifiques de ce monde.",
-      "lignes": [
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Fjord (8 Bois + 2 Bétail) : aménagement qui peut être construit en dehors d'une habitation, possédant 20 Garnison et 2 Herses. Lorsque les Norls lèvent une armée, ils peuvent la lever dans n'importe lequel de leurs Fjords. Les Fjords peuvent accueillir des extensions, qui peuvent être transformées en aménagements selon les mêmes règles qu'une habitation. Les Fjords peuvent être construits sans technologie."
-        },
-        {
-          "label": "Vivre de la terre",
-          "texte": "Lorsque vous effectuez une Razzia ou un Pillage, générez 10 Or, deux fois la ressource ciblée et 3 Science."
-        },
-        {
-          "label": "Nomades",
-          "texte": "Les Norls ne possèdent pas d'habitation en début de jeu, mais commencent avec 40 Or et 100 Nourriture en plus des ressources de départ. Construire une habitation requiert 6 Bois supplémentaires."
-        },
-        {
-          "label": "Âge II — Savoir chamanique",
-          "texte": "Vos bâtiments de faction génèrent +1 Science par tour s'ils ont au moins 1 expansion."
-        },
-        {
-          "label": "Âge II — L'art du viking",
-          "texte": "Vous pouvez posséder une armée supplémentaire. +1 PM pour vos armées."
-        },
-        {
-          "label": "Âge II — La course à la mer",
-          "texte": "Vos habitations et bâtiments de faction côtiers génèrent +3 Or et +1 Bétail par tour."
-        },
-        {
-          "label": "Âge III — Conquête territoriale",
-          "texte": "Les expansions consomment 5 Nourriture en moins. Garnison de vos bâtiments de faction +30."
-        },
-        {
-          "label": "Âge III — Armées des traditions",
-          "texte": "Vous pouvez posséder une armée supplémentaire. Chaque fois que vous levez une armée, recevez 10 Tourisme définitivement."
-        },
-        {
-          "label": "Âge III — Grands explorateurs",
-          "texte": "Monter ou descendre d'un bateau ne consomme aucun PM. Vos bateaux ont +1 PM et coûtent 4 Soies de moins à la construction."
-        }
-      ]
+      "description": "",
+      "lignes": []
     },
     {
       "nom": "VERMINES DE KAOSS",
-      "description": "Déliées de l'emprise des Racines, les morts èrent maintenant lmibrement à la surface. Leur objectif ? Ramener à la vie leur seigneur suprême et Dieu des Racines, Yehudiah.",
-      "lignes": [
-        {
-          "label": "Victoire de faction (désactivée)",
-          "texte": "Vous remportez la partie si vous possédez un rang total de Colonies souterraines de 30 ou plus."
-        },
-        {
-          "label": "Bâtiment de faction",
-          "texte": "Colonie souterraine rang I (15 Or + 3 Bétail) : doit être bâtie dans une habitation à 7 cases ou moins d'une de vos habitations ou colonies.\nColonie souterraine rang II (30 Or + 10 Bois) : remplace une colonie de rang I.\nColonie souterraine rang III (60 Or + 15 Pierres) : remplace une colonie de rang II.\nColonie souterraine rang IV (100 Or + 20 Fer) : remplace une colonie de rang III.\nColonie souterraine rang V (200 Or + 30 Charbon) : remplace une colonie de rang IV.\nVos Colonies génèrent 1 Or par rang de la colonie pour le joueur possédant la ville dans laquelle se trouve la colonie et pour vous."
-        },
-        {
-          "label": "Un chef plus intelligent",
-          "texte": "Votre capitale produit 1 Science par tour supplémentaire."
-        },
-        {
-          "label": "Colonies souterraines",
-          "texte": "Vos colonies souterraines produisent, en fonction de leur rang :\n• rang I : +1 Bois et +2 Nourriture par tour ;\n• rang II : +1 Pierre par tour ;\n• rang III : +1 Fer par tour ;\n• rang IV : +1 Charbon par tour ;\n• rang V : +1 Science par tour ou +2 Tourisme."
-        },
-        {
-          "label": "Âge II — Marché noir",
-          "texte": "Établir une route vers une ville avec une colonie rapporte +2 Or par tour au joueur possédant la ville, au joueur possédant la colonie et à vous."
-        },
-        {
-          "label": "Âge II — Infestation",
-          "texte": "Si vous attaquez une habitation possédant une Colonie, sa garnison est réduite de 30 pts par rang de la colonie."
-        },
-        {
-          "label": "Âge II — Colonies d'esclaves",
-          "texte": "Améliorer une colonie génère 5 habitants dans votre capitale."
-        },
-        {
-          "label": "Âge III — Grouiller partout",
-          "texte": "Le coût d'amélioration des colonies est réduit de 3 ressources et 20 Or."
-        },
-        {
-          "label": "Âge III — Murmurer à leurs oreilles",
-          "texte": "Vos colonies de rang III ou plus peuvent servir de point de départ pour vos marchands et octroient +1 route commerciale."
-        },
-        {
-          "label": "Âge III — Étudier leur manière de faire",
-          "texte": "Vos colonies génèrent +1 Science par tour."
-        }
-      ]
-    }
-  ],
-  "progres": [
-    {
-      "nom": "Progrès du développement côtier",
-      "age": 1,
-      "tags": "C, PV, Aurore N",
-      "brancheA": [
-        {
-          "nom": "Cours de pêche",
-          "cout": "6",
-          "description": "Vos habitations côtières produisent +4 Nourriture par tour."
-        },
-        {
-          "nom": "Pêche de culture",
-          "cout": "12",
-          "description": "Vos ressources maritimes produisent +3 Nourriture par tour."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Commerce maritime I",
-          "cout": "6",
-          "description": "Vos habitations côtières produisent +2 Or par tour."
-        },
-        {
-          "nom": "Expansion maritime",
-          "cout": "10",
-          "description": "Construire ou améliorer des habitations côtières vous coûte 3 Bois et 3 Pierre en moins."
-        }
-      ],
-      "techC": {
-        "nom": "Conquête maritime",
-        "cout": "14",
-        "description": "Déverrouille la construction des bateaux et bâtiments de faction."
-      }
-    },
-    {
-      "nom": "Progrès des stratégies défensives",
-      "age": 1,
-      "tags": "PL, N",
-      "brancheA": [
-        {
-          "nom": "Milices civiles I",
-          "cout": "6",
-          "description": "+30 garnison dans votre capitale.",
-          "effets": [
-            {
-              "type": "garnison",
-              "montant": 30,
-              "cible": "capitale"
-            }
-          ]
-        },
-        {
-          "nom": "Fortifications solides",
-          "cout": "10",
-          "description": "+15 Garnison dans vos habitations.",
-          "effets": [
-            {
-              "type": "garnison",
-              "montant": 15,
-              "cible": "habitations"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Eriger des murs",
-          "cout": "4",
-          "description": "Vos habitations possèdent 2 herses."
-        },
-        {
-          "nom": "Quadrilatère stratégique",
-          "cout": "8",
-          "description": "Lorsque vous combattez en défense d'habitation vous générez 1 dé de manœuvre  blanc suipplémentaire."
-        }
-      ],
-      "techC": {
-        "nom": "Milices civiles",
-        "cout": "12",
-        "description": "+30 Garnison dans vos habitations.",
-        "effets": [
-          {
-            "type": "garnison",
-            "montant": 30,
-            "cible": "habitations"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès de la découverte scientifique",
-      "age": 1,
-      "tags": "PV, Aurore, N.V",
-      "brancheA": [
-        {
-          "nom": "Progrès technologiques I",
-          "cout": "6",
-          "description": "Lorsque vous débloquez cette technologie, vous gagnez 6 Science.",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 6,
-              "ressource": "Science"
-            }
-          ]
-        },
-        {
-          "nom": "Progrès technologiques II",
-          "cout": "10",
-          "description": "Lorsque vous débloquez cette technologie, vous gagnez 10 Science.",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 10,
-              "ressource": "Science"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Comprendre la soie",
-          "cout": "8",
-          "description": "Votre bâtiment de capitale génère +1 Science par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Science"
-            }
-          ]
-        },
-        {
-          "nom": "Etude astronomique",
-          "cout": "12",
-          "description": "Votre capitale produit +1 Science par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Science"
-            }
-          ]
-        }
-      ],
-      "techC": {
-        "nom": "Progrès technologiques III",
-        "cout": "14",
-        "description": "Lorsque vous débloquez cette technologie, vous gagnez 14 Sciences.",
-        "effets": [
-          {
-            "type": "gain",
-            "montant": 14,
-            "ressource": "Science"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès de l'offensive",
-      "age": 1,
-      "tags": "PL, V, Aurore",
-      "brancheA": [
-        {
-          "nom": "Stratégies militaires I",
-          "cout": "7",
-          "description": "La prochaine armée que vous levez coûte 50 Or de moins."
-        },
-        {
-          "nom": "Raliement ! I",
-          "cout": "12",
-          "description": "Lorsque vous menez une bataille, vous bénéficiez d'un dé blanc de manoeuvre supplémentaire à chaque tour."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Rations",
-          "cout": "5",
-          "description": "Lorsque vous attaquez une habitation, sa garnison est réduite de 20."
-        },
-        {
-          "nom": "Service militaire",
-          "cout": "10",
-          "description": "Lorsque vous attaquez une habitation, vous bénéficiez d'Avant-garde sur 2 de vos modèles."
-        }
-      ],
-      "techC": {
-        "nom": "L'Art de la Guerre",
-        "cout": "14",
-        "description": "Vous pouvez posséder une unité militaire supplémentaire."
-      }
-    },
-    {
-      "nom": "Progrès du développement rural",
-      "age": 1,
-      "tags": "N, Aurore, C",
-      "brancheA": [
-        {
-          "nom": "Développement durable",
-          "cout": "8",
-          "description": "Construire un aménagement coûte 1 Bois de moins."
-        },
-        {
-          "nom": "Développement économe",
-          "cout": "12",
-          "description": "Construire un aménagement coûte 3 Or de moins."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Colonialisme durable",
-          "cout": "6",
-          "description": "Construire une nouvelle habitation coûte 5 Bois de moins."
-        },
-        {
-          "nom": "Colonialisme économe",
-          "cout": "10",
-          "description": "Construire une nouvelle habitation coûte 20 Or de moins."
-        }
-      ],
-      "techC": {
-        "nom": "Identité commune",
-        "cout": "15",
-        "description": "Permet la construction du bâtiment de faction. Lorsque vous débloquez ce progrès, ajoutez 5 habitants dans chacune de vos habitations."
-      }
-    },
-    {
-      "nom": "Progrès du développement urbain",
-      "age": 1,
-      "tags": "V, N",
-      "brancheA": [
-        {
-          "nom": "Déforestation",
-          "cout": "8",
-          "description": "Votre capitale produit +1 Bois par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Bois"
-            }
-          ]
-        },
-        {
-          "nom": "Carrieristes",
-          "cout": "14",
-          "description": "Votre capitale produit +1 Pierre par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Pierre"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Granges",
-          "cout": "5",
-          "description": "Votre capitale génère 10 Nourriture par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 10,
-              "ressource": "Nourriture"
-            }
-          ]
-        },
-        {
-          "nom": "Sédentarisation",
-          "cout": "12",
-          "description": "Lorsque vous débloquez ce progrès, ajoutez 20 habitants dans votre capitale."
-        }
-      ],
-      "techC": {
-        "nom": "Une ville magnifique",
-        "cout": "15",
-        "description": "Permet la construction du bâtiment de faction. Lorsque vous débloquez ce progrès, ajoutez 20 habitants dans votre capitale."
-      }
-    },
-    {
-      "nom": "Progrès du développement économique",
-      "age": 1,
-      "tags": "N, V",
-      "brancheA": [
-        {
-          "nom": "Organisation fiscale",
-          "cout": "3",
-          "description": "Votre capitale produit +2 Or par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 2,
-              "ressource": "Or"
-            }
-          ]
-        },
-        {
-          "nom": "Usinage",
-          "cout": "14",
-          "description": "Votre capitale génère 1 Charbon par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Charbon"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Commerce",
-          "cout": "6",
-          "description": "Vous pouvez posséder une route commerciale supplémentaire."
-        },
-        {
-          "nom": "Commerce lointain",
-          "cout": "10",
-          "description": "Aucun effet pour l'instant (l'Or par marchand a disparu avec le métier).",
-          "effets": []
-        }
-      ],
-      "techC": {
-        "nom": "Collecte d'impôts",
-        "cout": "14",
-        "description": "Vous pouvez posséder une route commerciale supplémentaire. Lorsque vous débloquez cette technologie, recevez 20 Or.",
-        "effets": [
-          {
-            "type": "gain",
-            "montant": 20,
-            "ressource": "Or"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès des relations diplomatiques",
-      "age": 1,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Vasselité",
-          "cout": "8",
-          "description": "Si vous êtes un vassal, vos habitations ont +20 Garnison."
-        },
-        {
-          "nom": "Tribut de cour",
-          "cout": "12",
-          "description": "Si vous êtes un vassal, votre capitale produit +4 Or et +8 Tourisme."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Garde suzeraine",
-          "cout": "6",
-          "description": "Si vous êtes suzerain, votre capitale produit +12 Nourriture par tour."
-        },
-        {
-          "nom": "Patronage",
-          "cout": "10",
-          "description": "Si vous êtes suzerain, votre capitale produit +1 Science par tour."
-        }
-      ],
-      "techC": {
-        "nom": "Émissaires de cour",
-        "cout": "14",
-        "description": "Lorsque vous débloquez cette technologie, recevez 1 Émissaire."
-      }
-    },
-    {
-      "nom": "Progrès du Tourisme",
-      "age": 1,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Trésor public",
-          "cout": "8",
-          "description": "Vos merveilles coûtent 20 Or de moins à la construction."
-        },
-        {
-          "nom": "Matériaux de prestige",
-          "cout": "12",
-          "description": "Vos merveilles coûtent 4 ressources de moins à la construction."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Routes pittoresques",
-          "cout": "6",
-          "description": "Vos habitations produisent +2 Tourisme."
-        },
-        {
-          "nom": "Mise en valeur",
-          "cout": "10",
-          "description": "Vos bâtiments de faction produisent +3 Tourisme."
-        }
-      ],
-      "techC": {
-        "nom": "Capitale prestigieuse",
-        "cout": "14",
-        "description": "Votre capitale rapporte 20 Tourisme. Vous pouvez maintenant construire votre bâtiment de faction."
-      }
-    },
-    {
-      "nom": "Progrès de la diplomatie",
-      "age": 2,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Geste",
-          "cout": "18",
-          "description": "Lorsque vous débloquez cette technologie, recevez 1 Émissaire (crédité automatiquement en réserve).",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 1,
-              "ressource": "Émissaires"
-            }
-          ]
-        },
-        {
-          "nom": "Offrande",
-          "cout": "24",
-          "description": "Lorsque vous débloquez cette technologie, recevez 1 Émissaire (crédité automatiquement en réserve).",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 1,
-              "ressource": "Émissaires"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Délégation",
-          "cout": "16",
-          "description": "Le prochain assassin joué contre vous est annulé et le joueur l'ayant joué doit vous verser 10 fois son rang de pays sous forme d'Or (plateau)."
-        },
-        {
-          "nom": "Ambassade",
-          "cout": "28",
-          "description": "Quiconque utilise un serment sur vous reçoit 10 Science. Vous recevez alors 15 Science (plateau)."
-        }
-      ],
-      "techC": {
-        "nom": "Vassalisation",
-        "cout": "46",
-        "description": "Les cartes de dynastie d'impôts génèrent 1 fois supplémentaire l'impôt et vous octroient, ainsi qu'à vos vassaux, 5 Science (les cartes de dynastie ne sont pas encore automatisées — à gérer au plateau)."
-      }
-    },
-    {
-      "nom": "Progrès du développement urbain",
-      "age": 2,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Viser le ciel",
-          "cout": "14",
-          "description": "Construire un bâtiment dans vos habitations coûte 15 Or de moins."
-        },
-        {
-          "nom": "Villes et sommets",
-          "cout": "24",
-          "description": "Améliorer vos habitations requiert 15 Or, 3 Bois, 3 Pierre et 3 Fer en moins."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Milles et une villes",
-          "cout": "17",
-          "description": "Lorsque vous fondez une nouvelle habitation, vous pouvez y construire immédiatement 2 aménagements gratuits."
-        },
-        {
-          "nom": "Expansionnisme",
-          "cout": "30",
-          "description": "Les habitations à plus de 7 case de votre capitale  produisent  2  Or et 2 Nourriture supplémentaires par tour."
-        }
-      ],
-      "techC": {
-        "nom": "Identité statique",
-        "cout": "44",
-        "description": ""
-      }
-    },
-    {
-      "nom": "Progrès défensif avancé",
-      "age": 2,
-      "tags": "PV, N",
-      "brancheA": [
-        {
-          "nom": "Milices civiles III",
-          "cout": "16",
-          "description": "+20 Garnison dans vos habitations.",
-          "effets": [
-            {
-              "type": "garnison",
-              "montant": 20,
-              "cible": "habitations"
-            }
-          ]
-        },
-        {
-          "nom": "Organisation défensive",
-          "cout": "26",
-          "description": "Réduit le coût de construction des bâtiments défensifs de 4 Or et 2 ressources."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Gestion de crise",
-          "cout": "22",
-          "description": "La prochaine crise est annulée."
-        },
-        {
-          "nom": "Combler les lacunes",
-          "cout": "24",
-          "description": "Vos habitations ne peuvent avoir moins de  30 Garnison."
-        }
-      ],
-      "techC": {
-        "nom": "Muraille",
-        "cout": "30",
-        "description": "+40 Garnison dans vos habitations."
-      }
-    },
-    {
-      "nom": "Progrès de l'écologie",
-      "age": 2,
-      "tags": "PV, N, Aurore",
-      "brancheA": [
-        {
-          "nom": "Barrage",
-          "cout": "22",
-          "description": "Lors d'innondations, choisissez 3 aménagements dans chacune de vos habitations qui ne seront pas détruits."
-        },
-        {
-          "nom": "Projet anti incendie",
-          "cout": "34",
-          "description": "Lors d'explosions volcaniques ou glissements de terrain, choisissez 3 aménagements dans chacune de vos habitations qui ne seront pas détruits."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Engrais naturels I",
-          "cout": "18",
-          "description": "Les champs et rizières produisent +2 Nourriture par tour.",
-          "effets": [
-            {
-              "type": "prodParAmenagement",
-              "montant": 2,
-              "ressource": "Nourriture",
-              "amenagements": [
-                "Champ",
-                "Rizière"
-              ]
-            }
-          ]
-        },
-        {
-          "nom": "Engrais naturels II",
-          "cout": "24",
-          "description": "Les champs et rizières produisent +3 Nourriture par tour.",
-          "effets": [
-            {
-              "type": "prodParAmenagement",
-              "montant": 3,
-              "ressource": "Nourriture",
-              "amenagements": [
-                "Champ",
-                "Rizière"
-              ]
-            }
-          ]
-        }
-      ],
-      "techC": {
-        "nom": "Recyclage",
-        "cout": "26",
-        "description": "Vous recevez 30 Or. Vos usines produisent +1 Production par tour.",
-        "effets": [
-          {
-            "type": "gain",
-            "montant": 30,
-            "ressource": "Or"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès de l'éducation",
-      "age": 2,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Assemblée de penseurs",
-          "cout": "20",
-          "description": "Découvrir un Progrès coûte 2 Science en moins."
-        },
-        {
-          "nom": "Assemblée de savants",
-          "cout": "28",
-          "description": "Découvrir un Progrès coûte 3 Science en moins."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Lumière",
-          "cout": "16",
-          "description": "Votre capitale produit +1 Science par tour."
-        },
-        {
-          "nom": "Merveilleux",
-          "cout": "26",
-          "description": "Vos merveilles produisent +1 Science par tour",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 1,
-              "ressource": "Science"
-            }
-          ]
-        }
-      ],
-      "techC": {
-        "nom": "Assemblées scientifiques",
-        "cout": "34",
-        "description": "Vos habitations produisent +1 Science par tour.",
-        "effets": [
-          {
-            "type": "prodParHabitation",
-            "montant": 1,
-            "ressource": "Science"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès de l'ouverture culturelle",
-      "age": 2,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Fascination culturelle",
-          "cout": "16",
-          "description": "Les foires fournissent +2 Tourisme",
-          "effets": [
-            {
-              "type": "prodParAmenagement",
-              "montant": 2,
-              "ressource": "Tourisme",
-              "amenagements": [
-                "Foire"
-              ]
-            }
-          ]
-        },
-        {
-          "nom": "Stands de goodies",
-          "cout": "22",
-          "description": "Les foires fournissent +2 Or par tour et +2 Tourisme.",
-          "effets": [
-            {
-              "type": "prodParAmenagement",
-              "montant": 2,
-              "ressource": "Or",
-              "amenagements": [
-                "Foire"
-              ]
-            },
-            {
-              "type": "prodParAmenagement",
-              "montant": 2,
-              "ressource": "Tourisme",
-              "amenagements": [
-                "Foire"
-              ]
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Safaris",
-          "cout": "14",
-          "description": "Vos merveilles naturelle fournissent +5 Tourisme."
-        },
-        {
-          "nom": "Parcs naturels",
-          "cout": "24",
-          "description": "Les sites archéologiques fournissent +8 Tourisme.",
-          "effets": [
-            {
-              "type": "prodParAmenagement",
-              "montant": 8,
-              "ressource": "Tourisme",
-              "amenagements": [
-                "Site archéologique"
-              ]
-            }
-          ]
-        }
-      ],
-      "techC": {
-        "nom": "Exposition universelle",
-        "cout": "32",
-        "description": "Votre capitale peut posséder une merveille supplémentaire. Les merveilles dans votre capitale coûtent 30 Or de moins à construire."
-      }
-    },
-    {
-      "nom": "Progrès de l'armée nationale",
-      "age": 2,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Grande armée I",
-          "cout": "14",
-          "description": "Vous pouvez posséder une armée suppémentaire. Vous possédez un dé de manœuvre blanc supplémentaire en bataille."
-        },
-        {
-          "nom": "Corps d'armée",
-          "cout": "20",
-          "description": "La vitesse de vos armée augmente de 1 PM."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Conscription I",
-          "cout": "16",
-          "description": "Recruter une armée vous coûte 10 Or de moins. Lorsque vous attaquez une habitation, sa garnison est réduite de 20."
-        },
-        {
-          "nom": "Croisade",
-          "cout": "24",
-          "description": "Lorsque vous remportez une victoire militaire, gagnez 30 Or et 5 Tourisme."
-        }
-      ],
-      "techC": {
-        "nom": "Coup d'état",
-        "cout": "32",
-        "description": "Lorsque vous menez une bataille, vous pouvez désigner un des sites d'armes de votre adversaire. Il ne pourra pas le jouer pour cette bataille."
-      }
-    },
-    {
-      "nom": "Progrès de l'armée nationale",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Grande armée",
-          "cout": "38",
-          "description": "Vous pouvez posséder une armée suppémentaire. Lorsque vous attaquez une habitation, sa garnison est réduite de 80."
-        },
-        {
-          "nom": "Sappeurs",
-          "cout": "56",
-          "description": "Lorsqu'une de vos armée attaque une habitation, celle-ci ne peut bénéficier de ses remparts."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Conscription",
-          "cout": "34",
-          "description": "Recruter une armée vous coûte 12 Or de moins. Vos armées ont +1 PM."
-        },
-        {
-          "nom": "Grand déploiement",
-          "cout": "58",
-          "description": "Lorsque vous menez une bataille, votre adversaire déploie son armée entièrement, puis vous déployez la votre. Vous choissez qui a le premier tour."
-        }
-      ],
-      "techC": {
-        "nom": "Art de la Guerre",
-        "cout": "66",
-        "description": "Lorsque vous menez une bataille, vous pouvez choisir votre liste d'armée après votre adversaire."
-      }
-    },
-    {
-      "nom": "Progrès de la défense nationale",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Progrès de la défense nationale A1",
-          "cout": "20",
-          "description": "+40 Garnison dans vos habitations."
-        },
-        {
-          "nom": "Réservistes",
-          "cout": "62",
-          "description": "Vos armées dans des habitations ont un entretient de 0 Or et Nourriture par tour."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Milices civiles V",
-          "cout": "36",
-          "description": "+40 Garnison dans vos habitations.",
-          "effets": [
-            {
-              "type": "garnison",
-              "montant": 40,
-              "cible": "habitations"
-            }
-          ]
-        },
-        {
-          "nom": "Service militaire avancé",
-          "cout": "64",
-          "description": "Vos habitations gagnent un nombre d'habitants par tour égal à 0,5 fois leur garnison."
-        }
-      ],
-      "techC": {
-        "nom": "Pré carré",
-        "cout": "82",
-        "description": "+20 Garnison dans chacune de vos habitations. Vos habitations ne peuvent plus être la cible de bombardements.",
-        "effets": [
-          {
-            "type": "garnison",
-            "montant": 20,
-            "cible": "habitations"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès du développement futur",
-      "age": 3,
-      "tags": "PV",
-      "brancheA": [
-        {
-          "nom": "Technologies futures I",
-          "cout": "32",
-          "description": "Votre capitale produit +3 Science par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 3,
-              "ressource": "Science"
-            }
-          ]
-        },
-        {
-          "nom": "Technologies futures II",
-          "cout": "44",
-          "description": "Vos habitations produisent +1 Science par tour.",
-          "effets": [
-            {
-              "type": "prodParHabitation",
-              "montant": 1,
-              "ressource": "Science"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Musées",
-          "cout": "32",
-          "description": "+30 Tourisme dans votre capitale.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 30,
-              "ressource": "Tourisme"
-            }
-          ]
-        },
-        {
-          "nom": "Merveilles naturelles",
-          "cout": "48",
-          "description": "Coût de construction des merveilles -10 Ressources. Les merveilles génèrent +10 Tourisme."
-        }
-      ],
-      "techC": {
-        "nom": "Progrès du développement futur C",
-        "cout": "60",
-        "description": "Vous pouvez posséder 1 ministre supplémentaire.",
-        "effets": [
-          {
-            "type": "ministreSup"
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès du développement économique",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Taxe nécéssaire I",
-          "cout": "38",
-          "description": "Lorsque vous débloquez ce progrès, recevez 250 Or.",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 250,
-              "ressource": "Or"
-            }
-          ]
-        },
-        {
-          "nom": "Taxes nécéssaire II",
-          "cout": "46",
-          "description": "Lorsque vous débloquez ce progrès, recevez 300 Or.",
-          "effets": [
-            {
-              "type": "gain",
-              "montant": 300,
-              "ressource": "Or"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Hausse du loyer",
-          "cout": "32",
-          "description": "Votre capitale produit +15 Or par tour.",
-          "effets": [
-            {
-              "type": "prodCapitale",
-              "montant": 15,
-              "ressource": "Or"
-            }
-          ]
-        },
-        {
-          "nom": "Urbanisme",
-          "cout": "54",
-          "description": "Votre capitale peut accueillir un bâtiment supplémentaire."
-        }
-      ],
-      "techC": {
-        "nom": "Progrès du développement économique C",
-        "cout": "40",
-        "description": "Lorsque vous débloquez cette technologie, montez de rang de pays puis recevez 50 Or par ministre que vous possédez.",
-        "effets": [
-          {
-            "type": "rangPays"
-          },
-          {
-            "type": "orParMinistre",
-            "montant": 50
-          }
-        ]
-      }
-    },
-    {
-      "nom": "Progrès d'humanisme",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Préfectures",
-          "cout": "48",
-          "description": "Lorsque vous débloquez ce progrès, ajoutez 15 habitants dans chacune de vos habitations."
-        },
-        {
-          "nom": "Prix Gorback Nobel",
-          "cout": "60",
-          "description": "Vos Ministres génèrent +6 Science par tour.",
-          "effets": [
-            {
-              "type": "prodParMetier",
-              "montant": 6,
-              "ressource": "Science",
-              "metier": "Ministre"
-            }
-          ]
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Greniers",
-          "cout": "46",
-          "description": "Lorsque vous débloquez ce progrès, ajoutez 40 habitants dans votre capitale."
-        },
-        {
-          "nom": "Culte de la personnalité",
-          "cout": "60",
-          "description": "Vos Ministres génèrent +30 Tourisme.",
-          "effets": [
-            {
-              "type": "prodParMetier",
-              "montant": 30,
-              "ressource": "Tourisme",
-              "metier": "Ministre"
-            }
-          ]
-        }
-      ],
-      "techC": {
-        "nom": "Gouvernement",
-        "cout": "78",
-        "description": "Vous pouvez posséder 1 Ministre supplémentaire."
-      }
-    },
-    {
-      "nom": "Progrès de l'industrialisation",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Charues",
-          "cout": "44",
-          "description": "Vos champs produisent +5 Nourriture  et +1 Or par tour."
-        },
-        {
-          "nom": "Exploitation forestière",
-          "cout": "58",
-          "description": "Vos Scieries ne produisent plus de Bois mais du Charbon."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Surconsommation",
-          "cout": "40",
-          "description": "Vos habitations consomment 10 Nourriture par rang de l'habitation mais génèrent 1 Science et 5 Tourisme par rang de l'habitation."
-        },
-        {
-          "nom": "Industrialisation",
-          "cout": "52",
-          "description": "Vos bâtiments coûtent 3 Ressources de moins et produisent+1 Charbon par tour."
-        }
-      ],
-      "techC": {
-        "nom": "Machine à vapeur",
-        "cout": "72",
-        "description": "+200 Habitants dans votre capitale."
-      }
-    },
-    {
-      "nom": "Progrès de la Suzeraineté",
-      "age": 3,
-      "tags": "",
-      "brancheA": [
-        {
-          "nom": "Hommage solennel",
-          "cout": "46",
-          "description": "Lorsque vous débloquez cette technologie, recevez 2 Émissaires."
-        },
-        {
-          "nom": "Offrandes",
-          "cout": "58",
-          "description": "Lorsque vous débloquez cette technologie, recevez 3 Émissaires."
-        }
-      ],
-      "brancheB": [
-        {
-          "nom": "Cartes de dynastie",
-          "cout": "16",
-          "description": "Recevez 3 Cartes de dynastie."
-        },
-        {
-          "nom": "Diplomatie effrénée",
-          "cout": "28",
-          "description": "Vous pouvez jouer autant de cartes Dynastie que vous souhaitez à chaque tour."
-        }
-      ],
-      "techC": {
-        "nom": "Vassalité élargie",
-        "cout": "46",
-        "description": "Vous pouvez posséder 1 carte Dynastie supplémentaire. Vous piochez donc une carte Dynastie de plus à chaque tour."
-      }
+      "description": "",
+      "lignes": []
     }
   ],
   "tourismeSeuils": [
@@ -3181,23 +1880,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder un Pontificat de rang I.",
-          "bonus": "Si complété pendant l'Âge 1 : la prochaine Merveille coûte 20 Or et 10 Ressources de base de moins. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder 3 Merveilles.",
-          "bonus": "Si complété pendant l'Âge 2 : vous recevez 20 Tourisme et 1 Émissaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder un Pontificat de rang III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 360 Tourisme et 4 Merveilles.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -3206,23 +1905,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder 3 habitations.",
-          "bonus": "Si complété pendant l'Âge 1 : la prochaine habitation coûte 5 Bois de moins et commence avec 15 habitants supplémentaires. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder une habitation avec 300 habitants.",
-          "bonus": "Si complété pendant l'Âge 2 : la population de votre capitale augmente de 30. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder 3 habitations de rang III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder une population totale de 2000 habitants.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -3231,23 +1930,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder 3 Émissaires chez 2 cités libres différentes.",
-          "bonus": "Si complété pendant l'Âge 1 : votre prochaine augmentation de rang de pays ne coûte aucune Nourriture. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Être Suzerain de 2 cités libres.",
-          "bonus": "Si complété pendant l'Âge 2 : recevez 2 Émissaires. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Être un Empereur.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 8 Émissaires au sein de la même cité libre.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -3256,23 +1955,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Aménager 4 ressources naturelles.",
-          "bonus": "Si complété pendant l'Âge 1 : recevez 5 ressources de base de votre choix. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder 3 routes commerciales.",
-          "bonus": "Si complété pendant l'Âge 2 : votre capitale peut accueillir un bâtiment supplémentaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder un revenu de 100 Or par tour.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 4 Guildes.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -3281,23 +1980,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Capturer une habitation.",
-          "bonus": "Si complété pendant l'Âge 1 : le coût de levée d'armée est réduit de 15 Or pour le reste de la partie. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder un Donjon doté de deux bâtiments militaires.",
-          "bonus": "Si complété pendant l'Âge 2 : vous pouvez posséder une armée supplémentaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Pouvoir lever 300 pts d'armée pour moins de 10 Or.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Contrôler 6 des habitations de départ.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -3306,23 +2005,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder un revenu de 5 Science par tour.",
-          "bonus": "Si complété pendant l'Âge 1 : vous gagnez 15 Science. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder un Donjon doté d'un Cabinet d'astronomie.",
-          "bonus": "Si complété pendant l'Âge 2 : apprenez 3 technologies d'un même arbre de rang I. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Découvrir 3 Progrès complets d'âge III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Terminer le Progrès Futur.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     }
@@ -3354,8 +2053,7 @@
     "3/  modifier la culture des gens de la ville : une charge par tour pour 5 habitats, sauf règles contraires",
     "4/ la ville change de culture si la moitié de ses habitants sont d'une autre culture",
     "victoires : seul le premier joueur à atteindre un palier déclenche ses effets",
-    "résolution bataille auto : A - 1,5*(A-B)",
-    "un marchand ne peut exploiter une merveille"
+    "résolution bataille auto : A - 1,5*(A-B)"
   ],
   "constructions": [
     {
@@ -4392,7 +3090,7 @@
       "ressource1": "",
       "valeur2": 0,
       "ressource2": "",
-      "description": "Plusieurs autorisés",
+      "description": "",
       "nobleSeul": true,
       "regleGenre": "vide",
       "attribution": "Manuelle",
@@ -4453,8 +3151,8 @@
       "metier": "Mage"
     },
     {
-      "effet": "Octroie un ministre qui appartient à un ministère, maximum 1.",
-      "revocation": "30 Or\n+ 6  Soie",
+      "effet": "",
+      "revocation": "",
       "metier": "Ministre"
     },
     {
