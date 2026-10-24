@@ -1,10 +1,20 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  BANQUE D'EFFETS — CONTRAT COMMUN (refactor 2026-10-18)
 //
-//  Principe : une règle (bâtiment, aménagement, règle de faction,
-//  technologie, régime…) = une DONNÉE qui combine des effetspiochés dans
-//  la BANQUE. Modifier une règle = modifier son appel à la banque ;
-//  le code du moteur ne change JAMAIS quand une règle change.
+//  Principe : une règle (bâtiment, aménagement, régime…) = une DONNÉE
+//  qui combine des effets piochés dans la BANQUE. Modifier une règle =
+//  modifier son appel à la banque ; le code du moteur ne change
+//  JAMAIS quand une règle change.
+//
+//  (RETRAIT 2026-10-24, retour arbitre « purge complète » — résolution
+//  R4 de l'audit des résiduels : la banque ne garde que les types
+//  d'effets PRODUITS par le référentiel actuel (constructions,
+//  régimes, cultures). Les types sans producteur — plomberie des
+//  techs/doctrines/dogmes, systèmes tous supprimés — partent en
+//  RETRAIT daté ci-dessous ; l'ancien contenu reste dans
+//  l'historique git, règle 9. Une future source (règles de factions
+//  à redéfinir, événements…) RÉINTRODUIRA les types dont elle aura
+//  besoin, repris de l'historique.)
 //
 //  Trois couches :
 //   1. src/rules/types.ts (ce fichier) — les types d'effets et de
@@ -17,13 +27,18 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player, City } from '../engine/types'
-import type { Cfg } from '../config/defaultConfig'
 
 // ── Contexte d'application ────────────────────────────────────────────────
 
 /** Contexte passé à chaque effet : tout ce dont un effet peut avoir besoin
  *  pour se calculer. Le moteur le construit une fois par site d'application
- *  (joueur, ville, tour) et le donne à la banque. */
+ *  (joueur, ville, tour) et le donne à la banque.
+ *  (RETRAIT 2026-10-24, purge R4 : les PORTS moteur (vague 2, inversion de
+ *  dépendance — C, capitaleDe, rangNiveau, garnisonVille) sont supprimés :
+ *  plus AUCUN type d'effet conservé ne consomme de service moteur. Les
+ *  futurs services nécessaires à un nouveau type d'effet seront
+ *  réintroduits avec lui — l'ancien contenu reste dans l'historique git,
+ *  règle 9.) */
 export interface ContexteEffet {
   /** État complet de la partie (lecture seule par convention — un effet
    *  ne mute JAMAIS l'état directement : il renvoie sa contribution). */
@@ -34,22 +49,6 @@ export interface ContexteEffet {
   ville?: City
   /** Saison du tour en cours. */
   saison: string
-  /** PORTS MOTEUR (vague 2, arbitrage Thibaut 2026-10-23 « tout dans
-   *  la vague 2 » — inversion de dépendance) : services injectés par le
-   *  site d'application (le MOTEUR construit le contexte). La couche
-   *  rules n'importe plus le moteur : plus de cfgOf/factions/regimes
-   *  dans src/rules — le cycle moteur→rules→moteur est cassé. Les
-   *  closures capturent joueur/C/state du site. */
-  ports: {
-    /** Config CONVERGÉE du site (cfgOf(state.config)). */
-    C: Cfg
-    /** Capitale du joueur (factions.ts). */
-    capitaleDe: (joueur: Player) => City | undefined
-    /** Rang d'habitation d'une ville (regimes.ts). */
-    rangNiveau: (ville: City) => number
-    /** Garnison des habitants d'une ville (regimes.ts). */
-    garnisonVille: (ville: City) => number
-  }
 }
 
 // ── Types d'effets de la banque ────────────────────────────────────────────
@@ -64,15 +63,18 @@ export interface EffetFluxVille {
   ete?: boolean
 }
 
-/** Production par tour créditée au joueur entier (toutes ses villes,
- *  canal « Régimes & cultures »…). */
-export interface EffetFluxJoueur {
-  type: 'fluxJoueur'
-  ressource: string
-  valeur: number
-  /** true = uniquement en été. */
-  ete?: boolean
-}
+// (RETRAIT 2026-10-24, retour arbitre « purge complète » — résolution R4 :
+//  les types d'effets SANS PRODUCTEUR sont supprimés. Le référentiel
+//  actuel ne produit que fluxVille, garnisonVille (constructions),
+//  fluxParAmenagement (régimes) et fluxParVilleCultureMonde
+//  (cultures). Types retirés : fluxJoueur (régimes & cultures
+//  historiques), fluxCapitale, garnisonParRang, tourismeInstantane,
+//  habitantsVille, conversionPoids, migrationPoids, reductionCout,
+//  reductionLeveeArmee, emissaires (avec son champ mort marchandsMax —
+//  reliquat du métier de Marchand retiré), scienceInstantanee,
+//  ressourcesInstantanees, demographieVille — plomberie des
+//  techs/doctrines/dogmes/Lauriers, systèmes tous supprimés. L'ancien
+//  contenu reste dans l'historique git, règle 9.)
 
 /** Production par tour, par AMÉNAGEMENT portant l'un des noms listés,
  *  dans TOUTES les villes du joueur (ex. Socialisme : +N Nourriture
@@ -105,157 +107,32 @@ export interface EffetFluxParVilleCultureMonde {
 //  plus aucun producteur. L'ancien contenu reste dans l'historique
 //  git (règle 9).
 
-/** Production par tour de la CAPITALE du joueur. */
-export interface EffetFluxCapitale {
-  type: 'fluxCapitale'
-  ressource: string
-  valeur: number
-}
-
 /** Garnison statique ajoutée à la ville (valeur d'état : tient tant que
- *  la source tient — bâtiment, technologie, règle…). */
+ *  la source tient — bâtiment…). */
 export interface EffetGarnisonVille {
   type: 'garnisonVille'
   valeur: number
 }
 
-/** Garnison statique par RANG d'habitation de la ville (ex. régime
- *  Autoritarisme : +15 × rang). */
-export interface EffetGarnisonParRang {
-  type: 'garnisonParRang'
-  valeur: number
-}
-
-
-/** TYPE HISTORIQUE — plus AUCUN producteur depuis le retour Thibaut
- *  2026-10-16 : le Tourisme est un FLUX NORMAL (fluxVille ; stock
- *  recalculé en fin de tour — stock = production). Conservé dans le
- *  contrat de types pour compatibilité des règles déjà saisies ; le
- *  registre de constructions ne le produit plus. */
-export interface EffetTourismeInstantane {
-  type: 'tourismeInstantane'
-  valeur: number
-}
-
-/** Habitants ajoutés immédiatement à la ville. Exemple historique : le
- *  bonus « votre capitale reçoit 15 habitants » du dogme du
- *  Socialisme — dogmes retirés du référentiel le 2026-10-24
- *  (retour arbitre), l'effet reste au contrat pour compatibilité
- *  des règles déjà saisies. */
-export interface EffetHabitantsVille {
-  type: 'habitantsVille'
-  valeur: number
-}
-
-/** Poids supplémentaire dans la pression de conversion culturelle de
- *  la culture concernée (merveilles culturelles… ; les dogmes,
- *  source historique, sont retirés du référentiel depuis le
- *  2026-10-24). */
-export interface EffetConversionPoids {
-  type: 'conversionPoids'
-  culture: string
-  valeur: number
-}
-
-/** Poids supplémentaire d'attrait migratoire de la ville (festivals,
- *  merveilles… — voir population.ts). */
-export interface EffetMigrationPoids {
-  type: 'migrationPoids'
-  valeur: number
-}
-
-/** Réduction du coût de construction (Or et/ou ressources de base) —
- *  ex. règles de construction à coût réduit (reductionCout).
- *  (RETRAIT 2026-10-24 : les effets de techs de fondation
- *  « −5 Bois, −20 Or » sont supprimés avec le système de progrès.) */
-export interface EffetReductionCout {
-  type: 'reductionCout'
-  /** Type de construction concernée : 'habitation' | 'batiment' | 'amenagement' | 'merveille' | 'leveeArmee' */
-  cible: string
-  reductions: Record<string, number>
-}
-
-/** Réduction du coût de levée d'armée (Or) — ex. Grand écuyer,
- *  bâtiments de la ville de levée. (RETRAIT 2026-10-24 : les
- *  réductions des techs, supprimées avec le système de progrès.) */
-export interface EffetReductionLeveeArmee {
-  type: 'reductionLeveeArmee'
-  valeur: number
-}
-
-/** Émissaires : gain immédiat (Pacifisme : 1 émissaire cité libre au
- *  choix) ou capacité maximale augmentée. Le champ `marchandsMax`
- *  (Capacité de marchands, ex. Capitalisme : +1) est HISTORIQUE et
- *  sans lecteur — le métier de Marchand a été retiré du jeu le
- *  2026-10-24 (arbitrage Thibaut) ; conservé pour ne pas casser les
- *  vieilles configs. */
-export interface EffetEmissaires {
-  type: 'emissaires'
-  /** nombre d'émissaires gagnés immédiatement */
-  gain: number
-  /** ANCIENNE capacité maximale de marchands +N (sans lecteur
-   *   depuis le retrait du métier le 2026-10-24) */
-  marchandsMax?: number
-}
-
-/** Science gagnée immédiatement (bonus one-shot de Laurier). */
-export interface EffetScienceInstantanee {
-  type: 'scienceInstantanee'
-  valeur: number
-}
-
-/** Ressources de base gagnées immédiatement (bonus de Laurier). */
-export interface EffetRessourcesInstantanees {
-  type: 'ressourcesInstantanees'
-  /** clé = nom de ressource, valeur = quantité gagnée */
-  gains: Record<string, number>
-}
-
-/** Modificateur démographique appliqué à la ville (santé, fécondité…).
- *  Réservé aux règles démographiques fines — rare. */
-export interface EffetDemographieVille {
-  type: 'demographieVille'
-  /** probabilité de maladie supplémentaire (ex. épidémie) */
-  risqueMaladie?: number
-  /** fécondité bonus des couples de la ville */
-  feconditeBonus?: number
-}
-
 /** Union : TOUS les types d'effets de la banque. */
 export type Effet =
   | EffetFluxVille
-  | EffetFluxJoueur
   | EffetFluxParAmenagement
   | EffetFluxParVilleCultureMonde
-  | EffetFluxCapitale
   | EffetGarnisonVille
-  | EffetGarnisonParRang
-  | EffetTourismeInstantane
-  | EffetHabitantsVille
-  | EffetConversionPoids
-  | EffetMigrationPoids
-  | EffetReductionCout
-  | EffetReductionLeveeArmee
-  | EffetEmissaires
-  | EffetScienceInstantanee
-  | EffetRessourcesInstantanees
-  | EffetDemographieVille
 
 // ── Conditions ─────────────────────────────────────────────────────────────
 
 /** Une règle peut être conditionnée. Toutes les conditions sont
- *  optionnelles (absence = toujours actif) et combinées en ET. */
+ *  optionnelles (absence = toujours actif) et combinées en ET.
+ *  (RETRAIT 2026-10-24, purge R4 : les conditions SANS PRODUCTEUR sont
+ *  supprimées — peuple, pontificatMin, ageMin, vassal, suzerainDeCite
+ *  (plomberie des règles de factions/dogmes, systèmes supprimés).
+ *  Les producteurs actuels n'utilisent que saison, regime et
+ *  culture. L'ancien contenu reste dans l'historique git, règle 9.) */
 export interface ConditionRegle {
-  /** Peuple requis (ex. 'NORLS' pour « L'art du viking »). */
-  peuple?: string
-  /** Rang de Pontificat minimum requis. */
-  pontificatMin?: number
-  /** Âge minimum du joueur. */
-  ageMin?: number
   /** Saison requise (ex. effets d'été). */
   saison?: string
-  /** Le joueur doit être vassal (Pacifisme Fidèles rang 2). */
-  vassal?: boolean
   /** Régime politique du joueur requis (ex. Socialisme). */
   regime?: string
   /** Culture du joueur requise (ex. Lunisme — règle de pays). */
@@ -263,9 +140,6 @@ export interface ConditionRegle {
   // (RETRAIT 2026-10-24 : les conditions `tech` et `techNom` —
   //  technologie débloquée requise — sont supprimées avec le
   //  système de progrès, retour arbitre.)
-  /** Le joueur doit posséder au moins une CITÉ LIBRE suzeraine
-   *  (ex. Garde suzeraine, Patronage — relations diplomatiques). */
-  suzerainDeCite?: boolean
 }
 
 // ── Règle de la banque ─────────────────────────────────────────────────────
@@ -273,19 +147,21 @@ export interface ConditionRegle {
 /** Source d'une règle : où elle vit dans le référentiel.
  *  'dogme' RETIRÉ le 2026-10-24 (retour arbitre : suppression de
  *  tous les dogmes) — la valeur n'est jamais à réutiliser (stabilité
- *  des règles déjà saisies). */
+ *  des règles déjà saisies).
+ *  (RETRAIT 2026-10-24, purge R4 : les sources DÉCLARÉES SANS
+ *  PRODUCTEUR — 'faction' (règles de factions, vidées le 2026-10-24),
+ *  'evenement', 'laurier' — sont supprimées ; elles n'avaient jamais
+ *  été branchées. Une future source réelle sera réintroduite avec
+ *  son producteur.) */
 export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
   | 'merveille'      // table constructions, famille Merveille
-  | 'faction'         // règles de faction (base, Âge II, Âge III)
   | 'regime'          // loi chiffrée du régime politique
   | 'culture'         // règle de pays culturelle
   //  'tech' RETIRÉ le 2026-10-24 (retour arbitre : suppression du
   //  système de progrès) — la valeur n'est jamais à réutiliser
   //  (stabilité des règles déjà saisies).
-  | 'evenement'        // événement de saison
-  | 'laurier'          // bonus one-shot de Laurier
 
 /** Une règle de la banque : identité + conditions + effets.
  *  L'identifiant `id` est STABLE (jamais renommé, jamais réutilisé) —
@@ -308,17 +184,24 @@ export interface RegleBanque {
   /** Conditions d'activation (toutes en ET). Vide = toujours actif
    *  quand la source est possédée. */
   conditions?: ConditionRegle
-  /** QUAND la règle se déclenche : 'tour' (chaque fin de tour —
-   *  défaut) ou 'finSaison' (au changement de saison, production
-   *  équivalente par tour : Sénéchal, Maître de cour, Légat…). */
-  declencheur?: 'tour' | 'finSaison'
+  // (RETRAIT 2026-10-24, purge R4 : le champ `declencheur` ('tour' |
+  //  'finSaison' — Sénéchal, Maître de cour, Légat…) est supprimé :
+  //  AUCUN producteur ne l'a jamais posé, AUCUN lecteur ne le lit
+  //  (toutes les règles vivantes sont des flux de tour). L'ancien
+  //  contenu reste dans l'historique git, règle 9.)
   /** Les effets — TOUJOURS piochés dans la banque. */
   effets: Effet[]
 }
 
 // ── Résultats d'application ────────────────────────────────────────────────
 
-/** Résultat agrégé d'une application de la banque sur un site. */
+/** Résultat agrégé d'une application de la banque sur un site.
+ *  (RETRAIT 2026-10-24, purge R4 : les canaux SANS LECTEUR MOTEUR —
+ *  conversion, migration, reductions, instantanes (plomberie des
+ *  dogmes/doctrines/démographie, jamais branchée) — sont supprimés.
+ *  Le moteur ne lit que flux, fluxEte et garnison (constructions.ts,
+ *  regimes.ts). L'ancien contenu reste dans l'historique git,
+ *  règle 9.) */
 export interface ContributionEffets {
   /** Flux par tour par ressource (clé = ressource). */
   flux: Record<string, number>
@@ -326,12 +209,4 @@ export interface ContributionEffets {
   fluxEte: Record<string, number>
   /** Garnison totale ajoutée au site. */
   garnison: number
-  /** Poids de conversion culturelle par culture. */
-  conversion: Record<string, number>
-  /** Poids migratoire du site. */
-  migration: number
-  /** Réductions de coût par type de cible. */
-  reductions: Record<string, Record<string, number>>
-  /** Effets instantanés (appliqués une fois, hors calcul de tour). */
-  instantanes: Effet[]
 }

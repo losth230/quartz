@@ -8,9 +8,6 @@
 import type { ContexteEffet } from './types'
 import { createGame } from '../engine/setup'
 import type { SetupLine } from '../engine/setup'
-import { cfgOf } from '../engine/gameData'
-import { capitaleDe } from '../engine/factions'
-import { rangNiveau, garnisonHabitationVille } from '../engine/regimes'
 
 const SETUP: SetupLine[] = [{
   nom: 'Joueur Test', peuple: 'NORLS', culture: 'Culture Nordique',
@@ -26,18 +23,11 @@ export function partieMock(opts?: { peuple?: string; saison?: string; villeRang?
   if (opts?.saison) state.saison = opts.saison as typeof state.saison
   const ville = joueur.villes[0]
   if (opts?.villeRang) ville.rang = opts.villeRang
-  // PORTS (vague 2) : les services RÉELS du moteur — les tests
-  //  valent ce que vaut la vraie évaluation.
-  const C = cfgOf(state.config)
-  return {
-    state, joueur, ville, saison: state.saison,
-    ports: {
-      C,
-      capitaleDe: (j) => capitaleDe(j),
-      rangNiveau: (v) => rangNiveau(v, C),
-      garnisonVille: (v) => garnisonHabitationVille(joueur, v, C, state),
-    },
-  }
+  // (RETRAIT 2026-10-24, purge R4 : les PORTS moteur (C, capitaleDe,
+  //  rangNiveau, garnisonVille — vague 2) sont supprimés avec les types
+  //  d'effets qui les consommaient ; le contexte se réduit à l'état,
+  //  au joueur, à la ville et à la saison, tous RÉELS.)
+  return { state, joueur, ville, saison: state.saison }
 }
 
 /** Contexte sans ville (effets joueur seul). */

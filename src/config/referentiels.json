@@ -2053,8 +2053,7 @@
     "3/  modifier la culture des gens de la ville : une charge par tour pour 5 habitats, sauf règles contraires",
     "4/ la ville change de culture si la moitié de ses habitants sont d'une autre culture",
     "victoires : seul le premier joueur à atteindre un palier déclenche ses effets",
-    "résolution bataille auto : A - 1,5*(A-B)",
-    "un marchand ne peut exploiter une merveille"
+    "résolution bataille auto : A - 1,5*(A-B)"
   ],
   "constructions": [
     {

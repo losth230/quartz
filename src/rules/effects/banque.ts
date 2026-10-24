@@ -18,24 +18,22 @@ import type {
 // ── Conditions ─────────────────────────────────────────────────────────────
 
 /** Vérifie les conditions d'une règle pour un contexte donné.
- *  Toutes les conditions présentes sont combinées en ET. */
+ *  Toutes les conditions présentes sont combinées en ET.
+ *  (RETRAIT 2026-10-24, purge R4 : les conditions SANS PRODUCTEUR —
+ *  peuple, vassal, suzerainDeCite (plus les notes documentaires
+ *  ageMin/pontificatMin « suivi manuel au plateau ») — sont
+ *  supprimées avec leurs champs de ConditionRegle ; seules restent
+ *  saison, regime et culture, les seules produites par le registre.
+ *  L'ancien contenu reste dans l'historique git, règle 9.) */
 export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: ContexteEffet): boolean {
   if (!cond) return true
   const { joueur } = ctx
-  if (cond.peuple && joueur.peuple !== cond.peuple) return false
   if (cond.saison && ctx.saison !== cond.saison) return false
-  if (cond.vassal === true && joueur.vassalDe == null) return false
-  if (cond.vassal === false && joueur.vassalDe != null) return false
   // (RETRAIT 2026-10-24 : les conditions `tech` / `techNom` — tech
   //  débloquée requise — sont supprimées avec le système de
   //  progrès, retour arbitre.)
   if (cond.regime && joueur.regime !== cond.regime) return false
   if (cond.culture && joueur.culture !== cond.culture) return false
-  // Suzerain d'au moins une cité libre (relations diplomatiques).
-  if (cond.suzerainDeCite === true && !(ctx.state.citesLibres ?? []).some((c) => c.suzerain === joueur.n)) return false
-  // cond.ageMin : suivi manuel au plateau (arbitre) — documentaire
-  //  tant que l'âge n'est pas suivi dans Player.
-  // cond.pontificatMin : suivi manuel au plateau — documentaire.
   return true
 }
 
@@ -47,16 +45,6 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     case 'fluxVille': {
       if (e.ete) {
         out.fluxEte[e.ressource] = (out.fluxEte[e.ressource] ?? 0) + e.valeur
-      } else {
-        out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
-      }
-      break
-    }
-    case 'fluxJoueur': {
-      // Un flux joueur s'applique au joueur même si le site est une
-      //  ville (il est crédité une fois, pas par ville).
-      if (e.ete) {
-        if (ctx.saison === 'Été') out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       } else {
         out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
       }
@@ -96,58 +84,19 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     //  fluxParGarnisonHabitation, fluxParMetier — sont supprimés
     //  avec le système de progrès. L'ancien contenu reste dans
     //  l'historique git, règle 9.)
-    case 'fluxCapitale': {
-      // Ne s'applique QUE si la ville du contexte est la capitale.
-      if (ctx.ville && ctx.ports.capitaleDe(ctx.joueur)?.nom === ctx.ville.nom) {
-        out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur
-      }
-      break
-    }
+    // (RETRAIT 2026-10-24, purge R4 « complète » : les types restants
+    //  SANS PRODUCTEUR — fluxJoueur, fluxCapitale, garnisonParRang,
+    //  tourismeInstantane, habitantsVille, conversionPoids,
+    //  migrationPoids, reductionCout, reductionLeveeArmee,
+    //  emissaires, scienceInstantanee, ressourcesInstantanees,
+    //  demographieVille (et les canaux instantanes/conversion/
+    //  migration/reductions de la contribution) — sont supprimés :
+    //  le référentiel ne produit que fluxVille, garnisonVille,
+    //  fluxParAmenagement et fluxParVilleCultureMonde, et le moteur
+    //  ne lit que flux/fluxEte/garnison. L'ancien contenu reste dans
+    //  l'historique git, règle 9.)
     case 'garnisonVille': {
       out.garnison += e.valeur
-      break
-    }
-    case 'garnisonParRang': {
-      // Le rang est déduit de la ville du contexte ; sans ville, effet nul.
-      if (ctx.ville?.rang) {
-        out.garnison += e.valeur * ctx.ports.rangNiveau(ctx.ville)
-      }
-      break
-    }
-    case 'tourismeInstantane':
-    case 'habitantsVille':
-    case 'scienceInstantanee':
-    case 'ressourcesInstantanees':
-    case 'emissaires': {
-      out.instantanes.push(e)
-      break
-    }
-    case 'conversionPoids': {
-      out.conversion[e.culture] = (out.conversion[e.culture] ?? 0) + e.valeur
-      break
-    }
-    case 'migrationPoids': {
-      out.migration += e.valeur
-      break
-    }
-    case 'reductionCout': {
-      const cible = out.reductions[e.cible] ?? {}
-      for (const [res, v] of Object.entries(e.reductions)) {
-        cible[res] = (cible[res] ?? 0) + v
-      }
-      out.reductions[e.cible] = cible
-      break
-    }
-    case 'reductionLeveeArmee': {
-      const cible = out.reductions['leveeArmee'] ?? {}
-      cible['Or'] = (cible['Or'] ?? 0) + e.valeur
-      out.reductions['leveeArmee'] = cible
-      break
-    }
-    case 'demographieVille': {
-      // Les modificateurs démographiques passent par les instantanés :
-      //  le site démographique les relit (population.ts).
-      out.instantanes.push(e)
       break
     }
   }
@@ -156,7 +105,7 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
 // ── Application de la banque ───────────────────────────────────────────────
 
 export function contributionVide(): ContributionEffets {
-  return { flux: {}, fluxEte: {}, garnison: 0, conversion: {}, migration: 0, reductions: {}, instantanes: [] }
+  return { flux: {}, fluxEte: {}, garnison: 0 }
 }
 
 /** Applique un ensemble de règles de la banque à un contexte et renvoie

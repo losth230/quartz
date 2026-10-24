@@ -78,7 +78,7 @@ src/
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
 └── engine/*.test.ts, rules/*.test.ts, state/*.test.ts, components/*.test.ts
-                             — tests natifs node:test (126) + tests de rendu (11)
+                             — tests natifs node:test (125) + tests de rendu (11)
 ```
 
 ## Multijoueur (protocole v2 UNIQUE — à ne pas casser)
@@ -106,10 +106,15 @@ protocoles possible dans un salon.
    moteur : sans ce check, un identifiant non défini dans le handler part en
    production (incident 2026-10-19 : `cfgMondiale`, ReferenceError à chaque
    résolution serveur, déployé vert par tous les contrôles).
-3. `npm test` — tests natifs `node --test` (126 : fusion, migrations, régression 20 tours
+3. `npm test` — tests natifs `node --test` (125 : fusion, migrations, régression 20 tours
    avec invariants, config, registre, banque, mutateurs, métiers, commerce, santé)
    + tests de rendu (11 vues) — R3 (2026-10-24) : chaque vue vérifie des DONNÉES
    dérivées de l'état (valeurs, noms, comptes), plus seulement des titres.
+   NB R4 (2026-10-24) : la banque rules/ ne garde que les 4 types d'effets
+   produits par le référentiel (fluxVille, garnisonVille,
+   fluxParAmenagement, fluxParVilleCultureMonde) — les types sans
+   producteur (techs/doctrines/dogmes supprimés) sont partis en RETRAIT
+   daté (−1 test banque : tourismeInstantane).
 4. `npm run build` (vite) — le job CI « Build jeu » bundle le tout.
 
 La CI (« CI jeu ») tourne sur la branche du jeu : type-check strict + tests + build +

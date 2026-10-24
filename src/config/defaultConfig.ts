@@ -1061,20 +1061,18 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  SCHEMA_VERSION_CONFIG (règle (x)). Trois familles :
   //    · entrée « Marchand » de merged.metiers (le picker, les caps) ;
   //    · entrée « Marchand » de merged.metiersEffets (le wiki) ;
-  //    · effets fluxParMetier de métier « Marchand » (ex. la tech
-  //      « Commerce lointain », gardée SANS effet — arbitrage
-  //      Thibaut 2026-10-24) : le métier n'existe plus, l'effet est
-  //      mort quelle que soit sa valeur — purgé pour aligner la
-  //      config sur le référentiel.
+  //    · (RETRAIT 2026-10-24, purge R4 : la troisième famille —
+  //      « effets fluxParMetier de métier Marchand dans les TECHS »
+  //      (ex. « Commerce lointain », gardée SANS effet) — est
+  //      devenue muette : la table `progres` entière est purgée
+  //      ci-dessous avec le système de progrès, retour arbitre.
+  //      Aucune purge dédiée nécessaire.)
   if (Array.isArray(merged.metiers)) {
     merged.metiers = merged.metiers.filter((m) => m.metier !== 'Marchand')
   }
   if (Array.isArray(merged.metiersEffets)) {
     merged.metiersEffets = merged.metiersEffets.filter((e) => e.metier !== 'Marchand')
   }
-  // (2026-10-24 : la purge des effets fluxParMetier « Marchand » dans
-  //  les TECHS est devenue muette — la table `progres` entière est
-  //  purgée ci-dessous avec le système de progrès, retour arbitre.)
   // PURGE DE L'INFLUENCE (retour arbitre Thibaut 2026-10-24, suite
   //  de l'arbitrage fondateur « Influence → émissaires ») : le texte
   //  de la règle des cités libres parlait encore de « gagner de

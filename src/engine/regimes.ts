@@ -36,7 +36,9 @@ export { rangNiveau } from './rangs'
 export { garnisonHabitationVille } from './garnisons'
 import { rangNiveau } from './rangs'
 import { garnisonHabitationVille } from './garnisons'
-import { capitaleDe } from './factions'
+// (RETRAIT 2026-10-24, purge R4 : l'import morte `capitaleDe` (factions)
+//  part avec les PORTS du contexte — plus aucun effet conservé ne
+//  consomme de service moteur.)
 
 /** Détail de la garnison d'une ville, ligne par ligne (même calibre
  *  que garnisonHabitationVille — l'interface affiche exactement ce
@@ -92,14 +94,10 @@ export function garnisonHabitationsPays(p: Player, C: Cfg, state?: GameState): n
  *  été, effet fluxParAmenagement) ; cette fonction ne fait que LIRE
  *  la banque, plus aucun montant codé ici. */
 export function effetsRegime(state: GameState, p: Player, saison: Saison, C: Cfg): Record<string, number> {
+  // (RETRAIT 2026-10-24, purge R4 : plus de PORTS injectés au contexte —
+  //  les types d'effets conservés ne consomment aucun service moteur.)
   return appliquerRegles(reglesRegimes(C), {
     state, joueur: p, saison,
-    ports: {
-      C,
-      capitaleDe,
-      rangNiveau: (ville) => rangNiveau(ville, C),
-      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
-    },
   }).flux
 }
 
@@ -167,12 +165,6 @@ export function effetsCulturePays(state: GameState, p: Player, C: Cfg): Record<s
   //  fonction ne fait que LIRE la banque.
   return appliquerRegles(reglesCultures(C), {
     state, joueur: p, saison: state.saison,
-    ports: {
-      C,
-      capitaleDe,
-      rangNiveau: (ville) => rangNiveau(ville, C),
-      garnisonVille: (ville) => garnisonHabitationVille(p, ville, C, state),
-    },
   }).flux
 }
 

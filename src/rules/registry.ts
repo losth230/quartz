@@ -99,9 +99,10 @@ export function registreComplet(C: Cfg): RegleBanque[] {
  *  montants = DONNÉES. Aujourd'hui seule la loi nourrEteChampRiziere
  *  est un FLUX (Socialisme : +N Nourriture d'été par Champ/Rizière)
  *  — l'été est une CONDITION de la règle, plus un if du moteur. La
- *  garnison de l'Autoritarisme (garnisonParRang) reste une VALEUR
- *  D'ÉTAT (garnisonHabitationVille), pas une production : hors
- *  banque. */
+ *  garnison de l'Autoritarisme (champ RÉFÉRENTIEL garnisonParRang —
+ *  pas le type d'effet de banque, retiré le 2026-10-24 purge R4)
+ *  reste une VALEUR D'ÉTAT (garnisonHabitationVille), pas une
+ *  production : hors banque. */
 export function reglesRegimes(C: Cfg): RegleBanque[] {
   const out: RegleBanque[] = []
   for (const regime of C.regimes) {

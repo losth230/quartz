@@ -31,13 +31,17 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  fluxParVille, fluxParVilleProximite, fluxParRangHabitation,
 //  fluxParBatiment, fluxParGarnisonHabitation, fluxParMetier — sont
 //  retirés du contrat avec le système de progrès.)
+// (RETRAIT 2026-10-24, purge R4 « complète » : les types restants SANS
+//  PRODUCTEUR — fluxJoueur, fluxCapitale, garnisonParRang (et le
+//  fantôme garnisonJoueur, listé ici sans exister dans types.ts),
+//  tourismeInstantane, habitantsVille, conversionPoids,
+//  migrationPoids, reductionCout, reductionLeveeArmee, emissaires,
+//  scienceInstantanee, ressourcesInstantanees, demographieVille —
+//  sont retirés du contrat : le référentiel ne produit QUE les
+//  quatre types ci-dessous.)
 const TYPES_CONNUSS = new Set([
-  'fluxVille', 'fluxJoueur', 'fluxCapitale',
-  'fluxParAmenagement', 'fluxParVilleCultureMonde',
-  'garnisonVille', 'garnisonParRang', 'garnisonJoueur',
-  'tourismeInstantane', 'habitantsVille', 'conversionPoids', 'migrationPoids',
-  'reductionCout', 'reductionLeveeArmee', 'emissaires',
-  'scienceInstantanee', 'ressourcesInstantanees', 'demographieVille',
+  'fluxVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde',
+  'garnisonVille',
 ])
 
 test('registre : TOUTE construction à effets du référentiel a SA règle', () => {
