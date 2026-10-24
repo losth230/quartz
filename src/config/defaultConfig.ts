@@ -1153,6 +1153,61 @@ export function cfgOf(config?: GameConfig): Cfg {
     merged.constructions = migrerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.schemaVersion = SCHEMA_VERSION_CONFIG
   }
+  // RETRAIT INTÉGRAL DES RÈGLES DE FACTIONS (retour arbitre Thibaut
+  //  2026-10-24 : « vide toutes les lignes de règles + les
+  //  descriptions, ne garde que les noms ») : le référentiel ne porte
+  //  plus que le NOM de chaque peuple (description et lignes VIDÉES —
+  //  la structure reste pour les recevoir à nouveau). Ce bloc
+  //  remplace, dans les configs sauvegardées, toute fiche PORTÉE PAR
+  //  LE RÉFÉRENTIEL par la fiche courante (vide) : les reliquats des
+  //  vagues précédentes (lignes, descriptions, champs structurés
+  //  reglesBase/ageII/ageIII des configs d'avant le 2026-10-19 que
+  //  l'onglet Peuples rendait encore) disparaissent. Un peuple HORS
+  //  référentiel (personnalisé) est conservé tel quel. Même patron
+  //  que la « mise à jour des CONDITIONS » de victoire : appliqué à
+  //  CHAQUE cfgOf, idempotent, SANS bump de SCHEMA_VERSION_CONFIG
+  //  (règle (x)).
+  {
+    const parNomPeuple = new Map(
+      [...DEFAULT_CONFIG.peuplesLibres, ...DEFAULT_CONFIG.peuplesAutres].map((d) => [d.nom, d]))
+    const alignerPeuples = (list: PeupleRef[] | undefined): PeupleRef[] =>
+      (list ?? []).map((p) => {
+        const def = parNomPeuple.get(p.nom)
+        return def ? structuredClone(def) : p
+      })
+    merged.peuplesLibres = alignerPeuples(merged.peuplesLibres)
+    merged.peuplesAutres = alignerPeuples(merged.peuplesAutres)
+  }
+  // VIDAGE DES TEXTES « MINISTRE » (retour arbitre Thibaut 2026-10-24
+  //  : « garder la ligne titre, vider ses textes ») : le système des
+  //  ministères a été retiré le 2026-10-23 ; la ligne « Ministre »
+  //  RESTE dans la table métiers (titre attribuable manuellement,
+  //  sans aucun effet moteur — l'étiquette des vieux états est
+  //  inoffensive) mais ses textes morts — description (« Plusieurs
+  //  autorisés »), effet (« Octroie un ministre… ») et coût de
+  //  révocation (« 30 Or + 6 Soie ») — sont VIDÉS dans le
+  //  référentiel. Ce bloc propage le vide aux configs sauvegardées
+  //  (une config convergée AVANT garde sinon ses textes affichés
+  //  dans Référence → Métiers). Même patron que la « mise à jour des
+  //  CONDITIONS » : appliqué à CHAQUE cfgOf, idempotent, SANS bump
+  //  de SCHEMA_VERSION_CONFIG (règle (x)).
+  if (Array.isArray(merged.metiers)) {
+    const defMin = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Ministre')
+    for (const t of merged.metiers) {
+      if (t.metier === 'Ministre' && defMin && t.description !== defMin.description) {
+        t.description = defMin.description
+      }
+    }
+  }
+  if (Array.isArray(merged.metiersEffets)) {
+    const defMinEff = DEFAULT_CONFIG.metiersEffets.find((t) => t.metier === 'Ministre')
+    for (const t of merged.metiersEffets) {
+      if (t.metier === 'Ministre' && defMinEff && (t.effet !== defMinEff.effet || t.revocation !== defMinEff.revocation)) {
+        t.effet = defMinEff.effet
+        t.revocation = defMinEff.revocation
+      }
+    }
+  }
   // Effet des taxes ±50 % → ±25 % (marqueur (z), retour Thibaut
   //  2026-10-15) : migration CIBLÉE des paramètres, indépendante du
   //  tampon schemaVersion — on ne re-joue PAS les autres migrations
@@ -1325,6 +1380,14 @@ export function cfgOf(config?: GameConfig): Cfg {
       //  merged.metiers AVANT ce bloc — la ligne ne peut plus être
       //  appariée, elle ne sert qu'à la lisibilité du snapshot.
       ['Marchand', '', 0, '', 0, '', '', false, '', 'Manuelle'],
+      // NB : le Ministre (textes VIDÉS le 2026-10-24, retour arbitre
+      //  « garder la ligne titre, vider ses textes » — le système
+      //  des ministères a été retiré le 2026-10-23, la ligne titre
+      //  reste) est conservé dans ce tableau HISTORIQUE avec ses
+      //  défauts d'avant la 3a (« Plusieurs autorisés ») : c'est ce
+      //  portrait qu'apparie la migration « ancien défaut exact →
+      //  nouveau défaut » ; le garde-fou de cfgOf vide ensuite la
+      //  description de l'entrée « Ministre » des configs.
       ['Ministre', '', 0, '', 0, '', 'Plusieurs autorisés', true, '', 'Manuelle'],
       ['Propagandiste', '', 0, '', 0, '', '', false, '', 'Manuelle'],
       ['Soldat', '', 0, '', 0, '', '', false, '', 'Armée'],
