@@ -2976,3 +2976,47 @@ vérifie les invariants GÉNÉRAUX mais pas « le système nouveau
 vit en vrai ». Toute nouvelle mécanique branchée au tour gagne
 un test « partie réelle : la mécanique produit ses effets
 attendus au bout de N tours ».
+
+## Audit externe B1-B7 (2026-10-24) — tous avérés, tous traités
+
+Un audit indépendant a relevé 7 points sur la vague
+domiciles/bonheur/statut social ; vérifiés un à un contre le
+code, TOUS avérés :
+
+- **B1 (bug, corrigé)** : `emploisOffertsVille` passait l'objet
+  `Player` au lieu de `p.n` à `capMetierVille`, masqué par un
+  cast `as never` → `r.joueur === joueur` (nombre === objet)
+  échouait toujours : les emplois ouverts par les ROUTES
+  COMMERCIALES ne comptaient jamais dans le facteur Emploi.
+  Correctif : `joueur: p.n`, le cast supprimé.
+- **B2 (dette, corrigé)** : `logementsVille` parsait encore le
+  TEXTE `domicilesDisponibles` (double source de vérité).
+  Correctif : lecture du stock `City.domiciles` (source unique),
+  replis `domicilesRang` puis texte (config très ancienne).
+- **B3 (arbitrage, PRÉSENTÉ)** : incohérence d'unité logement —
+  le bonheur compare aux HABITANTS (arbitrage initial « 1
+  logement = 1 habitant »), l'attribution loge des FOYERS.
+  Chiffré sur partie réelle : 84 logés/257 habitants → score
+  23, mais 60 logements/78 foyers → 77 par foyers, et le
+  prestige compte le domicile par PERSONNE. Trois unités pour
+  trois systèmes. Arbitre tranché : habitants partout (le
+  « 1 logement = 1 habitant » initial est conservé — les foyers
+  partagent un domicile, les conjoints/enfants logés comptent).
+- **B4 (doc, corrigé)** : 3 docblocks inexactes (mereId/pereId,
+  parents décédés transmettent aussi, retour = logés pas
+  seulement nouveaux).
+- **B5 (mort, corrigé)** : `prestigeFoyer` jamais appelé + branche
+  `conjointPrestige !== null` de `appliquer()` inatteignable —
+  supprimés, `appliquer` simplifié (célibataires : gain simple).
+- **B6 (tests, corrigé)** : test dédié du bonus
+  `mariageMemeRang` (écart exact = paramètre, personnages
+  identiques par ailleurs). NB : la première version du test
+  était fausse (métiers différents → bonus métier parasite) —
+  le test attrapait son propre bug, pas celui du moteur.
+- **B7 (convention, corrigé)** : arbitrages design consignés
+  dans docs/ia/regles-et-arbitrages.md (section « Domiciles,
+  bonheur et statut social ») — le journal reste pour
+  l'ingénierie, les règles vivent dans le référentiel
+  d'arbitrages.
+
+166/166 tests verts après correctifs.

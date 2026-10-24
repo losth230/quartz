@@ -89,7 +89,12 @@ export function bonheurVille(s: ScoresVille): number {
 export function emploisOffertsVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   let offres = 0
   for (const m of Object.keys(metiersDisponiblesRang(ville, C))) {
-    const cap = capMetierVille(m, ville, C, { state, joueur: p } as never)
+    // (correctif audit B1, 2026-10-24 : p.n — le contexte attend le
+    //  N° du joueur, pas l'objet Player ; le cast `as never` masquait
+    //  la faute de frappe et `r.joueur === joueur` comparait un
+    //  nombre à un objet → les emplacements des routes commerciales
+    //  ne comptaient JAMAIS dans le facteur Emploi.)
+    const cap = capMetierVille(m, ville, C, { state, joueur: p.n })
     if (Number.isFinite(cap)) offres += Math.floor(cap)
   }
   return offres
@@ -100,9 +105,22 @@ export function emploisOffertsVille(state: GameState, p: Player, ville: City, C:
  *  « 50 maisons, 10 Auberge » → 60 ; la vague domiciles remplacera
  *  par la table structurée). 1 logement = 1 habitant logé. */
 export function logementsVille(ville: City, C: Cfg): number {
+  // (correctif audit B2, 2026-10-24 : source UNIQUE de vérité — le
+  //  stock de la ville (City.domiciles, posé à la création et tenu
+  //  par initStockVille) ; repli sur domicilesRang du rang si le
+  //  champ est absent (états non normalisés — tests), PLUS le parse
+  //  du TEXTE en dernier recours (config très ancienne). Fini la
+  //  double source : le texte « domicilesDisponibles » est
+  //  HISTORIQUE.)
+  if (Array.isArray(ville.domiciles)) {
+    return ville.domiciles.reduce((acc, e) => acc + e.nombre, 0)
+  }
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),
   )
+  if (Array.isArray(def?.domicilesRang)) {
+    return def!.domicilesRang!.reduce((acc, e) => acc + e.nombre, 0)
+  }
   const txt = def?.domicilesDisponibles ?? ''
   let total = 0
   for (const part of txt.split(',')) {

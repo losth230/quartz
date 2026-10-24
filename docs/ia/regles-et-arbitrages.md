@@ -929,3 +929,46 @@ rang 1). Arbitrages actés lors de la session :
   fois par joueur. Bench 16 000 habitants : fin de tour ~9,8 s →
   ~2,0 s, état du jeu strictement identique (A/B déterministe
   3 tours). Détail : docs/ia/journal-technique.md.
+
+
+## Domiciles, bonheur et statut social (2026-10-24, arbitrages Thibaut)
+
+**Domiciles** — SIMPLE : un type = un nom + une qualité 1-5
+(Masure 1, Maison 2, Auberge 3, Maison de notable 4, Palais 5) ;
+pas de capacité ni coût (1 domicile = 1 logement, les bâtiments
+constructibles viendront) ; le rang de la ville DÉFINIT l'offre
+(stock `City.domiciles`, posé à la création et au changement de
+rang).
+
+**Qualité des métiers** — aménagement = roturier, bâtiment =
+bourgeois (Commerçant/Scientifique/Banquier/Troubadour/Professeur/
+Garde), lignée nobleSeul = noble. Champ donnée, ne change rien
+à l'affectation.
+
+**Bonheur des villes** — moyenne SIMPLE de 5 scores [0-100] :
+- Emploi, Logement, Sécurité : formule OPTIMUM symétrique (100
+  si offre = demande EXACTEMENT, malus IDENTIQUE en manque et en
+  excès : ±25 % → 75, ×2 → 0) ;
+- Logement PAR HABITANT (1 logement = 1 habitant logé) ;
+- Sécurité : cible = 100 × rang d'habitation ;
+- Santé : 100 − % de malades ;
+- Tourisme : part du joueur dans le tourisme MONDIAL (une course) ;
+- Indicateur PUR pour l'instant (aucun effet natalité/impôts).
+
+**Prestige et rangs sociaux** — le prestige est FAMILIAL :
+- convergence des couples (moyenne + gain commun) ;
+- héritage à l'âge adulte : 50 % du prestige MOYEN des parents,
+  joué une fois (la génération fondatrice sans parents n'hérite
+  pas — elle part de 0) ;
+- rangs dérivés : < 100 roturier, ≥ 100 bourgeois, ≥ 250 noble ;
+  anoblissement AUTOMATIQUE pour l'instant (la grâce du souverain
+  reste une piste) ;
+- gain par tour : −2 sans emploi / sans domicile / malade,
+  domicile +0..+4 (qualité −1), métier +2 bourgeois / +5 noble,
+  +1 si bonheur de la ville > 50 ;
+- mariages LIBRES + bonus de même condition (mariageMemeRang
+  +0,10 — aucune interdiction entre conditions).
+
+**Chute** — par érosion naturelle du prestige (les conditions qui
+se dégradent l'usent ; à 0 le foyer retombe roturier). Journal
+des changements de rang (📈 bourgeoisie, 👑 noblesse, 📉 chutes).

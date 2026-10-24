@@ -113,8 +113,9 @@ export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C:
 /** Attribue les domiciles d'une ville à ses foyers : la MEILLEURE
  *  qualité d'abord, sans dépasser le stock (stock.consume au fur et
  *  mesure). Un foyer garde son domicile s'il est déjà attribué et
- *  existe encore dans le stock. Retourne le nombre de foyers
- *  nouvellement logés (les changements portent le champ
+ *  existe encore dans le stock. Retourne le nombre de foyers LOGÉS
+ *  à l'issue de l'appel — déjà logés + nouvellement logés
+ *  (les changements portent le champ
  *  `Character.domicile` du chef ET du conjoint — les enfants mineurs
  *  suivent sans champ propre : le domicile est celui du foyer).
  *

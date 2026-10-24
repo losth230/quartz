@@ -135,3 +135,31 @@ test('runTurn complet : le statut social tourne sans crash et journalise les cha
   }
   assert.ok(state.log.length > 0, 'du journal')
 })
+
+
+// ── B6 (audit) : le bonus mariageMemeRang est testé dédiément ──────
+
+test('B6 : mariageMemeRang — bonus de même rang social, libres entre conditions', async () => {
+  const { computeMarriageProbability } = await import('./metiers')
+  const { C } = partieTemoin()
+  // deux personnages IDENTIQUES par ailleurs (même métier, âge,
+  //  culture vide, sans traits) — SEUL le prestige (donc le rang)
+  //  diffère : l'écart de probabilité est exactement le paramètre.
+  const a = perso({ metier: 'Chasseur' })
+  const roturier = perso({ metier: 'Chasseur' })
+  roturier.prestige = 10
+  const bourgeois = perso({ metier: 'Chasseur' })
+  bourgeois.prestige = 150   // même métier : seule différence = le rang
+  a.prestige = 10
+  const memeRang = computeMarriageProbability(a, roturier, C)
+  const rangsDifferents = computeMarriageProbability(a, bourgeois, C)
+  assert.ok(
+    memeRang > rangsDifferents,
+    `même rang (${memeRang.toFixed(3)}) > rangs différents (${rangsDifferents.toFixed(3)})`,
+  )
+  const attendu = C.p.mariageMemeRang
+  assert.ok(
+    Math.abs((memeRang - rangsDifferents) - attendu) < 1e-9,
+    `écart = mariageMemeRang (${attendu})`,
+  )
+})
