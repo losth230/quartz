@@ -274,7 +274,15 @@ export interface GameConfig {
      *  d'habitation). Validation manuelle au radar de l'accueil,
      *  ordre strict ; crise à chaque Laurier I-III validé ; bonus
      *  one-shot si complété pendant l'âge de même numéro ; le
-     *  Laurier IV = Victoire. */
+     *  Laurier IV = Victoire.
+     *  (RETRAIT 2026-10-24, retour arbitre « supprimer les conditions
+     *  de victoire » : les TEXTES de conditions/bonus sont vidés dans
+     *  le référentiel — Lauriers VIDÉS, structure conservée (voies +
+     *  coches + radar). Les textes d'une config sauvegardée sont
+     *  actualisés par le garde-fou de cfgOf (bloc « mise à jour des
+     *  conditions », qui remplace une voie différant du référentiel),
+     *  SANS bump de SCHEMA_VERSION_CONFIG. L'ancien contenu reste
+     *  dans l'historique git (règle 9).) */
     lauriers: { laurier: string; condition: string; bonus: string }[]
   }[]
   crises: string[]
@@ -841,6 +849,8 @@ function migrerPaysRangs(rangs: GameConfig['paysRangs']): GameConfig['paysRangs'
 // des anciens formats (refonte 2026-10-14) — « Rang I-IV » devient
 // « Laurier I-IV » ; les vieilles sauvegardes avec `rangs` repassent
 // automatiquement sur `lauriers` (textes du classeur conservés).
+// (NB 2026-10-24 : depuis le retrait des textes de conditions, les
+//  valeurs de repli sont vides — Lauriers VIDÉS, retour arbitre.)
 function migrerVictoires(list: GameConfig['victoires']): GameConfig['victoires'] {
   const convert = (m: any) => ({
     voie: m.voie ?? '',
@@ -913,6 +923,11 @@ function gardeFous(m: GameConfig): void {
   //  les nouvelles voies du référentiel REMPLACENT celles d'une config
   //  convergée — mais les Lauriers VALIDÉS par les joueurs (p.lauriers)
   //  sont conservés : seul le texte des conditions/bonus est actualisé.
+  //  (2026-10-24 : c'est ce bloc, appliqué à CHAQUE cfgOf, qui propage
+  //  le RETRAIT des textes de conditions (retour arbitre) vers les
+  //  configs sauvegardées — une voie aux textes non vides diffère du
+  //  référentiel vide et est remplacée ; idempotent, sans bump de
+  //  SCHEMA_VERSION_CONFIG.)
   if (Array.isArray(m.victoires)) {
     const voies = new Map(m.victoires.map((v) => [v.voie, v]))
     for (const def of DEFAULT_CONFIG.victoires) {

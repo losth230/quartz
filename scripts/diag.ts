@@ -950,15 +950,9 @@ export function schoolRankOf(batiments: string[], cfg?: GameConfig): number {
   return rank
 }
 
-// Conditions de victoire (texte de référence, chapitre XII du livret)
-export const VICTORY_TEXT: { nom: string; texte: string }[] = [
-  { nom: 'Militaire', texte: 'Capturer un total de 5 habitations (rang IV de la voie Militaire).' },
-  { nom: 'Économique', texte: 'Posséder 5 Guildes (rang IV de la voie Économique).' },
-  { nom: 'Culturelle', texte: 'Posséder 360 Tourisme et 5 Merveilles (rang IV de la voie Culturelle).' },
-  { nom: 'Scientifique', texte: 'Terminer le Progrès Futur (rang IV de la voie Scientifique).' },
-  { nom: 'Démographique', texte: 'Posséder une population totale de 1500 habitants (rang IV de la voie Démographique).' },
-  { nom: 'Diplomatique', texte: 'Être suzerain de 3 cités libres (rang IV de la voie Diplomatique).' },
-]
+// (RETRAIT 2026-10-24, retour arbitre : VICTORY_TEXT — textes des
+//  conditions de victoire du chapitre XII — est supprimé avec les
+//  textes de conditions/bonus de la table `victoires` du référentiel.)
 
 
 // ══ src/engine/shared.ts ══

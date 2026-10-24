@@ -106,10 +106,13 @@ export function victoryProgress(state: GameState): VictoryProgress[] {
     for (const v of victoires) {
       const n = nbLauriers(p, v.voie)
       valeurs[cleVoie(v.voie)] = n / 4
+      // (RETRAIT 2026-10-24 : les textes de conditions sont supprimés
+      //  du référentiel (Lauriers vides, retour arbitre) — repli « … »
+      //  au survol du radar.)
       details[cleVoie(v.voie)] =
         n >= 4
           ? `${n}/4 Lauriers — voie ${v.voie} TERMINÉE 👑`
-          : `${n}/4 Lauriers — prochain : ${v.lauriers[n]?.condition ?? '…'}`
+          : `${n}/4 Lauriers — prochain : ${v.lauriers[n]?.condition || '…'}`
     }
     return { joueur: p.n, nom: p.nom, valeurs, details }
   })

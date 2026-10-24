@@ -7,7 +7,6 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
-import { VICTORY_TEXT } from '../../engine/gameData2'
 import { Card, Badge } from '../ui'
 
 export function OngletVictoires({ C }: { C: Cfg }) {
@@ -19,17 +18,25 @@ export function OngletVictoires({ C }: { C: Cfg }) {
         l'accueil). Chaque Laurier I-III validé déclenche une <strong>crise</strong> ; bonus seulement si
         complété pendant l'âge de même numéro ; <strong>Laurier IV = Victoire</strong>.
       </p>
+      {/* (RETRAIT 2026-10-24, retour arbitre : les TEXTES de conditions et
+          de bonus sont supprimés — Lauriers VIDÉS, structure conservée,
+          nouvelles conditions à arbitrer. La liste « Victoire (Laurier
+          IV) » — VICTORY_TEXT — est retirée avec les textes.) */}
+      <p className="muted small">Conditions de victoire retirées le 2026-10-24 (Lauriers vides) — à redéfinir par l'arbitre.</p>
       {cfg.victoires.map((v, i) => (
         <div key={i} className="mb">
           <h4>{v.voie}</h4>
           <ul className="small">
             {v.lauriers.map((l, j) => (
-              <li key={j}><strong>{l.laurier}</strong> — {l.condition}{l.bonus ? <span className="muted"> ({l.bonus})</span> : null}</li>
+              <li key={j}>
+                <strong>{l.laurier}</strong>
+                {l.condition ? ` — ${l.condition}` : ''}
+                {l.bonus ? <span className="muted"> ({l.bonus})</span> : null}
+              </li>
             ))}
           </ul>
         </div>
       ))}
-      <p className="muted small">Victoire (Laurier IV) : {VICTORY_TEXT.map((v) => v.texte).join(' · ')}.</p>
     </Card>
   )
 }

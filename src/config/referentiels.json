@@ -2110,23 +2110,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder un Pontificat de rang I.",
-          "bonus": "Si complété pendant l'Âge 1 : la prochaine Merveille coûte 20 Or et 10 Ressources de base de moins. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder 3 Merveilles.",
-          "bonus": "Si complété pendant l'Âge 2 : vous recevez 20 Tourisme et 1 Émissaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder un Pontificat de rang III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 360 Tourisme et 4 Merveilles.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -2135,23 +2135,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder 3 habitations.",
-          "bonus": "Si complété pendant l'Âge 1 : la prochaine habitation coûte 5 Bois de moins et commence avec 15 habitants supplémentaires. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder une habitation avec 300 habitants.",
-          "bonus": "Si complété pendant l'Âge 2 : la population de votre capitale augmente de 30. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder 3 habitations de rang III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder une population totale de 2000 habitants.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -2160,23 +2160,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder 3 Émissaires chez 2 cités libres différentes.",
-          "bonus": "Si complété pendant l'Âge 1 : votre prochaine augmentation de rang de pays ne coûte aucune Nourriture. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Être Suzerain de 2 cités libres.",
-          "bonus": "Si complété pendant l'Âge 2 : recevez 2 Émissaires. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Être un Empereur.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 8 Émissaires au sein de la même cité libre.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -2185,23 +2185,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Aménager 4 ressources naturelles.",
-          "bonus": "Si complété pendant l'Âge 1 : recevez 5 ressources de base de votre choix. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder 3 routes commerciales.",
-          "bonus": "Si complété pendant l'Âge 2 : votre capitale peut accueillir un bâtiment supplémentaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Posséder un revenu de 100 Or par tour.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Posséder 4 Guildes.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -2210,23 +2210,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Capturer une habitation.",
-          "bonus": "Si complété pendant l'Âge 1 : le coût de levée d'armée est réduit de 15 Or pour le reste de la partie. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder un Donjon doté de deux bâtiments militaires.",
-          "bonus": "Si complété pendant l'Âge 2 : vous pouvez posséder une armée supplémentaire. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Pouvoir lever 300 pts d'armée pour moins de 10 Or.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Contrôler 6 des habitations de départ.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     },
@@ -2235,23 +2235,23 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Posséder un revenu de 5 Science par tour.",
-          "bonus": "Si complété pendant l'Âge 1 : vous gagnez 15 Science. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "Posséder un Donjon doté d'un Cabinet d'astronomie.",
-          "bonus": "Si complété pendant l'Âge 2 : apprenez 3 technologies d'un même arbre de rang I. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "Découvrir 3 Progrès complets d'âge III.",
-          "bonus": "Aucune récompense. Crise à la validation."
+          "condition": "",
+          "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "Terminer le Progrès Futur.",
-          "bonus": "Victoire !"
+          "condition": "",
+          "bonus": ""
         }
       ]
     }
