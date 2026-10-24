@@ -2542,9 +2542,62 @@ dégradés que le vrai moteur n'a pas à gérer : le jeu répare via
 normaliserEtat à l'ingestion) ; tsc strict diff VIDE vs base
 (scripts/ hors tsconfig — aucun impact) ; 126/126 tests natifs.
 
-R3 (tests de rendu fumée) et R4 (fluxParMetier orphelin) restent de
-la dette assumée.
+R4 (fluxParMetier orphelin) reste de la dette assumée ; R3 (tests de
+rendu fumée) est résolu dans la section suivante (même journée,
+retour arbitre « passe à R3 »).
 
+
+## Tests de rendu : du « fumée » aux données — résolution R3 (2026-10-24, retour arbitre « passe à R3 »)
+
+L'audit constatait que les tests de rendu « fumée » ne vérifiaient
+que des titres (« tel panneau affiche le mot Population ») : un
+tableau rendu avec de mauvaises données passait. R3 les renforce.
+
+**Méthode** (`src/components/testRendu.ts`) : `partieRendu()`
+retourne désormais le `GameState` (partie de 2 tours jouée) au lieu
+de seulement produire du HTML ; deux utilitaires ajoutés — `esc()`
+(le HTML de `renderToString` échappe `& < > "`, l'apostrophe droite
+en `&#x27;` — vérifié empiriquement) et `aplatir()` (retire les
+marqueurs `<!-- -->` insérés par JSX entre texte et expression,
+pour chercher des chaînes contiguës).
+
+**Ce que chaque vue vérifie désormais** (données dérivées de
+l'état, pas des constantes recopiées) :
+- `Dashboard`/`PlayerView` : noms des 8 joueurs, stocks via `fmt`
+  et valeur des `NumberInput` (`value=`), population VIVANTE,
+  voies de victoire ;
+- `PopulationTable` : comptes par dynastie ; `RoyaumeView` : le
+  Dirigeant via `pers()` de `./royaume/logiqueRoyaume` ;
+- `EventLogPanel` : ordre du journal (reverse) et compte exact
+  `min(500, log)` ; `HistoryPanel` : labels de tours/max, une
+  polyline PAR joueur ;
+- `ArmiesPanel` : prix de levée via `prixArmee(90, C, p1, etat)`,
+  commandants = filtre `age >= C.p.adultAge && isNobleDyn(c.dynastie,
+  C) && !c.armee` ;
+- `CitesLibresView` : garnison via `garnisonCiteLibre(etat, C)` avec
+  le `fmtNum` de `./citesLibres/logiqueCitesLibres` (rend « 140 »,
+  PAS « +140 » — pas celui de pays-utils), les 8 cités libres par
+  nom (createGame en génère 8) ;
+- `ReferenceDataPanel` : métiers de `cfgOf`, groupes `PARAM_META`,
+  `taxOrHautes` `value="1.25"`, PEUPLES/CULTURES/REGIMES de
+  gameData dans les options ; `ParamsPanel`/`SetupPanel` : champs
+  dérivés de la config réelle.
+
+**Preuve par mutation** (composants mutés puis restaurés et
+vérifiés octet par octet vs base) : prix codé en dur → DÉTECTÉE ;
+journal sans `.reverse()` → DÉTECTÉE ; joueur 1 omis des courbes →
+DÉTECTÉE ; population comptée avec les défunts → NON détectée
+(no-op : aucun décès en 2 tours — mutation documentée comme telle,
+sans effet réel).
+
+**Validation** : 11/11 tests de rendu, 126/126 natifs, tsc strict
+répliqué CI (ts 5.9.3 + @types/node 25.0.3, versions du lock) :
+diff base/jeu VIDE, seules les 3 erreurs de stub supabase attendues
+côté bac. Les tests `.ts` sous `src/` SONT type-checkés en CI
+(tsconfig `include: ["src"]`) — c'est ce qui a motivé la réplique
+exacte des versions. AGENTS.md réaligné (« 126 natifs + 11 rendu »).
+
+R4 (fluxParMetier orphelin) reste de la dette assumée.
 
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
@@ -2608,6 +2661,13 @@ la dette assumée.
     @supabase/supabase-js absent du bac, présent en CI — le fichier
     n'a pas changé) ; toute AUTRE erreur est réelle. À lancer avant
     tout push de .ts/.tsx (seul filet sur les .tsx, cf. règle 2).
+    NB (R3, 2026-10-24) : le harnais doit AUSSI installer
+    `@types/node` (version exacte du lock, ex. 25.0.3) — sans lui,
+    le tsc local produit de fausses erreurs TS2307 (`node:test`
+    introuvable) et TS18048 (`assert.ok` ne rétrécit pas le type
+    sans types de `node:assert`) qu'on ne voit pas en CI ; avec
+    ts 5.9.3 + @types/node 25.0.3, diff base/jeu VIDE attendu
+    (hors stubs supabase).
 
 14. **Mémoïsation/cache : prouver par A/B déterministe** (vague
     scalabilité, 2026-10-24) : une optimisation qui « ne change rien »
