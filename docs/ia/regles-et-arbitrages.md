@@ -154,6 +154,13 @@ Remplace le prérequis « 1 serment par rang intermédiaire » du classeur, jug�
   PAS de serment virtuel (contournerait la condition de montée en rang).
 - Le catalogue est **entièrement éditable** dans Paramètres → Ministères
   (nom, rang minimum, mode Auto/Plateau, effet, +/− lignes).
+- **NETTOYAGE 2026-10-24** (retour arbitre « garder la ligne titre, vider
+  ses textes ») : les derniers TEXTES résiduels partent du référentiel —
+  la ligne titre « Ministre » RESTE dans la table métiers (attribuable
+  manuellement, INERTE : le système des ministères n'existe plus) mais
+  sa description (« Plusieurs autorisés »), son effet (« Octroie un
+  ministre… ») et son coût de révocation (« 30 Or + 6 Soie ») sont
+  VIDÉS ; plus aucune fiche de peuple ne promet de ministre.
 
 ## Progrès technologiques (SUPPRIMÉS le 2026-10-24 — arbitrage « supprimer proprement les progrès et qu'il ne reste rien »)
 
@@ -800,6 +807,15 @@ rang 1). Arbitrages actés lors de la session :
   ministres / éducations à arbitrer quand le jeu sera dérouillé ;
   vague suivante VALIDÉE par Thibaut : redécoupage engine.ts (S) et
   couche ports/contrats (D) — design à présenter au prochain tour.
+- **Retrait INTÉGRAL des règles de factions (complément 2026-10-24,
+  retour arbitre « vide toutes les lignes de règles + les
+  descriptions, ne garde que les noms »)** : les fiches des 6 peuples
+  (Basiléens, Peaux Vertes, Elfes d'Or, Sylvains, Norls, Vermvres de
+  Kaoss) sont VIDÉES — descriptions et lignes de règles supprimées,
+  seuls les NOMS restent (la structure des fiches est conservée pour
+  les recevoir à nouveau). L'onglet Peuples n'affiche plus que les
+  noms ; les fiches sont à redéfinir par l'arbitre. Plus AUCUNE règle
+  affichée ne promet un effet que le jeu ne tient plus.
 
 ### Déménagement : perte du métier ET du domicile (arbitré 2026-10-21, vague 3a ; complément Dirigeant/Héritier le même soir)
 

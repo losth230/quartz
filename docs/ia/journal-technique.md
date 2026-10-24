@@ -2411,6 +2411,86 @@ vidés, aucune autre ligne touchée), grep résiduel `VICTORY_TEXT` =
 commentaires RETRAIT datés uniquement.
 
 
+## Retrait intégral des règles de factions + vidage des textes « Ministre » (2026-10-24, revue des résiduels R1-R4 — arbitrage Thibaut)
+
+Suite de la revue des résiduels post-simplifications (audit R1-R4
+présenté par Thibaut le 2026-10-24) : R1 (« résiduels de texte
+Ministre ») était le seul point ACTIONNABLE — R2 (miroir diag.ts en
+dérive permanente), R3 (tests de rendu toujours « fumée ») et R4
+(fluxParMetier orphelin) restent de la dette ASSUMÉE et documentée
+(cf. sections précédentes ; l'alternative R2 « brancher diag sur le
+vrai bundle _engine.mjs » reste un jour possible).
+
+**NB contexte** : l'audit R1 comptait 9 occurrences (« recevez 50 Or
+par ministre », « Vos Ministres génèrent +6 Science par tour »…) ;
+la purge du système de progrès (`eb7a1179`) a déjà emporté les textes
+de récompenses de techs — il restait 4 résiduels réels : la ligne
+« Ministre » de la table métiers (encore ATTRIBUTUABLE via le picker
+de la page Population — attribution Manuelle, nobleSeul), son effet
+(« Octroie un ministre qui appartient à un ministère, maximum 1. »)
++ coût de révocation (« 30 Or + 6 Soie ») dans metiersEffets, la
+ligne Basiléens « Vous pouvez posséder 1 Ministre supplémentaire. »,
+et la ligne `['Ministre', …]` du snapshot ANCIENS de defaultConfig.
+
+**Arbitrage Thibaut** (ask_user_question, 2026-10-24) :
+- Fiches de peuples : « vide toutes les lignes de règles + les
+  descriptions, ne garde que les noms » — RETRAIT INTÉGRAL des
+  règles de factions pour les 6 peuples (Basiléens, Peaux Vertes,
+  Elfes d'Or, Sylvains, Norls, Vermvres de Kaoss — 56 lignes + 6
+  descriptions) ;
+- Ligne « Ministre » : « garder la ligne titre dans la table
+  métiers, vider ses textes (description + effet → vides) » — le
+  titre RESTE attribuable (inerte, plus aucun effet moteur).
+
+**Implémentation** (4 fichiers, commit `f09ea596`) :
+- `src/config/referentiels.json` — édit chirurgical jq (round-trip
+  byte-identique VÉRIFIÉ avant transformation, `-j` pour conserver
+  l'absence de newline finale) : 6 descriptions → `""`, 6 `lignes`
+  → `[]`, description/effet/révocation « Ministre » → `""` ; diff
+  limité aux hunks voulus (260 lignes changées, aucune autre) ;
+  structure intacte (champs description/lignes conservés pour
+  recevoir de nouvelles règles).
+- `src/config/defaultConfig.ts` — DEUX garde-fous dans la queue
+  commune de cfgOf (après la branche migrations/tampon, avant
+  taxes25 — même patron que la « mise à jour des CONDITIONS ») :
+  (1) toute fiche de peuple PORTÉE PAR LE RÉFÉRENTIEL d'une config
+  sauvegardée est REMPLACÉE par la fiche courante (vide) — les
+  reliquats lignes/descriptions/reglesBase/ageII/ageIII des configs
+  d'avant le 2026-10-19 que l'onglet Peuples rendait encore
+  disparaissent ; un peuple HORS référentiel (personnalisé) est
+  conservé tel quel ; (2) description de l'entrée « Ministre » de
+  merged.metiers + effet/révocation de metiersEffets alignés sur le
+  référentiel vide. Idempotents, SANS bump de
+  SCHEMA_VERSION_CONFIG (règle (x)) — la partie en ligne de Thibaut
+  est nettoyée au premier chargement, sans re-jouer les migrations.
+  Docblock NB ajouté sur la ligne « Ministre » du snapshot ANCIENS
+  (patron Marchand : portrait des défauts d'avant la 3a conservé
+  pour l'appariement des anciens défauts exacts).
+- `src/components/reference/OngletsTraitsPeuples.tsx` — note de
+  l'onglet Peuples remplacée : « Règles de factions retirées
+  intégralement le 2026-10-24 (retour arbitre) : seuls les noms des
+  peuples sont conservés, les fiches sont vides — à redéfinir par
+  l'arbitre. » (l'ancienne note « conservées à titre documentaire »
+  et son historique 2026-10-19 restent dans le docblock du fichier).
+- `src/state/config.test.ts` — +2 tests de non-régression (fiches
+  vidées même d'une config DÉJÀ CONVERGÉE tamponnée schemaVersion=4
+  avec relics reglesBase/ageII ; ligne titre Ministre conservée +
+  textes vidés + idempotence des deux garde-fous).
+
+**Validation** : tsc strict diff VIDE vs base (99 erreurs
+préexistantes identiques) ; **126/126 tests natifs** (124 + 2) ;
+diag exit 0 — sortie IDENTIQUE à la base (49 lignes, 15 ÉCHEC
+informatifs : le miroir lit `referentiels.json` directement, aucun
+re-patch nécessaire cette fois) ; `jq empty` OK.
+
+Nettoyage effectué au passage : la seule ligne « Vous pouvez
+posséder 1 Ministre supplémentaire » des fiches disparaît avec les
+lignes ; plus AUCUN texte de règle affiché ne promet un effet que le
+jeu ne tient plus (les seules mentions « Ministre » restantes sont
+la ligne titre vidée, les docblocks RETRAIT/HISTORIQUE et les
+témoins de conversion titre→métier des migrations d'état).
+
+
 ## Règles d'ingénierie durables (issues d'incidents réels)
 
 1. **Jamais `a || b ?? c` sans parenthèses** — erreur de syntaxe JS/esbuild
