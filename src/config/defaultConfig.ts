@@ -232,8 +232,11 @@ export interface EmplacementDef {
  *  producteur.) */
 /** Type de domicile (table `domiciles` du référentiel — vague A,
  *  design domiciles/ascension 2026-10-24) : nom + qualité 1-5.
- *  SIMPLE par arbitrage : pas de capacité ni coût — 1 domicile = 1
- *  logement ; les bâtiments constructibles viendront plus tard. */
+ *  SIMPLE par arbitrage : pas de capacité ni coût. Unité « 1
+ *  personne = 1 maison » (arbitrage final 2026-10-24 —
+ *  l'ATTRIBUTION loge 1 FOYER par domicile, le BONHEUR mesure par
+ *  HABITANT : cf. engine/domiciles.ts pour les deux échelles
+ *  volontaires). */
 export interface DomicileDefConfig {
   domicile: string
   qualite: number

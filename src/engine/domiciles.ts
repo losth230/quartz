@@ -78,8 +78,9 @@ export interface Foyer {
 
 /** Foyers d'une population de ville : partition des habitants.
  *  ADULTE = age ≥ adultAge ; les enfants (age < adultAge) suivent
- *  leur mère (mariageId), sinon leur père, sinon le premier adulte
- *  de la ville (garde-fou). */
+ *  leur mère (mereId), sinon leur père (pereId), sinon le premier
+ *  adulte de la ville (garde-fou). (Correctif docblock audit B4,
+ *  2026-10-25 — le code a toujours utilisé mereId/pereId.) */
 export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C: Cfg): Foyer[] {
   const pop = (state.population[nJoueur] ?? []).filter(
     (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
