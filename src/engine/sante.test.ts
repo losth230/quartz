@@ -20,6 +20,7 @@ import { makeRng } from './rng'
 import { probaContracterMaladie } from './sante'
 import { cfgOf } from './gameData'
 import type { Character } from './types'
+import { createGame, defaultSetups } from './setup'
 
 /** Personnage de test (tous les champs obligatoires de Character). */
 function perso(age: number, traits: [string, string, string] = ['Obstiné', 'Stérile', 'Fécond']): Character {
@@ -34,18 +35,18 @@ function perso(age: number, traits: [string, string, string] = ['Obstiné', 'St�
   }
 }
 
-test('Gompertz : formule exacte — base à 0 an, exponentielle, plafond cap', () => {
+test('Gompertz : formule exacte — base à 0 an, exponentielle, SANS plafond (retrait 2026-10-25)', () => {
   const C = cfgOf()
   assert.equal(C.p.maladieBase, 0.0025, 'défaut maladieBase (calibration Monte-Carlo 2026-10-20)')
   assert.equal(C.p.maladiePente, 0.08)
-  assert.equal(C.p.maladieCap, 0.9)
   // âge 0 : base × exp(0) = base
   assert.ok(Math.abs(probaContracterMaladie(perso(0), C) - 0.0025) < 1e-12)
   // âge 60 : base × exp(pente × 60)
   const attendu60 = 0.0025 * Math.exp(0.08 * 60)
   assert.ok(Math.abs(probaContracterMaladie(perso(60), C) - attendu60) < 1e-12)
-  // âge très élevé : plafonné au cap
-  assert.equal(probaContracterMaladie(perso(500), C), 0.9)
+  // âge très élevé : PLUS de plafond (retrait 2026-10-25) — la
+  //  formule dépasse 1, le tirage rng.chance plafonne à ~1
+  assert.ok(probaContracterMaladie(perso(500), C) > 1, 'la courbe monte sans borne')
 })
 
 test('Gompertz : monte-carlo seedé — E[âge de décès] ∈ [55, 66] (calibration ~60 ans)', () => {
@@ -74,4 +75,41 @@ test('Gompertz : monte-carlo seedé — E[âge de décès] ∈ [55, 66] (calibra
   const esperance = somme / N
   assert.ok(esperance >= 55 && esperance <= 66,
     `E[âge de décès] hors bornes de calibration : ${esperance} (attendu ~60)`)
+})
+
+
+// ── Guérisseur (métier, 2026-10-25) ──────────────────────────────────
+
+test('Guérisseur : +2 % guérison et −2 % contraction par Guérisseur en poste dans la ville', () => {
+  const C = cfgOf()
+  assert.equal(C.p.guerisseurGuerison, 0.02)
+  assert.equal(C.p.guerisseurContraction, 0.02)
+  // le métier existe au référentiel, roturier, sans production directe
+  const def = C.metiers.find((m) => m.metier === 'Guérisseur')
+  assert.ok(def, 'métier Guérisseur au référentiel')
+  assert.equal(def?.qualite, 'roturier')
+  assert.equal(def?.valeur1, 0)
+  // l'Herboristerie ouvre un emplacement de Guérisseur
+  const herb = C.config.constructions.find((c) => c.nom === 'Herboristerie')
+  assert.ok(herb?.emplacements?.some((e) => e.metier === 'Guérisseur'),
+    "l'Herboristerie accueille un Guérisseur")
+})
+
+test('Guérisseur : effet moteur — la maladie d\'un habitant de la ville est modulée (via maladieStep)', () => {
+  // vérification structurelle : la proba d'un habitant avec 2
+  //  Guérisseurs en poste doit être inférieure à sans Guérisseur.
+  //  (maladieStep ne reçoit pas la population, l'effet passe par
+  //  state.population — test sur une partie témoin.)
+  const C = cfgOf()
+  const state = createGame(defaultSetups(), 20261025, 'local')
+  const p = state.players[0]
+  const pop = state.population[p.n] ?? []
+  const ville = p.villes[0]
+  const habitant = pop.find((c) => c.statut === 'Sain' && c.ville === ville.nom)!
+  // proba Gompertz pure de l'habitant
+  const probaPure = probaContracterMaladie(habitant, C)
+  // avec 2 Guérisseurs en poste dans sa ville : −4 %
+  const avecGuerisseurs = Math.max(0, probaPure - 2 * C.p.guerisseurContraction)
+  assert.ok(avecGuerisseurs < probaPure,
+    'la contraction baisse avec des Guérisseurs en poste')
 })

@@ -28,7 +28,9 @@ export function probaContracterMaladie(c: Character, C: Cfg = cfgOf()): number {
     if (td) delta += td.life_delta
   }
   const pente = C.p.maladiePente * Math.min(1.5, Math.max(0.5, 1 + delta / 100))
-  return Math.min(C.p.maladieCap, C.p.maladieBase * Math.exp(pente * c.age))
+  // (RETRAIT 2026-10-25, retour arbitre : plus de plafond — la
+  //  courbe monte sans borne, tendant vers 1 à très grand âge)
+  return C.p.maladieBase * Math.exp(pente * c.age)
 }
 
 // ── Maladie (règle simplifiée : on est malade ou sain, plus de
@@ -59,9 +61,18 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
       cureMod += bd.bonusGuerison
     }
   }
+  // GUÉRISSEURS (métier, 2026-10-25) : par Guérisseur VIVANT en
+  //  poste dans la ville du personnage — +2 % guérison, −2 %
+  //  contraction (paramètres, cumulables).
+  const guerisseurs = (state.population[p.n] ?? []).filter(
+    (x) => x.statut !== 'Décédé' && x.ville === c.ville && x.metier === 'Guérisseur',
+  ).length
+  contractMod -= guerisseurs * C.p.guerisseurContraction
+  cureMod += guerisseurs * C.p.guerisseurGuerison
   if (c.statut === 'Sain' || c.statut === 'Enceinte') {
-    let pContract = probaContracterMaladie(c, C) + contractMod
-    if (c.statut === 'Enceinte') pContract += C.p.modMaladieEnceinte
+    // (RETRAIT 2026-10-25 : plus de surrisque grossesse — les
+    //  femmes enceintes contractent comme les autres)
+    const pContract = probaContracterMaladie(c, C) + contractMod
     if (rng.chance(Math.max(0, pContract))) {
       if (c.statut === 'Enceinte') {
         // une femme enceinte qui tombe malade mourra après l'accouchement

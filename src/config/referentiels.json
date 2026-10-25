@@ -2161,11 +2161,17 @@
       "famille": "Economique",
       "nom": "Herboristerie",
       "cout": "10 Or + 2 Pierre",
-      "production": "",
+      "production": "+1 emplacement de Guérisseur.",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
-      "bonusGuerison": 0.05
+      "bonusGuerison": 0.05,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 1
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -2332,11 +2338,17 @@
       "famille": "Economique",
       "nom": "Herboristerie",
       "cout": "10 Or + 2 Pierre",
-      "production": "",
+      "production": "+1 emplacement de Guérisseur.",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
-      "bonusGuerison": 0.05
+      "bonusGuerison": 0.05,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 1
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -3817,6 +3829,18 @@
       "attribution": "Armée",
       "metier": "Commandant",
       "qualite": "noble"
+    },
+    {
+      "valeur1": 0,
+      "ressource1": "",
+      "valeur2": 0,
+      "ressource2": "",
+      "description": "+2 % de chances de guérison et −2 % de risque de contracter la maladie pour la ville tant qu'en poste.",
+      "nobleSeul": false,
+      "regleGenre": "vide",
+      "attribution": "",
+      "metier": "Guérisseur",
+      "qualite": "roturier"
     }
   ],
   "metiersEffets": [

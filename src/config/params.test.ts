@@ -40,7 +40,9 @@ test('mergeParams : la clé NOUVELLE prime sur l ancienne, quel que soit l ordre
 test('défauts v3 : Gompertz 0.0025/0.08/0.9, caps Chasseur supprimées (vague 3b), ageMax rayé', () => {
   assert.equal(DEFAULT_PARAMS.maladieBase, 0.0025)
   assert.equal(DEFAULT_PARAMS.maladiePente, 0.08)
-  assert.equal(DEFAULT_PARAMS.maladieCap, 0.9)
+  // (RETRAIT 2026-10-25 : maladieCap et modMaladieEnceinte supprimés)
+  assert.ok(!('maladieCap' in DEFAULT_PARAMS), 'maladieCap retiré (2026-10-25)')
+  assert.ok(!('modMaladieEnceinte' in DEFAULT_PARAMS), 'modMaladieEnceinte retiré (2026-10-25)')
   assert.ok(!('capMetierChasseurVille' in DEFAULT_PARAMS), 'capMetierChasseurVille supprimé (vague 3b : cap = base du rang + emplacements)')
   assert.ok(!('capMetierChasseurChateau' in DEFAULT_PARAMS), 'capMetierChasseurChateau supprimé (vague 3b)')
   assert.ok(!('ageMaxBase' in DEFAULT_PARAMS), 'ageMaxBase disparaît (mortalité Gompertz seule)')
@@ -71,9 +73,10 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   // referentiel converti : table metiers, champ metier — la vague 3a
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
   //  du nouveau référentiel derrière la table convertie : 1 Testeur +
-  //  23 (le Marchand est retiré du jeu le 2026-10-24, arbitrage
-  //  Thibaut — la purge de cfgOf le retire aussi des configs v2).
-  assert.equal(C.metiers.length, 24)
+  //  24 (le Marchand est retiré du jeu le 2026-10-24 ; le GUÉRISSEUR
+  //  est ajouté le 2026-10-25 — arbitre : +2 % guérison, −2 %
+  //  contraction, poste d'Herboristerie).
+  assert.equal(C.metiers.length, 25)
   assert.equal(C.metiers[0].metier, 'Testeur', 'le champ interne titre devient metier')
   assert.ok(C.metiers.some((m) => m.metier === 'Fermier'), 'vague 3a : les métiers manquants sont ajoutés')
   assert.ok(!C.metiers.some((m) => m.metier === 'Propagandiste'), 'vague 3a : Propagandiste retiré')

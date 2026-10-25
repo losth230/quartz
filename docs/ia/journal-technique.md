@@ -3132,3 +3132,32 @@ simplification réécrits (bâtiments seuls).
 
 166/166 verts, tsc strict 0, handler 0, bundle OK, build vite OK,
 diag 0.
+
+## Santé : retraits Gompertz + métier Guérisseur (2026-10-25, arbitre)
+
+**Retraits (retour arbitre)** :
+- **plafond maladieCap (0,9) supprimé** — la courbe Gompertz monte
+  sans borne (à très grand âge le risque dépasse 1, le tirage
+  plafonne naturellement) ;
+- **surrisque grossesse modMaladieEnceinte (+3 %) supprimé** — les
+  femmes enceintes contractent comme les autres.
+Paramètres retirés du type, des défauts et de PARAM_META ;
+tests verrouillant l'ancien plafond réalignés (la Monte-Carlo
+E[décès] ∈ [55, 66] tient toujours — le plafond ne jouait qu'à
+75+ ans).
+
+**Métier GUÉRISSEUR (25e métier)** :
+- référentiel : roturier, production nulle, description des
+  effets ;
+- effets moteur (sante.ts, comptés par Guérisseur VIVANT en poste
+  dans la ville du personnage, cumulables) :
+  `guerisseurGuerison` +2 % de guérison par tour,
+  `guerisseurContraction` −2 % de risque de contraction —
+  paramètres éditables (Formules → Maladie) ;
+- emplacement : l'Herboristerie (Ville et Château) accueille
+  1 Guérisseur (le bâtiment garde aussi ses propres bonus
+  malContraction −5 % / bonusGuerison +5 %) ;
+- 2 tests dédiés (paramètres + effet structurel).
+
+168/168 verts, tsc strict 0, handler 0, bundle OK, build vite OK,
+diag 0.
