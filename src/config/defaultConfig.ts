@@ -195,6 +195,12 @@ export interface ConstructionRef {
   cout: string
   production: string
   description: string
+  /** TAUDIS apportés au stock de logements de la ville (fiches
+   *  aménagements 2026-10-25 : tier 1 = 5, tier 2 = 8, tier 3 = 10,
+   *  sauf Baleinier/Bâteau de pêche qui n'en apportent pas).
+   *  Champ optionnel : absent = 0. Comptés par le facteur Logement
+   *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
+  taudisApportes?: number
   /** Effets STRUCTURÉS (marqueur (s)) — source du moteur quand présents ;
    *  sinon repli sur l'analyse du texte exact (anciennes configs). */
   effets?: EffetConstruction[]
@@ -1583,12 +1589,14 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  « Moulin à vent » (rang 2) encore constructible dans une
   //  NOUVELLE partie (bug constaté par Thibaut 2026-10-23 : « je
   //  vois encore tous les bâtiments de rang 2+ »). Filtre
-  //  inconditionnel, même patron que rangsHabitation : les entrées
-  //  rangMinHabitation >= 2 disparaissent de toute config convergée,
-  //  ancienne ou non. Idempotent. Pour RÉACTIVER plus tard les rangs
-  //  2/3 : les ré-ajouter au référentiel ET retirer ce filtre.
+  //  inconditionnel, même patron que rangsHabitation.
+  //  (RÉACTIVATION PARTIELLE, fiches aménagements 2026-10-25 : les
+  //  AMÉNAGEMENTS tiers 2/3 reviennent au référentiel (Baleinier
+  //  (tier 2)… remplaceAmenagement) — le filtre ne retire plus QUE
+  //  les BÂTIMENTS de rang ≥ 2, qui restent supprimés. Les merveilles
+  //  et aménagements de rang 2+ passent à nouveau.)
   merged.constructions = (merged.constructions ?? []).filter(
-    (c) => (c.rangMinHabitation ?? 0) < 2,
+    (c) => (c.rangMinHabitation ?? 0) < 2 || c.categorie === 'Aménagement',
   )
   const resultat: Cfg = {
     p: merged.params,
