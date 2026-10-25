@@ -231,9 +231,13 @@ export interface EmplacementDef {
  *  des événements de saison et des cartes dynastie, plus aucun
  *  producteur.) */
 /** Type de domicile (table `domiciles` du référentiel — vague A,
- *  design domiciles/ascension 2026-10-24) : nom + qualité 1-5.
- *  SIMPLE par arbitrage : pas de capacité ni coût — 1 domicile = 1
- *  logement ; les bâtiments constructibles viendront plus tard. */
+ *  design domiciles/ascension 2026-10-24) : nom + qualité 0-4
+ *  (Masure 0 … Palais 4 — la qualité EST le gain de prestige).
+ *  SIMPLE par arbitrage : pas de capacité ni coût. Unité « 1
+ *  personne = 1 maison » (arbitrage final 2026-10-24 —
+ *  l'ATTRIBUTION loge 1 FOYER par domicile, le BONHEUR mesure par
+ *  HABITANT : cf. engine/domiciles.ts pour les deux échelles
+ *  volontaires). */
 export interface DomicileDefConfig {
   domicile: string
   qualite: number
@@ -276,7 +280,7 @@ export interface GameConfig {
   peuplesAutres: PeupleRef[]
   constructions: ConstructionRef[]
   typesHabitation: HabitationDef[]
-  /** Table des types de domicile (vague A, 2026-10-24) : nom + qualité 1-5. */
+  /** Table des types de domicile (vague A, 2026-10-24) : nom + qualité 0-4. */
   domiciles: DomicileDefConfig[]
   // (progres — arbres de progrès — retiré le 2026-10-24, retour arbitre :
   //  suppression du système de progrès. La clé encore portée par les
@@ -631,7 +635,10 @@ export const DEFAULT_CONFIG: GameConfig = {
   typesHabitation: ref.typesHabitation,
   domiciles: (ref.domiciles ?? []).map((d: { domicile?: string; qualite?: number | string }) => ({
     domicile: String(d.domicile ?? ''),
-    qualite: Number(d.qualite) || 1,
+    // (correctif 2026-10-24 : ÉCHELLE 0-4 — le `|| 1` transformait
+    //  la qualité 0 (Masure) en 1 : le falsy zéro est un piège de
+    //  l'idiome || ; Number.isFinite garde le 0 légitime)
+    qualite: Number.isFinite(Number(d.qualite)) ? Number(d.qualite) : 0,
   })),
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,

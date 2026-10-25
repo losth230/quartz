@@ -195,14 +195,14 @@ export interface HabitationDef {
 }
 
 /** Type de domicile (table `domiciles` du référentiel — vague A,
- *  design domiciles/ascension 2026-10-24) : nom + qualité 1-5.
+ *  design domiciles/ascension 2026-10-24) : nom + qualité 0-4.
  *  SIMPLE par arbitrage : pas de capacité ni coût (les bâtiments
  *  constructibles viendront plus tard). Unité « 1 personne =
  *  1 maison » (arbitrage final 2026-10-24 — cf. engine/domiciles.ts
  *  pour les deux échelles foyer/habitant). */
 export interface DomicileDef {
   domicile: string
-  /** confort objectif du domicile, échelle 1 (précaire) → 5 (noble) */
+  /** confort objectif du domicile, échelle 0 (précaire) → 4 (noble) */
   qualite: number
 }
 

@@ -3262,23 +3262,23 @@
   "domiciles": [
     {
       "domicile": "Masure",
-      "qualite": 1
+      "qualite": 0
     },
     {
       "domicile": "Maison",
-      "qualite": 2
+      "qualite": 1
     },
     {
       "domicile": "Auberge",
-      "qualite": 3
+      "qualite": 2
     },
     {
       "domicile": "Maison de notable",
-      "qualite": 4
+      "qualite": 3
     },
     {
       "domicile": "Palais",
-      "qualite": 5
+      "qualite": 4
     }
   ]
 }

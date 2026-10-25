@@ -100,10 +100,12 @@ export function emploisOffertsVille(state: GameState, p: Player, ville: City, C:
   return offres
 }
 
-/** Logements d'une ville : les domiciles disponibles du rang
- *  (SIMULATION v3 : parsés du texte `domicilesDisponibles` du rang —
- *  « 50 maisons, 10 Auberge » → 60 ; la vague domiciles remplacera
- *  par la table structurée). 1 logement = 1 habitant logé. */
+/** Logements d'une ville (correctif audit B2, 2026-10-24) : le
+ *  STOCK de la ville (City.domiciles — source unique de vérité) ;
+ *  repli domicilesRang du rang (états non normalisés), puis parse
+ *  du TEXTE historique en dernier recours (config très ancienne).
+ *  1 logement = 1 habitant logé (arbitrage « 1 personne =
+ *  1 maison », 2026-10-24). */
 export function logementsVille(ville: City, C: Cfg): number {
   // (correctif audit B2, 2026-10-24 : source UNIQUE de vérité — le
   //  stock de la ville (City.domiciles, posé à la création et tenu

@@ -71,8 +71,12 @@ export function gainPrestigeTour(
   if (!c.domicile) g -= 2
   // malade
   if (c.statut === 'Malade') g -= 2
-  // domicile : +0 à +4 selon la qualité (1-5 → 0-4)
-  if (c.domicile) g += Math.max(0, qualiteDomicile(c.domicile, C) - 1)
+  // domicile : +0 à +4 — la QUALITÉ de la table domiciles EST le
+  //  gain (échelle 0-4, arbitrage Thibaut : Masure 0, Maison 1,
+  //  Auberge 2, Maison de notable 3, Palais 4 — correctif du
+  //  2026-10-24 : la table portait 1-5 avec une compensation -1
+  //  ici, réalignée en donnée pure 0-4)
+  if (c.domicile) g += Math.max(0, qualiteDomicile(c.domicile, C))
   // métier : +2 bourgeois, +5 noble
   const q = C.metiers.find((m) => m.metier === c.metier)?.qualite
   if (q === 'bourgeois') g += 2
@@ -82,13 +86,11 @@ export function gainPrestigeTour(
   return g
 }
 
-/** Prestige CIBLE d'un foyer = la MOYENNE des deux parents (le
- *  prestige est FAMILIAL : le couple converge vers la même
- *  valeur). Un célibataire : sa propre valeur. */
-export function prestigeFoyer(chef: Character, conjoint: Character | null): number {
-  if (!conjoint) return prestigeDe(chef)
-  return (prestigeDe(chef) + prestigeDe(conjoint)) / 2
-}
+// (RETRAIT 2026-10-25, correctif audit B5 : `prestigeFoyer` n'était
+//  JAMAIS appelé — l'agrégation des couples se fait en place dans
+//  evaluerFamilles. Annoncé supprimé le 2026-10-24 mais le fichier
+//  avait manqué le push (constaté au ré-audit du 2026-10-25).
+//  L'ancien contenu reste dans l'historique git, règle 9.)
 
 // ── Évaluation des familles (fin de tour) ─────────────────────────────
 
@@ -121,18 +123,14 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
   const adultes = pop.filter((c) => c.statut !== 'Décédé' && c.age >= C.p.adultAge)
   const traites = new Set<string>()
 
-  const appliquer = (c: Character, gain: number, conjointPrestige: number | null) => {
-    // convergence familiale : si marié, les deux tendent vers la
-    //  moyenne des deux gains (le foyer avance ensemble)
+  // (correctif audit B5, 2026-10-25 : appliquer ne sert que pour
+  //  les CÉLIBATAIRES — le paramètre conjointPrestige et sa
+  //  branche étaient TOUJOURS null (les couples sont agrégés en
+  //  place ci-dessous) : simplifié en gain simple, comportement
+  //  identique.)
+  const appliquer = (c: Character, gain: number) => {
     const ancien = rangSocial(prestigeDe(c))
-    let nouveauPrestige: number
-    if (conjointPrestige !== null) {
-      // moyenne des deux prestiges actuels + moyenne des gains
-      const actuel = prestigeDe(c)
-      nouveauPrestige = (actuel + conjointPrestige) / 2 + gain
-    } else {
-      nouveauPrestige = prestigeDe(c) + gain
-    }
+    const nouveauPrestige = prestigeDe(c) + gain
     c.prestige = Math.max(0, Math.round(nouveauPrestige))
     const nouveau = rangSocial(c.prestige)
     if (nouveau !== ancien) {
@@ -186,7 +184,7 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
     }
     // célibataire
     traites.add(a.id)
-    appliquer(a, gainPrestigeTour(a, C, bonheurParVille.get(a.ville) ?? 0), null)
+    appliquer(a, gainPrestigeTour(a, C, bonheurParVille.get(a.ville) ?? 0))
   }
 
   // 2. HÉRITAGE : enfants atteignant l'âge adulte CE tour —
@@ -202,7 +200,9 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
     if (c.statut === 'Décédé' || c.age < C.p.adultAge) continue
     if (c.prestigeHerite !== undefined) continue
     // seulement les enfants NÉS dans la partie : au moins un
-    //  parent connu ET vivant dans la population
+    //  parent CONNU dans la population (vivant ou décédé —
+    //  l'héritage transmet aussi posthumément ; correctif
+    //  docblock audit B4, 2026-10-25)
     const mere = c.mereId ? parId.get(c.mereId) : undefined
     const pere = c.pereId ? parId.get(c.pereId) : undefined
     if (!mere && !pere) continue // génération fondatrice : pas d'héritage

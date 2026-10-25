@@ -56,7 +56,7 @@ test('gainPrestigeTour : formule arbitrée exacte', () => {
   assert.equal(gainPrestigeTour(perso({ statut: 'Malade' }), C, 0), -6)
   // domicile Maison (qualité 2 → +1) : -2 (emploi) + 1 = -1
   assert.equal(gainPrestigeTour(perso({ domicile: 'Maison' }), C, 0), -1)
-  // domicile Palais (qualité 5 → +4)
+  // domicile Palais (qualité 4 → +4)
   assert.equal(gainPrestigeTour(perso({ domicile: 'Palais' }), C, 0), 2)
   // métier bourgeois (Commerçant) + domicile Maison : +2 +1 -0 = +3
   assert.equal(gainPrestigeTour(perso({ metier: 'Commerçant', domicile: 'Maison' }), C, 0), 3)

@@ -3,7 +3,7 @@
 //  (vague A+C du design domiciles/ascension, 2026-10-24)
 //
 //  PRINCIPES (arbitrages Thibaut) :
-//   · SIMPLE : un type de domicile porte un nom + une qualité 1-5 ;
+//   · SIMPLE : un type de domicile porte un nom + une qualité 0-4 ;
 //     pas de capacité ni coût — les bâtiments constructibles
 //     viendront plus tard ;
 //   · UNITÉ (arbitrage final Thibaut 2026-10-24 : « 1 personne =
@@ -78,8 +78,9 @@ export interface Foyer {
 
 /** Foyers d'une population de ville : partition des habitants.
  *  ADULTE = age ≥ adultAge ; les enfants (age < adultAge) suivent
- *  leur mère (mariageId), sinon leur père, sinon le premier adulte
- *  de la ville (garde-fou). */
+ *  leur mère (mereId), sinon leur père (pereId), sinon le premier
+ *  adulte de la ville (garde-fou). (Correctif docblock audit B4,
+ *  2026-10-25 — le code a toujours utilisé mereId/pereId.) */
 export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C: Cfg): Foyer[] {
   const pop = (state.population[nJoueur] ?? []).filter(
     (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
