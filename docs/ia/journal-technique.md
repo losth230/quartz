@@ -3038,3 +3038,39 @@ Docblocks réalignés (domiciles.ts, types.ts, defaultConfig.ts) et
 règle consignée dans regles-et-arbitrages.md. Le code du bonheur
 était déjà conforme — aucun changement de comportement, purement
 documentation + clôture d'audit. 166/166 verts.
+
+
+## Clôture effective de l'audit B1-B7 (2026-10-25) — le push du 2026-10-24 avait manqué statutSocial.ts
+
+Ré-audit de l'arbre `0813c99a` : le commit correctif du 2026-10-24
+annonçait B4 (docblocks) et B5 (code mort) traités, mais
+`src/engine/statutSocial.ts` était resté OCTET-IDENTIQUE à l'état
+pré-correctif — ses edits n'avaient pas été inclus dans le push.
+`prestigeFoyer` (jamais appelé) et la branche inatteignable
+`conjointPrestige !== null` étaient toujours présents, et deux
+docblocks restaient inexactes (héritage « parent vivant » vs code
+qui transmet aussi posthumément ; foyersDeVille « mariageId » vs
+mereId/pereId). Deux autres docblocks contredisaient les
+correctifs déjà poussés : logementsVille (bonheur.ts, dit « parsé
+du texte, la vague remplacera » au-dessus du corps corrigé B2) et
+DomicileDefConfig (defaultConfig.ts, listé « réaligné » dans la
+section B3 sans avoir changé).
+
+Compléments poussés le 2026-10-25 (comportement moteur IDENTIQUE,
+vérifié — diag octet-identique) :
+- statutSocial.ts : prestigeFoyer RETIRÉ (docblock RETRAIT daté,
+  règle 9), appliquer simplifié (paramètre/branche conjointPrestige
+  supprimés — inatteignables, les couples sont agrégés en place),
+  docblock héritage exact ;
+- domiciles.ts : docblock foyersDeVille exact (mereId/pereId) ;
+- bonheur.ts : docblock logementsVille réaligné sur le correctif
+  B2 ;
+- defaultConfig.ts : docblock DomicileDefConfig réaligné sur
+  l'arbitrage « 1 personne = 1 maison ».
+
+Validation : 155/155 natifs + 12/12 rendu, tsc strict (stubs
+supabase seuls), diag exit 0 IDENTIQUE, Edge Function bundle +
+exécution + typecheck verts. L'audit B1-B7 est cette fois réellement
+clos : 7/7 dans l'arbre ET dans la mémoire. (Leçon candidate : un
+correctif annoncé dans le message de commit doit être vérifié
+contre le DIFF du push, pas contre l'intention.)
