@@ -3096,3 +3096,39 @@ contredisait la doc. Réalignement en DONNÉE PURE :
 166/166 verts. AUCUN changement de comportement de jeu (les
 gains étaient déjà corrects via la compensation) — pure
 simplification + fix du cas Masure.
+
+## Fiches métiers/aménagements 2026-10-25 — tiers 2/3, Taudis, renommages
+
+**Données (fiches de l'arbitre)** :
+- **Aménagements tiers 2/3 DE RETOUR** : 14 aménagements × 3 tiers
+  (42 entrées) — tier 2 : 15 Or + 3 Pierre, tier 3 : 35 Or + 3 Fer ;
+  emplacements selon les fiches (ex. Carrière tier 3 : Mineur ×6 +
+  Charbonnier ×2) ; mécanique EXISTANTE réactivée
+  (remplaceAmenagement : tier 2 remplace tier 1, tier 3 remplace
+  tier 2) ;
+- **TAUDIS des aménagements** : chaque aménagement apporte des
+  logements au parc de la ville (tier 1 : 5, tier 2 : 8, tier 3 :
+  10 — sauf Baleinier et Bâteau de pêche : 0) ; nouveau champ
+  `taudisApportes` sur ConstructionRef + `taudisApportesVille`
+  (domiciles.ts), compté par le facteur Logement du bonheur —
+  les aménagements deviennent un LEVIER de logement en plus du
+  rang ;
+- **Renommage Masure → Taudis** (qualité 0) : alias à la lecture
+  dans domicileDef (les vieilles parties portent « Masure » dans
+  Character.domicile) ;
+- **Métiers** : Chasseur +1,5 Nourriture (était 1,2) ; Garde →
+  ROTURIER (était bourgeois — la fiche le classe en roturier,
+  +10 Garnison via garnisonParGarde, inchangé).
+
+**Réactivation du filtre de simplification** (config/defaultConfig) :
+le retrait inconditionnel des constructions de rang ≥ 2
+(2026-10-23, « pourquoi je vois encore le moulin à vent ») est
+ASSOUPLI : il ne retire plus que les **BÂTIMENTS** de rang ≥ 2 —
+les AMÉNAGEMENTS de rang 2/3 passent à nouveau (fiches). Le
+commentaire du filtre l'avait prédit : « pour réactiver les
+rangs 2/3 : les ré-ajouter au référentiel ET retirer ce filtre »
+— fait pour les aménagements. 2 tests verrouillant l'ancienne
+simplification réécrits (bâtiments seuls).
+
+166/166 verts, tsc strict 0, handler 0, bundle OK, build vite OK,
+diag 0.

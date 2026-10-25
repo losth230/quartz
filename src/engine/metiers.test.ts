@@ -321,10 +321,10 @@ test('Fermier (vague 3a) : +5 Nourriture en ÉTÉ seulement (champ ete du réfé
   const ville = p.villes[0]
   state.saison = 'Été'
   const dete = detailGainsVille(state, p, ville, C)
-  assert.ok(Math.abs(dete.metiers['Nourriture'] - (5 + 1.2)) < 1e-9, 'été : Fermier +5 et Chasseur +1,2 Nourriture')
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (5 + 1.5)) < 1e-9, 'été : Fermier +5 et Chasseur +1,5 Nourriture')
   state.saison = 'Hiver'
   const dhiver = detailGainsVille(state, p, ville, C)
-  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 1.2) < 1e-9, 'hors été : le Fermier ne produit rien, le Chasseur reste')
+  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 1.5) < 1e-9, 'hors été : le Fermier ne produit rien, le Chasseur reste')
 })
 
 test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, Banquier +10 % Or, cumul = +20 %', () => {

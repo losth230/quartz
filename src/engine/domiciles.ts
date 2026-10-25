@@ -41,7 +41,10 @@ import { rangsDefsType, nomRang } from './rangs'
 /** Définition d'un type de domicile (table `domiciles` du config). */
 export function domicileDef(nom: string | null | undefined, C: Cfg): { domicile: string; qualite: number } | undefined {
   if (!nom) return undefined
-  return C.config.domiciles.find((d) => d.domicile.toLowerCase() === nom.toLowerCase())
+  // (renommage Masure → Taudis, fiches 2026-10-25 : les états
+  //  sauvegardés portent l'ancien nom — alias à la lecture)
+  const n = nom.toLowerCase() === 'masure' ? 'Taudis' : nom
+  return C.config.domiciles.find((d) => d.domicile.toLowerCase() === n.toLowerCase())
 }
 
 /** Qualité d'un domicile (1-5 ; 0 = inconnu / sans domicile). */
@@ -61,6 +64,21 @@ export function stockRang(type: string, rang: string, C: Cfg): Array<{ domicile:
 /** Nombre TOTAL de logements d'une ville (somme du stock). */
 export function totalLogementsVille(ville: City): number {
   return (ville.domiciles ?? []).reduce((acc, e) => acc + e.nombre, 0)
+}
+
+/** TAUDIS apportés par les AMÉNAGEMENTS de la ville (fiches
+ *  2026-10-25 : chaque aménagement construit ajoute ses Taudis au
+ *  parc de logements — tier 1 : 5, tier 2 : 8, tier 3 : 10, sauf
+ *  Baleinier et Bâteau de pêche). Les noms d'aménagements des
+ *  vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
+ *  la lecture est par nom de construction dans le référentiel. */
+export function taudisApportesVille(ville: City, C: Cfg): number {
+  let total = 0
+  for (const nom of ville.amenagements ?? []) {
+    const ref = C.config.constructions.find((c) => c.nom === nom)
+    total += ref?.taudisApportes ?? 0
+  }
+  return total
 }
 
 // ── Foyers ────────────────────────────────────────────────────────────

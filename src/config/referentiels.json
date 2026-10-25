@@ -2458,7 +2458,7 @@
       "nom": "Carrière",
       "terrain": "Pierre",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Mineur.",
+      "production": "2 emplacements de Mineur, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2466,7 +2466,8 @@
           "metier": "Mineur",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2475,7 +2476,7 @@
       "nom": "Champ",
       "terrain": "Plaine",
       "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Fermier.",
+      "production": "3 emplacements de Fermier, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2483,7 +2484,8 @@
           "metier": "Fermier",
           "places": 3
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2492,7 +2494,7 @@
       "nom": "Foire",
       "terrain": "Plaine ou Désert",
       "cout": "8 Or + 3 Bois",
-      "production": "1 emplacement d'Artiste, 1 emplacement de Commerçant.",
+      "production": "1 emplacements de Artiste, 1 emplacements de Commerçant, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2504,7 +2506,8 @@
           "metier": "Commerçant",
           "places": 1
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2513,7 +2516,7 @@
       "nom": "Mine de Charbon",
       "terrain": "Charbon",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Charbonnier.",
+      "production": "2 emplacements de Charbonnier, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2521,7 +2524,8 @@
           "metier": "Charbonnier",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2530,7 +2534,7 @@
       "nom": "Mine de Fer",
       "terrain": "Fer",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Forgeron.",
+      "production": "2 emplacements de Forgeron, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2538,7 +2542,8 @@
           "metier": "Forgeron",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2547,10 +2552,16 @@
       "nom": "Mine d'Or",
       "terrain": "Or",
       "cout": "8 Or + 3 Bois",
-      "production": "Aucun effet pour l'instant.",
+      "production": "3 emplacements de Commerçant, 5 Taudis",
       "description": "Ses emplacements de Marchand ont disparu avec le métier (retiré du jeu).",
       "effets": [],
-      "emplacements": []
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 3
+        }
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2559,7 +2570,7 @@
       "nom": "Observatoire",
       "terrain": "Geyser/Volcan",
       "cout": "8 Or + 3 Bois",
-      "production": "1 emplacement de Scientifique.",
+      "production": "1 emplacements de Scientifique, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2567,7 +2578,8 @@
           "metier": "Scientifique",
           "places": 1
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2576,7 +2588,7 @@
       "nom": "Pâturage",
       "terrain": "Bétail",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements d'Éleveur.",
+      "production": "2 emplacements de Éleveur, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2584,7 +2596,8 @@
           "metier": "Éleveur",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2593,7 +2606,7 @@
       "nom": "Rizière",
       "terrain": "Marais",
       "cout": "8 Or + 3 Bois",
-      "production": "4 emplacements de Fermier.",
+      "production": "4 emplacements de Fermier, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2601,7 +2614,8 @@
           "metier": "Fermier",
           "places": 4
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2610,7 +2624,7 @@
       "nom": "Scierie",
       "terrain": "Forêt",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Bûcheron, 2 emplacements de Chasseur.",
+      "production": "2 emplacements de Bûcheron, 2 emplacements de Chasseur, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2622,7 +2636,8 @@
           "metier": "Chasseur",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2631,7 +2646,7 @@
       "nom": "Sériciculture",
       "terrain": "Soie",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Tisseur, 2 emplacements de Chasseur.",
+      "production": "2 emplacements de Tisseur, 2 emplacements de Chasseur, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2643,7 +2658,8 @@
           "metier": "Chasseur",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Aménagement",
@@ -2652,7 +2668,7 @@
       "nom": "Site archéologique",
       "terrain": "Ruine",
       "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements d'Archéologue.",
+      "production": "2 emplacements de Archéologue, 5 Taudis",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2660,7 +2676,8 @@
           "metier": "Archéologue",
           "places": 2
         }
-      ]
+      ],
+      "taudisApportes": 5
     },
     {
       "categorie": "Bâtiment",
@@ -2729,6 +2746,606 @@
           "quantite": 8
         }
       ]
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Baleinier (tier 2)",
+      "terrain": "Baleine",
+      "cout": "15 Or + 3 Pierre",
+      "production": "5 emplacements de Pêcheur, 5 emplacements de Commerçant",
+      "description": "Améliore Baleinier en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 5
+        },
+        {
+          "metier": "Commerçant",
+          "places": 5
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Baleinier"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Baleinier (tier 3)",
+      "terrain": "Baleine",
+      "cout": "35 Or + 3 Fer",
+      "production": "7 emplacements de Pêcheur, 10 emplacements de Commerçant",
+      "description": "Améliore Baleinier en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 7
+        },
+        {
+          "metier": "Commerçant",
+          "places": 10
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Baleinier (tier 2)"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Bâteau de pêche (tier 2)",
+      "terrain": "Crabe",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Pêcheur",
+      "description": "Améliore Bâteau de pêche en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 4
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Bâteau de pêche"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Bâteau de pêche (tier 3)",
+      "terrain": "Crabe",
+      "cout": "35 Or + 3 Fer",
+      "production": "7 emplacements de Pêcheur",
+      "description": "Améliore Bâteau de pêche en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 7
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Bâteau de pêche (tier 2)"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Carrière (tier 2)",
+      "terrain": "Pierre",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Mineur, 8 Taudis",
+      "description": "Améliore Carrière en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Mineur",
+          "places": 4
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Carrière",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Carrière (tier 3)",
+      "terrain": "Pierre",
+      "cout": "35 Or + 3 Fer",
+      "production": "6 emplacements de Mineur, 2 emplacements de Charbonnier, 10 Taudis",
+      "description": "Améliore Carrière en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Mineur",
+          "places": 6
+        },
+        {
+          "metier": "Charbonnier",
+          "places": 2
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Carrière (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Champ (tier 2)",
+      "terrain": "Plaine",
+      "cout": "15 Or + 3 Pierre",
+      "production": "6 emplacements de Fermier, 8 Taudis",
+      "description": "Améliore Champ en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 6
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Champ",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Champ (tier 3)",
+      "terrain": "Plaine",
+      "cout": "35 Or + 3 Fer",
+      "production": "10 emplacements de Fermier, 10 Taudis",
+      "description": "Améliore Champ en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 10
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Champ (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Foire (tier 2)",
+      "terrain": "Plaine ou Désert",
+      "cout": "15 Or + 3 Pierre",
+      "production": "2 emplacements de Artiste, 2 emplacements de Commerçant, 8 Taudis",
+      "description": "Améliore Foire en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Artiste",
+          "places": 2
+        },
+        {
+          "metier": "Commerçant",
+          "places": 2
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Foire",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Foire (tier 3)",
+      "terrain": "Plaine ou Désert",
+      "cout": "35 Or + 3 Fer",
+      "production": "4 emplacements de Artiste, 4 emplacements de Commerçant, 10 Taudis",
+      "description": "Améliore Foire en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Artiste",
+          "places": 4
+        },
+        {
+          "metier": "Commerçant",
+          "places": 4
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Foire (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine de Charbon (tier 2)",
+      "terrain": "Charbon",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Charbonnier, 8 Taudis",
+      "description": "Améliore Mine de Charbon en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Charbonnier",
+          "places": 4
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Mine de Charbon",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine de Charbon (tier 3)",
+      "terrain": "Charbon",
+      "cout": "35 Or + 3 Fer",
+      "production": "6 emplacements de Charbonnier, 10 Taudis",
+      "description": "Améliore Mine de Charbon en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Charbonnier",
+          "places": 6
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Mine de Charbon (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine de Fer (tier 2)",
+      "terrain": "Fer",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Forgeron, 1 emplacements de Garde, 8 Taudis",
+      "description": "Améliore Mine de Fer en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Forgeron",
+          "places": 4
+        },
+        {
+          "metier": "Garde",
+          "places": 1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Mine de Fer",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine de Fer (tier 3)",
+      "terrain": "Fer",
+      "cout": "35 Or + 3 Fer",
+      "production": "6 emplacements de Forgeron, 3 emplacements de Garde, 10 Taudis",
+      "description": "Améliore Mine de Fer en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Forgeron",
+          "places": 6
+        },
+        {
+          "metier": "Garde",
+          "places": 3
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Mine de Fer (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine d'Or (tier 2)",
+      "terrain": "Or",
+      "cout": "15 Or + 3 Pierre",
+      "production": "7 emplacements de Commerçant, 8 Taudis",
+      "description": "Améliore Mine d'Or en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 7
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Mine d'Or",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Mine d'Or (tier 3)",
+      "terrain": "Or",
+      "cout": "35 Or + 3 Fer",
+      "production": "12 emplacements de Commerçant, 10 Taudis",
+      "description": "Améliore Mine d'Or en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 12
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Mine d'Or (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Observatoire (tier 2)",
+      "terrain": "Geyser/Volcan",
+      "cout": "15 Or + 3 Pierre",
+      "production": "3 emplacements de Scientifique, 8 Taudis",
+      "description": "Améliore Observatoire en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 3
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Observatoire",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Observatoire (tier 3)",
+      "terrain": "Geyser/Volcan",
+      "cout": "35 Or + 3 Fer",
+      "production": "5 emplacements de Scientifique, 10 Taudis",
+      "description": "Améliore Observatoire en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 5
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Observatoire (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Pâturage (tier 2)",
+      "terrain": "Bétail",
+      "cout": "15 Or + 3 Pierre",
+      "production": "5 emplacements de Éleveur, 8 Taudis",
+      "description": "Améliore Pâturage en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 5
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Pâturage",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Pâturage (tier 3)",
+      "terrain": "Bétail",
+      "cout": "35 Or + 3 Fer",
+      "production": "8 emplacements de Éleveur, 10 Taudis",
+      "description": "Améliore Pâturage en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 8
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Pâturage (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Rizière (tier 2)",
+      "terrain": "Marais",
+      "cout": "15 Or + 3 Pierre",
+      "production": "8 emplacements de Fermier, 8 Taudis",
+      "description": "Améliore Rizière en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 8
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Rizière",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Rizière (tier 3)",
+      "terrain": "Marais",
+      "cout": "35 Or + 3 Fer",
+      "production": "15 emplacements de Fermier, 10 Taudis",
+      "description": "Améliore Rizière en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 15
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Rizière (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Scierie (tier 2)",
+      "terrain": "Forêt",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Bûcheron, 1 emplacements de Tisseur, 8 Taudis",
+      "description": "Améliore Scierie en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Bûcheron",
+          "places": 4
+        },
+        {
+          "metier": "Tisseur",
+          "places": 1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Scierie",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Scierie (tier 3)",
+      "terrain": "Forêt",
+      "cout": "35 Or + 3 Fer",
+      "production": "6 emplacements de Bûcheron, 2 emplacements de Tisseur, 10 Taudis",
+      "description": "Améliore Scierie en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Bûcheron",
+          "places": 6
+        },
+        {
+          "metier": "Tisseur",
+          "places": 2
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Scierie (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Sériciculture (tier 2)",
+      "terrain": "Soie",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Tisseur, 2 emplacements de Commerçant, 8 Taudis",
+      "description": "Améliore Sériciculture en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Tisseur",
+          "places": 4
+        },
+        {
+          "metier": "Commerçant",
+          "places": 2
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Sériciculture",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Sériciculture (tier 3)",
+      "terrain": "Soie",
+      "cout": "35 Or + 3 Fer",
+      "production": "6 emplacements de Tisseur, 5 emplacements de Commerçant, 10 Taudis",
+      "description": "Améliore Sériciculture en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Tisseur",
+          "places": 6
+        },
+        {
+          "metier": "Commerçant",
+          "places": 5
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Sériciculture (tier 2)",
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Site archéologique (tier 2)",
+      "terrain": "Ruine",
+      "cout": "15 Or + 3 Pierre",
+      "production": "4 emplacements de Archéologue, 8 Taudis",
+      "description": "Améliore Site archéologique en tier 2.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Archéologue",
+          "places": 4
+        }
+      ],
+      "rangMinHabitation": 2,
+      "remplaceAmenagement": "Site archéologique",
+      "taudisApportes": 8
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Terrain",
+      "famille": "",
+      "nom": "Site archéologique (tier 3)",
+      "terrain": "Ruine",
+      "cout": "35 Or + 3 Fer",
+      "production": "7 emplacements de Archéologue, 10 Taudis",
+      "description": "Améliore Site archéologique en tier 3.",
+      "effets": [],
+      "emplacements": [
+        {
+          "metier": "Archéologue",
+          "places": 7
+        }
+      ],
+      "rangMinHabitation": 3,
+      "remplaceAmenagement": "Site archéologique (tier 2)",
+      "taudisApportes": 10
     }
   ],
   "typesHabitation": [
@@ -2925,7 +3542,7 @@
   ],
   "metiers": [
     {
-      "valeur1": 1.2,
+      "valeur1": 1.5,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",
@@ -3086,12 +3703,12 @@
       "ressource1": "",
       "valeur2": 0,
       "ressource2": "",
-      "description": "+10 Garnison (statique) tant que le poste est tenu",
+      "description": "+10 Garnison tant qu'en poste.",
       "nobleSeul": false,
       "regleGenre": "vide",
       "attribution": "",
       "metier": "Garde",
-      "qualite": "bourgeois"
+      "qualite": "roturier"
     },
     {
       "valeur1": 0,
@@ -3261,7 +3878,7 @@
   ],
   "domiciles": [
     {
-      "domicile": "Masure",
+      "domicile": "Taudis",
       "qualite": 0
     },
     {

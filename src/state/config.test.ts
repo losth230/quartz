@@ -139,8 +139,13 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
     'les anciens effets de production directe (Or, Nourriture) disparaissent')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Champ'),
     'les entrées manquantes du référentiel sont ajoutées par la complétion')
-  assert.ok(!C.config.constructions.some((x) => x.nom.includes('tier')),
-    'simplification 2026-10-23 : plus de tiers 2/3 dans le référentiel')
+  // (fiches aménagements 2026-10-25 : les tiers 2/3 D'AMÉNAGEMENTS
+  //  sont de retour au référentiel — la simplification du 2026-10-23
+  //  ne retire plus que les BÂTIMENTS de rang ≥ 2)
+  assert.ok(C.config.constructions.some((x) => x.nom === 'Baleinier (tier 2)'),
+    'fiches 2026-10-25 : les tiers 2 d aménagements sont au référentiel')
+  assert.ok(!C.config.constructions.some((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2),
+    'simplification maintenue : aucun BÂTIMENT de rang ≥ 2')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon aménagement perso'),
     'un aménagement perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 4, 'tampon v4 apposé')
@@ -279,10 +284,15 @@ test('config : la mécanique d éducation est retirée — table educations abse
 //    aménagements de rang ≥ 2 retirés, MÊME des configs monde
 //    sauvegardées avant (« je vois encore le Moulin à vent ») ────
 
-test('config : les constructions rang >= 2 sont retirées, même d une config déjà convergée (le « Moulin à vent » d une config monde sauvegardée)', () => {
+test('config : les BÂTIMENTS rang >= 2 sont retirés, les AMÉNAGEMENTS tiers 2/3 passent (fiches 2026-10-25)', () => {
   const c = cloneDefaultConfig()
-  assert.ok(c.constructions.every((x) => (x.rangMinHabitation ?? 0) < 2),
-    'les défauts ne portent que des constructions de rang ≤ 1 (77 retirées du référentiel)')
+  // fiches 2026-10-25 : les aménagements tiers 2/3 sont DE RETOUR
+  //  (rangMinHabitation 2-3, catégorie Aménagement) ; les bâtiments
+  //  de rang ≥ 2 restent absents (simplification maintenue).
+  assert.ok(c.constructions.some((x) => x.categorie === 'Aménagement' && (x.rangMinHabitation ?? 0) >= 2),
+    'fiches 2026-10-25 : les tiers d aménagements sont au référentiel')
+  assert.ok(c.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
+    'les défauts ne portent AUCUN bâtiment de rang ≥ 2')
   // une config monde SAUVEGARDÉE AVANT la simplification garde les
   //  rangs 2/3 (la complétion n'ajoute que les manquantes, elle ne
   //  retire jamais les disparues) :
@@ -297,9 +307,9 @@ test('config : les constructions rang >= 2 sont retirées, même d une config d�
   })
   const C = cfgOf(c)
   assert.ok(!C.config.constructions.some((x) => x.nom === 'Moulin à vent'),
-    'rangMinHabitation 2 : le « Moulin à vent » est retiré par cfgOf')
-  assert.ok(C.config.constructions.every((x) => (x.rangMinHabitation ?? 0) < 2),
-    'aucune construction rang ≥ 2 ne survit à la convergence')
+    'rangMinHabitation 2 (BÂTIMENT) : le « Moulin à vent » est retiré par cfgOf')
+  assert.ok(C.config.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
+    'aucun BÂTIMENT rang ≥ 2 ne survit à la convergence (les aménagements passent)')
   // idempotence : la re-lecture d une config déjà filtrée est stable
   const C2 = cfgOf(C.config)
   assert.equal(C2.config.constructions.length, C.config.constructions.length,

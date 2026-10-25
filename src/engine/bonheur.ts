@@ -31,6 +31,7 @@ import { garnisonHabitationVille } from './garnisons'
 import { capMetierVille } from './metiers'
 import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
+import { taudisApportesVille } from './domiciles'
 import { tourismeCourant } from './regimes'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
@@ -114,14 +115,19 @@ export function logementsVille(ville: City, C: Cfg): number {
   //  du TEXTE en dernier recours (config très ancienne). Fini la
   //  double source : le texte « domicilesDisponibles » est
   //  HISTORIQUE.)
-  if (Array.isArray(ville.domiciles)) {
-    return ville.domiciles.reduce((acc, e) => acc + e.nombre, 0)
-  }
+  // stock du rang + TAUDIS apportés par les aménagements (fiches
+  //  2026-10-25 : les aménagements construits ajoutent des logements
+  //  au parc de la ville)
+  const stockVille = Array.isArray(ville.domiciles)
+    ? ville.domiciles.reduce((acc, e) => acc + e.nombre, 0)
+    : null
+  const taudis = taudisApportesVille(ville, C)
+  if (stockVille !== null) return stockVille + taudis
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),
   )
   if (Array.isArray(def?.domicilesRang)) {
-    return def!.domicilesRang!.reduce((acc, e) => acc + e.nombre, 0)
+    return def!.domicilesRang!.reduce((acc, e) => acc + e.nombre, 0) + taudis
   }
   const txt = def?.domicilesDisponibles ?? ''
   let total = 0
@@ -129,7 +135,7 @@ export function logementsVille(ville: City, C: Cfg): number {
     const m = part.trim().match(/^(\d+)\s/)
     if (m) total += Number(m[1])
   }
-  return total
+  return total + taudis
 }
 
 // ── Scores d'une ville réelle ────────────────────────────────────────
