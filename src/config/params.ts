@@ -31,17 +31,28 @@ export interface GameParams {
   // ── Maladie (rework habitants 2026-10-20 : Gompertz, plus d'âge-
   //    plafond — la maladie est la SEULE cause de mort) ──
   /** Probabilité de contracter la maladie ce tour :
-   *  min(maladieCap, maladieBase × exp(maladiePente × âge)),
+   *  maladieBase × exp(maladiePente × âge)
+   *  (RETRAIT du plafond maladieCap, retour arbitre 2026-10-25 :
+   *  la courbe Gompertz monte sans borne — à très grand âge le
+   *  risque tend vers 1 ; retrait AUSSI du surrisque des grossesses
+   *  modMaladieEnceinte : les femmes enceintes contractent comme
+   *  les autres).
    *  calibrée Monte-Carlo pour une espérance de vie ≈ 60 ans. */
   maladieBase: number
   maladiePente: number
-  maladieCap: number
+  // (RETRAITS 2026-10-25, retour arbitre : plus de maladieCap, plus
+  //  de modMaladieEnceinte — clés purgées des configs par cfgOf)
   /** Modificateur de contraction pour une femme enceinte. */
-  modMaladieEnceinte: number
   /** Guérison par tour d'un malade : probaGuerison − modGuerisonAge × âge
    *  (un malade qui re-contracte la maladie meurt). */
   probaGuerison: number
   modGuerisonAge: number
+  /** GUÉRISSEUR (métier, 2026-10-25) : par Guérisseur en poste
+   *  dans la ville — bonus de guérison et réduction du risque de
+   *  contracter (fiche arbitre : +2 % / −2 % ; cumulables si
+   *  plusieurs Guérisseurs, ex. 2 Herboristeries). */
+  guerisseurGuerison: number
+  guerisseurContraction: number
   // ── Métiers (caps par habitation, rework habitants 2026-10-20) ──
   /** Capacité maximale de Chasseurs dans une habitation « Ville »
    *  (arbitre 2026-10-20 : caps séparées selon le type). */
@@ -155,9 +166,10 @@ export const DEFAULT_PARAMS: GameParams = {
   cultureFertBase: 1,
   maladieBase: 0.0025,
   maladiePente: 0.08,
-  maladieCap: 0.9,
-  modMaladieEnceinte: 0.03,
+  // (RETRAIT 2026-10-25 : maladieCap et modMaladieEnceinte supprimés)
   probaGuerison: 0.25,
+  guerisseurGuerison: 0.02,
+  guerisseurContraction: 0.02,
   modGuerisonAge: 0.003,
   garnisonParGarde: 10,
   professeurBaseChance: 0.9,
@@ -248,9 +260,10 @@ export const PARAM_META: {
   { key: 'cultureFertBase', label: 'Facteur fécondité culturel de base', groupe: 'Fécondité' },
   { key: 'maladieBase', label: 'Maladie — probabilité de base (Gompertz)', groupe: 'Maladie', unite: 'proba', aide: 'Rework 2026-10-20 : plus d\'âge-plafond — chaque tour, probabilité de contracter la maladie = min(cap, base × exp(pente × âge)) ; calibrée pour une espérance de vie ≈ 60 ans.' },
   { key: 'maladiePente', label: 'Maladie — pente (Gompertz)', groupe: 'Maladie' },
-  { key: 'maladieCap', label: 'Maladie — plafond de probabilité', groupe: 'Maladie' },
-  { key: 'modMaladieEnceinte', label: 'Maladie — modificateur femme enceinte', groupe: 'Maladie' },
+  // (RETRAIT 2026-10-25 : maladieCap et modMaladieEnceinte supprimés)
   { key: 'probaGuerison', label: 'Probabilité de guérison (base)', groupe: 'Maladie', unite: 'proba' },
+  { key: 'guerisseurGuerison', label: 'Guérisseur — bonus de guérison par poste', groupe: 'Maladie', unite: 'proba' },
+  { key: 'guerisseurContraction', label: 'Guérisseur — réduction de contraction par poste', groupe: 'Maladie', unite: 'proba' },
   { key: 'modGuerisonAge', label: 'Guérison — modificateur par année d\'âge', groupe: 'Maladie' },
   { key: 'garnisonParGarde', label: 'Garnison par Garde en poste', groupe: 'Métiers' },
   { key: 'professeurBaseChance', label: 'Chance de base d\'attribution Professeur', groupe: 'Éducation' },
