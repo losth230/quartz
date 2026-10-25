@@ -933,8 +933,9 @@ rang 1). Arbitrages actés lors de la session :
 
 ## Domiciles, bonheur et statut social (2026-10-24, arbitrages Thibaut)
 
-**Domiciles** — SIMPLE : un type = un nom + une qualité 1-5
-(Masure 1, Maison 2, Auberge 3, Maison de notable 4, Palais 5) ;
+**Domiciles** — SIMPLE : un type = un nom + une qualité 0-4
+(Masure 0, Maison 1, Auberge 2, Maison de notable 3, Palais 4 —
+la qualité EST le gain de prestige par tour) ;
 pas de capacité ni coût (les bâtiments constructibles viendront) ;
 le rang de la ville DÉFINIT l'offre (stock `City.domiciles`,
 posé à la création et au changement de rang). **Unité (arbitrage

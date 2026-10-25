@@ -26,19 +26,22 @@ function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
 
 // ── Vague A : référentiel ─────────────────────────────────────────────
 
-test('table domiciles : 5 types, qualités 1-5 distinctes', () => {
+test('table domiciles : 5 types, qualités 0-4 distinctes', () => {
   const { C } = partieTemoin()
   const ds = C.config.domiciles
   assert.ok(ds.length >= 5, `au moins 5 types (trouvé ${ds.length})`)
   const qualites = ds.map((d) => d.qualite)
-  assert.deepEqual([...qualites].sort(), [1, 2, 3, 4, 5], 'échelle complète 1-5')
+  // échelle 0-4 (arbitrage Thibaut : la qualité EST le gain de
+  //  prestige — Masure 0 … Palais 4)
+  assert.deepEqual([...qualites].sort(), [0, 1, 2, 3, 4], 'échelle complète 0-4')
 })
 
 test('domicileDef / qualiteDomicile : lookup nom-insensible à la casse', () => {
   const { C } = partieTemoin()
-  assert.equal(qualiteDomicile('Palais', C), 5)
-  assert.equal(qualiteDomicile('palais', C), 5)
-  assert.equal(qualiteDomicile('Maison', C), 2)
+  assert.equal(qualiteDomicile('Palais', C), 4)
+  assert.equal(qualiteDomicile('palais', C), 4)
+  assert.equal(qualiteDomicile('Maison', C), 1)
+  assert.equal(qualiteDomicile('Masure', C), 0)
   assert.equal(qualiteDomicile(null, C), 0)
   assert.equal(qualiteDomicile('Inconnu', C), 0)
   assert.ok(domicileDef('Auberge', C))

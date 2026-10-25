@@ -3074,3 +3074,25 @@ exécution + typecheck verts. L'audit B1-B7 est cette fois réellement
 clos : 7/7 dans l'arbre ET dans la mémoire. (Leçon candidate : un
 correctif annoncé dans le message de commit doit être vérifié
 contre le DIFF du push, pas contre l'intention.)
+
+## Correctif échelle des domiciles : 0-4, pas 1-5 (2026-10-24, retour arbitre)
+
+L'arbitre a relevé que la formule de prestige « domicile +0 à
++4 » IMPLIQUE une échelle de qualité 0-4 — l'implémentation
+portait 1-5 en DONNÉE avec une compensation `qualite − 1` dans
+gainPrestigeTour : ça marchait mais doublait la complexité et
+contredisait la doc. Réalignement en DONNÉE PURE :
+
+- référentiel : Masure 0, Maison 1, Auberge 2, Maison de
+  notable 3, Palais 4 (la qualité EST le gain de prestige) ;
+- gainPrestigeTour : plus de compensation, lecture directe ;
+- BUG attrapé au passage : le normaliseur `Number(q) || 1`
+  transformait la qualité 0 (Masure) en 1 — le falsy zéro,
+  piège classique de l'idiome || ; corrigé en
+  `Number.isFinite(Number(q))` ;
+- tests réalignés (échelle 0-4 verrouillée, valeurs de gain
+  inchangées), docblocks et regles-et-arbitrages à jour.
+
+166/166 verts. AUCUN changement de comportement de jeu (les
+gains étaient déjà corrects via la compensation) — pure
+simplification + fix du cas Masure.

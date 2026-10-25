@@ -3,7 +3,7 @@
 //  (vague A+C du design domiciles/ascension, 2026-10-24)
 //
 //  PRINCIPES (arbitrages Thibaut) :
-//   · SIMPLE : un type de domicile porte un nom + une qualité 1-5 ;
+//   · SIMPLE : un type de domicile porte un nom + une qualité 0-4 ;
 //     pas de capacité ni coût — les bâtiments constructibles
 //     viendront plus tard ;
 //   · UNITÉ (arbitrage final Thibaut 2026-10-24 : « 1 personne =

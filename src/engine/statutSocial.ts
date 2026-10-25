@@ -71,8 +71,12 @@ export function gainPrestigeTour(
   if (!c.domicile) g -= 2
   // malade
   if (c.statut === 'Malade') g -= 2
-  // domicile : +0 à +4 selon la qualité (1-5 → 0-4)
-  if (c.domicile) g += Math.max(0, qualiteDomicile(c.domicile, C) - 1)
+  // domicile : +0 à +4 — la QUALITÉ de la table domiciles EST le
+  //  gain (échelle 0-4, arbitrage Thibaut : Masure 0, Maison 1,
+  //  Auberge 2, Maison de notable 3, Palais 4 — correctif du
+  //  2026-10-24 : la table portait 1-5 avec une compensation -1
+  //  ici, réalignée en donnée pure 0-4)
+  if (c.domicile) g += Math.max(0, qualiteDomicile(c.domicile, C))
   // métier : +2 bourgeois, +5 noble
   const q = C.metiers.find((m) => m.metier === c.metier)?.qualite
   if (q === 'bourgeois') g += 2
