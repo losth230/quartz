@@ -3161,3 +3161,50 @@ E[décès] ∈ [55, 66] tient toujours — le plafond ne jouait qu'à
 
 168/168 verts, tsc strict 0, handler 0, bundle OK, build vite OK,
 diag 0.
+
+
+## Carte ville : structure par blocs + bonheur en haut à droite (2026-10-25, arbitrages Thibaut)
+
+Trois arbitrages du retour du 2026-10-25 : (1) bloc bonheur en HAUT
+DROITE de la carte ville avec la moyenne ET les 5 axes en
+MINI-JAUGES (label + barre colorée + valeur — plus seulement une
+info-bulle au survol) ; (2) carte REGROUPÉE PAR BLOCS ; (3) le
+tableau détaillé de la garnison RESTE toujours visible (pas de
+compactage).
+
+Nouvelle structure de VilleCarte (page Pays) :
+1. TÊTE : Nom / Taxes / Proximité + bloc Bonheur à droite
+   (.ville-tete-wrap : flex-wrap, repli sous 320px) ;
+2. IDENTITÉ : culture majoritaire, habitants vivants, cultures
+   présentes ;
+3. RANG & TYPE + habitants requis ;
+4. GARNISON des habitations (tableau détaillé conservé) ;
+5. CONSTRUCTIONS (aménagements/bâtiments côte à côte) ;
+6. AUTRES puis PRODUCTION de la ville ;
+7. ACTIONS RARES (transférer, supprimer, devenir cité libre)
+   DÉPLACÉES EN BAS de carte — elles ne cannibalisent plus la
+   tête de lecture.
+
+L'ancienne ligne bonheur (vague E, milieu de carte) est retirée.
+CSS : .bonheur-bloc / .bonheur-axe (mini-jauges 6px, valeurs
+tabulaires). Test de rendu DÉDIÉ (patron R3) : la moyenne et les
+5 valeurs d'axes sont assertées CONTRE l'état — plus une assertion
+NÉGATIVE garantissant que l'ancienne ligne n'est plus rendue (le
+premier jet du test comptait le « Bonheur : moyenne… » de
+l'info-bulle du bloc : motif distinctif « Bonheur : <strong »).
+
+REBASE : des commits parallèles (échelle domiciles 0-4, fiches
+métiers/Taudis, retraits Gompertz + Guérisseur) sont arrivés
+pendant le travail — les edits UI ont été rejoués sur la tête
+résultante ; aucune collision (VilleCarte/styles/PlayerView.test
+intacts côté externe), test bonheur passé tel quel, diag IDENTIQUE
+à la base externe.
+
+AGENTS.md réaligné au passage (compteurs datés de R4 : 125 natifs
+/ 11 rendu — la réalité est 157 / 12 fichiers (15 tests) après
+les vagues domiciles/bonheur/statut social et Guérisseur ; NB daté).
+
+Validation : 157/157 natifs + 15/15 rendu (12 fichiers), tsc strict
+(stubs supabase seuls, diff base/jeu VIDE), diag exit 0 IDENTIQUE
+(UI seule — le moteur n'a pas bougé), Edge Function bundle +
+exécution verts.
