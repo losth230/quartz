@@ -261,7 +261,11 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
    *  bâtiments de ville / château hors faction, bâtiments de FACTION
    *  du peuple du joueur (ceux de capitale uniquement dans la
    *  capitale), bâtiments de CAPITALE pour la capitale uniquement.
-   *  Chaque carte montre le coût ET la description du classeur. */
+   *  Chaque carte montre le coût ET le RÉSUMÉ STRUCTURÉ des effets
+   *  (resumeConstruction — dérivé du moteur, toujours à jour ;
+   *  retour Thibaut 2026-10-26 : la DESCRIPTION DU CLASSEUR,
+   *  périmée, n'est plus affichée — même rendu que le panneau des
+   *  aménagements : résumé + prérequis éventuel). */
   /** Bâtiments constructibles pour UNE ville (retour Thibaut
    *  2026-10-15) : seuls les bâtiments du TYPE de la ville (Ville ou
    *  Château) s'affichent, et les MERVEILLES sont filtrées par le rang
@@ -354,7 +358,6 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
             description: [
               prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
               resumeConstruction(b) || b.production || '',
-              b.description,
             ].filter(Boolean).join('\n'),
             badge: FAM_BADGES[fam] ?? 'badge-info',
           })),
@@ -373,7 +376,6 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
           description: [
             prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
             resumeConstruction(b) || b.production || '',
-            b.description,
           ].filter(Boolean).join('\n'),
           badge: FAM_BADGES[fam] ?? 'badge-info',
         }))
@@ -393,7 +395,6 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
           description: [
             prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
             resumeConstruction(b) || b.production || '',
-            b.description,
           ].filter(Boolean).join('\n'),
         })),
       })

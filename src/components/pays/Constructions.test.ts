@@ -120,3 +120,34 @@ test('vague 3c : garde-fous NON BLOQUANTS — rang insuffisant ⚠, tier inféri
   assert.ok(!state.log.some((l) => l.texte.includes('amélioré(e) en Baleinier (tier 2)')),
     'sans remplacement effectif, le log dit « construit(e) », pas « amélioré(e) »')
 })
+
+test('retour Thibaut 2026-10-26 : le picker « + Construire » ne rend plus la description du classeur (périmée) — résumé structuré seulement, comme les aménagements', async () => {
+  const state = partie()
+  const { faireBatParFamille } = await import('./Constructions')
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  const cats = faireBatParFamille({ state, p, C })(p.villes[0])
+  assert.ok(cats.length > 0, 'aucune catégorie de construction pour la capitale')
+  let verrouilles = 0
+  for (const cat of cats) {
+    for (const o of cat.options) {
+      const d = o.description ?? ''
+      const ref = C.config.constructions.find((c) => c.categorie === 'Bâtiment' && c.nom === o.metier)
+      const descClasseur = ref?.description ?? ''
+      if (descClasseur) {
+        assert.ok(
+          !d.includes(descClasseur),
+          `« ${o.metier} » : la description du classeur (« ${descClasseur} ») ne doit plus être rendue dans le picker`,
+        )
+        verrouilles++
+      }
+    }
+  }
+  assert.ok(verrouilles > 5,
+    `trop peu de bâtiments vérifiés (${verrouilles}) — l'état de test a changé, le test perd son sens`)
+  // Le résumé structuré reste rendu (ex. Poste de garde → « 4 garde »).
+  const poste = cats.flatMap((c) => c.options).find((o) => o.metier === 'Poste de garde')
+  assert.ok(poste, 'Poste de garde absent du picker de la capitale')
+  assert.ok((poste.description ?? '').includes('4 garde'),
+    'le résumé structuré des emplacements du Poste de garde doit rester rendu')
+})

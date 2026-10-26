@@ -463,7 +463,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           {/* Marqueur (y) : un BOUTON PAR TYPE de bâtiment
               (militaire, économique, guilde, capitale —
               arbitrage Thibaut : les 5 familles existantes) +
-              description de chaque bâtiment AVANT le choix. */}
+              résumé des effets de chaque bâtiment AVANT le choix.
+              (Retour Thibaut 2026-10-26 : la description du
+              classeur, périmée, n'est plus affichée — le panneau
+              rend comme celui des aménagements : résumé structuré
+              dérivé du moteur + prérequis éventuel.) */}
           <ChoicePicker
             bouton="+ Construire…"
             categories={batParFamillePour(ville)}
