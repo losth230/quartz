@@ -3322,3 +3322,36 @@ tête — le test des 2 colonnes verrouille sa présence en gras).
 Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
 bougé).
+
+## Carte ville : rang & type de ville dans la zone de tête (2026-10-26, 3e retour Thibaut)
+
+Capture n°3 examinée — constat : « les trois cases Nom / Taxes /
+Proximité sont de tailles différentes (déjà corrigé la veille en
+ligne — la capture montrait l'ancien CSS, flex 1.5 du nom) et un
+ESPACE VIDE est présent en dessous, dans lequel Rang d'habitation
+et Type de ville pourraient se tenir ».
+
+Traitement :
+- RANG D'HABITATION + TYPE DE VILLE déplacés DANS la zone de
+  tête (colonne gauche), en RANGÉE 2 sous les trois cases — plus
+  d'espace vide : le bloc bonheur (colonne droite) borde
+  l'ensemble des champs.
+- .ville-tete passe en grille 6 colonnes : rangée 1 = 3 cases de
+  span 2 (nom/taxes/proximité égales), rangée 2 = 2 cases de
+  span 3 (rang/type égales) ; .ville-tete-wrap passe de flex à
+  grid 1fr / auto (fin du flex 1 1 320px) ; repli écran étroit
+  (≤ 560px) : tout en 1 colonne, grid-column auto sur les deux
+  sélecteurs nth-child.
+- La ligne « habitants requis » suit la rangée 2 dans la colonne
+  gauche ; le docblock d'en-tête de VilleCarte est renuméroté
+  (rang & type ne sont plus un bloc séparé : (1) TÊTE complète,
+  (2) POPULATION & GARNISON, (3) CONSTRUCTIONS, (4) AUTRES,
+  (5) PRODUCTION, (6) ACTIONS RARES).
+- Test de rendu : le test du bloc bonheur verrouille le
+  déplacement — « Type de ville » doit être rendu AVANT
+  « bonheur-bloc » dans le HTML (sur l'ancien layout, rang/type
+  étaient rendus après le wrap, l'assertion échoue).
+
+Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
+bougé).
