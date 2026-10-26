@@ -1,23 +1,30 @@
 // ══════════════════════════════════════════════════════════════════════
 //  UNE VILLE de la page Pays — structure PAR BLOCS (retour arbitre
 //  Thibaut 2026-10-25 « regrouper par blocs ») : (1) TÊTE : nom /
-//  taxes / proximité + BLOC BONHEUR en HAUT DROITE (moyenne + 5
-//  mini-jauges) + ligne identité (culture majoritaire, vivants) ;
-//  (2) RANG & TYPE + habitants requis ; (3) POPULATION & GARNISON
-//  en 2 COLONNES (retour Thibaut 2026-10-26 : tableau des cultures
-//  présentes — majoritaire en gras avec liseré, part en %, total
-//  des vivants — ET tableau détaillé de la garnison, origine par
-//  origine avec plancher et total — arbitre : le détail reste
-//  TOUJOURS visible, relooké en classes CSS dédiées) ; (4)
-//  CONSTRUCTIONS : aménagements et bâtiments (choix à catégories —
-//  marqueur (y)) ; (5) AUTRES ; (6) PRODUCTION ; (7) ACTIONS RARES
-//  en BAS de carte (transfert, suppression, cité libre) — elles ne
-//  cannibalisent plus la tête.
+//  taxes / proximité en 3 COLONNES ÉGALES (retour Thibaut
+//  2026-10-26) + BLOC BONHEUR en HAUT DROITE (moyenne + 5
+//  mini-jauges) + ligne vivants (la culture vit dans le tableau,
+//  plus de doublon en tête — retour 2026-10-26) ; (2) RANG & TYPE
+//  + habitants requis ; (3) POPULATION & GARNISON en 2 COLONNES
+//  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
+//  majoritaire en gras avec liseré, part en %, total des vivants
+//  — ET tableau détaillé de la garnison, origine par origine avec
+//  plancher et total — arbitre : le détail reste TOUJOURS visible,
+//  relooké en classes CSS dédiées) ; (4) CONSTRUCTIONS :
+//  aménagements et bâtiments (choix à catégories — marqueur (y)) —
+//  les COÛTS des aménagements vivent dans le POPUP de fabrication
+//  , plus dans le titre (retour Thibaut 2026-10-26) ; (5) AUTRES ;
+//  (6) PRODUCTION : par défaut SEULEMENT les ressources produites,
+//  toggle « tout afficher » (retour Thibaut 2026-10-26 — supersede
+//  le marqueur (r) « toutes les ressources même à 0 » du
+//  2026-10-15) ; (7) ACTIONS RARES en BAS de carte (transfert,
+//  suppression, cité libre) — elles ne cannibalisent plus la tête.
 //  (RETRAIT 2026-10-19, retour arbitre : la heatmap d'attrait migratoire
 //   a été retirée avec la migration spontanée par Tourisme — à refaire.)
 //  (Extrait de PlayerView.tsx — un fichier par UI.)
 // ══════════════════════════════════════════════════════════════════════
 
+import { useState } from 'react'
 import type { AutreDef, City, GameState, Player } from '../../engine/types'
 import { useGame } from '../../state/store'
 import * as remote from '../../supabase/client'
@@ -50,6 +57,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   setPlayer: (fn: (p: Player, s: GameState) => void) => void
 }) {
   const { state, update, salon } = useGame()
+  // (Retour Thibaut 2026-10-26 « cache par défaut les ressources
+  //  non produites » : la vue repliée n'affiche que les ressources
+  //  produites ; le toggle déplie le tableau complet. État local à
+  //  la carte — pas persisté, pas poussé.)
+  const [voirToutProd, setVoirToutProd] = useState(false)
   // Garde-fou type : PlayerView ne rend cette carte QUE si une partie
   //  est chargée (state non-null côté App).
   if (!state) return null
@@ -62,7 +74,6 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   //  inférieur, qui doit être présent dans la ville).
   const amRefsBase = refs.filter((r) => r.categorie === 'Aménagement' && !r.remplaceAmenagement)
   const amRefsTier = refs.filter((r) => r.categorie === 'Aménagement' && r.remplaceAmenagement)
-  const coutTier = (tier: number) => amRefsTier.find((a) => (a.rangMinHabitation ?? 0) === tier)?.cout ?? '—'
   // Améliorations proposées : uniquement celles dont le tier inférieur
   //  est présent à la ville (et masquées si le rang d'habitation est
   //  insuffisant — la catégorie vide est de toute façon masquée par
@@ -169,10 +180,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         })()}
         </div>
         <div className="muted small">
-          Culture majoritaire : <strong>{ville.culture}</strong> · {nbVivants} habitant(s) vivant(s)
-          {/* (Le détail par culture vit dans le bloc POPULATION &
-              GARNISON — retour Thibaut 2026-10-26 : tableau dédié,
-              plus de ligne à puces en tête de carte.) */}
+          {nbVivants} habitant(s) vivant(s)
+          {/* (Retour Thibaut 2026-10-26 « on voit deux fois la
+              culture » : la culture n'est plus en tête — le tableau
+              « Cultures présentes » du bloc POPULATION & GARNISON
+              est LA place de la culture (majoritaire en gras avec
+              liseré) ; la tête ne garde que le compte de vivants.) */}
         </div>
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
@@ -251,7 +264,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               <div>
                 <div className="ville-duo-titre">Cultures présentes</div>
                 {culturesTriees.length === 0 ? (
-                  <div className="muted small">aucun habitant enregistré</div>
+                  <div className="muted small">
+                    aucun habitant — culture de la ville : <strong>{ville.culture}</strong>
+                  </div>
                 ) : (
                   <table className="ville-table">
                     <tbody>
@@ -312,12 +327,15 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             retour Thibaut 2026-10-14) ── */}
         <div className="ville-constr">
           <div>
+        {/* (Retour Thibaut 2026-10-26 : les coûts vivent dans le
+            POPUP de fabrication — chaque option du picker affiche
+            déjà son coût (tier 1 : référentiel ; tiers 2/3 : coût
+            uniforme) — plus de coûts dans le titre.) */}
         <div className="mini-title">
           Aménagements
-          <span className="muted small">
-            {' '}· coût tier 1 : selon le référentiel · tier 2 : {coutTier(2)} (habitation de rang 2) · tier 3 : {coutTier(3)} (rang 3)
-            {reducBatisseurs ? ' (réduit par le Camp de bâtisseurs)' : ''}
-          </span>
+          {reducBatisseurs && (
+            <span className="muted small"> · coûts réduits (Camp de bâtisseurs)</span>
+          )}
         </div>
         {(ville.amenagements ?? []).length === 0 && <div className="muted small">aucun</div>}
         {(ville.amenagements ?? []).map((a, ai) => {
@@ -529,29 +547,45 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             return out
           })()
           const nEteTot = nEteAm + nEteAut
-          // Retour Thibaut (marqueur (r)) : toutes les ressources,
-          // même à production 0 (lignes teintées → lisibles).
+          // (RETRAIT du marqueur (r) — retour Thibaut 2026-10-26 :
+          //  par défaut SEULEMENT les ressources PRODUITES sont
+          //  listées ; le toggle « tout afficher » redonne toutes
+          //  les lignes. « produite » = au moins un canal non nul
+          //  (bâtiments, aménagements, autres, villageois).)
+          const estProduite = (r: string) =>
+            [pv.batiments, pv.amenagements, pv.autres, pv.habitants]
+              .some((d) => (d[r] ?? 0) !== 0)
           const resV = RESSOURCES_FLUX(C)
-          if (resV.length === 0 && nEteTot === 0) {
-            return (
-              <div className="muted small">
-                Cette ville ne produit rien par tour.
-              </div>
-            )
-          }
           // Lignes du tableau : chaque ressource + la ligne
           // « Nourr - été » juste après la Nourriture (ou en
           // première ligne s'il n'y a pas de nourriture générale).
-          // Retour Thibaut 2026-10-15 : la ligne « Nourr - été »
-          //  est TOUJOURS visible (même à 0) juste sous la
-          //  Nourriture, avec un style DISTINCT (badge été).
+          // (Retour Thibaut 2026-10-26 : la ligne été à 0 est
+          //  CACHÉE en vue repliée, comme les autres lignes vides —
+          //  supersede le retour 2026-10-15 « toujours visible ».)
           const lignesV: Array<{ kind: 'res'; r: string } | { kind: 'ete' } | { kind: 'eteAutre'; r: string }> = []
           let eteInsere = false
+          const montreEte = () => voirToutProd || nEteTot !== 0
           for (const r of resV) {
+            if (!voirToutProd && !estProduite(r)) continue
             lignesV.push({ kind: 'res', r })
-            if (r === 'Nourriture') { lignesV.push({ kind: 'ete' }); eteInsere = true }
+            if (r === 'Nourriture') { if (montreEte()) lignesV.push({ kind: 'ete' }); eteInsere = true }
           }
-          if (!eteInsere) lignesV.unshift({ kind: 'ete' })
+          if (!eteInsere && montreEte()) lignesV.unshift({ kind: 'ete' })
+          // Vue repliée d'une ville sans production : message court
+          // + le toggle (le tableau complet reste à un clic).
+          if (lignesV.length === 0) {
+            return (
+              <div>
+                <div className="mini-title">
+                  Production de la ville
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(true)}>tout afficher</button>
+                </div>
+                <div className="muted small">
+                  Cette ville ne produit rien par tour (ressources non produites cachées par défaut).
+                </div>
+              </div>
+            )
+          }
           // ÉTÉ d'autres ressources (revue 2026-10-16) : une ligne
           //  « <Ressource> - été » après la ressource concernée.
           for (const [res, v] of eteAutres) {
@@ -562,9 +596,25 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           }
           return (
             <div>
-              <div className="mini-title">Production de la ville</div>
+              <div className="mini-title">
+                Production de la ville
+                {/* (Retour Thibaut 2026-10-26 : toggle discret à
+                    côté du titre — vue repliée par défaut.) */}
+                {voirToutProd ? (
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(false)}>produites seulement</button>
+                ) : (
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(true)}>tout afficher</button>
+                )}
+              </div>
               <div className="table-wrap">
-                <table className="tbl small">
+                <table className="tbl small ville-prod">
+                  {/* (Retour Thibaut 2026-10-26 « colonnes inégales »
+                      : largeurs FIXES — colonne ressource plus large
+                      , les 5 colonnes de valeurs égales.) */}
+                  <colgroup>
+                    <col style={{ width: '22%' }} />
+                    <col span={5} style={{ width: '15.6%' }} />
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Ressource</th>
@@ -623,7 +673,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                         (d[r] ?? 0) === 0 ? '—' : fmtNum(d[r] ?? 0)
                       const t = pv.total[r] ?? 0
                       return (
-                        <tr key={r} style={{ background: fondRessource(r, C) }}>
+                        <tr key={r} className="ligne-prod" style={{ background: fondRessource(r, C) }}>
                           <td>
                             <span className="dot-res" style={{ background: couleurRessource(r, C) }} />
                             <strong>{r}</strong>

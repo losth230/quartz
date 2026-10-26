@@ -54,17 +54,16 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
     )
   }
   // La carte de la capitale affiche le compte d'habitants vivants
-  // ET la culture majoritaire calculés depuis l'état (VilleCarte).
+  // calculé depuis l'état (VilleCarte). (La culture majoritaire
+  //  n'est plus en tête depuis le retour 2026-10-26 « on voit
+  //  deux fois la culture » — le tableau « Cultures présentes »
+  //  la rend en gras, verrouillé par le test des 2 colonnes.)
   const cap = p1.villes[0]
   const nbVivants = (etat.population[1] ?? [])
     .filter((c) => c.statut !== 'Décédé' && c.ville === cap.nom).length
   assert.ok(
     h.includes(`${String(nbVivants)} habitant(s) vivant(s)`),
     `compte d'habitants vivants de ${cap.nom} (${nbVivants}) non rendu`,
-  )
-  assert.ok(
-    h.includes(`Culture majoritaire : <strong>${esc(cap.culture)}</strong>`),
-    `culture majoritaire « ${cap.culture} » de ${cap.nom} non rendue`,
   )
 })
 
@@ -171,5 +170,50 @@ test('rendu VilleCarte : population & garnison en 2 colonnes — tableaux propre
   assert.ok(
     h.includes(`Garnison des habitations : <strong>${esc(fmt(g))}</strong>`),
     `garnison ${fmt(g)} de « ${cap.nom} » absente du titre de colonne`,
+  )
+})
+
+test('rendu VilleCarte : production épurée par défaut — non produites cachées, toggle « tout afficher » (retour Thibaut 2026-10-26)', async () => {
+  const etat = await partieRendu()
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { GameProvider } = await import('../state/store')
+  const { PlayerView } = await import('./PlayerView')
+  const { cfgOf } = await import('../engine/gameData')
+  const { productionVille } = await import('../engine/production')
+  const { RESSOURCES_FLUX } = await import('./pays/pays-utils')
+
+  const html = renderToString(
+    React.createElement(GameProvider, null, React.createElement(PlayerView, { joueur: 1 })),
+  )
+  const h = aplatir(html)
+  const C = cfgOf(etat.config)
+  const p1 = etat.players.find((p) => p.n === 1)
+  assert.ok(p1, 'joueur 1 introuvable')
+  // Le toggle est rendu en vue repliée (le défaut CUCHE les
+  // ressources non produites — retour 2026-10-26).
+  assert.ok(
+    h.includes('>tout afficher</button>'),
+    'toggle « tout afficher » absent du bloc production (vue repliée attendue par défaut)',
+  )
+  // Le nombre de lignes de production rendues = EXACTEMENT les
+  // ressources PRODUITES des villes du joueur 1 (patron R3 : tout
+  // est dérivé de l'état — ni une ligne vide de trop, ni une
+  // ressource produite manquante). Les lignes du tableau portent
+  // la classe « ligne-prod » (signature — les récaps rendent aussi
+  // des pastilles dot-res mais sans cette classe).
+  let attendu = 0
+  for (const v of p1.villes) {
+    const pv = productionVille(etat, p1, v, C)
+    for (const r of RESSOURCES_FLUX(C)) {
+      if ([pv.batiments, pv.amenagements, pv.autres, pv.habitants]
+        .some((d) => (d[r] ?? 0) !== 0)) attendu++
+    }
+  }
+  assert.ok(attendu > 0, 'aucune ressource produite — partie de test suspecte')
+  const rendues = h.split('<tr class="ligne-prod"').length - 1
+  assert.equal(
+    rendues, attendu,
+    `attendu ${attendu} lignes de production (ressources produites des villes du joueur 1), rendu ${rendues} — cachage par défaut en échec`,
   )
 })

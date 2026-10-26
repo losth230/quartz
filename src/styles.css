@@ -664,10 +664,13 @@ input[type='range'] {
 /* ═══ Mise en forme (marqueur (p), retour Thibaut 2026-10-14) ═══ */
 
 /* En-tête de carte de ville (page Pays) : nom en gras + taxes sur la même ligne */
-.ville-tete { display: flex; gap: 8px; align-items: flex-end; }
-.ville-tete .field { flex: 1; margin-bottom: 0; }
-.ville-tete .field:first-child { flex: 1.5; }
+/* (Retour Thibaut 2026-10-26 : les trois cases de tête — nom,
+   taxes, proximité — de la MÊME TAILLE : grid 3 colonnes égales,
+   fin du flex 1.5 sur le nom ; repli 1 colonne sous 420px.) */
+.ville-tete { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: end; }
+.ville-tete .field { margin-bottom: 0; }
 .ville-tete .field:first-child .input { font-weight: 700; }
+@media (max-width: 420px) { .ville-tete { grid-template-columns: 1fr; } }
 
 /* Tête de carte ville avec BLOC BONHEUR en haut à droite (retour
    arbitre Thibaut 2026-10-25) : moyenne + 5 axes en mini-jauges.
@@ -708,6 +711,16 @@ input[type='range'] {
 .ville-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .ville-table tr.ligne-total td { border-top: 1px solid var(--border); border-bottom: none; padding-top: 5px; }
 .ville-table tr.ligne-major td:first-child { box-shadow: inset 2px 0 0 var(--accent); padding-left: 6px; }
+
+/* Toggle discret « tout afficher » / « produites seulement » du bloc
+   production (retour Thibaut 2026-10-26 : ressources non produites
+   cachées par défaut, tableau complet à un clic). */
+.prod-toggle {
+  background: none; border: none; padding: 0 0 0 10px; cursor: pointer;
+  font-size: 11px; font-weight: 400; color: var(--muted);
+  text-decoration: underline dotted;
+}
+.prod-toggle:hover { color: var(--accent); }
 
 /* « Donner à… » et « Marier avec… » sur la même ligne (tableaux de population) ;
    largeur RÉDUITE en fixe (retour Thibaut, marqueur (z)) : les deux menus
