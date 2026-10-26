@@ -1,23 +1,26 @@
 // ══════════════════════════════════════════════════════════════════════
 //  UNE VILLE de la page Pays — structure PAR BLOCS (retour arbitre
 //  Thibaut 2026-10-25 « regrouper par blocs ») : (1) TÊTE : nom /
-//  taxes / proximité en 3 COLONNES ÉGALES (retour Thibaut
-//  2026-10-26) + BLOC BONHEUR en HAUT DROITE (moyenne + 5
-//  mini-jauges) + ligne vivants (la culture vit dans le tableau,
-//  plus de doublon en tête — retour 2026-10-26) ; (2) RANG & TYPE
-//  + habitants requis ; (3) POPULATION & GARNISON en 2 COLONNES
+//  taxes / proximité en 3 colonnes égales PUIS rang d'habitation /
+//  type de ville en 2 colonnes égales sur la rangée 2 + ligne
+//  habitants requis (retour Thibaut 2026-10-26, capture n°3 :
+//  rang & type comblent l'espace vide sous les trois cases) + BLOC
+//  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) + ligne
+//  vivants (la culture vit dans le tableau, plus de doublon en
+//  tête — retour 2026-10-26) ; (2) POPULATION & GARNISON en 2
+//  COLONNES
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
 //  plancher et total — arbitre : le détail reste TOUJOURS visible,
-//  relooké en classes CSS dédiées) ; (4) CONSTRUCTIONS :
+//  relooké en classes CSS dédiées) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
-//  , plus dans le titre (retour Thibaut 2026-10-26) ; (5) AUTRES ;
-//  (6) PRODUCTION : par défaut SEULEMENT les ressources produites,
+//  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
+//  (5) PRODUCTION : par défaut SEULEMENT les ressources produites,
 //  toggle « tout afficher » (retour Thibaut 2026-10-26 — supersede
 //  le marqueur (r) « toutes les ressources même à 0 » du
-//  2026-10-15) ; (7) ACTIONS RARES en BAS de carte (transfert,
+//  2026-10-15) ; (6) ACTIONS RARES en BAS de carte (transfert,
 //  suppression, cité libre) — elles ne cannibalisent plus la tête.
 //  (RETRAIT 2026-10-19, retour arbitre : la heatmap d'attrait migratoire
 //   a été retirée avec la migration spontanée par Tourisme — à refaire.)
@@ -105,6 +108,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             nom de la ville EN GRAS + niveau de taxes sur la
             même ligne. */}
         <div className="ville-tete-wrap">
+        {/* Colonne GAUCHE de la zone de tête (retour Thibaut
+            2026-10-26, capture n°3) : les 5 cases sur 2 rangées +
+            la ligne habitants requis — le bloc bonheur (colonne
+            droite) borde l'ensemble, plus d'espace vide dessous. */}
+        <div>
         <div className="ville-tete">
         <Field label="Nom">
           <TextInput
@@ -141,6 +149,63 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             onChange={(v) => setPlayer((x) => { x.villes[idx].proximite = v })}
           />
         </Field>
+        {/* Rang d'habitation et type de ville (Ville / Château) sur
+            la RANGÉE 2 de la zone de tête — retour Thibaut 2026-10-26
+            (capture n°3) : ils comblent l'espace vide sous les trois
+            cases (le bloc bonheur est plus haut que la seule rangée
+            de cases). Échelles de rangs différentes : Hameau → Cité
+            → Grande Cité ou Motte → Donjon → Forteresse. */}
+        <Field label="Rang d'habitation">
+          <Select
+            value={ville.rang ?? rangsDisponibles(typeVille(ville), C)[0]}
+            options={rangsDisponibles(typeVille(ville), C).map((r) => {
+              const def = (C.config.typesHabitation ?? []).find(
+                (d) => d.type === typeVille(ville) && d.rang === r)
+              return {
+                value: r,
+                label: def?.cout ? `${r} (${def.cout})` : r,
+              }
+            })}
+            onChange={(v) => setPlayer((x, s) => {
+              const ville = x.villes[idx]
+              ville.rang = v
+              debiterCoutHabitation(s, x, ville, C)
+              // VAGUE C (2026-10-24) : le rang DÉFINIT l'offre de
+              //  domiciles — le stock suit le changement de rang.
+              initStockVille(ville, C)
+            })}
+          />
+        </Field>
+        <Field label="Type de ville">
+          <Select
+            value={typeVille(ville)}
+            options={[{ value: 'Ville', label: 'Ville (Hameau → Cité → Grande Cité)' }, { value: 'Château', label: 'Château (Motte → Donjon → Forteresse)' }]}
+            onChange={(v) => setPlayer((x, s) => {
+              const ville = x.villes[idx]
+              ville.type = v
+              // le rang doit appartenir à l'échelle du nouveau type
+              const rangs = rangsDisponibles(v, C)
+              if (!rangs.includes(ville.rang ?? '')) ville.rang = rangs[0]
+              debiterCoutHabitation(s, x, ville, C)
+            })}
+          />
+        </Field>
+        </div>
+        {/* Habitants requis par le rang courant, en dessous du rang.
+            (La consommation par tour des rangs d'habitation est
+            supprimée — arbitrage vague 3b, code retiré 2026-10-22.) */}
+        {(() => {
+          const requis = habitationDef(ville, C)?.habitantsRequis ?? 0
+          return (
+            <div className="small">
+              {requis > 0 && (
+                <span className={`small ${nbVivants < requis ? 'neg' : 'muted'}`}>
+                  · {fmt(requis)} habitants requis ({nbVivants} vivant(s){nbVivants < requis ? ' — insuffisant' : ''})
+                </span>
+              )}
+            </div>
+          )
+        })()}
         </div>
         {/* BONHEUR (retour arbitre Thibaut 2026-10-25) : HAUT DROITE
             de la carte — moyenne + les 5 axes en MINI-JAUGES (label +
@@ -189,61 +254,6 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         </div>
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
-        {/* Rang d'habitation et type de ville (Ville / Château)
-            sur la même ligne — échelles de rangs différentes :
-            Hameau → Cité → Grande Cité ou Motte → Donjon → Forteresse. */}
-        <div className="grid-2">
-          <Field label="Rang d'habitation">
-            <Select
-              value={ville.rang ?? rangsDisponibles(typeVille(ville), C)[0]}
-              options={rangsDisponibles(typeVille(ville), C).map((r) => {
-                const def = (C.config.typesHabitation ?? []).find(
-                  (d) => d.type === typeVille(ville) && d.rang === r)
-                return {
-                  value: r,
-                  label: def?.cout ? `${r} (${def.cout})` : r,
-                }
-              })}
-              onChange={(v) => setPlayer((x, s) => {
-                const ville = x.villes[idx]
-                ville.rang = v
-                debiterCoutHabitation(s, x, ville, C)
-                // VAGUE C (2026-10-24) : le rang DÉFINIT l'offre de
-                //  domiciles — le stock suit le changement de rang.
-                initStockVille(ville, C)
-              })}
-            />
-          </Field>
-          <Field label="Type de ville">
-            <Select
-              value={typeVille(ville)}
-              options={[{ value: 'Ville', label: 'Ville (Hameau → Cité → Grande Cité)' }, { value: 'Château', label: 'Château (Motte → Donjon → Forteresse)' }]}
-              onChange={(v) => setPlayer((x, s) => {
-                const ville = x.villes[idx]
-                ville.type = v
-                // le rang doit appartenir à l'échelle du nouveau type
-                const rangs = rangsDisponibles(v, C)
-                if (!rangs.includes(ville.rang ?? '')) ville.rang = rangs[0]
-                debiterCoutHabitation(s, x, ville, C)
-              })}
-            />
-          </Field>
-        </div>
-        {/* Habitants requis par le rang courant, en dessous du rang.
-            (La consommation par tour des rangs d'habitation est
-            supprimée — arbitrage vague 3b, code retiré 2026-10-22.) */}
-        {(() => {
-          const requis = habitationDef(ville, C)?.habitantsRequis ?? 0
-          return (
-            <div className="small">
-              {requis > 0 && (
-                <span className={`small ${nbVivants < requis ? 'neg' : 'muted'}`}>
-                  · {fmt(requis)} habitants requis ({nbVivants} vivant(s){nbVivants < requis ? ' — insuffisant' : ''})
-                </span>
-              )}
-            </div>
-          )
-        })()}
 
         {/* POPULATION & GARNISON en 2 COLONNES (retour Thibaut
             2026-10-26). La garnison est une VALEUR D'ÉTAT (pas un

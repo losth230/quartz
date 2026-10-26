@@ -83,6 +83,15 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   const h = aplatir(html)
   // Le bloc (et non plus l'ancienne ligne d'info) est rendu.
   assert.ok(h.includes('bonheur-bloc'), 'bloc bonheur absent de la carte ville')
+  // (Retour Thibaut 2026-10-26, capture n°3 : rang d'habitation et
+  //  type de ville DANS la zone de tête, AVANT le bloc bonheur —
+  //  sur l'ancien layout ils étaient rendus après le wrap, donc
+  //  cette assertion verrouille le déplacement dans la tête.)
+  assert.ok(h.includes('ville-tete'), 'zone de tête absente de la carte ville')
+  assert.ok(
+    h.indexOf('Type de ville') < h.indexOf('bonheur-bloc'),
+    '« Type de ville » doit être rendu dans la zone de tête, avant le bloc bonheur',
+  )
   // (l'ancienne ligne rendait « Bonheur : <strong> » — le bloc actuel
   //  rend « Bonheur <strong> » sans deux-points ; l'info-bulle du bloc
   //  contient « Bonheur : moyenne… », d'où le motif distinctif)

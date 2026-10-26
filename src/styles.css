@@ -666,18 +666,31 @@ input[type='range'] {
 /* En-tête de carte de ville (page Pays) : nom en gras + taxes sur la même ligne */
 /* (Retour Thibaut 2026-10-26 : les trois cases de tête — nom,
    taxes, proximité — de la MÊME TAILLE : grid 3 colonnes égales,
-   fin du flex 1.5 sur le nom ; repli 1 colonne sous 420px.) */
-.ville-tete { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; align-items: end; }
+   fin du flex 1.5 sur le nom ; repli 1 colonne sous 420px.
+   Retour Thibaut 2026-10-26, capture n°3 : rang d'habitation et
+   type de ville sur une RANGÉE 2 dans la même zone — grille 6
+   colonnes, rangée 1 = 3 cases de span 2, rangée 2 = 2 cases de
+   span 3 ; tout est de largeur régulière, plus d'espace vide.) */
+.ville-tete { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; align-items: end; }
 .ville-tete .field { margin-bottom: 0; }
 .ville-tete .field:first-child .input { font-weight: 700; }
-@media (max-width: 420px) { .ville-tete { grid-template-columns: 1fr; } }
+.ville-tete .field:nth-child(-n+3) { grid-column: span 2; }
+.ville-tete .field:nth-child(n+4) { grid-column: span 3; }
 
 /* Tête de carte ville avec BLOC BONHEUR en haut à droite (retour
    arbitre Thibaut 2026-10-25) : moyenne + 5 axes en mini-jauges.
-   Repli écran étroit : le bloc passe sous les champs (flex-wrap). */
-.ville-tete-wrap { display: flex; gap: 12px; align-items: flex-start; flex-wrap: wrap; }
-.ville-tete-wrap .ville-tete { flex: 1 1 320px; min-width: 0; }
-.bonheur-bloc { margin-left: auto; flex: 0 1 200px; min-width: 180px; }
+   Retour 2026-10-26, capture n°3 : le wrap devient une grille
+   1fr / auto — la colonne gauche (5 cases + habitants requis)
+   borde le bloc bonheur, plus d'espace vide sous les cases.
+   Repli écran étroit : tout en 1 colonne. */
+.ville-tete-wrap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+.bonheur-bloc { min-width: 180px; }
+@media (max-width: 560px) {
+  .ville-tete-wrap { grid-template-columns: 1fr; }
+  .ville-tete { grid-template-columns: 1fr; }
+  .ville-tete .field:nth-child(-n+3) { grid-column: auto; }
+  .ville-tete .field:nth-child(n+4) { grid-column: auto; }
+}
 .bonheur-moyen { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
 .bonheur-axe { display: flex; align-items: center; gap: 6px; font-size: 11px; line-height: 1.6; }
 .bonheur-axe-label { flex: 0 0 60px; color: var(--muted); }
