@@ -5,9 +5,10 @@
 //  type de ville en 2 colonnes égales sur la rangée 2 + ligne
 //  habitants requis (retour Thibaut 2026-10-26, capture n°3 :
 //  rang & type comblent l'espace vide sous les trois cases) + BLOC
-//  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) + ligne
-//  vivants (la culture vit dans le tableau, plus de doublon en
-//  tête — retour 2026-10-26) ; (2) POPULATION & GARNISON en 2
+//  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) — ni la culture
+//  NI le compte de vivants ne vivent en tête (retours Thibaut
+//  2026-10-26 : le tableau « Cultures présentes » porte la culture
+//  ET le total des vivants) ; (2) POPULATION & GARNISON en 2
 //  COLONNES
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
@@ -244,14 +245,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           )
         })()}
         </div>
-        <div className="muted small">
-          {nbVivants} habitant(s) vivant(s)
-          {/* (Retour Thibaut 2026-10-26 « on voit deux fois la
-              culture » : la culture n'est plus en tête — le tableau
-              « Cultures présentes » du bloc POPULATION & GARNISON
-              est LA place de la culture (majoritaire en gras avec
-              liseré) ; la tête ne garde que le compte de vivants.) */}
-        </div>
+        {/* (Retours Thibaut 2026-10-26 : « on voit deux fois la
+            culture » puis capture suivante « la mention N habitant(s)
+            vivant(s) est inutile au-dessus de Cultures présentes » —
+            la tête ne rend NI la culture NI le compte de vivants :
+            le tableau « Cultures présentes » du bloc POPULATION &
+            GARNISON est LA place de la culture (majoritaire en gras
+            avec liseré) ET du total des vivants (pied du tableau).) */}
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
 

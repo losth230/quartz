@@ -53,17 +53,15 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
       `stock ${r} du joueur 1 (${stock}) absent de la barre de ressources`,
     )
   }
-  // La carte de la capitale affiche le compte d'habitants vivants
-  // calculé depuis l'état (VilleCarte). (La culture majoritaire
-  //  n'est plus en tête depuis le retour 2026-10-26 « on voit
-  //  deux fois la culture » — le tableau « Cultures présentes »
-  //  la rend en gras, verrouillé par le test des 2 colonnes.)
-  const cap = p1.villes[0]
-  const nbVivants = (etat.population[1] ?? [])
-    .filter((c) => c.statut !== 'Décédé' && c.ville === cap.nom).length
+  // (Retour Thibaut 2026-10-26 « la mention "N habitant(s)
+  //  vivant(s)" est inutile au-dessus de Cultures présentes » :
+  //  le compte est retiré de la tête — le pied du tableau
+  //  « Cultures présentes » porte déjà le total des vivants
+  //  (verrouillé par le test des 2 colonnes). Cette assertion
+  //  négative verrouille le retrait de la ligne de tête.)
   assert.ok(
-    h.includes(`${String(nbVivants)} habitant(s) vivant(s)`),
-    `compte d'habitants vivants de ${cap.nom} (${nbVivants}) non rendu`,
+    !h.includes('habitant(s) vivant(s)'),
+    'la ligne « habitant(s) vivant(s) » ne doit plus être rendue en tête de carte',
   )
 })
 
