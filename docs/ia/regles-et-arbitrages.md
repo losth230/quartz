@@ -976,3 +976,50 @@ Garde), lignée nobleSeul = noble. Champ donnée, ne change rien
 **Chute** — par érosion naturelle du prestige (les conditions qui
 se dégradent l'usent ; à 0 le foyer retombe roturier). Journal
 des changements de rang (📈 bourgeoisie, 👑 noblesse, 📉 chutes).
+
+## La cour, le rang de naissance et les logements (arbitrages Thibaut, 2026-10-26)
+
+**Rang d'un personnage (rangDe)** — le rang affiché (colonne
+« Dynastie · Rang », page Population) tient compte de la NAISSANCE :
+- dynastie NOBLE → NOBLE DE NAISSANCE, quel que soit le prestige ;
+- dynastie roturière → rang du prestige (roturier < 100,
+  bourgeois ≥ 100, anobli ≥ 250).
+
+**300 prestige de base pour les nobles de naissance**
+(PRESTIGE_NOBLE_NAISSANCE) :
+- posé à la CRÉATION du personnage (setup — couple royal, fratrie,
+  enfants ; naissances — bébé de dynastie noble, bâtard noble
+  inclus ; familles nobles ajoutées en cours de partie, joueurs et
+  cités libres) ;
+- héritage avec PLANCHER : à l'âge adulte, un enfant de dynastie
+  noble ne peut pas hériter sous 300 (au-dessus, l'héritage normal
+  prime — 50 % de parents à 700+700 = 350) ;
+- 300 ≥ 250 → le noble de naissance est noble AUSSI par le
+  prestige : consommation Nourriture noble, hébergement prioritaire
+  dans l'ordre de service, score de mariage — sans règle spéciale.
+
+**La cour** (tableau supérieur de la page Population) — appartenance
+par RANG : nobles de naissance + roturiers anoblis par le prestige.
+La famille dirigeante y siège DÈS LE DÉPART. Le mariage manuel reste
+limité aux maisons de DYNASTIE noble (un anobli de dynastie
+roturière reste refusé — la question reste ouverte).
+
+**Colonnes du tableau population** — « Dynastie » et « Rang »
+FUSIONNÉES en une seule cellule : nom de dynastie + badge de rang +
+prestige en muted.
+
+**Logements** —
+- la CAPITALE démarre avec 8 PALAIS (à la place de la Maison de
+  notable du rang de départ) : servie la première dans l'ordre de
+  prestige décroissant, la famille dirigeante (nobles de naissance
+  à 300) y vit ;
+- les TYPES DE LOGEMENT (table domiciles : Taudis 0, Maison 1,
+  Auberge 2, Maison de notable 3, Palais 4) sont visibles dans les
+  Référentiels (onglet « Habitations ») et éditables dans les
+  Paramètres (onglet « Habitations ») ; la qualité 0-4 d'un logement
+  EST son gain de prestige par tour pour l'habitant logé.
+
+**Convention UI** (retour Thibaut 2026-10-26) — les textes de
+l'interface ne citent plus les arbitrages ni les retours de session :
+le contexte de design vit dans CE document (les tooltips de la page
+Population ont été nettoyés en conséquence).
