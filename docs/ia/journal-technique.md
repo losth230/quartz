@@ -3355,3 +3355,31 @@ Traitement :
 Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
 bougé).
+
+## Carte ville : retrait de la ligne « N habitant(s) vivant(s) » en tête (2026-10-26, 4e retour Thibaut)
+
+Constat : « la mention "53 habitant(s) vivant(s)" est inutile
+au-dessus de "Cultures présentes" » — redondante avec le pied du
+tableau Cultures présentes (ligne-total des vivants).
+
+Traitement :
+- VilleCarte.tsx : le div muted small « {nbVivants} habitant(s)
+  vivant(s) » est RETIRÉ de la tête (sous le bloc bonheur) ; le
+  commentaire sur place et le docblock d'en-tête sont mis à jour :
+  la tête ne rend NI la culture NI le compte de vivants — le
+  tableau « Cultures présentes » (bloc POPULATION & GARNISON)
+  porte la culture (majoritaire en gras + liseré) ET le total des
+  vivants (pied du tableau).
+- nbVivants reste utilisé par ailleurs : ligne « habitants
+  requis » (comparaison et affichage), part en % du tableau
+  garnison, pied du tableau cultures.
+- PlayerView.test.ts : l'assertion positive du test 1 (compte
+  rendu en tête) devient NÉGATIVE — la chaîne
+  « habitant(s) vivant(s) » ne doit plus apparaître du tout dans
+  le rendu (le pied du tableau garde son propre verrou, test des
+  2 colonnes). cap/nbVivants locaux retirés du test (plus
+  utilisés).
+
+Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
+bougé).
