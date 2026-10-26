@@ -543,7 +543,11 @@ function normaliserCultures(): CultureDef[] {
     nom: c.nom,
     heredite: c.heredite,
     homoAutorisee: c.homoAutorisee === true || c.homoAutorisee === 'true',
-    fertFactor: Number(c.fertFactor) || 1,
+    // (audit express 2026-10-26 : piège falsy-zéro — un futur
+    //  fertFactor 0 légal serait écrasé en 1 par `|| 1` (même
+    //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
+    //  s'applique qu'aux valeurs absentes ou non finies)
+    fertFactor: Number.isFinite(Number(c.fertFactor)) ? Number(c.fertFactor) : 1,
     reglePays: c.reglePays || '',
     reglePerso: c.reglePerso || '',
     capitalNourrParHabMonde: Number(c.capitalNourrParHabMonde) || undefined,

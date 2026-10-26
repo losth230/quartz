@@ -15,9 +15,9 @@
 //    · sans emploi        −2
 //    · sans domicile      −2
 //    · malade             −2
-//    · domicile           +0 à +4 selon le type (Masure 0, Maison 1,
+//    · domicile           +0 à +4 selon le type (Taudis 0, Maison 1,
 //                        Auberge 2, Maison de notable 3, Palais 4 —
-//                        i.e. la qualité 1-5 moins un)
+//                        la qualité 0-4 EST le gain)
 //    · métier             +2 si bourgeois, +5 si noble (roturier : 0)
 //    · +1 si bonheur de la ville > 50
 //
@@ -72,7 +72,7 @@ export function gainPrestigeTour(
   // malade
   if (c.statut === 'Malade') g -= 2
   // domicile : +0 à +4 — la QUALITÉ de la table domiciles EST le
-  //  gain (échelle 0-4, arbitrage Thibaut : Masure 0, Maison 1,
+  //  gain (échelle 0-4, arbitrage Thibaut : Taudis 0, Maison 1,
   //  Auberge 2, Maison de notable 3, Palais 4 — correctif du
   //  2026-10-24 : la table portait 1-5 avec une compensation -1
   //  ici, réalignée en donnée pure 0-4)

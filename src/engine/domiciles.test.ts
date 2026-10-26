@@ -1,6 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  TESTS DOMICILES — vagues A+C (design domiciles/ascension 2026-10-24)
-//   · table domiciles (qualité 1-5) + domicilesRang structuré du rang ;
+//   · table domiciles (qualité 0-4 : Taudis 0 → Palais 4) + domicilesRang structuré du rang ;
 //   · qualite des métiers (roturier/bourgeois/noble) ;
 //   · stock de la ville (City.domiciles) complété par normaliserEtat ;
 //   · foyers (couples + enfants mineurs) et attribution (meilleure

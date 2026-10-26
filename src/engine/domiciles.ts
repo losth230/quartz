@@ -47,7 +47,9 @@ export function domicileDef(nom: string | null | undefined, C: Cfg): { domicile:
   return C.config.domiciles.find((d) => d.domicile.toLowerCase() === n.toLowerCase())
 }
 
-/** Qualité d'un domicile (1-5 ; 0 = inconnu / sans domicile). */
+/** Qualité d'un domicile (échelle 0-4 : Taudis 0 → Palais 4 —
+ *  correctif échelle du 2026-10-25 ; 0 est une valeur LÉGALE, pas
+ *  seulement « inconnu » ; 0 aussi sans domicile). */
 export function qualiteDomicile(nom: string | null | undefined, C: Cfg): number {
   return domicileDef(nom, C)?.qualite ?? 0
 }
