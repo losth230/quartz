@@ -27,8 +27,10 @@ export interface GameParams {
    *  un noble vivant consomme consoNourrNoble Nourriture par tour. */
   consoNourrNoble: number
   /** (Arbitrage Thibaut 2026-10-26) — multiplicateur de production
-   *  du villageois selon son rang social : bourgeois ×prodMultBourgeois,
-   *  noble ×prodMultNoble, roturier ×1. */
+   *  du villageois selon son rang social : bourgeois ×prodMultBourgeois
+   *  (1,5), noble ×prodMultNoble (1 — le ×1,5 est RETIRÉ des nobles,
+   *  arbitrage corrigé du jour même : ils consomment 4 Nourriture),
+   *  roturier ×1. */
   prodMultBourgeois: number
   prodMultNoble: number
   gainsCrediteStock: number  // 1 = les gains de population créditent le stock
@@ -171,7 +173,7 @@ export const DEFAULT_PARAMS: GameParams = {
   consoNourrBourgeois: 2,
   consoNourrNoble: 4,
   prodMultBourgeois: 1.5,
-  prodMultNoble: 1.5,
+  prodMultNoble: 1,
   gainsCrediteStock: 1,
   fertBaseRate: 1.5,
   fertSingleFactor: 0.1,
@@ -269,7 +271,7 @@ export const PARAM_META: {
   { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
   { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },
   { key: 'prodMultBourgeois', label: 'Multiplicateur de production des bourgeois (rang)', groupe: 'Population', aide: 'La production du métier d\u2019un bourgeois vivant est multipliée par cette valeur (avant les taxes).' },
-  { key: 'prodMultNoble', label: 'Multiplicateur de production des nobles (rang)', groupe: 'Population' },
+  { key: 'prodMultNoble', label: 'Multiplicateur de production des nobles (rang)', groupe: 'Population', aide: 'CORRECTION du 2026-10-26 : le ×1,5 est retiré des nobles — ils consomment 4 Nourriture par tour et produisent ×1.' },
   { key: 'gainsCrediteStock', label: 'Gains de population crédités au stock (1 = oui)', groupe: 'Population' },
   { key: 'fertBaseRate', label: 'Fécondité de base (conception / tour)', groupe: 'Fécondité' },
   { key: 'fertSingleFactor', label: 'Facteur fécondité célibataire', groupe: 'Fécondité' },

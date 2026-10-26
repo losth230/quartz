@@ -361,7 +361,7 @@ test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, 
   assert.equal(avecTrouv.bonusTaxes['Tourisme'], undefined, 'aucun bonus sur une ressource non produite')
 })
 
-test('RANG SOCIAL (arbitrage Thibaut 2026-10-26) : bourgeois 2 Nourriture + production ×1,5 — noble 4 Nourriture + production ×1,5 — roturier base ×1', () => {
+test('RANG SOCIAL (arbitrage Thibaut 2026-10-26, CORRIGÉ du jour même : ×1,5 retiré des nobles) : bourgeois 2 Nourriture + ×1,5 — noble 4 Nourriture, ×1 — roturier base', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -378,13 +378,20 @@ test('RANG SOCIAL (arbitrage Thibaut 2026-10-26) : bourgeois 2 Nourriture + prod
   noble.prestige = 300 // noble     (250+)
   // helpers directs
   assert.equal(multProdRang(rotu, C), 1, 'roturier : ×1')
+  assert.equal(C.p.prodMultBourgeois, 1.5, 'verrou arbitrage : bourgeois ×1,5')
   assert.equal(multProdRang(bourg, C), C.p.prodMultBourgeois, 'bourgeois : ×1,5')
-  assert.equal(multProdRang(noble, C), C.p.prodMultNoble, 'noble : ×1,5')
+  assert.equal(C.p.prodMultNoble, 1, 'verrou CORRECTION : le ×1,5 est RETIRÉ des nobles — prodMultNoble = 1')
+  assert.equal(multProdRang(noble, C), 1, 'noble : ×1 (corrigé — plus de ×1,5)')
   assert.equal(consoNourrHabitant(rotu, C), C.p.consoNourrParHab, 'roturier : conso base')
   assert.equal(consoNourrHabitant(bourg, C), C.p.consoNourrBourgeois, 'bourgeois : 2 Nourriture')
   assert.equal(consoNourrHabitant(noble, C), C.p.consoNourrNoble, 'noble : 4 Nourriture')
-  // production brute : un bûcheron bourgeois produit ×1,5, un noble ×1,5
-  for (const [cible, mult] of [[bourg, C.p.prodMultBourgeois], [noble, C.p.prodMultNoble]] as const) {
+  // production brute : le bûcheron bourgeois produit ×1,5 — le noble
+  //  ×1 (×1,5 retiré, CORRECTION) : sa production est IDENTIQUE à la
+  //  base (le multiplicateur reste appliqué AVANT les taxes).
+  for (const [cible, mult, attendu] of [
+    [bourg, C.p.prodMultBourgeois, 'bourgeois ×1,5'],
+    [noble, C.p.prodMultNoble, 'noble ×1'],
+  ] as const) {
     state.population[p.n] = [rotu]
     invaliderIndexPopulation()
     const base = detailGainsVille(state, p, ville, C)
@@ -393,10 +400,10 @@ test('RANG SOCIAL (arbitrage Thibaut 2026-10-26) : bourgeois 2 Nourriture + prod
     const d = detailGainsVille(state, p, ville, C)
     for (const [res, v] of Object.entries(base.metiers)) {
       assert.ok(Math.abs(d.metiers[res] - v * mult) < 1e-9,
-        `${cible.prenom} : production ${res} ×${mult} (reçue ${d.metiers[res]}, base ${v})`)
+        `${cible.prenom} (${attendu}) : production ${res} ×${mult} (reçue ${d.metiers[res]}, base ${v})`)
     }
     assert.ok(Math.abs(d.taxes['Bois'] - base.taxes['Bois'] * mult) < 1e-9,
-      'le gain amplifié passe bien PAR les taxes (×1,5 avant, taxe ensuite)')
+      'le multiplicateur s\u2019applique AVANT les taxes (taxe sur le gain multiplié)')
   }
   // consommation par rang : 1 + 2 + 4 = 7 pour les trois ensemble
   state.population[p.n] = [rotu, bourg, noble]

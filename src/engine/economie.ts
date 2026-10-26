@@ -25,14 +25,16 @@ import { rangSocial, prestigeDe } from './statutSocial'
 //  dérivé du prestige (roturier < 100 ≤ bourgeois < 250 ≤ noble) :
 //    · roturier : conso consoNourrParHab (base 1), production ×1 ;
 //    · bourgeois : conso consoNourrBourgeois (2), production ×1,5 ;
-//    · noble : conso consoNourrNoble (4), production ×1,5.
+//    · noble : conso consoNourrNoble (4), production ×1 (CORRECTION
+//      du jour même 2026-10-26 : le ×1,5 est retiré des nobles).
 //  Le rang lu est celui du PRESTIGE (pas la qualité du métier) ; les
 //  mineurs, sans prestige propre, restent à la consommation de base.
 // ══════════════════════════════════════════════════════════════════════
 
 /** Multiplicateur de production d'un habitant selon son rang social
- *  (arbitrage Thibaut 2026-10-26) : bourgeois ×prodMultBourgeois,
- *  noble ×prodMultNoble, roturier ×1. S'applique à TOUTE la production
+ *  (arbitrage Thibaut 2026-10-26, corrigé du jour même) : bourgeois
+ *  ×prodMultBourgeois (1,5), noble ×prodMultNoble (1 — ×1,5 retiré),
+ *  roturier ×1. S'applique à TOUTE la production
  *  de métier du villageois (ressources 1/2 et bonus Ponton), AVANT le
  *  calcul des taxes (le gain amplifié est taxé comme les autres). */
 export function multProdRang(c: Character, C: Cfg): number {
