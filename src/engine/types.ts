@@ -132,8 +132,11 @@ export interface Character {
    *  tour (statutSocial.ts) : sans emploi -2, sans domicile -2,
    *  malade -2, domicile +0/+4 selon le type, métier +2 bourgeois /
    *  +5 noble, +1 si bonheur de la ville > 50. À l'âge adulte, un
-   *  enfant HÉRITE de 50 % du prestige moyen de ses parents. Rang
-   *  DÉRIVÉ : 0-100 roturier, 100-250 bourgeois, 250+ noble.
+   *  enfant HÉRITE de 50 % du prestige moyen de ses parents (un
+   *  enfant de dynastie NOBLE ne descend jamais sous 300 — base du
+   *  noble de naissance, retour Thibaut 2026-10-26). Rang DÉRIVÉ :
+   *  0-100 roturier, 100-250 bourgeois, 250+ noble ; les nobles de
+   *  NAISSANCE (dynastie noble) reçoivent 300 à leur création.
    *  Champ optionnel : absent des vieilles sauvegardes → 0
    *  (l'héritage des nouvelles générations fera le reste). */
   prestige?: number

@@ -132,6 +132,10 @@ test('attribuerDomicilesVille : les bâtiments les plus qualitatifs servent le H
   assert.ok(vivants.length >= 4, 'partie témoin assez peuplée')
   // un noble (prestige 300) et un bourgeois (120) ; le reste à 0
   for (const c of vivants) c.domicile = null
+  // (base 300 des nobles de naissance, retour Thibaut 2026-10-26 :
+  //  écrasée ici pour que SEULS vivants[0] et vivants[1] aient du
+  //  prestige — le test vérifie l'ORDRE de service, pas la base)
+  for (const c of vivants) c.prestige = 0
   vivants[0].prestige = 300
   vivants[1].prestige = 120
   // parc réduit : 1 Maison de notable (qualité 3) + 1 Maison (1)

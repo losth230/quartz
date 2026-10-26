@@ -34,6 +34,19 @@
 //  quel que soit son prestige — c'est ce rang que montrent la
 //  colonne Rang et la cour. Le prestige ne fait GRIMPER que les
 //  roturiers de dynastie : bourgeois à 100, anobli à 250.
+//
+//  PRESTIGE DE BASE D'UN NOBLE DE NAISSANCE (retour Thibaut
+//  2026-10-26, suite : « un noble de naissance doit avoir 300
+//  prestige de base ») : PRESTIGE_NOBLE_NAISSANCE = 300, posé à la
+//  CRÉATION du personnage (setup — couple royal, fratrie, enfants ;
+//  naissances — bébé de dynastie noble ; ajouts manuels de familles
+//  nobles, joueurs et cités libres). Conséquence : 300 ≥ 250, le
+//  noble de naissance est noble AUSSI par le prestige — les
+//  mécaniques qui lisent le prestige (consommation Nourriture,
+//  production, hébergement, score de mariage) le traitent en noble
+//  dès le tour 1, sans règle spéciale. À l'âge adulte, l'héritage
+//  d'un enfant de dynastie noble ne peut pas le faire descendre
+//  sous sa base (max(300, héritage)).
 //  (un enfant roturier héritant de 50 % de deux parents nobles à
 //   250+ naît bourgeois — il devra faire ses preuves pour la noblesse.)
 //
@@ -70,6 +83,15 @@ export function rangDe(c: Character, C: Cfg): RangSocial {
   if (isNobleDyn(c.dynastie, C)) return 'noble'
   return rangSocial(prestigeDe(c))
 }
+
+/** PRESTIGE DE BASE d'un noble de NAISSANCE (retour Thibaut
+ *  2026-10-26 : « un noble de naissance doit avoir 300 prestige de
+ *  base ») : posé à la création du personnage (setup, naissances,
+ *  familles nobles ajoutées) et garanti au sol par l'héritage.
+ *  300 ≥ 250 : le noble de naissance est noble aussi par le
+ *  prestige — les mécaniques (conso/prod, hébergement, mariage)
+ *  le traitent en noble dès le tour 1 sans règle spéciale. */
+export const PRESTIGE_NOBLE_NAISSANCE = 300
 
 /** Prestige d'un personnage (0 par défaut — vieilles sauvegardes). */
 export function prestigeDe(c: Character): number {
@@ -235,6 +257,14 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
       heritage = Math.round((prestigeDe(mere) + prestigeDe(pere)) / 2 * 0.5)
     } else {
       heritage = Math.round(prestigeDe((mere ?? pere)!) * 0.5)
+    }
+    // (retour Thibaut 2026-10-26 : « un noble de naissance doit avoir
+    //  300 prestige de base ») : un enfant de DYNASTIE NOBLE ne peut
+    //  pas hériter sous sa base de naissance — le plancher 300 tient,
+    //  l'héritage ne le relève que si les parents ont fait mieux
+    //  (ex. 50 % de 700+700 = 350+).
+    if (isNobleDyn(c.dynastie, C)) {
+      heritage = Math.max(PRESTIGE_NOBLE_NAISSANCE, heritage)
     }
     c.prestige = heritage
     c.prestigeHerite = heritage

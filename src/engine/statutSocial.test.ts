@@ -87,12 +87,23 @@ test('evaluerFamilles : un foyer bien loti accumule du prestige tour après tour
   const { state, p, C } = partieTemoin()
   initStockVille(p.villes[0], C)
   attribuerDomicilesVille(state, p, p.villes[0], C)
-  // tour 1 : tout le monde part de 0, tous ont domicile+metier
+  // tour 1 : les roturiers partent de 0, tous ont domicile+metier
   evaluerFamilles(state, p, C)
   const vivants = (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé')
-  // personne n'est encore bourgeois (prestige d'un tour ≈ +2-5 max)
-  assert.ok(vivants.every((c) => prestigeDe(c) < 100), 'pas de bourgeois après 1 tour')
-  assert.ok(vivants.some((c) => prestigeDe(c) > 0), 'du prestige accumulé')
+  // (300 de base pour les nobles de naissance, retour Thibaut
+  //  2026-10-26) : côté ROTURIERS personne n'est encore bourgeois
+  //  (prestige d'un tour ≈ +2-5 max)
+  const roturiers = vivants.filter((c) => !isNobleDyn(c.dynastie, C))
+  assert.ok(roturiers.length > 0, 'des roturiers dans la partie témoin')
+  assert.ok(roturiers.every((c) => prestigeDe(c) < 100), 'pas de bourgeois par le prestige après 1 tour')
+  assert.ok(roturiers.some((c) => prestigeDe(c) > 0), 'du prestige accumulé chez les roturiers')
+  // et les nobles de naissance tournent autour de leur base 300
+  const nobles = vivants.filter((c) => isNobleDyn(c.dynastie, C))
+  assert.ok(nobles.length >= 2, 'la famille dirigeante au setup (couple royal au minimum)')
+  assert.ok(
+    nobles.every((c) => prestigeDe(c) >= 280),
+    `les nobles de naissance restent sur leur base 300 (trouvé ${nobles.map((c) => prestigeDe(c)).join(', ')})`,
+  )
 })
 
 test('evaluerFamilles : convergence des couples (prestige familial partagé)', () => {
@@ -144,26 +155,69 @@ test('evaluerFamilles : un roturier qui franchit 100 journalise toujours son acc
   assert.equal(rangDe(rot, C), 'bourgeois')
 })
 
-test('evaluerFamilles : héritage 50 % du prestige moyen des parents, une seule fois', () => {
+test('setup : tout noble de NAISSANCE reçoit 300 prestige de base (retour Thibaut 2026-10-26)', () => {
+  const { state, C } = partieTemoin()
+  let nobles = 0
+  for (const [, pop] of Object.entries(state.population)) {
+    for (const c of pop) {
+      if (isNobleDyn(c.dynastie, C)) {
+        nobles++
+        assert.equal(prestigeDe(c), 300, `${fullName(c)} : noble de naissance → 300 de base (trouvé ${prestigeDe(c)})`)
+      }
+    }
+  }
+  assert.ok(nobles >= 16, `des nobles de naissance au setup des 8 joueurs (trouvé ${nobles})`)
+})
+
+test('evaluerFamilles : héritage 50 % du prestige moyen des parents, une seule fois (roturier de dynastie)', () => {
   const { state, p, C } = partieTemoin()
   const pop = state.population[p.n] ?? []
-  // un enfant mineur avec parents à prestige 200 et 100
-  const mere = pop.find((c) => c.mereId && c.statut !== 'Décédé' && c.age >= C.p.adultAge)
-  const enfant = mere ? pop.find((c) => c.mereId === mere.id && c.age < C.p.adultAge) : undefined
-  const pere = enfant?.pereId ? pop.find((c) => c.id === enfant.pereId) : undefined
-  if (!enfant || !mere) return // skip si la partie témoin n'a pas ce cas
-  mere.prestige = 200
-  if (pere) pere.prestige = 100
-  // l'enfant grandit : il devient adulte
-  enfant.age = C.p.adultAge
+  // parents DÉCÉDÉS (l'héritage est posthume et les défunts ne
+  //  convergent pas ni ne gagnent de prestige) et ROTURIERS
+  const mere = perso({ id: 'm2', dynastie: C.p.dynastieRoturier, prestige: 200, statut: 'Décédé' })
+  const pere = perso({ id: 'p2', dynastie: C.p.dynastieRoturier, prestige: 100, statut: 'Décédé' })
+  const enfant = perso({
+    id: 'e2', dynastie: C.p.dynastieRoturier, age: C.p.adultAge,
+    mereId: 'm2', pereId: 'p2',
+    metier: C.p.metierChasseur, domicile: 'Maison',
+  })
+  pop.push(mere, pere, enfant)
   evaluerFamilles(state, p, C)
   // héritage : 50 % de la moyenne (200+100)/2 = 75
-  const attendu = pere ? 75 : 100
-  assert.equal(enfant.prestige, attendu, `héritage 50 % de la moyenne (attendu ${attendu})`)
+  assert.equal(enfant.prestige, 75, `héritage 50 % de la moyenne (trouvé ${enfant.prestige})`)
+  assert.equal(enfant.prestigeHerite, 75, 'marqueur prestigeHerite posé')
   // rejouer : pas de double héritage (marqueur prestigeHerite)
   const avant = enfant.prestige
   evaluerFamilles(state, p, C)
   assert.ok(enfant.prestige >= avant, 'pas de perte à la relecture')
+})
+
+test('evaluerFamilles : héritage d’un enfant de dynastie NOBLE — plancher 300 de base (retour Thibaut 2026-10-26)', () => {
+  const { state, p, C } = partieTemoin()
+  const pop = state.population[p.n] ?? []
+  // parents nobles à 200 et 100 (SOUS la base) : l'enfant noble de
+  //  naissance ne peut pas hériter sous 300
+  const mere = perso({ id: 'm3', dynastie: 'Valmont', prestige: 200, statut: 'Décédé' })
+  const pere = perso({ id: 'p3', dynastie: 'Valmont', prestige: 100, statut: 'Décédé' })
+  const enfant = perso({
+    id: 'e3', dynastie: 'Valmont', age: C.p.adultAge,
+    mereId: 'm3', pereId: 'p3',
+    metier: C.p.metierChasseur, domicile: 'Maison',
+  })
+  pop.push(mere, pere, enfant)
+  evaluerFamilles(state, p, C)
+  assert.equal(enfant.prestige, 300, `plancher du noble de naissance (trouvé ${enfant.prestige})`)
+  assert.equal(enfant.prestigeHerite, 300, 'marqueur prestigeHerite posé')
+  // et si le parent a fait mieux que la base, l'héritage la dépasse :
+  //  50 % d'un seul parent à 700 = 350
+  const mere2 = perso({ id: 'm4', dynastie: 'Montclair', prestige: 700, statut: 'Décédé' })
+  const enfant2 = perso({
+    id: 'e4', dynastie: 'Montclair', age: C.p.adultAge, mereId: 'm4',
+    metier: C.p.metierChasseur, domicile: 'Maison',
+  })
+  pop.push(mere2, enfant2)
+  evaluerFamilles(state, p, C)
+  assert.equal(enfant2.prestige, 350, `50 % d'un seul parent à 700 (trouvé ${enfant2.prestige})`)
 })
 
 test('runTurn complet : le statut social tourne sans crash et journalise les changements', () => {

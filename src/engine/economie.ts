@@ -29,12 +29,15 @@ import { rangSocial, prestigeDe } from './statutSocial'
 //      du jour même 2026-10-26 : le ×1,5 est retiré des nobles).
 //  Le rang lu est celui du PRESTIGE (pas la qualité du métier) ; les
 //  mineurs, sans prestige propre, restent à la consommation de base.
-//  ⚠ ARBITRAGE EN SUSPENS (2026-10-26, retour Thibaut « des nobles
-//  dès le début ») : ce rang MÉCANIQUE (conso/prod) reste fondé sur
-//  le PRESTIGE seul — un noble de NAISSANCE (rangDe, dynastie noble)
-//  consomme/produit comme un roturier tant que son prestige < 100.
-//  Faire suivre la conso au rang de naissance changerait l'équilibre
-//  (famille dirigeante ×4 Nourriture dès le tour 1) : à arbitrer.
+//  (RÉSOLU 2026-10-26, retour Thibaut : « un noble de naissance doit
+//  avoir 300 prestige de base » — PRESTIGE_NOBLE_NAISSANCE, posé à
+//  la création) : le rang MÉCANIQUE reste fondé sur le prestige seul
+//  MAIS un noble de naissance part de 300 ≥ 250 → il est noble AUSSI
+//  par le prestige dès le tour 1 : consoNourrNoble (4), prodMultNoble,
+//  hébergement et score de mariage le traitent en noble sans règle
+//  spéciale. L'incohérence « affiché noble, traité roturier » est
+//  close ; seule une CHUTE du prestige sous 250 y rouvrirait l'écart
+//  (affichage rangDe : noble, mécanique : selon le prestige).
 // ══════════════════════════════════════════════════════════════════════
 
 /** Multiplicateur de production d'un habitant selon son rang social

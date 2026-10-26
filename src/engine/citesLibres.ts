@@ -33,6 +33,7 @@ import { makeRng } from './rng'
 import { cfgOf, peupleDef, metierDef, type Cfg } from './gameData'
 import { rangPaysNiveau } from './factions'
 import { isNobleDyn, perteDemenagement } from './shared'
+import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { resynchroniserTourisme } from './regimes'
 import { routesCommerceVersCite } from './commerce'
 import { consoNourrHabitant } from './economie'
@@ -313,6 +314,10 @@ function ajouterCiteLibre(
       fecondite: 0,
       armee: null,
     }
+    // nouvelle famille noble = nobles de NAISSANCE : 300 de base
+    //  (retour Thibaut 2026-10-26) — clé posée seulement pour les
+    //  nobles (le format compact omet la clé sinon)
+    if (noble) c.prestige = PRESTIGE_NOBLE_NAISSANCE
     pop.push(c)
     ajoutes++
   }

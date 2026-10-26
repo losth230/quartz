@@ -11,6 +11,7 @@ import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
 import { bump, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
 import { killCharacter } from './sante'
+import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
 
 
@@ -172,11 +173,19 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
   const batard = mere.enfantBatard
   const consanguin = isConsanguineous(mere, pere)
   for (let i = 0; i < nb; i++) {
+    // (retour Thibaut 2026-10-26 : un noble de NAISSANCE a 300
+    //  prestige de base — posé dès la naissance quand la dynastie
+    //  du bébé est noble ; à l'âge adulte l'héritage ne peut pas
+    //  le faire descendre sous ce plancher)
+    const dyn = computeBabyDynasty(state, p, mere, pere, batard, rng)
     const enfant: Character = {
       id: newId(rng),
       nom: mere.nom,
       prenom: pickName(state, p, rng, undefined),
-      dynastie: computeBabyDynasty(state, p, mere, pere, batard, rng),
+      dynastie: dyn,
+      // (clé posée seulement pour les bébés nobles — le format
+      //  compact de sauvegarde omet prestige sinon)
+      ...(isNobleDyn(dyn, C) ? { prestige: PRESTIGE_NOBLE_NAISSANCE } : {}),
       sexe: rng.pickWeighted(C.genres, (g) => g.poids).nom === 'Masculin' ? 'M' : 'F',
       age: 0,
       culture: mere.culture,

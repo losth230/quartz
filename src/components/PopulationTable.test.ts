@@ -69,12 +69,21 @@ test('rendu PopulationTable : la cour commence NOBLE (rang de naissance) et accu
   const popTot = etat.population[1] ?? []
   const pop1 = popTot.filter((c) => c.statut !== 'Décédé')
   assert.ok(pop1.length > 2, 'population témoin trop courte')
+  // (retour Thibaut 2026-10-26 : « un noble de naissance doit avoir
+  //  300 prestige de base ») : les nobles de naissance sont sur leur
+  //  base 300 (± 2 tours de gains) ; côté ROTURIERS personne n'a
+  //  encore 100+ par l'ascension après 2 tours.
+  const roturiersDeDynastie = popTot.filter((c) => c.dynastie === C.p.dynastieRoturier)
   assert.ok(
-    popTot.every((c) => (c.prestige ?? 0) < 100),
-    '2 tours : personne n’a encore le rang par le prestige',
+    roturiersDeDynastie.every((c) => (c.prestige ?? 0) < 100),
+    '2 tours : aucun roturier n’a encore le rang par le prestige',
   )
   const noblesNaissance = pop1.filter((c) => rangDe(c, C) === 'noble')
   assert.ok(noblesNaissance.length >= 2, `des nobles de naissance dès le départ (trouvé ${noblesNaissance.length})`)
+  assert.ok(
+    noblesNaissance.every((c) => (c.prestige ?? 0) >= 280),
+    `nobles de naissance sur leur base 300 (trouvé ${noblesNaissance.map((c) => c.prestige ?? 0).join(', ')})`,
+  )
   // Graver l’ascension sur deux ROTURIERS de dynastie : un anobli
   //  (300) et un bourgeois (150) — ils rejoignent la cour par le
   //  prestige, en plus des nobles de naissance.

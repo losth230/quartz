@@ -20,6 +20,7 @@ import { Select, Button, fmt } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { STATUTS } from './logiquePopulation'
 import { rangDe } from '../../engine/statutSocial'
+import { isNobleDyn } from '../../engine/shared'
 
 export interface PropsLignePersonnage {
   c: Character
@@ -48,11 +49,12 @@ export function LignePersonnage({
   return (
     <tr key={c.id} className={c.statut === 'Décédé' ? 'dead' : (c.metier === C.p.metierDirigeant || c.metier === C.p.metierHeritierStr) ? 'lead' : ''}>
       <td><strong>{c.prenom} {c.nom}</strong></td>
-      <td className="small" title={`Dynastie ${c.dynastie} — prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${rangDe(c, C) === 'noble' && (c.prestige ?? 0) < 250 ? ' · NOBLE DE NAISSANCE (dynastie noble — retour Thibaut 2026-10-26 : des nobles dès le début)' : ' · dynastie roturière : le rang suit le prestige (roturier sous 100, bourgeois 100-250, anobli 250+)'}`}>
+      <td className="small" title={`Dynastie ${c.dynastie} — prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${isNobleDyn(c.dynastie, C) ? ' · NOBLE DE NAISSANCE (dynastie noble — 300 prestige de base, retour Thibaut 2026-10-26)' : ' · dynastie roturière : le rang suit le prestige (roturier sous 100, bourgeois 100-250, anobli 250+)'}`}>
         {/* Colonnes FUSIONNÉES (retour Thibaut 2026-10-26 : « fusionner
             la colonne dynastie et la colonne rang ») : la dynastie et
             son rang côte à côte — le rang suit la dynastie de
-            naissance, le prestige reste en muted pour le détail. */}
+            naissance (nobles : 300 prestige de base), le prestige
+            reste en muted pour le détail. */}
         <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
           <span>{c.dynastie}</span>
           <span className={`badge ${rangDe(c, C) === 'noble' ? 'badge-info' : rangDe(c, C) === 'bourgeois' ? 'badge-neutral' : ''}`}>
