@@ -836,7 +836,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           <Button
             title="La ville quitte le joueur et devient une cité libre — il reçoit 1 émissaire placé dans cette cité"
             onClick={() => {
-              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité (retour Thibaut).`)) return
+              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité.`)) return
               update((st) => {
                 const src = st.players.find((x) => x.n === joueur)
                 if (src) villeDevientCiteLibre(st, src, idx)
