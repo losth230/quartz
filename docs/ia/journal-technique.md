@@ -3657,3 +3657,41 @@ et Merveilles hors fiche, non touchés).
 Validation : 168/168 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (les villes fraîches du
 diag n'ont aucun bâtiment).
+
+## Ligne ville : 3e tableau Logements (retour Thibaut 2026-10-26)
+
+Base a22c1861. Retour Thibaut : « sur la ligne des
+tableaux des cultures et garnisons, réduit les tableaux
+pour ajouter les logements ».
+
+La ligne POPULATION & GARNISON de la carte ville
+(VilleCarte.tsx, classe .ville-duo-cols) passe en 3
+COLONNES égales : Cultures présentes (inchangé),
+Garnison des habitations (inchangé), et un NOUVEAU
+tableau « Logements ». CSS : grid 1fr 1fr 1fr, repli
+2 colonnes sous 860px puis 1 colonne sous 560px.
+
+Tableau Logements — tout DÉRIVÉ du moteur (patron R3,
+aucun calcul dupliqué dans le composant) :
+- capacité par type = stock du rang (City.domiciles,
+  repli stockRang si état non normalisé) + apports des
+  constructions (domicilesApportesVille : Poste de
+  garde/Caserne +10 Taudis, Bas quartier +20, quartiers,
+  Tour de sorcier…) ;
+- occupés = foyers attribués (foyersDeVille, un foyer =
+  un logement, les enfants mineurs suivent) ;
+- ordre : meilleure qualité d'abord ; colonnes type ·
+  occupés/capacité · libres ; ligne « sans logement »
+  en rouge si des foyers restent dehors ; pied « Foyers
+  logés » occ/capacité + libres totaux ; infobulle du
+  titre explique les conventions.
+
+Tests : PlayerView.test — le verrou « population &
+garnison en 2 colonnes » devient « population, garnison
+& logements en 3 colonnes » : titre Logements avec la
+capacité totale attendue et chaque ligne occ/capacité
+re-calculée depuis l'état (patron R3). 168/168 natifs,
+18/18 rendu (12 fichiers), tsc strict 0 erreur, diag
+IDENTIQUE (le diag ne rend pas la page Pays).
+
+Fichiers : VilleCarte.tsx, styles.css, PlayerView.test.ts.
