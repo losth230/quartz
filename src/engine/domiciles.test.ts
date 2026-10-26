@@ -15,7 +15,9 @@ import { migrerEtat } from './migrations'
 import {
   domicileDef, qualiteDomicile, stockRang, totalLogementsVille,
   foyersDeVille, attribuerDomicilesVille, initStockVille,
+  taudisApportesVille,
 } from './domiciles'
+import { constructionRef, resumeConstruction } from './constructions'
 import type { GameState, Player, City } from './types'
 
 function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
@@ -193,4 +195,52 @@ test('audit merge : vieille partie tamponnée (v4) sans stock — attribution r�
   const loges = attribuerDomicilesVille(state, p, ville, C)
   assert.ok(loges > 0, `l'attribution initialise le stock et loge (${loges})`)
   assert.ok(Array.isArray(ville.domiciles), 'stock posé par défense en profondeur')
+})
+
+// ── Fiche aménagements 3 tiers (retour Thibaut 2026-10-26) ────────────
+
+test('fiche aménagements : Taudis apportés — cumul sur les aménagements de la ville', () => {
+  const { ville, C } = partieTemoin()
+  // Champ = 5 Taudis, Baleinier = aucun (null dans le référentiel)
+  ville.amenagements = ['Champ', 'Champ', 'Baleinier']
+  assert.equal(taudisApportesVille(ville, C), 10, '5 + 5 + 0')
+  // le tier 2 en remplace un de base : 5 + 8
+  ville.amenagements = ['Champ', 'Champ (tier 2)']
+  assert.equal(taudisApportesVille(ville, C), 13, '5 + 8')
+})
+
+test('fiche aménagements : Scierie tier 2 — 2 Tisseurs (correction fiche 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  const ref = constructionRef('Scierie (tier 2)', C.config)
+  assert.ok(ref, 'Scierie tier 2 dans le référentiel')
+  assert.equal(ref.taudisApportes, 8)
+  const emp = ref.emplacements ?? []
+  const tisseur = emp.find((e) => e.metier === 'Tisseur')
+  const bucheron = emp.find((e) => e.metier === 'Bûcheron')
+  assert.equal(tisseur?.places, 2, '2 emplacements de Tisseur (fiche, ex-1)')
+  assert.equal(bucheron?.places, 4, '4 emplacements de Bûcheron')
+})
+
+test('fiche aménagements : Mine d\'Or — 1 Marchand = 2 Commerçants (arbitrage Thibaut 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  // le Marchand étant retiré du jeu, ses emplacements sont remplacés
+  //  par le DOUBLE de Commerçants : 3→6, 7→14, 12→24.
+  for (const [tier, attendu] of [[1, 6], [2, 14], [3, 24]] as const) {
+    const nom = tier === 1 ? "Mine d'Or" : `Mine d'Or (tier ${tier})`
+    const ref = constructionRef(nom, C.config)
+    assert.ok(ref, `${nom} dans le référentiel`)
+    const commercants = (ref.emplacements ?? []).find((e) => e.metier === 'Commerçant')
+    assert.equal(commercants?.places, attendu, `${nom} : ${attendu} Commerçants`)
+  }
+})
+
+test('fiche aménagements : resumeConstruction affiche les Taudis (retour Thibaut 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  // Le résumé est LA source affichée partout (picker Aménager/Améliorations,
+  //  lignes de carte, Constructions) : les Taudis y sont désormais visibles.
+  assert.ok(resumeConstruction(constructionRef('Champ', C.config)).includes('+5 Taudis'),
+    'Champ : « +5 Taudis » dans le résumé')
+  const scierie2 = resumeConstruction(constructionRef('Scierie (tier 2)', C.config))
+  assert.ok(scierie2.includes('+8 Taudis'), 'Scierie tier 2 : « +8 Taudis »')
+  assert.ok(scierie2.includes('2 tisseur'), 'Scierie tier 2 : 2 tisseurs dans le résumé')
 })

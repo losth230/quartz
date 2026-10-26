@@ -2564,13 +2564,13 @@
       "nom": "Mine d'Or",
       "terrain": "Or",
       "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Commerçant, 5 Taudis",
-      "description": "Ses emplacements de Marchand ont disparu avec le métier (retiré du jeu).",
+      "production": "6 emplacements de Commerçant, 5 Taudis",
+      "description": "Emplacements de Marchand remplacés par le double de Commerçants (2 pour 1, arbitrage Thibaut 2026-10-26).",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 3
+          "places": 6
         }
       ],
       "taudisApportes": 5
@@ -3070,13 +3070,13 @@
       "nom": "Mine d'Or (tier 2)",
       "terrain": "Or",
       "cout": "15 Or + 3 Pierre",
-      "production": "7 emplacements de Commerçant, 8 Taudis",
+      "production": "14 emplacements de Commerçant, 8 Taudis",
       "description": "Améliore Mine d'Or en tier 2.",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 7
+          "places": 14
         }
       ],
       "rangMinHabitation": 2,
@@ -3090,13 +3090,13 @@
       "nom": "Mine d'Or (tier 3)",
       "terrain": "Or",
       "cout": "35 Or + 3 Fer",
-      "production": "12 emplacements de Commerçant, 10 Taudis",
+      "production": "24 emplacements de Commerçant, 10 Taudis",
       "description": "Améliore Mine d'Or en tier 3.",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 12
+          "places": 24
         }
       ],
       "rangMinHabitation": 3,
@@ -3230,7 +3230,7 @@
       "nom": "Scierie (tier 2)",
       "terrain": "Forêt",
       "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Bûcheron, 1 emplacements de Tisseur, 8 Taudis",
+      "production": "4 emplacements de Bûcheron, 2 emplacements de Tisseur, 8 Taudis",
       "description": "Améliore Scierie en tier 2.",
       "effets": [],
       "emplacements": [
@@ -3240,7 +3240,7 @@
         },
         {
           "metier": "Tisseur",
-          "places": 1
+          "places": 2
         }
       ],
       "rangMinHabitation": 2,

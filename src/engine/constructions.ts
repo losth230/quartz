@@ -231,6 +231,10 @@ export function resumeConstruction(ref: ConstructionRef | undefined): string {
   if (emp.length > 0) {
     parts.push(emp.map((e) => `${e.places} ${e.metier.toLowerCase()}`).join(', '))
   }
+  // Retour Thibaut 2026-10-26 (fiche aménagements) : les Taudis apportés par
+  // un aménagement doivent être visibles dans le résumé, pas seulement dans
+  // la description textuelle du référentiel.
+  if (ref.taudisApportes) parts.push(`+${ref.taudisApportes} Taudis`)
   return parts.join(' · ')
 }
 
