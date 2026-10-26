@@ -99,9 +99,10 @@ export interface HabitationDef {
    *  l'ancien TEXTE « metiersDisponibles » est converti par la
    *  migration ciblée de cfgOf, puis la clé disparaît). */
   metiersBase: EmplacementDef[]
-  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
-   *  historique conservé pour l'affichage de repli ; la donnée vit
-   *  dans `domicilesRang` (vague A, design domiciles 2026-10-24). */
+  /** domiciles disponibles, ex. « 50 Taudis, 1 Maison de notable »
+   *  — TEXTE d'affichage ; la donnée vit
+   *  dans `domicilesRang` (vague A, design domiciles 2026-10-24 ;
+   *  fiche habitations 2026-10-26). */
   domicilesDisponibles: string
   /** domiciles du rang STRUCTURÉS (vague A, 2026-10-24) :
    *  [{domicile: 'Maison', nombre: 50}, …] — 1 domicile = 1 logement.
@@ -828,7 +829,7 @@ export function realignerAmenagements(
 /** Table des types d'habitation (Ville / Château) d'une configuration
  *  existante — défauts du classeur si absents ou vides. */
 /** Parse le format de SAISIE TEXTE des métiers de base d'un rang
- *  (« 50 Chasseurs, 2 Gardes » — colonne historique du classeur, champ
+ *  (« 40 Chasseurs, 2 Gardes » — colonne historique du classeur, champ
  *  d'édition des Référentiels) en tableau STRUCTURÉ `metiersBase`
  *  (retour Thibaut 2026-10-23 : métiers TOUJOURS AU SINGULIER — un
  *  « s » final est retiré). Les entrées non reconnues dans

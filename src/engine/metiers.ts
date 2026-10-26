@@ -286,7 +286,8 @@ export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.confi
 //  Vague 3b (rangs & bâtiments de tier 1, arbitrage 2026-10-22) : les
 //  caps sont CUMULATIVES — cap d'un métier = BASE DU RANG
 //  d'habitation (colonne « Métiers disponibles », ex. Hameau :
-//  50 Chasseurs, 2 Gardes, 1 Commerçant, 1 Gouverneur) + EMPLACEMENTS
+//  40 Chasseurs — fiche habitations 2026-10-26, ex-50 —, 2 Gardes,
+//  1 Commerçant, 1 Gouverneur) + EMPLACEMENTS
 //  des bâtiments ET aménagements présents (Poste de garde : +4 Garde…).
 //  Les paramètres capMetierChasseur* sont supprimés (le cas spécial
 //  Chasseur disparaît). Un capParVille déclaré au référentiel
@@ -372,7 +373,7 @@ export function capMetierVille(
   const td = metierDef(metier, C.config)
   if (td?.capParVille !== undefined) return td.capParVille + empl
   // Vague 3b : cap CUMULATIVE = base du RANG d'habitation
-  //  (« Métiers disponibles » du rang — Hameau : 50 Chasseurs,
+  //  (« Métiers disponibles » du rang — Hameau : 40 Chasseurs,
   //  2 Gardes, 1 Commerçant, 1 Gouverneur…) + emplacements des
   //  bâtiments/aménagements.
   const base = metiersDisponiblesRang(ville, C)[metier] ?? 0

@@ -49,15 +49,15 @@ test('domicileDef / qualiteDomicile : lookup nom-insensible à la casse', () => 
   assert.ok(domicileDef('Auberge', C))
 })
 
-test('stockRang : Hameau = 50 Maisons + 10 Auberges (données converties)', () => {
+test('stockRang : Hameau = 50 Taudis + 1 Maison de notable (fiche habitations 2026-10-26)', () => {
   const { C } = partieTemoin()
   const stock = stockRang('Ville', 'Hameau', C)
-  const maison = stock.find((e) => e.domicile === 'Maison')
-  const auberge = stock.find((e) => e.domicile === 'Auberge')
-  assert.ok(maison, 'des Maisons au Hameau')
-  assert.equal(maison?.nombre, 50)
-  assert.equal(auberge?.nombre, 10)
-  assert.equal(stock.reduce((a, e) => a + e.nombre, 0), 60)
+  const taudis = stock.find((e) => e.domicile === 'Taudis')
+  const notable = stock.find((e) => e.domicile === 'Maison de notable')
+  assert.ok(taudis, 'des Taudis au Hameau')
+  assert.equal(taudis?.nombre, 50)
+  assert.equal(notable?.nombre, 1, '1 Maison de notable au Hameau')
+  assert.equal(stock.reduce((a, e) => a + e.nombre, 0), 51)
 })
 
 test('qualite des métiers : catégories arbitrees (aménagement→roturier, bâtiment→bourgeois, cour→noble)', () => {
@@ -91,11 +91,11 @@ test('initStockVille : le rang DÉFINIT l\'offre (écrase le stock)', () => {
   const { ville, C } = partieTemoin()
   initStockVille(ville, C)
   const total1 = totalLogementsVille(ville)
-  assert.equal(total1, 60) // Hameau : 50 + 10
+  assert.equal(total1, 51) // Hameau : 50 Taudis + 1 Maison de notable
   // on change le rang : le stock suit
   ville.rang = 'Cité'
   initStockVille(ville, C)
-  assert.equal(totalLogementsVille(ville), 150) // Cité : 100 + 50
+  assert.equal(totalLogementsVille(ville), 121) // Cité : 100 + 20 + 1
 })
 
 test('foyersDeVille : couples + enfants mineurs (partition sans doublon)', () => {
@@ -121,14 +121,18 @@ test('attribuerDomicilesVille : loge tout le monde si stock suffisant (meilleure
   initStockVille(ville, C)
   const loges = attribuerDomicilesVille(state, p, ville, C)
   const foyers = foyersDeVille(state, p.n, ville, C)
-  assert.equal(loges, foyers.length, 'tous les foyers logés (60 logements > foyers)')
+  assert.equal(loges, foyers.length, 'tous les foyers logés (51 logements > foyers)')
   // chaque foyer a un domicile connu
   for (const f of foyers) {
     assert.ok(f.domicile, `foyer de ${f.chef.prenom} sans domicile`)
-    assert.ok(qualiteDomicile(f.domicile, C) > 0, `domicile inconnu : ${f.domicile}`)
+    assert.ok(domicileDef(f.domicile, C), `domicile inconnu : ${f.domicile}`)
     assert.equal(f.conjoint?.domicile ?? f.domicile, f.domicile, 'le conjoint partage le domicile')
   }
-  // les Maisons (qualité 2) d'abord, pas les Masures (la table du rang n'en a pas de toute façon)
+  // (fiche habitations 2026-10-26 : le stock du Hameau est 50 Taudis
+  //  + 1 Maison de notable — l'attribution donne la MEILLEURE
+  //  qualité d'abord (la Maison de notable part la première), les
+  //  foyers suivants sont logés en Taudis : qualité 0 LÉGALE, plus
+  //  l'ancien « > 0 » qui la rejetait.)
 })
 
 test('attribuerDomicilesVille : stock insuffisant → foyers sans domicile, pas de surbooking', () => {

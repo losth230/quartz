@@ -5,8 +5,9 @@
 //  Arbitrages actés :
 //   · vague 3b (rangs & bâtiments tier 1, 2026-10-22) : caps
 //     CUMULATIVES — cap d'un métier = BASE DU RANG d'habitation
-//     (colonne « Métiers disponibles », ex. Hameau : 50 Chasseurs,
-//     2 Gardes, 1 Commerçant, 1 Gouverneur) + EMPLACEMENTS des
+//     (colonne « Métiers disponibles », ex. Hameau : 40 Chasseurs,
+//     2 Gardes, 1 Commerçant, 1 Gouverneur — fiche habitations
+//     2026-10-26) + EMPLACEMENTS des
 //     bâtiments ET aménagements ; les paramètres capMetierChasseur*
 //     sont supprimés ;
 //   · Garde/Commerçant/Gouverneur : plafonnés par la base du rang ;
@@ -72,7 +73,7 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   const ville: City = { ...p.villes[0] }
   ville.type = 'Ville'
   ville.amenagements = []
-  assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 50, 'cap de BASE du rang Hameau : 50 Chasseurs')
+  assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 40, 'cap de BASE du rang Hameau : 40 Chasseurs (fiche habitations 2026-10-26, ex-50)')
   ville.type = 'Château'
   ville.rang = 'Motte'
   assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 40, 'cap de BASE du rang Motte : 40 Chasseurs')
@@ -80,7 +81,7 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 20, 'cap de BASE du rang Donjon : 20 Chasseurs')
   // vague 3a : une Scierie ajoute 2 emplacements de Chasseur et 2 de Bûcheron
   const scierie: City = { ...p.villes[0], type: 'Ville', amenagements: ['Scierie'] }
-  assert.equal(capMetierVille(C.p.metierChasseur, scierie, C), 52, 'Chasseur : cap défaut 50 + 2 emplacements de la Scierie')
+  assert.equal(capMetierVille(C.p.metierChasseur, scierie, C), 42, 'Chasseur : cap défaut 40 + 2 emplacements de la Scierie')
   assert.equal(capMetierVille('Bûcheron', scierie, C), 2, 'Bûcheron : 2 emplacements (Scierie)')
   assert.equal(capMetierVille('Bûcheron', ville, C), 0, 'métier productif sans aménagement : cap 0')
   // Marchand RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut) : titre
@@ -236,7 +237,7 @@ test('occupationsMetierVille (vague 3a) : emplacements par aménagement, métier
   const chasseur = lignes.find((l) => l.metier === C.p.metierChasseur)
   assert.ok(chasseur, 'Chasseur listé (plafonné → toujours affiché, même à 0)')
   assert.equal(chasseur!.enPoste, 3, '3 Chasseurs en poste')
-  assert.equal(chasseur!.cap, 50, 'cap Ville 50 (aucun emplacement Chasseur ici)')
+  assert.equal(chasseur!.cap, 40, 'cap Ville 40 (aucun emplacement Chasseur ici ; fiche habitations 2026-10-26)')
   // (l'ex-Marchand de ce test est remplacé par un Fermier le
   //  2026-10-24 : le métier de Marchand est retiré du jeu — le
   //  Fermier occupe la même niche de métier productif plafonné par
@@ -612,7 +613,7 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
   const scierie3: City = { ...p.villes[0], type: 'Ville', rang: 'Hameau', batiments: [], amenagements: ['Scierie (tier 3)'] }
   assert.equal(capMetierVille('Bûcheron', scierie3, C), 6, 'Scierie (tier 3) : 6 emplacements de Bûcheron')
   assert.equal(capMetierVille('Tisseur', scierie3, C), 2, 'Scierie (tier 3) : 2 emplacements de Tisseur')
-  assert.equal(capMetierVille(C.p.metierChasseur, scierie3, C), 50, 'tier 3 seul : la base du Chasseur du rang Hameau (50), sans les +2 du tier 1 remplacé')
+  assert.equal(capMetierVille(C.p.metierChasseur, scierie3, C), 40, 'tier 3 seul : la base du Chasseur du rang Hameau (40), sans les +2 du tier 1 remplacé')
   // Champ amélioré en tier 2 : +6 Fermier (les 3 du tier 1 ont disparu).
   const champ2: City = { ...p.villes[0], type: 'Ville', rang: 'Hameau', batiments: [], amenagements: ['Champ (tier 2)'] }
   assert.equal(capMetierVille('Fermier', champ2, C), 6, 'Champ (tier 2) : 6 emplacements de Fermier (tier 1 remplacé)')

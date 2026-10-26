@@ -5,9 +5,11 @@
 //    · Ville     : Hameau → Cité (120 hab.) → Grande Cité (200 hab.) ;
 //    · Château   : Motte  → Donjon (120 hab.) → Forteresse (200 hab.).
 //  Vague 3b (arbitrage 2026-10-22) : chaque rang définit les MÉTIERS
-//  disponibles à la base (cap de base, ex. Hameau : 50 Chasseurs,
-//  2 Gardes, 1 Commerçant, 1 Gouverneur) et les DOMICILES
-//  disponibles (affichage seul pour l'instant). La consommation par
+//  disponibles à la base (cap de base, ex. Hameau : 40 Chasseurs,
+//  2 Gardes, 1 Commerçant, 1 Gouverneur — fiche habitations
+//  2026-10-26) et les DOMICILES disponibles (le TEXTE sert
+//  à l'affichage ; la DONNÉE vit dans domicilesRang, vague A
+//  2026-10-24). La consommation par
 //  tour et la garnison de base des rangs sont SUPPRIMÉES : la
 //  garnison vient des Gardes en poste (regimes.ts, vague 3a) —
 //  (nettoyage 2026-10-22, retour Thibaut : les no-ops qui restaient

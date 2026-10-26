@@ -73,7 +73,7 @@ export function CarteMetiersPlaces({
       </div>
       <p className="muted small">
         Vague 3b — caps CUMULATIVES : cap d'un métier = BASE DU RANG d'habitation
-        (colonne « Métiers disponibles », ex. Hameau : 50 Chasseurs, 2 Gardes,
+        (colonne « Métiers disponibles », ex. Hameau : 40 Chasseurs, 2 Gardes,
         1 Commerçant, 1 Gouverneur) + EMPLACEMENTS des bâtiments et aménagements de
         la ville (ex. Poste de garde : +4 Garde). Les métiers sans base, sans
         emplacement et non productifs (Banquier, Troubadour, Dirigeant/Héritier,

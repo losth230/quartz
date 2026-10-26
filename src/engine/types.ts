@@ -164,8 +164,9 @@ export interface AutreDef {
  *  chaque ville est de type Ville (Hameau → Cité → Grande Cité) ou
  *  Château (Motte → Donjon → Forteresse). Chaque rang a un coût
  *  d'amélioration, un nombre d'habitants requis, les métiers
- *  disponibles à la base (ex. « 50 Chasseurs, 2 Gardes, 1 Commerçant,
- *  1 Gouverneur » — cap de BASE du rang, vague 3b) et les domiciles
+ *  disponibles à la base (ex. « 40 Chasseurs, 2 Gardes, 1 Commerçant,
+ *  1 Gouverneur » — cap de BASE du rang, vague 3b ; fiche
+ *  habitations 2026-10-26) et les domiciles
  *  disponibles (affichage seul pour l'instant). Arbitrage vague 3b
  *  (2026-10-22) : plus NI consommation par tour NI garnison de base
  *  — les Garnisons viennent des Gardes en poste. Table paramétrable
@@ -183,9 +184,10 @@ export interface HabitationDef {
    *  l'ancien TEXTE « metiersDisponibles » est converti une bonne fois
    *  pour toutes par la migration ciblée de cfgOf). */
   metiersBase: Array<{ metier: string; places: number }>
-  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
-   *  HISTORIQUE conservé pour l'affichage de repli ; la donnée
-   *  vit désormais dans `domicilesRang` (vague A, 2026-10-24). */
+  /** domiciles disponibles, ex. « 50 Taudis, 1 Maison de notable »
+   *  — TEXTE d'affichage (wiki, éditeur, log de rang) ; la donnée
+   *  vit désormais dans `domicilesRang` (vague A, 2026-10-24 ;
+   *  fiche habitations 2026-10-26). */
   domicilesDisponibles: string
   /** domiciles du rang au format STRUCTURÉ (vague A, design
    *  domiciles 2026-10-24) : [{domicile: 'Maison', nombre: 50}, …].
