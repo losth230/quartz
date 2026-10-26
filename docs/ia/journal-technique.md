@@ -3459,3 +3459,26 @@ Validation : 158/158 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (partie fraîche : personne
 n'atteint 100 de prestige en 4 tours — le rang de prestige ne
 change rien aux sorties du diag).
+
+## Correction immédiate : ×1,5 RETIRÉ des nobles (2026-10-26)
+
+« Je me suis trompé, retire le ×1,5 des nobles. » — le multiplica-
+teur de production reste pour les BOURGEOIS (×1,5) mais les
+NOBLES produisent ×1 (ils conservent leur consommation de
+4 Nourriture par tour).
+
+Traitement :
+- params.ts : prodMultNoble passe de 1,5 à 1 (le paramètre reste
+  éditable dans l'onglet Paramètres, avec une aide retraçant la
+  correction) ; docblocks réalignés.
+- economie.ts : docblocks d'en-tête et de multProdRang corrigés
+  (noble ×prodMultNoble = 1). Le code moteur est inchangé — il
+  lit déjà le paramètre, seule la valeur d'arbitrage bouge.
+- metiers.test.ts : le test du rang social verrouille désormais la
+  correction — assert prodMultNoble = 1, production d'un Bûcheron
+  noble IDENTIQUE à la base, et verrou du prodMultBourgeois = 1,5.
+  Conso inchangée (roturier 1 / bourgeois 2 / noble 4, mineur base).
+
+Validation : 158/158 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (la partie fraîche du diag n'a
+ni bourgeois ni nobles : aucun impact).
