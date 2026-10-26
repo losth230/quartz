@@ -202,6 +202,20 @@ export interface ConstructionRef {
    *  Champ optionnel : absent = 0. Comptés par le facteur Logement
    *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
   taudisApportes?: number
+  /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
+   *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
+   *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de
+   *  notable — les TAUDIS passent par taudisApportes). Champ
+   *  optionnel : absent = aucun. Comptés par le facteur Logement du
+   *  bonheur (bonheur.ts, domicilesApportesVille). */
+  domicilesApportes?: Array<{ domicile: string; nombre: number }>
+  /** Bâtiment remplacé par cette construction (fiche bâtiments rang 2,
+   *  2026-10-26 : Silo à grain → Grange, Moulin à vent ← Silo à grain,
+   *  Ecole intermédiaire → Ecole élémentaire, Guilde des artisans de
+   *  la terre → Moulin à vent). Champ de DONNÉE pour la mécanique
+   *  d'amélioration des bâtiments (à venir) — la description fait foi
+   *  en attendant. */
+  remplaceBatiment?: string
   /** Effets STRUCTURÉS (marqueur (s)) — source du moteur quand présents ;
    *  sinon repli sur l'analyse du texte exact (anciennes configs). */
   effets?: EffetConstruction[]
@@ -1600,8 +1614,24 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  (tier 2)… remplaceAmenagement) — le filtre ne retire plus QUE
   //  les BÂTIMENTS de rang ≥ 2, qui restent supprimés. Les merveilles
   //  et aménagements de rang 2+ passent à nouveau.)
+  //  (RÉACTIVATION TOTALE, fiche bâtiments rang 2, 2026-10-26 : les
+  //  BÂTIMENTS de rang 2 reviennent au référentiel (Caserne, Réseau
+  //  de routes, Tour de sorcier, Ecole militaire, quartiers, Silo à
+  //  grain, Moulin à vent, ports, Clinique, Cabinet d'astronomie,
+  //  Chapelle, Ecole intermédiaire, guildes — 25 entrées). Les configs
+  //  sauvegardées AVANT portaient les VIEILLES valeurs des bâtiments
+  //  rang 2 supprimés (la complétion ne remplace jamais un nom
+  //  connu) : PURGE de tous les bâtiments rang ≥ 2, puis
+  //  RÉINJECTION de ceux du RÉFÉRENTIEL courant — les nouvelles
+  //  valeurs de la fiche font foi, sans doublon possible.
+  //  Idempotent.)
   merged.constructions = (merged.constructions ?? []).filter(
-    (c) => (c.rangMinHabitation ?? 0) < 2 || c.categorie === 'Aménagement',
+    (c) => !((c.rangMinHabitation ?? 0) >= 2 && c.categorie === 'Bâtiment'),
+  )
+  merged.constructions.push(
+    ...DEFAULT_CONFIG.constructions.filter(
+      (c) => (c.rangMinHabitation ?? 0) >= 2 && c.categorie === 'Bâtiment',
+    ),
   )
   const resultat: Cfg = {
     p: merged.params,

@@ -97,7 +97,7 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
   const C = cfgOf(undefined)
   const refs = C.config.constructions ?? []
   assert.ok(refs.length > 30,
-    'référentiel constructions attendu (41 entrées de rang 1 après la simplification 2026-10-23 : rangs 2+ supprimés)')
+    'référentiel constructions attendu (94 entrées après la fiche bâtiments rang 2, 2026-10-26)')
   const regles = reglesConstructions(C)
   assert.equal(regles.length, refs.filter((r) => r.effets?.length).length)
   const parNom = new Map(regles.map((r) => [r.nom, r]))
@@ -147,9 +147,9 @@ test('SANS règle de banque : production NULLE sur tous les canaux (repli texte 
 })
 
 test('Tourisme = FLUX NORMAL via la banque (Hôtel de tourisme +12 : ni instantané, ni stock cumulé)', () => {
-  // (la Chapelle est partie avec les constructions de rang 2+,
-  //  simplification 2026-10-23 — l'Hôtel de tourisme, rang 1, la remplace
-  //  comme témoin du Tourisme-flux.)
+  // (la Chapelle, rang 2, est DE RETOUR au référentiel depuis la
+  //  fiche bâtiments 2026-10-26 — l'Hôtel de tourisme, rang 1,
+  //  reste le témoin du Tourisme-flux.)
   const refs = cfgOf(undefined).config.constructions ?? []
   const hotel = refs.find((r) => r.nom === 'Hôtel de tourisme')
   assert.ok(hotel?.effets?.length, 'l Hôtel de tourisme doit avoir des effets structurés')

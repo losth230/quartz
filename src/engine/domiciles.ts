@@ -68,19 +68,33 @@ export function totalLogementsVille(ville: City): number {
   return (ville.domiciles ?? []).reduce((acc, e) => acc + e.nombre, 0)
 }
 
-/** TAUDIS apportés par les AMÉNAGEMENTS de la ville (fiches
- *  2026-10-25 : chaque aménagement construit ajoute ses Taudis au
- *  parc de logements — tier 1 : 5, tier 2 : 8, tier 3 : 10, sauf
- *  Baleinier et Bâteau de pêche). Les noms d'aménagements des
- *  vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
- *  la lecture est par nom de construction dans le référentiel. */
-export function taudisApportesVille(ville: City, C: Cfg): number {
-  let total = 0
-  for (const nom of ville.amenagements ?? []) {
+/** Domiciles apportés au parc de logements d'une ville par ses
+ *  CONSTRUCTIONS (AMÉNAGEMENTS et BÂTIMENTS — fiche bâtiments rang 2,
+ *  2026-10-26) : Taudis (taudisApportes) et autres types
+ *  (domicilesApportes : Maisons, Maisons de notable). Agrégat par type ;
+ *  les noms des vieilles sauvegardes peuvent porter le suffixe
+ *  « (tier N) » — la lecture est par nom de construction dans le
+ *  référentiel. */
+export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
+  const total = new Map<string, number>()
+  for (const nom of [...(ville.amenagements ?? []), ...(ville.batiments ?? [])]) {
     const ref = C.config.constructions.find((c) => c.nom === nom)
-    total += ref?.taudisApportes ?? 0
+    if (!ref) continue
+    if (ref.taudisApportes) total.set('Taudis', (total.get('Taudis') ?? 0) + ref.taudisApportes)
+    for (const e of ref.domicilesApportes ?? []) {
+      total.set(e.domicile, (total.get(e.domicile) ?? 0) + e.nombre)
+    }
   }
-  return total
+  return [...total.entries()].map(([domicile, nombre]) => ({ domicile, nombre }))
+}
+
+/** TAUDIS apportés par les constructions de la ville (canal Taudis
+ *  de domicilesApportesVille — fiches aménagements 2026-10-25 : tier
+ *  1 = 5, tier 2 = 8, tier 3 = 10, sauf Baleinier et Bâteau de
+ *  pêche ; fiche bâtiments 2026-10-26 : Poste de garde/Caserne +10,
+ *  Bas quartier +20). */
+export function taudisApportesVille(ville: City, C: Cfg): number {
+  return domicilesApportesVille(ville, C).find((e) => e.domicile === 'Taudis')?.nombre ?? 0
 }
 
 // ── Foyers ────────────────────────────────────────────────────────────

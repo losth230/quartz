@@ -231,10 +231,24 @@ export function resumeConstruction(ref: ConstructionRef | undefined): string {
   if (emp.length > 0) {
     parts.push(emp.map((e) => `${e.places} ${e.metier.toLowerCase()}`).join(', '))
   }
+  // Fiche bâtiments rang 1 (retour Thibaut 2026-10-26) : l'Herboristerie
+  //  n'accueille plus de Guérisseur — ses effets ±5% maladie sont
+  //  structurés (malContraction / bonusGuerison) et s'affichent dans le
+  //  résumé pour que le picker ne retombe pas sur la description du
+  //  classeur (périmée).
+  if (ref.malContraction) parts.push(`+${Math.round(ref.malContraction * 100)}% chances de maladie`)
+  if (ref.bonusGuerison) parts.push(`+${Math.round(ref.bonusGuerison * 100)}% guérison`)
   // Retour Thibaut 2026-10-26 (fiche aménagements) : les Taudis apportés par
   // un aménagement doivent être visibles dans le résumé, pas seulement dans
   // la description textuelle du référentiel.
   if (ref.taudisApportes) parts.push(`+${ref.taudisApportes} Taudis`)
+  // Fiche bâtiments rang 2 (2026-10-26) : les AUTRES domiciles apportés
+  //  (Maisons, Maisons de notable) s'affichent pareil (pluriel sur le
+  //  premier mot : « +20 Maisons de notable »).
+  for (const e of ref.domicilesApportes ?? []) {
+    const nom = e.nombre > 1 ? e.domicile.replace(/^(\S+)/, (m) => `${m}s`) : e.domicile
+    parts.push(`+${e.nombre} ${nom}`)
+  }
   return parts.join(' · ')
 }
 

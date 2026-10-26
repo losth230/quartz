@@ -122,8 +122,9 @@ test('registre : le chemin moteur EST la banque (voie unique de production)', ()
     void tourismeBanque
   }
   assert.ok(verifiees > 5, `trop peu de règles vérifiées contre le moteur (${verifiees})`)
-  // (simplification 2026-10-23 : les constructions de rang 2+ sont
-  //  retirées du référentiel, il reste 11 constructions à effets).
+  // (fiche bâtiments rang 2, 2026-10-26 : les constructions de rang
+  //  2+ sont DE RETOUR au référentiel — Moulin à vent, Guilde des
+  //  artisans… consomment des ressources par effets).
 })
 
 test('doublons Ville/Château : le moteur rend les effets de la BONNE version (bug réel)', () => {

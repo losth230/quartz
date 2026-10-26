@@ -144,8 +144,11 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
   //  ne retire plus que les BÂTIMENTS de rang ≥ 2)
   assert.ok(C.config.constructions.some((x) => x.nom === 'Baleinier (tier 2)'),
     'fiches 2026-10-25 : les tiers 2 d aménagements sont au référentiel')
-  assert.ok(!C.config.constructions.some((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2),
-    'simplification maintenue : aucun BÂTIMENT de rang ≥ 2')
+  // (fiche bâtiments rang 2, 2026-10-26 : les BÂTIMENTS rang 2 sont
+  //  de retour au référentiel — la réactivation suit la même voie
+  //  que les tiers d'aménagements 2026-10-25)
+  assert.ok(C.config.constructions.some((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2),
+    'fiche bâtiments 2026-10-26 : les bâtiments rang 2 sont au référentiel')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon aménagement perso'),
     'un aménagement perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 4, 'tampon v4 apposé')
@@ -280,23 +283,22 @@ test('config : la mécanique d éducation est retirée — table educations abse
     're-lecture : toujours absentes')
 })
 
-// ── Simplification (retour Thibaut 2026-10-23) : bâtiments et
-//    aménagements de rang ≥ 2 retirés, MÊME des configs monde
-//    sauvegardées avant (« je vois encore le Moulin à vent ») ────
+// ── Fiche bâtiments rang 2 (retour Thibaut 2026-10-26) : les
+//    bâtiments rang ≥ 2 sont DE RETOUR — les configs monde
+//    sauvegardées avant sont RESYNCÉES sur le référentiel ──────
 
-test('config : les BÂTIMENTS rang >= 2 sont retirés, les AMÉNAGEMENTS tiers 2/3 passent (fiches 2026-10-25)', () => {
+test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées sur le référentiel (fiche bâtiments 2026-10-26)', () => {
   const c = cloneDefaultConfig()
-  // fiches 2026-10-25 : les aménagements tiers 2/3 sont DE RETOUR
-  //  (rangMinHabitation 2-3, catégorie Aménagement) ; les bâtiments
-  //  de rang ≥ 2 restent absents (simplification maintenue).
-  assert.ok(c.constructions.some((x) => x.categorie === 'Aménagement' && (x.rangMinHabitation ?? 0) >= 2),
-    'fiches 2026-10-25 : les tiers d aménagements sont au référentiel')
-  assert.ok(c.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
-    'les défauts ne portent AUCUN bâtiment de rang ≥ 2')
-  // une config monde SAUVEGARDÉE AVANT la simplification garde les
-  //  rangs 2/3 (la complétion n'ajoute que les manquantes, elle ne
-  //  retire jamais les disparues) :
-  c.schemaVersion = 4 // déjà convergée : le filtre joue quand même
+  // fiche bâtiments 2026-10-26 : les 23 bâtiments rang 2 (Caserne,
+  //  Réseau de routes, Tour de sorcier, quartiers, ports, guildes…)
+  //  sont au référentiel — répartis Ville et Château.
+  const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
+  assert.equal(rang2defs.length, 23, `23 bâtiments rang 2 attendus au référentiel (trouvé ${rang2defs.length})`)
+  // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
+  //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
+  //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL
+  //  courant — jamais de doublon.
+  c.schemaVersion = 4 // déjà convergée : la purge joue quand même
   c.constructions.push({
     categorie: 'Bâtiment', groupe: 'Ville', famille: 'Economique',
     nom: 'Moulin à vent', cout: '40 Bois',
@@ -306,14 +308,19 @@ test('config : les BÂTIMENTS rang >= 2 sont retirés, les AMÉNAGEMENTS tiers 2
     rangMinHabitation: 2,
   })
   const C = cfgOf(c)
-  assert.ok(!C.config.constructions.some((x) => x.nom === 'Moulin à vent'),
-    'rangMinHabitation 2 (BÂTIMENT) : le « Moulin à vent » est retiré par cfgOf')
-  assert.ok(C.config.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
-    'aucun BÂTIMENT rang ≥ 2 ne survit à la convergence (les aménagements passent)')
-  // idempotence : la re-lecture d une config déjà filtrée est stable
+  const moulins = C.config.constructions.filter((x) => x.nom === 'Moulin à vent' && x.categorie === 'Bâtiment')
+  assert.equal(moulins.length, 1,
+    'le Moulin à vent revient en UN seul exemplaire (le vieux est purgé, le référentiel réinjecté)')
+  assert.deepEqual(moulins[0].effets, [{ ressource: 'Charbon', quantite: -1 }],
+    'les effets sont ceux du RÉFÉRENTIEL (resync), pas ceux de la vieille config')
+  assert.equal(moulins[0].cout, 'Silo à grain requis, 15 Or + 4 Bois + 4 Bétail', 'coût de la fiche')
+  // tous les bâtiments rang 2 du référentiel passent la convergence
+  const rang2C = C.config.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
+  assert.equal(rang2C.length, rang2defs.length, 'ni perdus, ni doublés par la convergence')
+  // idempotence : la re-lecture d une config déjà resyncée est stable
   const C2 = cfgOf(C.config)
   assert.equal(C2.config.constructions.length, C.config.constructions.length,
-    're-lecture : le filtre ne retire rien de plus (idempotent)')
+    're-lecture : la purge/réinjection est idempotente')
 })
 
 // ── Retrait intégral des règles de factions + textes « Ministre »

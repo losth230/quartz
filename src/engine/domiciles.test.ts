@@ -15,9 +15,9 @@ import { migrerEtat } from './migrations'
 import {
   domicileDef, qualiteDomicile, stockRang, totalLogementsVille,
   foyersDeVille, attribuerDomicilesVille, initStockVille,
-  taudisApportesVille,
+  taudisApportesVille, domicilesApportesVille,
 } from './domiciles'
-import { constructionRef, resumeConstruction } from './constructions'
+import { constructionRef, resumeConstruction, prerequisConstruction } from './constructions'
 import type { GameState, Player, City } from './types'
 
 function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
@@ -247,4 +247,79 @@ test('fiche aménagements : resumeConstruction affiche les Taudis (retour Thibau
   const scierie2 = resumeConstruction(constructionRef('Scierie (tier 2)', C.config))
   assert.ok(scierie2.includes('+8 Taudis'), 'Scierie tier 2 : « +8 Taudis »')
   assert.ok(scierie2.includes('2 tisseur'), 'Scierie tier 2 : 2 tisseurs dans le résumé')
+})
+
+// ── Fiche bâtiments rang 1 + 2 (retour Thibaut 2026-10-26) ─────────────
+
+test('fiche bâtiments : Taudis apportés par les BÂTIMENTS (Poste de garde + Bas quartier)', () => {
+  const { ville, C } = partieTemoin()
+  ville.batiments = ['Poste de garde', 'Bas quartier']
+  assert.equal(taudisApportesVille(ville, C), 30, '10 + 20')
+  // rang 2 : la Caserne cumule pareil
+  ville.batiments = ['Poste de garde', 'Caserne']
+  assert.equal(taudisApportesVille(ville, C), 20, '10 + 10')
+})
+
+test('fiche bâtiments : domicilesApportesVille — Maisons et Maisons de notable', () => {
+  const { ville, C } = partieTemoin()
+  // Quartier intermédiaire +20 Maisons, Haut quartier +20 Maisons de
+  //  notable (Château, rang 2) — cumul par type de domicile.
+  ville.batiments = ['Quartier intermédiaire', 'Haut quartier']
+  assert.deepEqual(domicilesApportesVille(ville, C), [
+    { domicile: 'Maison', nombre: 20 },
+    { domicile: 'Maison de notable', nombre: 20 },
+  ])
+  // Tour de sorcier : +1 Maison de notable, +1 Scientifique (lui
+  //  aussi lu par la carte, pas ici)
+  const tour = constructionRef('Tour de sorcier', C.config)
+  assert.deepEqual(tour?.domicilesApportes, [{ domicile: 'Maison de notable', nombre: 1 }])
+})
+
+test('fiche bâtiments : resumeConstruction affiche les domiciles apportés (pluriel)', () => {
+  const { C } = partieTemoin()
+  const quart = resumeConstruction(constructionRef('Quartier intermédiaire', C.config))
+  assert.ok(quart.includes('+20 Maisons'), '« +20 Maisons » (pluriel)')
+  const haut = resumeConstruction(constructionRef('Haut quartier', C.config))
+  assert.ok(haut.includes('+20 Maisons de notable'), '« +20 Maisons de notable »')
+  const tour = resumeConstruction(constructionRef('Tour de sorcier', C.config))
+  assert.ok(tour.includes('+1 Maison de notable'), '« +1 Maison de notable » (singulier)')
+})
+
+test('fiche bâtiments : prérequis rang 2 lus depuis le champ coût (« X requis »)', () => {
+  const { C } = partieTemoin()
+  assert.equal(prerequisConstruction(constructionRef('Caserne', C.config)), 'Poste de garde')
+  assert.equal(prerequisConstruction(constructionRef('Ecole militaire', C.config)), "Terrain d'entrainement")
+  assert.equal(prerequisConstruction(constructionRef('Clinique', C.config)), 'Herboristerie')
+  // le remplacement n'est PAS un prérequis : Silo à grain remplace la
+  //  Grange via le champ dédié (pas de « requis » dans le coût)
+  assert.equal(prerequisConstruction(constructionRef('Silo à grain', C.config)), null)
+  assert.equal(constructionRef('Silo à grain', C.config)?.remplaceBatiment, 'Grange')
+})
+
+test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudis', () => {
+  const { C } = partieTemoin()
+  for (const g of ['Ville', 'Château']) {
+    const ref = C.config.constructions.find((c) => c.nom === 'Caserne' && c.groupe === g)
+    assert.ok(ref, `Caserne ${g} dans le référentiel`)
+    assert.equal(ref?.rangMinHabitation, 2, `${g} : rang 2`)
+    assert.equal(ref?.taudisApportes, 10, `${g} : +10 Taudis`)
+    assert.deepEqual((ref?.emplacements ?? []).find((e) => e.metier === 'Garde'), { metier: 'Garde', places: 4 })
+  }
+})
+
+test('fiche bâtiments : l\'Herboristerie (rang 1) n\'accueille plus de Guérisseur — la Clinique (rang 2) en accueille 5', () => {
+  const { C } = partieTemoin()
+  const herb = constructionRef('Herboristerie', C.config)
+  assert.ok(herb, 'Herboristerie au référentiel')
+  assert.equal(herb?.emplacements, undefined, 'plus d\'emplacements : uniquement ±5% maladie')
+  assert.equal(herb?.malContraction, 0.05)
+  assert.equal(herb?.bonusGuerison, 0.05)
+  const clin = constructionRef('Clinique', C.config)
+  assert.ok(clin, 'Clinique au référentiel')
+  assert.equal(clin?.rangMinHabitation, 2)
+  assert.deepEqual((clin?.emplacements ?? []).find((e) => e.metier === 'Guérisseur'), { metier: 'Guérisseur', places: 5 })
+  // le résumé de l'Herboristerie reste STRUCTURÉ (effets ±5%) pour que
+  //  le picker ne retombe pas sur la description du classeur
+  assert.ok(resumeConstruction(herb).includes('+5% guérison'),
+    'Herboristerie : « +5% guérison » dans le résumé structuré')
 })

@@ -2062,8 +2062,8 @@
       "famille": "Militaire",
       "nom": "Poste de garde",
       "cout": "25 Or + 4 Fer",
-      "production": "",
-      "description": "+4 emplacements de Garde.",
+      "production": "+4 emplacements de Garde, +10 Taudis.",
+      "description": "+4 emplacements de Garde, +10 Taudis.",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
@@ -2071,7 +2071,8 @@
           "metier": "Garde",
           "places": 4
         }
-      ]
+      ],
+      "taudisApportes": 10
     },
     {
       "categorie": "Bâtiment",
@@ -2161,17 +2162,11 @@
       "famille": "Economique",
       "nom": "Herboristerie",
       "cout": "10 Or + 2 Pierre",
-      "production": "+1 emplacement de Guérisseur.",
+      "production": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
-      "bonusGuerison": 0.05,
-      "emplacements": [
-        {
-          "metier": "Guérisseur",
-          "places": 1
-        }
-      ]
+      "bonusGuerison": 0.05
     },
     {
       "categorie": "Bâtiment",
@@ -2192,12 +2187,257 @@
     },
     {
       "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Bas quartier",
+      "cout": "10 Bois + 10 Or",
+      "production": "+20 Taudis.",
+      "description": "+20 Taudis.",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "taudisApportes": 20
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Caserne",
+      "cout": "Poste de garde requis, 25 Or + 4 Fer",
+      "production": "+4 emplacements de Garde, +10 Taudis.",
+      "description": "+4 emplacements de Garde, +10 Taudis.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Réseau de routes",
+      "cout": "15 Or + 4 Soie",
+      "production": "Les cases de l'enceinte ne coûtent qu'1 point de mouvement (PM) à franchir.",
+      "description": "Les cases de l'enceinte ne coûtent qu'1 point de mouvement (PM) à franchir.",
+      "effets": [],
+      "rangMinHabitation": 2
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Tour de sorcier",
+      "cout": "40 Or + 12 Pierre",
+      "production": "+1 emplacement de Scientifique, +1 Maison de notable.",
+      "description": "Téléportation d'armée entre Tours de sorcier amies (1 Or par case, 1 PM). +1 emplacement de Scientifique, +1 Maison de notable.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Quartier intermédiaire",
+      "cout": "20 Or + 10 Pierre",
+      "production": "+20 Maisons.",
+      "description": "+20 Maisons.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Camp de travailleurs",
+      "cout": "Camp de bûcheron requis, 10 Or + 4 Pierre",
+      "production": "+2 emplacements de Bûcheron, +2 emplacements de Mineur.",
+      "description": "Camp de bûcheron ou de mineur requis. +2 emplacements de Bûcheron, +2 emplacements de Mineur.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Bûcheron",
+          "places": 2
+        },
+        {
+          "metier": "Mineur",
+          "places": 2
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Silo à grain",
+      "cout": "20 Or + 8 Bois",
+      "production": "+3 emplacements d'Éleveur, +7 emplacements de Fermier.",
+      "description": "Remplace la Grange. +3 emplacements d'Éleveur, +7 emplacements de Fermier.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 3
+        },
+        {
+          "metier": "Fermier",
+          "places": 7
+        }
+      ],
+      "remplaceBatiment": "Grange"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Moulin à vent",
+      "cout": "Silo à grain requis, 15 Or + 4 Bois + 4 Bétail",
+      "production": "Consomme 1 Charbon par tour. +4 emplacements d'Éleveur, +15 emplacements de Fermier.",
+      "description": "Silo à grain requis. Consomme 1 Charbon par tour. +4 emplacements d'Éleveur, +15 emplacements de Fermier. Bloque le passage en Grande Cité.",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 4
+        },
+        {
+          "metier": "Fermier",
+          "places": 15
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Place du marché",
+      "cout": "Echoppe requise, 20 Or + 6 Soie",
+      "production": "+6 emplacements de Commerçant.",
+      "description": "Echoppe requise. +6 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 6
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Port de commerce",
+      "cout": "Ponton requis, 20 Or + 4 Bois + 4 Soie",
+      "production": "+4 emplacements de Pêcheur, +10 emplacements de Commerçant.",
+      "description": "Ponton requis. +4 emplacements de Pêcheur, +10 emplacements de Commerçant.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 4
+        },
+        {
+          "metier": "Commerçant",
+          "places": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Port de pêche",
+      "cout": "Ponton requis, 20 Or + 4 Bétail + 4 Bois",
+      "production": "+6 emplacements de Pêcheur.",
+      "description": "Ponton requis. +6 emplacements de Pêcheur. Les pêcheurs de cette ville produisent +2 Nourriture par tour supplémentaires.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 6
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Clinique",
+      "cout": "Herboristerie requise, 30 Or + 6 Pierre",
+      "production": "+5 emplacements de Guérisseur.",
+      "description": "Herboristerie requise. +5 emplacements de Guérisseur.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 5
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Guilde des artisans de la terre",
+      "cout": "40 Or + 16 Bois + 6 Bétail",
+      "production": "Consomme 1 Charbon par tour. +30 emplacements de Fermier.",
+      "description": "Remplace le Moulin à vent. Consomme 1 Charbon par tour. +30 emplacements de Fermier. Tous les fermiers de votre pays produisent +5 Nourriture par tour en été.",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 30
+        }
+      ],
+      "remplaceBatiment": "Moulin à vent"
+    },
+    {
+      "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Poste de garde",
       "cout": "25 Or + 4 Fer",
-      "production": "",
-      "description": "+4 emplacements de Garde.",
+      "production": "+4 emplacements de Garde, +10 Taudis.",
+      "description": "+4 emplacements de Garde, +10 Taudis.",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
@@ -2205,7 +2445,8 @@
           "metier": "Garde",
           "places": 4
         }
-      ]
+      ],
+      "taudisApportes": 10
     },
     {
       "categorie": "Bâtiment",
@@ -2338,17 +2579,220 @@
       "famille": "Economique",
       "nom": "Herboristerie",
       "cout": "10 Or + 2 Pierre",
-      "production": "+1 emplacement de Guérisseur.",
+      "production": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
-      "bonusGuerison": 0.05,
+      "bonusGuerison": 0.05
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Bas quartier",
+      "cout": "10 Bois + 10 Or",
+      "production": "+20 Taudis.",
+      "description": "+20 Taudis.",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "taudisApportes": 20
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Caserne",
+      "cout": "Poste de garde requis, 25 Or + 4 Fer",
+      "production": "+4 emplacements de Garde, +10 Taudis.",
+      "description": "+4 emplacements de Garde, +10 Taudis.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "taudisApportes": 10
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Réseau de routes",
+      "cout": "15 Or + 4 Soie",
+      "production": "Les cases de l'enceinte ne coûtent qu'1 point de mouvement (PM) à franchir.",
+      "description": "Les cases de l'enceinte ne coûtent qu'1 point de mouvement (PM) à franchir.",
+      "effets": [],
+      "rangMinHabitation": 2
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Tour de sorcier",
+      "cout": "40 Or + 12 Pierre",
+      "production": "+1 emplacement de Scientifique, +1 Maison de notable.",
+      "description": "Téléportation d'armée entre Tours de sorcier amies (1 Or par case, 1 PM). +1 emplacement de Scientifique, +1 Maison de notable.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Ecole militaire",
+      "cout": "Terrain d'entrainement requis, 20 Or + 6 Bois + 4 Fer",
+      "production": "+2 emplacements de Garde.",
+      "description": "Si vous levez une armée dans cette habitation, dépensez 25 Or de moins. +2 emplacements de Garde.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 2
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Quartier intermédiaire",
+      "cout": "20 Or + 10 Pierre",
+      "production": "+20 Maisons.",
+      "description": "+20 Maisons.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Haut quartier",
+      "cout": "40 Or + 10 Soie",
+      "production": "+20 Maisons de notable.",
+      "description": "+20 Maisons de notable.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Clinique",
+      "cout": "Herboristerie requise, 30 Or + 6 Pierre",
+      "production": "+5 emplacements de Guérisseur.",
+      "description": "Herboristerie requise. +5 emplacements de Guérisseur.",
+      "effets": [],
+      "rangMinHabitation": 2,
       "emplacements": [
         {
           "metier": "Guérisseur",
-          "places": 1
+          "places": 5
         }
       ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Cabinet d'astronomie",
+      "cout": "5 Or + 4 Pierre + 2 Soie",
+      "production": "+4 emplacements de Scientifique.",
+      "description": "+4 emplacements de Scientifique.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Chapelle",
+      "cout": "Conjuratoire requis, 10 Or + 8 Pierre",
+      "production": "+7 emplacements d'Artiste.",
+      "description": "Conjuratoire requis. +7 emplacements d'Artiste.",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Artiste",
+          "places": 7
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Ecole intermédiaire",
+      "cout": "16 Or + 6 Pierre",
+      "production": "Consomme 3 Or par tour. +2 emplacements de Professeur, +1 emplacement de Scientifique.",
+      "description": "Remplace l'Ecole élémentaire. Consomme 3 Or par tour. +2 emplacements de Professeur, +1 emplacement de Scientifique.",
+      "effets": [
+        {
+          "ressource": "Or",
+          "quantite": -3
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Professeur",
+          "places": 2
+        },
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "remplaceBatiment": "Ecole élémentaire"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des explorateurs",
+      "cout": "Ecole militaire requis, 60 Or + 6 Pierre + 12 Soie",
+      "production": "Consomme 1 Charbon par tour.",
+      "description": "Ecole militaire + Responsable des voiries requis. Consomme 1 Charbon par tour. Vos armées ont +1 point de mouvement (PM) ; le coût de levée de toutes les armées est réduit de 20 Or.",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2
     },
     {
       "categorie": "Bâtiment",
