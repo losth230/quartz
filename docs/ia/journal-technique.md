@@ -3208,3 +3208,41 @@ Validation : 157/157 natifs + 15/15 rendu (12 fichiers), tsc strict
 (stubs supabase seuls, diff base/jeu VIDE), diag exit 0 IDENTIQUE
 (UI seule — le moteur n'a pas bougé), Edge Function bundle +
 exécution verts.
+
+
+## Audit express (2026-10-26) — dérives docblocks échelle 0-4 + piège falsy-zéro
+
+Périmètre : lecture ciblée des zones fraîches (sante/Gompertz/
+Guérisseur, domiciles 0-4, taudis, bonheur, VilleCarte) + tous les
+contrôles. État à la tête 24b0159d : 157/157 natifs, 15/15 rendu
+(12 fichiers), tsc strict 0 erreur, diag identique au dépôt, Edge
+Function verte.
+
+Vérifié CONFORME : Guérisseur (filtre vivant + ville + métier,
+bornes via chance, paramètres 0,02/0,02 éditables — cumul illimité
+par design, une dizaine de postes rend la maladie inoffensive :
+équilibre à surveiller, pas un bug) ; taudis 5/8/10 par tier avec
+exclusions Baleinier/Bâteau ✓ ; remplaceAmenagement câblé dans
+l'UI Constructions ✓ ; correctifs d'audit B1/B2 en place ✓ ;
+VilleCarte consomme scoresVille/bonheurVille du moteur (source
+unique) ✓ ; plus aucun as never, zéro TODO/FIXME.
+
+4 constats, corrigés dans la foulée :
+1. statutSocial.ts : docblock d'en-tête AUTO-CONTRADICTOIRE
+   (« Masure 0 … i.e. la qualité 1-5 moins un » vs correctif inline
+   0-4 du même fichier) — réaligné (Taudis 0-4, la qualité EST le
+   gain) + commentaire inline renommé Taudis ;
+2. domiciles.ts : docblock qualiteDomicile « (1-5 ; 0 = inconnu) »
+   — réaligné (échelle 0-4, 0 est une valeur LÉGALE : Taudis) ;
+3. domiciles.test.ts : en-tête « qualité 1-5 » — réaligné ;
+4. defaultConfig.ts : fertFactor `Number(x) || 1` — piège
+   falsy-zéro LATENT (même famille que le bug Taudis 0 du
+   2026-10-25) : remplacé par Number.isFinite (le défaut 1 ne
+   s'applique qu'aux valeurs absentes ou non finies). Aucun
+   comportement changé (toutes les cultures sont à 1), diag
+   IDENTIQUE, 157/157 après correctif.
+
+NB harnais (trace pour les sessions futures) : les « 3 stubs
+supabase » rapportés le 2026-10-25 venaient d'un harnais local
+incomplet (le paquet @supabase/supabase-js embarque ses types) —
+le projet est réellement tsc strict 0 erreur.
