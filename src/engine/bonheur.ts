@@ -156,7 +156,9 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   const pourvu = scoreOptimum(enPoste, travailleurs)
   const emploi = Math.round((structure + pourvu) / 2)
 
-  // LOGEMENT : par habitant (arbitrage v3)
+  // LOGEMENT : par habitant (arbitrage v3 — retourné cohérent par
+  //  le retour Thibaut 2026-10-26 : 1 logement = 1 habitant,
+  //  l'attribution loge désormais AUSSI par habitant)
   const logement = scoreOptimum(logementsVille(ville, C), habitants)
 
   // SÉCURITÉ : cible 100 × rang (arbitrage v3)

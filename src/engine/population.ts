@@ -72,10 +72,11 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
   migrerPopulation(state, p, rng)
 
   // 3.6ter DOMICILES (vague E, design domiciles 2026-10-24) :
-  //  attribution des logements aux foyers APRÈS la démographie du
-  //  tour (les nouveaux foyers de l'année — adultes, mariages —
-  //  prennent les places libres) et AVANT le statut social (le
-  //  prestige du tour compte le domicile attribué CE tour).
+  //  attribution des logements aux habitants APRÈS la démographie
+  //  du tour (retour Thibaut 2026-10-26 : 1 logement = 1 habitant —
+  //  les nouveau-nés de l'année prennent les places libres) et
+  //  AVANT le statut social (le prestige du tour compte le
+  //  domicile attribué CE tour).
   for (const v of p.villes) attribuerDomicilesVille(state, p, v, C)
 
   // 3.7 STATUT SOCIAL (vague D, design domiciles/ascension

@@ -39,7 +39,7 @@ import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../eng
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
-import { initStockVille, stockRang, foyersDeVille, domicilesApportesVille } from '../../engine/domiciles'
+import { initStockVille, stockRang, vivantsVille, domicilesApportesVille } from '../../engine/domiciles'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
@@ -277,8 +277,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           //  d'abord — capacité du rang (City.domiciles, repli
           //  stockRang pour un état non normalisé) + apports des
           //  constructions (domicilesApportesVille : Poste de garde,
-          //  quartiers…) ; occupés = foyers attribués (un foyer = un
-          //  logement, les enfants suivent) ; libres = reste.
+          //  quartiers…) ; occupés = habitants attribués (retour
+          //  Thibaut 2026-10-26 : 1 logement = 1 HABITANT, plus de
+          //  foyers — les bâtiments les plus qualitatifs servent
+          //  d'abord les personnages de haut rang) ; libres = reste.
           const stockLog = Array.isArray(ville.domiciles)
             ? ville.domiciles
             : stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
@@ -287,12 +289,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           for (const e of domicilesApportesVille(ville, C)) {
             capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
           }
-          const foyersLog = foyersDeVille(state, p.n, ville, C)
+          const habitantsLog = vivantsVille(state, p.n, ville)
           const occLog = new Map<string, number>()
-          for (const f of foyersLog) {
-            if (f.domicile) occLog.set(f.domicile, (occLog.get(f.domicile) ?? 0) + 1)
+          for (const c of habitantsLog) {
+            if (c.domicile) occLog.set(c.domicile, (occLog.get(c.domicile) ?? 0) + 1)
           }
-          const sansLogement = foyersLog.filter((f) => !f.domicile).length
+          const sansLogement = habitantsLog.filter((c) => !c.domicile).length
           const lignesLog = C.config.domiciles
             .filter((d) => (capLog.get(d.domicile) ?? 0) > 0)
             .sort((a, z) => z.qualite - a.qualite)
@@ -303,7 +305,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             })
           const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
           const libresTotaux = lignesLog.reduce((n, l) => n + l.libres, 0)
-          const foyersLoges = foyersLog.length - sansLogement
+          const habitantsLoges = habitantsLog.length - sansLogement
           return (
             <div className="ville-duo-cols">
               <div>
@@ -372,7 +374,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Par type de domicile, meilleure qualité d'abord : occupés/capacité puis places libres. Un foyer = un logement (les enfants mineurs suivent) ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…)."
+                  title="Par type de domicile, meilleure qualité d'abord : habitants/capacité puis places libres. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
                 >
                   Logements : <strong>{fmt(capTotale)}</strong>
                 </div>
@@ -396,8 +398,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                         </tr>
                       )}
                       <tr className="ligne-total">
-                        <td><strong>Foyers logés</strong></td>
-                        <td className="num"><strong>{fmt(foyersLoges)}/{fmt(capTotale)}</strong></td>
+                        <td><strong>Habitants logés</strong></td>
+                        <td className="num"><strong>{fmt(habitantsLoges)}/{fmt(capTotale)}</strong></td>
                         <td className="num muted"><strong>{fmt(libresTotaux)}</strong></td>
                       </tr>
                     </tbody>

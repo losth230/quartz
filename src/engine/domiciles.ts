@@ -1,34 +1,40 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  DOMICILES — STOCK DES VILLES ET ATTRIBUTION AUX FOYERS
+//  DOMICILES — STOCK DES VILLES ET ATTRIBUTION AUX HABITANTS
 //  (vague A+C du design domiciles/ascension, 2026-10-24)
 //
 //  PRINCIPES (arbitrages Thibaut) :
 //   · SIMPLE : un type de domicile porte un nom + une qualité 0-4 ;
 //     pas de capacité ni coût — les bâtiments constructibles
 //     viendront plus tard ;
-//   · UNITÉ (arbitrage final Thibaut 2026-10-24 : « 1 personne =
-//     1 maison ») : le BONHEUR compare le stock aux HABITANTS de
-//     la ville. L'ATTRIBUTION, elle, loge des FOYERS (une maison
-//     par famille — un foyer occupe 1 place) : l'unité de
-//     l'attribution est le foyer, l'unité de mesure du bonheur
-//     est la personne — deux échelles VOLONTAIRES (la maison
-//     familiale abrite plusieurs personnes, le score mesure la
-//     pression immobilière par tête).
+//   · UNITÉ (retour Thibaut 2026-10-26 : « je ne veux pas que les
+//     logements soient associés à des familles, je veux 1 logement
+//     = 1 habitant ») : un logement sert UNE personne — adulte OU
+//     enfant mineur. L'ancienne attribution par FOYER (une maison
+//     par famille, les mineurs suivaient leurs parents) est
+//     RETIRÉE. L'unité de l'attribution et l'unité de mesure du
+//     bonheur (l'axe Logement compare le stock aux habitants)
+//     sont désormais LA MÊME échelle ;
+//   · PRIORITÉ (retour Thibaut 2026-10-26 : « les bâtiments les
+//     plus qualitatifs soient priorisés pour les personnages de
+//     haut rang ») : l'ordre de service est le PRESTIGE
+//     décroissant — nobles avant bourgeois avant roturiers, les
+//     mineurs (sans prestige propre) servis en dernier. Dans cet
+//     ordre, chacun prend la MEILLEURE qualité restante : les
+//     Maisons de notable partent aux personnages de haut rang,
+//     les Taudis aux derniers servis ;
 //   · le stock d'une ville vit DANS la ville (City.domiciles :
 //     [{domicile: 'Maison', nombre: 50}, …]) — initialisé du rang
 //     d'habitation à la création/changement de rang (normaliserEtat
 //     le complète pour les vieilles sauvegardes) ;
-//   · l'attribution est PAR FOYER (le couple + ses enfants mineurs
-//     partagent le sort du foyer) : un foyer = un adulte marié OU
-//     un adulte seul — les mineurs suivent leurs parents ;
-//   · un foyer ne peut pas être attribué AU-DESSUS de sa condition
-//     (un roturier n'entre pas dans un Palais) ; en dessous, il
-//     peut (c'est le mécanisme de chute — à venir en vague D) ;
-//   · l'attribution attribue la MEILLEURE qualité disponible d'abord
-//     (les Maisons avant les Masures) — simple et lisible.
+//   · on ne déloge personne : un habitant garde son domicile
+//     s'il existe encore au stock (l'ordre de prestige ne sert
+//     qu'à répartir les places LIBRES) ;
+//   · pas encore de restriction par condition sociale au sens
+//     strict (un roturier PEUT finir en Maison de notable s'il
+//     est servi avant les nobles — mais l'ordre de prestige fait
+//     en pratique le tri).
 //
-//  Le champ Character.domicile (posé en vague 2 du rework habitants,
-//  « aucun effet en vague 1 ») devient la clé : nom du type de
+//  Le champ Character.domicile est la clé : nom du type de
 //  domicile ('Maison', 'Auberge'…), null = sans domicile.
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -97,113 +103,66 @@ export function taudisApportesVille(ville: City, C: Cfg): number {
   return domicilesApportesVille(ville, C).find((e) => e.domicile === 'Taudis')?.nombre ?? 0
 }
 
-// ── Foyers ────────────────────────────────────────────────────────────
-
-/** Un foyer : un adulte (marié ou seul) + ses enfants mineurs.
- *  Les enfants majeurs non mariés forment leur propre foyer
- *  (design « à la charge du joueur pour l'ajustement » — les
- *  règles de démographie existantes gèrent les âges). */
-export interface Foyer {
-  chef: Character
-  conjoint: Character | null
-  enfants: Character[]
-  domicile: string | null
-}
-
-/** Foyers d'une population de ville : partition des habitants.
- *  ADULTE = age ≥ adultAge ; les enfants (age < adultAge) suivent
- *  leur mère (mereId), sinon leur père (pereId), sinon le premier
- *  adulte de la ville (garde-fou). (Correctif docblock audit B4,
- *  2026-10-25 — le code a toujours utilisé mereId/pereId.) */
-export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C: Cfg): Foyer[] {
-  const pop = (state.population[nJoueur] ?? []).filter(
-    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
-  )
-  const adultes = pop.filter((c) => c.age >= C.p.adultAge)
-  const enfants = pop.filter((c) => c.age < C.p.adultAge)
-  const parId = new Map(pop.map((c) => [c.id, c] as const))
-  const foyers: Foyer[] = []
-  const pris = new Set<string>()
-
-  // 1. couples : chaque adulte marié une seule fois (mariageId partagé)
-  for (const a of adultes) {
-    if (pris.has(a.id)) continue
-    const conj = a.mariageId ? parId.get(a.mariageId) : undefined
-    if (conj && !pris.has(conj.id) && conj.statut !== 'Décédé') {
-      pris.add(a.id); pris.add(conj.id)
-      foyers.push({ chef: a, conjoint: conj, enfants: [], domicile: a.domicile ?? null })
-    }
-  }
-  // 2. célibataires
-  for (const a of adultes) {
-    if (pris.has(a.id)) continue
-    pris.add(a.id)
-    foyers.push({ chef: a, conjoint: null, enfants: [], domicile: a.domicile ?? null })
-  }
-  // 3. enfants mineurs rattachés
-  for (const e of enfants) {
-    const parent = parId.get(e.mereId ?? '') ?? parId.get(e.pereId ?? '')
-    const foyer = parent
-      ? foyers.find((f) => f.chef.id === parent.id || f.conjoint?.id === parent.id)
-      : undefined
-    ;(foyer ?? foyers[0])?.enfants.push(e)
-  }
-  return foyers
-}
-
 // ── Attribution ──────────────────────────────────────────────────────
 
-/** Attribue les domiciles d'une ville à ses foyers : la MEILLEURE
- *  qualité d'abord, sans dépasser le stock (stock.consume au fur et
- *  mesure). Un foyer garde son domicile s'il est déjà attribué et
- *  existe encore dans le stock. Retourne le nombre de foyers LOGÉS
- *  à l'issue de l'appel — déjà logés + nouvellement logés
- *  (les changements portent le champ
- *  `Character.domicile` du chef ET du conjoint — les enfants mineurs
- *  suivent sans champ propre : le domicile est celui du foyer).
- *
- *  CONDITIONS (vague C) : pas encore de restriction par condition
- *  sociale (roturier/bourgeois) — la vague D (ascension) l'ajoutera
- *  avec les statuts de dynastie. Pour l'instant tout le monde peut
- *  habiter partout (simple, lisible). */
+/** Habitants VIVANTS d'une ville — l'unité d'attribution (retour
+ *  Thibaut 2026-10-26 : 1 logement = 1 habitant, plus de foyers). */
+export function vivantsVille(state: GameState, nJoueur: number, ville: City): Character[] {
+  return (state.population[nJoueur] ?? []).filter(
+    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
+  )
+}
+
+/** Attribue les domiciles d'une ville à ses HABITANTS, une place par
+ *  personne (retour Thibaut 2026-10-26 : « je ne veux pas que les
+ *  logements soient associés à des familles, je veux 1 logement = 1
+ *  habitant. Et je veux également que les bâtiments les plus
+ *  qualitatifs soient priorisés pour les personnages de haut rang »).
+ *  Ordre de service : PRESTIGE DÉCROISSANT (nobles d'abord — les
+ *  mineurs, sans prestige propre, sont servis en dernier, à
+ *  prestation égale l'ordre de recensement fait foi) ; dans cet
+ *  ordre chacun GARDE son domicile s'il existe encore au stock
+ *  (on ne déloge personne — l'ordre de priorité ne sert qu'à
+ *  répartir les places libres), sinon prend la MEILLEURE qualité
+ *  restante. Stock épuisé : `Character.domicile = null` (sans
+ *  logement). Retourne le nombre d'habitants LOGÉS. */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
   //  existante dont les villes n'ont pas de stock (sauvegardées avant
   //  la vague, tampon schema déjà à jour → migrerEtat ne rejouera
   //  pas la v1) se voit initialiser le stock au rang courant.
   if (!Array.isArray(ville.domiciles)) initStockVille(ville, C)
-  const foyers = foyersDeVille(state, p.n, ville, C)
+  const pop = vivantsVille(state, p.n, ville)
   // stock restant : copie de travail
   const stock = new Map<string, number>()
   for (const e of ville.domiciles ?? []) stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
-  // ordre : meilleure qualité d'abord (les foyers déjà logés gardent
-  //  leur logement — on ne déloge personne, on complète)
+  // ordre de service : prestige décroissant (haut rang d'abord),
+  //  tri STABLE — les ex æquo gardent l'ordre du recensement
+  const servs = [...pop].sort((a, b) => (b.prestige ?? 0) - (a.prestige ?? 0))
+  // types par qualité décroissante : les bâtiments les plus
+  //  qualitatifs partent aux premiers servis (haut rang)
   const typesTries = [...C.config.domiciles].sort((a, b) => b.qualite - a.qualite)
   let loges = 0
-  for (const f of foyers) {
-    if (f.domicile && (stock.get(f.domicile) ?? 0) > 0) {
-      // déjà logé dans un type existant au stock : consomme sa place
-      stock.set(f.domicile, (stock.get(f.domicile) ?? 0) - 1)
+  for (const c of servs) {
+    // déjà logé dans un type existant au stock : garde sa place
+    if (c.domicile && (stock.get(c.domicile) ?? 0) > 0) {
+      stock.set(c.domicile, (stock.get(c.domicile) ?? 0) - 1)
       loges++
       continue
     }
-    // à loger : meilleure qualité disponible
+    // à loger : meilleure qualité restante
+    let place: string | null = null
     for (const t of typesTries) {
       const restant = stock.get(t.domicile) ?? 0
       if (restant > 0) {
         stock.set(t.domicile, restant - 1)
-        f.chef.domicile = t.domicile
-        if (f.conjoint) f.conjoint.domicile = t.domicile
-        f.domicile = t.domicile
-        loges++
+        place = t.domicile
         break
       }
     }
-    // rien de libre : foyer sans domicile — chef et conjoint à null
-    if (!f.domicile) {
-      f.chef.domicile = null
-      if (f.conjoint) f.conjoint.domicile = null
-    }
+    // rien de libre : sans domicile
+    c.domicile = place
+    if (place) loges++
   }
   return loges
 }

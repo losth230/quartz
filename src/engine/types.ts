@@ -121,8 +121,10 @@ export interface Character {
    *  emploi : NEUTRE, aucun effet au plateau, impôt nul. */
   metier: string | null
   /** Domicile du personnage (rework habitants 2026-10-20, vague 2 UI) :
-   *  null = sans domicile. Rempli par l'attribution aux foyers
-   *  (vague C, engine/domiciles.ts). Champ optionnel : absent des
+   *  null = sans domicile. Rempli par l'attribution aux habitants
+   *  (1 logement = 1 habitant — retour Thibaut 2026-10-26,
+   *  engine/domiciles.ts ; l'ancienne attribution par foyer est
+   *  retirée). Champ optionnel : absent des
    *  états migrés (compressé quand null). */
   domicile?: string | null
   /** PRESTIGE du personnage (vague D ascension sociale, 2026-10-24) :
@@ -235,7 +237,8 @@ export interface City {
    *  2026-10-24) : [{domicile: 'Maison', nombre: 50}, …] — l'offre
    *  de logements du rang (initStockVille à la création/changement
    *  de rang ; complété par normaliserEtat pour les vieilles
-   *  sauvegardes). 1 domicile = 1 logement (1 foyer). Champ
+   *  sauvegardes). 1 domicile = 1 logement (1 habitant — retour
+   *  Thibaut 2026-10-26). Champ
    *  optionnel : absent → []. */
   domiciles?: Array<{ domicile: string; nombre: number }>
   batiments: string[]

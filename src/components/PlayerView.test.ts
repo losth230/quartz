@@ -180,10 +180,11 @@ test('rendu VilleCarte : population, garnison & logements en 3 colonnes — tabl
   )
   // ── LOGEMENTS (retour Thibaut 2026-10-26 : « réduit les tableaux
   //  pour ajouter les logements ») : 3e tableau de la ligne — parc
-  //  par type de domicile, occupés/capacité puis libres, le tout
+  //  par type de domicile, habitants/capacité puis libres, le tout
   //  DÉRIVÉ de l'état (patron R3 : stock City.domiciles + apports
-  //  des constructions, occupés = foyers attribués).
-  const { foyersDeVille, domicilesApportesVille } = await import('../engine/domiciles')
+  //  des constructions, occupés = habitants attribués — 1 logement
+  //  = 1 habitant, retour du 2026-10-26).
+  const { vivantsVille, domicilesApportesVille } = await import('../engine/domiciles')
   const capLog = new Map<string, number>()
   for (const e of Array.isArray(cap.domiciles) ? cap.domiciles : []) {
     capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
@@ -196,10 +197,10 @@ test('rendu VilleCarte : population, garnison & logements en 3 colonnes — tabl
     h.includes(`Logements : <strong>${esc(fmt(capTotale))}</strong>`),
     `capacité totale ${fmt(capTotale)} absente du titre du tableau logements`,
   )
-  const foyersCap = foyersDeVille(etat, 1, cap, C)
+  const habitantsCap = vivantsVille(etat, 1, cap)
   const occLog = new Map<string, number>()
-  for (const f of foyersCap) {
-    if (f.domicile) occLog.set(f.domicile, (occLog.get(f.domicile) ?? 0) + 1)
+  for (const c of habitantsCap) {
+    if (c.domicile) occLog.set(c.domicile, (occLog.get(c.domicile) ?? 0) + 1)
   }
   for (const [nom, c] of capLog) {
     if (c <= 0 || !C.config.domiciles.some((d) => d.domicile === nom)) continue
