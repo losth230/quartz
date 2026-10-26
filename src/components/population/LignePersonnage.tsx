@@ -5,6 +5,10 @@
 //  bouton « Marier avec… » n'apparaît que pour la cour (le mariage
 //  manuel unit deux nobles — le reste de la population se marie au
 //  fil des tours).
+//  Colonne Rang (retour Thibaut 2026-10-26 : « il faut des nobles
+//  dès le début — la colonne dynastie doit correspondre à la
+//  colonne rang ») : rangDe — dynastie noble → noble de NAISSANCE,
+//  sinon rang du prestige (100/250).
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character } from '../../engine/types'
@@ -13,7 +17,7 @@ import { traitDef } from '../../engine/gameData'
 import { Select, Button, fmt } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { STATUTS } from './logiquePopulation'
-import { rangSocial } from '../../engine/statutSocial'
+import { rangDe } from '../../engine/statutSocial'
 
 export interface PropsLignePersonnage {
   c: Character
@@ -83,9 +87,9 @@ export function LignePersonnage({
       <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile'}>
         {c.domicile ?? '—'}
       </td>
-      <td className="small" title={`Prestige ${c.prestige ?? 0} — rang ${rangSocial(c.prestige ?? 0)} (roturier < 100 ≤ bourgeois < 250 ≤ noble)`}>
-        <span className={`badge ${rangSocial(c.prestige ?? 0) === 'noble' ? 'badge-info' : rangSocial(c.prestige ?? 0) === 'bourgeois' ? 'badge-neutral' : ''}`}>
-          {rangSocial(c.prestige ?? 0)}
+      <td className="small" title={`Prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${rangDe(c, C) === 'noble' && (c.prestige ?? 0) < 250 ? ' · NOBLE DE NAISSANCE (dynastie noble — retour Thibaut 2026-10-26 : des nobles dès le début)' : ' (roturier sous 100 ≤ bourgeois < 250 ≤ noble par ascension)'}`}>
+        <span className={`badge ${rangDe(c, C) === 'noble' ? 'badge-info' : rangDe(c, C) === 'bourgeois' ? 'badge-neutral' : ''}`}>
+          {rangDe(c, C)}
         </span>{' '}
         <span className="muted">{c.prestige ?? 0}</span>
       </td>

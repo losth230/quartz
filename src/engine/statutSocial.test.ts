@@ -17,8 +17,9 @@ import { cfgOf, type Cfg } from './gameData'
 import { runTurn } from './tour'
 import { attribuerDomicilesVille, initStockVille } from './domiciles'
 import {
-  rangSocial, prestigeDe, gainPrestigeTour, evaluerFamilles,
+  rangSocial, rangDe, prestigeDe, gainPrestigeTour, evaluerFamilles,
 } from './statutSocial'
+import { fullName, isNobleDyn } from './shared'
 import type { Character, GameState, Player } from './types'
 
 function partieTemoin(): { state: GameState; p: Player; C: Cfg } {
@@ -36,6 +37,18 @@ test('rangSocial : seuils arbitrés (0-100 roturier, 100-250 bourgeois, 250+ nob
   assert.equal(rangSocial(249), 'bourgeois')
   assert.equal(rangSocial(250), 'noble')
   assert.equal(rangSocial(400), 'noble')
+})
+
+test('rangDe : noble de NAISSANCE dès le départ (dynastie noble — retour Thibaut 2026-10-26 : « il faut des nobles dès le début »)', () => {
+  const { C } = partieTemoin()
+  // dynastie noble → NOBLE dès la naissance, prestige 0 compris :
+  // la colonne Rang correspond à la colonne Dynastie dès le setup
+  assert.equal(rangDe(perso({ dynastie: 'Valmont' }), C), 'noble')
+  assert.equal(rangDe(perso({ dynastie: 'Valmont', prestige: 300 }), C), 'noble')
+  // dynastie roturière → rang dérivé du prestige (100/250)
+  assert.equal(rangDe(perso({ dynastie: C.p.dynastieRoturier }), C), 'roturier')
+  assert.equal(rangDe(perso({ dynastie: C.p.dynastieRoturier, prestige: 150 }), C), 'bourgeois')
+  assert.equal(rangDe(perso({ dynastie: C.p.dynastieRoturier, prestige: 300 }), C), 'noble')
 })
 
 // ── Formule du tour ───────────────────────────────────────────────────
@@ -97,6 +110,38 @@ test('evaluerFamilles : convergence des couples (prestige familial partagé)', (
   assert.equal(prestigeDe(marie), prestigeDe(conj), 'les conjoints partagent le prestige')
   // et autour de 100 (la moyenne)
   assert.ok(Math.abs(prestigeDe(marie) - 100) <= 10, `convergence vers ~100 (trouvé ${prestigeDe(marie)})`)
+})
+
+test('evaluerFamilles : un noble de NAISSANCE ne journalise pas de changement de rang (retour Thibaut 2026-10-26)', () => {
+  const { state, p, C } = partieTemoin()
+  const pop = state.population[p.n] ?? []
+  // un membre de dynastie noble vivant (la famille dirigeante du setup)
+  const noble = pop.find((c) => isNobleDyn(c.dynastie, C) && c.statut !== 'Décédé' && c.age >= C.p.adultAge)
+  if (!noble) return // pas de dynastie noble dans la partie témoin — skip silencieux
+  assert.equal(rangDe(noble, C), 'noble', 'dynastie noble = noble de naissance (prestige 0 au setup)')
+  const evts = evaluerFamilles(state, p, C)
+  // son prestige a évolué mais son rang de NAISSANCE n'a pas changé :
+  // pas d'événement « accède/retombe » pour lui
+  assert.ok(
+    !evts.some((e) => e.nom === fullName(noble)),
+    `aucun événement de rang pour un noble de naissance (trouvé : ${evts.filter((e) => e.nom === fullName(noble)).map((e) => e.texte).join(' / ')})`,
+  )
+  assert.equal(rangDe(noble, C), 'noble')
+})
+
+test('evaluerFamilles : un roturier qui franchit 100 journalise toujours son accès à la bourgeoisie', () => {
+  const { state, p, C } = partieTemoin()
+  const pop = state.population[p.n] ?? []
+  // un roturier de dynastie, célibataire (chemin « appliquer »)
+  const rot = pop.find((c) => !isNobleDyn(c.dynastie, C) && c.statut !== 'Décédé' && c.age >= C.p.adultAge && !c.mariageId)
+  if (!rot) return // skip silencieux
+  rot.prestige = 99
+  rot.metier = C.p.metierChasseur
+  rot.domicile = 'Maison'
+  const evts = evaluerFamilles(state, p, C)
+  const ev = evts.find((e) => e.nom === fullName(rot))
+  assert.ok(ev && ev.texte.includes('accède à la bourgeoisie'), `événement d'accès attendu (trouvé : ${ev?.texte ?? 'aucun'})`)
+  assert.equal(rangDe(rot, C), 'bourgeois')
 })
 
 test('evaluerFamilles : héritage 50 % du prestige moyen des parents, une seule fois', () => {

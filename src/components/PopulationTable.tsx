@@ -10,9 +10,9 @@
 //  sont proposés (Chasseur, Gouverneur) — et arbre généalogique de la
 //  famille dirigeante (déplacé ici depuis la page Royaume).
 //  Retour Thibaut (2026-10-14) : la population est séparée en deux
-//  tableaux — « La cour » (personnages selon leur RANG social,
-//  bourgeois/noble — retour Thibaut 2026-10-26 : la cour ne
-//  commence pas noble, l'appartenance ne suit plus la dynastie)
+//  tableaux — « La cour » (personnages selon leur RANG social —
+//  retour Thibaut 2026-10-26 : des nobles DÈS LE DÉPART, le rang
+//  suit la dynastie de naissance + l'ascension par prestige)
 //  affichés AU-DESSUS et la population « classique ». Chaque
 //  personnage peut être DONNÉ à un autre joueur ; deux nobles
 //  peuvent être MARIÉS manuellement (y compris de joueurs
@@ -40,7 +40,7 @@ import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
 import { metiersAccessibles } from '../engine/metiers'
 import { fullName, deplacerPersonnage, toutesLesPopulations } from '../engine/shared'
-import { rangSocial, prestigeDe } from '../engine/statutSocial'
+import { rangDe } from '../engine/statutSocial'
 import { marierPersonnages } from '../engine/cour'
 import { metiersAccessiblesCite, pseudoJoueurDeCite, ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre } from '../engine/citesLibres'
 import { GenealogyTree } from './GenealogyTree'
@@ -98,18 +98,17 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   }
   const nomPorteur = p?.nom ?? cite?.nom ?? ''
 
-  // ── Séparation cour / population classique (retour Thibaut
-  //  2026-10-26 : « la cour des joueurs ne commence pas en tant que
-  //  noble — le tableau supérieur montre les personnages selon leur
-  //  RANG, pas leur dynastie ») : l'appartenance à la cour suit le
-  //  RANG SOCIAL issu du prestige (colonnes Rang des tableaux —
-  //  bourgeois ≥ 100, noble ≥ 250, cf. statutSocial.ts), PLUS la
-  //  dynastie. Un nom de famille noble ne suffit plus à siéger à la
-  //  cour tant que le prestige < 100 ; un bourgeois de dynastie
-  //  roturière y entre. Au départ d'une partie toute la cour est
-  //  roturière : le tableau est vide, il se remplit à mesure que
-  //  les personnages montent en rang.
-  const estDeCour = (c: Character) => rangSocial(prestigeDe(c)) !== 'roturier'
+  // ── Séparation cour / population classique (retours Thibaut
+  //  2026-10-26 : « le tableau supérieur montre les personnages
+  //  selon leur RANG, pas leur dynastie » PUIS « il faut des nobles
+  //  dès le début — la colonne dynastie doit correspondre à la
+  //  colonne rang ») : l'appartenance à la cour suit le RANG D'UN
+  //  PERSONNAGE (rangDe, cf. statutSocial.ts) — NOBLE DE NAISSANCE
+  //  si la dynastie est noble (la famille dirigeante et sa parenté
+  //  siègent donc à la cour DÈS LE DÉPART), sinon rang dérivé du
+  //  prestige (bourgeois ≥ 100, anobli ≥ 250). Les roturiers de
+  //  dynastie gravissent la cour par le prestige.
+  const estDeCour = (c: Character) => rangDe(c, C) !== 'roturier'
 
   const { rowsCour, rowsClassique } = useMemo(() => {
     const filtres = { statut: filtreStatut, ville: filtreVille, metier: filtreMetier, dynastie: filtreDyn }
@@ -373,9 +372,9 @@ export function PopulationTable({ joueur }: { joueur: number }) {
       <Card title={`👑 La cour de ${nomPorteur} — ${courVivants} vivants / ${pop.filter(estDeCour).length} au total`}>
         {blocFiltres}
         <p className="muted small">
-          Personnages selon leur RANG — bourgeois (prestige ≥ 100) et nobles (≥ 250) {cite ? 'de la cité libre' : 'du joueur'} —
-          filtres et tri appliqués aussi au tableau « Population » ci-dessous. La cour ne commence PAS noble :
-          elle se remplit à mesure que les personnages montent en rang (un nom de dynastie noble ne suffit plus).
+          Personnages selon leur RANG — nobles de NAISSANCE (dynastie noble) et, par ascension, bourgeois (prestige ≥ 100) et nobles (≥ 250) {cite ? 'de la cité libre' : 'du joueur'} —
+          filtres et tri appliqués aussi au tableau « Population » ci-dessous. La cour commence noble : la famille dirigeante y siège dès le départ (retour Thibaut 2026-10-26 :
+          des nobles dès le début — le rang suit la dynastie de naissance, le prestige y ajoute les roturiers anoblis).
         </p>
         <div className="table-wrap">
           <table className="tbl small pop-tbl">
@@ -384,7 +383,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               {rowsCour.length
                 ? rowsCour.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
                     .map((c) => <LignePersonnage key={c.id} c={c} avecMariage {...propsLigne} />)
-                : <tr><td colSpan={14} className="muted">aucun personnage de haut rang — toute la cour est roturière (bourgeois à prestige 100, noble à 250)</td></tr>}
+                : <tr><td colSpan={14} className="muted">aucun personnage de haut rang — ni dynastie noble, ni prestige ≥ 100 (bourgeois à 100, anobli à 250)</td></tr>}
             </tbody>
           </table>
         </div>
@@ -424,7 +423,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               })()}
         </div>
         <p className="muted small">
-          Population « classique » {cite ? 'de la cité libre' : 'du joueur'} (hors cour — roturiers, prestige sous 100){cite
+          Population « classique » {cite ? 'de la cité libre' : 'du joueur'} (hors cour — roturiers : dynastie roturière ET prestige sous 100){cite
             ? ' — le statut (Sain/Malade/Décédé) y est éditable : les cités libres ne passent pas au moteur démographique'
             : ' ; une ville transférée à un autre joueur emmène ses habitants classiques, la cour reste auprès de son joueur'}.
         </p>

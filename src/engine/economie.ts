@@ -29,6 +29,12 @@ import { rangSocial, prestigeDe } from './statutSocial'
 //      du jour même 2026-10-26 : le ×1,5 est retiré des nobles).
 //  Le rang lu est celui du PRESTIGE (pas la qualité du métier) ; les
 //  mineurs, sans prestige propre, restent à la consommation de base.
+//  ⚠ ARBITRAGE EN SUSPENS (2026-10-26, retour Thibaut « des nobles
+//  dès le début ») : ce rang MÉCANIQUE (conso/prod) reste fondé sur
+//  le PRESTIGE seul — un noble de NAISSANCE (rangDe, dynastie noble)
+//  consomme/produit comme un roturier tant que son prestige < 100.
+//  Faire suivre la conso au rang de naissance changerait l'équilibre
+//  (famille dirigeante ×4 Nourriture dès le tour 1) : à arbitrer.
 // ══════════════════════════════════════════════════════════════════════
 
 /** Multiplicateur de production d'un habitant selon son rang social

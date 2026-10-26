@@ -21,12 +21,21 @@
 //    · métier             +2 si bourgeois, +5 si noble (roturier : 0)
 //    · +1 si bonheur de la ville > 50
 //
-//  RANG DÉRIVÉ (fonction pure) :
+//  RANG DÉRIVÉ DU PRESTIGE (fonction pure, roturiers seulement) :
 //    · prestige < 100    → roturier
 //    · 100 ≤ prestige    → bourgeois
 //    · prestige ≥ 250    → noble
-//  (un enfant héritant de 50 % de deux parents nobles à 250+
-//   naît bourgeois — il devra faire ses preuves pour la noblesse.)
+//
+//  RANG D'UN PERSONNAGE (retour Thibaut 2026-10-26 : « il faut des
+//  nobles dès le début — la colonne dynastie doit correspondre à la
+//  colonne rang ») : un personnage de DYNASTIE NOBLE (isNobleDyn —
+//  la famille dirigeante et sa parenté au setup, les familles
+//  nobles ajoutées en cours de partie) est NOBLE DE NAISSANCE,
+//  quel que soit son prestige — c'est ce rang que montrent la
+//  colonne Rang et la cour. Le prestige ne fait GRIMPER que les
+//  roturiers de dynastie : bourgeois à 100, anobli à 250.
+//  (un enfant roturier héritant de 50 % de deux parents nobles à
+//   250+ naît bourgeois — il devra faire ses preuves pour la noblesse.)
 //
 //  Les changements de rang (montée comme chute) sont journalisés
 //  par le module du tour — ce module expose evaluerFamilles qui
@@ -35,6 +44,7 @@
 
 import type { Character, GameState, Player } from './types'
 import { type Cfg } from './gameData'
+import { isNobleDyn } from './shared'
 import { qualiteDomicile } from './domiciles'
 import { bonheurVilleComplete } from './bonheur'
 import { fullName } from './shared'
@@ -49,6 +59,16 @@ export function rangSocial(prestige: number): RangSocial {
   if (prestige >= 250) return 'noble'
   if (prestige >= 100) return 'bourgeois'
   return 'roturier'
+}
+
+/** RANG D'UN PERSONNAGE (retour Thibaut 2026-10-26 : « il faut des
+ *  nobles dès le début — la colonne dynastie doit correspondre à la
+ *  colonne rang ») : dynastie noble → NOBLE DE NAISSANCE, quel que
+ *  soit le prestige ; sinon rang dérivé du prestige (100/250). C'est
+ *  LE rang affiché (colonne Rang, cour) et journalisé (changements). */
+export function rangDe(c: Character, C: Cfg): RangSocial {
+  if (isNobleDyn(c.dynastie, C)) return 'noble'
+  return rangSocial(prestigeDe(c))
 }
 
 /** Prestige d'un personnage (0 par défaut — vieilles sauvegardes). */
@@ -129,10 +149,10 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
   //  place ci-dessous) : simplifié en gain simple, comportement
   //  identique.)
   const appliquer = (c: Character, gain: number) => {
-    const ancien = rangSocial(prestigeDe(c))
+    const ancien = rangDe(c, C)
     const nouveauPrestige = prestigeDe(c) + gain
     c.prestige = Math.max(0, Math.round(nouveauPrestige))
-    const nouveau = rangSocial(c.prestige)
+    const nouveau = rangDe(c, C)
     if (nouveau !== ancien) {
       evenements.push({
         joueur: p.n,
@@ -157,16 +177,20 @@ export function evaluerFamilles(state: GameState, p: Player, C: Cfg): EvenementR
       const gainA = gainPrestigeTour(a, C, bonheurParVille.get(a.ville) ?? 0)
       const gainB = gainPrestigeTour(conj, C, bonheurParVille.get(conj.ville) ?? 0)
       const pA = prestigeDe(a), pB = prestigeDe(conj)
+      // (rangDe AVANT mutation — les anciens rangs se lisent sur le
+      //  prestige d'avant convergence ; retour Thibaut 2026-10-26 :
+      //  les conjoints de dynastie noble sont noble de naissance,
+      //  leur rang ne change pas avec le prestige)
+      const ancienA = rangDe(a, C), ancienB = rangDe(conj, C)
       // chaque conjoint converge vers la moyenne, avec le gain
       //  moyen du couple (le foyer avance ensemble)
       const moyenneActuelle = (pA + pB) / 2
       const gainMoyen = (gainA + gainB) / 2
       a.prestige = Math.max(0, Math.round(moyenneActuelle + gainMoyen))
       conj.prestige = Math.max(0, Math.round(moyenneActuelle + gainMoyen))
-      const ancienA = rangSocial(pA), ancienB = rangSocial(pB)
       for (const [perso, ancien] of [[a, ancienA], [conj, ancienB]] as const) {
-        if (rangSocial(perso.prestige ?? 0) !== ancien) {
-          const nv = rangSocial(perso.prestige ?? 0)
+        if (rangDe(perso, C) !== ancien) {
+          const nv = rangDe(perso, C)
           evenements.push({
             joueur: p.n,
             nom: fullName(perso),
