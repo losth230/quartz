@@ -8,17 +8,48 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { City, GameState, Player } from './types'
+import type { Character, City, GameState, Player } from './types'
 import { cfgOf, metierDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './geographie'
+import { rangSocial, prestigeDe } from './statutSocial'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
 //  Metiers → Ressource1/Valeur1 + Ressource2/Valeur2, modulés par le niveau
 //  de taxes de la ville (sur TOUTES les ressources), puis consommation de
-//  1 Nourriture par habitant vivant (non taxée).
+//  Nourriture (non taxée).
+//  (Arbitrage Thibaut 2026-10-26, RANG SOCIAL — la réponse à « est-ce
+//  qu'il y a une différence réelle entre roturier et bourgeois ? ») :
+//  la consommation et la production dépendent désormais du RANG SOCIAL
+//  dérivé du prestige (roturier < 100 ≤ bourgeois < 250 ≤ noble) :
+//    · roturier : conso consoNourrParHab (base 1), production ×1 ;
+//    · bourgeois : conso consoNourrBourgeois (2), production ×1,5 ;
+//    · noble : conso consoNourrNoble (4), production ×1,5.
+//  Le rang lu est celui du PRESTIGE (pas la qualité du métier) ; les
+//  mineurs, sans prestige propre, restent à la consommation de base.
 // ══════════════════════════════════════════════════════════════════════
+
+/** Multiplicateur de production d'un habitant selon son rang social
+ *  (arbitrage Thibaut 2026-10-26) : bourgeois ×prodMultBourgeois,
+ *  noble ×prodMultNoble, roturier ×1. S'applique à TOUTE la production
+ *  de métier du villageois (ressources 1/2 et bonus Ponton), AVANT le
+ *  calcul des taxes (le gain amplifié est taxé comme les autres). */
+export function multProdRang(c: Character, C: Cfg): number {
+  const r = rangSocial(prestigeDe(c))
+  return r === 'noble' ? C.p.prodMultNoble : r === 'bourgeois' ? C.p.prodMultBourgeois : 1
+}
+
+/** Consommation de Nourriture d'un habitant vivant par tour (arbitrage
+ *  Thibaut 2026-10-26) : roturier consoNourrParHab (base), bourgeois
+ *  consoNourrBourgeois, noble consoNourrNoble. Le rang dérivé du
+ *  PRESTIGE — les mineurs (prestige 0) restent à la base. */
+export function consoNourrHabitant(c: Character, C: Cfg): number {
+  const r = rangSocial(prestigeDe(c))
+  return r === 'noble' ? C.p.consoNourrNoble
+    : r === 'bourgeois' ? C.p.consoNourrBourgeois
+    : C.p.consoNourrParHab
+}
 
 /** Multiplicateur de taxes d'une ville pour la production des habitants
  *  (toutes ressources) : Faible ×taxOrFaibles / Forte ×taxOrHautes. */
@@ -61,7 +92,7 @@ function gainsVilleBruts(state: GameState, p: Player, ville: City, C: Cfg): Reco
  *    metiers  : production brute des metiers des habitants vivants,
  *    taxeMult: multiplicateur de taxes de la ville (toutes ressources),
  *    taxes   : production taxée (= metiers × taxeMult),
- *    conso   : consommation de Nourriture (non taxée),
+ *    conso   : consommation de Nourriture (non taxée, par rang),
  *    net     : taxes − conso (ce qui est crédité au stock). */
 export interface GainsVilleDetail {
   habitants: number
@@ -96,14 +127,19 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     const td = metierDef(c.metier, C.config)
     if (!td) continue
     if (td.ete && state.saison !== 'Été') continue
+    // (Arbitrage Thibaut 2026-10-26 : la production du villageois est
+    //  multipliée par le multiplicateur de son RANG SOCIAL — bourgeois
+    //  ×1,5, noble ×1,5, AVANT les taxes — le gain amplifié est taxé
+    //  comme les autres.)
+    const mult = multProdRang(c, C)
     if (ponton && c.metier === 'Pêcheur') {
-      metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5
+      metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5 * mult
     }
     if (td.ressource1 && td.valeur1 !== 0) {
-      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1
+      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1 * mult
     }
     if (td.ressource2 && td.valeur2 !== 0) {
-      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2
+      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2 * mult
     }
   }
   // Taxes : le niveau module TOUTES les ressources produites par les habitants.
@@ -133,9 +169,11 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     const tv = v * taxeMult * (1 + (bonusTaxes[res] ?? 0))
     if (tv !== 0) taxes[res] = tv
   }
-  // Consommation (non taxée, appliquée après)
+  // Consommation (non taxée, appliquée après) — PAR RANG SOCIAL
+  //  (arbitrage Thibaut 2026-10-26) : roturier base, bourgeois 2,
+  //  noble 4 Nourriture par vivant et par tour.
   const conso: Record<string, number> = {}
-  const consoNourr = C.p.consoNourrParHab * vivants.length
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}

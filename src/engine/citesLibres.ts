@@ -35,6 +35,7 @@ import { rangPaysNiveau } from './factions'
 import { isNobleDyn, perteDemenagement } from './shared'
 import { resynchroniserTourisme } from './regimes'
 import { routesCommerceVersCite } from './commerce'
+import { consoNourrHabitant } from './economie'
 
 /** Consommation d'une cité libre : même règle qu'une ville de joueur —
  *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour. */
@@ -150,9 +151,14 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
     if (tv !== 0) taxes[res] = tv
   }
   // Consommation de la cité : comme une ville de joueur — la population
-  //  vivante consomme consoNourrParHab Nourriture par habitant et par tour.
+  //  vivante consomme selon son RANG SOCIAL (arbitrage Thibaut
+  //  2026-10-26 : base par tête, bourgeois 2, noble 4 — consoNourrHabitant,
+  //  engine/economie.ts). Le prestige des cités libres n'étant pas
+  //  calculé (evaluerFamilles ne court que pour les joueurs), leurs
+  //  habitants sont aujourd'hui tous à la consommation de base — la
+  //  règle est prête si le prestige y est ajouté un jour.
   const conso: Record<string, number> = {}
-  const consoNourr = C.p.consoNourrParHab * vivants.length
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}

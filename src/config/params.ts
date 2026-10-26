@@ -19,6 +19,18 @@ export interface GameParams {
   /** …ville avec Professeur de n'importe quel joueur. */
   migrationMonde: number
   consoNourrParHab: number
+  /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
+   *  un bourgeois vivant consomme consoNourrBourgeois Nourriture
+   *  par tour (au lieu de consoNourrParHab). */
+  consoNourrBourgeois: number
+  /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 250) —
+   *  un noble vivant consomme consoNourrNoble Nourriture par tour. */
+  consoNourrNoble: number
+  /** (Arbitrage Thibaut 2026-10-26) — multiplicateur de production
+   *  du villageois selon son rang social : bourgeois ×prodMultBourgeois,
+   *  noble ×prodMultNoble, roturier ×1. */
+  prodMultBourgeois: number
+  prodMultNoble: number
   gainsCrediteStock: number  // 1 = les gains de population créditent le stock
   // ── Fécondité ──
   fertBaseRate: number
@@ -156,6 +168,10 @@ export const DEFAULT_PARAMS: GameParams = {
   migrationSuzerain: 0.02,
   migrationMonde: 0.01,
   consoNourrParHab: 1,
+  consoNourrBourgeois: 2,
+  consoNourrNoble: 4,
+  prodMultBourgeois: 1.5,
+  prodMultNoble: 1.5,
   gainsCrediteStock: 1,
   fertBaseRate: 1.5,
   fertSingleFactor: 0.1,
@@ -249,7 +265,11 @@ export const PARAM_META: {
   { key: 'migrationEcole', label: 'Migration scolaire (même joueur)', groupe: 'Population', unite: 'proba', aide: 'Un enfant sans éducation dont la ville n\'a pas de Professeur part vers une ville avec Professeur du même joueur.' },
   { key: 'migrationSuzerain', label: 'Migration scolaire (suzerain)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de son suzerain, ou du suzerain de son suzerain.' },
   { key: 'migrationMonde', label: 'Migration scolaire (monde)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de n\'importe quel joueur.' },
-  { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant', groupe: 'Population' },
+  { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
+  { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
+  { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },
+  { key: 'prodMultBourgeois', label: 'Multiplicateur de production des bourgeois (rang)', groupe: 'Population', aide: 'La production du métier d\u2019un bourgeois vivant est multipliée par cette valeur (avant les taxes).' },
+  { key: 'prodMultNoble', label: 'Multiplicateur de production des nobles (rang)', groupe: 'Population' },
   { key: 'gainsCrediteStock', label: 'Gains de population crédités au stock (1 = oui)', groupe: 'Population' },
   { key: 'fertBaseRate', label: 'Fécondité de base (conception / tour)', groupe: 'Fécondité' },
   { key: 'fertSingleFactor', label: 'Facteur fécondité célibataire', groupe: 'Fécondité' },

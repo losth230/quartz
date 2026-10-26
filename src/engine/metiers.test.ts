@@ -40,7 +40,7 @@ import type { Character, City, GameState } from './types'
 import { cfgOf } from './gameData'
 import { capMetierVille, reaffecterMetiers, occupationsMetierVille } from './metiers'
 import { invaliderIndexPopulation } from './indexPopulation'
-import { detailGainsVille } from './economie'
+import { detailGainsVille, multProdRang, consoNourrHabitant } from './economie'
 import * as habitationsMod from './habitations'
 import { garnisonHabitationVille, detailGarnisonVille } from './regimes'
 
@@ -359,6 +359,59 @@ test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, 
   invaliderIndexPopulation()
   const avecTrouv = detailGainsVille(state, p, ville, C)
   assert.equal(avecTrouv.bonusTaxes['Tourisme'], undefined, 'aucun bonus sur une ressource non produite')
+})
+
+test('RANG SOCIAL (arbitrage Thibaut 2026-10-26) : bourgeois 2 Nourriture + production ×1,5 — noble 4 Nourriture + production ×1,5 — roturier base ×1', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  const ville = p.villes[0]
+  // 3 villageois de MÊME métier (Bûcheron, toute saison), de rangs
+  //  différents — le rang est DÉRIVÉ DU PRESTIGE, pas de la qualité
+  //  du métier (réponse au constat « aucune différence réelle entre
+  //  roturier et bourgeois »).
+  const rotu = perso('r-30', 30, { metier: 'Bûcheron' })
+  const bourg = perso('b-30', 30, { metier: 'Bûcheron' })
+  const noble = perso('n-30', 30, { metier: 'Bûcheron' })
+  rotu.prestige = 50   // roturier  (< 100)
+  bourg.prestige = 150 // bourgeois (100-250)
+  noble.prestige = 300 // noble     (250+)
+  // helpers directs
+  assert.equal(multProdRang(rotu, C), 1, 'roturier : ×1')
+  assert.equal(multProdRang(bourg, C), C.p.prodMultBourgeois, 'bourgeois : ×1,5')
+  assert.equal(multProdRang(noble, C), C.p.prodMultNoble, 'noble : ×1,5')
+  assert.equal(consoNourrHabitant(rotu, C), C.p.consoNourrParHab, 'roturier : conso base')
+  assert.equal(consoNourrHabitant(bourg, C), C.p.consoNourrBourgeois, 'bourgeois : 2 Nourriture')
+  assert.equal(consoNourrHabitant(noble, C), C.p.consoNourrNoble, 'noble : 4 Nourriture')
+  // production brute : un bûcheron bourgeois produit ×1,5, un noble ×1,5
+  for (const [cible, mult] of [[bourg, C.p.prodMultBourgeois], [noble, C.p.prodMultNoble]] as const) {
+    state.population[p.n] = [rotu]
+    invaliderIndexPopulation()
+    const base = detailGainsVille(state, p, ville, C)
+    state.population[p.n] = [cible]
+    invaliderIndexPopulation()
+    const d = detailGainsVille(state, p, ville, C)
+    for (const [res, v] of Object.entries(base.metiers)) {
+      assert.ok(Math.abs(d.metiers[res] - v * mult) < 1e-9,
+        `${cible.prenom} : production ${res} ×${mult} (reçue ${d.metiers[res]}, base ${v})`)
+    }
+    assert.ok(Math.abs(d.taxes['Bois'] - base.taxes['Bois'] * mult) < 1e-9,
+      'le gain amplifié passe bien PAR les taxes (×1,5 avant, taxe ensuite)')
+  }
+  // consommation par rang : 1 + 2 + 4 = 7 pour les trois ensemble
+  state.population[p.n] = [rotu, bourg, noble]
+  invaliderIndexPopulation()
+  const d3 = detailGainsVille(state, p, ville, C)
+  assert.ok(Math.abs(d3.conso['Nourriture'] + 7) < 1e-9,
+    `conso des trois rangs = 7 Nourriture (reçue ${d3.conso['Nourriture']})`)
+  // un MINEUR (prestige 0, sans métier) reste à la consommation de base
+  state.population[p.n].push(perso('e-8', 8, { metier: null }))
+  invaliderIndexPopulation()
+  const d4 = detailGainsVille(state, p, ville, C)
+  assert.ok(Math.abs(d4.conso['Nourriture'] + 7 + C.p.consoNourrParHab) < 1e-9,
+    'un mineur (sans prestige propre) consomme la base, pas le rang de ses parents')
+  assert.ok(Math.abs(d4.metiers['Bois'] - d3.metiers['Bois']) < 1e-9,
+    'un mineur ne produit rien : la production est inchangée')
 })
 
 test('reaffecterMetiers (2026-10-24) : le métier de Marchand RETIRÉ du jeu — ses porteurs perdent le titre, puis reprennent un poste aux places libres', () => {
