@@ -704,11 +704,16 @@ input[type='range'] {
 
 /* Population (cultures) & garnison côte à côte — retour Thibaut
    2026-10-26 : mêmes colonnes que .ville-constr, repli sous 560px.
+   (Retour Thibaut 2026-10-26 « réduit les tableaux pour ajouter les
+   logements » : la ligne passe en 3 colonnes égales — cultures,
+   garnison, logements — repli 2 colonnes sous 860px puis 1 sous
+   560px.)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée
    par un liseré accent (plus de styles inline dans VilleCarte). */
-.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 16px; }
+@media (max-width: 860px) { .ville-duo-cols { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 560px) { .ville-duo-cols { grid-template-columns: 1fr; } }
 .ville-duo-titre {
   color: var(--accent); font-size: 11px; font-weight: 600;

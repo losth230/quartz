@@ -113,7 +113,7 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   }
 })
 
-test('rendu VilleCarte : population & garnison en 2 colonnes — tableaux propres (retour Thibaut 2026-10-26)', async () => {
+test('rendu VilleCarte : population, garnison & logements en 3 colonnes — tableaux propres (retours Thibaut 2026-10-26)', async () => {
   const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
@@ -178,6 +178,37 @@ test('rendu VilleCarte : population & garnison en 2 colonnes — tableaux propre
     h.includes(`Garnison des habitations : <strong>${esc(fmt(g))}</strong>`),
     `garnison ${fmt(g)} de « ${cap.nom} » absente du titre de colonne`,
   )
+  // ── LOGEMENTS (retour Thibaut 2026-10-26 : « réduit les tableaux
+  //  pour ajouter les logements ») : 3e tableau de la ligne — parc
+  //  par type de domicile, occupés/capacité puis libres, le tout
+  //  DÉRIVÉ de l'état (patron R3 : stock City.domiciles + apports
+  //  des constructions, occupés = foyers attribués).
+  const { foyersDeVille, domicilesApportesVille } = await import('../engine/domiciles')
+  const capLog = new Map<string, number>()
+  for (const e of Array.isArray(cap.domiciles) ? cap.domiciles : []) {
+    capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+  }
+  for (const e of domicilesApportesVille(cap, C)) {
+    capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+  }
+  const capTotale = [...capLog.values()].reduce((a, b) => a + b, 0)
+  assert.ok(
+    h.includes(`Logements : <strong>${esc(fmt(capTotale))}</strong>`),
+    `capacité totale ${fmt(capTotale)} absente du titre du tableau logements`,
+  )
+  const foyersCap = foyersDeVille(etat, 1, cap, C)
+  const occLog = new Map<string, number>()
+  for (const f of foyersCap) {
+    if (f.domicile) occLog.set(f.domicile, (occLog.get(f.domicile) ?? 0) + 1)
+  }
+  for (const [nom, c] of capLog) {
+    if (c <= 0 || !C.config.domiciles.some((d) => d.domicile === nom)) continue
+    const o = occLog.get(nom) ?? 0
+    assert.ok(
+      h.includes(`class="num">${esc(fmt(o))}/${esc(fmt(c))}</td>`),
+      `ligne logements « ${nom} » (${fmt(o)}/${fmt(c)}) absente du 3e tableau`,
+    )
+  }
 })
 
 test('rendu VilleCarte : production épurée par défaut — non produites cachées, toggle « tout afficher » (retour Thibaut 2026-10-26)', async () => {

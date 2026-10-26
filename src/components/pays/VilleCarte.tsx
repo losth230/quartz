@@ -8,8 +8,10 @@
 //  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) — ni la culture
 //  NI le compte de vivants ne vivent en tête (retours Thibaut
 //  2026-10-26 : le tableau « Cultures présentes » porte la culture
-//  ET le total des vivants) ; (2) POPULATION & GARNISON en 2
-//  COLONNES
+//  ET le total des vivants) ; (2) POPULATION, GARNISON & LOGEMENTS
+//  en 3 COLONNES (retour Thibaut 2026-10-26 : les tableaux cultures
+//  et garnison sont RÉDUITS pour loger un 3e tableau « Logements »
+//  — parc par type de domicile, occupés/capacité puis libres)
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
@@ -37,7 +39,7 @@ import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../eng
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
-import { initStockVille } from '../../engine/domiciles'
+import { initStockVille, stockRang, foyersDeVille, domicilesApportesVille } from '../../engine/domiciles'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
@@ -255,13 +257,14 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
 
-        {/* POPULATION & GARNISON en 2 COLONNES (retour Thibaut
-            2026-10-26). La garnison est une VALEUR D'ÉTAT (pas un
-            flux) : base du rang + bâtiments + loi éventuelle du
-            régime ; ne change pas à chaque tour. Arbitre : le
-            tableau détaillé reste TOUJOURS visible — relooké en
-            classes CSS dédiées (.ville-table), plus de styles
-            inline ni de titre verbeux. */}
+        {/* POPULATION, GARNISON & LOGEMENTS en 3 COLONNES (retour
+            Thibaut 2026-10-26 : cultures et garnison réduites pour
+            loger le tableau Logements). La garnison est une VALEUR
+            D'ÉTAT (pas un flux) : base du rang + bâtiments + loi
+            éventuelle du régime ; ne change pas à chaque tour.
+            Arbitre : le tableau détaillé reste TOUJOURS visible —
+            relooké en classes CSS dédiées (.ville-table), plus de
+            styles inline ni de titre verbeux. */}
         {(() => {
           const g = garnisonHabitationVille(p, ville, C, state)
           const lignes = detailGarnisonVille(p, ville, C, state)
@@ -269,6 +272,38 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const plancher = g - sousTotal
           const part = (nb: number) =>
             nbVivants > 0 ? `${Math.round((100 * nb) / nbVivants)} %` : '—'
+          // ── LOGEMENTS (retour Thibaut 2026-10-26 : 3e tableau de
+          //  la ligne) : parc par type de domicile, meilleure qualité
+          //  d'abord — capacité du rang (City.domiciles, repli
+          //  stockRang pour un état non normalisé) + apports des
+          //  constructions (domicilesApportesVille : Poste de garde,
+          //  quartiers…) ; occupés = foyers attribués (un foyer = un
+          //  logement, les enfants suivent) ; libres = reste.
+          const stockLog = Array.isArray(ville.domiciles)
+            ? ville.domiciles
+            : stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
+          const capLog = new Map<string, number>()
+          for (const e of stockLog) capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          for (const e of domicilesApportesVille(ville, C)) {
+            capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          }
+          const foyersLog = foyersDeVille(state, p.n, ville, C)
+          const occLog = new Map<string, number>()
+          for (const f of foyersLog) {
+            if (f.domicile) occLog.set(f.domicile, (occLog.get(f.domicile) ?? 0) + 1)
+          }
+          const sansLogement = foyersLog.filter((f) => !f.domicile).length
+          const lignesLog = C.config.domiciles
+            .filter((d) => (capLog.get(d.domicile) ?? 0) > 0)
+            .sort((a, z) => z.qualite - a.qualite)
+            .map((d) => {
+              const cap = capLog.get(d.domicile) ?? 0
+              const occ = occLog.get(d.domicile) ?? 0
+              return { nom: d.domicile, cap, occ, libres: cap - occ }
+            })
+          const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
+          const libresTotaux = lignesLog.reduce((n, l) => n + l.libres, 0)
+          const foyersLoges = foyersLog.length - sansLogement
           return (
             <div className="ville-duo-cols">
               <div>
@@ -329,6 +364,45 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              {/* ── LOGEMENTS : 3e tableau de la ligne (retour Thibaut
+                  2026-10-26 — cultures/garnison réduites d'autant).
+                  Colonnes : type · occupés/capacité · libres ; le
+                  total rend foyers logés / capacité totale. */}
+              <div>
+                <div
+                  className="ville-duo-titre"
+                  title="Par type de domicile, meilleure qualité d'abord : occupés/capacité puis places libres. Un foyer = un logement (les enfants mineurs suivent) ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…)."
+                >
+                  Logements : <strong>{fmt(capTotale)}</strong>
+                </div>
+                {lignesLog.length === 0 ? (
+                  <div className="muted small">aucun logement</div>
+                ) : (
+                  <table className="ville-table">
+                    <tbody>
+                      {lignesLog.map((l) => (
+                        <tr key={l.nom}>
+                          <td>{l.nom}</td>
+                          <td className="num">{fmt(l.occ)}/{fmt(l.cap)}</td>
+                          <td className="num muted">{fmt(l.libres)}</td>
+                        </tr>
+                      ))}
+                      {sansLogement > 0 && (
+                        <tr>
+                          <td className="neg">sans logement</td>
+                          <td className="num neg">{fmt(sansLogement)}</td>
+                          <td />
+                        </tr>
+                      )}
+                      <tr className="ligne-total">
+                        <td><strong>Foyers logés</strong></td>
+                        <td className="num"><strong>{fmt(foyersLoges)}/{fmt(capTotale)}</strong></td>
+                        <td className="num muted"><strong>{fmt(libresTotaux)}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                )}
               </div>
             </div>
           )
