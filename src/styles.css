@@ -705,16 +705,36 @@ input[type='range'] {
 /* Population (cultures) & garnison côte à côte — retour Thibaut
    2026-10-26 : mêmes colonnes que .ville-constr, repli sous 560px.
    (Retour Thibaut 2026-10-26 « réduit les tableaux pour ajouter les
-   logements » : la ligne passe en 3 colonnes égales — cultures,
-   garnison, logements — repli 2 colonnes sous 860px puis 1 sous
-   560px.)
+   logements » : la ligne passe en 3 colonnes — cultures, garnison,
+   logements — repli 2 colonnes sous 860px puis 1 sous 560px.
+   Retour suivant « petites séparations + réduire le tableau de
+   culture » : filet vertical discret entre les tableaux (même
+   teinte que les filets de .ville-table) et cultures RÉTRÉCIE
+   (0.8fr) au profit de garnison et logements qui portent des
+   textes plus longs. Le filet suit la colonne (padding gauche), le
+   repli 2 colonnes l'enlève au 3e tableau (1re colonne de la 2e
+   rangée), le repli 1 colonne empile avec un filet horizontal.)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée
    par un liseré accent (plus de styles inline dans VilleCarte). */
-.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px 16px; }
-@media (max-width: 860px) { .ville-duo-cols { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 560px) { .ville-duo-cols { grid-template-columns: 1fr; } }
+.ville-duo-cols { display: grid; grid-template-columns: 0.8fr 1fr 1fr; gap: 4px 18px; }
+.ville-duo-cols > div:not(:first-child) {
+  border-left: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+  padding-left: 18px;
+}
+@media (max-width: 860px) {
+  .ville-duo-cols { grid-template-columns: 1fr 1fr; }
+  .ville-duo-cols > div:nth-child(3) { border-left: none; padding-left: 0; }
+}
+@media (max-width: 560px) {
+  .ville-duo-cols { grid-template-columns: 1fr; }
+  .ville-duo-cols > div:not(:first-child) {
+    border-left: none; padding-left: 0;
+    border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+    padding-top: 8px;
+  }
+}
 .ville-duo-titre {
   color: var(--accent); font-size: 11px; font-weight: 600;
   text-transform: uppercase; letter-spacing: 0.4px; margin: 4px 0 2px;
