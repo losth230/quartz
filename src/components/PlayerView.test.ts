@@ -67,3 +67,42 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
     `culture majoritaire « ${cap.culture} » de ${cap.nom} non rendue`,
   )
 })
+
+
+test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jauges (retour arbitre 2026-10-25)', async () => {
+  const etat = await partieRendu()
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { GameProvider } = await import('../state/store')
+  const { PlayerView } = await import('./PlayerView')
+  const { cfgOf } = await import('../engine/gameData')
+  const { scoresVille, bonheurVille } = await import('../engine/bonheur')
+
+  const html = renderToString(
+    React.createElement(GameProvider, null, React.createElement(PlayerView, { joueur: 1 })),
+  )
+  const h = aplatir(html)
+  // Le bloc (et non plus l'ancienne ligne d'info) est rendu.
+  assert.ok(h.includes('bonheur-bloc'), 'bloc bonheur absent de la carte ville')
+  // (l'ancienne ligne rendait « Bonheur : <strong> » — le bloc actuel
+  //  rend « Bonheur <strong> » sans deux-points ; l'info-bulle du bloc
+  //  contient « Bonheur : moyenne… », d'où le motif distinctif)
+  assert.ok(!h.includes('Bonheur : <strong'), 'ancienne ligne bonheur encore rendue')
+  // Moyenne + les 5 axes, valeurs dérivées de l'état (patron R3).
+  const C = cfgOf(etat.config)
+  const p1 = etat.players.find((p) => p.n === 1)
+  assert.ok(p1, 'joueur 1 introuvable')
+  for (const v of p1.villes) {
+    const s = scoresVille(etat, p1, v, C)
+    const b = bonheurVille(s)
+    assert.ok(h.includes(`>${b}</strong>`), `moyenne bonheur ${b} de « ${v.nom} » absente`)
+    const axes: Array<[string, number]> = [
+      ['Emploi', s.emploi], ['Logement', s.logement], ['Sécurité', s.securite],
+      ['Tourisme', s.tourisme], ['Santé', s.sante],
+    ]
+    for (const [label, val] of axes) {
+      assert.ok(h.includes(esc(label)), `axe « ${label} » absent du bloc bonheur`)
+      assert.ok(h.includes(`>${val}</span>`), `valeur ${val} de l'axe « ${label} » (« ${v.nom} ») absente`)
+    }
+  }
+})

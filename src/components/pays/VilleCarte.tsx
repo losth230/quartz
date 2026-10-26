@@ -1,9 +1,14 @@
 // ══════════════════════════════════════════════════════════════════════
-//  UNE VILLE de la page Pays : nom / taxes / proximité, actions
-//  (transfert, suppression, cité libre), cultures présentes, garnison
-//  des habitations, rang & type, consommation, aménagements et
-//  bâtiments (choix à catégories — marqueur (y)), lignes « Autres »,
-//  production de la ville.
+//  UNE VILLE de la page Pays — structure PAR BLOCS (retour arbitre
+//  Thibaut 2026-10-25 « regrouper par blocs ») : (1) TÊTE : nom /
+//  taxes / proximité + BLOC BONHEUR en HAUT DROITE (moyenne + 5
+//  mini-jauges) ; (2) IDENTITÉ : culture majoritaire, habitants
+//  vivants, cultures présentes ; (3) RANG & TYPE + habitants
+//  requis ; (4) GARNISON des habitations (tableau détaillé,
+//  conservé visible — arbitre) ; (5) CONSTRUCTIONS : aménagements
+//  et bâtiments (choix à catégories — marqueur (y)) ; (6) AUTRES ;
+//  (7) PRODUCTION ; (8) ACTIONS RARES en BAS de carte (transfert,
+//  suppression, cité libre) — elles ne cannibalisent plus la tête.
 //  (RETRAIT 2026-10-19, retour arbitre : la heatmap d'attrait migratoire
 //   a été retirée avec la migration spontanée par Tourisme — à refaire.)
 //  (Extrait de PlayerView.tsx — un fichier par UI.)
@@ -84,6 +89,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         {/* Ligne de tête densifiée (retour Thibaut 2026-10-14) :
             nom de la ville EN GRAS + niveau de taxes sur la
             même ligne. */}
+        <div className="ville-tete-wrap">
         <div className="ville-tete">
         <Field label="Nom">
           <TextInput
@@ -121,66 +127,42 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           />
         </Field>
         </div>
-        {/* Actions de ville : transfert à un autre joueur
-            (capture, vente, cadeau — la ville ET ses habitants
-            suivent) et suppression (les habitants restent
-            inscrits dans la population). Retour Thibaut. */}
-        <div className="badges-wrap">
-          <Select
-            value=""
-            options={[
-              { value: '' as const, label: '⇄ Transférer la ville à…' },
-              ...state.players
-                .filter((x) => x.n !== p.n)
-                .map((x) => ({ value: String(x.n), label: `${x.nom} (J${x.n})` })),
-            ]}
-            onChange={(v) => v && update((st) => {
-              const src = st.players.find((x) => x.n === joueur)
-              const dst = st.players.find((x) => x.n === parseInt(v, 10))
-              if (src && dst) {
-                const nomAvant = src.villes[idx]?.nom ?? ''
-                transfererVille(st, src, idx, dst)
-                // PROTOCOLE v2 (bug 2026-10-17 : ville transférée
-                //  perdue en fin de tour) : le transfert est une
-                //  mutation INTER-JOUEURS — la section du
-                //  RECEVEUR, poussée avant, l'écraserait à la
-                //  fusion. Il part donc aussi en ÉVÉNEMENT
-                //  PARTAGÉ (cp_events, type 'transfert_ville'),
-                //  rejoué par la résolution APRÈS la fusion des
-                //  sections (idempotent). best effort : si
-                //  l'insert échoue, le transfert reste visible
-                //  localement chez l'émetteur.
-                void remote.pousserEvenementPartage(
-                  salon, st.turn, joueur, 'transfert_ville',
-                  { ville: nomAvant, src: joueur, dst: parseInt(v, 10) },
-                )
-              }
-            })}
-          />
-          <Button
-            tone="danger"
-            onClick={() => {
-              if (!window.confirm(`Supprimer « ${ville.nom} » ? Sa population classique sera DÉFINITIVEMENT supprimée avec elle (la cour reste inscrite ; l'arbitre la reloge).`)) return
-              update((st) => {
-                const src = st.players.find((x) => x.n === joueur)
-                if (src) supprimerVille(st, src, idx)
-              })
-            }}
-          >
-            🗑 Supprimer
-          </Button>
-          <Button
-            title="La ville quitte le joueur et devient une cité libre — il reçoit 1 émissaire placé dans cette cité"
-            onClick={() => {
-              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité (retour Thibaut).`)) return
-              update((st) => {
-                const src = st.players.find((x) => x.n === joueur)
-                if (src) villeDevientCiteLibre(st, src, idx)
-              })
-            }}
-          >
-            🏼 Devenir cité libre
-          </Button>
+        {/* BONHEUR (retour arbitre Thibaut 2026-10-25) : HAUT DROITE
+            de la carte — moyenne + les 5 axes en MINI-JAUGES (label +
+            barre colorée + valeur), plus seulement une info-bulle.
+            Vague E design bonheur 2026-10-24 : moyenne simple des 5
+            facteurs, indicateur PUR à ce jour. */}
+        {(() => {
+          const s = scoresVille(state, p, ville, C)
+          const b = bonheurVille(s)
+          const axes: Array<[string, number]> = [
+            ['Emploi', s.emploi],
+            ['Logement', s.logement],
+            ['Sécurité', s.securite],
+            ['Tourisme', s.tourisme],
+            ['Santé', s.sante],
+          ]
+          const coul = (v: number) =>
+            v >= 70 ? 'var(--green, green)' : v >= 40 ? 'var(--yellow, #b8860b)' : 'var(--red, #b22222)'
+          return (
+            <div
+              className="bonheur-bloc"
+              title="Bonheur : moyenne simple des 5 facteurs (emploi, logement, sécurité, tourisme, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré)"
+            >
+              <div className="bonheur-moyen">
+                Bonheur <strong style={{ color: coul(b) }}>{b}</strong>
+                <span className="muted">/100</span>
+              </div>
+              {axes.map(([label, v]) => (
+                <div key={label} className="bonheur-axe" title={`${label} : ${v}/100`}>
+                  <span className="bonheur-axe-label">{label}</span>
+                  <span className="bonheur-axe-barre"><span style={{ width: `${v}%`, background: coul(v) }} /></span>
+                  <span className="bonheur-axe-val">{v}</span>
+                </div>
+              ))}
+            </div>
+          )
+        })()}
         </div>
         <div className="muted small">
           Culture majoritaire : <strong>{ville.culture}</strong> · {nbVivants} habitant(s) vivant(s)
@@ -197,60 +179,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             ))}
           </div>
         )}
-        {/* BONHEUR de la ville (vague E, design bonheur 2026-10-24) :
-            moyenne simple des 5 facteurs — jauge compacte avec le
-            détail au survol (info-bulle). */}
-        {(() => {
-          const s = scoresVille(state, p, ville, C)
-          const b = bonheurVille(s)
-          const couleur = b >= 70 ? 'var(--green, green)' : b >= 40 ? 'var(--yellow, #b8860b)' : 'var(--red, #b22222)'
-          return (
-            <div className="small" title={`Bonheur ${b}/100 — emploi ${s.emploi}, logement ${s.logement}, sécurité ${s.securite}, tourisme ${s.tourisme}, santé ${s.sante}`}>
-              Bonheur : <strong style={{ color: couleur }}>{b}</strong>{' '}
-              <span className="muted">/ 100</span>
-            </div>
-          )
-        })()}
-        {/* Garnison des habitations, notée sous la culture —
-            VALEUR D'ÉTAT (pas un flux) : base du rang + bâtiments
-            + loi éventuelle du régime ; ne change pas à chaque tour. */}
-        {(() => {
-          const g = garnisonHabitationVille(p, ville, C, state)
-          const lignes = detailGarnisonVille(p, ville, C, state)
-          const sousTotal = lignes.reduce((n, l) => n + l.valeur, 0)
-          const plancher = g - sousTotal
-          return (
-            <div className="small stack small-gap">
-              <div>
-                Garnison des habitations : <strong>{fmt(g)}</strong>
-                <span className="muted small"> — d'où vient ce chiffre :</span>
-              </div>
-              <table className="small" style={{ borderCollapse: 'collapse', width: '100%' }}>
-                <tbody>
-                  {lignes.map((l, i) => (
-                    <tr key={i}>
-                      <td className="muted small">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
-                      <td>{l.label}</td>
-                      <td className={l.valeur < 0 ? 'neg' : ''}>{l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}</td>
-                    </tr>
-                  ))}
-                  {plancher > 0 && (
-                    <tr>
-                      <td className="muted small">plancher</td>
-                      <td>« Combler les lacunes » : minimum 30</td>
-                      <td>+{fmt(plancher)}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td />
-                    <td><strong>Total</strong></td>
-                    <td><strong>{fmt(g)}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )
-        })()}
+        {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
+            arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
         {/* Rang d'habitation et type de ville (Ville / Château)
             sur la même ligne — échelles de rangs différentes :
             Hameau → Cité → Grande Cité ou Motte → Donjon → Forteresse. */}
@@ -307,6 +237,48 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           )
         })()}
 
+        {/* GARNISON des habitations (bloc 4 — sous rang & type,
+            retour arbitre 2026-10-25 ; le tableau détaillé reste
+            TOUJOURS visible — arbitre) :
+            VALEUR D'ÉTAT (pas un flux) : base du rang + bâtiments
+            + loi éventuelle du régime ; ne change pas à chaque tour. */}
+        {(() => {
+          const g = garnisonHabitationVille(p, ville, C, state)
+          const lignes = detailGarnisonVille(p, ville, C, state)
+          const sousTotal = lignes.reduce((n, l) => n + l.valeur, 0)
+          const plancher = g - sousTotal
+          return (
+            <div className="small stack small-gap">
+              <div>
+                Garnison des habitations : <strong>{fmt(g)}</strong>
+                <span className="muted small"> — d'où vient ce chiffre :</span>
+              </div>
+              <table className="small" style={{ borderCollapse: 'collapse', width: '100%' }}>
+                <tbody>
+                  {lignes.map((l, i) => (
+                    <tr key={i}>
+                      <td className="muted small">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
+                      <td>{l.label}</td>
+                      <td className={l.valeur < 0 ? 'neg' : ''}>{l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}</td>
+                    </tr>
+                  ))}
+                  {plancher > 0 && (
+                    <tr>
+                      <td className="muted small">plancher</td>
+                      <td>« Combler les lacunes » : minimum 30</td>
+                      <td>+{fmt(plancher)}</td>
+                    </tr>
+                  )}
+                  <tr>
+                    <td />
+                    <td><strong>Total</strong></td>
+                    <td><strong>{fmt(g)}</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          )
+        })()}
         {/* ── Aménagements et bâtiments CÔTE À CÔTE (densification,
             retour Thibaut 2026-10-14) ── */}
         <div className="ville-constr">
@@ -641,6 +613,70 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             </div>
           )
         })()}
+
+        {/* ACTIONS RARES — BAS de carte (retour arbitre Thibaut
+            2026-10-25 « regrouper par blocs » : elles ne
+            cannibalisent plus la tête de lecture) : transfert à un
+            autre joueur (capture, vente, cadeau — la ville ET ses
+            habitants suivent) et suppression (les habitants restent
+            inscrits dans la population). Retour Thibaut. */}
+        <div className="badges-wrap">
+          <Select
+            value=""
+            options={[
+              { value: '' as const, label: '⇄ Transférer la ville à…' },
+              ...state.players
+                .filter((x) => x.n !== p.n)
+                .map((x) => ({ value: String(x.n), label: `${x.nom} (J${x.n})` })),
+            ]}
+            onChange={(v) => v && update((st) => {
+              const src = st.players.find((x) => x.n === joueur)
+              const dst = st.players.find((x) => x.n === parseInt(v, 10))
+              if (src && dst) {
+                const nomAvant = src.villes[idx]?.nom ?? ''
+                transfererVille(st, src, idx, dst)
+                // PROTOCOLE v2 (bug 2026-10-17 : ville transférée
+                //  perdue en fin de tour) : le transfert est une
+                //  mutation INTER-JOUEURS — la section du
+                //  RECEVEUR, poussée avant, l'écraserait à la
+                //  fusion. Il part donc aussi en ÉVÉNEMENT
+                //  PARTAGÉ (cp_events, type 'transfert_ville'),
+                //  rejoué par la résolution APRÈS la fusion des
+                //  sections (idempotent). best effort : si
+                //  l'insert échoue, le transfert reste visible
+                //  localement chez l'émetteur.
+                void remote.pousserEvenementPartage(
+                  salon, st.turn, joueur, 'transfert_ville',
+                  { ville: nomAvant, src: joueur, dst: parseInt(v, 10) },
+                )
+              }
+            })}
+          />
+          <Button
+            tone="danger"
+            onClick={() => {
+              if (!window.confirm(`Supprimer « ${ville.nom} » ? Sa population classique sera DÉFINITIVEMENT supprimée avec elle (la cour reste inscrite ; l'arbitre la reloge).`)) return
+              update((st) => {
+                const src = st.players.find((x) => x.n === joueur)
+                if (src) supprimerVille(st, src, idx)
+              })
+            }}
+          >
+            🗑 Supprimer
+          </Button>
+          <Button
+            title="La ville quitte le joueur et devient une cité libre — il reçoit 1 émissaire placé dans cette cité"
+            onClick={() => {
+              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité (retour Thibaut).`)) return
+              update((st) => {
+                const src = st.players.find((x) => x.n === joueur)
+                if (src) villeDevientCiteLibre(st, src, idx)
+              })
+            }}
+          >
+            🏼 Devenir cité libre
+          </Button>
+        </div>
 
       </div>
   )
