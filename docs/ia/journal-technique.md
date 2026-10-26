@@ -3482,3 +3482,38 @@ Traitement :
 Validation : 158/158 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (la partie fraîche du diag n'a
 ni bourgeois ni nobles : aucun impact).
+
+## Fiche aménagements 3 tiers (retour Thibaut 2026-10-26)
+
+Thibaut envoie la fiche aménagements complète « mise à jour
+avec les nouvelles règles » (14 aménagements × 3 tiers, coûts
+uniformes 8 Or + 3 Bois / 15 Or + 3 Pierre / 35 Or + 3 Fer).
+
+Constat : le référentiel était DÉJÀ aligné sur la fiche —
+42 aménagements, emplacements et terrains identiques — à deux
+corrections près (plus les Taudis invisibles à l'écran).
+
+Traitement :
+- Scierie tier 2 : la fiche donne 2 Tisseurs (le référentiel
+  en avait 1) — emplacements et champ production réalignés
+  (4 Bûcheron + 2 Tisseur + 8 Taudis).
+- Mine d'Or : la fiche compte encore des « marchands » (métier
+  retiré du jeu le 2026-10-24). Arbitrage Thibaut : « tu as
+  raison pour les marchands, à la place remplace 1 marchand
+  par 2 commerçants » → les 3/7/12 Marchands des tiers 1/2/3
+  deviennent 6/14/24 Commerçants ; emplacements et champs
+  production réalignés, description du référentiel mise à jour.
+- resumeConstruction (constructions.ts) : les Taudis apportés
+  par un aménagement (taudisApportes 5/8/10, déjà lus par le
+  facteur Logement du bonheur) s'affichent désormais dans le
+  résumé (« +5 Taudis ») — LA source affichée partout (picker
+  Aménager/Améliorations, lignes de carte, page
+  Constructions) : la propagation est automatique.
+- Tests natifs : 158 → 162. Quatre verrous (domiciles.test.ts) :
+  cumul taudisApportesVille (5+5+0 = 10, 5+8 = 13), Scierie t2
+  (2 Tisseur, 4 Bûcheron, 8 Taudis), Mine d'Or 6/14/24
+  Commerçants, « +5/+8 Taudis » dans resumeConstruction.
+
+Validation : 162/162 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (le diag ne rend pas les
+résumés de construction).
