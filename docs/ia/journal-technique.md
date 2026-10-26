@@ -3565,3 +3565,95 @@ idempotent). Comportement documenté, pas d'écrasement forcé.
 Validation : 162/162 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (partie fraîche : 36-38
 Chasseurs sous le cap de 40, le log ne change pas).
+
+## Fiche bâtiments de rang 1 et 2 (retour Thibaut 2026-10-26)
+
+Base 4fe5bb30. Fiche complète « bâtiments de rang 1 et 2 » :
+Militaire, Économique, Guilde, pour les deux types
+d'habitation. Constat d'ensemble : le rang 1 était déjà
+conforme au référentiel SAUF trois points ; le rang 2
+avait été retiré du référentiel le 2026-10-23 (« Rangs 2
+et 3, tout sauf rang 1 ») — il revient IN EXTENSO avec
+les valeurs de la fiche.
+
+Rang 1 — trois corrections :
+- Poste de garde (les deux) : +10 Taudis manquants →
+  taudisApportes: 10, prod/desc réalignées.
+- Bas quartier (les deux) : ABSENT → créé, famille
+  Militaire, « 10 Bois + 10 Or », +20 Taudis.
+- Herboristerie (les deux) : l'emplacement Guérisseur
+  résiduel est RETIRÉ (la fiche ne donne que ±5% maladie —
+  champs malContraction/bonusGuerison 0.05 déjà présents).
+  Le Guérisseur migre vers la Clinique (rang 2, +5).
+  Conséquence picker : resumeConstruction(Herboristerie)
+  devenait vide et le « + Construire » retombait sur la
+  description du classeur (périmée) → resumeConstruction
+  affiche désormais les effets structurés (« +5% chances
+  de maladie, +5% guérison »), verrou rendu mis à jour.
+
+Rang 2 — 23 bâtiments réactivés (12 Ville, 11 Château ;
+total référentiel 94 constructions) : Caserne, Réseau de
+routes, Tour de sorcier (+1 Scientifique, +1 Maison de
+notable via le NOUVEAU champ domicilesApportes), Quartier
+intermédiaire (+20 Maisons), Ecole militaire, Haut quartier
+(Château, +20 Maisons de notable), Camp de travailleurs,
+Silo à grain (remplace la Grange), Moulin à vent (consomme
+1 Charbon/tour, bloque le passage en Grande Cité), Place du
+marché, Port de commerce, Port de pêche, Clinique (+5
+Guérisseurs), Cabinet d'astronomie, Chapelle, Ecole
+intermédiaire (remplace l'Ecole élémentaire, consomme
+3 Or/tour), Guilde des artisans de la terre (remplace le
+Moulin à vent, consomme 1 Charbon/tour, +30 Fermiers),
+Guilde des explorateurs. Prérequis via le champ cout
+(« X requis ») : mécanique prerequisConstruction EXISTANTE,
+le picker l'affiche déjà (« Prérequis : … »).
+
+Le filtre cfgOf du 2026-10-23 (qui retirait les bâtiments
+rang ≥ 2 de toute config) devient PURGE + RESYNC : les
+configs monde sauvegardées AVANT portaient les VIEILLES
+valeurs des bâtiments rang 2 (la complétion ne remplace
+jamais un nom connu) — on retire tous les bâtiments rang
+≥ 2 puis on réinjecte ceux du RÉFÉRENTIEL courant (les
+valeurs de la fiche font foi, sans doublon, idempotent).
+
+Moteur : nouvelle fonction domicilesApportesVille(ville, C)
+cumule Taudis (taudisApportes) et autres domiciles
+(domicilesApportes) sur aménagements ET bâtiments ;
+taudisApportesVille devient le canal Taudis de la même ;
+logementsVille (bonheur.ts) passe par elle (le Tour de
+sorcier et les quartiers logent donc pour de vrai).
+resumeConstruction affiche les domiciles apportés (« +20
+Maisons », pluriel sur le premier mot). Le champ
+remplaceBatiment (Silo → Grange, Ecole intermédiaire →
+Ecole élémentaire, Guilde artisans → Moulin à vent) est
+posé EN DONNÉES : la mécanique d'amélioration à l'écran
+reste à implémenter.
+
+Mécaniques posées en données/description mais à
+implémenter : Herses de siège, téléportation d'armées
+(Tour de sorcier), PM d'enceinte à 1 (Réseau de routes),
+réductions de coût de levée (Terrain d'entrainement −10,
+Ecole militaire −25, Guilde des explorateurs −20),
+routes commerciales supplémentaires (Echoppe, Place du
+marché), bonus pêcheurs (Ponton +0,5 Bétail, Port de
+pêche +2 Nourriture), fermiers du pays +5 Nourriture en
+été (Guilde artisans), blocage Grande Cité (Moulin à
+vent). « Responsable des voiries » (Guilde explorateurs) :
+office inexistant dans le moteur — arbitrage demandé.
+Camp de travailleurs : le OU (bûcheron/mineur) est
+documenté en description, le prérequis cout exige un Camp
+de bûcheron.
+
+Tests : 162 → 168 natifs (verrous rang 2 : domiciles
+apportés par bâtiments, cumuls Maisons/Notables, prérequis
+lus du cout, Caserne Ville+Château, Herboristerie sans
+emplacements vs Clinique +5, resume ±5% ; config.test :
+réactivation 23 bâtiments + resync idempotent + migration
+v4 inversée ; sante.test : témoin Clinique). Rang 1
+inchangé ailleurs (Herses, Conjuratoire, Grange, Ponton,
+Echoppe Ville déjà conformes ; Echoppe Château, Capitale
+et Merveilles hors fiche, non touchés).
+
+Validation : 168/168 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (les villes fraîches du
+diag n'ont aucun bâtiment).
