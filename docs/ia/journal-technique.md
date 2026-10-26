@@ -3383,3 +3383,39 @@ Traitement :
 Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
 bougé).
+
+## Panneaux « + Construire » : descriptions du classeur retirées (2026-10-26, 5e retour Thibaut)
+
+Constat : « dans le panneau pour construire un bâtiment, la
+description n'est plus du tout à jour » — les descriptions du
+classeur 7.19 sont périmées au regard des effets réels du moteur
+(ex. Herboristerie « 5% » alors que les taux Gompertz/Guérisseur
+ont changé).
+
+Traitement :
+- Le picker « + Construire… » (faireBatParFamille) ne rend plus
+  b.description (le texte du classeur) : la description de chaque
+  carte = Prérequis éventuel + resumeConstruction(b) (résumé
+  STRUCTURÉ dérivé du moteur : flux /tour, été, Garnison,
+  emplacements) — MÊME RENDU que le panneau « + Aménager » (les
+  aménagements du référentiel ont des descriptions vides : leur
+  panneau n'a jamais affiché que le résumé, d'où le « comme pour
+  les aménagements »).
+- 3 occurrences (familles par rang, Capitale, Merveilles) ;
+  docblocks de faireBatParFamille et commentaire marqueur (y) de
+  VilleCarte mis à jour. Le repli b.production reste en place
+  mais AUCUN bâtiment du référentiel ne l'atteint (tous ceux avec
+  une production ont des effets ou des emplacements structurés).
+- Le référentiel n'est PAS touché (reductionCampDeBatisseurs lit
+  la description EXACTE du Camp de bâtisseurs ; le wiki
+  Référentiels garde les descriptions ; tooltips des lignes
+  construites inchangés).
+- NOUVEAU TEST de rendu (18e) : les descriptions d'options du
+  picker ne contiennent AUCUNE description classeur (verrouillé
+  sur plus de 5 bâtiments) et le résumé structuré reste rendu
+  (Poste de garde → « 4 garde »). Les tests de rendu passent de
+  17 à 18.
+
+Validation : 157/157 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
+bougé).
