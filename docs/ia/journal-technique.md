@@ -3419,3 +3419,43 @@ Traitement :
 Validation : 157/157 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
 bougé).
+
+## Rang social : consommation et production par rang (2026-10-26, 6e retour Thibaut)
+
+Contexte : question « est-ce qu'il y a une différence réelle
+entre roturier et bourgeois ? » — réponse : quasi nulle (seul le
+mariage y était sensible). Arbitrage Thibaut (confirmé par
+question directe) : le RANG SOCIAL dérivé du prestige (pas la
+qualité du métier) :
+- roturier : conso base (1 Nourriture/tour), production ×1 ;
+- BOURGEOIS (prestige ≥ 100) : conso 2 Nourriture/tour,
+  production de métier ×1,5 ;
+- NOBLE (prestige ≥ 250) : conso 4 Nourriture/tour, production
+  ×1,5 (×1,5 aussi pour les nobles — confirmé).
+
+Traitement :
+- params.ts : 4 nouveaux paramètres éditables (onglet
+  Paramètres → groupe Population) : consoNourrBourgeois (2),
+  consoNourrNoble (4), prodMultBourgeois (1,5), prodMultNoble
+  (1,5) ; label de consoNourrParHab précisé « (roturier) ».
+- economie.ts : deux helpers exportés multProdRang(c, C) et
+  consoNourrHabitant(c, C) ; dans detailGainsVille, la
+  production de métier de chaque villageois est multipliée AVANT
+  les taxes (le gain amplifié est taxé comme les autres, bonus
+  Ponton compris) ; la consommation devient la SOMME par tête
+  selon le rang (fini le forfait consoNourrParHab × N).
+- citesLibres.ts : la consommation des cités libres passe par
+  consoNourrHabitant (règle unique) — leur prestige n'étant
+  pas calculé, aucun changement aujourd'hui, la règle est prête.
+- Mineurs : sans prestige propre (0), ils restent à la
+  consommation de base et ne produisent pas — arbitrage
+  documenté dans les docblocks.
+- Tests natifs : 157 → 158. Nouveau test (metiers.test.ts) :
+  helpers en direct (×1/×1,5, conso 1/2/4), production d'un
+  Bûcheron bourgeois ×1,5 passant par les taxes, conso des
+  trois rangs ensemble = 7, mineur à la base sans production.
+
+Validation : 158/158 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (partie fraîche : personne
+n'atteint 100 de prestige en 4 tours — le rang de prestige ne
+change rien aux sorties du diag).
