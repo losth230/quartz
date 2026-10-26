@@ -686,6 +686,29 @@ input[type='range'] {
 .ville-constr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 @media (max-width: 560px) { .ville-constr { grid-template-columns: 1fr; } }
 
+/* Population (cultures) & garnison côte à côte — retour Thibaut
+   2026-10-26 : mêmes colonnes que .ville-constr, repli sous 560px.
+   .ville-table : tableau compact dédié aux cartes de ville —
+   séparateurs discrets, valeurs numériques alignées à droite en
+   tabulaire, ligne total détachée par un filet, majoritaire marquée
+   par un liseré accent (plus de styles inline dans VilleCarte). */
+.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 16px; }
+@media (max-width: 560px) { .ville-duo-cols { grid-template-columns: 1fr; } }
+.ville-duo-titre {
+  color: var(--accent); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px; margin: 4px 0 2px;
+}
+.ville-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ville-table td {
+  padding: 3px 0; vertical-align: top;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+.ville-table tr:last-child td { border-bottom: none; }
+.ville-table td:not(.num) { padding-right: 8px; }
+.ville-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ville-table tr.ligne-total td { border-top: 1px solid var(--border); border-bottom: none; padding-top: 5px; }
+.ville-table tr.ligne-major td:first-child { box-shadow: inset 2px 0 0 var(--accent); padding-left: 6px; }
+
 /* « Donner à… » et « Marier avec… » sur la même ligne (tableaux de population) ;
    largeur RÉDUITE en fixe (retour Thibaut, marqueur (z)) : les deux menus
    ne s'étirent plus sur toute la cellule. */

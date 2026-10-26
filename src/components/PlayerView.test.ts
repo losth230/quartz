@@ -106,3 +106,70 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
     }
   }
 })
+
+test('rendu VilleCarte : population & garnison en 2 colonnes — tableaux propres (retour Thibaut 2026-10-26)', async () => {
+  const etat = await partieRendu()
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { GameProvider } = await import('../state/store')
+  const { PlayerView } = await import('./PlayerView')
+  const { cfgOf } = await import('../engine/gameData')
+  const { garnisonHabitationVille } = await import('../engine/regimes')
+  const { fmt } = await import('./ui')
+
+  const html = renderToString(
+    React.createElement(GameProvider, null, React.createElement(PlayerView, { joueur: 1 })),
+  )
+  const h = aplatir(html)
+  // Le bloc 2 colonnes (population à gauche, garnison à droite)
+  // est rendu dans la carte ville.
+  assert.ok(h.includes('ville-duo-cols'), 'colonnes population/garnison absentes de la carte ville')
+
+  // ── Données dérivées de l'état (patron R3) : capitale du joueur 1 ──
+  const C = cfgOf(etat.config)
+  const p1 = etat.players.find((p) => p.n === 1)
+  assert.ok(p1, 'joueur 1 introuvable')
+  const cap = p1.villes[0]
+  // Cultures présentes : même calcul que VilleCarte (vivants de la
+  // ville, la majoritaire triée en tête).
+  const cultures: Record<string, number> = {}
+  for (const c of etat.population[1] ?? []) {
+    if (c.statut === 'Décédé' || c.ville !== cap.nom) continue
+    cultures[c.culture] = (cultures[c.culture] ?? 0) + 1
+  }
+  const nbVivants = Object.values(cultures).reduce((a, b) => a + b, 0)
+  // Chaque culture rend SON compte dans le tableau ; la majoritaire
+  // est la seule en gras.
+  for (const [cult, nb] of Object.entries(cultures)) {
+    assert.ok(
+      h.includes(`<td class="num">${nb}</td>`),
+      `compte ${nb} de la culture « ${cult} » absent du tableau`,
+    )
+    if (cult === cap.culture) {
+      assert.ok(
+        h.includes(`<strong>${esc(cult)}</strong>`),
+        `culture majoritaire « ${cult} » non rendue en gras`,
+      )
+    }
+  }
+  // Le total des vivants est en pied de tableau.
+  assert.ok(
+    h.includes(`<td class="num"><strong>${nbVivants}</strong></td>`),
+    `total des vivants (${nbVivants}) absent du pied du tableau cultures`,
+  )
+  // (Assertion négative) l'ancienne ligne à puces « Culture : N » en
+  //  tête de carte n'est plus rendue (motif : strong + « : »).
+  for (const cult of Object.keys(cultures)) {
+    assert.ok(
+      !h.includes(`<strong>${esc(cult)} : `),
+      `ancienne ligne à puces encore rendue pour « ${cult} »`,
+    )
+  }
+  // La garnison totale de la capitale (fonction moteur — valeur
+  // d'état) est rendue dans le titre de la colonne droite.
+  const g = garnisonHabitationVille(p1, cap, C, etat)
+  assert.ok(
+    h.includes(`Garnison des habitations : <strong>${esc(fmt(g))}</strong>`),
+    `garnison ${fmt(g)} de « ${cap.nom} » absente du titre de colonne`,
+  )
+})

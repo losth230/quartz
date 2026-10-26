@@ -2,13 +2,17 @@
 //  UNE VILLE de la page Pays — structure PAR BLOCS (retour arbitre
 //  Thibaut 2026-10-25 « regrouper par blocs ») : (1) TÊTE : nom /
 //  taxes / proximité + BLOC BONHEUR en HAUT DROITE (moyenne + 5
-//  mini-jauges) ; (2) IDENTITÉ : culture majoritaire, habitants
-//  vivants, cultures présentes ; (3) RANG & TYPE + habitants
-//  requis ; (4) GARNISON des habitations (tableau détaillé,
-//  conservé visible — arbitre) ; (5) CONSTRUCTIONS : aménagements
-//  et bâtiments (choix à catégories — marqueur (y)) ; (6) AUTRES ;
-//  (7) PRODUCTION ; (8) ACTIONS RARES en BAS de carte (transfert,
-//  suppression, cité libre) — elles ne cannibalisent plus la tête.
+//  mini-jauges) + ligne identité (culture majoritaire, vivants) ;
+//  (2) RANG & TYPE + habitants requis ; (3) POPULATION & GARNISON
+//  en 2 COLONNES (retour Thibaut 2026-10-26 : tableau des cultures
+//  présentes — majoritaire en gras avec liseré, part en %, total
+//  des vivants — ET tableau détaillé de la garnison, origine par
+//  origine avec plancher et total — arbitre : le détail reste
+//  TOUJOURS visible, relooké en classes CSS dédiées) ; (4)
+//  CONSTRUCTIONS : aménagements et bâtiments (choix à catégories —
+//  marqueur (y)) ; (5) AUTRES ; (6) PRODUCTION ; (7) ACTIONS RARES
+//  en BAS de carte (transfert, suppression, cité libre) — elles ne
+//  cannibalisent plus la tête.
 //  (RETRAIT 2026-10-19, retour arbitre : la heatmap d'attrait migratoire
 //   a été retirée avec la migration spontanée par Tourisme — à refaire.)
 //  (Extrait de PlayerView.tsx — un fichier par UI.)
@@ -166,19 +170,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         </div>
         <div className="muted small">
           Culture majoritaire : <strong>{ville.culture}</strong> · {nbVivants} habitant(s) vivant(s)
+          {/* (Le détail par culture vit dans le bloc POPULATION &
+              GARNISON — retour Thibaut 2026-10-26 : tableau dédié,
+              plus de ligne à puces en tête de carte.) */}
         </div>
-        {culturesTriees.length > 0 && (
-          <div className="small">
-            {culturesTriees.map(([cult, nb], i) => (
-              <span key={cult}>
-                {i > 0 && ' · '}
-                {cult === ville.culture
-                  ? <strong>{cult} : {nb}</strong>
-                  : <span className="muted">{cult} : {nb}</span>}
-              </span>
-            ))}
-          </div>
-        )}
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
         {/* Rang d'habitation et type de ville (Ville / Château)
@@ -237,45 +232,79 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           )
         })()}
 
-        {/* GARNISON des habitations (bloc 4 — sous rang & type,
-            retour arbitre 2026-10-25 ; le tableau détaillé reste
-            TOUJOURS visible — arbitre) :
-            VALEUR D'ÉTAT (pas un flux) : base du rang + bâtiments
-            + loi éventuelle du régime ; ne change pas à chaque tour. */}
+        {/* POPULATION & GARNISON en 2 COLONNES (retour Thibaut
+            2026-10-26). La garnison est une VALEUR D'ÉTAT (pas un
+            flux) : base du rang + bâtiments + loi éventuelle du
+            régime ; ne change pas à chaque tour. Arbitre : le
+            tableau détaillé reste TOUJOURS visible — relooké en
+            classes CSS dédiées (.ville-table), plus de styles
+            inline ni de titre verbeux. */}
         {(() => {
           const g = garnisonHabitationVille(p, ville, C, state)
           const lignes = detailGarnisonVille(p, ville, C, state)
           const sousTotal = lignes.reduce((n, l) => n + l.valeur, 0)
           const plancher = g - sousTotal
+          const part = (nb: number) =>
+            nbVivants > 0 ? `${Math.round((100 * nb) / nbVivants)} %` : '—'
           return (
-            <div className="small stack small-gap">
+            <div className="ville-duo-cols">
               <div>
-                Garnison des habitations : <strong>{fmt(g)}</strong>
-                <span className="muted small"> — d'où vient ce chiffre :</span>
+                <div className="ville-duo-titre">Cultures présentes</div>
+                {culturesTriees.length === 0 ? (
+                  <div className="muted small">aucun habitant enregistré</div>
+                ) : (
+                  <table className="ville-table">
+                    <tbody>
+                      {culturesTriees.map(([cult, nb]) => (
+                        <tr key={cult} className={cult === ville.culture ? 'ligne-major' : ''}>
+                          <td>
+                            {cult === ville.culture
+                              ? <strong>{cult}</strong>
+                              : <span className="muted">{cult}</span>}
+                          </td>
+                          <td className="num">{nb}</td>
+                          <td className="num muted">{part(nb)}</td>
+                        </tr>
+                      ))}
+                      <tr className="ligne-total">
+                        <td><strong>Habitants vivants</strong></td>
+                        <td className="num"><strong>{nbVivants}</strong></td>
+                        <td className="num muted">{nbVivants > 0 ? '100 %' : '—'}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                )}
               </div>
-              <table className="small" style={{ borderCollapse: 'collapse', width: '100%' }}>
-                <tbody>
-                  {lignes.map((l, i) => (
-                    <tr key={i}>
-                      <td className="muted small">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
-                      <td>{l.label}</td>
-                      <td className={l.valeur < 0 ? 'neg' : ''}>{l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}</td>
+              <div>
+                <div className="ville-duo-titre">
+                  Garnison des habitations : <strong>{fmt(g)}</strong>
+                </div>
+                <table className="ville-table">
+                  <tbody>
+                    {lignes.map((l, i) => (
+                      <tr key={i}>
+                        <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
+                        <td>{l.label}</td>
+                        <td className={l.valeur < 0 ? 'num neg' : 'num'}>
+                          {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
+                        </td>
+                      </tr>
+                    ))}
+                    {plancher > 0 && (
+                      <tr>
+                        <td className="muted">plancher</td>
+                        <td>« Combler les lacunes » : minimum 30</td>
+                        <td className="num">+{fmt(plancher)}</td>
+                      </tr>
+                    )}
+                    <tr className="ligne-total">
+                      <td />
+                      <td><strong>Total</strong></td>
+                      <td className="num"><strong>{fmt(g)}</strong></td>
                     </tr>
-                  ))}
-                  {plancher > 0 && (
-                    <tr>
-                      <td className="muted small">plancher</td>
-                      <td>« Combler les lacunes » : minimum 30</td>
-                      <td>+{fmt(plancher)}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td />
-                    <td><strong>Total</strong></td>
-                    <td><strong>{fmt(g)}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           )
         })()}
