@@ -3246,3 +3246,37 @@ NB harnais (trace pour les sessions futures) : les « 3 stubs
 supabase » rapportés le 2026-10-25 venaient d'un harnais local
 incomplet (le paquet @supabase/supabase-js embarque ses types) —
 le projet est réellement tsc strict 0 erreur.
+
+
+## Carte ville : population & garnison en 2 colonnes (2026-10-26, retour Thibaut)
+
+Retour du 2026-10-26 : « pour la garnison, garde un tableau
+détaillé, mais rends le plus propre, idem pour les différentes
+cultures. Peut-être que les deux pourraient cohabiter en 2
+colonnes sur la même ligne. » Fait :
+
+- NOUVEAU BLOC « POPULATION & GARNISON » en 2 colonnes
+  (.ville-duo-cols, même repli 1 colonne <560px que
+  .ville-constr), placé après Rang & type ;
+- COLONNE GAUCHE, tableau des cultures présentes (.ville-table) :
+  une ligne par culture (nom, habitant(s), part en %), la
+  majoritaire SEULE en gras avec liseré accent, pied de tableau
+  « Habitants vivants » en total — l'ancienne ligne à puces
+  « Culture : N · … » de la tête est RETIRÉE (la tête garde la
+  ligne concise « Culture majoritaire · N vivants ») ;
+- COLONNE DROITE, tableau détaillé de la garnison (arbitre du
+  2026-10-25 conservé : le détail reste TOUJOURS visible) :
+  origine → ligne → valeur (+/−, négatives en rouge), plancher
+  éventuel, ligne Total détachée — fin des styles inline et du
+  titre verbeux « d'où vient ce chiffre » : classes CSS dédiées
+  (.ville-duo-titre, .ville-table, .ligne-total, .ligne-major,
+  valeurs numériques alignées à droite en tabular-nums).
+
+Test de rendu DÉDIÉ (patron R3, 16e test de rendu) : comptes par
+culture, gras de la majoritaire, total des vivants et garnison de
+la capitale assertés CONTRE l'état (mêmes calculs que le
+composant) + assertion NÉGATIVE sur l'ancienne ligne à puces
+(motif « <strong>Culture : »).
+
+Validation : 157/157 natifs, 16/16 rendu (12 fichiers), tsc strict
+0 erreur, diag IDENTIQUE (UI seule), moteur inchangé.
