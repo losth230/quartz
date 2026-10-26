@@ -3695,3 +3695,30 @@ re-calculée depuis l'état (patron R3). 168/168 natifs,
 IDENTIQUE (le diag ne rend pas la page Pays).
 
 Fichiers : VilleCarte.tsx, styles.css, PlayerView.test.ts.
+
+## Ligne ville : séparations + cultures rétrécie (retour Thibaut 2026-10-26)
+
+Base 124e178a. Retour Thibaut sur la ligne cultures /
+garnison / logements : « met des petites séparations entre
+les différents tableaux pour mieux faire la distinction et
+réduit le tableau de culture pour donner davantage de place
+aux deux autres ».
+
+CSS uniquement (styles.css, classe .ville-duo-cols) :
+- colonnes 1fr 1fr 1fr → 0.8fr 1fr 1fr : le tableau
+  Cultures (court : nom, compte, part en %) cède de la
+  place à Garnison (« Combler les lacunes »…) et Logements
+  (occupés/capacité) qui portent des textes plus longs ;
+- filet vertical discret entre les tableaux (border-left
+  + padding gauche 18px, même teinte atténuée que les
+  filets de .ville-table — color-mix var(--border) 65%) ;
+- replis : 2 colonnes sous 860px (le filet est retiré au 3e
+  tableau, 1re colonne de la 2e rangée), 1 colonne sous
+  560px (filets verticaux remplacés par un filet
+  horizontal + padding-top entre les tableaux empilés).
+
+Aucun changement de composant ni de test : rendu HTML
+identique, la mise en page est pure CSS.
+
+Validation : 168/168 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE. Fichier : styles.css.
