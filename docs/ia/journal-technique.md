@@ -3845,3 +3845,13 @@ Base a24bdda. Retour Thibaut : « super, mais il faut des nobles dès le début,
   - autres usages d'isNobleDyn inchangés : ArmiesPanel, sante.ts, villes.ts, citesLibres.ts, naissances.ts, metiers.ts (nobleSeul, score mariageMemeRang qui compare les rangs de PRESTIGE), CartePersonnagesImportants.
 - Verrous : statutSocial.test.ts +3 (rangDe : noble de naissance SI dynastie noble (prestige 0 compris), rang du prestige pour les roturiers de dynastie ; événements : aucun changement de rang pour un noble de naissance, accès à la bourgeoisie toujours journalisé pour un roturier qui franchit 100) → **171 natifs** ; test de rendu PopulationTable réécrit : la cour commence NON vide (nobles de naissance ≥ 2 au départ, les deux roturiers gravés 300/150 la rejoignent, comptes exacts cour/population, marqueur « NOBLE DE NAISSANCE ») → **19/19 rendu (12 fichiers)**.
 - Validation : tsc 0 erreur, 171/171 natifs, 19/19 rendu, **diag IDENTIQUE** (aucun seuil de prestige franchi dans le scénario 4 tours — aucun événement de rang n'y est émis), diff src limité aux 6 fichiers prévus (statutSocial, statutSocial.test, economie [commentaire], LignePersonnage, PopulationTable, PopulationTable.test).
+
+## Fusion des colonnes Dynastie et Rang (retour Thibaut 2026-10-26, suite 2)
+
+Base 8c7c174. Retour Thibaut : « je pense qu'il faudrait fusionner la colonne dynastie et la colonne roturier peut-être ». Depuis que le rang suit la dynastie de naissance (rangDe, commit précédent), les deux colonnes disaient la même chose en deux cellules — fusion.
+
+- LignePersonnage.tsx : UNE SEULE cellule « Dynastie · Rang » — nom de dynastie + badge rangDe (noble/bourgeois/roturier, couleur inchangée) + prestige en muted ; title conservant le marqueur « NOBLE DE NAISSANCE » (dynastie noble sous 250) ou l'explication prestige (roturier sous 100, bourgeois 100-250, anobli 250+). L'ancienne cellule Rang autonome supprimée.
+- PopulationTable.tsx : en-têtes 14 → 13 colonnes (« Dynastie · Rang » remplace « Dynastie » + « Rang »), colSpan des états vides 14 → 13 (cour et population).
+- Portée : les deux tableaux (cour et population) partagent LignePersonnage — le changement vaut pour les deux d'un coup ; aucun autre composant n'utilise LignePersonnage.
+- Aucun changement moteur (affichage pur) : 171/171 natifs et diag IDENTIQUE attendus et constatés ; 19/19 rendu (le test de la cour vérifie toujours le marqueur « NOBLE DE NAISSANCE », désormais dans la cellule fusionnée).
+- Validation : tsc 0 erreur, 171/171 natifs, 19/19 rendu (12 fichiers), diag IDENTIQUE, diff src limité aux 2 fichiers prévus.
