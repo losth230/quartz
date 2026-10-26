@@ -54,3 +54,49 @@ test('rendu PopulationTable : la page Population s’affiche sans crash', async 
     )
   }
 })
+
+test('rendu PopulationTable : la cour montre les personnages selon leur RANG, pas leur dynastie (retour Thibaut 2026-10-26)', async () => {
+  const etat = await partieRendu()
+  // (retour Thibaut : « la cour des joueurs ne commence pas en tant
+  //  que noble — le tableau supérieur montre les personnages selon
+  //  leur rang, et non leur dynastie »). Après 2 tours, TOUT le
+  //  monde est roturier (prestige < 100) : la cour est vide.
+  const { saveLocal } = await import('../state/storage')
+  const popTot = etat.population[1] ?? []
+  const pop1 = popTot.filter((c) => c.statut !== 'Décédé')
+  assert.ok(pop1.length > 2, 'population témoin trop courte')
+  assert.ok(
+    popTot.every((c) => (c.prestige ?? 0) < 100),
+    'partie témoin : toute la cour est roturière au départ (prestige < 100)',
+  )
+  // Graver deux rangs sur des vivants : un noble (300) et un
+  //  bourgeois (150) — la dynastie ne joue AUCUN rôle.
+  pop1[0].prestige = 300
+  pop1[1].prestige = 150
+  saveLocal(etat)
+
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { GameProvider } = await import('../state/store')
+  const { PopulationTable } = await import('./PopulationTable')
+  const html = renderToString(
+    React.createElement(GameProvider, null, React.createElement(PopulationTable, { joueur: 1 })),
+  )
+  const h = aplatir(html)
+  const nom = etat.players.find((p) => p.n === 1)?.nom ?? 'Joueur 1'
+  // Titre de la carte cour : comptes par RANG (2 personnages ≥ 100).
+  assert.ok(
+    h.includes(`👑 La cour de ${esc(nom)} — 2 vivants / 2 au total`),
+    'la cour compte les personnages par rang social (prestige ≥ 100), pas par dynastie',
+  )
+  assert.ok(
+    h.includes('Personnages selon leur RANG'),
+    'sous-titre « Personnages selon leur RANG » absent',
+  )
+  // La carte Population prend le reste (roturiers).
+  const vivantsRestants = pop1.length - 2
+  assert.ok(
+    h.includes(`Population de ${esc(nom)} — ${String(vivantsRestants)} vivants / ${String(popTot.length - 2)} au total`),
+    'la population classique compte les roturiers (prestige < 100)',
+  )
+})
