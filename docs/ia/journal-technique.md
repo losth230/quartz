@@ -3722,3 +3722,65 @@ identique, la mise en page est pure CSS.
 
 Validation : 168/168 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE. Fichier : styles.css.
+
+## Attribution : 1 logement = 1 habitant + priorité au haut rang (retour Thibaut 2026-10-26)
+
+Base 7878ff55. Retour Thibaut après l'explication du
+modèle domiciles : « je ne veux pas que les logements
+soient associés à des familles, je veux 1 logement = 1
+habitant. Et je veux également que les bâtiments les plus
+qualitatifs soient priorisés pour les personnages de
+haut rang ».
+
+Moteur (engine/domiciles.ts) :
+- L'attribution par FOYER est RETIRÉE (interface Foyer +
+  foyersDeVille supprimées). Nouvelle unité : le
+  HABITANT vivant (adulte OU enfant mineur), via une
+  petite fonction partagée vivantsVille(). Chaque
+  personne consomme UNE place.
+- Ordre de service : PRESTIGE DÉCROISSANT
+  (Character.prestige — nobles avant bourgeois avant
+  roturiers, les mineurs sans prestige propre servis en
+  dernier ; tri stable, l'ordre de recensement fait foi
+  à prestation égale). Dans cet ordre : chacun GARDE
+  son domicile s'il existe encore au stock (on ne
+  déloge pas, l'ordre de priorité ne sert qu'à répartir
+  les places LIBRES), sinon prend la MEILLEURE qualité
+  restante — les Maisons de notable partent aux
+  personnages de haut rang. Stock épuisé : domicile
+  null (sans logement, −2 prestige/tour, ligne rouge
+  du tableau Logements).
+- Conséquence mécanique : l'axe Logement du bonheur
+  (qui comparait déjà le stock aux HABITANTS) redevient
+  COHÉRENT avec l'attribution — plus de double échelle
+  volontaire foyer/personne.
+- Conséquence de DONNÉES à noter : une partie fraîche
+  au Hameau porte 53 habitants pour 51 logements (50
+  Taudis + 1 Maison de notable — fiche habitations) :
+  2 habitants sont désormais dehors (l'ancien modèle
+  par foyer logeait tout le monde, les familles
+  partageaient une place). C'est le comportement
+  ATTENDU de la nouvelle règle avec le stock de la
+  fiche — si le Hameau doit loger tout le monde, il
+  faut soit plus de Taudis au stock initial, soit des
+  constructions (+10 Taudis Poste de garde, +20 Bas
+  quartier).
+
+UI (VilleCarte) : le tableau Logements compte les
+HABITANTS attribués (plus les foyers) — pied
+« Habitants logés », infobulle mise à jour (1 logement =
+1 habitant, meilleur bâtiment au haut rang). Docblocks
+(types.ts, population.ts, bonheur.ts) réalignés.
+
+Tests (168/168) : verrous réécrits — 1 place par vivant
+(logés = min(capacité, habitants), pas de surbooking,
+Maison de notable au premier servi), priorité prestige
+décroissant (noble 300 → Maison de notable, bourgeois
+120 → Maison, prestige 0 dehors), stock insuffisant,
+idempotence, défense en profondeur ; PlayerView.test
+compte les habitants. Validation : 18/18 rendu (12
+fichiers), tsc strict 0 erreur, diag IDENTIQUE.
+
+Fichiers : domiciles.ts, types.ts, population.ts,
+bonheur.ts, VilleCarte.tsx, domiciles.test.ts,
+PlayerView.test.ts.
