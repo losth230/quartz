@@ -3280,3 +3280,45 @@ composant) + assertion NÉGATIVE sur l'ancienne ligne à puces
 
 Validation : 157/157 natifs, 16/16 rendu (12 fichiers), tsc strict
 0 erreur, diag IDENTIQUE (UI seule), moteur inchangé.
+
+
+## Carte ville : 5 retours UI de la capture d'écran (2026-10-26, 2e retour Thibaut)
+
+Capture examinée (image envoyée au chat) — 5 constats, tous traités :
+1. TABLEAU PRODUCTION, colonnes inégales → colgroup : colonne
+   ressource 22 %, les 5 colonnes de valeurs à 15,6 % chacune.
+2. « ON VOIT DEUX FOIS LA CULTURE » → la tête ne rend plus que
+   « N habitant(s) vivant(s) » ; la culture vit UNIQUEMENT dans le
+   tableau « Cultures présentes » (majoritaire en gras + liseré).
+   Ville sans habitant : « aucun habitant — culture de la
+   ville : X » (la culture de la ville reste visible).
+3. Cases nom/taxes/proximité DE LA MÊME TAILLE → .ville-tete
+   passe en grid 3 colonnes égales (fin du flex 1.5 du nom —
+   la cause des largeurs inégales), repli 1 colonne sous 420px.
+4. COÛTS DES AMÉNAGEMENTS DANS LE POPUP → mini-title épuré
+   (« Aménagements » + mention Camp de bâtisseurs si active) :
+   chaque option du picker affichait DÉJÀ son coût (tier 1 :
+   référentiel ; tiers 2/3 : coût uniforme + « améliore X ») —
+   plus rien dans le titre (coutTier retiré du composant).
+5. RESSOURCES NON PRODUITES CACHÉES PAR DÉFAUT → le tableau
+   production ne liste par défaut que les ressources avec au
+   moins un canal non nul (bâtiments/aménagements/autres/
+   villageois) ; toggle discret « tout afficher » /
+   « produites seulement » à côté du titre (état local useState,
+   pas persisté). SUPERSEDE le marqueur (r) du 2026-10-15
+   « toutes les ressources même à 0 » ET le retour 2026-10-15
+   « Nourr - été toujours visible même à 0 » (la ligne été à 0
+   est cachée en vue repliée). Ville sans production : message
+   court + le toggle (tableau complet à un clic).
+
+Test de rendu dédié (17e) : le nombre de lignes rendues
+(signature tr class="ligne-prod" — les récaps rendent aussi des
+pastilles dot-res mais sans cette classe) est asserté ÉGAL au
+compte dérivé de l'état (ressources produites des villes du
+joueur 1) + présence du toggle ; l'assertion « Culture
+majoritaire » du 1er test est retirée (la culture n'est plus en
+tête — le test des 2 colonnes verrouille sa présence en gras).
+
+Validation : 157/157 natifs, 17/17 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (UI seule — le moteur n'a pas
+bougé).
