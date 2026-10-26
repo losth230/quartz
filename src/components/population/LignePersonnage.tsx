@@ -49,7 +49,7 @@ export function LignePersonnage({
   return (
     <tr key={c.id} className={c.statut === 'Décédé' ? 'dead' : (c.metier === C.p.metierDirigeant || c.metier === C.p.metierHeritierStr) ? 'lead' : ''}>
       <td><strong>{c.prenom} {c.nom}</strong></td>
-      <td className="small" title={`Dynastie ${c.dynastie} — prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${isNobleDyn(c.dynastie, C) ? ' · NOBLE DE NAISSANCE (dynastie noble — 300 prestige de base, retour Thibaut 2026-10-26)' : ' · dynastie roturière : le rang suit le prestige (roturier sous 100, bourgeois 100-250, anobli 250+)'}`}>
+      <td className="small" title={`Dynastie ${c.dynastie} — prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${isNobleDyn(c.dynastie, C) ? ' · NOBLE DE NAISSANCE (dynastie noble — 300 prestige de base)' : ' · dynastie roturière : le rang suit le prestige (roturier sous 100, bourgeois 100-250, anobli 250+)'}`}>
         {/* Colonnes FUSIONNÉES (retour Thibaut 2026-10-26 : « fusionner
             la colonne dynastie et la colonne rang ») : la dynastie et
             son rang côte à côte — le rang suit la dynastie de

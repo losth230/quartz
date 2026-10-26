@@ -136,8 +136,19 @@ export function makePlayer(n: number, s: SetupLine, C: Cfg): Player {
       //  initialisé au rang de création — l'offre de logements de la
       //  ville (audit de merge : SANS cette ligne, le stock restait
       //  indéfini dans les parties neuves et personne n'était logé).
-      domiciles: stockRang(idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville',
-        rangsDisponibles(idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville', C)[0] ?? 'Hameau', C),
+      //  (retour Thibaut 2026-10-26 : la CAPITALE commence avec
+      //  8 PALAIS — la Maison de notable du rang de départ est
+      //  remplacée. Les nobles de naissance (300 prestige) sont
+      //  servis les premiers : la famille dirigeante vit dans les
+      //  palais, le reste de la population dans les taudis du rang.)
+      domiciles: (() => {
+        const typeV = idx === 0 ? (s.typeCapitale ?? 'Ville') : 'Ville'
+        const stock = stockRang(typeV, rangsDisponibles(typeV, C)[0] ?? 'Hameau', C)
+        if (idx !== 0) return stock
+        return stock.map((e) => e.domicile.toLowerCase() === 'maison de notable'
+          ? { domicile: 'Palais', nombre: 8 }
+          : e)
+      })(),
       // Retour Thibaut (marqueur (r)) : PLUS AUCUN bâtiment par défaut
       // dans la capitale — tout se construit au plateau.
       batiments: [],

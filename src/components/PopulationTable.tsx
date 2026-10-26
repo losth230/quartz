@@ -373,8 +373,8 @@ export function PopulationTable({ joueur }: { joueur: number }) {
         {blocFiltres}
         <p className="muted small">
           Personnages selon leur RANG — nobles de NAISSANCE (dynastie noble) et, par ascension, bourgeois (prestige ≥ 100) et nobles (≥ 250) {cite ? 'de la cité libre' : 'du joueur'} —
-          filtres et tri appliqués aussi au tableau « Population » ci-dessous. La cour commence noble : la famille dirigeante y siège dès le départ (retour Thibaut 2026-10-26 :
-          des nobles dès le début — le rang suit la dynastie de naissance, le prestige y ajoute les roturiers anoblis).
+          filtres et tri appliqués aussi au tableau « Population » ci-dessous. La cour commence noble : la famille dirigeante y siège dès le départ ;
+          le prestige y ajoute les roturiers anoblis (bourgeois à 100, anobli à 250).
         </p>
         <div className="table-wrap">
           <table className="tbl small pop-tbl">
@@ -389,8 +389,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
         </div>
         <p className="muted small">
           « ➡ Donner à… » transfère le personnage à un autre porteur (il y est éditable et y produit).
-          « 💍 Marier avec… » unit deux personnages DU MÊME porteur (retour Thibaut (z) : on ne
-          cible plus les autres joueurs ni les cités) : la personne mariée déménage
+          « 💍 Marier avec… » unit deux personnages DU MÊME porteur : la personne mariée déménage
           dans la ville de son conjoint (confirmation avant de marier un Dirigeant).
           Si un mariage ou un don est refusé, le motif s'affiche en rouge sous le métier
           (déjà marié, mineur… — le mariage manuel reste limité aux maisons de DYNASTIE

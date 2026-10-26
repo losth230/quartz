@@ -63,6 +63,19 @@ test('stockRang : Hameau = 50 Taudis + 1 Maison de notable (fiche habitations 20
   assert.equal(stock.reduce((a, e) => a + e.nombre, 0), 51)
 })
 
+test('setup : la CAPITALE démarre avec 8 PALAIS, pas 1 Maison de notable (arbitrage Thibaut 2026-10-26)', () => {
+  const { ville } = partieTemoin()
+  const stock = ville.domiciles ?? []
+  const palais = stock.find((e) => e.domicile === 'Palais')
+  assert.ok(palais, 'des Palais dans la capitale au départ')
+  assert.equal(palais?.nombre, 8, '8 Palais (la famille dirigeante y siège)')
+  assert.ok(!stock.some((e) => e.domicile === 'Maison de notable'),
+    'plus de Maison de notable dans le stock initial de la capitale')
+  const taudis = stock.find((e) => e.domicile === 'Taudis')
+  assert.equal(taudis?.nombre, 50, 'les 50 Taudis du rang Hameau restent')
+  assert.equal(totalLogementsVille(ville), 58, '50 Taudis + 8 Palais = 58 logements')
+})
+
 test('qualite des métiers : catégories arbitrees (aménagement→roturier, bâtiment→bourgeois, cour→noble)', () => {
   const { C } = partieTemoin()
   const q = (m: string) => C.metiers.find((t) => t.metier === m)?.qualite

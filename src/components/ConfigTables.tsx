@@ -16,5 +16,5 @@ export type { TableProps } from './params/logiqueParams'
 //  techs de progrès — supprimé avec le système de progrès.)
 export { EffetsConstructionEditor } from './params/EditeursEffets'
 export { BatimentsParams, AmenagementsParams } from './params/ConstructionsParams'
-export { PaysRangsParams, HabitationsParams } from './params/PaysHabitationsParams'
+export { PaysRangsParams, HabitationsParams, DomicilesParams } from './params/PaysHabitationsParams'
 export { CouleursParams } from './params/CouleursParams'

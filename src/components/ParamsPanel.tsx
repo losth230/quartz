@@ -17,7 +17,7 @@ import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
 import { Card, NumberInput, TextInput, Button } from './ui'
 import {
   BatimentsParams, AmenagementsParams, PaysRangsParams,
-  HabitationsParams, CouleursParams,
+  HabitationsParams, DomicilesParams, CouleursParams,
 } from './ConfigTables'
 
 const ONGLETS = [
@@ -232,7 +232,14 @@ export function ParamsPanel() {
 
       {onglet === 'Pays & rangs' && <PaysRangsParams config={config} setCfg={setCfg} />}
 
-      {onglet === 'Habitations' && <HabitationsParams config={config} setCfg={setCfg} />}
+      {onglet === 'Habitations' && (
+        <>
+          <HabitationsParams config={config} setCfg={setCfg} />
+          {/* (retour Thibaut 2026-10-26 : les types de logement dans
+              les paramètres — table domiciles : nom + qualité 0-4) */}
+          <DomicilesParams config={config} setCfg={setCfg} />
+        </>
+      )}
 
       {onglet === 'Couleurs' && <CouleursParams config={config} setCfg={setCfg} />}
 

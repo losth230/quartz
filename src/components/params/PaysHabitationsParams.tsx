@@ -107,3 +107,41 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
     </Card>
   )
 }
+
+/** (retour Thibaut 2026-10-26 : « ajoute les différents types de
+ *  logement dans les paramètres ») — éditeur de la table DOMICILES :
+ *  nom du type + qualité 0-4. La qualité d'un logement EST son gain
+ *  de prestige par tour pour l'habitant logé (cf. gainPrestigeTour,
+ *  statutSocial.ts) ; l'attribution sert les habitants par prestige
+ *  décroissant, un logement = un habitant, sans délogement. */
+export function DomicilesParams({ config, setCfg }: TableProps) {
+  return (
+    <Card title={`Types de logement (${config.domiciles.length}) — qualité = gain de prestige par tour`}>
+      <p className="muted small">
+        Échelle de référence 0-4 : Taudis 0, Maison 1, Auberge 2, Maison de notable 3,
+        Palais 4. Les stocks de départ par rang d'habitation restent dans la table
+        « Types &amp; rangs d'habitation » ci-dessus (colonne affichage) ; au setup,
+        la capitale démarre avec 8 Palais à la place de la Maison de notable.
+      </p>
+      <div className="table-wrap">
+        <table className="tbl small">
+          <thead><tr><th>Logement</th><th>Qualité (0-4)</th><th></th></tr></thead>
+          <tbody>
+            {config.domiciles.map((d, i) => (
+              <tr key={i}>
+                <td><TextInput value={d.domicile} onChange={(v) => setCfg((c) => { c.domiciles[i].domicile = v })} /></td>
+                <td><NumberInput value={d.qualite} step={1} min={0} onChange={(v) => setCfg((c) => { c.domiciles[i].qualite = v })} /></td>
+                <td>
+                  <Button tone="danger" onClick={() => setCfg((c) => { c.domiciles.splice(i, 1) })}>✕</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Button onClick={() => setCfg((c) => {
+        c.domiciles.push({ domicile: 'Nouveau logement', qualite: 0 })
+      })}>+ Ajouter un type de logement</Button>
+    </Card>
+  )
+}
