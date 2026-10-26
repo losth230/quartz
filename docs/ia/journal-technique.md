@@ -3517,3 +3517,51 @@ Traitement :
 Validation : 162/162 natifs, 18/18 rendu (12 fichiers), tsc
 strict 0 erreur, diag IDENTIQUE (le diag ne rend pas les
 résumés de construction).
+
+## Fiche types d'habitation : Ville & Château, 3 tiers (retour Thibaut 2026-10-26)
+
+Thibaut envoie la fiche des rangs d'habitation « mise à jour
+avec les nouvelles règles » (Ville : Hameau/Cité/Grande Cité ;
+Château : Motte/Donjon/Forteresse).
+
+Constat : coûts et habitants requis sont IDENTIQUES au
+référentiel (aucun changement). Trois familles de deltas :
+
+Traitement (référentiel typesHabitation — source unique, lu
+par DEFAULT_CONFIG) :
+- Domiciles par rang — le gros morceau : la fiche remplace
+  l'offre « Maison/Auberge » par « Taudis / Maisons / Maison
+  de notable » (les trois types existent déjà dans la table
+  domiciles, qualités 0/1/3 — la Maison de notable était
+  jusque-là inatteignable). domicilesRang ET le texte
+  domicilesDisponibles réalignés : Hameau 50 Taudis + 1
+  Maison de notable, Cité 100 + 20 + 1, Grande Cité 150 +
+  100 + 1, Motte 50 + 5, Donjon 100 + 10, Forteresse 150 +
+  20 (logements : 51/121/251 villes, 55/110/170 châteaux —
+  ex 60/150/250). L'Auberge (qualité 2) reste dans la table
+  domiciles : les stocks des parties en cours restent valides.
+- Métiers de base : Hameau Chasseurs 50 → 40, Cité
+  Chasseurs 30 → 20 (Motte 40, Donjon 20, Grande Cité et
+  Forteresse inchangés — la fiche confirmait le reste).
+  Le peuplement initial (36-38 Chasseurs) reste sous le cap.
+- Docblocks réalignés (metiers.ts, habitations.ts, types.ts,
+  defaultConfig.ts, CarteMetiersPlaces.tsx) : les exemples
+  « 50 Chasseurs » / « 50 maisons, 10 Auberge » décrivent
+  désormais « 40 Chasseurs » / « 50 Taudis, 1 Maison de
+  notable ».
+- Tests natifs (162 au total, verrous réalignés) : stockRang
+  Hameau (51), initStockVille (51/121), l'attribution loge
+  les foyers en Taudis (qualité 0 LÉGALE — l'ancien verrou
+  « qualité > 0 » rejetait le Taudis), caps Chasseur 40 et
+  42 avec Scierie, occupations 40.
+
+Continuité des parties en cours : le stock vit DANS la
+ville (City.domiciles) — une partie existante garde son
+ancien stock jusqu'à son prochain changement de rang (le
+rang DÉFINIT l'offre) ; les configs monde sauvegardées ne
+sont complétées que si le champ est absent (migrerTypesHabitation,
+idempotent). Comportement documenté, pas d'écrasement forcé.
+
+Validation : 162/162 natifs, 18/18 rendu (12 fichiers), tsc
+strict 0 erreur, diag IDENTIQUE (partie fraîche : 36-38
+Chasseurs sous le cap de 40, le log ne change pas).
