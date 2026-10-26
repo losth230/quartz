@@ -3784,3 +3784,49 @@ fichiers), tsc strict 0 erreur, diag IDENTIQUE.
 Fichiers : domiciles.ts, types.ts, population.ts,
 bonheur.ts, VilleCarte.tsx, domiciles.test.ts,
 PlayerView.test.ts.
+
+## La cour : appartenance par RANG social, plus par dynastie (retour Thibaut 2026-10-26)
+
+Base 68eff17a. Retour Thibaut : « la cour des
+joueurs ne commence pas en tant que noble — le tableau
+supérieur doit montrer les personnages en fonction de
+leur RANG, et non de leur dynastie ».
+
+La carte « 👑 La cour » de la page Population
+(PopulationTable.tsx) séparait cour / population
+classique par NOBLESSE DE DYNASTIE (isNobleDyn — un nom
+de famille noble suffisait à siéger). Désormais
+l'appartenance suit le RANG SOCIAL issu du prestige
+(colonnes Rang des tableaux, statutSocial.ts —
+bourgeois ≥ 100, noble ≥ 250) :
+
+- estDeCour(c) = rangSocial(prestigeDe(c)) ≠ roturier.
+  Un bourgeois de dynastie roturière entre à la cour ;
+  un nom noble ne suffit plus tant que prestige < 100 ;
+- au départ d'une partie TOUTE la cour est roturière :
+  le tableau supérieur est vide (« aucun personnage de
+  haut rang — toute la cour est roturière ») et se
+  remplit à mesure que les personnages montent en rang
+  — cohérent avec la vague D (ascension par prestige) ;
+- la carte « Population » classique prend le reste
+  (roturiers), textes et compteurs réalignés.
+
+NON-TOUCHÉ (arbitrage à venir) : le moteur du mariage
+manuel exige toujours deux personnages de DYNASTIE noble
+(marierPersonnages + eligibleMariage) — un bourgeois de
+dynastie roturière voit le bouton « Marier avec… » à la
+cour mais le mariage est refusé par le moteur (message
+explicite, documenté dans la carte). Les autres usages
+d'isNobleDyn (armées, décès/levées, suppression de
+ville, personnages importants/famille royale du
+royaume) restent dynastiques.
+
+Tests : nouveau verrou de rendu PopulationTable (19e
+test de rendu) — partie témoin après 2 tours : tous
+roturiers (cour vide), on grave un noble (300) et un
+bourgeois (150) : la carte cour titre « 2 vivants / 2 au
+total », la carte population prend le reste. 168/168
+natifs, 19/19 rendu (12 fichiers), tsc strict 0
+erreur, diag IDENTIQUE.
+
+Fichiers : PopulationTable.tsx, PopulationTable.test.ts.
