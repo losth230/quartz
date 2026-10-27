@@ -1076,3 +1076,63 @@ wiki Référentiels → Bâtiments) affiche « +1 route commerciale » —
 l'effet de l'échoppe est donc VISIBLE à l'écran. Un bâtiment hors
 référentiel n'apporte rien, comme pour toute production. Le cap
 reste un cap CONSEILLÉ (jamais bloquant — convention du jeu).
+
+## Coûts, prérequis, métiers et logements : des valeurs, par la banque (arbitrage Thibaut, 2026-10-27)
+
+**Retour Thibaut** : « je veux que le coût ne soit pas textuel mais des
+valeurs qui passent par la banque. Idem pour l'attribution de métiers
+(champs "valeur"/"métier"), idem pour les logements. »
+
+**Le coût** : le coût d'une construction vivait dans un TEXTE libre du
+référentiel (« 25 Or + 4 Fer », « Silo à grain requis, 15 Or + 4 Bois +
+4 Bétail ») interprété par une regex (`parseCoutTexte`). Depuis
+2026-10-27, chaque entrée porte ses coûts en DONNÉES :
+`couts: [{ressource, valeur}]` — 94/94 entrées migrées, 198 paires,
+fidélité vérifiée pair à pair (0 écart avec l'ancienne lecture). Le
+moteur agrège (`coutConstructionRef`), l'UI affiche le calcul
+(« 25 Or + 4 Fer »), l'onglet 🎛 Paramètres édite les paires
+(ressource + valeur) via `CoutEditor`.
+
+**Le prérequis** : il vitait DANS le texte du coût, extrait par regex
+(« X requis. »). Il devient un champ dédié `requis` (12 entrées :
+Caserne → Poste de garde, Place du marché → Echoppe, Clinique →
+Herboristerie…), éditable dans Paramètres, lu par
+`prerequisConstruction` — règle inchangée : le prérequis doit être
+construit dans la MÊME ville (garde-fou non bloquant, ⚠ dans le log).
+
+**Les métiers et les logements passent par la banque** : la banque
+d'effets est la voie UNIQUE des effets depuis 2026-10-19, mais les
+EMPLACEMENTS de métiers (`emplacements: [{metier, places}]`) et les
+LOGEMENTS (`taudisApportes`, `domicilesApportes`) étaient encore lus
+en champs AD HOC par le moteur. Depuis 2026-10-27, le registre
+(`rules/registry.ts`) les TRADUIT en effets de banque au même titre
+que les flux :
+- `emplacements` → effets **`placesMetier`** {metier, valeur} ;
+- `taudisApportes` / `domicilesApportes` → effets **`logements`**
+  {logement, valeur} — les Taudis et les autres domiciles passent par
+  le MÊME canal.
+
+La contribution de la banque gagne deux canaux (`placesMetier`,
+`logements`), lus par `emplacementsConstructionRef` /
+`logementsConstructionRef` (métiers : caps par ville ; logements :
+parc de la ville, bonheur, attribution des domiciles). Une
+construction porte une règle dès qu'elle a un effet QUELCONQUE.
+Les lectures acceptent la config de la partie en argument — les
+éditions de Paramètres s'appliquent (effets, emplacements, logements).
+
+**Textes vidés** : les champs textuels `cout`, `production` et
+`description` des constructions sont VIDÉS du référentiel (plus aucun
+lecteur ; ils restent OPTIONNELS dans le type pour les vieilles
+configs). Les colonnes « Production (texte) » et « Description » de
+l'onglet Paramètres et du wiki Référentiels sont retirées — le résumé
+affichable (`resumeConstruction`), calculé par le moteur, fait foi.
+
+**Compatibilité des configs sauvegardées** : `migrerConstructions`
+passe de « ajouter les entrées manquantes » à une complétion CHAMP À
+CHAMP par (nom, groupe) — même patron que `migrerFactions`. Les
+vieilles configs reçoivent les champs nouveaux (`couts`, `requis`) ;
+tout champ sauvegardé garde la priorité (une édition perso survit).
+
+**Camp de bâtisseurs** : sa réduction (5 Or, 1 Bois) est un repli
+STRUCTURÉ (champ `reduction` si le Camp entre un jour au référentiel
+— mécanisme dormant) — plus d'analyse de description textuelle.
