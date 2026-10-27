@@ -91,3 +91,16 @@ drop function if exists public.cp_advisory_unlock(text);
 --    lieu de la dupliquer (upsert côté client).
 create unique index if not exists cp_events_section_unique
   on public.cp_events (salon, tour, joueur, type);
+
+-- 7. (audit 2026-10-27, F1) Policy UPDATE pour cp_events : l'upsert
+--    idempotent de pousserSectionV2 (INSERT ... ON CONFLICT DO UPDATE)
+--    déclenche un UPDATE sur conflit — SANS policy UPDATE, PostgREST
+--    rejetait chaque re-poussée en 42501 (« new row violates
+--    row-level security policy ») et le client prenait le repli
+--    delete+insert à CHAQUE fois (3 allers-retours au lieu d'1,
+--    fenêtre de non-atomicité). Vérifié en conditions réelles.
+--    ⚠ INSTALLATION EXISTANTE : coller ce bloc une fois dans l'éditeur SQL.
+drop policy if exists "cp_events maj" on public.cp_events;
+create policy "cp_events maj"
+  on public.cp_events for update to anon
+  using (true) with check (true);

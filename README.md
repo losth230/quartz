@@ -28,6 +28,9 @@ Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
   `parties_chasse_peche` du jeu (sans toucher à la table `parties` du wargame).
   Un joueur crée la partie avec un code de
   salon, les 7 autres cliquent « 🔗 Rejoindre ce salon » — tout se synchronise en temps réel.
+  Préférez un code **généré** (bouton 🎲 de l'onglet ⚙ Nouvelle partie) : le code
+  du salon est le seul secret de la partie (aucun compte joueur), un code court
+  est devinable.
 
 Le déploiement est assuré par `.github/workflows/deploy.yaml` du dépôt `quartz` :
 à chaque push sur `v4` ou sur `chasse-et-peche-web`, le workflow reconstruit le site
