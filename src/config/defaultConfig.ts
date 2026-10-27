@@ -202,6 +202,16 @@ export interface ConstructionRef {
    *  Champ optionnel : absent = 0. Comptés par le facteur Logement
    *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
   taudisApportes?: number
+  /** ROUTES commerciales apportées au cap conseillé du joueur
+   *  (retour Thibaut 2026-10-27 : « je ne vois pas dans l'échoppe la
+   *  possibilité de posséder une route commerciale supplémentaire » —
+   *  l'apport quitte les noms de bâtiments codés en dur de
+   *  maxRoutesJoueur et vit ICI, comme les autres effets ; ex.
+   *  Echoppe : 1. Champ optionnel : absent = 0. Comptés par
+   *  maxRoutesJoueur (commerce.ts) pour TOUTES les villes du joueur,
+   *  version du groupe (Ville/Château) de la ville qui porte le
+   *  bâtiment. */
+  routesApportees?: number
   /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
    *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
    *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de

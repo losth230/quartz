@@ -161,6 +161,15 @@ export function effetsEteConstructionRef(ref: ConstructionRef): Record<string, n
   return c ? c.fluxEte : {}
 }
 
+/** ROUTES commerciales apportées par une construction au cap conseillé
+ *  du joueur (retour Thibaut 2026-10-27 : l'apport vivait codé en dur
+ *  par NOM dans maxRoutesJoueur — il devient une DONNÉE du référentiel
+ *  (champ routesApportees, ex. Echoppe : 1), lisible par le moteur et
+ *  par le résumé affiché. Champ optionnel : 0. */
+export function routesApporteesConstructionRef(ref: ConstructionRef | undefined): number {
+  return ref?.routesApportees ?? 0
+}
+
 /** Valeur d'ÉTAT d'une construction : la Garnison (défense tant que la
  *  construction tient). Le Tourisme n'y figure PLUS : flux normal depuis
  *  le retour Thibaut 2026-10-16 (voir la sémantique en tête de section). */
@@ -242,6 +251,12 @@ export function resumeConstruction(ref: ConstructionRef | undefined): string {
   // un aménagement doivent être visibles dans le résumé, pas seulement dans
   // la description textuelle du référentiel.
   if (ref.taudisApportes) parts.push(`+${ref.taudisApportes} Taudis`)
+  // Retour Thibaut 2026-10-27 : les ROUTES commerciales apportées
+  //  s'affichent pareil — l'effet vit dans le référentiel
+  //  (routesApportees), il doit être visible dans le picker « +
+  //  Construire », les badges de la carte et le wiki Référentiels.
+  const routes = routesApporteesConstructionRef(ref)
+  if (routes > 0) parts.push(`+${routes} route${routes > 1 ? 's' : ''} commerciale${routes > 1 ? 's' : ''}`)
   // Fiche bâtiments rang 2 (2026-10-26) : les AUTRES domiciles apportés
   //  (Maisons, Maisons de notable) s'affichent pareil (pluriel sur le
   //  premier mot : « +20 Maisons de notable »).

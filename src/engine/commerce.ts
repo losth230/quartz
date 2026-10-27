@@ -49,8 +49,7 @@ import type {
 } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, type Cfg } from './gameData'
-import { constructionRef, effetsConstructionRef, effetsEteConstructionRef } from './constructions'
-import { nbBatiments } from './factions'
+import { constructionRef, effetsConstructionRef, effetsEteConstructionRef, routesApporteesConstructionRef } from './constructions'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
  *  Seules les routes du modèle DISSOCIÉ (sans marchandId) sont
@@ -268,11 +267,11 @@ export function appliquerEffetsCommerce(
 
 /** Nombre maximal de ROUTES commerciales d'un joueur (cap
  *  ANNONCE, jamais bloquant — convention du jeu) : paramètre
- *  maxMarchands (0 par défaut), +1 par technologie « route
- *  supplémentaire » (Commerce, Collecte d'impôts), +1 par Plateforme
- *  commerciale ou Guilde des marchands (qui la remplace), +1 par
- *  Echoppe (« permet d'entretenir 1 route commerciale
- *  supplémentaire »). Renommé de maxMarchandsJoueur le 2026-10-24
+ *  maxMarchands (0 par défaut) + les ROUTES APPORTÉES par les bâtiments
+ *  PRÉSENTS (retour Thibaut 2026-10-27 : champ routesApportees du
+ *  RÉFÉRENTIEL — ex. Echoppe : 1, Place du marché : 1 — plus de noms
+ *  de bâtiments codés en dur ; l'ancien comptage citait des bâtiments
+ *  ABSENTS du référentiel et MANQUAIT la Place du marché).
  *  (vague 3b : les routes ne sont plus portées par des marchands). */
 export function maxRoutesJoueur(
   p: Player,
@@ -282,9 +281,19 @@ export function maxRoutesJoueur(
   // (RETRAIT 2026-10-24 : les techs Commerce / Collecte d'impôts
   //  (+1 route chacune) sont supprimées avec le système de progrès,
   //  retour arbitre.)
-  max += nbBatiments(p, 'Plateforme commerciale')
-  max += nbBatiments(p, 'Guilde des marchands')
-  max += nbBatiments(p, 'Echoppe')
+  // (2026-10-27 : somme des routesApportees du RÉFÉRENTIEL pour
+  //  chaque bâtiment présent, chaque ville avec le BON groupe
+  //  (Ville/Château) — un bâtiment hors référentiel n'apporte
+  //  rien, comme pour toute production. Retour Thibaut : l'apport
+  //  vit dans le référentiel, plus de noms codés en dur —
+  //  l'ancien comptage citait des Plateforme commerciale / Guilde
+  //  des marchands ABSENTES du référentiel et MANQUAIT la Place
+  //  du marché, qui promet une route dans sa description.)
+  for (const v of p.villes) {
+    for (const b of v.batiments) {
+      max += routesApporteesConstructionRef(constructionRef(b, C.config, v.type))
+    }
+  }
   return max
 }
 

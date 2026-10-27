@@ -61,7 +61,6 @@ const REMPLACE: Record<string, string[]> = {
   'Guilde des savants': ['Institut de recherche'],
   'Guilde des évangiles': ['Conjuratoire'],
   'Guilde des marins': ["Complexe d'exploitation maritime"],
-  'Guilde des marchands': ['Plateforme commerciale'],
 }
 
 /** Effets par tour d'un bâtiment : production EXACTE du référentiel,

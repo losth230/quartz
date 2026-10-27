@@ -2126,6 +2126,7 @@
       "cout": "10 Or + 3 Bois",
       "production": "+2 emplacements de Commerçant.",
       "description": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "routesApportees": 1,
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
@@ -2343,6 +2344,7 @@
       "cout": "Echoppe requise, 20 Or + 6 Soie",
       "production": "+6 emplacements de Commerçant.",
       "description": "Echoppe requise. +6 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "routesApportees": 1,
       "effets": [],
       "rangMinHabitation": 2,
       "emplacements": [
@@ -2564,6 +2566,7 @@
       "cout": "12 Or + 2 Bois",
       "production": "+2 emplacements de Commerçant.",
       "description": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "routesApportees": 1,
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
