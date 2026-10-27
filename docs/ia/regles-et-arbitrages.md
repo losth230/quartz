@@ -1043,3 +1043,36 @@ devient noble doit pouvoir être marié manuellement. »
   critère. Les autres gardes-fous ne changent pas (majeurs, vivants,
   célibataires, même porteur pour le picker, déménagement chez le
   conjoint).
+
+## Les effets des bâtiments et les routes commerciales (arbitrage Thibaut, 2026-10-27)
+
+« Les effets des bâtiments ne sont pas clairs. J'ai l'impression qu'ils
+sont codés en dur, alors que la banque sert justement à éviter ça, et
+je ne vois pas dans l'échoppe la possibilité de posséder une route
+commerciale supplémentaire. »
+
+**Où vivent les effets d'un bâtiment** (règle d'architecture, rappel) :
+- flux de production (Or, Nourriture, Tourisme, Charbon…) et Garnison
+  → la BANQUE D'EFFETS (rules/registry → contributionBanque), dont la
+  source est le champ structuré `effets` du référentiel ;
+- emplacements de métiers → champ `emplacements` ;
+- logements → champs `taudisApportes` / `domicilesApportes` ;
+- santé / écoles → champs `ecoleRang`, `malContraction`,
+  `bonusGuerison`… ;
+- et désormais ROUTES commerciales → champ **`routesApportees`**.
+
+**Le cas des routes** : le cap conseillé de routes commerciales
+(`maxRoutesJoueur`) comptait des NOMS de bâtiments codés en dur
+(« Plateforme commerciale », « Guilde des marchands », « Echoppe ») —
+les deux premiers n'existent même PLUS au référentiel (vestiges du
+classeur), et la **Place du marché**, qui promet pourtant « 1 route
+commerciale supplémentaire » dans sa description, n'était PAS comptée.
+Depuis 2026-10-27 : chaque bâtiment présent apporte ses
+`routesApportees` du référentiel (Echoppe [Ville] : 1, Echoppe
+[Château] : 1, Place du marché : 1), le moteur somme le champ pour
+toutes les villes du joueur (bon groupe Ville/Château), et le résumé
+affichable (picker « + Construire », badges de la carte de ville,
+wiki Référentiels → Bâtiments) affiche « +1 route commerciale » —
+l'effet de l'échoppe est donc VISIBLE à l'écran. Un bâtiment hors
+référentiel n'apporte rien, comme pour toute production. Le cap
+reste un cap CONSEILLÉ (jamais bloquant — convention du jeu).
