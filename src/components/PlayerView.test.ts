@@ -113,7 +113,7 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   }
 })
 
-test('rendu VilleCarte : population, garnison & logements en 3 colonnes — tableaux propres (retours Thibaut 2026-10-26)', async () => {
+test('rendu VilleCarte : population, garnison, logements & métiers en 4 colonnes — tableaux propres (retours Thibaut 2026-10-26/27)', async () => {
   const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
@@ -210,6 +210,32 @@ test('rendu VilleCarte : population, garnison & logements en 3 colonnes — tabl
       `ligne logements « ${nom} » (${fmt(o)}/${fmt(c)}) absente du 3e tableau`,
     )
   }
+  // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau tableau
+  //  avec les 3 tableaux de logement, culture et garnison, qui
+  //  recense tous les métiers disponibles et occupés ») : 4e
+  //  tableau de la ligne, DÉRIVÉ de l'état (patron R3 — même
+  //  helper moteur que le panneau Population).
+  const { occupationsMetierVille } = await import('../engine/metiers')
+  const lignesMet = occupationsMetierVille(habitantsCap, cap, C, { state: etat, joueur: 1 })
+  const enPosteTotal = lignesMet.reduce((n, l) => n + (l.metier ? l.enPoste : 0), 0)
+  assert.ok(
+    h.includes(`Métiers : <strong>${esc(fmt(enPosteTotal))}</strong> en poste`),
+    `titre « Métiers : ${fmt(enPosteTotal)} en poste » absent du 4e tableau`,
+  )
+  // Chaque métier disponible (cap finie) ou occupé rend SON nom, et
+  //  la ligne Sans-emploi (rôle neutre) est toujours présente.
+  for (const l of lignesMet) {
+    assert.ok(
+      h.includes(`>${esc(l.metier ?? 'Sans-emploi')}</`),
+      `métier « ${l.metier ?? 'Sans-emploi'} » absent du 4e tableau`,
+    )
+  }
+  assert.ok(h.includes('Sans-emploi'), 'ligne « Sans-emploi » absente du 4e tableau')
+  // Le pied rend le total en poste / vivants de la ville.
+  assert.ok(
+    h.includes(`<strong>${esc(fmt(enPosteTotal))}/${esc(fmt(nbVivants))}</strong>`),
+    `total « ${fmt(enPosteTotal)}/${fmt(nbVivants)} » (en poste/vivants) absent du 4e tableau`,
+  )
 })
 
 test('rendu VilleCarte : production épurée par défaut — non produites cachées, toggle « tout afficher » (retour Thibaut 2026-10-26)', async () => {

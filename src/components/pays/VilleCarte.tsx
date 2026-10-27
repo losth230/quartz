@@ -16,7 +16,11 @@
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
 //  plancher et total — arbitre : le détail reste TOUJOURS visible,
-//  relooké en classes CSS dédiées) ; (3) CONSTRUCTIONS :
+//  relooké en classes CSS dédiées) ; (2bis) MÉTIERS en 4e tableau de
+//  la ligne (retour Thibaut 2026-10-27 : « un nouveau tableau avec
+//  les 3 tableaux de logement, culture et garnison, qui recense
+//  tous les métiers disponibles et occupés » — même données que le
+//  panneau Population, une ligne par métier occupé ou plafonné) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
 //  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
@@ -40,6 +44,7 @@ import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } fr
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
 import { initStockVille, stockRang, vivantsVille, domicilesApportesVille } from '../../engine/domiciles'
+import { occupationsMetierVille } from '../../engine/metiers'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
@@ -311,6 +316,20 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             })
           const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
           const habitantsLoges = habitantsLog.length - sansLogement
+          // ── MÉTIERS (retour Thibaut 2026-10-27 : « ajouter un
+          //  nouveau tableau […] qui recense tous les métiers
+          //  disponibles et occupés ») : 4e tableau de la ligne,
+          //  mêmes données que le panneau Population (helper moteur
+          //  occupationsMetierVille, testé) — une ligne par métier
+          //  OCCUPÉ (en poste > 0) ou DISPONIBLE (cap finie :
+          //  base du rang + emplacements des constructions), la
+          //  ligne Sans-emploi toujours présente (rôle neutre).
+          const lignesMet = occupationsMetierVille(
+            habitantsLog, ville, C, { state, joueur },
+          )
+          const enPosteTotal = lignesMet.reduce(
+            (n, l) => n + (l.metier ? l.enPoste : 0), 0,
+          )
           return (
             <div className="ville-duo-cols">
               <div>
@@ -410,6 +429,51 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                     </tbody>
                   </table>
                 )}
+              </div>
+              {/* ── MÉTIERS (retour Thibaut 2026-10-27) : tous les
+                  métiers DISPONIBLES (cap finie — base du rang +
+                  emplacements des constructions) et OCCUPÉS de la
+                  ville, avec la ligne Sans-emploi (rôle neutre) et
+                  le total en poste / vivants. Colonnes : en poste ·
+                  places libres (« — » pour les métiers non
+                  plafonnés : rôles de cour, armée, Banquier,
+                  Troubadour…). Surnombre en rouge (cap baissée,
+                  aménagement perdu — cf. reaffecterMetiers). */}
+              <div>
+                <div
+                  className="ville-duo-titre"
+                  title="Tous les métiers disponibles et occupés de la ville : en poste / places libres. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » = métier non plafonné ici (règles propres)."
+                >
+                  Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
+                </div>
+                <table className="ville-table">
+                  <tbody>
+                    {lignesMet.map((l) => (
+                      <tr key={l.metier ?? 'sans'}>
+                        <td>
+                          {l.metier
+                            ? l.metier
+                            : <span className="muted" title="Sans-emploi : rôle neutre — impôt nul, aucun effet">Sans-emploi</span>}
+                        </td>
+                        <td className="num">{fmt(l.enPoste)}</td>
+                        <td className={
+                          Number.isFinite(l.cap) && l.cap - l.enPoste < 0
+                            ? 'num neg'
+                            : 'num'
+                        }>
+                          {Number.isFinite(l.cap)
+                            ? fmt(l.cap - l.enPoste)
+                            : <span className="muted">—</span>}
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="ligne-total">
+                      <td><strong>Habitants en poste</strong></td>
+                      <td className="num"><strong>{fmt(enPosteTotal)}/{fmt(nbVivants)}</strong></td>
+                      <td />
+                    </tr>
+                  </tbody>
+                </table>
               </div>
             </div>
           )
