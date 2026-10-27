@@ -7,7 +7,7 @@
 
 import type { Cfg } from '../../engine/gameData'
 import { resumeConstruction, coutConstructionRef } from '../../engine/constructions'
-import { fmtCout } from '../pays/pays-utils'
+import { fmtCout, titreAmenagement } from '../pays/pays-utils'
 import { Card } from '../ui'
 
 export function OngletBatiments({ C }: { C: Cfg }) {
@@ -102,12 +102,14 @@ export function OngletAmenagements({ C }: { C: Cfg }) {
       </p>
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Aménagement</th><th>Terrain</th><th>Coût</th><th>Effets</th></tr></thead>
+          <thead><tr><th>Aménagement</th><th>Coût</th><th>Effets</th></tr></thead>
           <tbody>
             {(cfg.constructions ?? []).filter((c) => c.categorie === 'Aménagement').map((c, i) => (
               <tr key={i}>
-                <td><strong>{c.nom}</strong></td>
-                <td>{c.terrain || '—'}</td>
+                {/* (Retour Thibaut 2026-10-27 : la case requise vit entre
+                    parenthèses dans le titre — la colonne Terrain, devenue
+                    redondante, est retirée.) */}
+                <td><strong>{titreAmenagement(c.nom, c.terrain)}</strong></td>
                 <td>{fmtCout(coutConstructionRef(c))}</td>
                 <td>{resumeConstruction(c, cfg) || <span className="muted">—</span>}</td>
               </tr>

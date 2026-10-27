@@ -56,6 +56,17 @@ export function fmtNum(v: number): string {
   return v === 0 ? '—' : `${v > 0 ? '+' : ''}${fmt(v)}`
 }
 
+/** Titre d'affichage d'un aménagement (retour Thibaut 2026-10-27) :
+ *  la CASE REQUISE vit entre parenthèses dans le TITRE —
+ *  « Baleinier (Baleine) », « Champ (Plaine) » — partout où le titre
+ *  est affiché (picker « + Aménager une case… », badge construit de
+ *  la carte, wiki). Un aménagement PERSO sans terrain reste nu.
+ *  L'éditeur des Paramètres continue d'éditer le NOM BRUT : les
+ *  parenthèses ne sont jamais stockées dans l'état ni la config. */
+export function titreAmenagement(nom: string, terrain?: string): string {
+  return terrain ? `${nom} (${terrain})` : nom
+}
+
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <label className="field">

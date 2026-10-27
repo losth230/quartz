@@ -51,7 +51,7 @@ import { ChoicePicker } from '../Picker'
 import { faireConstruire, faireBatParFamille } from './Constructions'
 import {
   Field, ORIGINE_LABEL, RESSOURCES_FLUX, FAM_BADGES,
-  fmtEffets, fmtCout, fmtNum,
+  fmtEffets, fmtCout, fmtNum, titreAmenagement,
 } from './pays-utils'
 
 export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
@@ -434,7 +434,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           return (
             <div key={ai} className="ligne-construction">
               <span className="badge badge-good">
-                {a}
+                {/* (Retour Thibaut 2026-10-27 : la case requise vit
+                    entre parenthèses dans le TITRE.) */}
+                {titreAmenagement(a, ref?.terrain)}
                 <button
                   className="badge-x"
                   title="Retirer"
@@ -445,7 +447,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 >×</button>
               </span>
               <span className="muted small">
-                {ref ? `${resumeConstruction(ref, C.config) || '—'}${ref.terrain ? ` (${ref.terrain})` : ''}` : '—'}
+                {ref ? (resumeConstruction(ref, C.config) || '—') : '—'}
               </span>
             </div>
           )
@@ -465,8 +467,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Aménagements',
                 options: amRefsBase.map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
-                  droite: `${fmtCout(coutConstructionRef(a))}${a.terrain ? ` · ${a.terrain}` : ''}`,
+                  // (Retour Thibaut 2026-10-27 : la case requise vit
+                  //  entre parenthèses dans le TITRE — plus besoin du
+                  //  suffixe « · terrain » à droite du coût.)
+                  metier: titreAmenagement(a.nom, a.terrain),
+                  droite: fmtCout(coutConstructionRef(a)),
                   description: [
                     resumeConstruction(a, C.config),
                   ].filter(Boolean).join('\n'),
@@ -476,7 +481,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Améliorations · tier 2',
                 options: ameliorationsTier(2).map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
+                  metier: titreAmenagement(a.nom, a.terrain),
                   droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
                     resumeConstruction(a, C.config),
@@ -488,7 +493,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Améliorations · tier 3',
                 options: ameliorationsTier(3).map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
+                  metier: titreAmenagement(a.nom, a.terrain),
                   droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
                     resumeConstruction(a, C.config),

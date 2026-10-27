@@ -148,3 +148,36 @@ test('retour Thibaut 2026-10-27 : textes vidés — le picker rend le résumé s
   assert.equal(poste.droite, '25 Or + 4 Fer',
     'coût du Poste de garde : lu des paires {ressource, valeur}, pas du texte')
 })
+
+// ── Retour Thibaut 2026-10-27 : « pour les aménagements, met la case
+//    requise entre parenthèses dans le titre de l'aménagement » ──────
+
+test('titre des aménagements : la case requise vit entre parenthèses (retour Thibaut 2026-10-27)', async () => {
+  const { titreAmenagement } = await import('./pays-utils')
+  // le titre affiché = « nom (case requise) », dans le picker « +
+  //  Aménager une case… », le badge construit de la carte et le wiki
+  assert.equal(titreAmenagement('Baleinier', 'Baleine'), 'Baleinier (Baleine)', 'tier 1')
+  assert.equal(titreAmenagement('Champ', 'Plaine'), 'Champ (Plaine)', 'Champ')
+  assert.equal(titreAmenagement('Scierie', 'Forêt'), 'Scierie (Forêt)', 'Scierie')
+  // tiers 2/3 : les parenthèses viennent APRÈS le nom complet
+  //  (« Baleinier (tier 2) (Baleine) », pas « Baleinier (Baleine) (tier 2) »)
+  assert.equal(
+    titreAmenagement('Baleinier (tier 2)', 'Baleine'),
+    'Baleinier (tier 2) (Baleine)', 'tier 2 : parenthèses en fin de titre')
+  // un aménagement PERSO sans case requise reste au titre nu
+  assert.equal(titreAmenagement('Mon aménagement perso'), 'Mon aménagement perso',
+    'sans terrain : titre nu (perso)')
+  assert.equal(titreAmenagement('X', ''), 'X', 'terrain vide : titre nu')
+  // Verrou référentiel : les aménagements du référentiel portent TOUS
+  //  une case requise — le titre affiché a donc toujours ses
+  //  parenthèses (les seuls titres nus sont les aménagements perso).
+  const state = partie()
+  const C = cfgOf(state.config)
+  const amenagements = (C.config.constructions ?? []).filter((c) => c.categorie === 'Aménagement')
+  assert.ok(amenagements.length > 0, 'référentiel aménagements attendu')
+  for (const a of amenagements) {
+    assert.ok(a.terrain, `« ${a.nom} » : case requise (terrain) absente du référentiel`)
+    assert.ok(titreAmenagement(a.nom, a.terrain).endsWith(`(${a.terrain})`),
+      `« ${a.nom} » : le titre doit finir par « (${a.terrain}) »`)
+  }
+})
