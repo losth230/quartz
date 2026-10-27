@@ -392,8 +392,8 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           « 💍 Marier avec… » unit deux personnages DU MÊME porteur : la personne mariée déménage
           dans la ville de son conjoint (confirmation avant de marier un Dirigeant).
           Si un mariage ou un don est refusé, le motif s'affiche en rouge sous le métier
-          (déjà marié, mineur… — le mariage manuel reste limité aux maisons de DYNASTIE
-          noble, règle moteur en vigueur).
+          (déjà marié, mineur… — le mariage manuel unit deux NOBLES : dynastie noble
+          de naissance ou anobli à 250 de prestige).
         </p>
       </Card>
 
