@@ -3981,3 +3981,12 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **Verrou** : PlayerView.test — test « colonnes » étendu en « 4 colonnes » (patron R3, dérivé de l'état) : titre, chaque métier disponible/occupé, ligne Sans-emploi, pied en poste/vivants.
 - **Rebase** : la branche avait bougé entre-temps (audit F1-F6, commits 841ab257…0553a8d5) — aucun fichier en commun, validation refaite sur la nouvelle base.
 - Validation : tsc 0 erreur, **190/190 natifs**, **21/21 rendu**, diag IDENTIQUE (86 règles), bundle Edge Function rebuildé + testé.
+
+## F1 vérifié en production (2026-10-27, après collage du SQL par Thibaut)
+
+- **Thibaut a collé le bloc §7** (policy UPDATE « cp_events maj ») dans l'éditeur SQL Supabase — l'action manuelle du plan d'action de l'audit est FAITE.
+- **Vérification en conditions réelles anonymes** sur salon jetable `audit-test-fix2` (joueur 99, ligne purgée après ; aucune écriture sur le salon `chasse-peche`, contrôlé en lecture) :
+  - PATCH explicite sur `cp_events` → **204** : la policy UPDATE est bien active ;
+  - **upsert de `pousserSectionV2` rejoué à l'identique** (`on_conflict=salon,tour,joueur,type`) → **200, la ligne est REMPLACÉE** (id stable, payload mis à jour) — le même appel rendait 42501 ce matin (audit F1) et le repli delete+insert jouait à CHAQUE re-poussée. La voie rapide est donc OPÉRATIONNELLE en production : 1 aller-retour au lieu de 3, plus de fenêtre de non-atomicité.
+  - NB outillage : en curl direct, le mode `Prefer: resolution=merge-upsert` rend 409/23505 sur cette table ; sans incidence pour le jeu — supabase-js `.upsert()` émet `merge-duplicates`, mode vérifié en 200.
+- Bilan de l'audit 2026-10-27 : F1-F6 TOUS résolus et vérifiés. Restent en attente d'arbitrage : m1 (timeout du fetch de `resoudreTourServeur`) et m2 (sections de joueurs inconnus dans `fusionnerSections`).
