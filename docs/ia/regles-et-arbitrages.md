@@ -1297,3 +1297,23 @@ case requise reste au titre nu.
   le doublon : suffixe « · terrain » à droite du coût du picker,
   suffixe « (terrain) » du résumé muet du badge, colonne Terrain du
   wiki.
+
+## Le 4e tableau « Métiers » de la carte de ville (arbitrage Thibaut, 2026-10-27)
+
+« Ajouter un nouveau tableau avec les 3 tableaux de logement, culture et
+garnison, qui recense tous les métiers disponibles et occupés. » Le bloc
+POPULATION, GARNISON & LOGEMENTS de chaque carte de ville porte un
+4e tableau « Métiers : N en poste » :
+
+- une ligne par métier OCCUPÉ (en poste > 0) ou DISPONIBLE (cap
+  finie : base du rang d'habitation + emplacements des bâtiments et
+  aménagements), la ligne Sans-emploi toujours présente (rôle
+  neutre — impôt nul, aucun effet) ;
+- colonnes : en poste · places libres (« — » pour les métiers non
+  plafonnés ici : rôles de cour, armée, Banquier, Troubadour,
+  Dirigeant/Héritier…) ; le surnombre s'affiche en rouge ;
+- pied de tableau : habitants en poste / vivants de la ville ;
+- mêmes données que le panneau Population (helper moteur
+  occupationsMetierVille) : aucune règle nouvelle, aucune logique
+  dupliquée — la carte de ville et le panneau Population ne
+  peuvent pas se contredire.

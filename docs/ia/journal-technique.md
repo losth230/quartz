@@ -3972,3 +3972,12 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **Points forts confirmés** : le repli delete+insert a masqué F1 pendant des semaines (architecture défensive) ; diag IDENTIQUE malgré la refonte du store (moteur intact) ; CAS tour_publie et barrière v2 sans défaut de concurrence retrouvé.
 - Rapport versé : `docs/ia/audit-code-2026-10-27.md` (statuts F1-F6 + m1/m2 + plan d'action).
 - Validation : tsc (CI), **190/190 natifs** (+1 test F6), **21 rendus attendus en CI** (+1 test F2, non exécutables localement sans react), diag IDENTIQUE, balance JSX vérifiée sur les 4 .tsx modifiés (harnais dédié ; artefacts préexistants identiques base ↔ modifiés sur ParamsPanel/SetupPanel).
+
+## 4e tableau « Métiers » sur la carte de ville (retour Thibaut, 2026-10-27 — base 0553a8d5)
+
+- **Retour Thibaut** : « ajouter un nouveau tableau avec les 3 tableaux de logement, culture et garnison, qui recense tous les métiers disponibles et occupés » — le bloc POPULATION, GARNISON & LOGEMENTS de la carte de ville passe de 3 à 4 colonnes.
+- **VilleCarte** : 4e tableau « Métiers : N en poste » — une ligne par métier OCCUPÉ (en poste > 0) ou DISPONIBLE (cap finie : base du rang + emplacements des constructions), la ligne Sans-emploi toujours présente (rôle neutre). Colonnes : en poste · places libres (« — » pour les non plafonnés : rôles de cour, armée, Banquier, Troubadour… ; surnombre en rouge). Pied : habitants en poste / vivants. Mêmes données que le panneau Population (helper moteur testé occupationsMetierVille) — dérivation directe de l'état, zéro logique dupliquée.
+- **styles.css** : .ville-duo-cols en 4 colonnes (0.8fr 1fr 1fr 1.1fr) ; repli 2 colonnes sous 860px (filets retirés aux têtes de rangée — enfants impairs), 1 colonne sous 560px inchangé.
+- **Verrou** : PlayerView.test — test « colonnes » étendu en « 4 colonnes » (patron R3, dérivé de l'état) : titre, chaque métier disponible/occupé, ligne Sans-emploi, pied en poste/vivants.
+- **Rebase** : la branche avait bougé entre-temps (audit F1-F6, commits 841ab257…0553a8d5) — aucun fichier en commun, validation refaite sur la nouvelle base.
+- Validation : tsc 0 erreur, **190/190 natifs**, **21/21 rendu**, diag IDENTIQUE (86 règles), bundle Edge Function rebuildé + testé.
