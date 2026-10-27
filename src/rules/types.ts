@@ -180,9 +180,11 @@ export interface ConditionRegle {
 export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
-  | 'merveille'      // table constructions, famille Merveille
   | 'regime'          // loi chiffrée du régime politique
   | 'culture'         // règle de pays culturelle
+  //  'merveille' RETIRÉ le 2026-10-27 (audit : suppression des
+  //  merveilles, retour Thibaut) — la valeur n'est jamais à réutiliser
+  //  (stabilité des règles déjà saisies).
   //  'tech' RETIRÉ le 2026-10-24 (retour arbitre : suppression du
   //  système de progrès) — la valeur n'est jamais à réutiliser
   //  (stabilité des règles déjà saisies).

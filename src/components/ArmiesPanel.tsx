@@ -245,7 +245,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
             ({C.p.armeePrixOr} Or tous les {C.p.armeePriXPuissance} points de force — payé une fois, pas d'entretien)
           </span>
           {prixBrut > prix && (
-            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (Grand écuyer, merveilles, bâtiments de la ville)</span>
+            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (Grand écuyer, bâtiments de la ville)</span>
           )}
           {orDispo < prix && <span className="neg"> ⚠ Or insuffisant ({fmt(orDispo)} disponible)</span>}
         </p>

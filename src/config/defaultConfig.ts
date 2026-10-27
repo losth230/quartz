@@ -11,6 +11,12 @@
 
 import refJson from './referentiels.json'
 import { mergeParams, type GameParams, type GameParamStrings } from './params'
+// (2026-10-27, audit : HabitationDef n'est plus défini en double ici —
+//  l'UNIQUE définition vit dans engine/types.ts, importée puis
+//  ré-exportée pour ne pas casser les imports existants.)
+import type { HabitationDef } from '../engine/types'
+
+export type { HabitationDef }
 
 // ── Types des référentiels (issus du classeur) ─────────────────────────
 
@@ -79,45 +85,6 @@ export interface RegimeDef {
    *  des vieilles configurations, complétés par migrerRegimes. */
   garnisonParRang?: number
   nourrEteChampRiziere?: number
-}
-/** Ligne de la table « types d'habitation » (feuille Ville du classeur) :
- *  chaque ville est de type Ville (Hameau → Cité → Grande Cité) ou
- *  Château (Motte → Donjon → Forteresse) ; chaque rang a un coût
- *  d'amélioration, un nombre d'habitants requis, une consommation
- *  par tour et une garnison de base — débités/appliqués
- *  automatiquement par le moteur (engine/habitations.ts). */
-export interface HabitationDef {
-  /** « Ville » ou « Château » */
-  type: string
-  /** nom du rang (Hameau, Cité, Grande Cité, Motte, Donjon, Forteresse) */
-  rang: string
-  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
-   *  textuel ») : TEXTE de coût VIDÉ dans le référentiel — le coût
-   *  vit dans `couts`. Champ OPTIONNEL : les configs sauvegardées
-   *  qui portent encore l'ancien texte restent valides. */
-  cout?: string
-  /** COÛT d'amélioration du rang en DONNÉES STRUCTURÉES (paires
-   *  {ressource, valeur}, même format que les `couts` des
-   *  constructions — retour Thibaut 2026-10-27). Optionnel :
-   *  absent = gratuit. */
-  couts?: CoutRef[]
-  habitantsRequis: number
-  /** métiers disponibles à la BASE du rang, format STRUCTURÉ (retour
-   *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
-   *  SINGULIER, même format que les `emplacements` des constructions ;
-   *  l'ancien TEXTE « metiersDisponibles » est converti par la
-   *  migration ciblée de cfgOf, puis la clé disparaît). */
-  metiersBase: EmplacementDef[]
-  /** domiciles disponibles, ex. « 50 Taudis, 1 Maison de notable »
-   *  — TEXTE d'affichage ; la donnée vit
-   *  dans `domicilesRang` (vague A, design domiciles 2026-10-24 ;
-   *  fiche habitations 2026-10-26). */
-  domicilesDisponibles: string
-  /** domiciles du rang STRUCTURÉS (vague A, 2026-10-24) :
-   *  [{domicile: 'Maison', nombre: 50}, …] — 1 domicile = 1 logement.
-   *  Optionnel : absent des vieilles configs → complété par
-   *  migrerTypesHabitation (garde-fou idempotent). */
-  domicilesRang?: Array<{ domicile: string; nombre: number }>
 }
 /** Événements de saison (été/hiver) RETIRÉS du référentiel le
  *  2026-10-24 (retour arbitre Thibaut) : la table `events` (18
@@ -197,9 +164,9 @@ export interface CoutRef {
 export interface ConstructionRef {
   categorie: string   // 'Bâtiment' | 'Aménagement'
   groupe: string      // 'Ville' | 'Château' | 'Capitale' | 'Terrain'
-  famille: string      // Militaire / Economique / Guilde / Capitale / Merveille / ''
+  famille: string      // Militaire / Economique / Guilde / Capitale / ''
   nom: string
-  /** Merveilles ET aménagements tiers 2/3 : rang d'habitation
+  /** Aménagements tiers 2/3 : rang d'habitation
    *  MINIMUM requis pour construire/améliorer (1 = Hameau/Motte…,
    *  2 = Cité/Donjon, 3 = Grande Cité/Forteresse). Champ optionnel. */
   rangMinHabitation?: number
@@ -1683,6 +1650,12 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  (tier 2)… remplaceAmenagement) — le filtre ne retire plus QUE
   //  les BÂTIMENTS de rang ≥ 2, qui restent supprimés. Les merveilles
   //  et aménagements de rang 2+ passent à nouveau.)
+  //  (RETRAIT 2026-10-27, audit + retour Thibaut « supprimer toutes
+  //  les merveilles pour l'instant » : les 4 merveilles du référentiel
+  //  disparaissent. Les entrées portées par les vieilles configs ne
+  //  sont NI retirées NI purgées : invisibles du sélecteur/wiki, sans
+  //  règle de banque dans le référentiel courant, elles ne produisent
+  //  rien — pas de crash, pas de migration nécessaire.)
   //  (RÉACTIVATION TOTALE, fiche bâtiments rang 2, 2026-10-26 : les
   //  BÂTIMENTS de rang 2 reviennent au référentiel (Caserne, Réseau
   //  de routes, Tour de sorcier, Ecole militaire, quartiers, Silo à

@@ -20,7 +20,7 @@ export function OngletBatiments({ C }: { C: Cfg }) {
           « Nourr - été »), Garnison (valeur d'état), emplacements de métiers et
           logements apportés. Deux colonnes — VILLE et CHÂTEAU ; tri par RANG
           d'habitation puis par FAMILLE (Militaire, Économique, Guilde,
-          Merveille, Capitale).
+          Capitale).
         </p>
         <div className="refbat-grid">
           {[['Ville', 'VILLES'], ['Château', 'CHÂTEAUX']].map(([groupe, label]) => (
@@ -35,8 +35,7 @@ export function OngletBatiments({ C }: { C: Cfg }) {
                     || a.nom.localeCompare(z.nom))
                 const familles: Array<[string, string]> = [
                   ['Militaire', 'Militaire'], ['Economique', 'Économique'],
-                  ['Guilde', 'Guilde'],
-                  ['Merveille', 'Merveille'], ['Capitale', 'Capitale'],
+                  ['Guilde', 'Guilde'], ['Capitale', 'Capitale'],
                 ]
                 return [1, 2, 3].map((rang) => {
                   const duRang = bats.filter((b) => (b.rangMinHabitation ?? 1) === rang)

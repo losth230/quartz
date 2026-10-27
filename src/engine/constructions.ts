@@ -57,7 +57,7 @@ export function batimentsRefs(cfg?: GameConfig): ConstructionRef[] {
 // ── Coûts structurés ({ressource, valeur}) ─────────────────────────────
 
 /** Normalise un nom de ressource (« Pierres » → « Pierre »). */
-export function normaliserRessource(res: string): string {
+function normaliserRessource(res: string): string {
   if (/^pierres?$/i.test(res)) return 'Pierre'
   if (/^bétails?$/i.test(res)) return 'Bétail'
   if (/^nourritures?$/i.test(res)) return 'Nourriture'

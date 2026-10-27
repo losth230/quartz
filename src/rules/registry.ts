@@ -82,9 +82,8 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
       })),
     ]
     if (effets.length === 0) continue
-    const source: SourceRegle = ref.famille === 'Merveille'
-      ? 'merveille'
-      : ref.categorie === 'Aménagement' ? 'amenagement' : 'batiment'
+    const source: SourceRegle =
+      ref.categorie === 'Aménagement' ? 'amenagement' : 'batiment'
     out.push({
       id: `${source}.${slug(ref.nom)}@${slug(ref.groupe)}`,
       source,

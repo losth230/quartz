@@ -39,7 +39,7 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   return proba
 }
 
-export function femaleAgeFactor(age: number): number {
+function femaleAgeFactor(age: number): number {
   if (age < 16) return 0
   if (age <= 25) return 1.0
   if (age <= 30) return 0.9
@@ -51,12 +51,12 @@ export function femaleAgeFactor(age: number): number {
   return 0
 }
 
-export function maleAgeFactor(age: number): number {
+function maleAgeFactor(age: number): number {
   if (age < 16) return 0
   return Math.max(0, 1 - (0.5 * (age - 16)) / 42)
 }
 
-export function orientationFertFactor(orientation: string): number {
+function orientationFertFactor(orientation: string): number {
   const o = orientation.toLowerCase()
   return o.includes('homo') || o.includes('asex') ? 0.7 : 1
 }
@@ -224,7 +224,7 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
   mere.enfantBatard = false
 }
 
-export function pickName(state: GameState, p: Player, rng: Rng, sexe: 'M' | 'F' | undefined): string {
+function pickName(state: GameState, p: Player, rng: Rng, sexe: 'M' | 'F' | undefined): string {
   const C = cfgOf(state.config)
   const peup = peupleDef(p.peuple, C.config) ?? peupleDef(C.peuples[0], C.config)
   if (!peup) return 'Anonyme'
@@ -244,7 +244,7 @@ export function isConsanguineous(mere: Character, pere: Character | undefined): 
 }
 
 /** Dynastie du bébé selon l'Hérédité de la culture (Masculine/Féminine/Parité). */
-export function computeBabyDynasty(
+function computeBabyDynasty(
   state: GameState, p: Player, mere: Character, pere: Character | undefined,
   batard: boolean, rng: Rng,
 ): string {
@@ -265,7 +265,7 @@ export function computeBabyDynasty(
 
 /** Héritage des traits : 40% par trait parental héritable (3 essais mère + 3 essais père),
  *  puis 30% de tirage pondéré par slot libre. */
-export function inheritTraits(enfant: Character, mere: Character, pere: Character | undefined, rng: Rng, C: Cfg = cfgOf()) {
+function inheritTraits(enfant: Character, mere: Character, pere: Character | undefined, rng: Rng, C: Cfg = cfgOf()) {
   const parents = [mere, ...(pere ? [pere] : [])]
   const nbEssais = Math.max(0, Math.round(C.p.traitHeriteEssais))
   for (const parent of parents) {

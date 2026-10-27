@@ -112,7 +112,7 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
   }
 }
 
-export function formatDynastyPair(d1: string, d2: string): string {
+function formatDynastyPair(d1: string, d2: string): string {
   return d1 <= d2 ? `${d1} & ${d2}` : `${d2} & ${d1}`
 }
 
@@ -202,7 +202,8 @@ export function assignAdultMetier(
  *  Ville, ainsi que le Professeur (nomination automatique par les
  *  écoles). L'avertissement de places est une aide, jamais bloquant
  *  — la réaffectation de fin de tour règle le surnombre. */
-export function metiersAccessibles(state: GameState, _p: Player, C: Cfg = cfgOf(state.config)): string[] {
+// (AUDIT 2026-10-27 : le paramètre joueur inutilisé `_p` est retiré.)
+export function metiersAccessibles(state: GameState, C: Cfg = cfgOf(state.config)): string[] {
   const out: string[] = [C.p.metierChasseur, C.p.metierGouverneur]
   // Dirigeant / Héritier (retour utilisateur 2026-10-17) : nomination
   //  MANUELLE possible — le picker « Attribuer… » de la page
@@ -301,7 +302,7 @@ export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.confi
  *  vague 3b 2026-10-22 : les BÂTIMENTS comptent aussi, ex. Poste de
  *  garde +4 Garde — somme des `emplacements` des constructions de la
  *  ville, format référentiel `emplacements: [{ metier, places }]`). */
-export function emplacementsMetierVille(
+function emplacementsMetierVille(
   metier: string, ville: City, C: Cfg = cfgOf(),
   ctx?: { state: GameState; joueur: number },
 ): number {
@@ -439,7 +440,7 @@ function premierPosteLibre(
   return premier ? premier.metier : null
 }
 
-export interface OccupationMetier {
+interface OccupationMetier {
   /** Métier concerné — null = ligne « Sans-emploi ». */
   metier: string | null
   /** Occupants VIVANTS en poste (les Décédés ne comptent pas). */

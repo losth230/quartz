@@ -138,7 +138,7 @@ function villesAvecProfesseur(state: GameState, joueur: Player): City[] {
   return joueur.villes.filter((v) => villes.has(v.nom))
 }
 
-export function migrerPopulation(state: GameState, p: Player, rng: Rng) {
+function migrerPopulation(state: GameState, p: Player, rng: Rng) {
   const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
   /** personnages déjà déplacés ce tour (pas de double migration) */

@@ -3,16 +3,15 @@
 //  PlayerView.tsx, un fichier par UI) :
 //   · faireConstruire : le mutateur « construire » (bâtiment /
 //     aménagement) — garde-fous des règles (faction, capitale, type
-//     Ville/Château, limites par famille, rang minimum, prérequis,
-//     merveilles), réductions (technologies, Basiléens, Sylvains),
-//     coût débité, règle de culture, recalcule du Tourisme, effet
-//     one-shot des merveilles, déclenchement du Surintendant ;
+//     Ville/Château, limites par famille, rang minimum, prérequis),
+//     réductions (Basiléens, Sylvains), coût débité, règle de
+//     culture, recalcule du Tourisme, déclenchement du Surintendant ;
 //   · vague 3c : les aménagements de tier 2/3 (rangMinHabitation +
 //     remplaceAmenagement) REMPLACENT une instance du tier inférieur
 //     (amélioration, pas construction en plus) ;
 //   · faireBatParFamille : les catégories du sélecteur « + Construire »
-//     d'une ville (familles × rangs, merveilles par rang, alertes
-//     rouges des limites — marqueur (y)).
+//     d'une ville (familles × rangs, alertes rouges des limites —
+//     marqueur (y)). (RETRAIT 2026-10-27, audit : plus de Merveilles.)
 //  Fonctions pures de fabrique : PlayerView/VilleCarte fournit l'état,
 //  ces fabriques referment les closures.
 // ══════════════════════════════════════════════════════════════════════
@@ -24,9 +23,7 @@ import { constructionRef, prerequisConstruction, coutConstructionRef, resumeCons
 import { rangNiveau } from '../../engine/regimes'
 import { batimentsCapitale, capitaleDe } from '../../engine/factions'
 import { cultureDef, type Cfg } from '../../engine/gameData'
-import { statutMerveille, pastilleClass } from '../../engine/statutAuto'
 import { villeCotiere } from '../../engine/villes'
-import { effetImmediatMerveille } from '../../engine/merveilles'
 import { resynchroniserTourisme } from '../../engine/regimes'
 import { fmt } from '../ui'
 import type { PickerCategorie } from '../Picker'
@@ -117,9 +114,9 @@ export function faireConstruire(o: {
       }
       // Rang d'habitation requis (retour Thibaut 2026-10-15) : un
       //  bâtiment du rang N ne se construit pas dans une habitation de
-      //  rang inférieur (vérifie Militaire, Économique, Guilde ET
-      //  Merveilles — la vue filtre déjà, ce garde-fou couvre les
-      //  états importés/rebasés).
+      //  rang inférieur (vérifie Militaire, Économique, Guilde — plus
+      //  de Merveilles depuis l'audit 2026-10-27 ; la vue filtre déjà,
+      //  ce garde-fou couvre les états importés/rebasés).
       if (ref && ref.rangMinHabitation && rangNiveau(ville, C) < ref.rangMinHabitation) {
         s.log.push({
           turn: s.turn, type: 'Système', joueur: t.n,
@@ -148,25 +145,9 @@ export function faireConstruire(o: {
           })
         }
       }
-      if (fam === 'Merveille') {
-        const rangRequis = ref?.rangMinHabitation ?? 1
-        if (rangNiveau(ville, C) < rangRequis) {
-          s.log.push({
-            turn: s.turn, type: 'Système', joueur: t.n,
-            texte: `⚠ ${nom} : cette merveille exige normalement une habitation de rang ${rangRequis} minimum (${ville.nom} est de rang ${rangNiveau(ville, C)}). Construction quand même enregistrée.`,
-          })
-        }
-        const nbMerv = ville.batiments.filter((b) => (constructionRef(b, C.config)?.famille ?? '') === 'Merveille').length
-        if (nbMerv >= 1) {
-          s.log.push({
-            turn: s.turn, type: 'Système', joueur: t.n,
-            texte: `⚠ ${nom} : ${ville.nom} possède déjà ${nbMerv} merveille(s) — la règle en prévoit une seule par ville. Construction quand même enregistrée.`,
-          })
-        }
-      }
       const cout = type === 'batiment'
         ? coutBatiment(nom, C, groupe)
-        : coutAmenagement(t, C.config, type === 'amenagement' ? nom : undefined)
+        : coutAmenagement(t, C.config, nom)
       // (RETRAIT 2026-10-24, retour arbitre : les réductions de coût des
       //  TECHNOLOGIES — Développement durable/économe, Viser le ciel —
       //  et les réductions des merveilles par les techs « Progrès du
@@ -230,15 +211,9 @@ export function faireConstruire(o: {
       //  la production Tourisme ; le stock est RECALCULÉ =
       //  production courante (jamais cumulé).
       resynchroniserTourisme(s, t, `${nom} construit(e) à ${ville.nom}`)
-      // Merveille : effet one-shot à la construction (Antichambre
-      //  +50 % Or, Jardins +40 Habitants, Palais conversions…).
-      // Effets one-shot à la construction : MERVEILLES + Guilde des
-      //  diplomates (+2 émissaires, retour Thibaut 2026-10-15).
-      const mervTxt = ((ref?.famille ?? '') === 'Merveille' || nom === 'Guilde des diplomates')
-        ? effetImmediatMerveille(s, t, nom) : ''
       s.log.push({
         turn: s.turn, type: 'Système', joueur: t.n,
-        texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}${sci > 0 ? ` — règle de culture : +${fmt(sci)} Science` : ''}${mervTxt}.`,
+        texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}${sci > 0 ? ` — règle de culture : +${fmt(sci)} Science` : ''}.`,
       })
     })
   return construire
@@ -295,38 +270,17 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
         const maxGui = 1
         if (nbGui >= maxGui) warns.push(`Limite Guilde atteinte (${nbGui}/${maxGui} par ville).`)
       }
-      if (fam === 'Merveille') {
-        const nbMerv = ville.batiments.filter((x) => (constructionRef(x, C.config)?.famille ?? '') === 'Merveille').length
-        if (nbMerv >= 1) warns.push(`${nbMerv} merveille(s) déjà présentes (une seule par ville).`)
-      }
       return warns.join(' ')
     }
     // Les bâtiments de CAPITALE sont ajoutés explicitement plus bas (une
     //  seule fois) — okGroupe les EXCLUT pour éviter le doublon.
     const okGroupe = (b: { groupe: string; famille?: string }) =>
       b.groupe === 'Capitale' ? false
-      // Les MERVEILLES se construisent dans les DEUX types d'habitation
-      //  (Ville et Château) — leur description dit « Habitation rang
-      //  1+/2+/3 » sans distinction de type.
-      : (b.famille ?? '') === 'Merveille' ? true
       : b.groupe.toLowerCase() === type
     const eligibles = [
       ...batRefs.filter((b) => okGroupe(b)).map((b) => ({ b, groupe: b.groupe })),
       ...(estCapitale ? refsBatCapitale.map((b) => ({ b, groupe: 'Capitale' })) : []),
     ]
-    // Merveilles du groupe de la ville, triées par rang croissant —
-    //  une catégorie par rang DISPONIBLE (les rangs supérieurs au
-    //  rang de la ville sont masqués).
-    const merveilles = batRefs
-      .filter((b) => okGroupe(b) && (b.famille ?? '') === 'Merveille')
-      .filter((b) => (b.rangMinHabitation ?? 1) <= rang)
-      .sort((a, z) => (a.rangMinHabitation ?? 1) - (z.rangMinHabitation ?? 1))
-    const merveillesParRang = new Map<number, typeof merveilles>()
-    for (const m of merveilles) {
-      const r = m.rangMinHabitation ?? 1
-      if (!merveillesParRang.has(r)) merveillesParRang.set(r, [])
-      merveillesParRang.get(r)!.push(m)
-    }
     // Retour Thibaut 2026-10-15 : séparation par RANG D'HABITATION pour
     //  Militaire / Économique / Guilde — une catégorie par famille et
     //  par rang DISPONIBLE (les bâtiments de rang supérieur au rang de
@@ -380,24 +334,6 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
           badge: FAM_BADGES[fam] ?? 'badge-info',
         }))
       if (options.length > 0) out.push({ label, options })
-    }
-    // Une catégorie de merveilles PAR RANG (séparation visuelle) :
-    //  « Merveilles · rang 1 », « Merveilles · rang 2 »…
-    for (const [r, ms] of merveillesParRang) {
-      out.push({
-        label: `Merveilles · rang ${r}${r > 1 ? '+' : ''}`,
-        options: ms.map((b) => ({
-          value: `${b.groupe}|${b.nom}`,
-          metier: b.nom,
-          badge: pastilleClass(statutMerveille(b.nom)),
-          droite: fmtCout(coutConstructionRef(b)),
-          alerte: alertePour(b) || undefined,
-          description: [
-            prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
-            resumeConstruction(b, C.config),
-          ].filter(Boolean).join('\n'),
-        })),
-      })
     }
     return out
   }

@@ -14,7 +14,7 @@
 import type { City, Player, Saison } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import {
-  amenagementsRefs, constructionRef, coutConstructionRef, effetsConstructionRef,
+  constructionRef, coutConstructionRef, effetsConstructionRef,
   effetsEteConstructionRef, eteSeulementRef, reductionCampDeBatisseurs,
 } from './constructions'
 
@@ -25,40 +25,16 @@ import {
 //  Baleinier, lue dans son TEXTE de coût — est supprimée ; les coûts se
 //  lisent en DONNÉES via coutConstructionRef. L'ancien contenu reste
 //  dans l'historique git, règle 9.)
+// (RETRAIT 2026-10-27, AUDIT : AmenagementDef / amenagementsDefs /
+//  AMENAGEMENTS / amenagementDef — vues normalisées lisant les textes
+//  « effet / description » du classeur — sont du CODE MORT (le champ
+//  `effet` est vide depuis le passage aux coûts structurés, plus
+//  AUCUN lecteur). L'interface passe par amenagementRef +
+//  effetsTourAmenagement. Historique git.)
 
-export interface AmenagementDef {
-  nom: string
-  /** case de terrain requise (affichée entre parenthèses dans le classeur) */
-  terrain: string
-  /** description exacte du classeur (affichée dans l'interface) */
-  effet: string
-  /** effets de flux par tour ; ignorés hors été si eteSeulement */
-  effets: Record<string, number>
-  /** production uniquement à la saison d'Été (Champ, Rizière) */
-  eteSeulement?: boolean
-}
-
-/** Référence brute du référentiel : coût / production / description exacts. */
+/** Référence brute du référentiel : coût (`couts`) et règle de banque. */
 export function amenagementRef(nom: string, cfg?: GameConfig) {
   return constructionRef(nom, cfg)
-}
-
-/** Définitions normalisées de tous les aménagements du référentiel. */
-export function amenagementsDefs(cfg?: GameConfig): AmenagementDef[] {
-  return amenagementsRefs(cfg).map((ref) => ({
-    nom: ref.nom,
-    terrain: ref.terrain ?? '—',
-    effet: ref.description ?? '',
-    effets: { ...effetsConstructionRef(ref, cfg), ...effetsEteConstructionRef(ref, cfg) },
-    eteSeulement: eteSeulementRef(ref, cfg),
-  }))
-}
-
-/** Liste du référentiel par défaut (compatibilité : export historique). */
-export const AMENAGEMENTS: AmenagementDef[] = amenagementsDefs()
-
-export function amenagementDef(nom: string, cfg?: GameConfig): AmenagementDef | undefined {
-  return amenagementsDefs(cfg).find((a) => a.nom === nom)
 }
 
 /** Le joueur possède-t-il un Camp de bâtisseurs (coût des aménagements réduit) ? */
@@ -67,13 +43,14 @@ export function aCampDeBatisseurs(p: Player): boolean {
 }
 
 /** Coût de construction d'un aménagement pour ce joueur : coût du
- *  référentiel pour l'aménagement demandé (repli : coût du Baleinier),
- *  en DONNÉES STRUCTURÉES (champ `couts`, retour Thibaut 2026-10-27),
- *  réduction du Camp de bâtisseurs déduite (champ `reduction`, repli
- *  5 Or / 1 Bois — plancher à 0). */
-export function coutAmenagement(p: Player, cfg?: GameConfig, nom?: string): Record<string, number> {
-  const ref = (nom ? amenagementRef(nom, cfg) : undefined) ?? amenagementRef('Baleinier', cfg)
-  const base = ref ? coutConstructionRef(ref) : { Or: 8, Bois: 3 }
+ *  référentiel pour l'aménagement demandé, en DONNÉES STRUCTURÉES
+ *  (champ `couts`, retour Thibaut 2026-10-27 — AUDIT : plus de repli
+ *  « Baleinier » ni coût forcé, un aménagement hors référentiel n'a
+ *  pas de coût), réduction du Camp de bâtisseurs déduite (champ
+ * `reduction`, repli 5 Or / 1 Bois — plancher à 0). */
+export function coutAmenagement(p: Player, cfg: GameConfig, nom: string): Record<string, number> {
+  const ref = amenagementRef(nom, cfg)
+  const base = ref ? coutConstructionRef(ref) : {}
   if (!aCampDeBatisseurs(p)) return { ...base }
   const reduc = reductionCampDeBatisseurs(cfg)
   const out: Record<string, number> = {}
@@ -85,8 +62,9 @@ export function coutAmenagement(p: Player, cfg?: GameConfig, nom?: string): Reco
 
 /** Effets par tour d'un aménagement pour la saison donnée
  *  (Champ et Rizière ne produisent qu'en été — production exacte du
- *  référentiel). */
-export function effetsTourAmenagement(nom: string, saison: Saison, cfg?: GameConfig): Record<string, number> {
+ *  référentiel). (AUDIT 2026-10-27 : dé-exporté, usage interne
+ *  uniquement — detailsAmenagementsJoueur.) */
+function effetsTourAmenagement(nom: string, saison: Saison, cfg?: GameConfig): Record<string, number> {
   const ref = amenagementRef(nom, cfg)
   if (!ref) return {}
   if (eteSeulementRef(ref, cfg) && saison !== 'Été') return {}

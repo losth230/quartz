@@ -2,8 +2,8 @@
 //  VAGUE QUALITÉ (2026-10-24) — extrait de CitesLibresView.tsx.
 //  Réserves d'émissaires (revue 2026-10-15) : ressource de chaque
 //  joueur, dépensée en plaçant un émissaire dans une cité libre.
-//  Les merveilles (Antre de la déesse araignée) créditent
-//  automatiquement.
+//  (RETRAIT 2026-10-27, audit : plus de crédit automatique par les
+//  merveilles — la réserve est libre d'édition.)
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Player } from '../../engine/types'

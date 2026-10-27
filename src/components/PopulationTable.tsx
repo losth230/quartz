@@ -255,7 +255,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const vivants = pop.filter((c) => c.statut !== 'Décédé')
   const villesOcc = cite ? [{ nom: cite.nom }] : (p?.villes ?? [])
   const accessibles = p
-    ? metiersAccessibles(state, p)
+    ? metiersAccessibles(state)
     : (cite ? metiersAccessiblesCite(state, cite) : [])
   // ── Ajout manuel d'habitants ────────────────────────────────────────
   const villesAjout = cite ? [cite.nom] : (p?.villes.map((v) => v.nom) ?? [])

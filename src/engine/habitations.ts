@@ -55,10 +55,9 @@ export function rangsDisponibles(type: string, C: Cfg): string[] {
   return rangsDefsType(type, C).map((d) => d.rang)
 }
 
-/** Habitants requis pour le rang d'habitation d'une ville. */
-export function habitantsRequisVille(ville: City, C: Cfg): number {
-  return habitationDef(ville, C)?.habitantsRequis ?? 0
-}
+// (RETRAIT 2026-10-27, AUDIT : habitantsRequisVille — habitants requis
+//  du rang d'une ville — était du CODE MORT, plus AUCUN appelant.
+//  Historique git.)
 
 /** Coût d'amélioration d'un rang d'habitation — DONNÉES STRUCTURÉES
  *  (retour Thibaut 2026-10-27 « idem bâtiments/aménagements » : le

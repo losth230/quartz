@@ -33,7 +33,6 @@ export const FAM_BADGES: Record<string, string> = {
   Economique: 'badge-fam-eco',
   Capitale: 'badge-fam-cap',
   Guilde: 'badge-fam-gui',
-  Merveille: 'badge-fam-merv',
 }
 export function fmtEffets(effets: Record<string, number>, C: Cfg): string {
   const entries = Object.entries(effets).filter(([, v]) => v !== 0)

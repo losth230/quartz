@@ -12,7 +12,7 @@
 //  Laurier III ne donne aucune récompense ; le Laurier IV = VICTOIRE.
 //  L'ancienne auto-détection « domination » (checkVictory, part de
 //  l'Or mondial, voie Dynastique fantôme) a été supprimée : les
-//  conditions du classeur (Merveilles, captures, routes…) ne sont pas
+//  conditions du classeur (captures, routes…) ne sont pas
 //  toutes suivies par le moteur, la validation reste humaine.
 // ══════════════════════════════════════════════════════════════════════
 

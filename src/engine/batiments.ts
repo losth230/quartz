@@ -4,31 +4,29 @@
 //  chaque fin de tour : +1 Bois pour un Camp de bûcheron, −10 Nourriture
 //  pour un Poste de garde, +45 Nourriture / −1 Charbon pour un Moulin à
 //  vent…
-//  RÉFÉRENTIEL CANONIQUE : chaque bâtiment référence son coût exact, sa
-//  production exacte et sa description exacte (table `constructions`,
-//  feuille « Ville » du classeur 7.19). TOUTE production passe par la
-//  BANQUE D'EFFETS (retour Thibaut 2026-10-19) : effetsConstructionRef
-//  lit la règle de la construction (rules/registry → rules/effects) ;
-//  un bâtiment hors référentiel ne produit RIEN (l'ancien analyseur du
-//  texte d'effet et EFFETS_FORCES ont été retirés le 2026-10-19 — les
-//  bâtiments santé / écoles portent des effets de moteur, pas des flux).
+//  RÉFÉRENTIEL CANONIQUE : chaque bâtiment référence ses COÛTS
+//  STRUCTURÉS (champ `couts`, retour Thibaut 2026-10-27) et ses
+//  règles (table `constructions`, feuille « Ville » du classeur).
+//  TOUTE production passe par la BANQUE D'EFFETS (retour Thibaut
+//  2026-10-19) : effetsConstructionRef lit la règle de la construction
+//  (rules/registry → rules/effects) ; un bâtiment hors référentiel
+//  ne produit RIEN (l'ancien analyseur du texte d'effet et
+//  EFFETS_FORCES ont été retirés le 2026-10-19 — les bâtiments
+//  santé / écoles portent des effets de moteur, pas des flux).
+//  (RETRAIT 2026-10-27, audit + retour Thibaut « supprimer toutes les
+//  merveilles pour l'instant » : les 4 merveilles du référentiel, le
+//  module merveilles.ts et le doublement de Science du Laboratoire
+//  de Falheim disparaissent — les bâtiments inconnus portés par les
+//  vieilles sauvegardes ne produisent simplement rien.)
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, Player } from './types'
 import type { Cfg } from './gameData'
-import { aLaboratoireFalheim } from './merveilles'
-import { capitaleDe } from './factions'
 import {
   constructionRef, coutBatimentRef, effetsConstructionRef, garnisonConstructionRef,
   batimentsRefs, type ConstructionRef,
 } from './constructions'
-
-/** Référence du référentiel pour un bâtiment (coût / production / description
- *  exacts), éventuellement restreinte à un groupe (Ville / Château / Capitale). */
-export function batimentRef(nom: string, C?: Cfg, groupe?: string): ConstructionRef | undefined {
-  return constructionRef(nom, C?.config, groupe)
-}
 
 /** Toutes les références de bâtiments du référentiel canonique. */
 export function batimentsConstructionsRefs(C?: Cfg): ConstructionRef[] {
@@ -44,23 +42,14 @@ export function batimentsConstructionsRefs(C?: Cfg): ConstructionRef[] {
 //  produit rien.
 
 /** « Remplace X » : les effets du bâtiment remplacé sont ignorés quand
- *  le remplaçant est présent dans la même ville. */
+ *  le remplaçant est présent dans la même ville. (AUDIT 2026-10-27 :
+ *  purgé des clés/cibles mortes — bâtiments retirés du référentiel ;
+ *  ne restent que les remplacements réellement constructibles.) */
 const REMPLACE: Record<string, string[]> = {
   'Camp de travailleurs': ['Camp de bûcheron', 'Camp de mineur'],
   'Silo à grain': ['Grange'],
   'Moulin à vent': ['Silo à grain', 'Grange'],
-  'Guilde des artisans de la terre.': ['Moulin à vent', 'Silo à grain', 'Grange'],
-  'Ecole intermédiaire': ['Ecole élémentaire', 'École élémentaire'],
-  'École intermédiaire': ['Ecole élémentaire', 'École élémentaire'],
-  'Ecole supérieure': ['Ecole intermédiaire', 'École intermédiaire', 'Ecole élémentaire', 'École élémentaire'],
-  'École supérieure': ['Ecole intermédiaire', 'École intermédiaire', 'Ecole élémentaire', 'École élémentaire'],
-  'Guilde des diplomates': [
-    'Ecole supérieure', 'École supérieure', 'Ecole intermédiaire', 'École intermédiaire',
-    'Ecole élémentaire', 'École élémentaire',
-  ],
-  'Guilde des savants': ['Institut de recherche'],
-  'Guilde des évangiles': ['Conjuratoire'],
-  'Guilde des marins': ["Complexe d'exploitation maritime"],
+  'Ecole intermédiaire': ['Ecole élémentaire'],
 }
 
 /** Effets par tour d'un bâtiment : production EXACTE du référentiel,
@@ -145,16 +134,6 @@ export function appliquerEffetsBatiments(p: Player, C: Cfg): Record<string, numb
       out[res] = (out[res] ?? 0) + v
     }
   }
-  // Merveille « Laboratoire d'expérimentations de Falheim » (retour
-  //  Thibaut 2026-10-15) : double la Science générée par les
-  //  bâtiments de la CAPITALE — on ajoute une seconde fois le flux
-  //  de Science des bâtiments de la capitale.
-  if (aLaboratoireFalheim(p) && capitaleDe(p) != null) {
-    const cap = capitaleDe(p)!
-    for (const [res, v] of Object.entries(effetsBatimentsVille(cap, C))) {
-      if (res === 'Science' && v > 0) out[res] = (out[res] ?? 0) + v
-    }
-  }
   for (const [res, v] of Object.entries(out)) {
     if (!v) continue
     const rs = p.resources[res]
@@ -165,7 +144,7 @@ export function appliquerEffetsBatiments(p: Player, C: Cfg): Record<string, numb
 
 // ── Vue détaillée pour l'interface (tableau des bâtiments) ─────────────
 
-export interface LigneBatiment {
+interface LigneBatiment {
   nom: string
   villes: string[]               // villes qui le possèdent
   effets: Record<string, number>  // flux par tour cumulés (0 si remplacé partout)
@@ -201,4 +180,3 @@ export function detailsBatimentsJoueur(p: Player, C: Cfg): LigneBatiment[] {
   return [...lignes.values()].sort((a, b) => a.nom.localeCompare(b.nom))
 }
 
-export { coutBatimentRef }

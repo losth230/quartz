@@ -9,7 +9,6 @@ import type { GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { emptyRecap, fullName } from './shared'
-import { reductionLeveeArmeesMerveilles } from './merveilles'
 
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
 
@@ -180,9 +179,8 @@ export function prixArmee(
   let prix = (puissanceCible / tranche) * C.p.armeePrixOr
   // Réductions automatiques (revue 2026-10-15) :
   if (p && state) {
-    // Merveilles (retour Thibaut 2026-10-15) : Temple de Bahamutt et
-    //  Ordre des chevaliers de Notan : -20/-25 Or sur les levées.
-    prix -= reductionLeveeArmeesMerveilles(p)
+    // (RETRAIT 2026-10-27, audit — merveilles supprimées : plus de
+    //  réduction de levée par merveille.)
     // (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
     //  système de progrès, retour arbitre.)
     // Stratégies militaires I : la PROCHAINE armée coûte 50 Or de moins
