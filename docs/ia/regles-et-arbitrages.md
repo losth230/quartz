@@ -1023,3 +1023,23 @@ prestige en muted.
 l'interface ne citent plus les arbitrages ni les retours de session :
 le contexte de design vit dans CE document (les tooltips de la page
 Population ont été nettoyés en conséquence).
+
+## Le mariage manuel suit le RANG (arbitrage Thibaut, 2026-10-27)
+
+« Le mariage manuel reste limité aux nobles, mais un bourgeois qui
+devient noble doit pouvoir être marié manuellement. »
+
+- **Avant** : le mariage manuel (bouton « 💍 Marier avec… » de la page
+  Population, moteur `marierPersonnages`) exigeait une DYNASTIE noble
+  chez les deux époux — un roturier anobli par le prestige (rang
+  noble à 250+) restait exclu.
+- **Après** : l'éligibilité suit le RANG (`rangDe`) — sont mariables
+  les personnages de rang **noble**, c'est-à-dire :
+  - nobles de NAISSANCE (dynastie noble, base 300), ou
+  - roturiers ANOBLIS par le prestige (250+, rang « noble »).
+  Un bourgeois (100-249) ou un roturier (< 100) reste exclu.
+- Le moteur (`marierPersonnages`) et le picker de l'interface
+  (`eligibleMariage`) appliquent la même règle : deux sites, un seul
+  critère. Les autres gardes-fous ne changent pas (majeurs, vivants,
+  célibataires, même porteur pour le picker, déménagement chez le
+  conjoint).
