@@ -41,6 +41,7 @@
 import type { Character, City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
+import { logementsConstructionRef } from './constructions'
 
 // ── Lecture du référentiel ───────────────────────────────────────────
 
@@ -76,19 +77,19 @@ export function totalLogementsVille(ville: City): number {
 
 /** Domiciles apportés au parc de logements d'une ville par ses
  *  CONSTRUCTIONS (AMÉNAGEMENTS et BÂTIMENTS — fiche bâtiments rang 2,
- *  2026-10-26) : Taudis (taudisApportes) et autres types
- *  (domicilesApportes : Maisons, Maisons de notable). Agrégat par type ;
- *  les noms des vieilles sauvegardes peuvent porter le suffixe
- *  « (tier N) » — la lecture est par nom de construction dans le
- *  référentiel. */
+ *  2026-10-26) : Taudis et autres types, lus VIA LA BANQUE (retour
+ *  Thibaut 2026-10-27 : les taudisApportes / domicilesApportes du
+ *  référentiel sont traduits en effets `logements` — ce canal est la
+ *  voie moteur unique, comme les flux). Agrégat par type ; les noms
+ *  des vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
+ *  la lecture est par nom de construction dans le référentiel. */
 export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
   const total = new Map<string, number>()
   for (const nom of [...(ville.amenagements ?? []), ...(ville.batiments ?? [])]) {
     const ref = C.config.constructions.find((c) => c.nom === nom)
     if (!ref) continue
-    if (ref.taudisApportes) total.set('Taudis', (total.get('Taudis') ?? 0) + ref.taudisApportes)
-    for (const e of ref.domicilesApportes ?? []) {
-      total.set(e.domicile, (total.get(e.domicile) ?? 0) + e.nombre)
+    for (const [domicile, nombre] of Object.entries(logementsConstructionRef(ref, C.config))) {
+      if (nombre > 0) total.set(domicile, (total.get(domicile) ?? 0) + nombre)
     }
   }
   return [...total.entries()].map(([domicile, nombre]) => ({ domicile, nombre }))

@@ -114,12 +114,36 @@ export interface EffetGarnisonVille {
   valeur: number
 }
 
+/** Emplacements de métier accordés dans la ville du contexte (retour
+ *  Thibaut 2026-10-27 : l'attribution de métiers passe par la banque —
+ *  les `emplacements` du référentiel sont traduits en effet
+ *  `placesMetier` par le registre, comme les flux ; ex. Poste de
+ *  garde : +4 Garde). */
+export interface EffetPlacesMetier {
+  type: 'placesMetier'
+  metier: string
+  valeur: number
+}
+
+/** Logements ajoutés au parc de la ville du contexte (retour Thibaut
+ *  2026-10-27 : les logements passent par la banque — les
+ *  taudisApportes et domicilesApportes du référentiel sont traduits en
+ *  effet `logements` ; ex. Champ : +5 Taudis, Quartier intermédiaire :
+ *  +20 Maisons). */
+export interface EffetLogements {
+  type: 'logements'
+  logement: string
+  valeur: number
+}
+
 /** Union : TOUS les types d'effets de la banque. */
 export type Effet =
   | EffetFluxVille
   | EffetFluxParAmenagement
   | EffetFluxParVilleCultureMonde
   | EffetGarnisonVille
+  | EffetPlacesMetier
+  | EffetLogements
 
 // ── Conditions ─────────────────────────────────────────────────────────────
 
@@ -209,4 +233,11 @@ export interface ContributionEffets {
   fluxEte: Record<string, number>
   /** Garnison totale ajoutée au site. */
   garnison: number
+  /** Emplacements de métier par métier (retour Thibaut 2026-10-27 :
+   *  canal des `emplacements` du référentiel, clé = métier). */
+  placesMetier: Record<string, number>
+  /** Logements apportés au parc de la ville (retour Thibaut
+   *  2026-10-27 : canal des taudisApportes / domicilesApportes,
+   *  clé = type de logement). */
+  logements: Record<string, number>
 }

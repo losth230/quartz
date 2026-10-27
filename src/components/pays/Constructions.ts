@@ -20,7 +20,7 @@
 import type { City, GameState, Player } from '../../engine/types'
 import { coutBatiment, batimentsConstructionsRefs } from '../../engine/batiments'
 import { coutAmenagement } from '../../engine/amenagements'
-import { constructionRef, prerequisConstruction, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
+import { constructionRef, prerequisConstruction, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { rangNiveau } from '../../engine/regimes'
 import { batimentsCapitale, capitaleDe } from '../../engine/factions'
 import { cultureDef, type Cfg } from '../../engine/gameData'
@@ -277,7 +277,7 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
     const rang = rangNiveau(ville, C)
     // Alerte rouge d'une construction (revue 2026-10-16 : les limites
     //  s'INDIQUENT en rouge dans le picker, elles ne bloquent jamais).
-    const alertePour = (b: { nom: string; famille?: string; cout: string }): string => {
+    const alertePour = (b: { nom: string; famille?: string; requis?: string }): string => {
       const warns: string[] = []
       if (ville.batiments.includes(b.nom)) warns.push('Déjà construit dans cette ville (le référentiel prévoit un seul exemplaire).')
       const pre = prerequisConstruction(b)
@@ -353,11 +353,11 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
           options: items.map(({ b, groupe }) => ({
             value: `${groupe}|${b.nom}`,
             metier: b.nom,
-            droite: fmtCout(parseCoutTexte(b.cout)),
+            droite: fmtCout(coutConstructionRef(b)),
             alerte: alertePour(b) || undefined,
             description: [
               prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
-              resumeConstruction(b) || b.production || '',
+              resumeConstruction(b, C.config),
             ].filter(Boolean).join('\n'),
             badge: FAM_BADGES[fam] ?? 'badge-info',
           })),
@@ -371,11 +371,11 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
         .map(({ b, groupe }) => ({
           value: `${groupe}|${b.nom}`,
           metier: b.nom,
-          droite: fmtCout(parseCoutTexte(b.cout)),
+          droite: fmtCout(coutConstructionRef(b)),
           alerte: alertePour(b) || undefined,
           description: [
             prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
-            resumeConstruction(b) || b.production || '',
+            resumeConstruction(b, C.config),
           ].filter(Boolean).join('\n'),
           badge: FAM_BADGES[fam] ?? 'badge-info',
         }))
@@ -390,11 +390,11 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
           value: `${b.groupe}|${b.nom}`,
           metier: b.nom,
           badge: pastilleClass(statutMerveille(b.nom)),
-          droite: fmtCout(parseCoutTexte(b.cout)),
+          droite: fmtCout(coutConstructionRef(b)),
           alerte: alertePour(b) || undefined,
           description: [
             prerequisConstruction(b) ? `Prérequis : ${prerequisConstruction(b)} dans cette ville.` : '',
-            resumeConstruction(b) || b.production || '',
+            resumeConstruction(b, C.config),
           ].filter(Boolean).join('\n'),
         })),
       })

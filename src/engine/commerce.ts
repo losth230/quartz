@@ -104,10 +104,10 @@ export function ressourcesCopiables(nom: string, cfg?: GameConfig): RessourceCop
   const ref = constructionRef(nom, cfg)
   if (!ref) return []
   const out: RessourceCopiable[] = []
-  for (const [res, v] of Object.entries(effetsConstructionRef(ref))) {
+  for (const [res, v] of Object.entries(effetsConstructionRef(ref, cfg))) {
     if (v > 0) out.push({ ressource: res, valeur: v, ete: false })
   }
-  for (const [res, v] of Object.entries(effetsEteConstructionRef(ref))) {
+  for (const [res, v] of Object.entries(effetsEteConstructionRef(ref, cfg))) {
     if (v > 0) out.push({ ressource: res, valeur: v, ete: true })
   }
   return out

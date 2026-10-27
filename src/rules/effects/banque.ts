@@ -99,13 +99,25 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       out.garnison += e.valeur
       break
     }
+
+    // (Retour Thibaut 2026-10-27 : « des valeurs qui passent par la
+    //  banque » — les emplacements de métiers et les logements sont
+    //  des canaux de la contribution AU MÊME TITRE que les flux.)
+    case 'placesMetier': {
+      out.placesMetier[e.metier] = (out.placesMetier[e.metier] ?? 0) + e.valeur
+      break
+    }
+    case 'logements': {
+      out.logements[e.logement] = (out.logements[e.logement] ?? 0) + e.valeur
+      break
+    }
   }
 }
 
 // ── Application de la banque ───────────────────────────────────────────────
 
 export function contributionVide(): ContributionEffets {
-  return { flux: {}, fluxEte: {}, garnison: 0 }
+  return { flux: {}, fluxEte: {}, garnison: 0, placesMetier: {}, logements: {} }
 }
 
 /** Applique un ensemble de règles de la banque à un contexte et renvoie

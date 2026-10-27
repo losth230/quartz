@@ -316,7 +316,7 @@ export function emplacementsMetierVille(
     //  geographie.ts) ; hors proximité le bâtiment reste
     //  affiché mais n'ouvre aucun poste.
     if (nom === 'Ponton' && !villeCotiere(ville)) continue
-    for (const e of emplacementsConstructionRef(ref)) {
+    for (const e of emplacementsConstructionRef(ref, C.config)) {
       if (e.metier === metier) total += e.places
     }
   }
@@ -355,7 +355,7 @@ function emplacementsRoutesVille(
     if (r.joueur === joueur && r.villeOrigine === villeNom) {
       const ref = r.amenagement ? constructionRef(r.amenagement, C.config) : null
       if (ref) {
-        for (const e of emplacementsConstructionRef(ref)) {
+        for (const e of emplacementsConstructionRef(ref, C.config)) {
           if (e.metier === metier) total += e.places
         }
       }

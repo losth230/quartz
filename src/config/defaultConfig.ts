@@ -176,6 +176,15 @@ export interface EffetConstruction {
   ete?: boolean
 }
 
+/** Paire structurée {ressource, valeur} — format des COÛTS de
+ *  construction (retour Thibaut 2026-10-27 : le coût ne doit plus
+ *  être un texte à analyser) et des réductions (Camp de
+ *  bâtisseurs). */
+export interface CoutRef {
+  ressource: string
+  valeur: number
+}
+
 export interface ConstructionRef {
   categorie: string   // 'Bâtiment' | 'Aménagement'
   groupe: string      // 'Ville' | 'Château' | 'Capitale' | 'Terrain'
@@ -193,9 +202,31 @@ export interface ConstructionRef {
    *  (tier 3) » remplace « Baleinier (tier 2) ». Champ optionnel :
    *  absent = tier 1 (aménagement de base, constructible tel quel). */
   remplaceAmenagement?: string
-  cout: string
-  production: string
-  description: string
+  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
+   *  textuel ») : les TEXTES cout / production / description sont
+   *  VIDÉS dans le référentiel — le coût vit dans `couts`, le
+   *  prérequis dans `requis`, la production dans `effets` (banque).
+   *  Champs gardés OPTIONNELS : les configs sauvegardées qui portent
+   *  encore les anciens textes restent valides (plus aucun lecteur). */
+  cout?: string
+  production?: string
+  description?: string
+  /** COÛT de construction en DONNÉES STRUCTURÉES (retour Thibaut
+   *  2026-10-27 : paires {ressource, valeur} agrégées par
+   *  coutConstructionRef — plus d'analyse de texte). Champ
+   *  optionnel : absent = gratuit. */
+  couts?: CoutRef[]
+  /** Bâtiment PRÉREQUIS, à construire dans la MÊME ville (retour
+   *  Thibaut 2026-10-27 : le prérequis vivait dans le texte du coût —
+   *  il devient une DONNÉE ; ex. Caserne → « Poste de garde »).
+   *  Champ optionnel : aucun prérequis. */
+  requis?: string
+  /** Réduction de coût des aménagements accordée par CE bâtiment
+   *  (canal « Camp de bâtisseurs » — mécanisme dormant : le Camp
+   *  n'est pas au référentiel, reductionCampDeBatisseurs replie sur
+   *  {Or: 5, Bois: 1} tant que ce champ est absent). Données
+   *  structurées, retour Thibaut 2026-10-27. */
+  reduction?: CoutRef[]
   /** TAUDIS apportés au stock de logements de la ville (fiches
    *  aménagements 2026-10-25 : tier 1 = 5, tier 2 = 8, tier 3 = 10,
    *  sauf Baleinier/Bâteau de pêche qui n'en apportent pas).
@@ -808,16 +839,25 @@ export function migrerSwapSylvains(f: PeupleRef): PeupleRef {
 }
 
 /** Table des constructions (bâtiments / aménagements) d'une
- *  configuration existante : les entrées du référentiel
- *  par défaut absentes de la config (apparues depuis la sauvegarde)
- *  sont AJOUTÉES, sans toucher aux entrées déjà présentes. */
+ *  configuration existante. (Retour Thibaut 2026-10-27 : complétion
+ *  CHAMP À CHAMP par (nom, groupe) — le même patron que
+ *  migrerFactions.) Les entrées déjà présentes reçoivent les champs
+ *  NOUVEAUX du référentiel courant qu'elles ne portent pas (couts,
+ *  requis…) ; tout champ SAUVEGARDÉ garde la priorité — une édition
+ *  personnalisée dans Paramètres survit à la convergence. Les
+ *  entrées du référentiel par défaut absentes de la config (apparues
+ *  depuis la sauvegarde) sont AJOUTÉES. */
 export function migrerConstructions(
   list: ConstructionRef[] | undefined, defauts: ConstructionRef[],
 ): ConstructionRef[] {
   const out = [...(list ?? [])]
-  const noms = new Set(out.map((c) => c.nom))
+  for (let i = 0; i < out.length; i++) {
+    const d = defauts.find((x) => x.nom === out[i]!.nom && x.groupe === out[i]!.groupe)
+    if (d) out[i] = { ...d, ...out[i] }
+  }
+  const cles = new Set(out.map((c) => `${c.nom}|${c.groupe}`))
   for (const d of defauts) {
-    if (!noms.has(d.nom)) out.push(d)
+    if (!cles.has(`${d.nom}|${d.groupe}`)) out.push(d)
   }
   return out
 }

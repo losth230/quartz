@@ -65,7 +65,23 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
   const refs = C.config.constructions ?? []
   const out: RegleBanque[] = []
   for (const ref of refs) {
-    if (!ref.effets || ref.effets.length === 0) continue
+    // (Retour Thibaut 2026-10-27 : « des valeurs qui passent par la
+    //  banque » — les EMPLACEMENTS de métiers et les LOGEMENTS
+    //  (taudisApportes / domicilesApportes) sont traduits en EFFETS
+    //  de banque comme les flux : une construction porte une règle
+    //  dès qu'elle a un effet QUELCONQUE, et le moteur lit tout par
+    //  le même canal.)
+    const effets: Effet[] = [
+      ...effetsConstructionVersBanque(ref.effets ?? []),
+      ...(ref.emplacements ?? []).map((e): Effet => ({
+        type: 'placesMetier', metier: e.metier, valeur: Number(e.places) || 0,
+      })),
+      ...(ref.taudisApportes ? [{ type: 'logements', logement: 'Taudis', valeur: ref.taudisApportes } as Effet] : []),
+      ...(ref.domicilesApportes ?? []).map((e): Effet => ({
+        type: 'logements', logement: e.domicile, valeur: e.nombre,
+      })),
+    ]
+    if (effets.length === 0) continue
     const source: SourceRegle = ref.famille === 'Merveille'
       ? 'merveille'
       : ref.categorie === 'Aménagement' ? 'amenagement' : 'batiment'
@@ -75,7 +91,7 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
       nom: ref.nom,
       // Le groupe est porté par la règle (accès moteur par nom+groupe).
       groupe: ref.groupe,
-      effets: effetsConstructionVersBanque(ref.effets),
+      effets,
     })
   }
   return out

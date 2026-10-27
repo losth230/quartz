@@ -6,7 +6,8 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
-import { resumeConstruction } from '../../engine/constructions'
+import { resumeConstruction, coutConstructionRef } from '../../engine/constructions'
+import { fmtCout } from '../pays/pays-utils'
 import { Card } from '../ui'
 
 export function OngletBatiments({ C }: { C: Cfg }) {
@@ -16,10 +17,10 @@ export function OngletBatiments({ C }: { C: Cfg }) {
       <Card title={`Wiki — bâtiments par groupe, rang et famille (${(cfg.constructions ?? []).filter((c) => c.categorie === 'Bâtiment' && (c.groupe === 'Ville' || c.groupe === 'Château')).length})`}>
         <p className="muted small">
           Effets calculés par le moteur : flux / tour, production d'été (canal
-          « Nourr - été »), Tourisme crédité UNE fois à la construction, Garnison
-          (valeur d'état). Retour Thibaut 2026-10-15 : deux colonnes — VILLE et
-          CHÂTEAU ; tri par RANG d'habitation puis par FAMILLE (Militaire,
-          Économique, Guilde, Merveille, Capitale).
+          « Nourr - été »), Garnison (valeur d'état), emplacements de métiers et
+          logements apportés. Deux colonnes — VILLE et CHÂTEAU ; tri par RANG
+          d'habitation puis par FAMILLE (Militaire, Économique, Guilde,
+          Merveille, Capitale).
         </p>
         <div className="refbat-grid">
           {[['Ville', 'VILLES'], ['Château', 'CHÂTEAUX']].map(([groupe, label]) => (
@@ -52,11 +53,10 @@ export function OngletBatiments({ C }: { C: Cfg }) {
                             {deLaFamille.map((b) => (
                               <div key={b.nom} className="refbat-bat">
                                 <strong>{b.nom}</strong>
-                                <span className="refbat-cout">{b.cout || '—'}</span>
+                                <span className="refbat-cout">{fmtCout(coutConstructionRef(b))}</span>
                                 <span className="refbat-effets">
-                                  {resumeConstruction(b) || b.production || ''}
+                                  {resumeConstruction(b, cfg) || '—'}
                                 </span>
-                                <span className="muted small">{b.description}</span>
                               </div>
                             ))}
                           </div>
@@ -97,21 +97,20 @@ export function OngletAmenagements({ C }: { C: Cfg }) {
   return (
     <Card title={`Wiki — aménagements (${(cfg.constructions ?? []).filter((c) => c.categorie === 'Aménagement').length})`}>
       <p className="muted small">
-        Effets calculés par le moteur (coût exact, flux / tour, été, Tourisme à la
-        construction). Coût réduit par un « Camp de bâtisseurs » présent dans la ville
-        (montant lu dans sa description).
+        Effets calculés par le moteur : flux / tour, été, emplacements de métiers
+        et logements apportés. Coût réduit par un « Camp de bâtisseurs » présent
+        dans la ville (réduction : 5 Or et 1 Bois).
       </p>
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Aménagement</th><th>Terrain</th><th>Coût</th><th>Effets</th><th>Description</th></tr></thead>
+          <thead><tr><th>Aménagement</th><th>Terrain</th><th>Coût</th><th>Effets</th></tr></thead>
           <tbody>
             {(cfg.constructions ?? []).filter((c) => c.categorie === 'Aménagement').map((c, i) => (
               <tr key={i}>
                 <td><strong>{c.nom}</strong></td>
                 <td>{c.terrain || '—'}</td>
-                <td>{c.cout || '—'}</td>
-                <td>{resumeConstruction(c) || <span className="muted">—</span>}</td>
-                <td className="muted">{c.description}</td>
+                <td>{fmtCout(coutConstructionRef(c))}</td>
+                <td>{resumeConstruction(c, cfg) || <span className="muted">—</span>}</td>
               </tr>
             ))}
           </tbody>

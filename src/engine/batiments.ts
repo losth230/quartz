@@ -74,7 +74,7 @@ const REMPLACE: Record<string, string[]> = {
  *  effets des châteaux. */
 export function effetsTourBatiment(nom: string, C: Cfg, groupe?: string): Record<string, number> {
   const ref = constructionRef(nom, C.config, groupe)
-  return ref ? effetsConstructionRef(ref) : {}
+  return ref ? effetsConstructionRef(ref, C.config) : {}
 }
 
 /** Garnison statique accordée par un bâtiment (valeur d'état, pas un
@@ -82,7 +82,7 @@ export function effetsTourBatiment(nom: string, C: Cfg, groupe?: string): Record
  *  (doublons Ville/Château). */
 export function garnisonBatiment(nom: string, C: Cfg, groupe?: string): number {
   const ref = constructionRef(nom, C.config, groupe)
-  return ref ? garnisonConstructionRef(ref) : 0
+  return ref ? garnisonConstructionRef(ref, C.config) : 0
 }
 
 /** Production Tourisme par tour d'un bâtiment ou aménagement — lu sur
@@ -93,7 +93,7 @@ export function garnisonBatiment(nom: string, C: Cfg, groupe?: string): number {
  *  recalculé en fin de tour) et la conversion culturelle. */
 export function productionTourismeBatiment(nom: string, C: Cfg, groupe?: string): number {
   const ref = constructionRef(nom, C.config, groupe)
-  return ref ? (effetsConstructionRef(ref)['Tourisme'] ?? 0) : 0
+  return ref ? (effetsConstructionRef(ref, C.config)['Tourisme'] ?? 0) : 0
 }
 
 // ── Coût de construction (référentiel canonique) ────────────────────────

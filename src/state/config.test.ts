@@ -313,7 +313,13 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
     'le Moulin à vent revient en UN seul exemplaire (le vieux est purgé, le référentiel réinjecté)')
   assert.deepEqual(moulins[0].effets, [{ ressource: 'Charbon', quantite: -1 }],
     'les effets sont ceux du RÉFÉRENTIEL (resync), pas ceux de la vieille config')
-  assert.equal(moulins[0].cout, 'Silo à grain requis, 15 Or + 4 Bois + 4 Bétail', 'coût de la fiche')
+  // (2026-10-27, retour Thibaut : coût en DONNÉES `couts` + champ
+  //  `requis` dédié — plus de texte « Silo à grain requis, 15 Or… ».)
+  assert.equal(moulins[0].cout, '', 'le texte de coût est vidé')
+  assert.equal(moulins[0].requis, 'Silo à grain', 'prérequis de la fiche (champ dédié)')
+  assert.deepEqual(moulins[0].couts, [
+    { ressource: 'Or', valeur: 15 }, { ressource: 'Bois', valeur: 4 }, { ressource: 'Bétail', valeur: 4 },
+  ], 'coût de la fiche (paires ressource/valeur)')
   // tous les bâtiments rang 2 du référentiel passent la convergence
   const rang2C = C.config.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
   assert.equal(rang2C.length, rang2defs.length, 'ni perdus, ni doublés par la convergence')

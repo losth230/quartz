@@ -1,13 +1,15 @@
 // ══════════════════════════════════════════════════════════════════════
-//  CONSTRUCTIONS — RÉFÉRENTIEL CANONIQUE (coût / production / description)
+//  CONSTRUCTIONS — RÉFÉRENTIEL CANONIQUE (données structurées)
 //  Source unique : table « constructions » du référentiel (referentiels.json),
 //  saisie depuis la feuille « Ville » du classeur 7.19 :
-//    · Bâtiments de ville (colonnes B/C/D) et de château (F/G/H),
-//    · Bâtiments de capitale (« 12 Or + 6 Bois »),
-//    · Aménagements de terrain (« 8 Or + 3 Bois »).
-//  Chaque entrée référence le COÛT EXACT, la PRODUCTION EXACTE (texte
-//  analysable par le moteur) et la DESCRIPTION EXACTE du classeur —
-//  la production et la description sont parfois similaires.
+//    · Bâtiments de ville, de château et de capitale,
+//    · Aménagements de terrain.
+//  (Retour Thibaut 2026-10-27 : le coût n'est plus un TEXTE à analyser —
+//  chaque entrée porte ses DONNÉES : `couts` (paires {ressource, valeur}),
+//  `requis` (bâtiment prérequis, même ville), `effets` (flux/garnison via
+//  la banque), `emplacements` (métiers — canal placesMetier de la banque),
+//  `taudisApportes` / `domicilesApportes` (logements — canal logements de
+//  la banque). Les anciens textes cout/production/description sont VIDÉS.)
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
@@ -66,7 +68,10 @@ export function normaliserRessource(res: string): string {
   return res
 }
 
-/** Analyse un texte de coût (« 25 Or + 4 Fer ») en quantités par ressource. */
+/** Analyse un texte de coût (« 25 Or + 4 Fer ») en quantités par ressource.
+ *  (Depuis le retour Thibaut 2026-10-27, les COÛTS de constructions sont
+ *  des DONNÉES (`couts`) — cet analyseur ne sert plus qu'aux textes de
+ *  coût des TYPES D'HABITATION, cf. habitations.ts.) */
 export function parseCoutTexte(texte: string): Record<string, number> {
   const out: Record<string, number> = {}
   if (!texte) return out
@@ -124,19 +129,31 @@ export function contexteLectureSeule(): ContexteEffet {
 }
 
 /** Contribution de la banque pour une construction (règle identifiée par
- *  (nom, groupe)). Retourne undefined si la construction n'a pas de
+ *  (nom, groupe)). Le paramètre `cfg` optionnel (retour Thibaut
+ *  2026-10-27) sélectionne la config dont les règles sont lues — les
+ *  éditions de Paramètres s'appliquent ; par défaut : la config du
+ *  référentiel. Retourne undefined si la construction n'a pas de
  *  règle — production nulle, par convention ci-dessus. */
-function contributionBanque(ref: ConstructionRef): ReturnType<typeof appliquerRegles> | undefined {
-  const regle = reglePourConstruction(ref, C_LECTURE)
+function contributionBanque(ref: ConstructionRef, cfg?: GameConfig): ReturnType<typeof appliquerRegles> | undefined {
+  const regle = reglePourConstruction(ref, cfg ? cfgOf(cfg) : C_LECTURE)
   if (!regle) return undefined
   return appliquerRegles([regle], contexteLectureSeule())
 }
 
 // ── Accès moteur : coûts et effets ─────────────────────────────────────
 
-/** Coût de construction d'une entrée du référentiel (texte de coût exact). */
+/** Coût de construction d'une entrée du référentiel — DONNÉES
+ *  STRUCTURÉES (retour Thibaut 2026-10-27 : le coût n'est plus un
+ *  texte à analyser, le champ `couts` porte des paires
+ *  {ressource, valeur}, agrégées ici par ressource). */
 export function coutConstructionRef(ref: ConstructionRef): Record<string, number> {
-  return parseCoutTexte(ref.cout)
+  const out: Record<string, number> = {}
+  for (const c of ref.couts ?? []) {
+    if (!c || !Number.isFinite(Number(c.valeur))) continue
+    const res = normaliserRessource(c.ressource)
+    out[res] = (out[res] ?? 0) + Number(c.valeur)
+  }
+  return out
 }
 
 /** Coût de construction d'un bâtiment du référentiel (par nom, groupe optionnel). */
@@ -148,16 +165,18 @@ export function coutBatimentRef(nom: string, cfg?: GameConfig, groupe?: string):
 /** Effets par tour FLUX d'une construction : production régulière de la
  *  règle de banque (le Tourisme est un flux NORMAL ; la Garnison, valeur
  *  d'état, passe par son canal dédié ; l'Été par le canal été). Sans
- *  règle : production nulle. */
-export function effetsConstructionRef(ref: ConstructionRef): Record<string, number> {
-  const c = contributionBanque(ref)
+ *  règle : production nulle. Le paramètre `cfg` optionnel (retour
+ *  Thibaut 2026-10-27) lit les règles de CETTE config — les éditions
+ *  de Paramètres s'appliquent. */
+export function effetsConstructionRef(ref: ConstructionRef, cfg?: GameConfig): Record<string, number> {
+  const c = contributionBanque(ref, cfg)
   return c ? c.flux : {}
 }
 
 /** Production d'ÉTÉ d'une construction (canal « Nourr - été » : Champ,
  *  Rizière) — effets marqués « été » dans la banque. */
-export function effetsEteConstructionRef(ref: ConstructionRef): Record<string, number> {
-  const c = contributionBanque(ref)
+export function effetsEteConstructionRef(ref: ConstructionRef, cfg?: GameConfig): Record<string, number> {
+  const c = contributionBanque(ref, cfg)
   return c ? c.fluxEte : {}
 }
 
@@ -173,49 +192,57 @@ export function routesApporteesConstructionRef(ref: ConstructionRef | undefined)
 /** Valeur d'ÉTAT d'une construction : la Garnison (défense tant que la
  *  construction tient). Le Tourisme n'y figure PLUS : flux normal depuis
  *  le retour Thibaut 2026-10-16 (voir la sémantique en tête de section). */
-export function instantanesConstructionRef(ref: ConstructionRef): Record<string, number> {
-  const c = contributionBanque(ref)
+export function instantanesConstructionRef(ref: ConstructionRef, cfg?: GameConfig): Record<string, number> {
+  const c = contributionBanque(ref, cfg)
   if (!c || !c.garnison) return {}
   return { Garnison: c.garnison }
 }
 
 /** Une construction ne produit-t-elle qu'en Été ? (Champ, Rizière — lu
  *  sur la RÈGLE de banque : tout flux qu'elle porte est marqué été.) */
-export function eteSeulementRef(ref: ConstructionRef): boolean {
-  const regle = reglePourConstruction(ref, C_LECTURE)
+export function eteSeulementRef(ref: ConstructionRef, cfg?: GameConfig): boolean {
+  const regle = reglePourConstruction(ref, cfg ? cfgOf(cfg) : C_LECTURE)
   const flux = (regle?.effets ?? []).filter(
     (e): e is Extract<Effet, { type: 'fluxVille' }> => e.type === 'fluxVille',
   )
   return flux.length > 0 && flux.every((e) => e.ete)
 }
 
-/** Bâtiment (ou aménagement) prérequis d'une construction, extrait du
- *  texte de coût (« Poste de garde requis. », « Herboristerie requise. »,
- *  « Caserne requise »…). Retourne null si aucun. Le prérequis doit être
+/** Bâtiment (ou aménagement) prérequis d'une construction — CHAMP DÉDIÉ
+ *  `requis` (retour Thibaut 2026-10-27 : le prérequis vivait dans le
+ *  TEXTE du coût, il devient une DONNÉE du référentiel ; ex. Caserne →
+ *  « Poste de garde »). Retourne null si aucun. Le prérequis doit être
  *  présent dans la MÊME ville (règle du classeur). */
-export function prerequisConstruction(ref: Pick<ConstructionRef, 'cout'> | undefined): string | null {
-  if (!ref) return null
-  const m = ref.cout.match(/([A-ZÉÈÀÂÎÔÛ][\wàâäéèêëîïôöûüç'’ .-]*?)\s+requis(?:e)?s?\b/i)
-    ?? ref.cout.match(/requis(?:e)?s?\s*:?\s*([A-ZÉÈÀÂÎÔÛ][\wàâäéèêëîïôöûüç'’ .-]*?)(?:\.|$)/i)
-  if (!m) return null
-  return m[1].trim().replace(/\s*$/,'') || null
+export function prerequisConstruction(ref: Pick<ConstructionRef, 'requis'> | undefined): string | null {
+  return ref?.requis?.trim() || null
 }
 
-/** Emplacements de métiers accordés par une construction (vague 3a,
- *  rework métiers & aménagements 2026-10-21) : chaque aménagement tier 1
- *  octroie `places` postes de `metier` aux villes qui le possèdent —
- *  la production directe a disparu au profit de ces postes (caps par
- *  ville = somme des emplacements des aménagements présents, cf.
- *  engine/metiers.ts capMetierVille). Format du référentiel :
- *  `emplacements: [{ metier, places }]`. */
-export function emplacementsConstructionRef(ref: ConstructionRef): Array<{ metier: string; places: number }> {
-  return (ref.emplacements ?? []).map((e) => ({ metier: e.metier, places: Number(e.places) || 0 }))
+/** Emplacements de métiers accordés par une construction — VIA LA
+ *  BANQUE (retour Thibaut 2026-10-27 : l'attribution de métiers passe
+ *  par la banque — les `emplacements` du référentiel, format
+ *  `[{ metier, places }]`, sont traduits en effets `placesMetier` par
+ *  le registre ; cette lecture est le canal moteur unique, comme les
+ *  flux). */
+export function emplacementsConstructionRef(ref: ConstructionRef, cfg?: GameConfig): Array<{ metier: string; places: number }> {
+  const c = contributionBanque(ref, cfg)
+  return c ? Object.entries(c.placesMetier).map(([metier, places]) => ({ metier, places })) : []
+}
+
+/** LOGEMENTS apportés au parc d'une ville par une construction — VIA LA
+ *  BANQUE (retour Thibaut 2026-10-27 : les logements passent par la
+ *  banque — taudisApportes et domicilesApportes sont traduits en
+ *  effets `logements` ; les Taudis et les autres types de domicile
+ *  passent par le MÊME canal). Clé = type de logement, valeur =
+ *  nombre apporté. */
+export function logementsConstructionRef(ref: ConstructionRef, cfg?: GameConfig): Record<string, number> {
+  const c = contributionBanque(ref, cfg)
+  return c ? { ...c.logements } : {}
 }
 
 /** Garnison statique accordée par une construction (valeur d'état, pas un
  *  flux) — via la banque d'effets ; sans règle : 0. */
-export function garnisonConstructionRef(ref: ConstructionRef): number {
-  const c = contributionBanque(ref)
+export function garnisonConstructionRef(ref: ConstructionRef, cfg?: GameConfig): number {
+  const c = contributionBanque(ref, cfg)
   return c ? c.garnison : 0
 }
 
@@ -223,20 +250,20 @@ export function garnisonConstructionRef(ref: ConstructionRef): number {
  *  wiki Référentiels) : « +2 Or / tour · été : +10 Nourriture ·
  *  Garnison +40 ». Le Tourisme apparaît comme flux (« +16 Tourisme /
  *  tour ») conformément à la sémantique stock = production. */
-export function resumeConstruction(ref: ConstructionRef | undefined): string {
+export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameConfig): string {
   if (!ref) return ''
   const parts: string[] = []
-  const flux = Object.entries(effetsConstructionRef(ref))
+  const flux = Object.entries(effetsConstructionRef(ref, cfg))
   if (flux.length > 0) {
     parts.push(flux.map(([r, v]) => `${v > 0 ? '+' : ''}${v} ${r}`).join(', ') + ' / tour')
   }
-  const ete = Object.entries(effetsEteConstructionRef(ref))
+  const ete = Object.entries(effetsEteConstructionRef(ref, cfg))
   if (ete.length > 0) {
     parts.push('été : ' + ete.map(([r, v]) => `${v > 0 ? '+' : ''}${v} ${r}`).join(', '))
   }
-  const inst = instantanesConstructionRef(ref)
+  const inst = instantanesConstructionRef(ref, cfg)
   if (inst.Garnison) parts.push(`Garnison +${inst.Garnison}`)
-  const emp = emplacementsConstructionRef(ref)
+  const emp = emplacementsConstructionRef(ref, cfg)
   if (emp.length > 0) {
     parts.push(emp.map((e) => `${e.places} ${e.metier.toLowerCase()}`).join(', '))
   }
@@ -247,32 +274,38 @@ export function resumeConstruction(ref: ConstructionRef | undefined): string {
   //  classeur (périmée).
   if (ref.malContraction) parts.push(`+${Math.round(ref.malContraction * 100)}% chances de maladie`)
   if (ref.bonusGuerison) parts.push(`+${Math.round(ref.bonusGuerison * 100)}% guérison`)
-  // Retour Thibaut 2026-10-26 (fiche aménagements) : les Taudis apportés par
-  // un aménagement doivent être visibles dans le résumé, pas seulement dans
-  // la description textuelle du référentiel.
-  if (ref.taudisApportes) parts.push(`+${ref.taudisApportes} Taudis`)
+  // Retour Thibaut 2026-10-27 : les TAUDIS et les AUTRES domiciles
+  //  apportés se lisent sur le CANAL « logements » de la banque —
+  //  même rendu qu'avant (« +5 Taudis », « +20 Maisons de notable »,
+  //  pluriel sur le premier mot).
+  const log = logementsConstructionRef(ref, cfg)
+  const taudis = log['Taudis'] ?? 0
+  if (taudis > 0) parts.push(`+${taudis} Taudis`)
   // Retour Thibaut 2026-10-27 : les ROUTES commerciales apportées
   //  s'affichent pareil — l'effet vit dans le référentiel
   //  (routesApportees), il doit être visible dans le picker « +
   //  Construire », les badges de la carte et le wiki Référentiels.
   const routes = routesApporteesConstructionRef(ref)
   if (routes > 0) parts.push(`+${routes} route${routes > 1 ? 's' : ''} commerciale${routes > 1 ? 's' : ''}`)
-  // Fiche bâtiments rang 2 (2026-10-26) : les AUTRES domiciles apportés
-  //  (Maisons, Maisons de notable) s'affichent pareil (pluriel sur le
-  //  premier mot : « +20 Maisons de notable »).
-  for (const e of ref.domicilesApportes ?? []) {
-    const nom = e.nombre > 1 ? e.domicile.replace(/^(\S+)/, (m) => `${m}s`) : e.domicile
-    parts.push(`+${e.nombre} ${nom}`)
+  for (const [logement, nombre] of Object.entries(log)) {
+    if (logement === 'Taudis' || nombre <= 0) continue
+    const nom = nombre > 1 ? logement.replace(/^(\S+)/, (m) => `${m}s`) : logement
+    parts.push(`+${nombre} ${nom}`)
   }
   return parts.join(' · ')
 }
 
-/** Réduction de coût des aménagements accordée par le Camp de bâtisseurs
- *  (lue dans sa description EXACTE : « Réduit le coût de construction des
- *  aménagements de 5 Or et 1 Bois. »). */
+/** Réduction de coût des aménagements accordée par le Camp de
+ *  bâtisseurs — champ `reduction` du référentiel, DONNÉES
+ *  STRUCTURÉES (retour Thibaut 2026-10-27 : plus d'analyse de
+ *  description textuelle). Le Camp n'est pas au référentiel
+ *  (mécanisme dormant) : repli {Or: 5, Bois: 1} tant que le champ
+ *  est absent. */
 export function reductionCampDeBatisseurs(cfg?: GameConfig): Record<string, number> {
   const ref = constructionRef('Camp de bâtisseurs', cfg)
-  const m = ref?.description.match(/aménagements\s+de\s+(\d+)\s*Or\s+et\s+(\d+)\s*Bois/i)
-  if (!ref || !m) return { Or: 5, Bois: 1 }
-  return { Or: parseInt(m[1], 10), Bois: parseInt(m[2], 10) }
+  const paires = ref?.reduction ?? []
+  if (paires.length === 0) return { Or: 5, Bois: 1 }
+  const out: Record<string, number> = {}
+  for (const r of paires) out[r.ressource] = (out[r.ressource] ?? 0) + r.valeur
+  return out
 }

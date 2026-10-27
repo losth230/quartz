@@ -51,12 +51,14 @@ async function construireDe(state: ReturnType<typeof partie>) {
  *  réinjectées APRÈS convergence (dans C.config, une fois cfgOf
  *  passé — forme exacte de l'ancien référentiel). */
 const TIERS_23 = [
+  // (retour Thibaut 2026-10-27 : les coûts sont des DONNÉES structurées
+  //  `couts` — paires {ressource, valeur} — plus de texte à analyser)
   { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 2)',
-    terrain: 'Baleine', cout: '15 Or + 3 Pierre', production: '', description: '',
+    terrain: 'Baleine', couts: [{ ressource: 'Or', valeur: 15 }, { ressource: 'Pierre', valeur: 3 }],
     effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Baleinier',
     emplacements: [{ metier: 'Pêcheur', places: 5 }, { metier: 'Commerçant', places: 5 }] },
   { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 3)',
-    terrain: 'Baleine', cout: '35 Or + 3 Fer', production: '', description: '',
+    terrain: 'Baleine', couts: [{ ressource: 'Or', valeur: 35 }, { ressource: 'Fer', valeur: 3 }],
     effets: [], rangMinHabitation: 3, remplaceAmenagement: 'Baleinier (tier 2)',
     emplacements: [{ metier: 'Pêcheur', places: 7 }, { metier: 'Commerçant', places: 10 }] },
 ]
@@ -121,33 +123,28 @@ test('vague 3c : garde-fous NON BLOQUANTS — rang insuffisant ⚠, tier inféri
     'sans remplacement effectif, le log dit « construit(e) », pas « amélioré(e) »')
 })
 
-test('retour Thibaut 2026-10-26 : le picker « + Construire » ne rend plus la description du classeur (périmée) — résumé structuré seulement, comme les aménagements', async () => {
+test('retour Thibaut 2026-10-27 : textes vidés — le picker rend le résumé structuré et le coût calculé des DONNÉES', async () => {
   const state = partie()
   const { faireBatParFamille } = await import('./Constructions')
   const C = cfgOf(state.config)
   const p = state.players[0]
   const cats = faireBatParFamille({ state, p, C })(p.villes[0])
   assert.ok(cats.length > 0, 'aucune catégorie de construction pour la capitale')
-  let verrouilles = 0
-  for (const cat of cats) {
-    for (const o of cat.options) {
-      const d = o.description ?? ''
-      const ref = C.config.constructions.find((c) => c.categorie === 'Bâtiment' && c.nom === o.metier)
-      const descClasseur = ref?.description ?? ''
-      if (descClasseur) {
-        assert.ok(
-          !d.includes(descClasseur),
-          `« ${o.metier} » : la description du classeur (« ${descClasseur} ») ne doit plus être rendue dans le picker`,
-        )
-        verrouilles++
-      }
-    }
+  // Les TEXTES cout / production / description du référentiel sont VIDÉS
+  //  (le coût vit dans `couts`, le prérequis dans `requis`, la production
+  //  dans `effets`) — verrou sur TOUTE la table.
+  const refsBatiments = (C.config.constructions ?? []).filter((c) => c.categorie === 'Bâtiment')
+  assert.ok(refsBatiments.length > 30, 'référentiel bâtiments attendu')
+  for (const ref of refsBatiments) {
+    assert.ok(!ref.cout && !ref.production && !ref.description,
+      `« ${ref.nom} » : les textes cout/production/description doivent être vidés`)
   }
-  assert.ok(verrouilles > 5,
-    `trop peu de bâtiments vérifiés (${verrouilles}) — l'état de test a changé, le test perd son sens`)
   // Le résumé structuré reste rendu (ex. Poste de garde → « 4 garde »).
   const poste = cats.flatMap((c) => c.options).find((o) => o.metier === 'Poste de garde')
   assert.ok(poste, 'Poste de garde absent du picker de la capitale')
   assert.ok((poste.description ?? '').includes('4 garde'),
     'le résumé structuré des emplacements du Poste de garde doit rester rendu')
+  // Le coût affiché est CALCULÉ depuis les données structurées (couts).
+  assert.equal(poste.droite, '25 Or + 4 Fer',
+    'coût du Poste de garde : lu des paires {ressource, valeur}, pas du texte')
 })

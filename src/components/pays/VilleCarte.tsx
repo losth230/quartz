@@ -35,7 +35,7 @@ import type { AutreDef, City, GameState, Player } from '../../engine/types'
 import { useGame } from '../../state/store'
 import * as remote from '../../supabase/client'
 import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
-import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
+import { constructionsRefs, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
@@ -438,8 +438,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   })}
                 >×</button>
               </span>
-              <span className="muted small" title={ref?.description ?? ''}>
-                {ref ? `${resumeConstruction(ref) || ref.production || '—'}${ref.terrain ? ` (${ref.terrain})` : ''}` : '—'}
+              <span className="muted small">
+                {ref ? `${resumeConstruction(ref, C.config) || '—'}${ref.terrain ? ` (${ref.terrain})` : ''}` : '—'}
               </span>
             </div>
           )
@@ -460,10 +460,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 options: amRefsBase.map((a) => ({
                   value: a.nom,
                   metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))}${a.terrain ? ` · ${a.terrain}` : ''}`,
+                  droite: `${fmtCout(coutConstructionRef(a))}${a.terrain ? ` · ${a.terrain}` : ''}`,
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                   ].filter(Boolean).join('\n'),
                 })),
               },
@@ -472,10 +471,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 options: ameliorationsTier(2).map((a) => ({
                   value: a.nom,
                   metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))} · améliore ${a.remplaceAmenagement}`,
+                  droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                     `Remplace un « ${a.remplaceAmenagement} » de ${ville.nom} (habitation de rang 2 minimum).`,
                   ].filter(Boolean).join('\n'),
                 })),
@@ -485,10 +483,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 options: ameliorationsTier(3).map((a) => ({
                   value: a.nom,
                   metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))} · améliore ${a.remplaceAmenagement}`,
+                  droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                     `Remplace un « ${a.remplaceAmenagement} » de ${ville.nom} (habitation de rang 3 minimum).`,
                   ].filter(Boolean).join('\n'),
                 })),
@@ -513,7 +510,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           // gris-bleu pour les bâtiments sans famille.
           const clFam = FAM_BADGES[ref?.famille ?? ''] ?? 'badge-info'
           const resume = [
-            resumeConstruction(ref) || ref?.production || '',
+            resumeConstruction(ref, C.config),
             // Garnison déjà incluse dans le résumé structuré ; repli :
             !ref?.effets && garnison > 0 ? `Garnison +${garnison}` : '',
             !ref && Object.keys(effets).length > 0 ? fmtEffets(effets, C) : '',
@@ -528,7 +525,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   onClick={() => setPlayer((x) => { x.villes[idx].batiments.splice(bi, 1) })}
                 >×</button>
               </span>
-              <span className="muted small" title={ref?.description ?? ''}>
+              <span className="muted small">
                 {resume || '—'}
               </span>
             </div>

@@ -41,7 +41,7 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  quatre types ci-dessous.)
 const TYPES_CONNUSS = new Set([
   'fluxVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde',
-  'garnisonVille',
+  'garnisonVille', 'placesMetier', 'logements',
 ])
 
 test('registre : TOUTE construction à effets du référentiel a SA règle', () => {
@@ -146,5 +146,9 @@ test('doublons Ville/Château : le moteur rend les effets de la BONNE version (b
   const ville = cfgOf(undefined).config.constructions.find((c) => c.nom === 'Echoppe' && c.groupe === 'Ville')
   const chateau = cfgOf(undefined).config.constructions.find((c) => c.nom === 'Echoppe' && c.groupe === 'Château')
   assert.ok(ville && chateau, 'les deux versions Echoppe existent')
-  assert.notEqual(ville.cout, chateau.cout, 'les coûts des deux versions diffèrent (donc le groupe compte)')
+  // (2026-10-27, retour Thibaut : les coûts sont des DONNÉES `couts` —
+  //  la résolution PAR GROUPE doit donner des paires distinctes :
+  //  Echoppe Ville = 10 Or + 3 Bois, Château = 12 Or + 2 Bois.)
+  assert.notEqual(JSON.stringify(ville.couts), JSON.stringify(chateau.couts),
+    'les coûts des deux versions diffèrent (donc le groupe compte)')
 })
