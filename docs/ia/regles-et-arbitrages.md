@@ -1136,3 +1136,47 @@ tout champ sauvegardé garde la priorité (une édition perso survit).
 **Camp de bâtisseurs** : sa réduction (5 Or, 1 Bois) est un repli
 STRUCTURÉ (champ `reduction` si le Camp entre un jour au référentiel
 — mécanisme dormant) — plus d'analyse de description textuelle.
+
+**Idem types d'habitation** (retour Thibaut 2026-10-27, « appliquer
+aux types d'habitation les changements faits sur les bâtiments et
+aménagements ») : le coût d'amélioration des rangs (Hameau → Grande
+Cité, Motte → Forteresse) vit désormais en paires
+`couts: [{ressource, valeur}]` — les 6 rangs migrés (Hameau 20 Or +
+10 Bois + 6 Bétail… Forteresse 120 Or + 10 Pierre + 12 Fer), texte
+`cout` vidé. `coutRang` (engine/habitations.ts) agrège les paires
+(`agregerCouts`, partagé avec `coutConstructionRef`) ;
+`debiterCoutHabitation` débite le stock à la construction du rang.
+L'analyseur de texte `parseCoutTexte` est RETIRÉ du moteur — plus
+AUCUN coût du jeu n'est analysé, tout est lu des données. L'onglet
+Paramètres édite les paires via `CoutEditor` (même éditeur que les
+constructions) ; le wiki Habitations et le sélecteur de rang (page
+Pays) affichent le coût calculé. `migrerTypesHabitation` complète
+`couts` depuis la ligne du défaut de même (type, rang) — idempotent,
+même patron que `domicilesRang`.
+
+## Le registre de règles, vu PAR CANAL (retour Thibaut, 2026-10-27)
+
+La migration « tout par la banque » a fait passer le registre de ~15
+règles manuscrites (les seules exceptions) à **90 règles générées**
+(une par construction qui a un effet quelconque) — plus rigoureux,
+mais moins lisible à l'inspection. Le diag
+(`scripts/diag.ts` → `diag-out.txt`, joué par la CI) rend désormais
+le registre **filtré par canal** (type d'effet) :
+
+```
+total : 90 règles — sources : batiment 40, amenagement 42, merveille 4, regime 1, culture 3
+── canal placesMetier : 71 règles ──
+  batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
+── canal logements : 47 règles ──
+── canal fluxVille : 12 règles ──
+── canal garnisonVille : 2 règles ──
+── canal fluxParAmenagement : 1 règle ──
+── canal fluxParVilleCultureMonde : 3 règles ──
+```
+
+Chaque ligne porte l'id stable, le nom (et le groupe Ville/Château),
+les conditions éventuelles (`[si regime=Socialisme, saison=Été]`) et
+les effets signés. Un effet bizarre en partie se localise par canal
+puis par nom — plus de lecture séquentielle. Une règle multi-canaux
+apparaît dans chaque canal concerné (le canal est un filtre, pas un
+tri) ; un canal inconnu est signalé `⚠`.
