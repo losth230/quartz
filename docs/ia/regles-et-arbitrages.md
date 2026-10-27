@@ -1278,3 +1278,22 @@ pré-rework (effet de flux disparu, emplacements `2 Bûcheron`, couts
 du référentiel), purge des 4 merveilles, perso conservé, idempotence,
 édition post-convergence non écrasée ; les tests des migrations
 ciblées passent leurs configs à schemaVersion 5.
+
+## La case requise dans le titre des aménagements (arbitrage Thibaut, 2026-10-27)
+
+« Pour les aménagements, met la case requise entre parenthèses dans le
+titre de l'aménagement. » Le titre affiché partout (picker
+« + Aménager une case… », badge d'un aménagement construit, wiki)
+est « nom (case requise) » : « Baleinier (Baleine) », « Champ
+(Plaine) », « Baleinier (tier 2) (Baleine) » — les parenthèses
+viennent APRÈS le nom complet des tiers. Un aménagement perso sans
+case requise reste au titre nu.
+
+- Les parenthèses sont un pur AFFICHAGE : jamais stockées dans
+  l'état ni la config — l'éditeur des Paramètres édite le nom brut
+  (champ `terrain` à part), le picker embarque le nom brut en
+  `value`.
+- Les anciens emplacements de la même info sont retirés pour éviter
+  le doublon : suffixe « · terrain » à droite du coût du picker,
+  suffixe « (terrain) » du résumé muet du badge, colonne Terrain du
+  wiki.

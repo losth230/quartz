@@ -3949,3 +3949,12 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **Tests** : tampon attendu 5 (params.test, config.test) ; les cinq tests des migrations ciblées (« déjà convergée ») passent leurs configs à schemaVersion 5 ; +2 tests natifs (réalignement du Camp de bûcheron pré-rework + purge des 4 merveilles + perso conservé + idempotence ; édition post-convergence non écrasée).
 - Docs : regles-et-arbitrages.md — nouvelle section « Réalignement automatique des BÂTIMENTS au chargement » + compat merveilles de la section audit réécrite (purge v5).
 - Validation : tsc 0 erreur, **189/189 natifs** (+2), 19/19 rendu (12 fichiers), diag IDENTIQUE (86 règles), bundle Edge Function rebuildé + testé.
+
+## Titre des aménagements : la case requise entre parenthèses (retour Thibaut, 2026-10-27 — base 86594289)
+
+- **Retour Thibaut** : « pour les aménagements, met la case requise entre parenthèses dans le titre de l'aménagement » — le titre affiché devient « Baleinier (Baleine) », « Champ (Plaine) ».
+- **pays-utils** : helper partagé `titreAmenagement(nom, terrain)` — « nom (case requise) » ; aménagement perso sans terrain = titre nu. Les parenthèses ne sont JAMAIS stockées : ni dans l'état ni dans la config (l'éditeur des Paramètres édite le nom brut, le picker embarque le nom brut en `value`, seul le libellé affiché change).
+- **VilleCarte** : picker « + Aménager une case… » (tiers 1/2/3) — titre avec parenthèses, suffixe « · terrain » à droite du coût retiré (doublon) ; badge d'un aménagement construit — titre avec parenthèses, suffixe « (terrain) » du résumé muet retiré (doublon).
+- **Wiki (OngletsBatiments)** : titre « nom (case requise) » ; la colonne Terrain, devenue redondante, est retirée de la table des aménagements.
+- **Verrou** : Constructions.test (+1 → rendu 20/20) — titres tier 1 « Baleinier (Baleine) », tier 2 « Baleinier (tier 2) (Baleine) » (parenthèses APRÈS le nom complet), perso nu, terrain vide nu + verrou référentiel : les 42 aménagements portent TOUS une case requise.
+- Validation : tsc 0 erreur, **189/189 natifs**, **20/20 rendu** (+1), diag IDENTIQUE (86 règles), bundle Edge Function rebuildé + testé.
