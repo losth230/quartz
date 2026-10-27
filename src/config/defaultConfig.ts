@@ -1072,9 +1072,15 @@ function gardeFous(m: GameConfig): void {
   m.constructions = ouDefauts(m.constructions, DEFAULT_CONFIG.constructions)
   // Ajout des constructions du référentiel manquantes dans une config
   //  déjà convergée (revue 2026-10-15) : les NOUVELLES constructions
-  //  (ex. les 12 MERVEILLES) sont AJOUTÉES sans toucher aux existantes —
-  //  la personnalisation (coûts édités, suppressions) persiste. Clé : nom.
-  //  Une construction existante du même nom N'EST PAS écrasée.
+  //  (ex. les 12 MERVEILLES) sont AJOUTÉES sans toucher aux existantes.
+  //  NB (corrigé 2026-10-27, audit F5 — l'ancien commentaire disait
+  //  « suppressions persiste », ce qui contredisait le code) : une
+  //  construction du RÉFÉRENTIEL supprimée dans les Paramètres est
+  //  RÉ-AJOUTÉE ici à la prochaine lecture (comportement voulu et
+  //  verrouillé par config.test.ts : « les entrées manquantes du
+  //  référentiel sont ajoutées »). Ne persistent que les ÉDITIONS
+  //  (coûts, effets — champ sauvegardé prioritaire) et les lignes
+  //  PERSO (clé absente du référentiel). Clé : nom.
   if (Array.isArray(m.constructions)) {
     // Mise à jour des RANGS d'habitation (revue 2026-10-15 : les
     //  configs convergées gardaient les anciens défauts — sans
@@ -1094,6 +1100,37 @@ function gardeFous(m: GameConfig): void {
     }
   }
   m.couleurs = migrerCouleurs(m.couleurs)
+}
+
+/**
+ * F6 (audit 2026-10-27) : validation de FORME d'une configuration
+ * importée (onglet JSON des Paramètres). Le JSON importé n'est pas
+ * contrôlé par le type : un champ au mauvais type (« constructions: 42 »)
+ * passait le JSON.parse puis convergeait sans erreur et cassait l'UI au
+ * premier rendu. Contrat minimal, symétrique des garde-fous : les tables
+ * du référentiel présentes doivent être des TABLEAUX, `params` un objet.
+ * Retourne la liste des problèmes (vide = forme acceptable) — l'UI
+ * refuse l'import et AFFICHE les problèmes au lieu d'importer en aveugle.
+ */
+export function validerFormeConfig(c: unknown): string[] {
+  const problemes: string[] = []
+  if (!c || typeof c !== 'object' || Array.isArray(c)) {
+    return ['la configuration doit être un objet JSON (et non un tableau ou une valeur)']
+  }
+  const m = c as Record<string, unknown>
+  const TABLES = [
+    'constructions', 'traits', 'cultures', 'regimes', 'typesHabitation',
+    'paysRangs', 'victoires', 'peuplesLibres', 'peuplesAutres', 'metiers',
+  ]
+  for (const t of TABLES) {
+    if (t in m && !Array.isArray(m[t])) {
+      problemes.push(`« ${t} » doit être un tableau`)
+    }
+  }
+  if ('params' in m && (typeof m.params !== 'object' || m.params === null || Array.isArray(m.params))) {
+    problemes.push('« params » doit être un objet')
+  }
+  return problemes
 }
 
 /** Converge une configuration quelconque vers le format courant :

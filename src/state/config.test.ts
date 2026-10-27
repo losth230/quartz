@@ -16,7 +16,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { adopterConfig, configAuChargement } from './configPriorite'
-import { cloneDefaultConfig, cfgOf, type GameConfig } from '../config/defaultConfig'
+import { cloneDefaultConfig, cfgOf, validerFormeConfig, type GameConfig } from '../config/defaultConfig'
 import { createGame, type SetupLine } from '../engine/setup'
 import type { GameState } from '../engine/types'
 
@@ -528,4 +528,23 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
   const C2 = cfgOf(C.config)
   assert.equal(C2.metiers.find((t) => t.metier === 'Ministre')!.description, '',
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
+})
+
+// ── F6 (audit 2026-10-27) : validation de forme d'une config importée ──
+test('F6 : validerFormeConfig accepte une config saine et refuse les champs au mauvais type', () => {
+  // config saine : aucun problème
+  const saine = cloneDefaultConfig()
+  assert.equal(validerFormeConfig(saine).length, 0, 'une config par défaut est de forme acceptable')
+  assert.equal(validerFormeConfig({}).length, 0, 'un objet vide (clés absentes) est acceptable')
+  // champs au mauvais type : refus, un problème par table fautive
+  const mauvaise = { ...cloneDefaultConfig(), constructions: 42, params: ' Oops' }
+  const problemes = validerFormeConfig(mauvaise)
+  assert.ok(problemes.includes('« constructions » doit être un tableau'), `problème constructions manquant : ${problemes.join(' ; ')}`)
+  assert.ok(problemes.includes('« params » doit être un objet'), `problème params manquant : ${problemes.join(' ; ')}`)
+  // non-objet : refus explicite
+  assert.equal(validerFormeConfig('config').length, 1, 'une string est refusée')
+  assert.equal(validerFormeConfig([1, 2]).length, 1, 'un tableau est refusé')
+  // les tables valides ne lèvent PAS de faux positif
+  const bonne = { ...cloneDefaultConfig(), metiers: [] }
+  assert.equal(validerFormeConfig(bonne).length, 0, 'un tableau vide (même vide → garde-fous) reste de forme valide')
 })

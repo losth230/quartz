@@ -11,7 +11,7 @@
 
 import { useState } from 'react'
 import { useGame } from '../state/store'
-import { cfgOf, cloneDefaultConfig } from '../config/defaultConfig'
+import { cfgOf, cloneDefaultConfig, validerFormeConfig } from '../config/defaultConfig'
 import type { GameConfig } from '../config/defaultConfig'
 import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
 import { Card, NumberInput, TextInput, Button } from './ui'
@@ -362,6 +362,14 @@ function JsonPanel({ config, setCfg, replaceState, exportState, importState }: {
         <Button tone="primary" onClick={() => {
           try {
             const parsed = JSON.parse(text) as GameConfig
+            // F6 (audit 2026-10-27) : validation de FORME avant import —
+            //  un champ au mauvais type (« constructions: 42 ») cassait
+            //  l'UI au premier rendu après un import « réussi ».
+            const problemes = validerFormeConfig(parsed)
+            if (problemes.length) {
+              setMsg(`Import refusé — ${problemes.join(' ; ')}`)
+              return
+            }
             setCfg((c) => {
               for (const k of Object.keys(parsed) as (keyof GameConfig)[]) {
                 ;(c as unknown as Record<string, unknown>)[k as string] = parsed[k]
