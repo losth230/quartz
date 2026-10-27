@@ -1158,18 +1158,20 @@ même patron que `domicilesRang`.
 
 La migration « tout par la banque » a fait passer le registre de ~15
 règles manuscrites (les seules exceptions) à **90 règles générées**
-(une par construction qui a un effet quelconque) — plus rigoureux,
-mais moins lisible à l'inspection. Le diag
+(une par construction qui a un effet quelconque ; les 4 règles
+« merveille » ont disparu le jour même avec la suppression des
+merveilles, cf. ci-dessous) — plus rigoureux, mais moins lisible
+à l'inspection. Le diag
 (`scripts/diag.ts` → `diag-out.txt`, joué par la CI) rend désormais
 le registre **filtré par canal** (type d'effet) :
 
 ```
-total : 90 règles — sources : batiment 40, amenagement 42, merveille 4, regime 1, culture 3
+total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 3
 ── canal placesMetier : 71 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
 ── canal logements : 47 règles ──
-── canal fluxVille : 12 règles ──
-── canal garnisonVille : 2 règles ──
+── canal fluxVille : 9 règles ──
+── canal garnisonVille : 1 règle ──
 ── canal fluxParAmenagement : 1 règle ──
 ── canal fluxParVilleCultureMonde : 3 règles ──
 ```
@@ -1180,3 +1182,51 @@ les effets signés. Un effet bizarre en partie se localise par canal
 puis par nom — plus de lecture séquentielle. Une règle multi-canaux
 apparaît dans chaque canal concerné (le canal est un filtre, pas un
 tri) ; un canal inconnu est signalé `⚠`.
+
+## Merveilles supprimées, remplacements purgés, HabitationDef unifié (audit, arbitrages Thibaut 2026-10-27)
+
+À la demande de Thibaut, un audit des modules bâtiments, aménagements,
+population et métiers (erreurs, code mort, SOLID, cohérence) a été
+suivi de quatre arbitrages :
+
+1. **Suppression de TOUTES les merveilles « pour l'instant »** (retour
+   explicite de Thibaut). Les 4 entrées du référentiel (Sanctuaire de
+   Salmodiva, Jardins d'Alexandrie, Mont Caracole, Grands bains)
+   disparaissent, avec le module `engine/merveilles.ts` (effet
+   one-shot, réduction de levée, doublement de Science du Laboratoire
+   de Falheim) et `engine/statutAuto.ts` (pastilles vert/jaune/rouge
+   — elles ne concernaient plus que les merveilles). Le sélecteur
+   « + Construire » n'a plus de catégorie « Merveilles · rang N », le
+   wiki n'a plus de famille Merveille, et `SourceRegle` perd la
+   valeur `'merveille'` (jamais réutilisable — stabilité des règles
+   déjà saisies ; le registre passe de 90 à 86 règles).
+   **Compatibilité vieilles parties** : les entrées encore portées
+   par une config sauvegardée ne sont ni retirées ni purgées ; elles
+   sont invisibles du sélecteur et du wiki, et un bâtiment inconnu ne
+   produit rien — pas de crash, pas de migration nécessaire
+   (même logique que les bâtiments rang 2 retirés puis réactivés).
+2. **Table REMPLACE purgée** : seuls restent les remplacements dont
+   les DEUX extrémités existent au référentiel (Camp de
+   travailleurs→Camps de bûcheron/mineur, Silo à grain→Grange, Moulin
+   à vent→Silo/Grange, Ecole intermédiaire→Ecole élémentaire). Les
+   clés et cibles mortes (guildes et écoles supprimées du
+   référentiel) partent — la règle « un remplaçant neutralise les
+   effets du remplacé » ne change pas.
+3. **Code mort retiré** (aucun appelant, aucun test) : `batimentRef`,
+   `habitantsRequisVille`, les vues normalisées
+   `AmenagementDef/amenagementsDefs/AMENAGEMENTS/amenagementDef`
+   (le champ `effet` est vide depuis le passage aux coûts
+   structurés), les replis inatteignables de `coutAmenagement`
+   (Baleinier, coût forcé 8 Or/3 Bois — le nom est désormais REQUIS
+   et un aménagement hors référentiel n'a pas de coût). Les exports
+   usage-interne uniquement sont dé-exportés (13 fonctions/types).
+   `metiersAccessibles` perd son paramètre joueur inutilisé.
+4. **HabitationDef unifié** : l'interface n'est plus définie en
+   double (engine/types.ts et config/defaultConfig.ts) — l'unique
+   définition vit dans engine/types.ts, importée et ré-exportée par
+   la config ; les deux définitions étaient structurellement
+   identiques.
+
+L'audit a par ailleurs confirmé SAIN la voie unique banque partout
+(flux, métiers, logements, garnisons), le passage de la config à tous
+les sites d'appel moteur et l'orchestration population.
