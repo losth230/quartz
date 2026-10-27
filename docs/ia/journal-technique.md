@@ -3886,3 +3886,9 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **Verrous** : mutateurs.test.ts — nouveau test « l'ANOBLI (roturier devenu noble, 250+) est mariable — le bourgeois non » (bourgeois 150 refusé /NOBLES/, roturier 0 refusé, anobli 250 accepté avec liens mariageId croisés + log Mariage ; le refus accepté est testé en DERNIER car le garde-fou « déjà marié » précède le check de noblesse au moteur). Helper perso étendu (option prestige, posée seulement si définie — pas de `prestige: undefined` explicite). Les gardes-fous existants (roturier refusé) restent valides tels quels.
 - Docs : regles-et-arbitrages.md — nouvelle section « Le mariage manuel suit le RANG ».
 - Validation : tsc 0 erreur, **175/175 natifs** (+1), 19/19 rendu, diag IDENTIQUE (aucune règle de tour ne touche au mariage manuel — mutation d'arbitre).
+
+## Tableau Logements : colonne « places libres » retirée (retour Thibaut, 2026-10-27 — base 45663a8)
+
+- **Retour Thibaut** : « dans le tableau des logements, il y a une colonne à droite avec un nombre qui ne sert à rien (par exemple 8) : ce nombre indique le nombre de logements mais la colonne d'avant affiche 0/8 — retire-la. »
+- VilleCarte.tsx — 3e tableau « Logements » de la carte de ville : la 3e colonne (places libres par type, + cellule `<td/>` de la ligne « sans logement » + cellule du total) est retirée ; il reste 2 colonnes, type · occupés/capacité (le reste se lit dans occ/cap, ex. 0/8). Champ `libres` et `libresTotaux` supprimés du calcul (aucun autre usage), docblock et title du survol mis à jour (« habitants/capacité », plus de « places libres »). Le tableau « Métiers et places par ville » (Population) garde SES places libres — elles n'y sont pas redondantes (pas de colonne en poste/capacité au même format) et le retour ne le mentionne pas.
+- Validation : tsc 0 erreur, **175/175 natifs**, 19/19 rendu (12 fichiers), diag IDENTIQUE (changement d'affichage pur).
