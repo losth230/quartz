@@ -280,7 +280,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           //  quartiers…) ; occupés = habitants attribués (retour
           //  Thibaut 2026-10-26 : 1 logement = 1 HABITANT, plus de
           //  foyers — les bâtiments les plus qualitatifs servent
-          //  d'abord les personnages de haut rang) ; libres = reste.
+          //  d'abord les personnages de haut rang).
           const stockLog = Array.isArray(ville.domiciles)
             ? ville.domiciles
             : stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
@@ -301,10 +301,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             .map((d) => {
               const cap = capLog.get(d.domicile) ?? 0
               const occ = occLog.get(d.domicile) ?? 0
-              return { nom: d.domicile, cap, occ, libres: cap - occ }
+              return { nom: d.domicile, cap, occ }
             })
           const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
-          const libresTotaux = lignesLog.reduce((n, l) => n + l.libres, 0)
           const habitantsLoges = habitantsLog.length - sansLogement
           return (
             <div className="ville-duo-cols">
@@ -369,12 +368,15 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               </div>
               {/* ── LOGEMENTS : 3e tableau de la ligne (retour Thibaut
                   2026-10-26 — cultures/garnison réduites d'autant).
-                  Colonnes : type · occupés/capacité · libres ; le
-                  total rend foyers logés / capacité totale. */}
+                  Colonnes : type · occupés/capacité (retour Thibaut
+                  2026-10-27 : la colonne « places libres » est
+                  retirée — redondante, cap − occupés se lit déjà
+                  dans occ/cap) ; le total rend habitants logés /
+                  capacité totale. */}
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Par type de domicile, meilleure qualité d'abord : habitants/capacité puis places libres. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
+                  title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
                 >
                   Logements : <strong>{fmt(capTotale)}</strong>
                 </div>
@@ -387,20 +389,17 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                         <tr key={l.nom}>
                           <td>{l.nom}</td>
                           <td className="num">{fmt(l.occ)}/{fmt(l.cap)}</td>
-                          <td className="num muted">{fmt(l.libres)}</td>
                         </tr>
                       ))}
                       {sansLogement > 0 && (
                         <tr>
                           <td className="neg">sans logement</td>
                           <td className="num neg">{fmt(sansLogement)}</td>
-                          <td />
                         </tr>
                       )}
                       <tr className="ligne-total">
                         <td><strong>Habitants logés</strong></td>
                         <td className="num"><strong>{fmt(habitantsLoges)}/{fmt(capTotale)}</strong></td>
-                        <td className="num muted"><strong>{fmt(libresTotaux)}</strong></td>
                       </tr>
                     </tbody>
                   </table>
