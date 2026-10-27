@@ -1200,11 +1200,15 @@ suivi de quatre arbitrages :
    wiki n'a plus de famille Merveille, et `SourceRegle` perd la
    valeur `'merveille'` (jamais réutilisable — stabilité des règles
    déjà saisies ; le registre passe de 90 à 86 règles).
-   **Compatibilité vieilles parties** : les entrées encore portées
-   par une config sauvegardée ne sont ni retirées ni purgées ; elles
-   sont invisibles du sélecteur et du wiki, et un bâtiment inconnu ne
-   produit rien — pas de crash, pas de migration nécessaire
-   (même logique que les bâtiments rang 2 retirés puis réactivés).
+   **Compatibilité vieilles parties** (MÀJ le jour même, retour
+   Thibaut « on peut supprimer les anciennes parties » puis « oui,
+   purge à l'ouverture » — voir la section suivante) : les 4
+   entrées encore portées par une config d'avant le retrait sont
+   PURGÉES à l'ouverture par la migration v5 ; seuls les bâtiments
+   merveilles DÉJÀ CONSTRUITS dans les villes restent dans l'état —
+   bâtiments inconnus du référentiel, ils ne produisent rien, pas de
+   crash (même logique que les bâtiments rang 2 retirés puis
+   réactivés).
 2. **Table REMPLACE purgée** : seuls restent les remplacements dont
    les DEUX extrémités existent au référentiel (Camp de
    travailleurs→Camps de bûcheron/mineur, Silo à grain→Grange, Moulin
@@ -1230,3 +1234,47 @@ suivi de quatre arbitrages :
 L'audit a par ailleurs confirmé SAIN la voie unique banque partout
 (flux, métiers, logements, garnisons), le passage de la config à tous
 les sites d'appel moteur et l'orchestration population.
+
+## Réalignement automatique des BÂTIMENTS au chargement (arbitrage Thibaut, 2026-10-27 — migration v5)
+
+Après le tour « audit », Thibaut constate sur sa partie (Ctrl+F5) :
+« tu as récupéré les anciennes règles des bâtiments, par exemple le
+bûcheron qui donne du bois plutôt que des emplacements de bûcheron ».
+
+**Diagnostic** : la config vit DANS la partie sauvegardée. Les parties
+d'avant le rework « production → emplacements » portent encore les
+vieux effets de flux (`effets: [{Bois, 1}]` pour le Camp de bûcheron),
+et `migrerConstructions` fusionne champ à champ `{...défaut, ...entrée}`
+— le champ SAUVEGARDÉ prime, donc le vieux flux survivait alors que
+les `emplacements` absents étaient complétés par le défaut : le
+bâtiment produisait le Bois de l'ancienne règle ET les emplacements de
+la nouvelle (double comptage). Les parties à tampon ≥ 4 ne repassaient
+plus par les migrations, figeant le problème.
+
+**Arbitrage** : « on peut supprimer les anciennes parties, et oui, le
+réalignement doit être automatique au chargement. »
+
+1. **SCHEMA_VERSION_CONFIG 4 → 5** : les configs tamponnées v4
+   repassent UNE fois par le bloc de migrations (patron règle (x)).
+   Les vieilles parties sont jetables — la résurrection éventuelle
+   d'entrées disparues est acceptable.
+2. **`realignerAmenagements` devient `realignerConstructions`** : le
+   réalignement v4 (aménagements, vague 3a) s'étend aux BÂTIMENTS.
+   Toute construction du référentiel est une donnée de RÉFÉRENCE,
+   pas de personnalisation : toute entrée de même (nom, groupe) est
+   REMPLACÉE par l'entrée courante du référentiel (effets,
+   emplacements, couts, textes). Les constructions PERSO (clé absente
+   du référentiel) sont conservées telles quelles, et une édition
+   saisie APRÈS la convergence survit aux re-lectures (le
+   réalignement ne joue qu'une fois, à la migration).
+3. **Purge des merveilles à l'ouverture** : les 4 merveilles encore
+   portées par les vieilles configs disparaissent à la migration v5
+   (filtre `famille !== 'Merveille'` avant le réalignement) — le
+   « (52) » constaté dans l'onglet Paramètres redevient 48. Les
+   bâtiments merveilles déjà construits restent dans l'état.
+
+Verrous : config.test.ts — réalignement du Camp de bûcheron
+pré-rework (effet de flux disparu, emplacements `2 Bûcheron`, couts
+du référentiel), purge des 4 merveilles, perso conservé, idempotence,
+édition post-convergence non écrasée ; les tests des migrations
+ciblées passent leurs configs à schemaVersion 5.
