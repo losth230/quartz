@@ -12,6 +12,8 @@
 //
 //  Contenu (inchangé en esprit, réaligné sur l'API réelle) :
 //    · partie saine : createGame + 4 tours + levée d'armées + tour ;
+//    · registre de règles PAR CANAL (type d'effet — retour Thibaut
+//      2026-10-27 : vue de débogage du registre ~90 règles) ;
 //    · scénarios de DÉGRADATION : un champ supprimé/vidé sur un état
 //      cloné, puis runTurn — chaque [ÉCHEC] est un état dégradé que
 //      le moteur n'a pas à gérer (informatif, jamais bloquant :
@@ -30,6 +32,8 @@ import { runTurn } from '../src/engine/tour'
 import { createGame, defaultSetups } from '../src/engine/setup'
 import { cfgOf } from '../src/engine/gameData'
 import { isNobleDyn } from '../src/engine/shared'
+import { registreComplet } from '../src/rules/registry'
+import type { Effet, RegleBanque } from '../src/rules/types'
 
 // ── Harnais de sortie ──────────────────────────────────────────────────
 const __out: string[] = []
@@ -83,6 +87,46 @@ try {
   }
   runTurn(st)
   dlog('tour suivant (armées en place) : OK — turn', st.turn)
+
+  // ── Registre de règles, FILTRÉ PAR CANAL (retour Thibaut 2026-10-27) ──
+  //  Le registre portait ~15 règles manuscrites avant la migration « tout
+  //  par la banque » ; il en porte ~90 depuis (une règle par construction
+  //  qui a un effet QUELCONQUE, générée par reglesConstructions) : pour
+  //  arbitrer un effet bizarre en partie, la vue PAR CANAL (type d'effet)
+  //  remplace la lecture séquentielle. Une règle multi-canaux apparaît
+  //  dans CHAQUE canal concerné (le canal est un filtre, pas un tri).
+  dlog('')
+  dlog('═══ REGISTRE DE RÈGLES PAR CANAL ═══')
+  const regles = registreComplet(C)
+  const parSource: Record<string, number> = {}
+  for (const r of regles) parSource[r.source] = (parSource[r.source] ?? 0) + 1
+  dlog(`total : ${regles.length} règles — sources : ${Object.entries(parSource).map(([s, n]) => `${s} ${n}`).join(', ')}`)
+  const signe = (v: number) => `${v > 0 ? '+' : ''}${v}`
+  const effetCourt = (e: Effet): string => {
+    switch (e.type) {
+      case 'fluxVille': return `${e.ressource} ${signe(e.valeur)}${e.ete ? ' (été)' : ''}`
+      case 'garnisonVille': return `Garnison ${signe(e.valeur)}`
+      case 'placesMetier': return `${e.metier} ${signe(e.valeur)}`
+      case 'logements': return `${e.logement} ${signe(e.valeur)}`
+      case 'fluxParAmenagement': return `${e.ressource} ${signe(e.valeur)} par ${e.noms.join(' / ')}`
+      case 'fluxParVilleCultureMonde': return `${e.ressource} ${signe(e.valeur)} par ville de la culture`
+      default: return JSON.stringify(e)
+    }
+  }
+  const decrireRegle = (r: RegleBanque): string =>
+    `${r.id} — ${r.nom}${r.groupe ? ` (${r.groupe})` : ''}` +
+    (r.conditions ? ` [si ${Object.entries(r.conditions).map(([k, v]) => `${k}=${v}`).join(', ')}]` : '') +
+    ` : ${r.effets.map(effetCourt).join(' · ')}`
+  const CANAUX_CONNUS = ['placesMetier', 'logements', 'fluxVille', 'garnisonVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde']
+  const canaux: string[] = []
+  for (const r of regles) for (const e of r.effets) if (!canaux.includes(e.type)) canaux.push(e.type)
+  const inconnus = canaux.filter((c) => !CANAUX_CONNUS.includes(c)).sort()
+  if (inconnus.length) dlog(`⚠ canaux inconnus : ${inconnus.join(', ')}`)
+  for (const canal of [...CANAUX_CONNUS.filter((c) => canaux.includes(c)), ...inconnus]) {
+    const rs = regles.filter((r) => r.effets.some((e) => e.type === canal))
+    dlog(`── canal ${canal} : ${rs.length} règle${rs.length > 1 ? 's' : ''} ──`)
+    for (const r of rs) dlog('  ' + decrireRegle(r))
+  }
 
   // ── Scénarios de dégradation (runTurn sur état cloné puis dégradé) ──
   dlog('')

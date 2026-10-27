@@ -4803,7 +4803,7 @@
     {
       "type": "Ville",
       "rang": "Hameau",
-      "cout": "20 Or + 10 Bois + 6 Bétail",
+      "cout": "",
       "habitantsRequis": 0,
       "domicilesDisponibles": "50 Taudis, 1 Maison de notable",
       "metiersBase": [
@@ -4833,12 +4833,26 @@
           "domicile": "Maison de notable",
           "nombre": 1
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 6
+        }
       ]
     },
     {
       "type": "Ville",
       "rang": "Cité",
-      "cout": "40 Or + 8 Bétail + 6 Pierres",
+      "cout": "",
       "habitantsRequis": 120,
       "domicilesDisponibles": "100 Taudis, 20 Maisons, 1 Maison de notable",
       "metiersBase": [
@@ -4872,12 +4886,26 @@
           "domicile": "Maison de notable",
           "nombre": 1
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 8
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        }
       ]
     },
     {
       "type": "Ville",
       "rang": "Grande Cité",
-      "cout": "40 Or + 12 Bétail + 12 Charbons",
+      "cout": "",
       "habitantsRequis": 200,
       "domicilesDisponibles": "150 Taudis, 100 Maisons, 1 Maison de notable",
       "metiersBase": [
@@ -4907,12 +4935,26 @@
           "domicile": "Maison de notable",
           "nombre": 1
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 12
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 12
+        }
       ]
     },
     {
       "type": "Château",
       "rang": "Motte",
-      "cout": "20 Or + 12 Bois + 2 Bétail",
+      "cout": "",
       "habitantsRequis": 0,
       "domicilesDisponibles": "50 Taudis, 5 Maisons de notable",
       "metiersBase": [
@@ -4938,12 +4980,26 @@
           "domicile": "Maison de notable",
           "nombre": 5
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 2
+        }
       ]
     },
     {
       "type": "Château",
       "rang": "Donjon",
-      "cout": "40 Or + 2 Bétail + 12 Pierres",
+      "cout": "",
       "habitantsRequis": 120,
       "domicilesDisponibles": "100 Taudis, 10 Maisons de notable",
       "metiersBase": [
@@ -4969,12 +5025,26 @@
           "domicile": "Maison de notable",
           "nombre": 10
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 2
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
+        }
       ]
     },
     {
       "type": "Château",
       "rang": "Forteresse",
-      "cout": "120 Or + 10 Pierres + 12 Fer",
+      "cout": "",
       "habitantsRequis": 200,
       "domicilesDisponibles": "150 Taudis, 20 Maisons de notable",
       "metiersBase": [
@@ -4995,6 +5065,20 @@
         {
           "domicile": "Maison de notable",
           "nombre": 20
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 120
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 12
         }
       ]
     }

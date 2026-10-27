@@ -15,7 +15,7 @@ import type { City, Player, Saison } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import {
   amenagementsRefs, constructionRef, coutConstructionRef, effetsConstructionRef,
-  effetsEteConstructionRef, eteSeulementRef, parseCoutTexte, reductionCampDeBatisseurs,
+  effetsEteConstructionRef, eteSeulementRef, reductionCampDeBatisseurs,
 } from './constructions'
 
 // ── Définitions exposées à l'interface ─────────────────────────────────
@@ -188,6 +188,7 @@ export function detailsAmenagementsJoueur(p: Player, saison: Saison, cfg?: GameC
   }
   return [...lignes.values()].sort((a, b) => a.nom.localeCompare(b.nom))
 }
-
-/** Analyse du texte de coût (ré-exporté pour l'interface). */
-export { parseCoutTexte }
+// (RETRAIT 2026-10-27 : le ré-export de parseCoutTexte disparaît avec
+//  l'analyseur — plus AUCUN coût textuel dans le jeu, les coûts
+//  d'habitation sont passés aux DONNÉES `couts` comme les
+//  constructions, retour Thibaut « idem bâtiments/aménagements ».)

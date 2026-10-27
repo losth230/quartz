@@ -40,7 +40,7 @@ import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } fr
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
 import { initStockVille, stockRang, vivantsVille, domicilesApportesVille } from '../../engine/domiciles'
-import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
+import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
 import { supprimerVille, transfererVille } from '../../engine/villes'
@@ -164,9 +164,15 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             options={rangsDisponibles(typeVille(ville), C).map((r) => {
               const def = (C.config.typesHabitation ?? []).find(
                 (d) => d.type === typeVille(ville) && d.rang === r)
+              // (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+              //  le coût du rang vient des DONNÉES `couts` (agrégées par
+              //  coutRang), plus du texte.
+              const parts = Object.entries(coutRang(def)).filter(([, v]) => v > 0)
               return {
                 value: r,
-                label: def?.cout ? `${r} (${def.cout})` : r,
+                label: parts.length
+                  ? `${r} (${parts.map(([res, v]) => `${fmt(v)} ${res}`).join(' + ')})`
+                  : r,
               }
             })}
             onChange={(v) => setPlayer((x, s) => {

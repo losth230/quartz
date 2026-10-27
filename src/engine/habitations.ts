@@ -27,7 +27,7 @@
 
 import type { City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
-import { parseCoutTexte } from './constructions'
+import { agregerCouts } from './constructions'
 import { nomRang, rangsDefsType } from './rangs'
 export { nomRang, rangsDefsType } from './rangs'
 
@@ -60,11 +60,20 @@ export function habitantsRequisVille(ville: City, C: Cfg): number {
   return habitationDef(ville, C)?.habitantsRequis ?? 0
 }
 
-/** Coût d'un rang d'habitation (colonne « Coût d'amélioration » du
- *  référentiel, ex. « 20 Or + 10 Bois + 6 Bétail »), en quantités
- *  positives. Vide / inconnu = gratuit. */
+/** Coût d'amélioration d'un rang d'habitation — DONNÉES STRUCTURÉES
+ *  (retour Thibaut 2026-10-27 « idem bâtiments/aménagements » : le
+ *  coût ne doit plus être textuel — paires {ressource, valeur} du
+ *  champ `couts`, agrégées par agregerCouts, même format que les
+ *  constructions). Vide / inconnu = gratuit. */
+export function coutRang(def: import('./types').HabitationDef | undefined): Record<string, number> {
+  return agregerCouts(def?.couts)
+}
+
+/** Coût du rang d'habitation d'une ville (construction /
+ *  amélioration — lecture du champ `couts`, plus de texte à
+ *  analyser). */
 export function coutHabitation(ville: City, C: Cfg): Record<string, number> {
-  return parseCoutTexte(habitationDef(ville, C)?.cout ?? '')
+  return coutRang(habitationDef(ville, C))
 }
 
 /** Débite automatiquement du stock le coût d'habitation du rang

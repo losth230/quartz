@@ -54,13 +54,9 @@ export function batimentsRefs(cfg?: GameConfig): ConstructionRef[] {
   return constructionsRefs(cfg).filter((c) => c.categorie === 'Bâtiment')
 }
 
-// ── Analyseurs de texte (coût uniquement) ───────────────────────────────
+// ── Coûts structurés ({ressource, valeur}) ─────────────────────────────
 
-const NOMBRE = String.raw`\d+(?:[.,]\d+)?`
-/** Ressources telles qu'elles apparaissent dans les textes de coût du classeur. */
-const RESSOURCES_COUT = 'Or|Bois|Pierres?|Fer|Charbon|Bétails?|Soie|Nourritures?|Science|Tourisme'
-
-/** Normalise un nom de ressource lu dans un texte (« Pierres » → « Pierre »). */
+/** Normalise un nom de ressource (« Pierres » → « Pierre »). */
 export function normaliserRessource(res: string): string {
   if (/^pierres?$/i.test(res)) return 'Pierre'
   if (/^bétails?$/i.test(res)) return 'Bétail'
@@ -68,17 +64,18 @@ export function normaliserRessource(res: string): string {
   return res
 }
 
-/** Analyse un texte de coût (« 25 Or + 4 Fer ») en quantités par ressource.
- *  (Depuis le retour Thibaut 2026-10-27, les COÛTS de constructions sont
- *  des DONNÉES (`couts`) — cet analyseur ne sert plus qu'aux textes de
- *  coût des TYPES D'HABITATION, cf. habitations.ts.) */
-export function parseCoutTexte(texte: string): Record<string, number> {
+/** Agrège des paires {ressource, valeur} (champ `couts` — retour
+ *  Thibaut 2026-10-27 « le coût ne doit plus être textuel ») en
+ *  quantités par ressource. Format UNIQUE des coûts de constructions
+ *  ET de types d'habitation : l'ancien analyseur de TEXTE
+ *  (parseCoutTexte) est RETIRÉ — plus aucun coût n'est analysé, tout
+ *  est lu des DONNÉES. */
+export function agregerCouts(couts: Array<{ ressource: string; valeur: number }> | undefined): Record<string, number> {
   const out: Record<string, number> = {}
-  if (!texte) return out
-  const re = new RegExp(String.raw`(${NOMBRE})\s*(?:de\s+)?(${RESSOURCES_COUT})\b`, 'gi')
-  for (const m of texte.matchAll(re)) {
-    const res = normaliserRessource(m[2])
-    out[res] = (out[res] ?? 0) + parseFloat(m[1].replace(',', '.'))
+  for (const c of couts ?? []) {
+    if (!c || !Number.isFinite(Number(c.valeur))) continue
+    const res = normaliserRessource(c.ressource)
+    out[res] = (out[res] ?? 0) + Number(c.valeur)
   }
   return out
 }
@@ -145,15 +142,11 @@ function contributionBanque(ref: ConstructionRef, cfg?: GameConfig): ReturnType<
 /** Coût de construction d'une entrée du référentiel — DONNÉES
  *  STRUCTURÉES (retour Thibaut 2026-10-27 : le coût n'est plus un
  *  texte à analyser, le champ `couts` porte des paires
- *  {ressource, valeur}, agrégées ici par ressource). */
+ *  {ressource, valeur}, agrégées par agregerCouts — partage avec le
+ *  coût des types d'habitation depuis le retour du 2026-10-27
+ *  « idem habitations »). */
 export function coutConstructionRef(ref: ConstructionRef): Record<string, number> {
-  const out: Record<string, number> = {}
-  for (const c of ref.couts ?? []) {
-    if (!c || !Number.isFinite(Number(c.valeur))) continue
-    const res = normaliserRessource(c.ressource)
-    out[res] = (out[res] ?? 0) + Number(c.valeur)
-  }
-  return out
+  return agregerCouts(ref.couts)
 }
 
 /** Coût de construction d'un bâtiment du référentiel (par nom, groupe optionnel). */

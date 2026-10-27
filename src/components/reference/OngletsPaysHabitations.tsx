@@ -5,6 +5,8 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
+import { coutRang } from '../../engine/habitations'
+import { fmtCout } from '../pays/pays-utils'
 import { Card } from '../ui'
 
 export function OngletPaysRangs({ C }: { C: Cfg }) {
@@ -48,7 +50,9 @@ export function OngletHabitations({ C }: { C: Cfg }) {
               <tr key={i}>
                 <td><strong>{h.type}</strong></td>
                 <td>{h.rang}</td>
-                <td>{h.cout || '—'}</td>
+                {/* (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+                    coût CALCULÉ des DONNÉES `couts` — le texte est vidé. */}
+                <td>{fmtCout(coutRang(h))}</td>
                 <td>{h.habitantsRequis}</td>
                 <td>{(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ') || '—'}</td>
                 <td>{h.domicilesDisponibles || '—'}</td>

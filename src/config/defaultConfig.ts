@@ -91,7 +91,16 @@ export interface HabitationDef {
   type: string
   /** nom du rang (Hameau, Cité, Grande Cité, Motte, Donjon, Forteresse) */
   rang: string
-  cout: string
+  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
+   *  textuel ») : TEXTE de coût VIDÉ dans le référentiel — le coût
+   *  vit dans `couts`. Champ OPTIONNEL : les configs sauvegardées
+   *  qui portent encore l'ancien texte restent valides. */
+  cout?: string
+  /** COÛT d'amélioration du rang en DONNÉES STRUCTURÉES (paires
+   *  {ressource, valeur}, même format que les `couts` des
+   *  constructions — retour Thibaut 2026-10-27). Optionnel :
+   *  absent = gratuit. */
+  couts?: CoutRef[]
   habitantsRequis: number
   /** métiers disponibles à la BASE du rang, format STRUCTURÉ (retour
    *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
@@ -943,6 +952,16 @@ export function migrerTypesHabitation(list: HabitationDef[] | undefined): Habita
     if (d.domicilesRang === undefined) {
       const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
       d.domicilesRang = ref?.domicilesRang ? [...ref.domicilesRang] : []
+    }
+    // (Retour Thibaut 2026-10-27 « le coût ne doit plus être textuel —
+    //  idem bâtiments/aménagements ») : le coût d'amélioration vit en
+    //  DONNÉES STRUCTURÉES `couts` — complété depuis la ligne du défaut
+    //  de même (type, rang) si absent (config sauvegardée avant la
+    //  migration) ; l'ancien TEXTE `cout` n'est plus lu nulle part.
+    //  Idempotent, même patron que domicilesRang.
+    if (d.couts === undefined) {
+      const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
+      d.couts = ref?.couts ? [...ref.couts] : []
     }
   }
   return list

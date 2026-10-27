@@ -181,7 +181,18 @@ export interface HabitationDef {
   type: string
   /** nom du rang (Hameau, Cité, Grande Cité, Motte, Donjon, Forteresse) */
   rang: string
-  cout: string
+  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
+   *  textuel » — appliqué aux types d'habitation comme aux
+   *  bâtiments/aménagements) : le TEXTE de coût est VIDÉ dans le
+   *  référentiel — le coût vit dans `couts`. Champ gardé OPTIONNEL :
+   *  les configs sauvegardées qui portent encore l'ancien texte
+   *  restent valides (plus aucun lecteur). */
+  cout?: string
+  /** COÛT d'amélioration du rang en DONNÉES STRUCTURÉES (retour
+   *  Thibaut 2026-10-27 : paires {ressource, valeur} agrégées par
+   *  coutRang — même format que les `couts` des constructions, plus
+   *  d'analyse de texte). Champ optionnel : absent = gratuit. */
+  couts?: Array<{ ressource: string; valeur: number }>
   habitantsRequis: number
   /** métiers disponibles à la base du rang, format STRUCTURÉ (retour
    *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU

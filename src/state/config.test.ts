@@ -329,6 +329,58 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
     're-lecture : la purge/réinjection est idempotente')
 })
 
+// ── (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») : le
+//    coût des TYPES D'HABITATION passe aux DONNÉES `couts` ──────────
+
+test('config : le coût des types d habitation vit en DONNÉES `couts` (paires ressource/valeur), le texte est vidé', () => {
+  // Verrou global sur le RÉFÉRENTIEL : chaque rang porte des paires
+  //  {ressource, valeur} et un TEXTE de coût vide — plus rien à
+  //  analyser (l analyseur de texte est retiré du moteur).
+  const defs = cfgOf(undefined).config.typesHabitation
+  assert.equal(defs.length, 6, '6 rangs d habitation attendus (Ville + Château)')
+  for (const d of defs) {
+    assert.ok(Array.isArray(d.couts) && d.couts.length > 0,
+      `${d.type}/${d.rang} : champ couts attendu (données structurées)`)
+    assert.ok(!d.cout, `${d.type}/${d.rang} : le texte de coût doit être vidé`)
+  }
+  // Fidélité : Hameau = 20 Or + 10 Bois + 6 Bétail (l ancienne
+  //  chaîne « 20 Or + 10 Bois + 6 Bétail »), Forteresse = 120 Or +
+  //  10 Pierre + 12 Fer (l ancien « 12 Fer » au singulier du stock).
+  const hameau = defs.find((d) => d.type === 'Ville' && d.rang === 'Hameau')
+  assert.deepEqual(hameau?.couts, [
+    { ressource: 'Or', valeur: 20 }, { ressource: 'Bois', valeur: 10 }, { ressource: 'Bétail', valeur: 6 },
+  ], 'coût du Hameau (paires ressource/valeur)')
+  const forteresse = defs.find((d) => d.type === 'Château' && d.rang === 'Forteresse')
+  assert.deepEqual(forteresse?.couts, [
+    { ressource: 'Or', valeur: 120 }, { ressource: 'Pierre', valeur: 10 }, { ressource: 'Fer', valeur: 12 },
+  ], 'coût de la Forteresse (paires ressource/valeur)')
+})
+
+test('config : une config sauvegardée AVANT la migration reçoit les `couts` du défaut de même (type, rang) — champ sauvegardé prioritaire', () => {
+  // Une config d avant le 2026-10-27 ne porte PAS `couts` (seul le
+  //  TEXTE existait) : migrerTypesHabitation complète les paires
+  //  depuis la ligne du défaut de même (type, rang), idempotent.
+  const c = cloneDefaultConfig()
+  for (const d of c.typesHabitation) delete d.couts
+  const C = cfgOf(c)
+  const hameau = C.config.typesHabitation.find((d) => d.type === 'Ville' && d.rang === 'Hameau')
+  assert.deepEqual(hameau?.couts, [
+    { ressource: 'Or', valeur: 20 }, { ressource: 'Bois', valeur: 10 }, { ressource: 'Bétail', valeur: 6 },
+  ], 'les paires sont complétées depuis le défaut')
+  // idempotence : la re-lecture d une config déjà complétée est stable
+  const C2 = cfgOf(C.config)
+  assert.deepEqual(C2.config.typesHabitation.find((d) => d.type === 'Ville' && d.rang === 'Hameau')?.couts,
+    hameau?.couts, 're-lecture : les paires survivent')
+  // un rang PERSONNALISÉ (absent du défaut) reçoit un coût vide
+  //  (gratuit), pas de crash.
+  const c3 = cloneDefaultConfig()
+  c3.typesHabitation[0] = { ...c3.typesHabitation[0], rang: 'Bourgade' }
+  delete (c3.typesHabitation[0] as { couts?: unknown }).couts
+  const C3 = cfgOf(c3)
+  const bourgade = C3.config.typesHabitation.find((d) => d.rang === 'Bourgade')
+  assert.deepEqual(bourgade?.couts, [], 'rang personnalisé : coût vide (gratuit)')
+})
+
 // ── Retrait intégral des règles de factions + textes « Ministre »
 //    vidés (retour arbitre Thibaut 2026-10-24) ─────────────────────
 

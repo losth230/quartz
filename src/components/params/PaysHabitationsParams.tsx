@@ -9,6 +9,7 @@
 import { useEffect } from 'react'
 import { DEFAULT_CONFIG, parseMetiersBaseTexte } from '../../config/defaultConfig'
 import { Card, TextInput, NumberInput, Button, Select } from '../ui'
+import { CoutEditor } from './ConstructionsParams'
 import type { TableProps } from './logiqueParams'
 
 export function PaysRangsParams({ config, setCfg }: TableProps) {
@@ -89,7 +90,22 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
                   />
                 </td>
                 <td><TextInput value={h.rang} onChange={(v) => setCfg((c) => { c.typesHabitation[i].rang = v })} /></td>
-                <td><TextInput value={h.cout} onChange={(v) => setCfg((c) => { c.typesHabitation[i].cout = v })} /></td>
+                {/* (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+                    le coût d'amélioration vit en DONNÉES STRUCTURÉES
+                    `couts` (paires ressource/valeur, même éditeur que les
+                    constructions) — plus de texte à analyser. */}
+                <td>
+                  <CoutEditor
+                    valeur={h.couts}
+                    ressources={config.ressources}
+                    set={(fn) => setCfg((c) => {
+                      const t = c.typesHabitation[i]
+                      if (!t) return
+                      if (!t.couts) t.couts = []
+                      fn(t.couts)
+                    })}
+                  />
+                </td>
                 <td><NumberInput value={h.habitantsRequis} step={10} min={0} onChange={(v) => setCfg((c) => { c.typesHabitation[i].habitantsRequis = v })} /></td>
                 <td><TextInput value={(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ')} onChange={(v) => setCfg((c) => { c.typesHabitation[i].metiersBase = parseMetiersBaseTexte(v, c.metiers.map((m) => m.metier)) })} /></td>
                 <td><TextInput value={h.domicilesDisponibles ?? ''} onChange={(v) => setCfg((c) => { c.typesHabitation[i].domicilesDisponibles = v })} /></td>
@@ -102,7 +118,7 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
         </table>
       </div>
       <Button onClick={() => setCfg((c) => {
-        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', cout: '', habitantsRequis: 0, metiersBase: [], domicilesDisponibles: '' })
+        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', couts: [], habitantsRequis: 0, metiersBase: [], domicilesDisponibles: '' })
       })}>+ Ajouter un rang d'habitation</Button>
     </Card>
   )
