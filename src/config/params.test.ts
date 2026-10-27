@@ -68,8 +68,8 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   asAny.progres = [{ nom: 'Arbre v2', age: 1, brancheA: [], brancheB: [], techC: { nom: '', cout: '', description: '' } }]
   asAny.schemaVersion = 2
   const C = cfgOf(cfg)
-  assert.equal(SCHEMA_VERSION_CONFIG, 4)
-  assert.equal(C.config.schemaVersion, 4, 'tampon posé à la version courante')
+  assert.equal(SCHEMA_VERSION_CONFIG, 5)
+  assert.equal(C.config.schemaVersion, 5, 'tampon posé à la version courante')
   // referentiel converti : table metiers, champ metier — la vague 3a
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
   //  du nouveau référentiel derrière la table convertie : 1 Testeur +

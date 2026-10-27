@@ -838,32 +838,38 @@ export function migrerConstructions(
   return out
 }
 
-/** (v4, retour Thibaut 2026-10-22) : RÉALIGNEMENT des aménagements
- *  d'une ancienne configuration sur le référentiel courant. Les configs
- *  sauvegardées AVANT le rework « production → emplacements » (vague
- *  3a, 2026-10-21) portent encore les ANCIENNES descriptions (« +2 Or
+/** (v4→v5, retours Thibaut 2026-10-22 puis 2026-10-27) : RÉALIGNEMENT
+ *  des constructions d'une ancienne configuration sur le référentiel
+ *  courant. Les configs sauvegardées AVANT le rework « production →
+ *  emplacements » portent encore les ANCIENNES descriptions (« +2 Or
  *  et +10 Nourriture par tour. ») ET les anciens effets structurés
- *  (encore lus par le moteur — l'aménagement continuait de produire !)
- *  sans champ `emplacements` : la partie en cours affichait donc des
- *  aménagements mensongers et hors rework, alors que les tiers 2/3
- *  (ajoutés neufs par migrerConstructions) étaient conformes — un
- *  mélange incohérent. migrerConstructions n'ajoutant que les
- *  entrées MANQUANTES par nom, les entrées existantes restaient figées.
- *  Arbitrage : un aménagement du référentiel est une donnée de
- *  RÉFÉRENCE, pas de personnalisation — toute entrée de même nom (et
- *  de catégorie Aménagement) est REMPLACÉE par l'entrée courante du
- *  référentiel (description, production, coût, terrain, emplacements,
- *  effets, rangMinHabitation, remplaceAmenagement). Les aménagements
- *  PERSO (noms hors référentiel) sont conservés tels quels. */
-export function realignerAmenagements(
+ *  (encore lus par le moteur — la construction continuait de
+ *  produire !) sans champ `emplacements` : la partie en cours
+ *  affichait donc des constructions mensongères et hors rework,
+ *  alors que les entrées ajoutées neuves par migrerConstructions
+ *  étaient conformes — un mélange incohérent. migrerConstructions
+ *  n'ajoutant que les entrées MANQUANTES par (nom, groupe), les
+ *  entrées existantes restaient figées.
+ *  v4 (vague 3a) : aménagements seuls.
+ *  v5 (2026-10-27, retour Thibaut « le bûcheron qui donne du bois
+ *  plutôt que des emplacements de bûcheron ») : les BÂTIMENTS sont
+ *  dans le même cas — les configs d'avant le rework portent les vieux
+ *  effets de flux (Camp de bûcheron +1 Bois) que la fusion champ à
+ *  champ de migrerConstructions conserve, en plus des emplacements
+ *  complétés par le défaut : DOUBLE COMPTAGE. Arbitrage : TOUTE
+ *  construction du référentiel (bâtiment OU aménagement) est une
+ *  donnée de RÉFÉRENCE, pas de personnalisation — toute entrée de
+ *  même (nom, groupe) est REMPLACÉE par l'entrée courante du
+ *  référentiel. Les constructions PERSO (clé absente du référentiel)
+ *  sont conservées telles quelles. */
+export function realignerConstructions(
   list: ConstructionRef[] | undefined, defauts: ConstructionRef[],
 ): ConstructionRef[] {
   if (!Array.isArray(list)) return defauts
-  const parNom = new Map(
-    defauts.filter((d) => d.categorie === 'Aménagement').map((d) => [d.nom, d]),
+  const parCle = new Map(
+    defauts.map((d) => [`${d.nom}|${d.groupe}`, d]),
   )
-  return list.map((c) =>
-    (c.categorie === 'Aménagement' ? parNom.get(c.nom) : undefined) ?? c)
+  return list.map((c) => parCle.get(`${c.nom}|${c.groupe}`) ?? c)
 }
 
 /** Table des types d'habitation (Ville / Château) d'une configuration
@@ -1002,7 +1008,20 @@ function migrerVictoires(list: GameConfig['victoires']): GameConfig['victoires']
 //  de même nom remplacées ; aménagements perso conservés ; bâtiments
 //  et autres tables intouchés). Les tiers 2/3 de la vague 3c sont
 //  ajoutés par migrerConstructions.
-export const SCHEMA_VERSION_CONFIG = 4
+// Version 5 (2026-10-27, retour Thibaut « tu as récupéré les
+//  anciennes règles des bâtiments, par exemple le bûcheron qui donne
+//  du bois plutôt que des emplacements de bûcheron ») : les configs v4
+//  sauvegardées AVANT le rework « production → emplacements » des
+//  BÂTIMENTS portent encore les anciens effets de flux (Camp de
+//  bûcheron +1 Bois) que migrerConstructions conserve (champ
+//  sauvegardé prioritaire) en plus des emplacements complétés par le
+//  défaut — DOUBLE COMPTAGE. Arbitrage : le réalignement s'étend aux
+//  BÂTIMENTS (toute construction du référentiel = donnée de
+//  référence), et les 4 MERVEILLES encore portées par les vieilles
+//  configs sont purgées à l'ouverture (« on peut supprimer les
+//  anciennes parties, et oui, le réalignement doit être automatique
+//  au chargement »).
+export const SCHEMA_VERSION_CONFIG = 5
 
 /** Garde-fous appliqués à TOUTES les configurations, même convergées :
  *  chaque table du référentiel migrée doit contenir au moins une entrée
@@ -1251,10 +1270,21 @@ export function cfgOf(config?: GameConfig): Cfg {
     merged.constructions = (merged.constructions ?? []).filter((c) => !(c as { faction?: string }).faction)
     // constructions : ajout des entrées du référentiel apparues depuis
     //  la sauvegarde
-    // (v4) : réalignement des AMÉNAGEMENTS existants sur le
-    //  référentiel AVANT la complétion (retour Thibaut 2026-10-22 —
-    //  voir realignerAmenagements : descriptions/effets de la vague 3a)
-    merged.constructions = realignerAmenagements(merged.constructions, DEFAULT_CONFIG.constructions)
+    // (v5, retour Thibaut 2026-10-27 « purge à l'ouverture ») : les 4
+    //  MERVEILLES (Sanctuaire de Salmodiva, Jardins d'Alexandrie, Mont
+    //  Caracole, Grands bains) retirées du référentiel le 2026-10-27
+    //  sont POURGÉES des configs d'avant le retrait — sans ça, elles
+    //  restaient visibles dans l'onglet Paramètres des vieilles
+    //  parties (le « (52) » constaté). Les éventuels bâtiments
+    //  merveilles DÉJÀ CONSTRUITS dans les villes restent dans l'état :
+    //  bâtiments inconnus du référentiel, aucun effet, pas de crash.
+    merged.constructions = (merged.constructions ?? []).filter(
+      (c) => (c.famille ?? '') !== 'Merveille',
+    )
+    // (v4→v5) : réalignement des constructions existantes (BÂTIMENTS
+    //  depuis v5, aménagements depuis v4) sur le référentiel AVANT la
+    //  complétion — voir realignerConstructions.
+    merged.constructions = realignerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.constructions = migrerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.schemaVersion = SCHEMA_VERSION_CONFIG
   }
@@ -1652,10 +1682,12 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  et aménagements de rang 2+ passent à nouveau.)
   //  (RETRAIT 2026-10-27, audit + retour Thibaut « supprimer toutes
   //  les merveilles pour l'instant » : les 4 merveilles du référentiel
-  //  disparaissent. Les entrées portées par les vieilles configs ne
-  //  sont NI retirées NI purgées : invisibles du sélecteur/wiki, sans
-  //  règle de banque dans le référentiel courant, elles ne produisent
-  //  rien — pas de crash, pas de migration nécessaire.)
+  //  disparaissent. (MÀJ même jour, retour Thibaut « purge à
+  //  l'ouverture » : les entrées encore portées par les vieilles
+  //  configs SONT purgées à la migration v5 — voir le bloc
+  //  constructions de cfgOf. Seuls les éventuels bâtiments merveilles
+  //  DÉJÀ CONSTRUITS dans les villes restent dans l'état : bâtiments
+  //  inconnus, aucun effet, pas de crash.)
   //  (RÉACTIVATION TOTALE, fiche bâtiments rang 2, 2026-10-26 : les
   //  BÂTIMENTS de rang 2 reviennent au référentiel (Caserne, Réseau
   //  de routes, Tour de sorcier, Ecole militaire, quartiers, Silo à
