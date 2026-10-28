@@ -1548,3 +1548,29 @@ Décisions :
    de postes ; la carte de ville, elle, reflète ce qui y vit.
 4. **Verrou de régression** : le test de rendu vérifie que chaque métier inoccupé
    de la fixture est absent du tableau, en plus des N/M des lignes affichées.
+
+## Les enfants ne sont pas des sans-emplois (arbitrage Thibaut, 2026-10-28)
+
+« Les enfants ne devraient pas apparaitre comme des sans-emplois, que ce soit dans les
+tableaux ou le comptage du bonheur, mais comme des enfants, un métier à part qui devient
+sans-emploi par défaut à l'âge adulte. » Décisions :
+
+1. **Ligne « Enfant » à part** : dans le tableau Métiers de la carte de ville ET dans la
+   carte « Métiers et places par ville » du panneau Population, les vivants d'âge inférieur
+   à l'âge adulte (16 ans par défaut) sans métier forment une ligne « Enfant » distincte,
+   juste avant le Sans-emploi — pas un statut de chômage. La ligne n'apparaît que s'il y a
+   des enfants (pas de bruit « Enfant 0 »).
+2. **Sans-emploi = adultes uniquement** : la ligne Sans-emploi (rôle neutre : impôt nul,
+   aucun effet) ne recense plus que les habitants ADULTES sans métier. Un enfant porteur
+   d'un métier affecté manuellement reste compté dans sa ligne de métier.
+3. **Devenir adulte** : à l'anniversaire des 16 ans, l'enfant passe Sans-emploi puis
+   reçoit un poste si un emplacement est libre (flux inchangé — `assignAdultMetier` au
+   passage d'âge, réaffectation de fin de tour).
+4. **Facteur Emploi du bonheur** : les enfants sont hors marché du travail — ils ne
+   comptent ni comme demande (travailleurs) ni comme postes pourvus, même porteurs d'un
+   métier affecté manuellement (l'ancien comptage gonflait les postes pourvus). En
+   revanche ils comptent toujours pour le Logement et la Santé : ils logent et tombent
+   malades comme les autres habitants.
+5. **Verrous de régression** : test moteur (ligne Enfant, Sans-emploi adulte, ordre,
+   edge cases), test bonheur (des enfants porteurs d'un métier ne changent pas l'Emploi)
+   et test de rendu (labels et tooltip de la ligne Enfant dans la carte de ville).
