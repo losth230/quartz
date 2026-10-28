@@ -4061,3 +4061,11 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **UI** (`ArmiesPanel.tsx`) : les 3 `NumberInput` (pertes, renfort, puissance de levée) deviennent des `Select` — pertes 1-20 (« N pertes (−N × pts) »), renfort +15 à +300 (« +N pts (P Or) », prix de levée avec réductions de la ville de renfort), levée 45-300 (« N pts (P Or) »). Import `NumberInput` retiré du panneau.
 - **Tests** (`engine/armees.test.ts`) : test « non suivie pure » RÉÉCRIT en « liée à la population » (j1/j2 tuées par ordre du recensement, Dirigeant et 35 ans épargnés, pool épuisé → points seuls, commandant en plus) ; NOUVEAU test « suivie au-delà des soldats suivis » (s1 + j1 + j2 tués, 90 → 45) ; « fin de service » amendée (le complément libère s1, `liberes2` = commandant + s1) — 219 tests.
 - Validation : **219/219 tests natifs**, diag IDENTIQUE, diff vs base limité aux 3 fichiers src voulus, JSX BALANCED, `--check` OK.
+
+## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
+
+- **Arbitrage Thibaut (acté)** : « commence par retirer la migration par scolarité » — seul système de migration automatique restant (l'attrait touristique était déjà retiré le 2026-10-19).
+- **Moteur** (`engine/population.ts`) : `migrerPopulation`, le cache `villesAvecProfesseur` (et son invalidation par état), l'interface `CibleVille` et l'appel étape 3.6bis du tour SUPPRIMÉS ; banner de section réécrit en mémoire RETRAIT (historique VBA conservé : 10 %/2 %/1 %, Obstinés exclus) ; imports morts retirés (`City`, `fullName`, `perteDemenagement` — ne servaient qu'à la migration).
+- **Paramètres** (`config/params.ts`) : `migrationEcole/Suzerain/Monde` quittent PARAM_META (plus éditables) et restent en REFLIS de compatibilité dans l'interface et DEFAULT_PARAMS — patron du retrait armées (puissanceGeneral & co).
+- **Tests** (`engine/population.test.ts` NOUVEAU, ×2) : 20 tours avec Professeur chez un autre joueur → aucun enfant ne bouge, aucune entrée « scolarité » au journal ; REFLIS aux valeurs historiques.
+- Validation : **221/221 tests natifs** (219 + 2), diag IDENTIQUE, diff vs base limité aux 3 fichiers voulus (population.ts, params.ts, population.test.ts NOUVEAU), `--check` OK. Aucun .tsx touché.

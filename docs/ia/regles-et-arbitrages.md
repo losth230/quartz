@@ -1485,3 +1485,26 @@ habitants ». Décisions :
    panneau Armées.
 4. **Journal des armées enrichi** : pertes et fin de service listent les noms des
    tombés / libérés, pour lecture immédiate au fil du recensement.
+
+## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
+
+« Commence par retirer la migration par scolarité. » Le seul système de migration
+automatique restant (la migration spontanée par attrait touristique avait déjà été
+retirée le 2026-10-19) disparaît à son tour. Décisions :
+
+1. **Plus AUCUNE migration automatique de population** : `migrerPopulation`, le cache
+   `villesAvecProfesseur`, l'interface `CibleVille` et l'étape 3.6bis du tour sont
+   supprimés (note RETRAIT in situ avec l'historique VBA : 10 % même joueur, 2 %
+   suzerain, 1 % monde, Obstinés exclus). Un enfant sans Professeur dans sa ville y
+   reste, point final.
+2. **Les seuls déplacements restants sont VOLONTAIRES** : mariages et cour (un époux
+   non ancré déménage chez l'autre), transferts de cour, acquisition d'une cité libre.
+   Le principe survit dans `cour.ts` : un personnage qui change de joueur est
+   physiquement déplacé dans le tableau de population de son nouveau joueur.
+3. **Paramètres en REFLIS** : `migrationEcole` (0,10), `migrationSuzerain` (0,02) et
+   `migrationMonde` (0,01) ne sont plus éditables dans l'onglet Paramètres (retrait de
+   PARAM_META, patron du retrait armées) mais restent dans l'interface et les défauts
+   pour les configs sauvegardées — plus aucun lecteur au moteur.
+4. **Tests de régression** : sur 20 tours avec un Professeur disponible chez un autre
+   joueur, aucun enfant ne quitte sa ville et aucune entrée « scolarité » n'apparaît
+   au journal.
