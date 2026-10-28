@@ -1406,6 +1406,10 @@ et les réductions de levée deviennent un CANAL de la banque comme les flux :
 
 ## Pertes, renfort et retrait de la cible (arbitrage Thibaut, 2026-10-28)
 
+> ⚠ AMENDÉ LE MÊME JOUR (2e retour) — voir la section suivante : le point 1 ci-dessous
+> (dérivation pour les armées suivies) est ABANDONNÉ. La puissance stockée fait foi
+> pour TOUTE armée, et les pertes abaissent AUSSI la puissance cible.
+
 Trois retours arbitre après la session « les armées rejoignent la banque » :
 
 1. **Pertes d'une armée non suivie** (bug « infliger des pertes réduit l'armée à 45 à
@@ -1433,3 +1437,25 @@ Trois retours arbitre après la session « les armées rejoignent la banque » :
 3. **Retrait de la case « cible »** : la sélection d'un joueur visé ne servait à rien
    — champ `cible` retiré du type `Army` et de l'UI (note RETRAIT in situ) ; une
    vieille sauvegarde peut encore porter la clé, elle est ignorée.
+
+## La puissance stockée fait foi ; les pertes abaissent la cible (arbitrage Thibaut, 2026-10-28, 2e retour)
+
+Suite du renfort déployé ce matin : le renfort fonctionne, mais les pertes et la fin de
+service font encore retomber une armée à 45. Cause : les recrues du renfort faisaient
+passer l'armée au modèle « suivie », et toute perte RE-DÉRIVAIT la puissance depuis les
+soldats survivants — 2 recrues tuées dans une armée de plateau de 200 pts → 0 soldat +
+commandant = 45. Décisions :
+
+1. **Plus aucune dérivation** : la puissance STOCKÉE d'une armée — sa valeur de plateau,
+   levée, renfort ou pertes décomptées — n'est JAMAIS recalculée depuis ses soldats,
+   qu'elle les suive ou non. `recomputeArmy` (dérivation soldats × pts + commandant)
+   est RETIRÉ du moteur.
+2. **Pertes et fin de service soustractives sur la puissance ET la puissance cible** :
+   N pertes = −N × points du Soldat, + points du Commandant s'il tombe (plancher 0 sur
+   les deux) ; les soldats réellement suivis meurent (ou redeviennent Chasseurs),
+   jusqu'à N ; une armée non suivie ne perd que des points.
+3. **Pas de remplissage automatique** : la cible suivant les pertes, l'armée ne se
+   re-remplit pas au tour suivant. Le renfort (ou une levée) relève la cible ; le
+   recrutement de chaque tour comble l'écart en AUGMENTANT la stockée de la valeur des
+   recrues — sans jamais la re-dériver. Un commandant mort entre deux tours est détaché
+   et coûte ses points, la vacance se comble par recrutement (la cible est intacte).
