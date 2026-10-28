@@ -1529,3 +1529,22 @@ Les métiers, affiche-les comme les logements avec N/M. » Décisions :
 4. **Verrou de régression** : le test de rendu vérifie désormais le format N/M de
    chaque ligne métier (cap finie et infinie, surnombre en rouge), dérivé de l'état
    par le même helper moteur que le panneau Population (`occupationsMetierVille`).
+
+## Le tableau Métiers de la carte de ville n'affiche que les métiers présents (arbitrage Thibaut, 2026-10-28)
+
+« Dans le tableau des métiers, n'affiche que les métiers présents dans la ville. »
+Décisions :
+
+1. **Métiers occupés seulement** : le tableau « Métiers » de la carte de ville liste
+   uniquement les métiers ayant au moins un habitant en poste (format N/M « en
+   poste / capacité » inchangé). Les métiers disponibles mais inoccupés — y compris
+   les lignes « 0/0 » des métiers sans emplacement — ne s'y affichent plus.
+2. **Sans-emploi reste** : la ligne « Sans-emploi » (rôle neutre : impôt nul, aucun
+   effet) est toujours visible — elle recense des habitants présents dans la ville,
+   pas un métier offert.
+3. **Le panneau Population garde l'inventaire complet** : la carte « Métiers et
+   places par ville » (panneau Population) continue de lister tous les métiers
+   plafonnés avec leurs places max et places libres — c'est là que se lit l'offre
+   de postes ; la carte de ville, elle, reflète ce qui y vit.
+4. **Verrou de régression** : le test de rendu vérifie que chaque métier inoccupé
+   de la fixture est absent du tableau, en plus des N/M des lignes affichées.
