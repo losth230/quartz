@@ -59,12 +59,15 @@ export function garnisonCiteLibre(state: GameState, C: Cfg): number {
   return 100 + 40 * maxRang
 }
 
-/** Multiplicateur de taxes d'une cité libre (comme une ville de joueur :
- *  module TOUTES les ressources produites par ses habitants). */
-export function facteurTaxesCite(cite: CiteLibre, C: Cfg): number {
+/** Multiplicateur de taxes d'une cité libre, PAR RESSOURCE (comme une
+ *  ville de joueur — arbitrage Thibaut 2026-10-28 « changement des
+ *  taxes ») : la Nourriture part du côté des naissances — Faible :
+ *  Nourriture ×taxNourrFaibles, toutes les AUTRES ressources
+ *  ×taxOrFaibles ; Forte : l'inverse ; Moyenne : ×1. */
+export function facteurTaxesCite(cite: CiteLibre, C: Cfg, ressource: string): number {
   const t = cite.taxes ?? 'Moyenne'
-  if (t === 'Faible') return C.p.taxOrFaibles
-  if (t === 'Forte') return C.p.taxOrHautes
+  if (t === 'Faible') return ressource === 'Nourriture' ? C.p.taxNourrFaibles : C.p.taxOrFaibles
+  if (t === 'Forte') return ressource === 'Nourriture' ? C.p.taxNourrHautes : C.p.taxOrHautes
   return 1
 }
 
@@ -98,7 +101,9 @@ export function citesSuzerainesDe(state: GameState, p: Player): CiteLibre[] {
 /** Détail des gains d'une cité libre, canal par canal :
  *    metiers     : production brute des metiers des habitants vivants —
  *                 les Chasseurs produisent 1,1 × la Nourriture,
- *    taxeMult   : multiplicateur de taxes de la cité,
+ *    taxeMult   : multiplicateur de taxes de la cité PAR RESSOURCE
+ *                (arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr*,
+ *                toutes les autres ressources ×taxOr*),
  *    taxes      : production taxée (= metiers × taxeMult),
  *    conso      : consommation de la cité (négative — Nourriture par
  *                habitant vivant, comme une ville de joueur),
@@ -113,7 +118,7 @@ export interface DetailCiteLibre {
   enfants: number
   chasseurs: number
   metiers: Record<string, number>
-  taxeMult: number
+  taxeMult: Record<string, number>
   taxes: Record<string, number>
   conso: Record<string, number>
   net: Record<string, number>
@@ -144,11 +149,14 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
       metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + v
     }
   }
-  // Taxes de la cité : le niveau module TOUTES les ressources
-  const taxeMult = facteurTaxesCite(cite, C)
+  // Taxes de la cité : le niveau module la production PAR RESSOURCE
+  //  (arbitrage Thibaut 2026-10-28 : la Nourriture part du côté des
+  //  naissances, toutes les autres ressources à l'envers).
+  const taxeMult: Record<string, number> = {}
+  for (const res of Object.keys(metiers)) taxeMult[res] = facteurTaxesCite(cite, C, res)
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
-    const tv = v * taxeMult
+    const tv = v * taxeMult[res]
     if (tv !== 0) taxes[res] = tv
   }
   // Consommation de la cité : comme une ville de joueur — la population

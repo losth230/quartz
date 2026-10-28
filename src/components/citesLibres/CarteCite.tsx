@@ -16,6 +16,17 @@ import { routesCommerceVersCite } from '../../engine/commerce'
 import { Card, Select, TextInput, Button, Badge, TAX_OPTIONS } from '../ui'
 import { fmtNum } from './logiqueCitesLibres'
 
+/** Résumé des multiplicateurs de taxes PAR RESSOURCE (arbitrage
+ *  Thibaut 2026-10-28) : « ×1 » si aucun facteur ou tous uniformes,
+ *  sinon la liste par ressource (« Nourriture ×1.25 · Or ×0.75 »). */
+function fmtTaxesCite(taxeMult: Record<string, number>): string {
+  const facteurs = Object.entries(taxeMult)
+  if (facteurs.length === 0 || facteurs.every(([, f]) => f === 1)) return '×1'
+  const uniques = new Set(facteurs.map(([, f]) => f))
+  if (uniques.size === 1) return `×${facteurs[0][1]}`
+  return facteurs.map(([res, f]) => `${res} ×${f}`).join(' · ')
+}
+
 export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, cultures, annexions, setAnnexions, mutCite, supprimerCite, changerEmissaires, changerSuzerain, update }: {
   cite: CiteLibre
   state: GameState
@@ -221,7 +232,7 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
         <span className="muted">
           {d.habitants} vivant(s) — {d.adultes} adulte(s), {d.enfants} enfant(s){d.enfants > 0 ? ' (ne produisent pas, consomment)' : ''}, dont {d.chasseurs} chasseur(s)
           {d.chasseurs > 0 && <> — <strong>Nourriture ×1,1</strong> (règle des cités libres)</>}
-          {' '}· taxes ×{d.taxeMult}
+          {' '}· taxes {fmtTaxesCite(d.taxeMult)}
         </span>
         <div className="badges-wrap">
           {Object.entries(d.metiers).map(([res, v]) => (

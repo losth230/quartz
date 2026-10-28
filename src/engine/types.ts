@@ -289,8 +289,10 @@ export interface CiteLibre {
   type: string
   /** Culture des habitants de la cité. */
   culture?: string
-  /** Niveau de taxes de la cité (module TOUTES les ressources produites
-   *  par ses habitants, comme pour une ville de joueur). */
+  /** Niveau de taxes de la cité (module la production PAR RESSOURCE,
+   *  arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr* du côté des
+   *  naissances, toutes les autres ressources ×taxOr* à l'envers —
+   *  comme pour une ville de joueur). */
   taxes?: TaxeNiveau
   /** Type d'habitation de la cité (retour Thibaut 2026-10-14) : Hameau
    *  (rural) ou Château (fortifié), tiré AU HASARD à la création de la

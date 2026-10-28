@@ -62,11 +62,17 @@ export function consoNourrHabitant(c: Character, C: Cfg): number {
     : C.p.consoNourrParHab
 }
 
-/** Multiplicateur de taxes d'une ville pour la production des habitants
- *  (toutes ressources) : Faible ×taxOrFaibles / Forte ×taxOrHautes. */
-export function facteurTaxes(ville: City, C: Cfg): number {
-  if (ville.taxes === 'Faible') return C.p.taxOrFaibles
-  if (ville.taxes === 'Forte') return C.p.taxOrHautes
+/** Multiplicateur de taxes d'une ville pour la production des
+ *  habitants, PAR RESSOURCE (arbitrage Thibaut 2026-10-28 « changement
+ *  des taxes ») : la Nourriture part du côté des naissances — Faible :
+ *  Nourriture ×taxNourrFaibles, toutes les AUTRES ressources
+ *  ×taxOrFaibles ; Forte : l'inverse ; Moyenne : ×1. Le nom « taxOr* »
+ *  est historique (avant l'arbitrage 2026-10-28 ces clés couvraient
+ *  toutes les ressources) : elles ne portent plus que les ressources
+ *  hors Nourriture. */
+export function facteurTaxes(ville: City, C: Cfg, ressource: string): number {
+  if (ville.taxes === 'Faible') return ressource === 'Nourriture' ? C.p.taxNourrFaibles : C.p.taxOrFaibles
+  if (ville.taxes === 'Forte') return ressource === 'Nourriture' ? C.p.taxNourrHautes : C.p.taxOrHautes
   return 1
 }
 
@@ -101,14 +107,16 @@ function gainsVilleBruts(state: GameState, p: Player, ville: City, C: Cfg): Reco
 /** Détail des gains d'une ville, canal par canal (affiché en bas de la
  *  carte de la ville : « ce que les taxes rapportent »).
  *    metiers  : production brute des metiers des habitants vivants,
- *    taxeMult: multiplicateur de taxes de la ville (toutes ressources),
+ *    taxeMult: multiplicateur de taxes de la ville PAR RESSOURCE
+ *              (arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr*,
+ *              toutes les autres ressources ×taxOr*),
  *    taxes   : production taxée (= metiers × taxeMult),
  *    conso   : consommation de Nourriture (non taxée, par rang),
  *    net     : taxes − conso (ce qui est crédité au stock). */
 export interface GainsVilleDetail {
   habitants: number
   metiers: Record<string, number>
-  taxeMult: number
+  taxeMult: Record<string, number>
   /** Bonus de taxe ADDITIF par ressource (vague 3a, rework métiers
    *  & emplacements 2026-10-21) : Gouverneur +10 % sur toutes les
    *  ressources, Professeur +10 % Science, Banquier +10 % Or,
@@ -153,7 +161,9 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
       metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2 * mult
     }
   }
-  // Taxes : le niveau module TOUTES les ressources produites par les habitants.
+  // Taxes : le niveau module la production PAR RESSOURCE (arbitrage
+  //  Thibaut 2026-10-28 : la Nourriture part du côté des naissances,
+  //  toutes les autres ressources à l'envers).
   // Grand Chambellan (ministère, refonte 2026-10-14) : +10 % sur toutes
   // les taxes reçues — multiplicateur appliqué ici (cumulables).
   // Vague 3a (rework métiers, arbitrage 2026-10-21) : les bonus de taxe
@@ -161,7 +171,8 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  Professeur +10 % Science, Banquier +10 % Or, Troubadour +10 %
   //  Tourisme (présence d'au moins un titulaire vivant dans la ville ;
   //  ex. Gouverneur + Professeur = +20 % sur la Science).
-  const taxeMult = facteurTaxes(ville, C)
+  const taxeMult: Record<string, number> = {}
+  for (const res of Object.keys(metiers)) taxeMult[res] = facteurTaxes(ville, C, res)
   const bonusTaxes: Record<string, number> = {}
   const ajouteBonus = (res: string, part: number) => {
     bonusTaxes[res] = (bonusTaxes[res] ?? 0) + part
@@ -177,7 +188,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers['Tourisme'] !== undefined) ajouteBonus('Tourisme', 0.1)
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
-    const tv = v * taxeMult * (1 + (bonusTaxes[res] ?? 0))
+    const tv = v * taxeMult[res] * (1 + (bonusTaxes[res] ?? 0))
     if (tv !== 0) taxes[res] = tv
   }
   // Consommation (non taxée, appliquée après) — PAR RANG SOCIAL
@@ -194,7 +205,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   return { habitants: vivants.length, metiers, taxeMult, bonusTaxes, taxes, conso, net }
 }
 
-/** Facteur de taxes sur la conception (Faible ×taxNaissFaibles / Moyenne ×1 / Forte ×taxNaissHautes — ±25 %, marqueur (z)). */
+/** Facteur de taxes sur la conception (Faible ×taxNaissFaibles / Moyenne ×1 / Forte ×taxNaissHautes — ±25 %, marqueur (z) ; valeurs reconfirmées par l'arbitrage taxes 2026-10-28 : les naissances partent du côté de la Nourriture). */
 export function taxBirthFactor(ville: City | undefined, C: Cfg = cfgOf()): number {
   if (!ville) return 1
   return ville.taxes === 'Faible' ? C.p.taxNaissFaibles : ville.taxes === 'Forte' ? C.p.taxNaissHautes : 1

@@ -174,7 +174,11 @@ export function Button({ children, onClick, tone = 'normal', disabled, title }: 
 }
 
 export const TAX_OPTIONS = [
-  { value: 'Faible' as const, label: 'Faible (×0,5 sur toutes les ressources / ×1,5 naissances)' },
-  { value: 'Moyenne' as const, label: 'Moyenne (×1 / ×1)' },
-  { value: 'Forte' as const, label: 'Forte (×1,5 sur toutes les ressources / ×0,5 naissances)' },
+  // Libellés = DÉFAUTS des paramètres taxNourr*/taxOr*/taxNaiss*
+  //  (arbitrage Thibaut 2026-10-28 — les anciens libellés ×0,5/×1,5
+  //  dataient du régime ±50 % d'avant le marqueur (z), jamais mis à
+  //  jour). Personnalisables dans Paramètres → Taxes.
+  { value: 'Faible' as const, label: 'Faible (naissances & Nourriture ×1,25 · autres productions ×0,75)' },
+  { value: 'Moyenne' as const, label: 'Moyenne (×1 partout)' },
+  { value: 'Forte' as const, label: 'Forte (naissances & Nourriture ×0,75 · autres productions ×1,25)' },
 ]

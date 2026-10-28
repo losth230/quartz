@@ -130,3 +130,22 @@ test('params : les paramètres d éducation (chanceEduc*, profBonusEduc) sont su
   assert.ok(!('profBonusEduc' in DEFAULT_PARAMS), 'profBonusEduc supprimé')
   assert.ok('professeurBaseChance' in DEFAULT_PARAMS, 'professeurBaseChance reste (les Professeurs restent)')
 })
+
+test('défauts taxes 2026-10-28 : Nourriture ×1,25/×0,75 du côté des naissances, autres ressources ×0,75/×1,25 à l\'envers', () => {
+  // Arbitrage Thibaut 2026-10-28 « changement des taxes » : les clés
+  //  taxNourr* sont NOUVELLES ; les clés taxOr* changent de SENS (elles
+  //  ne portent plus que les ressources hors Nourriture — valeurs
+  //  inchangées) ; les naissances (taxNaiss*) ne bougent pas.
+  assert.equal(DEFAULT_PARAMS.taxNourrFaibles, 1.25, 'Faible : Nourriture ×1,25')
+  assert.equal(DEFAULT_PARAMS.taxNourrHautes, 0.75, 'Forte : Nourriture ×0,75')
+  assert.equal(DEFAULT_PARAMS.taxOrFaibles, 0.75, 'Faible : autres ressources ×0,75')
+  assert.equal(DEFAULT_PARAMS.taxOrHautes, 1.25, 'Forte : autres ressources ×1,25')
+  assert.equal(DEFAULT_PARAMS.taxNaissFaibles, 1.25, 'naissances ×1,25 en Faible (inchangé)')
+  assert.equal(DEFAULT_PARAMS.taxNaissHautes, 0.75, 'naissances ×0,75 en Forte (inchangé)')
+  // Une config SAUVEGARDÉE (avant l'arbitrage) reçoit les défauts des
+  //  clés nouvelles sans perdre ses personnalisations.
+  const p = mergeParams({ taxOrFaibles: 0.8 })
+  assert.equal(p.taxNourrFaibles, 1.25, 'clé nouvelle absente de la config → défaut posé par le merge')
+  assert.equal(p.taxNourrHautes, 0.75)
+  assert.equal(p.taxOrFaibles, 0.8, 'personnalisation existante conservée')
+})

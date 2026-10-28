@@ -108,6 +108,8 @@ export interface GameParams {
   // ── Taxes ──
   taxOrFaibles: number
   taxOrHautes: number
+  taxNourrFaibles: number
+  taxNourrHautes: number
   taxNaissFaibles: number
   taxNaissHautes: number
   // ── Armées ──
@@ -210,11 +212,22 @@ export const DEFAULT_PARAMS: GameParams = {
   conversionProba: 0.1,
   conversionPoidsLocal: 5,
   conversionMemeCulture: 5,
-  // Effet des taxes Faibles/Fortes : ±25 % (retour Thibaut, marqueur
+  // Effet des taxes Faibles/Fortes — ±25 % (retour Thibaut, marqueur
   //  (z) — avant ±50 % ; les configs existantes encore aux anciens
   //  défauts sont migrées ciblément par cfgOf, champ taxes25).
+  // ARBITRAGE Thibaut 2026-10-28 « changement des taxes » : la
+  //  Nourriture part du côté des NAISSANCES — Faible = naissances et
+  //  Nourriture ×1,25 mais toutes les autres productions ×0,75 ;
+  //  Forte = l'inverse ; Moyenne = ×1 partout. Les nouvelles clés
+  //  taxNourr* reçoivent les défauts ci-dessous (mergeParams les pose
+  //  sur les configs existantes, sans migration) ; les clés taxOr*
+  //  changent de SENS — elles ne portent plus que les ressources hors
+  //  Nourriture (valeurs inchangées, les configs sauvegardées restent
+  //  valides telles quelles).
   taxOrFaibles: 0.75,
   taxOrHautes: 1.25,
+  taxNourrFaibles: 1.25,
+  taxNourrHautes: 0.75,
   taxNaissFaibles: 1.25,
   taxNaissHautes: 0.75,
   puissanceGeneral: 45,
@@ -309,8 +322,10 @@ export const PARAM_META: {
   { key: 'conversionProba', label: 'Proba de tentative de conversion culturelle', groupe: 'Culture', unite: 'proba' },
   { key: 'conversionPoidsLocal', label: 'Poids des voisins de même culture', groupe: 'Culture' },
   { key: 'conversionMemeCulture', label: 'Poids de sa propre culture', groupe: 'Culture' },
-  { key: 'taxOrFaibles', label: 'Taxes faibles — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
-  { key: 'taxOrHautes', label: 'Taxes fortes — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
+  { key: 'taxNourrFaibles', label: 'Taxes faibles — multiplicateur Nourriture', groupe: 'Taxes' },
+  { key: 'taxNourrHautes', label: 'Taxes fortes — multiplicateur Nourriture', groupe: 'Taxes' },
+  { key: 'taxOrFaibles', label: 'Taxes faibles — multiplicateur autres ressources (hors Nourriture)', groupe: 'Taxes' },
+  { key: 'taxOrHautes', label: 'Taxes fortes — multiplicateur autres ressources (hors Nourriture)', groupe: 'Taxes' },
   { key: 'taxNaissFaibles', label: 'Taxes faibles — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'taxNaissHautes', label: 'Taxes fortes — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'proxRiviereNourriture', label: 'Proximité rivière — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord d\'une rivière » (marqueur (y)).' },
