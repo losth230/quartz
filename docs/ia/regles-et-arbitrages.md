@@ -1635,3 +1635,22 @@ Décisions :
    poste X/vivants » restent inchangés.
 5. **Verrou de régression** : test de rendu — chaque métier occupé ou offert affiché
    (le Dirigeant occupé revient), chaque métier 0/0 absent.
+
+## La Maison de notable et le Palais sont réservés aux nobles (arbitrage Thibaut, 2026-10-28, 5e retour du jour)
+
+« Pour les logements, fais en sorte qu'il faille être noble minimum pour avoir une maison de
+notable ou un palais. » Décisions :
+
+1. **Rang noble requis** : seuls les personnages de rang NOBLE (dynastie noble ou
+   prestige ≥ 250) peuvent occuper une Maison de notable ou un Palais. Un roturier ou un
+   bourgeois ne peut ni en recevoir ni en garder : à la réattribution, il est relogé dans
+   la meilleure qualité restante non réservée.
+2. **Exception au « on ne déloge personne »** : un non-noble qui détenait un domicile
+   réservé (attribution antérieure au retour) le perd à la réattribution — la place
+   réservée reste au stock pour les nobles. Un noble garde son Palais normalement.
+3. **Stock vide sans nobles** : si la ville n'a aucun noble, ses Maisons de notable et
+   ses Palais restent inoccupés — ils ne servent à personne d'autre.
+4. **Ordre inchangé** : le service reste par prestige décroissant (nobles d'abord) ; la
+   restriction garantit désormais ce que l'ordre de prestige faisait « en pratique ».
+5. **Verrou de régression** : test moteur — parc de réservés vide sans noble, Palais au
+   noble (300), bourgeois (120) expulsé du Palais vers la Maison.
