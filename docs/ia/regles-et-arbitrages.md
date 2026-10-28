@@ -1349,3 +1349,57 @@ du côté des naissances**, toutes les **autres ressources à l'envers** :
   reconfirmé).
 - Les multiplicateurs ne s'appliquent PAS à ce que la Nourriture a de spécial :
   la « Nourr - été » des aménagements et la proximité restent hors taxes.
+
+## Les armées par la banque (arbitrage Thibaut, 2026-10-28)
+
+« Je me fiche qu'ils vivent dans les paramètres, général et soldat sont des
+métiers, ils doivent donc vivre dans la banque, tout ce qui est logique de se
+trouver en banque doit rejoindre la banque. » — les données d'armée qui avaient
+une FICHE naturelle migrent du pot commun des paramètres vers le RÉFÉRENTIEL,
+et les réductions de levée deviennent un CANAL de la banque comme les flux :
+
+- **Puissances et âges → LIGNES DE MÉTIER** (onglet Métiers du référentiel) :
+  Soldat `puissanceArmee` 15, `ageMin` 16, `ageMax` 30 ; Commandant
+  `puissanceArmee` 45. Lues par `puissanceArmeeMetier(metier, C, repli)` et
+  `agesRecrutementSoldat(C)` (engine/armees.ts) — le recrutement, le calcul de
+  puissance et l'init de levée suivent la fiche éditée immédiatement.
+- **Réductions de levée → FICHES DE CONSTRUCTION** (champ `reductionLeveeArmee`),
+  traduites par le registre en effet de banque `reductionLeveeArmee` (type
+  RESTAURÉ le 2026-10-28 avec un producteur — il avait été purgé le 2026-10-24
+  « sans producteur ») :
+
+  | Construction | Groupe | Réduction de levée |
+  | --- | --- | --- |
+  | Terrain d'entrainement | Château | 10 Or |
+  | Ecole militaire | Château | 25 Or |
+  | Guilde des explorateurs | Château | 20 Or |
+  | Grande caserne | Capitale | 8 Or |
+
+  Le canal s'agrège dans la contribution (`reductionLeveeArmee`) et se lit par
+  `reductionLeveeBatiments(ville, C)` : `prixArmee(puissanceCible, C, ville)`
+  facture `armeePrixOr` Or par tranche de `armeePriXPuissance` points, MOINS la
+  somme des réductions des bâtiments de la VILLE DE LEVÉE (plancher 0). La levée
+  se passe dans une habitation (retour 2026-10-15) : les aménagements ne
+  comptent pas, seuls les bâtiments de la ville s'appliquent.
+- **Périmètre inchangé** : les prix de base `armeePrixOr` (1) et
+  `armeePriXPuissance` (2) RESTENT en paramètres (aucune fiche naturelle) ;
+  la garnison des Gardes (`garnisonParGarde`) reste HORS périmètre armées.
+- **Flag mort retiré** : `prochaineArmeeReduite` (Stratégies militaires I,
+  −50 Or sur la prochaine levée, revue 2026-10-15) était mort depuis la purge
+  du système de progrès du 2026-10-24 (aucun producteur) — arbitrage : « garde
+  la fonction en banque mais retire cet effet précisément ». Le champ
+  disparaît du type et de prixArmee ; une vieille sauvegarde qui le porte
+  encore se charge sans erreur (champ inconnu ignoré).
+- **Migration `armeesBanque2026`** (marqueur (z), sans bump de tampon) : les
+  configs sauvegardées AVANT l'arbitrage portent les valeurs dans les
+  paramètres — la migration les SÈME sur les lignes de métier et les fiches de
+  construction (en préservant tout champ déjà défini), puis pose le drapeau.
+  Les 4 paramètres historiques (`puissanceSoldat`, `puissanceGeneral`,
+  `soldatAgeMin`, `soldatAgeMax`) restent des REFLIS de compatibilité :
+  lus uniquement si la ligne ne porte pas le champ, plus éditables dans
+  l'onglet Paramètres (retirés de PARAM_META).
+- **UI** : la page Armées lit les métiers dynamiquement (titre « Soldat 15 pts,
+  Commandant 45 pts » dérivé, paragraphes d'âge et de prix dynamiques) ;
+  l'onglet Métiers du wiki gagne une colonne « Armée » (puissance + âges) ;
+  l'éditeur des constructions gagne une colonne « Réduc. levée (Or) » ;
+  `resumeConstruction` affiche « levée d'armée −N Or » (picker, badges, wiki).
