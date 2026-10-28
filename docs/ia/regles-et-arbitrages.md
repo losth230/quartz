@@ -1496,7 +1496,9 @@ destinations « toutes les villes du monde » ; exclusions « tous les vivants s
 et Héritier ») :
 
 1. **Départ LINÉAIRE** : à chaque fin de tour, chaque habitant vivant (sauf Dirigeant et
-   Héritier, qui ne déménagent jamais — règle 2026-10-21) quitte sa ville avec
+   Héritier, qui ne déménagent jamais — règle 2026-10-21 — et sauf soldats/commandants
+   EN ARMÉE : l'armée lie l'habitant, cf. « L'armée est liée à la population » ; AMENDEMENT
+   du jour) quitte sa ville avec
    `p = migrationBonheurMax × (100 − bonheur de sa ville) / 100` — 0 % à 100 de bonheur,
    5 % à 50, 10 % à 0 (défauts). Bonheur = la moyenne des 5 facteurs du système de
    bonheur (2026-10-24), calculé une fois par ville et par tour.
@@ -1517,6 +1519,17 @@ et Héritier ») :
 5. **Paramètres** (groupe Population) : `migrationBonheurMax` (0,10) et
    `migrationBonheurCulture` (4). Pas de plafond par ville : la linéarité 0-10 % fait
    foi. À proba max 0, le flux est coupé.
+6. **COUPLES INSÉPARABLES (amendement du jour, retour CI du flux v1)** : le tirage
+   individuel séparait des époux entre porteurs — or le moteur interdit le remariage
+   tant que l'époux vit (cour) : un « divorcé par la distance » ne pouvait plus jamais
+   fonder de foyer. Un marié ne part donc qu'AVEC son conjoint de la même ville (le
+   foyer suit, sans tirage propre) ; si le conjoint est ancré (Dirigeant, Héritier,
+   en armée), le foyer NE PART PAS ; si le conjoint est absent de la ville (défunt ou
+   domicilié ailleurs), l'habitant part seul. Invariant : aucun mariage ne traverse
+   deux porteurs après le flux.
+7. **Cultures recalculées** : les arrivées pouvant renverser la majorité, le flux
+   recalcule la culture de chaque ville (majorité des vivants) en fin d'étape 4bis —
+   l'invariant de l'étape 3.6 de populationTurn tient aussi après le flux.
 
 ## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
 
