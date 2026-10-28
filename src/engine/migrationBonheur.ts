@@ -20,7 +20,23 @@
 //     s'entend des villes des joueurs).
 //   · QUI PART — tous les VIVANTS sauf Dirigeant et Héritier
 //     (règle établie 2026-10-21 : ils ne déménagent jamais —
-//     neDemenageJamais, cf. shared.ts).
+//     neDemenageJamais, cf. shared.ts) ET les soldats/commandants
+//     en armée (c.armee — l'armée LIE l'habitant, arbitrage du
+//     2026-10-28 « l'armée est liée à la population »).
+//   · COUPLES INSÉPARABLES (amendement du jour, retour CI rouge du
+//     flux v1 : le tirage individuel SÉPARAIT des couples entre
+//     joueurs — mariageId pointait chez un autre porteur, et la
+//     règle de mariage (cour.ts) interdit le remariage tant que
+//     l'époux vit : un « divorcé par la distance » ne pouvait plus
+//     jamais se remarier) : un marié ne part qu'AVEC son conjoint
+//     de la même ville (le foyer suit, une seule entrée chacun) ;
+//     si le conjoint est ancré (Dirigeant/Héritier/en armée), le
+//     foyer NE PART PAS ; si le conjoint est absent de la ville
+//     (défunt ou domicilié ailleurs), l'habitant part seul.
+//   · CULTURES recalculées en fin de flux (updateCityCultures) :
+//     les arrivées peuvent renverser la majorité — l'invariant
+//     « ville.culture = majorité des vivants » (populationTurn
+//     étape 3.6) doit tenir aussi après le flux.
 //   · PONDÉRATION (pas filtrage) du tirage de destination :
 //       poids = (culture identique ? migrationBonheurCulture : 1)
 //               × (1 + bonheur de la ville candidate / 100)
@@ -47,6 +63,7 @@ import type { Rng } from './rng'
 import { cfgOf, type Cfg } from './gameData'
 import { fullName, neDemenageJamais, perteDemenagement } from './shared'
 import { bonheurVilleComplete } from './bonheur'
+import { updateCityCultures } from './culture'
 
 /** Probabilité qu'un habitant quitte sa ville : LINÉAIRE en bonheur
  *  (arbitrage Thibaut 2026-10-28 : 0 % à 100, max à 0). Pure. */
@@ -85,8 +102,15 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
     //  les migrants arrivés chez p au fil de l'appel ne sont pas
     //  re-tirés (même garantie que l'ancienne migration scolaire).
     const parVille = new Map<string, Character[]>()
+    /** Vivants de la ville, ancrés inclus — le conjoint ancré d'un
+     *  marié y figure : le foyer ne doit pas partir sans lui. */
+    const parVilleTous = new Map<string, Character[]>()
     for (const c of state.population[p.n] ?? []) {
-      if (c.statut === 'Décédé' || neDemenageJamais(c, C)) continue
+      if (c.statut === 'Décédé') continue
+      const lt = parVilleTous.get(c.ville)
+      if (lt) lt.push(c)
+      else parVilleTous.set(c.ville, [c])
+      if (neDemenageJamais(c, C) || c.armee) continue
       const l = parVille.get(c.ville)
       if (l) l.push(c)
       else parVille.set(c.ville, [c])
@@ -99,28 +123,43 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
       const candidats = fiches.filter((f) => f !== src)
       for (const c of [...habitants]) {
         if (deplaces.has(c.id)) continue
+        // COUPLES INSÉPARABLES : un marié ne part qu'avec son conjoint
+        //  de la MÊME VILLE ; conjoint ancré → le foyer reste.
+        let conj: Character | undefined
+        if (c.mariageId) {
+          conj = (parVilleTous.get(v.nom) ?? []).find((x) => x.id === c.mariageId)
+          if (conj && (neDemenageJamais(conj, C) || conj.armee)) continue
+        }
         if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
         const dest = rng.pickWeighted(candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C))
-        // Transfert physique chez le porteur de la ville de destination
-        //  (principe conservé de l'ancienne migration scolaire).
-        if (dest.joueur.n !== p.n) {
-          const src2 = state.population[p.n] ?? []
-          const i = src2.indexOf(c)
-          if (i >= 0) src2.splice(i, 1)
-          const dst = state.population[dest.joueur.n] ?? (state.population[dest.joueur.n] = [])
-          dst.push(c)
+        // Transfert physique du FOYER chez le porteur de la ville de
+        //  destination (principe conservé de l'ancienne migration
+        //  scolaire) — le conjoint suit sans tirage propre.
+        for (const m of conj ? [c, conj] : [c]) {
+          if (dest.joueur.n !== p.n) {
+            const src2 = state.population[p.n] ?? []
+            const i = src2.indexOf(m)
+            if (i >= 0) src2.splice(i, 1)
+            const dst = state.population[dest.joueur.n] ?? (state.population[dest.joueur.n] = [])
+            dst.push(m)
+          }
+          const avant = m.ville
+          m.ville = dest.ville.nom
+          perteDemenagement(m, C)
+          deplaces.add(m.id)
+          const chez = dest.joueur.n === p.n ? '' : ` chez ${dest.joueur.nom}`
+          const verbe = m === c ? 'quitte' : `suit ${fullName(c)} — quitte`
+          state.log.push({
+            turn: state.turn + 1, type: 'Système', joueur: p.n,
+            texte: `${fullName(m)} ${verbe} ${avant} pour ${dest.ville.nom}${chez} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`,
+          })
         }
-        const avant = c.ville
-        c.ville = dest.ville.nom
-        perteDemenagement(c, C)
-        deplaces.add(c.id)
-        state.log.push({
-          turn: state.turn + 1, type: 'Système', joueur: p.n,
-          texte: dest.joueur.n === p.n
-            ? `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`
-            : `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} chez ${dest.joueur.nom} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`,
-        })
       }
     }
   }
+
+  // Cultures des villes recalculées : les arrivées peuvent renverser
+  //  la majorité — l'invariant « ville.culture = majorité des vivants »
+  //  (populationTurn étape 3.6) doit tenir aussi après le flux.
+  for (const p of state.players) updateCityCultures(state, p)
 }

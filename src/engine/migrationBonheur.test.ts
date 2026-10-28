@@ -5,7 +5,12 @@
 //     (« entre 0 % et 10 %, le 10 % à 0 de bonheur, le 0 % à 100 ») ;
 //   · destinations : TOUTES les villes du monde, transfert physique
 //     inter-joueurs au besoin (comme l'ancienne migration scolaire) ;
-//   · qui part : tous les vivants SAUF Dirigeant/Héritier ;
+//   · qui part : tous les vivants SAUF Dirigeant/Héritier et les
+//     soldats/commandants en armée (l'armée lie l'habitant) ;
+//   · COUPLES INSÉPARABLES (amendement) : un marié ne part qu'avec
+//     son conjoint de la même ville (le foyer suit) ; conjoint
+//     ancré → le foyer ne part pas ; conjoint absent → il part seul ;
+//   · cultures des villes recalculées après le flux (majorité).
 //   · pondération : culture identique ×N × (1 + bonheur/100) ;
 //   · toute migration = perteDemenagement + entrée « Système » au
 //     journal avec le motif « cherche meilleure vie ».
@@ -27,14 +32,14 @@ function partie(seed = 20261028): { state: GameState; C: ReturnType<typeof cfgOf
 }
 
 /** Habitant de test (tuple de 3 traits, cf. Character). */
-function hab(id: string, age: number, o: { metier?: string | null; ville?: string; culture?: string } = {}): Character {
+function hab(id: string, age: number, o: { metier?: string | null; ville?: string; culture?: string; armee?: string | null } = {}): Character {
   return {
     id, nom: 'Test', prenom: `Pers-${id}`, dynastie: 'Roturier', sexe: 'M', age,
     culture: o.culture ?? 'Déisme', ville: o.ville ?? 'Capitale', orientation: 'Hétérosexuel',
     traits: ['Fécond', 'Fécond', 'Fécond'], statut: 'Sain', mariage: null, mariageId: null,
     mere: null, mereId: null, pere: null, pereId: null,
     pereBio: null, pereBioId: null, enfantBatard: false,
-    metier: o.metier ?? null, fecondite: 0, armee: null,
+    metier: o.metier ?? null, fecondite: 0, armee: o.armee ?? null,
   }
 }
 
@@ -136,6 +141,62 @@ test('flux : Dirigeant et Héritier ne partent jamais, même à proba max 1', ()
   assert.equal(her.ville, p0.villes[0].nom, 'l Héritier reste ancré')
   assert.equal(dir.metier, C.p.metierDirigeant, 'titre conservé')
   assert.equal(her.metier, C.p.metierHeritierStr, 'titre conservé')
+})
+
+test('couples inséparables : le conjoint de la même ville SUIT le migrant (foyer entier, un seul tirage)', () => {
+  const { state, C } = partie()
+  C.p.migrationBonheurMax = 1
+  const p0 = state.players[0]
+  const h1 = hab('cp1', 30, { ville: p0.villes[0].nom })
+  const h2 = hab('cp2', 28, { ville: p0.villes[0].nom })
+  h1.mariage = 'Pers-cp2 Test'; h1.mariageId = 'cp2'
+  h2.mariage = 'Pers-cp1 Test'; h2.mariageId = 'cp1'
+  state.population[p0.n] = [h1, h2]
+  migrationBonheur(state, makeRng(4242))
+  // Le foyer ENTIER est transféré, à la même destination, couple intact.
+  let dst1: { j: number; v: string } | undefined
+  let dst2: { j: number; v: string } | undefined
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) {
+      if (c.id === 'cp1') dst1 = { j: Number(nStr), v: c.ville }
+      if (c.id === 'cp2') dst2 = { j: Number(nStr), v: c.ville }
+    }
+  }
+  assert.ok(dst1 && dst2, 'les deux époux sont encore dans le monde')
+  assert.ok(dst1!.j !== p0.n || dst1!.v !== p0.villes[0].nom, 'le foyer est parti à proba max 1')
+  assert.ok(dst1!.j === dst2!.j && dst1!.v === dst2!.v, 'le couple part ENSEMBLE, à la même destination')
+  assert.equal(h1.mariageId, 'cp2', 'le couple n est pas dissocié (mariageId)')
+  assert.equal(h2.mariageId, 'cp1', 'le couple n est pas dissocié (mariageId)')
+  // Aucun mariageId croisé entre porteurs : l'invariant du moteur
+  //  (conjoints dans la même ville) tient après le flux.
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) {
+      if (!c.mariageId) continue
+      const conj = (liste ?? []).find((x) => x.id === c.mariageId)
+      assert.ok(conj, `le conjoint de ${c.id} vit chez le même porteur (${nStr})`)
+    }
+  }
+  // Le conjoint qui suit est journalisé lui aussi.
+  const logs = state.log.filter((e) => e.texte.includes('cherche meilleure vie') && (e.texte.includes('Pers-cp1') || e.texte.includes('Pers-cp2')))
+  assert.equal(logs.length, 2, 'une entrée par membre du foyer parti')
+})
+
+test('couples inséparables : conjoint ANCRÉ (Dirigeant/Héritier/en armée) → le foyer NE PART PAS', () => {
+  const { state, C } = partie()
+  C.p.migrationBonheurMax = 1
+  const p0 = state.players[0]
+  const dir = hab('d1', 40, { metier: C.p.metierDirigeant, ville: p0.villes[0].nom })
+  const epouse = hab('e1', 38, { ville: p0.villes[0].nom })
+  dir.mariage = 'Pers-e1 Test'; dir.mariageId = 'e1'
+  epouse.mariage = 'Pers-d1 Test'; epouse.mariageId = 'd1'
+  const soldat = hab('s1', 25, { ville: p0.villes[0].nom, armee: 'Garde' })
+  state.population[p0.n] = [dir, epouse, soldat]
+  migrationBonheur(state, makeRng(9001))
+  assert.ok(state.population[p0.n].includes(epouse), 'l épouse d un Dirigeant ne quitte pas son foyer (proba max 1)')
+  assert.equal(epouse.ville, p0.villes[0].nom, 'elle reste dans la ville')
+  assert.ok(state.population[p0.n].includes(soldat), 'un soldat en armée ne déménage pas')
+  assert.equal(soldat.ville, p0.villes[0].nom, 'le soldat reste dans la ville')
+  assert.ok(!state.log.some((e) => e.texte.includes('Pers-e1') || e.texte.includes('Pers-s1')), 'aucun départ journalisé pour le foyer ou le soldat')
 })
 
 test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les premiers tours', () => {
