@@ -185,8 +185,13 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                 }
                 x.armees.splice(idx, 1)
               })}>Dissoudre l'armée</Button>
-              {/* ── Infliger des pertes (revue 2026-10-17) : tuer N soldats
-                  de l'armée — batailles au plateau, saisie des pertes ici. */}
+              {/* ── Pertes (revue 2026-10-17 ; arbitrage Thibaut
+                  2026-10-28, 2e retour) : batailles au plateau,
+                  saisie des pertes ici. −N × pts de Soldat sur la
+                  puissance ET la cible (+ commandant si coché) ;
+                  les soldats suivis meurent ; la puissance stockée
+                  fait foi — plus aucune re-dérivation, pas de
+                  remplissage automatique. */}
               <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
                 <span className="muted small">⚔ Pertes :</span>
                 <NumberInput
@@ -205,7 +210,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                 <Button tone="danger" onClick={() => {
                   const nb = Math.round(pertesParArmee[idx] ?? 0)
                   if (nb <= 0) return
-                  if (!window.confirm(`Infliger ${nb} perte(s) à « ${a.nom} » ? (Armée suivie : les soldats correspondants sont tués ; armée non suivie : ${nb} × ${puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)} pts retranchés de la puissance.)`)) return
+                  if (!window.confirm(`Infliger ${nb} perte(s) à « ${a.nom} » ? −${nb * puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)} pts sur la puissance ET la puissance cible${tuerCmdParArmee[idx] ? ' (et le commandant : ' + puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral) + ' pts en plus)' : ''}. Les soldats suivis de l'armée meurent ; pas de remplissage automatique.`)) return
                   setPlayer((x, s2) => { infligerPertes(s2, x, idx, nb, !!tuerCmdParArmee[idx]) })
                 }}>⚔ Infliger {Math.round(pertesParArmee[idx] ?? 0)} perte(s)</Button>
                 {/* ── Fin de service (revue 2026-10-17) : N soldats
@@ -213,7 +218,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                 <Button onClick={() => {
                   const nb = Math.round(pertesParArmee[idx] ?? 0)
                   if (nb <= 0) return
-                  if (!window.confirm(`Libérer ${nb} soldat(s) de « ${a.nom} » ? Ils quittent l'armée et redeviennent Chasseurs (vivants et productifs).`)) return
+                  if (!window.confirm(`Libérer ${nb} soldat(s) de « ${a.nom} » ? Ils quittent l'armée et redeviennent Chasseurs ; −${nb * puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)} pts sur la puissance ET la puissance cible. Pas de remplissage automatique.`)) return
                   setPlayer((x, s2) => { libererSoldats(s2, x, idx, nb, !!tuerCmdParArmee[idx]) })
                 }}>🕊 Libérer {Math.round(pertesParArmee[idx] ?? 0)} en fin de service</Button>
               </div>
@@ -221,9 +226,10 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   levée AU SEIN de l'armée — même prix, réductions
                   de la ville de renfort ; la puissance CIBLE est
                   relevée et le recrutement de chaque tour comble
-                  l'écart (les premières recrues font aussi passer
-                  une armée non suivie en dérivation — migration
-                  vers le suivi). */}
+                  l'écart. (2e retour : les recrues n'entraînent
+                  PLUS aucune re-dérivation de la puissance — la
+                  stockée fait foi, elles ne font que l'augmenter
+                  de leurs points au recrutement.) */}
               <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
                 <span className="muted small">⚔ Renfort :</span>
                 <NumberInput
@@ -322,6 +328,9 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
           construction du référentiel — cf. Référentiels). Le RENFORT est une levée au
           sein d'une armée existante : mêmes prix et réductions, la puissance cible est
           relevée et le recrutement de chaque tour comble l'écart.
+          Les PERTES et fins de service abaissent la puissance ET la puissance
+          cible (pas de remplissage automatique) : une perte vaut les points
+          d'un soldat, la chute du commandant coûte en plus les siens.
         </p>
       </Card>
     </div>

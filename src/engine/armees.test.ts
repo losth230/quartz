@@ -27,7 +27,7 @@ import { cfgOf } from './gameData'
 import { makeRng } from './rng'
 import {
   puissanceArmeeMetier, agesRecrutementSoldat,
-  recomputeArmy, recruitForArmies, prixArmee,
+  recruitForArmies, prixArmee,
   infligerPertes, libererSoldats,
 } from './armees'
 import {
@@ -74,27 +74,13 @@ test('défauts du référentiel : Soldat 15 pts, Commandant 45 pts, recrutement 
   assert.deepEqual(agesRecrutementSoldat(C), { min: 16, max: 30 }, 'bornes d âge portées par la ligne Soldat')
 })
 
-test('recomputeArmy : soldats × 15 + commandant × 45 — la ligne de métier ÉDITÉE prime', () => {
-  const state = partie()
-  const p = state.players[0]
-  const C = cfgOf(state.config)
-  state.population[p.n] = [
-    perso('s1', 20), perso('s2', 25), perso('s3', 28),
-    perso('c1', 40), // commandant vivant
-  ]
-  const armee: Army = {
-    nom: 'Légion', puissanceCible: 0, puissance: 0,
-    commandant: 'c1', soldats: ['s1', 's2', 's3'],
-  }
-  recomputeArmy(state, p, armee)
-  assert.equal(armee.puissance, 3 * 15 + 45, '3 soldats × 15 + commandant × 45 = 90')
-  // La fiche de métier est la source de vérité : une édition dans
-  //  Référentiels s'applique immédiatement (référentiel édité prime).
-  ligneMetier(C, C.p.metierSoldat).puissanceArmee = 20
-  ligneMetier(C, C.p.metierCommandant).puissanceArmee = 50
-  recomputeArmy(state, p, armee)
-  assert.equal(armee.puissance, 3 * 20 + 50, 'lignes éditées : 3 × 20 + 50 = 110')
-})
+// (RETRAIT 2026-10-28, 2e retour arbitre « les pertes baissent encore
+//  l'armée à 45 » : recomputeArmy — dérivation « soldats × pts +
+//  commandant » — est SUPPRIMÉ du moteur : il écrasait la puissance
+//  stockée d'une armée de plateau dont les recrues réelles ne
+//  couvraient qu'une fraction des points. La prime de la ligne de
+//  métier ÉDITÉE (fiche > paramètre) reste couverte par le test de
+//  pertes « ligne de métier ÉDITÉE prime » ci-dessous.)
 
 test('repli param : ligne de métier SANS champ → paramètre historique', () => {
   const state = partie()
@@ -197,23 +183,24 @@ test('flag mort prochaineArmeeReduite : un champ résiduel d une vieille sauvega
 })
 
 // ═════════════════════════════════════════════════════════════════════════
-//  SUIVIE vs NON SUIVIE (retour arbitre 2026-10-28 « les pertes
-//  réduisent l'armée à 45 à chaque fois ») :
+//  LA PUISSANCE STOCKÉE FAIT FOI (arbitrage Thibaut 2026-10-28, 2e
+//  retour « les pertes baissent ENCORE l'armée à 45 ») :
 //
-//   · une armée SUIVIE (soldats non vide) adosse sa puissance à ses
-//     personnages réels — dérivation soldats × 15 + commandant ;
-//   · une armée NON SUIVIE (soldats vide — levée fraîche pas
-//     encore passée par le recrutement, ou import du classeur)
-//     garde sa puissance STOCKÉE : pertes et fin de service y
-//     sont SOUSTRACTIVES (nb × 15, + 45 si le commandant tombe),
-//     aucune dérivation ne l'écrase à son seul commandant ;
-//   · le RENFORT est une levée au sein de l'armée (arbitrage
-//     Thibaut 2026-10-28) : la puissance cible est relevée, le
-//     recrutement comble l'écart par des recrues réelles — qui
-//     font aussi passer une armée non suivie en dérivation.
+//   · PLUS AUCUNE DÉRIVATION (recomputeArmy RETIRÉ) : la puissance
+//     stockée — valeur de plateau — n'est JAMAIS recalculée depuis
+//     les soldats, l'armée en suive ou non ;
+//   · pertes et fin de service : SOUSTRACTIVES sur la puissance ET
+//     la puissance CIBLE (nb × points du soldat, + points du
+//     commandant s'il tombe) — pas de remplissage automatique au
+//     tour suivant (retour arbitre explicite) ;
+//   · les soldats réellement suivis meurent (pertes) ou
+//     redeviennent Chasseurs (fin de service), jusqu'à nb ;
+//   · le RENFORT (levée au sein de l'armée) relève la cible, le
+//     recrutement comble l'écart — les recrues AUGMENTENT la
+//     stockée de leurs points, sans jamais la re-dériver.
 // ═════════════════════════════════════════════════════════════════════════
 
-test('pertes armée SUIVIE : soldats réels tués, puissance dérivée (comportement inchangé)', () => {
+test('pertes armée SUIVIE : soldats réels tués, −30 sur la puissance ET la cible', () => {
   const state = partie()
   const p = state.players[0]
   state.population[p.n] = [
@@ -226,17 +213,44 @@ test('pertes armée SUIVIE : soldats réels tués, puissance dérivée (comporte
   }
   p.armees = [armee]
   const tombes = infligerPertes(state, p, 0, 2)
-  assert.equal(armee.puissance, 60, '2 soldats tombés : 3 × 15 + 45 − 30 = 60')
-  assert.equal(tombes.length, 2, '2 personnages réels tués')
+  assert.equal(armee.puissance, 60, '90 − 2 × 15 = 60 (pas de dérivation)')
+  assert.equal(armee.puissanceCible, 60, 'la cible suit : pas de remplissage au tour suivant')
+  assert.equal(tombes.length, 2, '2 soldats réels tués dans l ordre d engagement')
   assert.equal(armee.soldats.length, 1, 'il reste un soldat')
-  // les derniers (1 soldat + commandant) : l'armée retombe à 0
-  infligerPertes(state, p, 0, 2, true)
-  assert.equal(armee.puissance, 0, 'commandant + dernier soldat : 0')
+  // 1 perte + commandant coché : −15 −45 → plancher 0 sur les DEUX
+  infligerPertes(state, p, 0, 1, true)
+  assert.equal(armee.puissance, 0, '60 − 15 − 45 = 0')
+  assert.equal(armee.puissanceCible, 0, 'la cible suit jusqu au plancher')
   assert.equal(armee.commandant, null)
-  assert.equal(armee.soldats.length, 0)
+  assert.equal(state.population[p.n].find((c) => c.id === 's3')!.statut, 'Sain', 'le dernier soldat survit : nb est consommé par le commandant')
 })
 
-test('pertes armée NON SUIVIE : SOUSTRACTIVES sur la puissance stockée (pas de chute à 45)', () => {
+test('BUG DU SOIR (régression) : armée de plateau 200 + 2 recrues de renfort → pertes 2 → 200, PAS 45', () => {
+  const state = partie()
+  const p = state.players[0]
+  state.population[p.n] = [perso('c1', 40), perso('s1', 20), perso('s2', 21)]
+  const armee: Army = {
+    nom: 'Légion', puissanceCible: 230, puissance: 200,
+    commandant: 'c1', soldats: [],
+  }
+  p.armees = [armee]
+  // renfort de +30 : le recrutement comble par 2 recrues réelles
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 230, 'stockée 200 + 2 × 15 = 230')
+  assert.equal(armee.soldats.length, 2, 'l armée suit ses 2 recrues')
+  // les pertes tuent les 2 recrues : la stockée, PAS une dérivation,
+  //  donne la puissance restante (l ancienne dérivation donnait 45)
+  const tombes = infligerPertes(state, p, 0, 2)
+  assert.equal(tombes.length, 2)
+  assert.equal(armee.puissance, 200, '230 − 2 × 15 = 200, PAS 45')
+  assert.equal(armee.puissanceCible, 200, 'la cible suit les pertes')
+  // et PAS de remplissage automatique au tour suivant
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 200, 'cible atteinte : aucune recrue')
+  assert.deepEqual(armee.soldats, [], 'l armée ne se re-remplit pas')
+})
+
+test('pertes armée NON SUIVIE pure : personne ne meurt, −N × 15 sur la puissance et la cible', () => {
   const state = partie()
   const p = state.players[0]
   state.population[p.n] = [perso('c1', 40)]
@@ -247,67 +261,71 @@ test('pertes armée NON SUIVIE : SOUSTRACTIVES sur la puissance stockée (pas de
   p.armees = [armee]
   const tombes = infligerPertes(state, p, 0, 2)
   assert.equal(armee.puissance, 170, '2 pertes = −2 × 15 → 170, PAS 45')
+  assert.equal(armee.puissanceCible, 170, 'la cible suit')
   assert.deepEqual(tombes, [], 'aucun personnage réel : l armée n en suit aucun')
   assert.equal(state.population[p.n][0].statut, 'Sain', 'le commandant est intact')
   // commandant tué EN PLUS : ses points s ajoutent aux pertes
   const tombes2 = infligerPertes(state, p, 0, 1, true)
   assert.equal(armee.puissance, 110, '1 perte + commandant : −15 −45 → 110')
+  assert.equal(armee.puissanceCible, 110, 'la cible suit, commandant compris')
   assert.equal(armee.commandant, null)
   assert.equal(state.population[p.n][0].statut, 'Décédé', 'le commandant, lui, est un personnage réel')
   assert.deepEqual(tombes2, ['Pers-c1 Test'])
 })
 
-test('fin de service armée NON SUIVIE : soustractive aussi, le commandant redevient Chasseur', () => {
+test('fin de service : soustractive sur la puissance ET la cible, suivie ou non', () => {
   const state = partie()
   const p = state.players[0]
-  state.population[p.n] = [perso('c1', 40)]
+  state.population[p.n] = [
+    perso('s1', 20), perso('s2', 25), perso('s3', 28),
+    perso('c1', 40),
+  ]
+  // armée suivie : les libérés redeviennent Chasseurs, vivants
   const armee: Army = {
-    nom: 'Légion', puissanceCible: 200, puissance: 200,
-    commandant: 'c1', soldats: [],
+    nom: 'Légion', puissanceCible: 90, puissance: 90,
+    commandant: 'c1', soldats: ['s1', 's2', 's3'],
   }
   p.armees = [armee]
   const liberes = libererSoldats(state, p, 0, 2)
-  assert.equal(armee.puissance, 170, '2 démobilisés abstraits : −2 × 15')
-  assert.deepEqual(liberes, [], 'personne à libérer pour de vrai')
-  const liberes2 = libererSoldats(state, p, 0, 1, true)
-  assert.equal(armee.puissance, 110, '1 démobilisé + commandant : −15 −45')
-  assert.equal(armee.commandant, null)
-  const c1 = state.population[p.n][0]
+  assert.equal(armee.puissance, 60, '90 − 2 × 15 = 60')
+  assert.equal(armee.puissanceCible, 60, 'la cible suit')
+  assert.equal(liberes.length, 2)
+  const s1 = state.population[p.n].find((c) => c.id === 's1')!
+  assert.equal(s1.statut, 'Sain', 'libéré vivant')
+  assert.equal(s1.metier, 'Chasseur', 're-titré Chasseur (convention Dissoudre)')
+  // armée non suivie : seulement les points baissent
+  const armee2: Army = {
+    nom: 'Garde', puissanceCible: 200, puissance: 200,
+    commandant: 'c1', soldats: [],
+  }
+  p.armees.push(armee2)
+  const liberes2 = libererSoldats(state, p, 1, 2, true)
+  assert.equal(armee2.puissance, 125, '200 − 2 × 15 − 45 (commandant) = 125')
+  assert.equal(armee2.puissanceCible, 125, 'la cible suit')
+  assert.equal(armee2.commandant, null)
+  const c1 = state.population[p.n].find((c) => c.id === 'c1')!
   assert.equal(c1.statut, 'Sain', 'le commandant libéré reste vivant')
-  assert.equal(c1.metier, 'Chasseur', 'il redevient Chasseur (convention Dissoudre)')
+  assert.equal(c1.metier, 'Chasseur', 'il redevient Chasseur')
   assert.deepEqual(liberes2, ['Pers-c1 Test'])
 })
 
-test('recruitForArmies armée NON SUIVIE : la puissance stockée fait foi ; le renfort comble par de vraies recrues', () => {
+test('ligne de métier ÉDITÉE prime : soldat 20 pts → pertes 2 = −40', () => {
   const state = partie()
   const p = state.players[0]
-  state.population[p.n] = [perso('c1', 40), perso('s1', 20), perso('s2', 21)]
+  const C = cfgOf(state.config)
+  ligneMetier(C, C.p.metierSoldat).puissanceArmee = 20
+  state.population[p.n] = [perso('c1', 40)]
   const armee: Army = {
-    nom: 'Légion', puissanceCible: 200, puissance: 200,
+    nom: 'Légion', puissanceCible: 100, puissance: 100,
     commandant: 'c1', soldats: [],
   }
   p.armees = [armee]
-  // cible atteinte : RIEN ne bouge (l ancienne dérivation écrasait
-  //  l armée à son seul commandant, 45)
-  recruitForArmies(state, p, makeRng(20261028))
-  assert.equal(armee.puissance, 200, 'puissance stockée conservée (pas 45)')
-  assert.deepEqual(armee.soldats, [], 'aucune recrue : la cible est atteinte')
-  // RENFORT de +30 pts : cible 230 — le recrutement comble l écart
-  //  par des recrues réelles (levée au sein de l armée) ; les 2
-  //  recrues font passer l armée en SUIVIE.
-  armee.puissanceCible = 230
-  recruitForArmies(state, p, makeRng(20261028))
-  assert.equal(armee.soldats.length, 2, '2 recrues comblent +30 pts')
-  assert.equal(armee.puissance, 230, 'stockée 200 + 2 × 15 = 230')
-  assert.equal(state.population[p.n].find((c) => c.id === 's1')!.metier, 'Soldat', 'les recrues deviennent Soldat')
-  // devenue suivie, la dérivation s applique (2 × 15 + 45 = 75) ;
-  //  la cible tient le niveau affiché.
-  armee.puissanceCible = 75
-  recruitForArmies(state, p, makeRng(20261028))
-  assert.equal(armee.puissance, 75, 'dérivation suivie : 2 × 15 + commandant 45')
+  infligerPertes(state, p, 0, 2)
+  assert.equal(armee.puissance, 60, '100 − 2 × 20 = 60 : la fiche édité fait foi')
+  assert.equal(armee.puissanceCible, 60)
 })
 
-test('recruitForArmies armée NON SUIVIE : commandant mort entre deux tours → détaché, −45 sur la stockée', () => {
+test('commandant mort entre deux tours : détaché, −45 sur la stockée ; le recrutement ne re-dérive RIEN', () => {
   const state = partie()
   const p = state.players[0]
   state.population[p.n] = [perso('c1', 40)]
@@ -317,7 +335,15 @@ test('recruitForArmies armée NON SUIVIE : commandant mort entre deux tours → 
     commandant: 'c1', soldats: [],
   }
   p.armees = [armee]
+  // aucun candidat : la vacance du commandant reste visible
   recruitForArmies(state, p, makeRng(20261028))
   assert.equal(armee.commandant, null, 'le commandant mort est détaché')
   assert.equal(armee.puissance, 155, 'stockée − points du commandant : 200 − 45')
+  assert.equal(armee.puissanceCible, 200, 'la cible est intacte : la vacance se comble par recrutement')
+  // des candidats arrivent : les recrues comblent l écart SANS
+  //  jamais re-dériver la stockée
+  state.population[p.n].push(perso('s1', 20), perso('s2', 21), perso('s3', 22))
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 200, '155 + 3 × 15 = 200')
+  assert.equal(armee.soldats.length, 3, '3 recrues comblent la vacance du commandant')
 })
