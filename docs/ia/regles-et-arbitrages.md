@@ -1502,23 +1502,29 @@ et Héritier ») :
    `p = migrationBonheurMax × (100 − bonheur de sa ville) / 100` — 0 % à 100 de bonheur,
    5 % à 50, 10 % à 0 (défauts). Bonheur = la moyenne des 5 facteurs du système de
    bonheur (2026-10-24), calculé une fois par ville et par tour.
-2. **Destination pondérée, pas filtrée** : tirage parmi TOUTES les villes du monde
-   (tous joueurs, transfert physique de population au besoin — même principe que
-   l'ancienne migration scolaire ; les cités libres ne sont pas destinations), chaque
-   ville candidate pesant `poids = (culture identique à celle du migrant ?
-   migrationBonheurCulture : 1) × (1 + bonheur de la candidate / 100)` — une ville de
-   SA culture pèse 4× (défaut), une ville à 100 de bonheur pèse 2× une ville à 0.
-   Exclusion de la ville source PAR IDENTITÉ (plusieurs joueurs peuvent avoir une ville
-   homonyme, ex. « Capitale »).
+2. **Destination pondérée, pas filtrée — v2 (retour Thibaut, 3e arbitrage du
+   jour)** : tirage parmi TOUTES les villes du monde (tous joueurs, transfert physique
+   de population au besoin — même principe que l'ancienne migration scolaire ; les
+   cités libres ne sont pas destinations), chaque ville candidate pesant
+   `poids = (ville du MÊME JOUEUR ? migrationBonheurMemeJoueur : 1) × (culture
+   identique à celle du migrant ? migrationBonheurCulture : 1) × (1 + bonheur de la
+   candidate / 100)` — une ville du même joueur pèse 1,5× (défaut : la migration
+   interne est privilégiée), une ville de SA culture 1,25× (défaut — le ×4 de la mise
+   en place du matin est REMPLACÉ), une ville à 100 de bonheur pèse 2× une ville à 0 —
+   les trois effets se multiplient. Exclusion de la ville source PAR IDENTITÉ
+   (plusieurs joueurs peuvent avoir une ville homonyme, ex. « Capitale ») — la seule
+   exclue du tirage : un personnage peut REVENIR vers une ville d'où il vient (retour
+   Thibaut explicite : « ce n'est pas un bug »).
 3. **Conséquences** : tout déménagement applique `perteDemenagement` (métier ET domicile
    perdus — convention établie) et journalise en type « Système » avec le motif
    « cherche meilleure vie » ; un habitant ne migre qu'UNE fois par tour.
 4. **Placement étape 4bis** (après tous les moteurs de population) : un migrant n'est
    pas retraité (vieillissement, maladie) au même tour chez son nouveau porteur —
    l'ancienne migration scolaire vivait DANS populationTurn et cumulait ces effets.
-5. **Paramètres** (groupe Population) : `migrationBonheurMax` (0,10) et
-   `migrationBonheurCulture` (4). Pas de plafond par ville : la linéarité 0-10 % fait
-   foi. À proba max 0, le flux est coupé.
+5. **Paramètres** (groupe Population) : `migrationBonheurMax` (0,10),
+   `migrationBonheurCulture` (1,25 — v2) et `migrationBonheurMemeJoueur` (1,5 — v2,
+   NOUVEAU). Pas de plafond par ville : la linéarité 0-10 % fait foi. À proba max 0,
+   le flux est coupé.
 6. **COUPLES INSÉPARABLES (amendement du jour, retour CI du flux v1)** : le tirage
    individuel séparait des époux entre porteurs — or le moteur interdit le remariage
    tant que l'époux vit (cour) : un « divorcé par la distance » ne pouvait plus jamais
