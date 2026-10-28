@@ -23,16 +23,23 @@
 //     neDemenageJamais, cf. shared.ts) ET les soldats/commandants
 //     en armée (c.armee — l'armée LIE l'habitant, arbitrage du
 //     2026-10-28 « l'armée est liée à la population »).
-//   · COUPLES INSÉPARABLES (amendement du jour, retour CI rouge du
-//     flux v1 : le tirage individuel SÉPARAIT des couples entre
-//     joueurs — mariageId pointait chez un autre porteur, et la
-//     règle de mariage (cour.ts) interdit le remariage tant que
-//     l'époux vit : un « divorcé par la distance » ne pouvait plus
-//     jamais se remarier) : un marié ne part qu'AVEC son conjoint
-//     de la même ville (le foyer suit, une seule entrée chacun) ;
-//     si le conjoint est ancré (Dirigeant/Héritier/en armée), le
-//     foyer NE PART PAS ; si le conjoint est absent de la ville
-//     (défunt ou domicilié ailleurs), l'habitant part seul.
+//   · FOYER COMPLET (amendement du jour, 4e retour arbitre :
+//     « lorsqu'un personnage déménage, il déménage avec son/sa
+//     conjoint.e et leurs enfants non mariés » — étend l'amendement
+//     « couples inséparables » du 2e retour, motivé par la CI rouge
+//     du flux v1 : le tirage individuel séparait des couples entre
+//     porteurs) : un départ emporte le conjoint de la MÊME VILLE et
+//     leurs ENFANTS NON MARIÉS de la ville (un enfant = mereId/pereId
+//     d'un membre du couple, sans mariageId — un enfant marié a son
+//     propre foyer et reste) ; si le conjoint est ancré
+//     (Dirigeant/Héritier/en armée), le foyer NE PART PAS ; si le
+//     conjoint est absent de la ville (défunt ou domicilié
+//     ailleurs), l'habitant part avec ses enfants non mariés ; un
+//     enfant ancré (ex. Héritier, soldat) RESTE — il ne déménage
+//     jamais (règle 2026-10-21) et n'entrave pas le départ du
+//     reste du foyer. Un enfant éligible garde aussi son propre
+//     tirage : parti seul (sans conjoint ni enfants), il est déjà
+//     « déplacé » quand le tour des parents vient.
 //   · CULTURES recalculées en fin de flux (updateCityCultures) :
 //     les arrivées peuvent renverser la majorité — l'invariant
 //     « ville.culture = majorité des vivants » (populationTurn
@@ -137,20 +144,30 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
       const candidats = fiches.filter((f) => f !== src)
       for (const c of [...habitants]) {
         if (deplaces.has(c.id)) continue
-        // COUPLES INSÉPARABLES : un marié ne part qu'avec son conjoint
-        //  de la MÊME VILLE ; conjoint ancré → le foyer reste.
+        // FOYER COMPLET : le départ emporte le conjoint de la MÊME
+        //  VILLE et leurs enfants NON MARIÉS de la ville ; conjoint
+        //  ancré → le foyer reste.
         let conj: Character | undefined
         if (c.mariageId) {
           conj = (parVilleTous.get(v.nom) ?? []).find((x) => x.id === c.mariageId)
           if (conj && (neDemenageJamais(conj, C) || conj.armee)) continue
         }
+        // Enfants du foyer : mereId/pereId d'un membre du couple, non
+        //  mariés, vivants, de la même ville. Les ancrés (Héritier,
+        //  soldat…) RESTENT — ils ne déménagent jamais et
+        //  n'entravent pas le départ du reste du foyer.
+        const idsFoyer = new Set<string>([c.id, ...(conj ? [conj.id] : [])])
+        const enfantsFoyer = (parVilleTous.get(v.nom) ?? []).filter((e) =>
+          !e.mariageId && !deplaces.has(e.id) && !neDemenageJamais(e, C) && !e.armee &&
+          (idsFoyer.has(e.mereId ?? '') || idsFoyer.has(e.pereId ?? '')))
         if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
         const dest = rng.pickWeighted(
           candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n))
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
-        //  scolaire) — le conjoint suit sans tirage propre.
-        for (const m of conj ? [c, conj] : [c]) {
+        //  scolaire) — conjoint et enfants suivent sans tirage propre.
+        const foyer = [c, ...(conj ? [conj] : []), ...enfantsFoyer]
+        for (const m of foyer) {
           if (dest.joueur.n !== p.n) {
             const src2 = state.population[p.n] ?? []
             const i = src2.indexOf(m)
