@@ -26,10 +26,17 @@ export interface GameParams {
    *  Linéaire : p = migrationBonheurMax × (100 − bonheur) / 100
    *  (0 % à 100 de bonheur, défaut 10 % à 0). */
   migrationBonheurMax: number
-  /** (Arbitrage Thibaut 2026-10-28) Poids multiplicatif d'une ville
-   *  candidate de SA culture dans le tirage pondéré de destination
-   *  (se multiplie avec l'attrait de son bonheur, ×[1 ; 2]). */
+  /** (Arbitrage Thibaut 2026-10-28, v2 au 3e retour du jour : ×1,25,
+   *  le ×4 de la mise en place du matin est REMPLACÉ) Poids
+   *  multiplicatif d'une ville candidate de SA culture dans le tirage
+   *  pondéré de destination (se multiplie avec le facteur même joueur
+   *  et l'attrait du bonheur, ×[1 ; 2]). */
   migrationBonheurCulture: number
+  /** (Arbitrage Thibaut 2026-10-28, v2) Poids multiplicatif d'une ville
+   *  candidate du MÊME JOUEUR que le migrant (migration interne
+   *  privilégiée) dans le tirage pondéré de destination — se multiplie
+   *  avec le facteur culture et l'attrait du bonheur. */
+  migrationBonheurMemeJoueur: number
   consoNourrParHab: number
   /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
    *  un bourgeois vivant consomme consoNourrBourgeois Nourriture
@@ -196,7 +203,8 @@ export const DEFAULT_PARAMS: GameParams = {
   migrationMonde: 0.01,
   // (Arbitrage Thibaut 2026-10-28 — flux de migration par bonheur)
   migrationBonheurMax: 0.10,
-  migrationBonheurCulture: 4,
+  migrationBonheurCulture: 1.25,
+  migrationBonheurMemeJoueur: 1.5,
   consoNourrParHab: 1,
   consoNourrBourgeois: 2,
   consoNourrNoble: 4,
@@ -311,7 +319,8 @@ export const PARAM_META: {
   //  restent comme REFLIS de compatibilité. Remplacée le jour même
   //  par le flux de migration par BONHEUR ci-dessous.)
   { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
-  { key: 'migrationBonheurCulture', label: 'Migration par bonheur — poids d\'une ville de SA culture', groupe: 'Population', aide: 'Destination pondérée : ×N pour une ville de la culture du migrant (défaut 4), ×(1 + bonheur/100) pour l\'attrait de la ville candidate. Les deux effets se multiplient.' },
+  { key: 'migrationBonheurCulture', label: 'Migration par bonheur — poids d\'une ville de SA culture', groupe: 'Population', aide: 'Destination pondérée : ×N pour une ville de la culture du migrant (défaut 1,25 — retour du jour : le ×4 de la mise en place est remplacé), ×1,5 pour une ville du même joueur, ×(1 + bonheur/100) pour l\'attrait de la ville candidate. Les trois effets se multiplient.' },
+  { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — poids d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Destination pondérée (retour du jour) : ×N pour une ville du même joueur que le migrant (défaut 1,5 — la migration interne est privilégiée). Se multiplie avec le poids culture et l\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
   { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
   { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
   { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },

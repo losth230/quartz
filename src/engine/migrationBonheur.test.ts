@@ -11,7 +11,9 @@
 //     son conjoint de la même ville (le foyer suit) ; conjoint
 //     ancré → le foyer ne part pas ; conjoint absent → il part seul ;
 //   · cultures des villes recalculées après le flux (majorité).
-//   · pondération : culture identique ×N × (1 + bonheur/100) ;
+//   · pondération v2 (3e retour du jour) : ville du MÊME JOUEUR ×1,5
+//     × culture identique ×1,25 × (1 + bonheur/100) — les trois effets
+//     se multiplient ; retour vers une ville d'origine légitime ;
 //   · toute migration = perteDemenagement + entrée « Système » au
 //     journal avec le motif « cherche meilleure vie ».
 // ═══════════════════════════════════════════════════════════════════════════
@@ -60,18 +62,24 @@ test('proba de départ : LINÉAIRE — 0 % à 100 de bonheur, max à 0, moitié 
   assert.equal(probaDepartBonheur(0, C), 0, 'proba max nulle = flux coupé')
 })
 
-test('poids de destination : culture identique ×N, bonheur monotone, effets multipliés', () => {
+test('poids de destination v2 : même joueur ×1,5, culture identique ×1,25, bonheur monotone — les trois effets se multiplient', () => {
   const { C } = partie()
-  C.p.migrationBonheurCulture = 4
+  C.p.migrationBonheurCulture = 1.25
+  C.p.migrationBonheurMemeJoueur = 1.5
   const c = hab('m1', 30, { culture: 'Nordique' })
   const memeCulture = villeTest('A', 'Nordique')
   const autreCulture = villeTest('B', 'Méridionale')
-  assert.equal(poidsDestination(c, memeCulture, 0, C), 4, '×4 même culture à bonheur 0')
+  assert.equal(poidsDestination(c, memeCulture, 0, C), 1.25, '×1,25 même culture à bonheur 0 (le ×4 du matin est REMPLACÉ)')
   assert.equal(poidsDestination(c, autreCulture, 0, C), 1, '×1 autre culture à bonheur 0')
-  assert.equal(poidsDestination(c, memeCulture, 100, C), 8, '×4 ×2 à bonheur 100')
+  assert.equal(poidsDestination(c, memeCulture, 100, C), 2.5, '×1,25 ×2 à bonheur 100')
   assert.equal(poidsDestination(c, autreCulture, 100, C), 2, '×1 ×2 à bonheur 100')
-  // ville sans culture renseignée (champ optionnel) : pas de bonus
+  // Même joueur (retour du jour, v2) : migration interne privilégiée
+  assert.equal(poidsDestination(c, autreCulture, 0, C, true), 1.5, '×1,5 même joueur à bonheur 0')
+  assert.equal(poidsDestination(c, memeCulture, 100, C, true), 3.75, '×1,5 ×1,25 ×2 — les trois effets se multiplient')
+  assert.equal(poidsDestination(c, autreCulture, 100, C, true), 3, '×1,5 ×1 ×2 à bonheur 100')
+  // ville sans culture renseignée (champ optionnel) : pas de bonus culture
   assert.equal(poidsDestination(c, villeTest('C'), 0, C), 1)
+  assert.equal(poidsDestination(c, villeTest('C'), 0, C, true), 1.5, 'sans culture, le facteur même joueur reste seul')
 })
 
 // ── Flux complet (déterministe — graines fixes) ──────────────────────
@@ -202,7 +210,8 @@ test('couples inséparables : conjoint ANCRÉ (Dirigeant/Héritier/en armée) �
 test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les premiers tours', () => {
   const { state, C } = partie(20261101)
   assert.equal(C.p.migrationBonheurMax, 0.10)
-  assert.equal(C.p.migrationBonheurCulture, 4)
+  assert.equal(C.p.migrationBonheurCulture, 1.25)
+  assert.equal(C.p.migrationBonheurMemeJoueur, 1.5)
   // au setup : villes sans bâtiments → bonheur d'emblée < 100
   const b0 = bonheurVilleComplete(state, state.players[0], state.players[0].villes[0], C)
   assert.ok(b0 < 100, `le bonheur initial est dégradé (${b0}/100) — le flux a prise`)

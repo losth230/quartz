@@ -37,11 +37,20 @@
 //     les arrivées peuvent renverser la majorité — l'invariant
 //     « ville.culture = majorité des vivants » (populationTurn
 //     étape 3.6) doit tenir aussi après le flux.
-//   · PONDÉRATION (pas filtrage) du tirage de destination :
-//       poids = (culture identique ? migrationBonheurCulture : 1)
+//   · PONDÉRATION (pas filtrage) du tirage de destination — v2
+//     (retour Thibaut, 3e arbitrage du jour) :
+//       poids = (ville du MÊME JOUEUR ? migrationBonheurMemeJoueur : 1)
+//               × (culture identique ? migrationBonheurCulture : 1)
 //               × (1 + bonheur de la ville candidate / 100)
-//     une ville de SA culture pèse 4× (défaut), une ville à 100 de
-//     bonheur pèse 2× une ville à 0 — les deux effets se multiplient.
+//     une ville du même joueur pèse 1,5× (défaut), une ville de SA
+//     culture 1,25× (défaut — le ×4 du matin est REMPLACÉ), une ville
+//     à 100 de bonheur 2× une ville à 0 — les trois effets se
+//     multiplient.
+//   · RETOUR POSSIBLE : un personnage peut migrer vers une ville
+//     d'où il VIENT (retour Thibaut explicite : « ce n'est pas un
+//     bug ») — aucune ville n'est interdite pour ses anciennes
+//     résidences ; la seule exclue du tirage est la ville SOURCE
+//     courante (par identité).
 //   · CONSÉQUENCES — convention établie de tout changement de
 //     résidence : perteDemenagement (métier ET domicile perdus,
 //     retour Sans-emploi jusqu'à la réaffectation du tour suivant) ;
@@ -72,10 +81,15 @@ export function probaDepartBonheur(bonheur: number, C: Cfg): number {
 }
 
 /** Poids d'attraction d'une ville candidate pour un migrant :
- *  culture identique à la sienne ×N, bonheur ×(1 + b/100). Pure. */
-export function poidsDestination(c: Character, ville: City, bonheur: number, C: Cfg): number {
+ *  ville du même joueur ×1,5, culture identique ×1,25, bonheur
+ *  ×(1 + b/100) — les trois effets se multiplient (v2, retour
+ *  Thibaut du jour ; le culture ×4 du matin est REMPLACÉ). Pure. */
+export function poidsDestination(
+  c: Character, ville: City, bonheur: number, C: Cfg, memeJoueur = false,
+): number {
+  const joueur = memeJoueur ? C.p.migrationBonheurMemeJoueur : 1
   const culture = (ville.culture ?? '') === c.culture ? C.p.migrationBonheurCulture : 1
-  return culture * (1 + bonheur / 100)
+  return joueur * culture * (1 + bonheur / 100)
 }
 
 /** Fiche d'une ville du monde pour le tirage. */
@@ -131,7 +145,8 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
           if (conj && (neDemenageJamais(conj, C) || conj.armee)) continue
         }
         if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
-        const dest = rng.pickWeighted(candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C))
+        const dest = rng.pickWeighted(
+          candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n))
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
         //  scolaire) — le conjoint suit sans tirage propre.

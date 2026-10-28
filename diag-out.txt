@@ -1,7 +1,7 @@
 createGame OK — 8 joueurs
-4 tours OK — turn 5 · saison Hiver · log 728 entrées
+4 tours OK — turn 5 · saison Hiver · log 724 entrées
 commandants disponibles pour J1 : 4
-levée + recrutement OK — Armée 1:3 soldats, Armée 2:3 soldats
+levée + recrutement OK — Armée 1:3 soldats, Armée 2:6 soldats
 dissolution armée idx=1 : OK
 renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
