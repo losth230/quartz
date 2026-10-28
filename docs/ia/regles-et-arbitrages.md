@@ -1459,3 +1459,29 @@ commandant = 45. Décisions :
    recrutement de chaque tour comble l'écart en AUGMENTANT la stockée de la valeur des
    recrues — sans jamais la re-dériver. Un commandant mort entre deux tours est détaché
    et coûte ses points, la vacance se comble par recrutement (la cible est intacte).
+
+   AMENDEMENT (3e retour, même jour) : le point « une armée non suivie ne perd que des
+   points » est CADUC — l'armée est liée à la population, cf. section suivante.
+
+## L'armée est liée à la population ; les pertes tuent de vrais habitants (arbitrage Thibaut, 2026-10-28, 3e retour)
+
+Deux retours d'arbitre sur le panneau Armées : (1) « plutôt que des champs textes pour
+pertes, ajouts et levée d'armées, affichez un menu déroulant, ce sera plus simple » ;
+(2) « l'armée est liée à la population, donc des pertes dans une armée doit tuer des
+habitants ». Décisions :
+
+1. **Les pertes tuent de VRAIS habitants** : les soldats réellement suivis meurent
+   d'abord (ordre d'engagement), puis le COMPLÉMENT est pris parmi les candidats
+   RECRUTABLES — mêmes critères que le recrutement : vivants, aux âges de la ligne
+   Soldat (16-30 ans par défaut), sans armée, métier libre ou Chasseur — dans l'ordre
+   du recensement. Un Dirigeant ou un homme d'âge mûr ne meurt pas au front. Le pool
+   épuisé, les points SEULS continuent de baisser (plancher 0).
+2. **Fin de service symétrique** : au-delà des soldats suivis, le complément est
+   démobilisé parmi les mêmes candidats recrutables, qui quittent la vie civile et
+   redeviennent Chasseurs (convention Dissoudre) — ils restent vivants et productifs.
+3. **Menus déroulants** : plus AUCUN champ de saisie — pertes (1 à 20, « N pertes
+   (−N × pts) »), renfort (+15 à +300 pts, prix de levée affiché par option), puissance
+   cible de levée (45 à 300 pts, prix affiché par option). `NumberInput` retiré du
+   panneau Armées.
+4. **Journal des armées enrichi** : pertes et fin de service listent les noms des
+   tombés / libérés, pour lecture immédiate au fil du recensement.
