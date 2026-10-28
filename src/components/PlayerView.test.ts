@@ -113,7 +113,7 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   }
 })
 
-test('rendu VilleCarte : population, garnison, logements & métiers en damier 2×2 — tableaux propres (retours Thibaut 2026-10-26/27/28)', async () => {
+test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLONNES (3 tableaux empilés + métiers) — tableaux propres (retours Thibaut 2026-10-26/27/28)', async () => {
   const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
@@ -127,10 +127,18 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
     React.createElement(GameProvider, null, React.createElement(PlayerView, { joueur: 1 })),
   )
   const h = aplatir(html)
-  // Le bloc damier 2×2 (retour Thibaut 2026-10-28 « ils ne
-  // rentrent pas » : rangée 1 cultures + logements, rangée 2
-  // garnison + métiers) est rendu dans la carte ville.
-  assert.ok(h.includes('ville-duo-cols'), 'damier population/garnison/logements/métiers absent de la carte ville')
+  // Le bloc en DEUX COLONNES (retour Thibaut 2026-10-28, 3e
+  //  retour du jour : colonne gauche cultures + logements +
+  //  garnison EMPILÉS, colonne droite les métiers — SUPERSEDÉ
+  //  le damier 2×2 du matin) est rendu dans la carte ville.
+  assert.ok(h.includes('ville-duo-cols'), 'les deux colonnes (3 tableaux empilés + métiers) absentes de la carte ville')
+  assert.ok(h.includes('ville-col-stack'), 'la colonne des 3 tableaux empilés absente de la carte ville')
+  assert.ok(
+    h.indexOf('Cultures présentes') < h.indexOf('Logements : <strong>') &&
+      h.indexOf('Logements : <strong>') < h.indexOf('Garnison des habitations : <strong>') &&
+      h.indexOf('Garnison des habitations : <strong>') < h.indexOf('Métiers : <strong>'),
+    'ordre attendu : cultures, logements, garnison empilés à gauche puis métiers à droite',
+  )
 
   // ── Données dérivées de l'état (patron R3) : capitale du joueur 1 ──
   const C = cfgOf(etat.config)
@@ -180,8 +188,8 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
     `garnison ${fmt(g)} de « ${cap.nom} » absente du titre de colonne`,
   )
   // ── LOGEMENTS (retour Thibaut 2026-10-26 : « réduit les tableaux
-  //  pour ajouter les logements ») : rangée 1 du damier, à
-  //  droite des cultures (retour 2026-10-28) — parc
+  //  pour ajouter les logements ») : colonne gauche, SOUS les
+  //  cultures (retour 2026-10-28, 3e retour) — parc
   //  par type de domicile, habitants/capacité puis libres, le tout
   //  DÉRIVÉ de l'état (patron R3 : stock City.domiciles + apports
   //  des constructions, occupés = habitants attribués — 1 logement
@@ -215,8 +223,8 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
   // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau tableau
   //  avec les 3 tableaux de logement, culture et garnison, qui
   //  recense tous les métiers disponibles et occupés ») : tableau
-  //  de la 2e rangée du damier, à droite de la garnison (retour
-  //  Thibaut 2026-10-28), DÉRIVÉ de l'état (patron R3 — même
+  //  de la colonne DROITE, à côté des 3 tableaux empilés (retour
+  //  Thibaut 2026-10-28, 3e retour), DÉRIVÉ de l'état (patron R3 — même
   //  helper moteur que le panneau Population).
   const { occupationsMetierVille } = await import('../engine/metiers')
   const lignesMet = occupationsMetierVille(habitantsCap, cap, C, { state: etat, joueur: 1 })

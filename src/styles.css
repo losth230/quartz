@@ -716,28 +716,29 @@ input[type='range'] {
    les métiers disponibles et occupés » : la ligne passe en
    4 colonnes — cultures, garnison, logements, métiers.
    Retour Thibaut 2026-10-28 « ils ne rentrent pas » : DAMIER 2×2 —
-   rangée 1 cultures + logements, rangée 2 garnison + métiers ;
-   filet vertical entre colonnes (pairs), filet horizontal entre
-   rangées (2e rangée).)
+   rangée 1 cultures + logements, rangée 2 garnison + métiers.
+   Retour Thibaut 2026-10-28 (3e retour du jour) « deux colonnes » :
+   colonne gauche culture + logements + garnison EMPILÉS, colonne
+   droite les métiers ; filet vertical entre colonnes, filets
+   horizontaux entre les tableaux empilés.)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée
    par un liseré accent (plus de styles inline dans VilleCarte). */
 .ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; }
-.ville-duo-cols > div:nth-child(even) {
+.ville-duo-cols > div:last-child {
   border-left: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
   padding-left: 18px;
 }
-.ville-duo-cols > div:nth-child(n+3) {
+.ville-col-stack > div + div {
+  margin-top: 10px;
   border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
-  padding-top: 8px;
+  padding-top: 10px;
 }
 @media (max-width: 560px) {
   .ville-duo-cols { grid-template-columns: 1fr; }
-  .ville-duo-cols > div:nth-child(even) {
+  .ville-duo-cols > div:last-child {
     border-left: none; padding-left: 0;
-  }
-  .ville-duo-cols > div:not(:first-child) {
     border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
     padding-top: 8px;
   }

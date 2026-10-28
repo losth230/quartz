@@ -9,9 +9,10 @@
 //  NI le compte de vivants ne vivent en tête (retours Thibaut
 //  2026-10-26 : le tableau « Cultures présentes » porte la culture
 //  ET le total des vivants) ; (2) POPULATION, GARNISON, LOGEMENTS
-//  & MÉTIERS en DAMIER 2×2 (retour Thibaut 2026-10-28 : « ils ne
-//  rentrent pas » sur une seule ligne — rangée 1 : culture +
-//  logements ; rangée 2 : garnison + métiers)
+//  & MÉTIERS en DEUX COLONNES (retour Thibaut 2026-10-28 : damier
+//  2×2 « ils ne rentrent pas » — SUPERSEDÉ le même jour, 3e
+//  retour : colonne gauche culture + logements + garnison
+//  EMPILÉS, colonne droite les métiers)
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
@@ -275,10 +276,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
 
-        {/* POPULATION, GARNISON, LOGEMENTS & MÉTIERS en DAMIER 2×2
-            (retour Thibaut 2026-10-28 : « on va les mettre sur
-            deux lignes car ils ne rentrent pas » — rangée 1 :
-            culture + logements ; rangée 2 : garnison + métiers).
+        {/* POPULATION, GARNISON, LOGEMENTS & MÉTIERS en DEUX
+            COLONNES (retour Thibaut 2026-10-28, 3e retour du
+            jour : « deux colonnes, une avec 3 tableaux :
+            culture, logement et garnison, et une deuxième avec
+            les métiers » — SUPERSEDÉ le damier 2×2 du matin) :
+            colonne gauche les 3 tableaux empilés, colonne
+            droite les métiers.
             La garnison est une VALEUR D'ÉTAT (pas un flux) : base
             du rang + bâtiments + loi éventuelle du régime ; ne
             change pas à chaque tour. Arbitre : le tableau détaillé
@@ -292,9 +296,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const plancher = g - sousTotal
           const part = (nb: number) =>
             nbVivants > 0 ? `${Math.round((100 * nb) / nbVivants)} %` : '—'
-          // ── LOGEMENTS (retour Thibaut 2026-10-26 : 3e tableau de
-          //  la ligne — 2026-10-28 : rangée 1 du damier, à droite
-          //  des cultures) : parc par type de domicile, meilleure qualité
+          // ── LOGEMENTS (retour Thibaut 2026-10-26 : 3e tableau —
+          //  2026-10-28 : colonne gauche, SOUS les cultures) : parc
+          //  par type de domicile, meilleure qualité
           //  d'abord — capacité du rang (City.domiciles, repli
           //  stockRang pour un état non normalisé) + apports des
           //  constructions (domicilesApportesVille : Poste de garde,
@@ -328,8 +332,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const habitantsLoges = habitantsLog.length - sansLogement
           // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau
           //  tableau […] qui recense tous les métiers disponibles
-          //  et occupés ») : rangée 2 du damier, à droite de la
-          //  garnison (retour 2026-10-28), mêmes données que le
+          //  et occupés ») : colonne DROITE, à côté des 3
+          //  tableaux empilés (retour 2026-10-28), mêmes données que le
           //  panneau Population (helper moteur
           //  occupationsMetierVille, testé). Retour Thibaut
           //  2026-10-28 « n'affiche que les métiers présents dans
@@ -359,105 +363,107 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           )
           return (
             <div className="ville-duo-cols">
-              <div>
-                <div className="ville-duo-titre">Cultures présentes</div>
-                {culturesTriees.length === 0 ? (
-                  <div className="muted small">
-                    aucun habitant — culture de la ville : <strong>{ville.culture}</strong>
-                  </div>
-                ) : (
-                  <table className="ville-table">
-                    <tbody>
-                      {culturesTriees.map(([cult, nb]) => (
-                        <tr key={cult} className={cult === ville.culture ? 'ligne-major' : ''}>
-                          <td>
-                            {cult === ville.culture
-                              ? <strong>{cult}</strong>
-                              : <span className="muted">{cult}</span>}
-                          </td>
-                          <td className="num">{nb}</td>
-                          <td className="num muted">{part(nb)}</td>
+              <div className="ville-col-stack">
+                <div>
+                  <div className="ville-duo-titre">Cultures présentes</div>
+                  {culturesTriees.length === 0 ? (
+                    <div className="muted small">
+                      aucun habitant — culture de la ville : <strong>{ville.culture}</strong>
+                    </div>
+                  ) : (
+                    <table className="ville-table">
+                      <tbody>
+                        {culturesTriees.map(([cult, nb]) => (
+                          <tr key={cult} className={cult === ville.culture ? 'ligne-major' : ''}>
+                            <td>
+                              {cult === ville.culture
+                                ? <strong>{cult}</strong>
+                                : <span className="muted">{cult}</span>}
+                            </td>
+                            <td className="num">{nb}</td>
+                            <td className="num muted">{part(nb)}</td>
+                          </tr>
+                        ))}
+                        <tr className="ligne-total">
+                          <td><strong>Habitants vivants</strong></td>
+                          <td className="num"><strong>{nbVivants}</strong></td>
+                          <td className="num muted">{nbVivants > 0 ? '100 %' : '—'}</td>
                         </tr>
-                      ))}
-                      <tr className="ligne-total">
-                        <td><strong>Habitants vivants</strong></td>
-                        <td className="num"><strong>{nbVivants}</strong></td>
-                        <td className="num muted">{nbVivants > 0 ? '100 %' : '—'}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                )}
-              </div>
-              {/* ── LOGEMENTS (retour Thibaut 2026-10-26 — puis
-                  rangée 1 du damier 2×2, retour 2026-10-28 :
-                  culture + logements ne tenaient plus sur la même
-                  ligne que garnison et métiers).
-                  Colonnes : type · occupés/capacité (retour Thibaut
-                  2026-10-27 : la colonne « places libres » est
-                  retirée — redondante, cap − occupés se lit déjà
-                  dans occ/cap) ; le total rend habitants logés /
-                  capacité totale. */}
-              <div>
-                <div
-                  className="ville-duo-titre"
-                  title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
-                >
-                  Logements : <strong>{fmt(capTotale)}</strong>
+                      </tbody>
+                    </table>
+                  )}
                 </div>
-                {lignesLog.length === 0 ? (
-                  <div className="muted small">aucun logement</div>
-                ) : (
+                {/* ── LOGEMENTS (retour Thibaut 2026-10-26 — puis
+                    damier 2×2, retour 2026-10-28 — SUPERSEDÉ le
+                    même jour : 2e tableau de la colonne gauche,
+                    empilé sous les cultures).
+                    Colonnes : type · occupés/capacité (retour Thibaut
+                    2026-10-27 : la colonne « places libres » est
+                    retirée — redondante, cap − occupés se lit déjà
+                    dans occ/cap) ; le total rend habitants logés /
+                    capacité totale. */}
+                <div>
+                  <div
+                    className="ville-duo-titre"
+                    title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
+                  >
+                    Logements : <strong>{fmt(capTotale)}</strong>
+                  </div>
+                  {lignesLog.length === 0 ? (
+                    <div className="muted small">aucun logement</div>
+                  ) : (
+                    <table className="ville-table">
+                      <tbody>
+                        {lignesLog.map((l) => (
+                          <tr key={l.nom}>
+                            <td>{l.nom}</td>
+                            <td className="num">{fmt(l.occ)}/{fmt(l.cap)}</td>
+                          </tr>
+                        ))}
+                        {sansLogement > 0 && (
+                          <tr>
+                            <td className="neg">sans logement</td>
+                            <td className="num neg">{fmt(sansLogement)}</td>
+                          </tr>
+                        )}
+                        <tr className="ligne-total">
+                          <td><strong>Habitants logés</strong></td>
+                          <td className="num"><strong>{fmt(habitantsLoges)}/{fmt(capTotale)}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                <div>
+                  <div className="ville-duo-titre">
+                    Garnison des habitations : <strong>{fmt(g)}</strong>
+                  </div>
                   <table className="ville-table">
                     <tbody>
-                      {lignesLog.map((l) => (
-                        <tr key={l.nom}>
-                          <td>{l.nom}</td>
-                          <td className="num">{fmt(l.occ)}/{fmt(l.cap)}</td>
+                      {lignes.map((l, i) => (
+                        <tr key={i}>
+                          <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
+                          <td>{l.label}</td>
+                          <td className={l.valeur < 0 ? 'num neg' : 'num'}>
+                            {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
+                          </td>
                         </tr>
                       ))}
-                      {sansLogement > 0 && (
+                      {plancher > 0 && (
                         <tr>
-                          <td className="neg">sans logement</td>
-                          <td className="num neg">{fmt(sansLogement)}</td>
+                          <td className="muted">plancher</td>
+                          <td>« Combler les lacunes » : minimum 30</td>
+                          <td className="num">+{fmt(plancher)}</td>
                         </tr>
                       )}
                       <tr className="ligne-total">
-                        <td><strong>Habitants logés</strong></td>
-                        <td className="num"><strong>{fmt(habitantsLoges)}/{fmt(capTotale)}</strong></td>
+                        <td />
+                        <td><strong>Total</strong></td>
+                        <td className="num"><strong>{fmt(g)}</strong></td>
                       </tr>
                     </tbody>
                   </table>
-                )}
-              </div>
-              <div>
-                <div className="ville-duo-titre">
-                  Garnison des habitations : <strong>{fmt(g)}</strong>
                 </div>
-                <table className="ville-table">
-                  <tbody>
-                    {lignes.map((l, i) => (
-                      <tr key={i}>
-                        <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
-                        <td>{l.label}</td>
-                        <td className={l.valeur < 0 ? 'num neg' : 'num'}>
-                          {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
-                        </td>
-                      </tr>
-                    ))}
-                    {plancher > 0 && (
-                      <tr>
-                        <td className="muted">plancher</td>
-                        <td>« Combler les lacunes » : minimum 30</td>
-                        <td className="num">+{fmt(plancher)}</td>
-                      </tr>
-                    )}
-                    <tr className="ligne-total">
-                      <td />
-                      <td><strong>Total</strong></td>
-                      <td className="num"><strong>{fmt(g)}</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
               </div>
               {/* ── MÉTIERS (retour Thibaut 2026-10-27, puis
                   2026-10-28 « n'affiche que les métiers présents
