@@ -24,7 +24,10 @@
 //  capacité » comme les logements, et SEULS les métiers PRÉSENTS
 //  (occupés) de la ville s'affichent ; retour 2026-10-28 bis :
 //  les ENFANTS ne sont pas des sans-emplois — ligne « Enfant »
-//  à part qui devient Sans-emploi à l'âge adulte) ; (3) CONSTRUCTIONS :
+//  à part qui devient Sans-emploi à l'âge adulte ; retour
+//  2026-10-28 ter : le tableau liste les métiers DISPONIBLES
+//  (cap ≥ 1), occupés ou non — les métiers hors offre ne
+//  s'affichent plus) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
 //  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
@@ -330,20 +333,29 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           //  panneau Population (helper moteur
           //  occupationsMetierVille, testé). Retour Thibaut
           //  2026-10-28 « n'affiche que les métiers présents dans
-          //  la ville » : seuls les métiers OCCUPÉS (en poste > 0)
-          //  s'affichent — les disponibles inoccupés (cap finie,
-          //  0 en poste) quittent le tableau. Même retour : les
-          //  ENFANTS ne sont pas des sans-emplois — ligne neutre
-          //  « Enfant » à part (cap illimitée), le Sans-emploi ne
-          //  compte que les adultes.
+          //  la ville » (filtre occupés, SUPERSEDÉ ci-dessous) ;
+          //  même retour : les ENFANTS ne sont pas des
+          //  sans-emplois — ligne neutre « Enfant » à part (cap
+          //  illimitée), le Sans-emploi ne compte que les adultes.
+          //  Retour Thibaut 2026-10-28 (2e retour du jour) « dans le
+          //  tableau des métiers s'affichent non pas tous les
+          //  métiers occupés, mais les métiers disponibles » : la
+          //  table liste les métiers que la ville OFFRE (cap
+          //  finie ≥ 1 : base du rang + emplacements des
+          //  constructions), occupés ou non — un poste libre se
+          //  lit N/M. Ne s'affichent plus les métiers HORS offre :
+          //  rôles non plafonnés (Dirigeant, armée, Banquier…)
+          //  même occupés, et surnombre cap 0 (aménagement perdu —
+          //  corrigé par reaffecterMetiers au fin de tour). Les
+          //  lignes neutres restent (Enfant, Sans-emploi).
           const lignesMet = occupationsMetierVille(
             habitantsLog, ville, C, { state, joueur },
           )
           const enPosteTotal = lignesMet.reduce(
             (n, l) => n + (l.metier ? l.enPoste : 0), 0,
           )
-          const metiersPresents = lignesMet.filter(
-            (l) => l.metier === null || l.enPoste > 0,
+          const metiersDisponibles = lignesMet.filter(
+            (l) => l.metier === null || (Number.isFinite(l.cap) && l.cap >= 1),
           )
           return (
             <div className="ville-duo-cols">
@@ -449,10 +461,15 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               </div>
               {/* ── MÉTIERS (retour Thibaut 2026-10-27, puis
                   2026-10-28 « n'affiche que les métiers présents
-                  dans la ville ») : UNIQUEMENT les métiers OCCUPÉS
-                  (en poste > 0) — les disponibles inoccupés ne
-                  s'affichent pas — avec les lignes neutres
-                  Enfant (les enfants ne sont pas des
+                  dans la ville » — SUPERSEDÉ par le 2e retour du
+                  jour « non pas tous les métiers occupés, mais les
+                  métiers disponibles ») : les métiers que la ville
+                  OFFRE (cap finie ≥ 1 : base du rang + emplacements
+                  des constructions), occupés ou non — un poste
+                  libre se lit N/M ; les métiers HORS offre ne
+                  s'affichent pas (rôles non plafonnés même
+                  occupés, surnombre cap 0). Avec les lignes
+                  neutres Enfant (les enfants ne sont pas des
                   sans-emplois — retour 2026-10-28 : ligne à part,
                   ils deviennent Sans-emploi à l'âge adulte) et
                   Sans-emploi (adultes, rôle neutre), et le total
@@ -466,13 +483,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Les métiers occupés de la ville, au format en poste / capacité (comme les logements) ; les métiers disponibles mais inoccupés ne sont pas listés. Ligne Enfant : les enfants ne sont pas des sans-emplois — ils deviennent Sans-emploi à l'âge adulte. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
+                  title="Les métiers disponibles dans la ville, au format en poste / capacité (comme les logements) : cap finie d'au moins 1 place (base du rang d'habitation + emplacements des bâtiments et aménagements — ex. Poste de garde : +4 Garde), occupés ou non. Les métiers hors offre (rôles non plafonnés, cap 0) ne sont pas listés. Ligne Enfant : les enfants ne sont pas des sans-emplois — ils deviennent Sans-emploi à l'âge adulte."
                 >
                   Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
                 </div>
                 <table className="ville-table">
                   <tbody>
-                    {metiersPresents.map((l) => (
+                    {metiersDisponibles.map((l) => (
                       <tr key={l.metier ?? (l.enfants ? 'enfants' : 'sans')}>
                         <td>
                           {l.metier
