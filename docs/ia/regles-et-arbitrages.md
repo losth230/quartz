@@ -1613,3 +1613,25 @@ avec les métiers. » Décisions :
 3. **Verrou de régression** : le test de rendu vérifie la présence des deux colonnes
    (wrapper d'empilement) et l'ordre des titres — cultures, logements, garnison puis
    métiers.
+
+## Le tableau Métiers affiche les présents ET les disponibles, sans distinction (arbitrage Thibaut, 2026-10-28, 4e retour)
+
+« Affiche également les métiers comme dirigeant ou héritier ou ministre etc s'ils sont
+présents. En fait, il faut voir les métiers présents ET disponibles sans distinction. »
+Décisions :
+
+1. **Union occupés ∪ offerts** : un métier s'affiche s'il est OCCUPÉ (au moins un
+   habitant en poste, même non plafonné — Dirigeant, Héritier, Ministre, armée,
+   Banquier… : capacité illimitée notée « — ») OU OFFERT par la ville (capacité finie
+   d'au moins une place, occupé ou non — un poste libre se lit N/M). SUPERSEDÉ
+   l'arbitrage « métiers disponibles » du 3e retour.
+2. **Seuls masqués** : les métiers ni occupés ni offerts (0/0) et le surnombre cap 0
+   inoccupé. Le panneau Population garde son inventaire complet.
+3. **Délimitations claires** (même retour) : filet sous l'en-tête de la carte, filets
+   plein ton entre les tableaux (vertical entre colonnes, horizontaux entre empilés),
+   filet au-dessus des constructions — en-tête, tableaux et reste de la ville se
+   lisent en trois zones distinctes.
+4. **Comptages globaux** : le titre « Métiers : N en poste » et le pied « Habitants en
+   poste X/vivants » restent inchangés.
+5. **Verrou de régression** : test de rendu — chaque métier occupé ou offert affiché
+   (le Dirigeant occupé revient), chaque métier 0/0 absent.
