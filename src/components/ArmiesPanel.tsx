@@ -14,7 +14,7 @@ import type { GameState, Player } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import { prixArmee, infligerPertes, libererSoldats, puissanceArmeeMetier, agesRecrutementSoldat } from '../engine/armees'
 import { isNobleDyn } from '../engine/shared'
-import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
+import { Card, Select, TextInput, Button, fmt } from './ui'
 
 export function ArmiesPanel({ joueur }: { joueur: number }) {
   const { state, update } = useGame()
@@ -194,10 +194,18 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   remplissage automatique. */}
               <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
                 <span className="muted small">⚔ Pertes :</span>
-                <NumberInput
-                  value={pertesParArmee[idx] ?? 1}
-                  step={1} min={0} max={999}
-                  onChange={(v) => setPertesParArmee((m) => ({ ...m, [idx]: Math.round(v) }))}
+                {/* (Arbitrage Thibaut 2026-10-28, 3e retour : menu
+                    déroulant plutôt que champ de saisie. L'armée est
+                    LIÉE À LA POPULATION — chaque perte tue un VRAI
+                    habitant : soldat suivi d'abord, puis candidat
+                    recrutable.) */}
+                <Select
+                  value={String(pertesParArmee[idx] ?? 1)}
+                  options={Array.from({ length: 20 }, (_, k) => k + 1).map((n) => ({
+                    value: String(n),
+                    label: `${n} perte${n > 1 ? 's' : ''} (−${fmt(n * puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat))} pts)`,
+                  }))}
+                  onChange={(v) => setPertesParArmee((m) => ({ ...m, [idx]: Math.round(Number(v)) }))}
                 />
                 <label className="small" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
                   <input
@@ -232,10 +240,15 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   de leurs points au recrutement.) */}
               <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
                 <span className="muted small">⚔ Renfort :</span>
-                <NumberInput
-                  value={deltaRenfort}
-                  step={15} min={15} max={300}
-                  onChange={(v) => setRenfortParArmee((m) => ({ ...m, [idx]: Math.round(v) }))}
+                {/* (Arbitrage Thibaut 2026-10-28, 3e retour : menu
+                    déroulant plutôt que champ de saisie.) */}
+                <Select
+                  value={String(deltaRenfort)}
+                  options={Array.from({ length: 20 }, (_, k) => (k + 1) * 15).map((d) => ({
+                    value: String(d),
+                    label: `+${fmt(d)} pts (${fmt(prixArmee(d, C, villeRenfortObj))} Or)`,
+                  }))}
+                  onChange={(v) => setRenfortParArmee((m) => ({ ...m, [idx]: Math.round(Number(v)) }))}
                 />
                 <Select
                   value={villeRenfortParArmee[idx] ?? ''}
@@ -290,8 +303,18 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
             />
           </label>
           <label className="field">
-            <span className="field-label">Puissance cible (45-300)</span>
-            <NumberInput value={puissance} onChange={setPuissance} step={15} min={45} max={300} />
+            <span className="field-label">Puissance cible</span>
+            {/* (Arbitrage Thibaut 2026-10-28, 3e retour : menu
+                déroulant plutôt que champ de saisie, prix de levée
+                affiché dans chaque option.) */}
+            <Select
+              value={String(puissance)}
+              options={Array.from({ length: 18 }, (_, k) => 45 + k * 15).map((v) => ({
+                value: String(v),
+                label: `${fmt(v)} pts (${fmt(prixArmee(v, C, villeLeveeObj))} Or)`,
+              }))}
+              onChange={(v) => setPuissance(Math.round(Number(v)))}
+            />
           </label>
           <label className="field">
             <span className="field-label">Ville de levée (bonus de ses bâtiments)</span>

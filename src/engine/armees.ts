@@ -115,16 +115,19 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
 //  si un besoin d'alignement manuel émerge.)
 
 /**
- * INFLIGER DES PERTES (revue 2026-10-17 ; arbitrage Thibaut 2026-10-28,
- *  2e retour) : `nb` pertes coûtent `nb` × points du Soldat, sur la
- *  puissance ET la puissance CIBLE (le commandant tué en premier si
- *  demandé coûte ses points en plus). Les soldats réellement suivis
- *  meurent dans l'ordre d'engagement (statut « Décédé », conjoint
- *  libéré) ; une armée non suivie ne perd que des points. PLUS
- *  AUCUNE DÉRIVATION : la puissance stockée fait foi, et la cible
- *  suit les pertes — pas de remplissage automatique au tour
- *  suivant (arbitrage Thibaut 2026-10-28). Retourne les noms des
- *  soldats tués.
+ * INFLIGER DES PERTES (revue 2026-10-17 ; arbitrages Thibaut
+ *  2026-10-28) : `nb` pertes coûtent `nb` × points du Soldat, sur
+ *  la puissance ET la puissance CIBLE — le commandant tué en
+ *  premier si demandé coûte ses points en plus ; pas de
+ *  remplissage automatique au tour suivant (2e retour). L'ARMÉE
+ *  EST LIÉE À LA POPULATION (3e retour) : les pertes tuent de
+ *  VRAIS habitants — les soldats suivis d'abord (ordre
+ *  d'engagement), puis le complément parmi les candidats
+ *  RECRUTABLES (mêmes critères que le recrutement : vivants, aux
+ *  âges du Soldat, sans armée, métier libre ou Chasseur), dans
+ *  l'ordre du recensement ; le pool épuisé, les points seuls
+ *  continuent de baisser (plancher 0). PLUS AUCUNE DÉRIVATION :
+ *  la puissance stockée fait foi. Retourne les noms des tués.
  */
 export function infligerPertes(
   state: GameState, p: Player, idxArmee: number, nb: number,
@@ -175,26 +178,49 @@ export function infligerPertes(
     const c = pop.find((x) => x.id === id)
     if (c && c.statut !== 'Décédé') tuer(c)
   }
+  // (Arbitrage Thibaut 2026-10-28, 3e retour « l'armée est liée à la
+  //  population » : au-delà des soldats suivis, le complément des
+  //  pertes est pris parmi les candidats RECRUTABLES — mêmes
+  //  critères que le recrutement (vivants, aux âges de la ligne
+  //  Soldat, sans armée, métier libre ou Chasseur), dans l'ordre du
+  //  recensement. Le pool épuisé, les points seuls continuent de
+  //  baisser : les Dirigeants et autres métiers ne meurent pas au
+  //  front.)
+  if (tombes.length < nb) {
+    const ages = agesRecrutementSoldat(C)
+    const candidats = pop.filter(
+      (c) =>
+        c.statut !== 'Décédé' &&
+        c.age >= ages.min && c.age <= ages.max &&
+        !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
+    )
+    for (const c of candidats) {
+      if (tombes.length >= nb) break
+      tuer(c)
+    }
+  }
   const perte = nb * puSoldat + (cmdTomb ? puCmd : 0)
   armee.puissance = Math.max(0, armee.puissance - perte)
   armee.puissanceCible = Math.max(0, armee.puissanceCible - perte)
   state.log.push({
     turn: state.turn, type: 'Armée', joueur: p.n,
-    texte: `⚔ Pertes — ${armee.nom} : ${nb} perte(s) au combat${cmdTomb ? ` — et le commandant (${tombes[0]})` : ''} (−${perte} pts sur la puissance et la cible). Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
+    texte: `⚔ Pertes — ${armee.nom} : ${nb} perte(s) au combat${cmdTomb ? ' — le commandant est tombé' : ''} (−${perte} pts sur la puissance et la cible)${tombes.length ? ` — tombés : ${tombes.join(', ')}` : ''}. Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
   })
   return tombes
 }
 
 /**
- * FIN DE SERVICE (revue 2026-10-17 ; arbitrage Thibaut 2026-10-28,
- *  2e retour) : N soldats quittent l'armée et redeviennent CHASSEURS
- *  (même convention que Dissoudre — ils restent vivants et
- *  productifs) ; le commandant peut être démobilisé aussi. Comme
- *  les pertes : SOUSTRACTIF sur la puissance ET la puissance cible
- *  (nb × points du soldat, + points du commandant), sans AUCUNE
- *  dérivation — la puissance stockée fait foi, la cible suit, pas
- *  de remplissage automatique. Retourne les noms des soldats
- *  libérés.
+ * FIN DE SERVICE (revue 2026-10-17 ; arbitrages Thibaut 2026-10-28) :
+ *  N soldats quittent l'armée et redeviennent CHASSEURS (même
+ *  convention que Dissoudre — ils restent vivants et productifs) ;
+ *  le commandant peut être démobilisé aussi. Comme les pertes :
+ *  SOUSTRACTIF sur la puissance ET la puissance cible (nb × points
+ *  du soldat, + points du commandant), sans AUCUNE dérivation, pas
+ *  de remplissage automatique. L'ARMÉE EST LIÉE À LA POPULATION
+ *  (3e retour) : au-delà des soldats suivis, le complément est
+ *  pris parmi les candidats recrutables (vivants, âges du Soldat,
+ *  sans armée, métier libre ou Chasseur) qui redeviennent
+ *  Chasseurs. Retourne les noms des libérés.
  */
 export function libererSoldats(
   state: GameState, p: Player, idxArmee: number, nb: number,
@@ -231,12 +257,29 @@ export function libererSoldats(
     const c = pop.find((x) => x.id === id)
     if (c && c.statut !== 'Décédé') liberer(c)
   }
+  // (Arbitrage Thibaut 2026-10-28, 3e retour : l'armée est liée à la
+  //  population — le complément vient des candidats recrutables,
+  //  qui quittent la vie civile (re-titrés Chasseurs) ; pool
+  //  épuisé, les points seuls baissent.)
+  if (liberes.length < nb) {
+    const ages = agesRecrutementSoldat(C)
+    const candidats = pop.filter(
+      (c) =>
+        c.statut !== 'Décédé' &&
+        c.age >= ages.min && c.age <= ages.max &&
+        !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
+    )
+    for (const c of candidats) {
+      if (liberes.length >= nb) break
+      liberer(c)
+    }
+  }
   const perte = nb * puSoldat + (cmdLibere ? puCmd : 0)
   armee.puissance = Math.max(0, armee.puissance - perte)
   armee.puissanceCible = Math.max(0, armee.puissanceCible - perte)
   state.log.push({
     turn: state.turn, type: 'Armée', joueur: p.n,
-    texte: `🕊 Fin de service — ${armee.nom} : ${nb} soldat(s) démobilisé(s)${cmdLibere ? ' et le commandant' : ''} (−${perte} pts sur la puissance et la cible)${liberes.length > (cmdLibere ? 1 : 0) ? ` — libérés : ${liberes.slice(cmdLibere ? 1 : 0).join(', ')}` : ''}. Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
+    texte: `🕊 Fin de service — ${armee.nom} : ${nb} soldat(s) démobilisé(s)${cmdLibere ? ' — et le commandant' : ''} (−${perte} pts sur la puissance et la cible)${liberes.length ? ` — libérés : ${liberes.join(', ')}` : ''}. Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
   })
   return liberes
 }

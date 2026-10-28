@@ -195,6 +195,12 @@ test('flag mort prochaineArmeeReduite : un champ résiduel d une vieille sauvega
 //     tour suivant (retour arbitre explicite) ;
 //   · les soldats réellement suivis meurent (pertes) ou
 //     redeviennent Chasseurs (fin de service), jusqu'à nb ;
+//   · L'ARMÉE EST LIÉE À LA POPULATION (3e retour 2026-10-28) :
+//     au-delà des soldats suivis, le complément est pris parmi
+//     les candidats RECRUTABLES (vivants, âges du Soldat, sans
+//     armée, métier libre ou Chasseur) — tués (pertes) ou
+//     re-titrés Chasseurs (fin de service) ; le pool épuisé,
+//     les points seuls baissent ;
 //   · le RENFORT (levée au sein de l'armée) relève la cible, le
 //     recrutement comble l'écart — les recrues AUGMENTENT la
 //     stockée de leurs points, sans jamais la re-dériver.
@@ -250,10 +256,16 @@ test('BUG DU SOIR (régression) : armée de plateau 200 + 2 recrues de renfort �
   assert.deepEqual(armee.soldats, [], 'l armée ne se re-remplit pas')
 })
 
-test('pertes armée NON SUIVIE pure : personne ne meurt, −N × 15 sur la puissance et la cible', () => {
+test('pertes armée NON SUIVIE : l armée est LIÉE à la population — les pertes tuent de VRAIS habitants (3e retour)', () => {
   const state = partie()
   const p = state.players[0]
-  state.population[p.n] = [perso('c1', 40)]
+  state.population[p.n] = [
+    perso('c1', 40), // commandant, 40 ans : PAS candidat
+    perso('d1', 22, { metier: 'Dirigeant' }), // métier tenu : PAS candidat
+    perso('j1', 18), perso('j2', 22), // recrutables (métier libre)
+    perso('o1', 35), // 35 ans : hors des âges du Soldat
+    perso('j3', 25, { metier: 'Chasseur' }), // Chasseur : candidat
+  ]
   const armee: Army = {
     nom: 'Légion', puissanceCible: 200, puissance: 200,
     commandant: 'c1', soldats: [],
@@ -262,15 +274,55 @@ test('pertes armée NON SUIVIE pure : personne ne meurt, −N × 15 sur la puiss
   const tombes = infligerPertes(state, p, 0, 2)
   assert.equal(armee.puissance, 170, '2 pertes = −2 × 15 → 170, PAS 45')
   assert.equal(armee.puissanceCible, 170, 'la cible suit')
-  assert.deepEqual(tombes, [], 'aucun personnage réel : l armée n en suit aucun')
-  assert.equal(state.population[p.n][0].statut, 'Sain', 'le commandant est intact')
+  assert.deepEqual(tombes, ['Pers-j1 Test', 'Pers-j2 Test'], '2 VRAIS habitants tués, ordre du recensement')
+  const byId = (id: string) => state.population[p.n].find((c) => c.id === id)!
+  assert.equal(byId('j1').statut, 'Décédé')
+  assert.equal(byId('j2').statut, 'Décédé')
+  assert.equal(byId('j3').statut, 'Sain', 'le Chasseur survit : seules 2 pertes')
+  assert.equal(byId('d1').statut, 'Sain', 'le Dirigeant ne meurt pas au front')
+  assert.equal(byId('o1').statut, 'Sain', 'hors des âges du Soldat')
+  assert.equal(byId('c1').statut, 'Sain', 'le commandant est intact')
+  // le pool s épuise : j3 tombe, puis les points SEULS baissent
+  const tombes2 = infligerPertes(state, p, 0, 3)
+  assert.equal(armee.puissance, 125, '170 − 3 × 15 = 125')
+  assert.equal(armee.puissanceCible, 125, 'la cible suit')
+  assert.deepEqual(tombes2, ['Pers-j3 Test'], 'le dernier candidat tombe')
+  const tombes3 = infligerPertes(state, p, 0, 2)
+  assert.equal(armee.puissance, 95, 'pool épuisé : 125 − 2 × 15 = 95, points seuls')
+  assert.deepEqual(tombes3, [], 'plus personne de tué')
   // commandant tué EN PLUS : ses points s ajoutent aux pertes
-  const tombes2 = infligerPertes(state, p, 0, 1, true)
-  assert.equal(armee.puissance, 110, '1 perte + commandant : −15 −45 → 110')
-  assert.equal(armee.puissanceCible, 110, 'la cible suit, commandant compris')
+  const tombes4 = infligerPertes(state, p, 0, 1, true)
+  assert.equal(armee.puissance, 35, '95 − 15 − 45 = 35')
+  assert.equal(armee.puissanceCible, 35, 'la cible suit, commandant compris')
   assert.equal(armee.commandant, null)
-  assert.equal(state.population[p.n][0].statut, 'Décédé', 'le commandant, lui, est un personnage réel')
-  assert.deepEqual(tombes2, ['Pers-c1 Test'])
+  assert.equal(byId('c1').statut, 'Décédé', 'le commandant, lui, est un personnage réel')
+  assert.deepEqual(tombes4, ['Pers-c1 Test'])
+})
+
+test('pertes armée SUIVIE au-delà des soldats suivis : le complément vient de la population (3e retour)', () => {
+  const state = partie()
+  const p = state.players[0]
+  state.population[p.n] = [
+    perso('s1', 20), // soldat suivi
+    perso('j1', 18), perso('j2', 22), // candidats
+    perso('d1', 25, { metier: 'Dirigeant' }), // PAS candidat
+    perso('c1', 40), // commandant
+  ]
+  const armee: Army = {
+    nom: 'Légion', puissanceCible: 90, puissance: 90,
+    commandant: 'c1', soldats: ['s1'],
+  }
+  p.armees = [armee]
+  const tombes = infligerPertes(state, p, 0, 3)
+  assert.equal(armee.puissance, 45, '90 − 3 × 15 = 45')
+  assert.equal(armee.puissanceCible, 45, 'la cible suit')
+  assert.deepEqual(tombes, ['Pers-s1 Test', 'Pers-j1 Test', 'Pers-j2 Test'], 'soldat suivi d abord, puis candidats recrutables')
+  assert.deepEqual(armee.soldats, [], 'le tué est retiré des suivis')
+  const byId = (id: string) => state.population[p.n].find((c) => c.id === id)!
+  assert.equal(byId('j1').statut, 'Décédé')
+  assert.equal(byId('j2').statut, 'Décédé')
+  assert.equal(byId('d1').statut, 'Sain', 'le Dirigeant ne meurt pas au front')
+  assert.equal(byId('c1').statut, 'Sain', 'le commandant survit')
 })
 
 test('fin de service : soustractive sur la puissance ET la cible, suivie ou non', () => {
@@ -306,7 +358,13 @@ test('fin de service : soustractive sur la puissance ET la cible, suivie ou non'
   const c1 = state.population[p.n].find((c) => c.id === 'c1')!
   assert.equal(c1.statut, 'Sain', 'le commandant libéré reste vivant')
   assert.equal(c1.metier, 'Chasseur', 'il redevient Chasseur')
-  assert.deepEqual(liberes2, ['Pers-c1 Test'])
+  // (3e retour 2026-10-28 : l'armée est liée à la population — la
+  //  2e démobilisation vient du complément recrutable : s1, déjà
+  //  Chasseur depuis la libération ci-dessus, quitte la vie civile.)
+  assert.deepEqual(liberes2, ['Pers-c1 Test', 'Pers-s1 Test'], 'commandant + 1 candidat recratable')
+  const s1b = state.population[p.n].find((c) => c.id === 's1')!
+  assert.equal(s1b.statut, 'Sain', 'le candidat libéré reste vivant')
+  assert.equal(s1b.metier, 'Chasseur', 're-titré Chasseur')
 })
 
 test('ligne de métier ÉDITÉE prime : soldat 20 pts → pertes 2 = −40', () => {
