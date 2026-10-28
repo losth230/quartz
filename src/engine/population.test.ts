@@ -25,7 +25,8 @@ function perso(id: string, age: number, o: { metier?: string | null; ville?: str
     culture: 'Déisme', ville: o.ville ?? 'Capitale', orientation: 'Hétérosexuel',
     // SANS « Obstiné » : l'ancienne migration ne devait jamais s'appliquer
     //  aux Obstinés — nos candidats doivent y avoir été éligibles.
-    traits: ['Fécond'], statut: 'Sain', mariage: null, mariageId: null,
+    //  (traits = tuple de 3, cf. Character.)
+    traits: ['Stérile', 'Fécond', 'Fécond'], statut: 'Sain', mariage: null, mariageId: null,
     mere: null, mereId: null, pere: null, pereId: null,
     pereBio: null, pereBioId: null, enfantBatard: false,
     metier: o.metier ?? null, fecondite: 0, armee: null,
