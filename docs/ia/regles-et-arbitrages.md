@@ -1317,3 +1317,35 @@ POPULATION, GARNISON & LOGEMENTS de chaque carte de ville porte un
   occupationsMetierVille) : aucune règle nouvelle, aucune logique
   dupliquée — la carte de ville et le panneau Population ne
   peuvent pas se contredire.
+
+## Le régime des taxes PAR RESSOURCE (arbitrage Thibaut, 2026-10-28)
+
+« J'aimerais maintenant changer les taxes : faibles avec naissances et production
+nourritures ×1,25, mais toutes les autres productions ×0,75. Normales. Hautes
+avec naissances et production nourritures ×0,75, mais toutes les autres
+productions ×1,25. » Le niveau de taxes d'une ville (et des cités libres) module
+la production des habitants **ressource par ressource** — la **Nourriture part
+du côté des naissances**, toutes les **autres ressources à l'envers** :
+
+| Niveau | Naissances | Nourriture | Autres productions |
+| --- | --- | --- | --- |
+| Faible | ×1,25 | ×1,25 | ×0,75 |
+| Moyenne | ×1 | ×1 | ×1 |
+| Forte | ×0,75 | ×0,75 | ×1,25 |
+
+- **Portée inchangée** : le facteur module la production des MÉTIERS des
+  habitants (c'est « ce que les taxes rapportent ») — bâtiments, aménagements,
+  lignes « Autres », commerce et proximité ne sont PAS taxés ; la consommation
+  de Nourriture reste non taxée. Idem cités libres (transfert au suzerain) —
+  le facteur s'applique après la règle « Chasseurs ×1,1 » propre aux cités.
+- Les bonus de taxe (Gouverneur +10 %, Banquier/Professeur/Troubadour +10 % sur
+  leur ressource) restent ADDITIFS par ressource, appliqués APRÈS le facteur de
+  niveau de taxes.
+- **Paramètres** (groupes « Taxes ») : nouvelles clés `taxNourrFaibles`/`taxNourrHautes`
+  (1,25/0,75) ; les clés historiques `taxOrFaibles`/`taxOrHautes` (0,75/1,25)
+  changent de SENS — elles ne portent plus que les ressources hors Nourriture
+  (valeurs inchangées, les configs sauvegardées restent valides) ;
+  `taxNaissFaibles`/`taxNaissHautes` (1,25/0,75) ne bougent pas (marqueur (z),
+  reconfirmé).
+- Les multiplicateurs ne s'appliquent PAS à ce que la Nourriture a de spécial :
+  la « Nourr - été » des aménagements et la proximité restent hors taxes.
