@@ -1403,3 +1403,33 @@ et les réductions de levée deviennent un CANAL de la banque comme les flux :
   l'onglet Métiers du wiki gagne une colonne « Armée » (puissance + âges) ;
   l'éditeur des constructions gagne une colonne « Réduc. levée (Or) » ;
   `resumeConstruction` affiche « levée d'armée −N Or » (picker, badges, wiki).
+
+## Pertes, renfort et retrait de la cible (arbitrage Thibaut, 2026-10-28)
+
+Trois retours arbitre après la session « les armées rejoignent la banque » :
+
+1. **Pertes d'une armée non suivie** (bug « infliger des pertes réduit l'armée à 45 à
+   chaque fois ») : une armée dont `soldats` est vide — levée fraîche pas encore passée
+   par le recrutement d'un tour, ou import du classeur — n'adosse sa puissance à AUCUN
+   personnage. Sa puissance **STOCKÉE fait foi** : les pertes y sont **soustractives**
+   (nb × points du Soldat, + points du Commandant s'il tombe), sans tuer personne et
+   SANS dérivation — l'ancienne dérivation `soldats × 15 + commandant` l'écrasait à son
+   seul commandant (45), quel que soit le nombre de pertes. La fin de service y est
+   soustractive aussi (le commandant libéré redevient Chasseur). Une armée **suivie**
+   (soldats non vide) garde son comportement : soldats réels tués, puissance dérivée.
+   `recomputeArmy` reste une dérivation pure — contrat : ne l'appeler QUE sur une
+   armée suivie (les mutateurs capturent « suivie » AVANT les kills, pour qu'une armée
+   dont tous les soldats tombent retombe juste à 0 ou au commandant survivant).
+   Un commandant mort entre deux tours coûte ses points à l'armée non suivie (détaché,
+   −45 sur la stockée).
+2. **Renfort** (« considéré en tout point comme une levée d'armée au sein d'une armée
+   existante ») : même prix que la levée (Or × pts / armeePriXPuissance), mêmes
+   **réductions de la ville de renfort** (canal `reductionLeveeArmee`), Or débité une
+   fois, **puissance cible relevée de N** — le recrutement de chaque tour comble
+   l'écart par de vraies recrues. Pour une armée non suivie, les premières recrues la
+   font passer en dérivation (migration vers le suivi) : sa puissance devient alors
+   celle de ses soldats réels — si la population manque de candidats, l'écart s'affiche
+   tel quel (vérité des nombres).
+3. **Retrait de la case « cible »** : la sélection d'un joueur visé ne servait à rien
+   — champ `cible` retiré du type `Army` et de l'UI (note RETRAIT in situ) ; une
+   vieille sauvegarde peut encore porter la clé, elle est ignorée.
