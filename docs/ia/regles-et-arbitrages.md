@@ -1508,3 +1508,24 @@ retirée le 2026-10-19) disparaît à son tour. Décisions :
 4. **Tests de régression** : sur 20 tours avec un Professeur disponible chez un autre
    joueur, aucun enfant ne quitte sa ville et aucune entrée « scolarité » n'apparaît
    au journal.
+
+## Le damier 2×2 de la carte de ville et le format N/M des métiers (arbitrage Thibaut, 2026-10-28)
+
+« Pour les tableaux, on va les mettre sur deux lignes car ils ne rentrent pas. Sur la
+première ligne, culture + logements, et sur une deuxième ligne, garnison + métiers.
+Les métiers, affiche-les comme les logements avec N/M. » Décisions :
+
+1. **Quatre tableaux, deux rangées** : le bloc population de la carte de ville devient
+   un damier 2×2 — rangée 1 « Cultures présentes » + « Logements », rangée 2
+   « Garnison des habitations » + « Métiers ». Un filet vertical sépare les colonnes,
+   un filet horizontal sépare les rangées ; sous 560 px tout empile en une colonne.
+2. **Métiers au format N/M comme les logements** : une seule colonne de valeurs
+   « en poste / capacité » (ex. Garde 2/4), à la place des colonnes « en poste ·
+   places libres ». « — » en dénominateur = métier non plafonné ici (rôles de cour,
+   armée, Banquier, Troubadour… et Sans-emploi). Surnombre en rouge : la capacité
+   baissée (aménagement perdu) se lit immédiatement (ex. 5/4).
+3. **Le pied reste en poste / vivants** : « Habitants en poste X/Y » en gras, même
+   lecture que le pied des logements (habitants logés / capacité).
+4. **Verrou de régression** : le test de rendu vérifie désormais le format N/M de
+   chaque ligne métier (cap finie et infinie, surnombre en rouge), dérivé de l'état
+   par le même helper moteur que le panneau Population (`occupationsMetierVille`).
