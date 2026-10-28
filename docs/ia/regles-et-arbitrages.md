@@ -1486,6 +1486,38 @@ habitants ». Décisions :
 4. **Journal des armées enrichi** : pertes et fin de service listent les noms des
    tombés / libérés, pour lecture immédiate au fil du recensement.
 
+## Flux de migration par bonheur (arbitrage Thibaut, 2026-10-28, 2e arbitrage du jour)
+
+« J'aimerais un flux de migration en fonction du bonheur : plus le bonheur est bas, plus un
+habitant a de chances de quitter sa ville, pour une autre ville aléatoire, pondérée par la
+culture similaire et le bonheur de chacune des villes. » Décisions (retours explicites
+Thibaut : linéaire « entre 0 % et 10 %, le 10 % à 0 de bonheur et le 0 % à 100 » ;
+destinations « toutes les villes du monde » ; exclusions « tous les vivants sauf Dirigeant
+et Héritier ») :
+
+1. **Départ LINÉAIRE** : à chaque fin de tour, chaque habitant vivant (sauf Dirigeant et
+   Héritier, qui ne déménagent jamais — règle 2026-10-21) quitte sa ville avec
+   `p = migrationBonheurMax × (100 − bonheur de sa ville) / 100` — 0 % à 100 de bonheur,
+   5 % à 50, 10 % à 0 (défauts). Bonheur = la moyenne des 5 facteurs du système de
+   bonheur (2026-10-24), calculé une fois par ville et par tour.
+2. **Destination pondérée, pas filtrée** : tirage parmi TOUTES les villes du monde
+   (tous joueurs, transfert physique de population au besoin — même principe que
+   l'ancienne migration scolaire ; les cités libres ne sont pas destinations), chaque
+   ville candidate pesant `poids = (culture identique à celle du migrant ?
+   migrationBonheurCulture : 1) × (1 + bonheur de la candidate / 100)` — une ville de
+   SA culture pèse 4× (défaut), une ville à 100 de bonheur pèse 2× une ville à 0.
+   Exclusion de la ville source PAR IDENTITÉ (plusieurs joueurs peuvent avoir une ville
+   homonyme, ex. « Capitale »).
+3. **Conséquences** : tout déménagement applique `perteDemenagement` (métier ET domicile
+   perdus — convention établie) et journalise en type « Système » avec le motif
+   « cherche meilleure vie » ; un habitant ne migre qu'UNE fois par tour.
+4. **Placement étape 4bis** (après tous les moteurs de population) : un migrant n'est
+   pas retraité (vieillissement, maladie) au même tour chez son nouveau porteur —
+   l'ancienne migration scolaire vivait DANS populationTurn et cumulait ces effets.
+5. **Paramètres** (groupe Population) : `migrationBonheurMax` (0,10) et
+   `migrationBonheurCulture` (4). Pas de plafond par ville : la linéarité 0-10 % fait
+   foi. À proba max 0, le flux est coupé.
+
 ## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
 
 « Commence par retirer la migration par scolarité. » Le seul système de migration
@@ -1508,149 +1540,3 @@ retirée le 2026-10-19) disparaît à son tour. Décisions :
 4. **Tests de régression** : sur 20 tours avec un Professeur disponible chez un autre
    joueur, aucun enfant ne quitte sa ville et aucune entrée « scolarité » n'apparaît
    au journal.
-
-## Le damier 2×2 de la carte de ville et le format N/M des métiers (arbitrage Thibaut, 2026-10-28)
-
-« Pour les tableaux, on va les mettre sur deux lignes car ils ne rentrent pas. Sur la
-première ligne, culture + logements, et sur une deuxième ligne, garnison + métiers.
-Les métiers, affiche-les comme les logements avec N/M. » Décisions :
-
-1. **Quatre tableaux, deux rangées** : le bloc population de la carte de ville devient
-   un damier 2×2 — rangée 1 « Cultures présentes » + « Logements », rangée 2
-   « Garnison des habitations » + « Métiers ». Un filet vertical sépare les colonnes,
-   un filet horizontal sépare les rangées ; sous 560 px tout empile en une colonne.
-2. **Métiers au format N/M comme les logements** : une seule colonne de valeurs
-   « en poste / capacité » (ex. Garde 2/4), à la place des colonnes « en poste ·
-   places libres ». « — » en dénominateur = métier non plafonné ici (rôles de cour,
-   armée, Banquier, Troubadour… et Sans-emploi). Surnombre en rouge : la capacité
-   baissée (aménagement perdu) se lit immédiatement (ex. 5/4).
-3. **Le pied reste en poste / vivants** : « Habitants en poste X/Y » en gras, même
-   lecture que le pied des logements (habitants logés / capacité).
-4. **Verrou de régression** : le test de rendu vérifie désormais le format N/M de
-   chaque ligne métier (cap finie et infinie, surnombre en rouge), dérivé de l'état
-   par le même helper moteur que le panneau Population (`occupationsMetierVille`).
-
-## Le tableau Métiers de la carte de ville n'affiche que les métiers présents (arbitrage Thibaut, 2026-10-28)
-
-« Dans le tableau des métiers, n'affiche que les métiers présents dans la ville. »
-Décisions :
-
-1. **Métiers occupés seulement** : le tableau « Métiers » de la carte de ville liste
-   uniquement les métiers ayant au moins un habitant en poste (format N/M « en
-   poste / capacité » inchangé). Les métiers disponibles mais inoccupés — y compris
-   les lignes « 0/0 » des métiers sans emplacement — ne s'y affichent plus.
-2. **Sans-emploi reste** : la ligne « Sans-emploi » (rôle neutre : impôt nul, aucun
-   effet) est toujours visible — elle recense des habitants présents dans la ville,
-   pas un métier offert.
-3. **Le panneau Population garde l'inventaire complet** : la carte « Métiers et
-   places par ville » (panneau Population) continue de lister tous les métiers
-   plafonnés avec leurs places max et places libres — c'est là que se lit l'offre
-   de postes ; la carte de ville, elle, reflète ce qui y vit.
-4. **Verrou de régression** : le test de rendu vérifie que chaque métier inoccupé
-   de la fixture est absent du tableau, en plus des N/M des lignes affichées.
-
-## Les enfants ne sont pas des sans-emplois (arbitrage Thibaut, 2026-10-28)
-
-« Les enfants ne devraient pas apparaitre comme des sans-emplois, que ce soit dans les
-tableaux ou le comptage du bonheur, mais comme des enfants, un métier à part qui devient
-sans-emploi par défaut à l'âge adulte. » Décisions :
-
-1. **Ligne « Enfant » à part** : dans le tableau Métiers de la carte de ville ET dans la
-   carte « Métiers et places par ville » du panneau Population, les vivants d'âge inférieur
-   à l'âge adulte (16 ans par défaut) sans métier forment une ligne « Enfant » distincte,
-   juste avant le Sans-emploi — pas un statut de chômage. La ligne n'apparaît que s'il y a
-   des enfants (pas de bruit « Enfant 0 »).
-2. **Sans-emploi = adultes uniquement** : la ligne Sans-emploi (rôle neutre : impôt nul,
-   aucun effet) ne recense plus que les habitants ADULTES sans métier. Un enfant porteur
-   d'un métier affecté manuellement reste compté dans sa ligne de métier.
-3. **Devenir adulte** : à l'anniversaire des 16 ans, l'enfant passe Sans-emploi puis
-   reçoit un poste si un emplacement est libre (flux inchangé — `assignAdultMetier` au
-   passage d'âge, réaffectation de fin de tour).
-4. **Facteur Emploi du bonheur** : les enfants sont hors marché du travail — ils ne
-   comptent ni comme demande (travailleurs) ni comme postes pourvus, même porteurs d'un
-   métier affecté manuellement (l'ancien comptage gonflait les postes pourvus). En
-   revanche ils comptent toujours pour le Logement et la Santé : ils logent et tombent
-   malades comme les autres habitants.
-5. **Verrous de régression** : test moteur (ligne Enfant, Sans-emploi adulte, ordre,
-   edge cases), test bonheur (des enfants porteurs d'un métier ne changent pas l'Emploi)
-   et test de rendu (labels et tooltip de la ligne Enfant dans la carte de ville).
-
-## Le tableau Métiers de la carte de ville recense les métiers disponibles (arbitrage Thibaut, 2026-10-28)
-
-« Il faut également que dans le tableau des métiers s'affichent non pas tous les métiers
-occupés, mais les métiers disponibles. » Décisions :
-
-1. **Offre de la ville** : le tableau Métiers de la carte de ville liste les métiers
-   DISPONIBLES — chaque métier plafonné offrant au moins une place (base du rang +
-   emplacements des aménagements), occupé ou non. Un emplacement offert mais non pourvu
-   s'affiche au format 0/N.
-2. **Hors offre** : les métiers non plafonnés (Dirigeant, Banquier, armée, Troubadour…)
-   ne s'affichent plus sur la carte, même occupés ; un surnombre sur cap 0 (aménagement
-   perdu depuis) disparaît aussi de la carte — état transitoire corrigé par la
-   réaffectation, toujours visible dans la carte « Métiers et places par ville » du
-   panneau Population.
-3. **Comptages globaux** : le titre (« Métiers : N en poste ») et le pied (« Habitants
-   en poste X/vivants ») restent GLOBAUX — N inclut les métiers non affichés (ex. le
-   Dirigeant) ; seules les lignes sont filtrées.
-4. **Lignes neutres** : Enfant et Sans-emploi restent affichées (arbitrages précédents
-   inchangés).
-5. **Verrou de régression** : test de rendu dérivé du même helper moteur — chaque métier
-   disponible affiché au format N/M, chaque métier hors offre absent du rendu.
-
-## Les quatre tableaux de la carte de ville passent en deux colonnes (arbitrage Thibaut, 2026-10-28, 3e retour du jour)
-
-« Pour les tableaux, plutôt que de les avoir en deux lignes de 2 tableaux, j'aimerais
-deux colonnes, une avec 3 tableaux : culture, logement et garnison, et une deuxième
-avec les métiers. » Décisions :
-
-1. **Deux colonnes** : le bloc population de la carte de ville abandonne le damier 2×2
-   du matin (SUPERSEDÉ) pour DEUX colonnes — à gauche « Cultures présentes »,
-   « Logements » et « Garnison des habitations » empilés, à droite « Métiers ». Un filet
-   vertical sépare les colonnes, des filets horizontaux séparent les tableaux empilés ;
-   sous 560 px tout empile en une colonne.
-2. **Contenu inchangé** : ni les données ni le format des tableaux ne bougent — le
-   format N/M des métiers (retour damier) reste tel quel ; seul le placement change.
-3. **Verrou de régression** : le test de rendu vérifie la présence des deux colonnes
-   (wrapper d'empilement) et l'ordre des titres — cultures, logements, garnison puis
-   métiers.
-
-## Le tableau Métiers affiche les présents ET les disponibles, sans distinction (arbitrage Thibaut, 2026-10-28, 4e retour)
-
-« Affiche également les métiers comme dirigeant ou héritier ou ministre etc s'ils sont
-présents. En fait, il faut voir les métiers présents ET disponibles sans distinction. »
-Décisions :
-
-1. **Union occupés ∪ offerts** : un métier s'affiche s'il est OCCUPÉ (au moins un
-   habitant en poste, même non plafonné — Dirigeant, Héritier, Ministre, armée,
-   Banquier… : capacité illimitée notée « — ») OU OFFERT par la ville (capacité finie
-   d'au moins une place, occupé ou non — un poste libre se lit N/M). SUPERSEDÉ
-   l'arbitrage « métiers disponibles » du 3e retour.
-2. **Seuls masqués** : les métiers ni occupés ni offerts (0/0) et le surnombre cap 0
-   inoccupé. Le panneau Population garde son inventaire complet.
-3. **Délimitations claires** (même retour) : filet sous l'en-tête de la carte, filets
-   plein ton entre les tableaux (vertical entre colonnes, horizontaux entre empilés),
-   filet au-dessus des constructions — en-tête, tableaux et reste de la ville se
-   lisent en trois zones distinctes.
-4. **Comptages globaux** : le titre « Métiers : N en poste » et le pied « Habitants en
-   poste X/vivants » restent inchangés.
-5. **Verrou de régression** : test de rendu — chaque métier occupé ou offert affiché
-   (le Dirigeant occupé revient), chaque métier 0/0 absent.
-
-## La Maison de notable et le Palais sont réservés aux nobles (arbitrage Thibaut, 2026-10-28, 5e retour du jour)
-
-« Pour les logements, fais en sorte qu'il faille être noble minimum pour avoir une maison de
-notable ou un palais. » Décisions :
-
-1. **Rang noble requis** : seuls les personnages de rang NOBLE (dynastie noble ou
-   prestige ≥ 250) peuvent occuper une Maison de notable ou un Palais. Un roturier ou un
-   bourgeois ne peut ni en recevoir ni en garder : à la réattribution, il est relogé dans
-   la meilleure qualité restante non réservée.
-2. **Exception au « on ne déloge personne »** : un non-noble qui détenait un domicile
-   réservé (attribution antérieure au retour) le perd à la réattribution — la place
-   réservée reste au stock pour les nobles. Un noble garde son Palais normalement.
-3. **Stock vide sans nobles** : si la ville n'a aucun noble, ses Maisons de notable et
-   ses Palais restent inoccupés — ils ne servent à personne d'autre.
-4. **Ordre inchangé** : le service reste par prestige décroissant (nobles d'abord) ; la
-   restriction garantit désormais ce que l'ordre de prestige faisait « en pratique ».
-5. **Verrou de régression** : test moteur — parc de réservés vide sans noble, Palais au
-   noble (300), bourgeois (120) expulsé du Palais vers la Maison.
