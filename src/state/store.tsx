@@ -414,10 +414,17 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  local courant puis publication directe (l'ancien flux, utilisé
    *  quand la barrière est indisponible : schéma non migré, réseau
    *  KO, ou test en solo dans un salon multijoueur). */
-  const resoudreSeul = useCallback(async () => {
+  const resoudreSeul = useCallback(async (erreurServeur?: string) => {
     const st = stateRef.current
     if (!st) return
     const draft = clonerEtat(st)
+    // m1 (arbitrage Thibaut 2026-10-27) : la résolution serveur a
+    //  échoué après 2 essais — message VISIBLE dans le journal. Le
+    //  tour est quand même résolu localement (le joueur n'est jamais
+    //  bloqué), mais il SAIT pourquoi ça a tourné en local.
+    if (erreurServeur) {
+      draft.log.push({ turn: st.turn, type: 'Système', joueur: null, texte: `⚠️ ${erreurServeur} — résolution locale utilisée.` })
+    }
     // CONFIG MONDIALE : effet en fin de tour, comme tout le reste
     //  (seulement en réseau : en local sans réseau, la config commune
     //  locale fait foi — pas de serveur pour la config mondiale).
@@ -503,8 +510,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             setConflit(false)
           }
         } else {
-          // repli local (serveur indisponible)
-          await resoudreSeul()
+          // repli local (serveur indisponible) — m1 : après 2 essais
+          //  ratés, le message d'échec est journalisé VISIBLEMENT
+          //  (dejaPublie n'est PAS un échec : rien à signaler).
+          await resoudreSeul(res.dejaPublie ? undefined : res.error)
         }
       })()
       return
@@ -526,7 +535,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  déclaration : nextTurnV2 est défini avant les deux fonctions
    *  de repli qu'il appelle). */
   const pollerBarriereV2Ref = useRef<(attendus: number[], tour: number) => Promise<void>>(async () => {})
-  const resoudreBarriereLocaleV2Ref = useRef<(attendus: number[], tour: number) => Promise<void>>(async () => {})
+  const resoudreBarriereLocaleV2Ref = useRef<(attendus: number[], tour: number, erreurServeur?: string) => Promise<void>>(async () => {})
 
   const nextTurnV2 = useCallback(async (st: GameState, moi: number) => {
     const maSection: remote.SectionJoueur = {
@@ -587,7 +596,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         //  Function le ferait, on exécute runTurn, et on PUBLIE :
         //  les autres joueurs reçoivent le tour par le realtime.
         setBarriere({ prets: new Set(), monTourPousse: false })
-        await resoudreBarriereLocaleV2Ref.current(attendus, st.turn)
+        // m1 : le message d'échec (2 essais ratés) est fusionné dans
+        //  le tour PUBLIÉ — tous les joueurs voient pourquoi le
+        //  serveur a été contourné.
+        await resoudreBarriereLocaleV2Ref.current(attendus, st.turn, res.error)
       }
     } else {
       // attendre : poll léger des événements du tour ; quand la
@@ -602,7 +614,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  sémantique qu'elle : télécharge l'état de référence, fusionne
    *  les sections du tour (cp_events), runTurn, PUBLIE. Les autres
    *  joueurs reçoivent le tour par le realtime — aucune perte. */
-  const resoudreBarriereLocaleV2 = useCallback(async (attendus: number[], tour: number) => {
+  const resoudreBarriereLocaleV2 = useCallback(async (attendus: number[], tour: number, erreurServeur?: string) => {
     const sections = await remote.lireSectionsV2(salon, tour)
     if (!sections) { await resoudreSeul(); return }
     const ref = await remote.loadRemote(salon)
@@ -611,6 +623,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     //  (src/engine/fusion.ts — tests fusion.test.ts). Les bugs de
     //  routes/cités/transferts corrigés en production y sont verrouillés.
     const draft = fusionnerSections(ref, sections)
+    // m1 (arbitrage Thibaut 2026-10-27) : échec serveur après 2 essais —
+    //  le message est fusionné dans le tour PUBLIÉ (visible par tous).
+    if (erreurServeur) {
+      draft.log.push({ turn: tour, type: 'Système', joueur: null, texte: `⚠️ ${erreurServeur} — résolution locale avec publication.` })
+    }
     const evts = await remote.lireEvenementsPartages(salon, tour)
     rejouerEvenementsPartages(draft, evts)
     // CONFIG MONDIALE : effet en fin de tour, comme tout le reste —
@@ -682,7 +699,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           // FONCTION SERVEUR INDISPONIBLE — même repli que le dernier
           //  pousseur : résolution LOCALE AVEC PUBLICATION.
           setBarriere({ prets: new Set(), monTourPousse: false })
-          await resoudreBarriereLocaleV2Ref.current(attendus, tour)
+          // m1 : même journalisation d'échec que le dernier pousseur.
+          await resoudreBarriereLocaleV2Ref.current(attendus, tour, res.error)
         }
         return
       }
