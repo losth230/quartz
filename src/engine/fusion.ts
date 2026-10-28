@@ -129,8 +129,20 @@ export function fusionnerSections(
       })
       continue
     }
+    // m2 (arbitrage Thibaut 2026-10-27) : un numéro INCONNU du setup ne
+    //  doit JAMAIS être fusionné — le code du salon étant le seul secret
+    //  (RLS anon ouverte, audit F2), quiconque le connaît peut pousser
+    //  une section avec un numéro arbitraire : ses modifications sont
+    //  IGNORÉES et le journal du tour le dit VISIBLEMENT.
     const pj = draft.players.find((q) => q.n === n)
-    if (pj && sec.player) Object.assign(pj, sec.player)
+    if (!pj) {
+      newLogs.push({
+        turn: ref.turn + 1, type: 'Système', joueur: n,
+        texte: `⚠️ Joueur ${n} inexistant dans la partie — section ignorée, ses modifications ne comptent pas pour ce tour.`,
+      })
+      continue
+    }
+    if (sec.player) Object.assign(pj, sec.player)
     if (sec.population) draft.population[n] = sec.population as typeof draft.population[number]
     // ROUTES : remplacer uniquement les routes de CE joueur
     if (Array.isArray(sec.routes)) {
