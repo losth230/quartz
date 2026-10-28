@@ -47,18 +47,32 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       const s = pop.find((x) => x.id === id)
       return s && s.statut !== 'Décédé'
     })
-    // commandant mort ?
+    // (Arbitrage Thibaut 2026-10-28, retour « les pertes réduisent
+    //  l'armée à 45 à chaque fois » : une armée NON SUIVIE —
+    //  soldats vide, levée fraîche pas encore passée par le
+    //  recrutement ou import du classeur — n'adosse sa puissance
+    //  à AUCUN personnage : la puissance STOCKÉE fait foi. La
+    //  dérivation soldats × pts + commandant ne s'applique qu'aux
+    //  armées suivies, sinon l'armée repartait de son seul
+    //  commandant (45). Les recrues d'un RENFORT font passer
+    //  l'armée non suivie en dérivation — migration vers le
+    //  suivi.)
+    const suivie = armee.soldats.length > 0
+    // commandant mort ? (une armée non suivie stocke une puissance
+    //  abstraite : la chute du commandant lui coûte ses points,
+    //  comme une perte au combat.)
     const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
     // (Arbitrage Thibaut 2026-10-28 : puissances lues sur les lignes
     //  de métier Soldat / Commandant du référentiel.)
     const puissanceSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
     const puissanceCommandant = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
     const ages = agesRecrutementSoldat(C)
-    let puissance = armee.soldats.length * puissanceSoldat
+    let puissance = suivie ? armee.soldats.length * puissanceSoldat : armee.puissance
     if (cmd && cmd.statut !== 'Décédé') {
-      puissance += puissanceCommandant
+      if (suivie) puissance += puissanceCommandant
     } else if (armee.commandant) {
       armee.commandant = null
+      if (!suivie) puissance = Math.max(0, puissance - puissanceCommandant)
       recap.commandantTombe = armee.nom
       state.log.push({
         turn: state.turn + 1, type: 'Armée', joueur: p.n,
@@ -90,7 +104,14 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
 
 /** Recalcule la puissance affichée d'une armée (après édition manuelle).
  *  (Arbitrage Thibaut 2026-10-28 : puissances lues sur les lignes de
- *  métier — même lecture que recruitForArmies.) */
+ *  métier — même lecture que recruitForArmies.)
+ *  CONTRAT (2026-10-28, retour « les pertes réduisent l'armée à 45 à
+ *  chaque fois ») : NE PAS appeler sur une armée NON SUIVIE (soldats
+ *  vide) — la dérivation l'écraserait à son seul commandant. Les
+ *  mutateurs d'armée (pertes, fin de service) capturent « suivie »
+ *  AVANT les kills et ne dérivent QUE les armées déjà suivies, pour
+ *  que l'armée dont tous les soldats viennent de tomber retombe
+ *  juste (0, ou les points du commandant s'il survit). */
 export function recomputeArmy(state: GameState, p: Player, armee: { nom: string; soldats: string[]; commandant: string | null; puissance: number }) {
   const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
@@ -131,6 +152,34 @@ export function infligerPertes(
     armee.soldats = armee.soldats.filter((id) => id !== c.id)
     c.armee = null
     tombes.push(fullName(c))
+  }
+  // (Arbitrage Thibaut 2026-10-28, retour « les pertes réduisent
+  //  l'armée à 45 à chaque fois » : une armée NON SUIVIE (soldats
+  //  vide — levée fraîche ou import du classeur) n'adosse sa
+  //  puissance à aucun personnage : les pertes y sont
+  //  SOUSTRACTIVES sur la puissance stockée, nb × points du
+  //  soldat (+ points du commandant s'il tombe). Pas de dérivation :
+  //  elle écraserait l'armée à son seul commandant, quel que soit
+  //  le nombre de pertes.)
+  if (armee.soldats.length === 0) {
+    const C = cfgOf(state.config)
+    const puSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+    const puCmd = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+    let cmdTomb = false
+    if (tuerCommandant && armee.commandant) {
+      const cmd = pop.find((x) => x.id === armee.commandant)
+      if (cmd && cmd.statut !== 'Décédé') {
+        tuer(cmd)
+        armee.commandant = null
+        cmdTomb = true
+      }
+    }
+    armee.puissance = Math.max(0, armee.puissance - nb * puSoldat - (cmdTomb ? puCmd : 0))
+    state.log.push({
+      turn: state.turn, type: 'Armée', joueur: p.n,
+      texte: `⚔ Pertes — ${armee.nom} : ${nb} perte(s) au combat${cmdTomb ? ` — et le commandant (${tombes[0]}) est tombé` : ''}. Puissance restante : ${Math.round(armee.puissance)}.`,
+    })
+    return tombes
   }
   if (tuerCommandant && armee.commandant) {
     const cmd = pop.find((x) => x.id === armee.commandant)
@@ -174,6 +223,29 @@ export function libererSoldats(
     armee.soldats = armee.soldats.filter((id) => id !== c.id)
     liberes.push(fullName(c))
   }
+  // (Arbitrage Thibaut 2026-10-28 : fin de service d'une armée NON
+  //  SUIVIE — même traitement soustractif que les pertes, sans
+  //  tuer personne : la puissance stockée fait foi.)
+  if (armee.soldats.length === 0) {
+    const C = cfgOf(state.config)
+    const puSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+    const puCmd = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+    let cmdLibere = false
+    if (libererCommandant && armee.commandant) {
+      const cmd = pop.find((x) => x.id === armee.commandant)
+      if (cmd && cmd.statut !== 'Décédé') {
+        liberer(cmd)
+        armee.commandant = null
+        cmdLibere = true
+      }
+    }
+    armee.puissance = Math.max(0, armee.puissance - nb * puSoldat - (cmdLibere ? puCmd : 0))
+    state.log.push({
+      turn: state.turn, type: 'Armée', joueur: p.n,
+      texte: `🕊 Fin de service — ${armee.nom} : ${nb} soldat(s) démobilisé(s)${cmdLibere ? ' et le commandant' : ''}. Puissance restante : ${Math.round(armee.puissance)}.`,
+    })
+    return liberes
+  }
   if (libererCommandant && armee.commandant) {
     const cmd = pop.find((x) => x.id === armee.commandant)
     if (cmd && cmd.statut !== 'Décédé') {
@@ -199,6 +271,10 @@ export function libererSoldats(
 /** Prix de levée d'une armée : Or facturés pour sa puissance CIBLE,
  *  1 Or tous les 2 points de force (paramétrable via armeePrixOr /
  *  armeePriXPuissance). Payé UNE FOIS à la levée — pas d'entretien.
+ *  (Arbitrage Thibaut 2026-10-28 : le RENFORT est EN TOUT POINT une
+ *  levée au sein d'une armée existante — même prix, mêmes réductions
+ *  de la ville de renfort ; la puissance cible est relevée de N et
+ *  le recrutement de chaque tour comble l'écart.)
  *  (Arbitrage Thibaut 2026-10-28 : « les armées, et surtout les
  *  réductions de levée, rejoignent la banque » — les réductions de
  *  levée ne sont plus codées en dur par NOM de bâtiment : le champ

@@ -272,7 +272,10 @@ export interface Army {
   puissance: number
   commandant: string | null   // id du personnage
   soldats: string[]           // ids des personnages metier Soldat
-  cible: string | null        // ville / joueur visé
+  // (RETRAIT 2026-10-28, retour arbitre : le champ « cible »
+  //  (ville / joueur visé) ne servait à rien — la sélection de
+  //  cible disparaît de l'UI ; une vieille sauvegarde peut encore
+  //  porter la clé, elle est ignorée.)
 }
 
 /** Cité libre : habitation sans joueur (règle « Cités libres » du

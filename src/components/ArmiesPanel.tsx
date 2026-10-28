@@ -1,6 +1,8 @@
 // ══════════════════════════════════════════════════════════════════════
-//  Armées : lever, renommer, nommer un commandant, définir la cible,
+//  Armées : lever, renommer, nommer un commandant, renforcer,
 //  dissoudre (portage de LeverArmee / NommerCommandant / RetirerArmee).
+//  (RETRAIT 2026-10-28, retour arbitre : la case « cible » de
+//  sélection d'un joueur visé ne servait à rien — supprimée.)
 //  Puissances et âges lus sur les LIGNES DE MÉTIER du référentiel
 //  (arbitrage Thibaut 2026-10-28 : « général et soldat sont des
 //  métiers, ils doivent donc vivre dans la banque »).
@@ -17,7 +19,14 @@ import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
 export function ArmiesPanel({ joueur }: { joueur: number }) {
   const { state, update } = useGame()
   const [nom, setNom] = useState('')
-  const [cible] = useState<number | null>(null)
+  // (RETRAIT 2026-10-28 : plus de state « cible » — la case de
+  //  sélection d'un joueur visé ne servait à rien, retour arbitre.)
+  // Renfort par armée (arbitrage Thibaut 2026-10-28 : renforcer
+  //  est EN TOUT POINT une levée au sein d'une armée existante —
+  //  même prix, réductions de la ville de renfort, puissance cible
+  //  relevée, le recrutement de chaque tour comble l'écart).
+  const [renfortParArmee, setRenfortParArmee] = useState<Record<number, number>>({})
+  const [villeRenfortParArmee, setVilleRenfortParArmee] = useState<Record<number, string>>({})
   const [commandant, setCommandant] = useState('')
   const [puissance, setPuissance] = useState(90)
   // Revue Thibaut 2026-10-15 : la levée se passe DANS une habitation
@@ -85,7 +94,8 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
         puissance: puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral),
         commandant: cmd.id,
         soldats: [],
-        cible: cible ? state.players.find((q) => q.n === cible)?.nom ?? null : null,
+        // (RETRAIT 2026-10-28 : plus de champ « cible » — retour
+        //  arbitre, la sélection de cible ne servait à rien.)
       })
       const pers = (s.population[joueur] ?? []).find((c) => c.id === cmd.id)
       if (pers) {
@@ -109,6 +119,11 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
         {p.armees.map((a, idx) => {
           const cmd = a.commandant ? vivants.find((c) => c.id === a.commandant) : undefined
           const cmdMort = a.commandant && (!cmd || cmd.statut === 'Décédé')
+          // Renfort : prix « levée » du delta choisi, réductions de
+          // la ville de renfort (arbitrage Thibaut 2026-10-28).
+          const deltaRenfort = Math.round(renfortParArmee[idx] ?? 15)
+          const villeRenfortObj = p.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
+          const prixRenfort = prixArmee(deltaRenfort, C, villeRenfortObj)
           return (
             <div key={idx} className={`mini ${cmdMort ? 'warn-box' : ''}`}>
               <div className="mini-title">
@@ -127,45 +142,38 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                 {cmd && <span> · commandant : <strong>{cmd.prenom} {cmd.nom}</strong></span>}
                 {cmdMort && <span className="neg"> · ⚠ commandant tombé, à remplacer !</span>}
               </div>
-              <div className="grid-2">
-                <Select
-                  value={a.commandant ?? ''}
-                  options={[
-                    ...(cmd ? [{ value: cmd.id, label: `${cmd.prenom} ${cmd.nom}` }] : []),
-                    { value: '', label: '(sans commandant)' },
-                    ...commandantsDispo
-                      .filter((c) => c.id !== a.commandant)
-                      .map((c) => ({ value: c.id, label: `${c.prenom} ${c.nom} (${c.dynastie})` })),
-                  ]}
-                  onChange={(v) => setPlayer((x, s) => {
-                    const pers = (s.population[joueur] ?? [])
-                    const ancien = x.armees[idx].commandant
-                    if (ancien) {
-                      const ancienPers = pers.find((c) => c.id === ancien)
-                      if (ancienPers) {
-                        ancienPers.metier = null
-                        ancienPers.armee = null
-                      }
+              {/* (RETRAIT 2026-10-28 : le Select « cible » — joueur
+                  visé — est supprimé, il ne servait à rien (retour
+                  arbitre) ; le commandant reste le seul choix.) */}
+              <Select
+                value={a.commandant ?? ''}
+                options={[
+                  ...(cmd ? [{ value: cmd.id, label: `${cmd.prenom} ${cmd.nom}` }] : []),
+                  { value: '', label: '(sans commandant)' },
+                  ...commandantsDispo
+                    .filter((c) => c.id !== a.commandant)
+                    .map((c) => ({ value: c.id, label: `${c.prenom} ${c.nom} (${c.dynastie})` })),
+                ]}
+                onChange={(v) => setPlayer((x, s) => {
+                  const pers = (s.population[joueur] ?? [])
+                  const ancien = x.armees[idx].commandant
+                  if (ancien) {
+                    const ancienPers = pers.find((c) => c.id === ancien)
+                    if (ancienPers) {
+                      ancienPers.metier = null
+                      ancienPers.armee = null
                     }
-                    x.armees[idx].commandant = v || null
-                    if (v) {
-                      const nouveau = pers.find((c) => c.id === v)
-                      if (nouveau) {
-                        nouveau.metier = C.p.metierCommandant
-                        nouveau.armee = x.armees[idx].nom
-                      }
+                  }
+                  x.armees[idx].commandant = v || null
+                  if (v) {
+                    const nouveau = pers.find((c) => c.id === v)
+                    if (nouveau) {
+                      nouveau.metier = C.p.metierCommandant
+                      nouveau.armee = x.armees[idx].nom
                     }
-                  })}
-                />
-                <Select
-                  value={a.cible ?? ''}
-                  options={[
-                    { value: '', label: 'Pas de cible' },
-                    ...state.players.filter((q) => q.n !== p.n).map((q) => ({ value: q.nom, label: `Cible : ${q.nom}` })),
-                  ]}
-                  onChange={(v) => setPlayer((x) => { x.armees[idx].cible = v || null })}
-                />
-              </div>
+                  }
+                })}
+              />
               <Button tone="danger" onClick={() => setPlayer((x, s) => {
                 const armee = x.armees[idx]
                 const pers = s.population[joueur] ?? []
@@ -197,7 +205,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                 <Button tone="danger" onClick={() => {
                   const nb = Math.round(pertesParArmee[idx] ?? 0)
                   if (nb <= 0) return
-                  if (!window.confirm(`Infliger ${nb} perte(s) à « ${a.nom} » ? Les soldats correspondants seront tués (statut « Décédé »).`)) return
+                  if (!window.confirm(`Infliger ${nb} perte(s) à « ${a.nom} » ? (Armée suivie : les soldats correspondants sont tués ; armée non suivie : ${nb} × ${puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)} pts retranchés de la puissance.)`)) return
                   setPlayer((x, s2) => { infligerPertes(s2, x, idx, nb, !!tuerCmdParArmee[idx]) })
                 }}>⚔ Infliger {Math.round(pertesParArmee[idx] ?? 0)} perte(s)</Button>
                 {/* ── Fin de service (revue 2026-10-17) : N soldats
@@ -208,6 +216,50 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   if (!window.confirm(`Libérer ${nb} soldat(s) de « ${a.nom} » ? Ils quittent l'armée et redeviennent Chasseurs (vivants et productifs).`)) return
                   setPlayer((x, s2) => { libererSoldats(s2, x, idx, nb, !!tuerCmdParArmee[idx]) })
                 }}>🕊 Libérer {Math.round(pertesParArmee[idx] ?? 0)} en fin de service</Button>
+              </div>
+              {/* ── Renfort (arbitrage Thibaut 2026-10-28) : une
+                  levée AU SEIN de l'armée — même prix, réductions
+                  de la ville de renfort ; la puissance CIBLE est
+                  relevée et le recrutement de chaque tour comble
+                  l'écart (les premières recrues font aussi passer
+                  une armée non suivie en dérivation — migration
+                  vers le suivi). */}
+              <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+                <span className="muted small">⚔ Renfort :</span>
+                <NumberInput
+                  value={deltaRenfort}
+                  step={15} min={15} max={300}
+                  onChange={(v) => setRenfortParArmee((m) => ({ ...m, [idx]: Math.round(v) }))}
+                />
+                <Select
+                  value={villeRenfortParArmee[idx] ?? ''}
+                  options={[
+                    { value: '', label: '(hors habitation — aucun bonus)' },
+                    ...p.villes.map((v) => ({ value: v.nom, label: v.nom })),
+                  ]}
+                  onChange={(v) => setVilleRenfortParArmee((m) => ({ ...m, [idx]: v }))}
+                />
+                <Button
+                  tone="primary"
+                  disabled={orDispo < prixRenfort}
+                  onClick={() => {
+                    const delta = Math.round(renfortParArmee[idx] ?? 0)
+                    if (delta < 15) return
+                    setPlayer((x, s) => {
+                      const armee = x.armees[idx]
+                      const villeObj = x.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
+                      const prix2 = prixArmee(delta, C, villeObj)
+                      const rs = x.resources['Or']
+                      if (rs && rs.stock < prix2) return
+                      if (rs && prix2 > 0) rs.stock -= prix2
+                      armee.puissanceCible += delta
+                      s.log.push({
+                        turn: s.turn, type: 'Armée', joueur,
+                        texte: `⚔ Renfort — « ${armee.nom} » : +${fmt(delta)} pts (cible ${fmt(armee.puissanceCible)} pts) — prix de levée : −${prix2} Or.`,
+                      })
+                    })
+                  }}
+                >⚔ Renforcer +{fmt(deltaRenfort)} pts ({fmt(prixRenfort)} Or)</Button>
               </div>
             </div>
           )
@@ -267,7 +319,9 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
           ({C.p.armeePrixOr} Or tous les {C.p.armeePriXPuissance} points de force) est débité une seule fois, à la création de
           l'armée. Choisir une VILLE DE LEVÉE applique les RÉDUCTIONS DE LEVÉE portées
           par ses bâtiments (arbitrage 2026-10-28 : elles vivent sur les fiches de
-          construction du référentiel — cf. Référentiels).
+          construction du référentiel — cf. Référentiels). Le RENFORT est une levée au
+          sein d'une armée existante : mêmes prix et réductions, la puissance cible est
+          relevée et le recrutement de chaque tour comble l'écart.
         </p>
       </Card>
     </div>
