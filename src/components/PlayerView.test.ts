@@ -233,16 +233,17 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
     h.includes(`Métiers : <strong>${esc(fmt(enPosteTotal))}</strong> en poste`),
     `titre « Métiers : ${fmt(enPosteTotal)} en poste » absent du tableau métiers`,
   )
-  // Le tableau liste les métiers DISPONIBLES dans la ville (retour
-  //  Thibaut 2026-10-28 ter : « les métiers disponibles ») :
-  //  offre de la ville (cap finie >= 1), occupés ou non ; les
-  //  métiers HORS OFFRE ne s'affichent plus. Les lignes neutres
-  //  restent : Sans-emploi (adultes) et Enfant (retour bis : ligne
-  //  à part, pas des sans-emplois).
-  const disponibles = lignesMet.filter(
-    (l) => l.metier === null || (Number.isFinite(l.cap) && l.cap >= 1),
+  // Le tableau liste les métiers PRÉSENTS ET DISPONIBLES dans la
+  //  ville SANS DISTINCTION (retour Thibaut 2026-10-28, 4e
+  //  retour — SUPERSEDÉ le « disponibles » seuls du 3e retour) :
+  //  un métier s'affiche s'il est OCCUPÉ (même non plafonné :
+  //  le Dirigeant de la fixture, cap ∞ → N/—) OU OFFERT (cap
+  //  finie >= 1, occupé ou non). Les lignes neutres restent :
+  //  Sans-emploi (adultes) et Enfant (retour bis : ligne à part).
+  const affiches = lignesMet.filter(
+    (l) => l.metier === null || l.enPoste > 0 || (Number.isFinite(l.cap) && l.cap >= 1),
   )
-  for (const l of disponibles) {
+  for (const l of affiches) {
     const label = l.metier ?? (l.enfants ? 'Enfant' : 'Sans-emploi')
     assert.ok(
       h.includes(`>${esc(label)}</`),
@@ -258,21 +259,21 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
     h.includes('class="muted" title="Enfant : pas un sans-emploi'),
     'tooltip de la ligne Enfant absent du tableau métiers',
   )
-  // Un métier HORS OFFRE ne s'affiche PAS (retour 2026-10-28 ter) :
-  //  rôles non plafonnés même occupés (cap ∞ — ex. le Dirigeant
-  //  de la fixture) et surnombre cap 0 (ex. les 0/0 de la fixture).
+  // Un métier NI occupé NI offert ne s'affiche PAS (retour
+  //  2026-10-28, 4e retour) : seuls les 0/0 de la fixture. Le
+  //  Dirigeant occupé (cap ∞) est de retour dans le tableau.
   for (const l of lignesMet) {
-    if (l.metier === null || (Number.isFinite(l.cap) && l.cap >= 1)) continue
+    if (l.metier === null || l.enPoste > 0 || (Number.isFinite(l.cap) && l.cap >= 1)) continue
     assert.ok(
       !h.includes(`>${esc(l.metier)}</td><td class="num`),
-      `métier hors offre « ${l.metier} » ne doit pas s'afficher dans le tableau métiers`,
+      `métier ni occupé ni offert « ${l.metier} » ne doit pas s'afficher dans le tableau métiers`,
     )
   }
   // Format N/M COMME LES LOGEMENTS (retour Thibaut 2026-10-28) :
   //  en poste / capacité, « — » en dénominateur pour les métiers
   //  non plafonnés, surnombre en rouge — sur les lignes affichées
   //  (Enfant et Sans-emploi inclus : cap illimitée → N/—).
-  for (const l of disponibles) {
+  for (const l of affiches) {
     const surnombre = Number.isFinite(l.cap) && l.enPoste > l.cap
     const attenduNM = Number.isFinite(l.cap)
       ? `class="num${surnombre ? ' neg' : ''}">${esc(fmt(l.enPoste))}/${esc(fmt(l.cap))}</td>`

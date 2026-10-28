@@ -682,8 +682,11 @@ input[type='range'] {
    Retour 2026-10-26, capture n°3 : le wrap devient une grille
    1fr / auto — la colonne gauche (5 cases + habitants requis)
    borde le bloc bonheur, plus d'espace vide sous les cases.
-   Repli écran étroit : tout en 1 colonne. */
-.ville-tete-wrap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; }
+   Repli écran étroit : tout en 1 colonne.
+   Retour Thibaut 2026-10-28 (4e retour du jour) : délimitation
+   CLAIRE — filet plein ton sous l'en-tête, avant le bloc des
+   tableaux. */
+.ville-tete-wrap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .bonheur-bloc { min-width: 180px; }
 @media (max-width: 560px) {
   .ville-tete-wrap { grid-template-columns: 1fr; }
@@ -698,8 +701,11 @@ input[type='range'] {
 .bonheur-axe-barre > span { display: block; height: 100%; border-radius: 3px; }
 .bonheur-axe-val { flex: 0 0 24px; text-align: right; font-variant-numeric: tabular-nums; }
 
-/* Aménagements et bâtiments côte à côte dans une carte de ville */
-.ville-constr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Aménagements et bâtiments côte à côte dans une carte de ville
+   (retour Thibaut 2026-10-28, 4e retour du jour : filet CLAIR
+   au-dessus — le bloc des tableaux se détache du reste de la
+   ville). */
+.ville-constr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--border); }
 @media (max-width: 560px) { .ville-constr { grid-template-columns: 1fr; } }
 
 /* Population (cultures) & garnison côte à côte — retour Thibaut
@@ -720,26 +726,29 @@ input[type='range'] {
    Retour Thibaut 2026-10-28 (3e retour du jour) « deux colonnes » :
    colonne gauche culture + logements + garnison EMPILÉS, colonne
    droite les métiers ; filet vertical entre colonnes, filets
-   horizontaux entre les tableaux empilés.)
+   horizontaux entre les tableaux empilés.
+   Retour 2026-10-28 (4e retour du jour) : délimitations CLAIRES
+   entre les tableaux — filets plein ton (var(--border)) entre
+   colonnes et entre tableaux empilés.)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée
    par un liseré accent (plus de styles inline dans VilleCarte). */
 .ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; }
 .ville-duo-cols > div:last-child {
-  border-left: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+  border-left: 1px solid var(--border);
   padding-left: 18px;
 }
 .ville-col-stack > div + div {
   margin-top: 10px;
-  border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+  border-top: 1px solid var(--border);
   padding-top: 10px;
 }
 @media (max-width: 560px) {
   .ville-duo-cols { grid-template-columns: 1fr; }
   .ville-duo-cols > div:last-child {
     border-left: none; padding-left: 0;
-    border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+    border-top: 1px solid var(--border);
     padding-top: 8px;
   }
 }
