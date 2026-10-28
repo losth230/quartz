@@ -11,12 +11,15 @@ export interface GameParams {
   adultAge: number
   setupAgeMax: number
   adulteryRate: number
-  /** Migration scolaire : enfant sans Professeur dans sa ville → ville
-   *  avec Professeur du même joueur. */
+  // (RETRAIT 2026-10-28, arbitrage Thibaut : la migration par
+  //  scolarité est supprimée du moteur — plus aucun lecteur. Les
+  //  3 paramètres ci-dessous sont conservés comme REFLIS de
+  //  compatibilité, car les configs sauvegardées les portent.)
+  /** (REFLI) Migration scolaire — plus aucun lecteur depuis le retrait. */
   migrationEcole: number
-  /** …ville avec Professeur du suzerain (ou du suzerain du suzerain). */
+  /** (REFLI) …suzerain — plus aucun lecteur depuis le retrait. */
   migrationSuzerain: number
-  /** …ville avec Professeur de n'importe quel joueur. */
+  /** (REFLI) …n'importe quel joueur — plus aucun lecteur. */
   migrationMonde: number
   consoNourrParHab: number
   /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
@@ -178,6 +181,7 @@ export const DEFAULT_PARAMS: GameParams = {
   adultAge: 16,
   setupAgeMax: 50,
   adulteryRate: 0.03,
+  // (REFLI — retrait migration scolaire 2026-10-28, cf. interface)
   migrationEcole: 0.10,
   migrationSuzerain: 0.02,
   migrationMonde: 0.01,
@@ -289,9 +293,10 @@ export const PARAM_META: {
 }[] = [
   { key: 'adultAge', label: 'Âge adulte', groupe: 'Population', aide: 'Âge à partir duquel un personnage reçoit un métier et peut se marier.' },
   { key: 'adulteryRate', label: 'Taux d\'adultère', groupe: 'Population', unite: 'proba' },
-  { key: 'migrationEcole', label: 'Migration scolaire (même joueur)', groupe: 'Population', unite: 'proba', aide: 'Un enfant sans éducation dont la ville n\'a pas de Professeur part vers une ville avec Professeur du même joueur.' },
-  { key: 'migrationSuzerain', label: 'Migration scolaire (suzerain)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de son suzerain, ou du suzerain de son suzerain.' },
-  { key: 'migrationMonde', label: 'Migration scolaire (monde)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de n\'importe quel joueur.' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut : la migration
+  //  par scolarité est supprimée du moteur — les paramètres
+  //  migrationEcole/Suzerain/Monde ne sont plus éditables ici et
+  //  restent comme REFLIS de compatibilité.)
   { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
   { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
   { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },

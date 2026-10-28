@@ -5,10 +5,10 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, City, GameState, Player } from './types'
+import type { Character, GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
-import { emptyRecap, fullName, perteDemenagement } from './shared'
+import { emptyRecap } from './shared'
 import { maybeAssignProfesseurs, gestionMariages, assignAdultMetier } from './metiers'
 import { maladieStep } from './sante'
 import { computeFecondite, conceptionEtNaissances } from './naissances'
@@ -68,8 +68,10 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
   applyCultureInfluence(state, p, rng, recap)
   updateCityCultures(state, p)
 
-  // 3.6bis Migration (scolarité)
-  migrerPopulation(state, p, rng)
+  // (RETRAIT 2026-10-28, arbitrage Thibaut : l'étape 3.6bis
+  //  « Migration (scolarité) » est supprimée avec migrerPopulation —
+  //  plus AUCUNE migration automatique de population ; les seuls
+  //  déplacements restants sont volontaires : mariages/cour, transferts.)
 
   // 3.6ter DOMICILES (vague E, design domiciles 2026-10-24) :
   //  attribution des logements aux habitants APRÈS la démographie
@@ -95,118 +97,28 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
 }
 
 // ══════════════════════════════════════════════════════════════════════
-//  MIGRATION (règles étendues)
-//    1. SCOLARITÉ — un enfant vivant sans éducation dont la ville n'a
-//       pas de Professeur peut partir étudier ailleurs :
+//  MIGRATION DE POPULATION — RETRAIT INTÉGRAL (2026-10-28)
+//    Historique (porté du VBA du classeur) :
+//    1. SCOLARITÉ — un enfant vivant sans éducation dont la ville
+//       n'a pas de Professeur pouvait partir étudier ailleurs :
 //         · 10 % : ville avec Professeur du MÊME joueur ;
 //         · 2 % : ville avec Professeur d'un autre joueur suzerain
 //           (ou suzerain du suzerain) ;
 //         · 1 % : ville avec Professeur de n'importe quel joueur.
-//       Les « Obstinés » ne migrent jamais (l'éducation ne les tentera
-//       jamais — VBA).
-//  (RETRAIT 2026-10-19, retour arbitre : la migration spontanée par attrait
-//   touristique a été retirée avec le système d'attrait — à refaire.)
-//  Un personnage qui change de joueur est physiquement déplacé dans le
-//  tableau de population de son nouveau joueur.
+//       Les « Obstinés » ne migraient jamais (l'éducation ne les
+//       tentera jamais — VBA).
+//    2. La migration spontanée par attrait touristique avait déjà
+//       été retirée le 2026-10-19 (retour arbitre, avec le système
+//       d'attrait — à refaire).
+//    (RETRAIT 2026-10-28, arbitrage Thibaut « commence par retirer
+//     la migration par scolarité » : migrerPopulation, le cache
+//     villesAvecProfesseur, l'interface CibleVille et l'étape 3.6bis
+//     du tour sont supprimés. Plus AUCUNE migration automatique de
+//     population. Les déplacements restants sont TOUS volontaires :
+//     mariages et cour (un époux non ancré déménage chez l'autre,
+//     cf. cour.ts), transferts de cour, acquisition de cité libre —
+//     et le principe survit : un personnage qui change de joueur est
+//     physiquement déplacé dans le tableau de population de son
+//     nouveau joueur. Les paramètres migrationEcole/Suzerain/Monde
+//     restent en REFLIS dans params.ts.)
 // ══════════════════════════════════════════════════════════════════════
-
-/** Cible de migration : une ville, chez un joueur donné. */
-interface CibleVille { joueur: Player; ville: City }
-
-/**
- * Villes d'un joueur abritant au moins un Professeur vivant.
- * OPTIMISATION 2026-10-16 : cache par état (invalidé quand l'état
- *  change) — l'ancien pop.some() scannait toute la population du
- *  joueur pour CHAQUE appel, lui-même fait par migrant.
- */
-let cacheVillesProfState: { state: object; parJoueur: Map<number, Set<string>> } | null = null
-function villesAvecProfesseur(state: GameState, joueur: Player): City[] {
-  const C = cfgOf(state.config)
-  if (!cacheVillesProfState || cacheVillesProfState.state !== state) {
-    const parJoueur = new Map<number, Set<string>>()
-    for (const [nStr, liste] of Object.entries(state.population ?? {})) {
-      const n = Number(nStr)
-      const villes = new Set<string>()
-      for (const c of liste ?? []) {
-        if (c.statut !== 'Décédé' && c.metier === C.p.metierProfesseur) villes.add(c.ville)
-      }
-      parJoueur.set(n, villes)
-    }
-    cacheVillesProfState = { state, parJoueur }
-  }
-  const villes = cacheVillesProfState.parJoueur.get(joueur.n) ?? new Set<string>()
-  return joueur.villes.filter((v) => villes.has(v.nom))
-}
-
-function migrerPopulation(state: GameState, p: Player, rng: Rng) {
-  const C = cfgOf(state.config)
-  const pop = state.population[p.n] ?? []
-  /** personnages déjà déplacés ce tour (pas de double migration) */
-  const deplaces = new Set<string>()
-
-  /** Déplace c (appartenant au joueur n° srcN) vers la ville de dest. */
-  const migrer = (c: Character, srcN: number, dest: CibleVille, motif: string) => {
-    if (dest.joueur.n !== srcN) {
-      const src = state.population[srcN] ?? []
-      const i = src.indexOf(c)
-      if (i >= 0) src.splice(i, 1)
-      const dst = state.population[dest.joueur.n] ?? (state.population[dest.joueur.n] = [])
-      dst.push(c)
-    }
-    const avant = c.ville
-    c.ville = dest.ville.nom
-    // Vague 3a (arbitrage 2026-10-21) : changement d'habitation →
-    //  perte du métier ET du domicile (retour Sans-emploi jusqu'à
-    //  la réaffectation de fin de tour). NB : migrer ne déplace QUE
-    //  des enfants, un Dirigeant/Héritier ne passe jamais ici
-    //  (arbitrage 2026-10-21 : il ne déménage jamais).
-    perteDemenagement(c, C)
-    deplaces.add(c.id)
-    state.log.push({
-      turn: state.turn + 1, type: 'Système', joueur: srcN,
-      texte: dest.joueur.n === srcN
-        ? `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} (${motif}).`
-        : `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} chez ${dest.joueur.nom} (${motif}).`,
-    })
-  }
-
-  // ── 1. Migration scolaire des enfants ─────────────────────────────────
-  const profsChezMoi = villesAvecProfesseur(state, p)
-  const chezMoiAutres = profsChezMoi.map((v) => ({ joueur: p, ville: v }))
-  const suzerain1 = p.vassalDe != null && p.vassalDe !== p.n
-    ? state.players.find((x) => x.n === p.vassalDe) : undefined
-  const suzerain2 = suzerain1?.vassalDe != null && suzerain1.vassalDe !== p.n
-    ? state.players.find((x) => x.n === suzerain1.vassalDe) : undefined
-  const chezSuzerains = [suzerain1, suzerain2]
-    .filter((s): s is Player => !!s)
-    .flatMap((s) => villesAvecProfesseur(state, s).map((v) => ({ joueur: s, ville: v })))
-  const chezLeMonde = state.players
-    .filter((q) => q.n !== p.n)
-    .flatMap((q) => villesAvecProfesseur(state, q).map((v) => ({ joueur: q, ville: v })))
-
-  for (const c of [...pop]) {
-    if (c.statut === 'Décédé' || c.age >= C.p.adultAge) continue
-    // VBA : les « Obstinés » ne migrent pas.
-    if ((c.traits ?? []).includes(C.p.traitObstine)) continue
-    if (deplaces.has(c.id)) continue
-    // un Professeur dans SA ville → pas de migration scolaire
-    if (profsChezMoi.some((v) => v.nom === c.ville)) continue
-    const ciblesMemeJoueur = chezMoiAutres.filter((t) => t.ville.nom !== c.ville)
-    if (ciblesMemeJoueur.length > 0 && rng.chance(C.p.migrationEcole)) {
-      migrer(c, p.n, rng.pick(ciblesMemeJoueur), 'scolarité — rejoint un Professeur')
-      continue
-    }
-    const ciblesSuzerain = chezSuzerains.filter((t) => t.ville.nom !== c.ville)
-    if (ciblesSuzerain.length > 0 && rng.chance(C.p.migrationSuzerain)) {
-      migrer(c, p.n, rng.pick(ciblesSuzerain), 'scolarité — Professeur du suzerain')
-      continue
-    }
-    const ciblesMonde = [...ciblesMemeJoueur, ...chezLeMonde]
-    if (ciblesMonde.length > 0 && rng.chance(C.p.migrationMonde)) {
-      migrer(c, p.n, rng.pick(ciblesMonde), 'scolarité — Professeur')
-    }
-  }
-
-  // (RETRAIT 2026-10-19, retour arbitre : la migration spontanée par
-  //  attrait touristique a été retirée — système à refaire.)
-}
