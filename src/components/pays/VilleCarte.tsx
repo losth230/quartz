@@ -20,9 +20,9 @@
 //  Thibaut 2026-10-27 : « un nouveau tableau avec les 3 tableaux
 //  de logement, culture et garnison, qui recense tous les métiers
 //  disponibles et occupés » — même données que le panneau
-//  Population, une ligne par métier occupé ou plafonné ; retour
-//  2026-10-28 : format N/M « en poste / capacité » comme les
-//  logements) ; (3) CONSTRUCTIONS :
+//  Population ; retour 2026-10-28 : format N/M « en poste /
+//  capacité » comme les logements, et SEULS les métiers PRÉSENTS
+//  (occupés) de la ville s'affichent) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
 //  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
@@ -321,20 +321,25 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             })
           const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
           const habitantsLoges = habitantsLog.length - sansLogement
-          // ── MÉTIERS (retour Thibaut 2026-10-27 : « ajouter un
-          //  nouveau tableau […] qui recense tous les métiers
-          //  disponibles et occupés ») : rangée 2 du damier, à
-          //  droite de la garnison (retour 2026-10-28), mêmes
-          //  données que le panneau Population (helper moteur
-          //  occupationsMetierVille, testé) — une ligne par métier
-          //  OCCUPÉ (en poste > 0) ou DISPONIBLE (cap finie :
-          //  base du rang + emplacements des constructions), la
-          //  ligne Sans-emploi toujours présente (rôle neutre).
+          // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau
+          //  tableau […] qui recense tous les métiers disponibles
+          //  et occupés ») : rangée 2 du damier, à droite de la
+          //  garnison (retour 2026-10-28), mêmes données que le
+          //  panneau Population (helper moteur
+          //  occupationsMetierVille, testé). Retour Thibaut
+          //  2026-10-28 « n'affiche que les métiers présents dans
+          //  la ville » : seuls les métiers OCCUPÉS (en poste > 0)
+          //  s'affichent — les disponibles inoccupés (cap finie,
+          //  0 en poste) quittent le tableau ; Sans-emploi reste
+          //  (rôle neutre des habitants de la ville).
           const lignesMet = occupationsMetierVille(
             habitantsLog, ville, C, { state, joueur },
           )
           const enPosteTotal = lignesMet.reduce(
             (n, l) => n + (l.metier ? l.enPoste : 0), 0,
+          )
+          const metiersPresents = lignesMet.filter(
+            (l) => l.metier === null || l.enPoste > 0,
           )
           return (
             <div className="ville-duo-cols">
@@ -438,11 +443,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   </tbody>
                 </table>
               </div>
-              {/* ── MÉTIERS (retour Thibaut 2026-10-27) : tous les
-                  métiers DISPONIBLES (cap finie — base du rang +
-                  emplacements des constructions) et OCCUPÉS de la
-                  ville, avec la ligne Sans-emploi (rôle neutre) et
-                  le total en poste / vivants. Format N/M COMME LES
+              {/* ── MÉTIERS (retour Thibaut 2026-10-27, puis
+                  2026-10-28 « n'affiche que les métiers présents
+                  dans la ville ») : UNIQUEMENT les métiers OCCUPÉS
+                  (en poste > 0) — les disponibles inoccupés ne
+                  s'affichent pas — avec la ligne Sans-emploi
+                  (rôle neutre) et le total en poste / vivants.
+                  Format N/M COMME LES
                   LOGEMENTS (retour Thibaut 2026-10-28) : en poste /
                   capacité — « — » en dénominateur pour les métiers
                   non plafonnés (rôles de cour, armée, Banquier,
@@ -451,13 +458,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Tous les métiers disponibles et occupés de la ville, au format en poste / capacité (comme les logements). Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
+                  title="Les métiers occupés de la ville, au format en poste / capacité (comme les logements) ; les métiers disponibles mais inoccupés ne sont pas listés. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
                 >
                   Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
                 </div>
                 <table className="ville-table">
                   <tbody>
-                    {lignesMet.map((l) => (
+                    {metiersPresents.map((l) => (
                       <tr key={l.metier ?? 'sans'}>
                         <td>
                           {l.metier

@@ -225,19 +225,30 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
     h.includes(`Métiers : <strong>${esc(fmt(enPosteTotal))}</strong> en poste`),
     `titre « Métiers : ${fmt(enPosteTotal)} en poste » absent du tableau métiers`,
   )
-  // Chaque métier disponible (cap finie) ou occupé rend SON nom, et
-  //  la ligne Sans-emploi (rôle neutre) est toujours présente.
-  for (const l of lignesMet) {
+  // Seuls les métiers PRÉSENTS dans la ville (occupés) s'affichent
+  //  (retour Thibaut 2026-10-28 « n'affiche que les métiers présents
+  //  dans la ville ») — la ligne Sans-emploi (rôle neutre) reste.
+  const presents = lignesMet.filter((l) => l.metier === null || l.enPoste > 0)
+  for (const l of presents) {
     assert.ok(
       h.includes(`>${esc(l.metier ?? 'Sans-emploi')}</`),
       `métier « ${l.metier ?? 'Sans-emploi'} » absent du tableau métiers`,
     )
   }
   assert.ok(h.includes('Sans-emploi'), 'ligne « Sans-emploi » absente du tableau métiers')
+  // Un métier disponible mais INOCCUPÉ (cap finie, 0 en poste —
+  //  ex. les 0/0 de la fixture) ne s'affiche PAS.
+  for (const l of lignesMet) {
+    if (l.metier === null || l.enPoste > 0) continue
+    assert.ok(
+      !h.includes(`>${esc(l.metier)}</td>`),
+      `métier inoccupé « ${l.metier} » ne doit pas s'afficher dans le tableau métiers`,
+    )
+  }
   // Format N/M COMME LES LOGEMENTS (retour Thibaut 2026-10-28) :
   //  en poste / capacité, « — » en dénominateur pour les métiers
-  //  non plafonnés, surnombre en rouge.
-  for (const l of lignesMet) {
+  //  non plafonnés, surnombre en rouge — sur les lignes affichées.
+  for (const l of presents) {
     const surnombre = Number.isFinite(l.cap) && l.enPoste > l.cap
     const attenduNM = Number.isFinite(l.cap)
       ? `class="num${surnombre ? ' neg' : ''}">${esc(fmt(l.enPoste))}/${esc(fmt(l.cap))}</td>`
