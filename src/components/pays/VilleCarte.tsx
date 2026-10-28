@@ -305,7 +305,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           //  quartiers…) ; occupés = habitants attribués (retour
           //  Thibaut 2026-10-26 : 1 logement = 1 HABITANT, plus de
           //  foyers — les bâtiments les plus qualitatifs servent
-          //  d'abord les personnages de haut rang).
+          //  d'abord les personnages de haut rang). Maison de
+          //  notable et Palais RÉSERVÉS aux nobles (retour Thibaut
+          //  2026-10-28, 5e retour du jour).
           const stockLog = Array.isArray(ville.domiciles)
             ? ville.domiciles
             : stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
@@ -405,7 +407,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 <div>
                   <div
                     className="ville-duo-titre"
-                    title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant)."
+                    title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant). Maisons de notable et Palais RÉSERVÉS aux nobles (retour 2026-10-28) : un roturier ou un bourgeois ne peut ni les recevoir ni les garder."
                   >
                     Logements : <strong>{fmt(capTotale)}</strong>
                   </div>

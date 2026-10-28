@@ -26,13 +26,19 @@
 //     [{domicile: 'Maison', nombre: 50}, …]) — initialisé du rang
 //     d'habitation à la création/changement de rang (normaliserEtat
 //     le complète pour les vieilles sauvegardes) ;
+//   · RÉSERVATION (retour Thibaut 2026-10-28, 5e retour du jour :
+//     « il faut être noble minimum pour avoir une maison de
+//     notable ou un palais ») : la Maison de notable et le Palais
+//     sont RÉSERVÉS au rang NOBLE — un roturier ou un bourgeois ne
+//     peut ni les recevoir ni les GARDER (SUPERSEDÉ l'ancien
+//     principe « pas de restriction par condition sociale ») ;
+//     l'ordre de prestige fait le tri, la restriction le garantit ;
 //   · on ne déloge personne : un habitant garde son domicile
 //     s'il existe encore au stock (l'ordre de prestige ne sert
-//     qu'à répartir les places LIBRES) ;
-//   · pas encore de restriction par condition sociale au sens
-//     strict (un roturier PEUT finir en Maison de notable s'il
-//     est servi avant les nobles — mais l'ordre de prestige fait
-//     en pratique le tri).
+//     qu'à répartir les places LIBRES) — SAUF s'il n'est plus
+//     éligible à un domicile réservé (non-noble en Maison de
+//     notable / Palais : relogé comme les autres, la place
+//     réservée reste au stock pour les nobles) ;
 //
 //  Le champ Character.domicile est la clé : nom du type de
 //  domicile ('Maison', 'Auberge'…), null = sans domicile.
@@ -42,6 +48,7 @@ import type { Character, City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
 import { logementsConstructionRef } from './constructions'
+import { rangDe } from './statutSocial'
 
 // ── Lecture du référentiel ───────────────────────────────────────────
 
@@ -106,6 +113,17 @@ export function taudisApportesVille(ville: City, C: Cfg): number {
 
 // ── Attribution ──────────────────────────────────────────────────────
 
+/** Domiciles RÉSERVÉS aux NOBLES (retour Thibaut 2026-10-28, 5e
+ * retour du jour : « il faut être noble minimum pour avoir une
+ * maison de notable ou un palais ») — la Maison de notable et le
+ * Palais ne sont ni attribués ni conservés par un roturier ou un
+ * bourgeois, même servi avant les nobles restants. Comparaison
+ * insensible à la casse (même tolérance que domicileDef). */
+export function reserveNobleDomicile(nom: string | null | undefined): boolean {
+  const n = (nom ?? '').trim().toLowerCase()
+  return n === 'maison de notable' || n === 'palais'
+}
+
 /** Habitants VIVANTS d'une ville — l'unité d'attribution (retour
  *  Thibaut 2026-10-26 : 1 logement = 1 habitant, plus de foyers). */
 export function vivantsVille(state: GameState, nJoueur: number, ville: City): Character[] {
@@ -125,8 +143,12 @@ export function vivantsVille(state: GameState, nJoueur: number, ville: City): Ch
  *  ordre chacun GARDE son domicile s'il existe encore au stock
  *  (on ne déloge personne — l'ordre de priorité ne sert qu'à
  *  répartir les places libres), sinon prend la MEILLEURE qualité
- *  restante. Stock épuisé : `Character.domicile = null` (sans
- *  logement). Retourne le nombre d'habitants LOGÉS. */
+ *  restante. RÉSERVATION (retour Thibaut 2026-10-28 : il faut être
+ *  NOBLE minimum pour une Maison de notable ou un Palais) : un
+ *  non-noble ne peut ni recevoir ni garder un domicile réservé —
+ *  il est relogé dans le meilleur reste, la place réservée reste
+ *  au stock pour les nobles. Stock épuisé : `Character.domicile =
+ *  null` (sans logement). Retourne le nombre d'habitants LOGÉS. */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
   //  existante dont les villes n'ont pas de stock (sauvegardées avant
@@ -145,15 +167,27 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
   const typesTries = [...C.config.domiciles].sort((a, b) => b.qualite - a.qualite)
   let loges = 0
   for (const c of servs) {
-    // déjà logé dans un type existant au stock : garde sa place
-    if (c.domicile && (stock.get(c.domicile) ?? 0) > 0) {
+    // RANG du personnage : la Maison de notable et le Palais sont
+    //  RÉSERVÉS aux nobles (retour Thibaut 2026-10-28, 5e retour
+    //  du jour — rangDe : dynastie noble OU prestige ≥ 250).
+    const noble = rangDe(c, C) === 'noble'
+    // déjà logé dans un type existant au stock : garde sa place —
+    //  SAUF domicile réservé non éligible (relogé comme les autres,
+    //  la place réservée reste au stock)
+    if (
+      c.domicile &&
+      (stock.get(c.domicile) ?? 0) > 0 &&
+      (noble || !reserveNobleDomicile(c.domicile))
+    ) {
       stock.set(c.domicile, (stock.get(c.domicile) ?? 0) - 1)
       loges++
       continue
     }
-    // à loger : meilleure qualité restante
+    // à loger : meilleure qualité restante — les domiciles RÉSERVÉS
+    //  ne sont proposés qu'aux nobles
     let place: string | null = null
     for (const t of typesTries) {
+      if (!noble && reserveNobleDomicile(t.domicile)) continue
       const restant = stock.get(t.domicile) ?? 0
       if (restant > 0) {
         stock.set(t.domicile, restant - 1)

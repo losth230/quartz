@@ -7,7 +7,11 @@
 //     2026-10-26 — plus de foyers), ordre de service par PRESTIGE
 //     décroissant (les bâtiments les plus qualitatifs aux
 //     personnages de haut rang), meilleure qualité d'abord, sans
-//     dépasser le stock.
+//     dépasser le stock ;
+//   · réservation (retour Thibaut 2026-10-28, 5e retour du jour) :
+//     Maison de notable et Palais RÉSERVÉS au rang NOBLE — un
+//     roturier ou un bourgeois ne peut ni les recevoir ni les
+//     garder.
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -18,7 +22,7 @@ import { migrerEtat } from './migrations'
 import {
   domicileDef, qualiteDomicile, stockRang, totalLogementsVille,
   vivantsVille, attribuerDomicilesVille, initStockVille,
-  taudisApportesVille, domicilesApportesVille,
+  taudisApportesVille, domicilesApportesVille, reserveNobleDomicile,
 } from './domiciles'
 import { constructionRef, resumeConstruction, prerequisConstruction } from './constructions'
 import type { GameState, Player, City } from './types'
@@ -166,6 +170,53 @@ test('attribuerDomicilesVille : les bâtiments les plus qualitatifs servent le H
   for (const c of vivants.slice(2)) {
     assert.equal(c.domicile, null, `« ${c.prenom} » (prestige ${c.prestige ?? 0}) devait rester dehors`)
   }
+})
+
+test('attribuerDomicilesVille : Maison de notable et Palais RÉSERVÉS aux nobles (retour Thibaut 2026-10-28, 5e retour du jour)', () => {
+  const { state, p, ville, C } = partieTemoin()
+  const vivants = vivantsVille(state, p.n, ville)
+  // le helper : exactement les deux types nommés par le retour
+  assert.ok(reserveNobleDomicile('Palais') && reserveNobleDomicile('maison de notable'),
+    'Palais et Maison de notable sont réservés (insensible à la casse)')
+  assert.ok(!reserveNobleDomicile('Maison') && !reserveNobleDomicile(null),
+    'Maison et null ne le sont pas')
+  // un parc TRÈS large en domiciles réservés, personne de noble
+  //  (dynastie roturier, prestige 0) : les réservés restent VIDES
+  ville.domiciles = [
+    { domicile: 'Maison de notable', nombre: 2 },
+    { domicile: 'Palais', nombre: 2 },
+    { domicile: 'Maison', nombre: 1 },
+  ]
+  for (const c of vivants) {
+    c.domicile = null
+    c.prestige = 0
+    c.dynastie = C.p.dynastieRoturier
+  }
+  const loges0 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges0, 1, 'sans noble, seule la Maison part — les réservés restent vides')
+  assert.ok(
+    vivants.every((c) => c.domicile === null || c.domicile === 'Maison'),
+    'aucun roturier en Maison de notable ni au Palais',
+  )
+  // UN noble (par le prestige — rangDe : ≥ 250) : il prend un
+  //  PALAIS (meilleure qualité), personne d'autre ne le suit
+  vivants[0].prestige = 300
+  for (const c of vivants) c.domicile = null
+  const loges1 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges1, 2)
+  assert.equal(vivants[0].domicile, 'Palais', 'le noble (300) prend un Palais')
+  assert.ok(vivants.slice(1).every((c) => c.domicile === null || c.domicile === 'Maison'),
+    'les non-nobles ne touchent pas les réservés',
+  )
+  // un BOURGEOIS qui détenait un Palais (attribution antérieure
+  //  au retour) ne le GARDE pas : relogé dans le meilleur reste
+  vivants[1].prestige = 120
+  vivants[1].domicile = 'Palais'
+  for (const c of vivants) if (c !== vivants[0] && c !== vivants[1]) c.domicile = null
+  const loges2 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(vivants[0].domicile, 'Palais', 'le noble garde son Palais')
+  assert.equal(vivants[1].domicile, 'Maison', 'le bourgeois (120) perd le Palais — relogé en Maison')
+  assert.equal(loges2, 2)
 })
 
 test('attribuerDomicilesVille : stock insuffisant → habitants sans domicile, pas de surbooking', () => {
