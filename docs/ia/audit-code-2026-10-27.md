@@ -29,8 +29,8 @@ action manuelle de Thibaut (SQL ci-dessous).
 | F4 | `runTurn` local : 1,7-3,2 s à 16k habitants, UI gelée sans signal | ✅ appliqué — état `calculTour` + bandeau « ⏳ Calcul du tour en cours… » + bouton verrouillé |
 | F5 | Commentaire mensonger dans `gardeFous` (« suppressions persiste » alors que le code ré-ajoute les constructions du référentiel) | ✅ appliqué — commentaire corrigé (comportement inchangé, verrouillé par tests) |
 | F6 | Import JSON de config non validé en forme (`JSON.parse as GameConfig`) → crash UI possible après un import « réussi » | ✅ appliqué — `validerFormeConfig()` + rejet « Import refusé — … » + test |
-| m1 | `resoudreTourServeur` : `fetch` sans timeout | 📝 documenté, non traité (décision à prendre) |
-| m2 | `fusionnerSections` accepte des sections de joueurs inconnus | 📝 documenté, non traité (décision à prendre) |
+| m1 | `resoudreTourServeur` : `fetch` sans timeout | ✅ appliqué le soir même (arbitrage Thibaut : 60 s + reprise + message) |
+| m2 | `fusionnerSections` accepte des sections de joueurs inconnus | ✅ appliqué le soir même (arbitrage Thibaut : ignorées + journal visible) |
 
 ## F1 — `cp_events` : pas de policy UPDATE, l'upsert échoue en production 🟠
 
@@ -149,15 +149,28 @@ rendu (`.map` sur un nombre). Appliqué :
 - `state/config.test.ts` : test (config saine acceptée, `constructions: 42` et
   `params` string refusés, pas de faux positif sur les tables valides).
 
-## Micro-constats (documentés, non traités — décision à prendre)
+## Micro-constats — APPLIQUÉS le soir même (arbitrage Thibaut 2026-10-27)
 
-- **m1** : `resoudreTourServeur` fait un `fetch` sans timeout ; une Edge Function
-  lente laisse le client indéfiniment en attente. Un `AbortSignal.timeout(…)`
-  réglerait ça proprement.
-- **m2** : `fusionnerSections` accepte des sections pour des n° de joueurs
-  inconnus du setup (aucune validation du numéro). Impact faible en jeu entre
-  amis ; à coupler avec une future validation plus stricte si le modèle
-  « amis de confiance » évolue.
+- **m1** ✅ : `resoudreTourServeur` fait un `fetch` sans timeout ; une Edge
+  Function lente laissait le client indéfiniment en attente. Arbitrage
+  Thibaut : « timeout au bout de 1 min, retente automatiquement, et si le
+  nouvel essai rate de nouveau, ajoute et affiche un message d'erreur ».
+  Appliqué : `AbortSignal.timeout(60_000)` sur chaque essai, UNE reprise
+  automatique (helper pur `src/supabase/reprise.ts` — `avecReprise`,
+  `dejaPublie` = verdict définitif, pas de reprise inutile), et au 2e échec
+  une erreur explicite journalisée VISIBLEMENT avant le repli local
+  (`resoudreSeul(erreurServeur?)` et `resoudreBarriereLocaleV2(...,
+  erreurServeur?)` — l'entrée « Système » du repli barrière est fusionnée
+  dans le tour PUBLIÉ, visible par tous ; les 3 branches Forcer / dernier
+  pousseur / poller passent le message).
+- **m2** ✅ : `fusionnerSections` acceptait des sections pour des n° de
+  joueurs inconnus du setup. Arbitrage Thibaut : « affiche un message en
+  disant que ce joueur n'existe pas et ignore donc les modifications ».
+  Appliqué : un numéro absent du setup est ignoré AVANT toute application
+  (player/population/routes/cités/log) et le journal du tour affiche
+  « ⚠️ Joueur N inexistant dans la partie — section ignorée, ses
+  modifications ne comptent pas pour ce tour. ». Le garde est dans le
+  module partagé client + Edge Function (bundle serveur reconstruit par la CI).
 
 ## ✅ Points forts (à préserver)
 
@@ -179,8 +192,8 @@ rendu (`.map` sur un nombre). Appliqué :
 |---|--------|-----|--------|
 | 1 | F2-F6 appliqués + rapport versé + journal | IA | ✅ ce jour |
 | 2 | Coller le bloc SQL du §7 (policy UPDATE `cp_events`) dans l'éditeur SQL Supabase | **Thibaut** | ⏳ en attente |
-| 3 | m1 : timeout sur `resoudreTourServeur` | à arbitrer | 📝 |
-| 4 | m2 : sections de joueurs inconnus dans `fusionnerSections` | à arbitrer | 📝 |
+| 3 | m1 : timeout sur `resoudreTourServeur` | IA | ✅ appliqué le soir même (arbitrage Thibaut) |
+| 4 | m2 : sections de joueurs inconnus dans `fusionnerSections` | IA | ✅ appliqué le soir même (arbitrage Thibaut) |
 
 ## Validation
 
@@ -193,3 +206,6 @@ rendu (`.map` sur un nombre). Appliqué :
 - Balance JSX vérifiée sur les 4 fichiers .tsx modifiés (harnais dédié) ;
   ParamsPanel/SetupPanel portent deux artefacts préexistants du harnais,
   identiques base ↔ modifiés.
+- Soir (m1/m2, arbitrages Thibaut) : **198/198 natifs** (190 + 6 reprise
+  + 2 fusion), diag IDENTIQUE, diff vs base limité aux 6 fichiers voulus,
+  balance JSX store.tsx OK.
