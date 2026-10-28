@@ -2722,6 +2722,7 @@
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Terrain d'entrainement",
+      "reductionLeveeArmee": 10,
       "cout": "",
       "production": "",
       "description": "",
@@ -3039,6 +3040,7 @@
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Ecole militaire",
+      "reductionLeveeArmee": 25,
       "cout": "",
       "production": "",
       "description": "",
@@ -3249,6 +3251,7 @@
       "groupe": "Château",
       "famille": "Guilde",
       "nom": "Guilde des explorateurs",
+      "reductionLeveeArmee": 20,
       "cout": "",
       "production": "",
       "description": "",
@@ -3305,6 +3308,7 @@
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Grande caserne",
+      "reductionLeveeArmee": 8,
       "cout": "",
       "production": "",
       "description": "",
@@ -5235,6 +5239,9 @@
       "regleGenre": "vide",
       "attribution": "Armée",
       "metier": "Soldat",
+      "puissanceArmee": 15,
+      "ageMin": 16,
+      "ageMax": 30,
       "qualite": "roturier"
     },
     {
@@ -5247,6 +5254,7 @@
       "regleGenre": "vide",
       "attribution": "Armée",
       "metier": "Commandant",
+      "puissanceArmee": 45,
       "qualite": "noble"
     },
     {

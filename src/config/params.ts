@@ -113,6 +113,16 @@ export interface GameParams {
   taxNaissFaibles: number
   taxNaissHautes: number
   // ── Armées ──
+  // (Arbitrage Thibaut 2026-10-28 : « général et soldat sont des
+  //  métiers, ils doivent donc vivre dans la banque » — les
+  //  PUISSANCES d'armée et les ÂGES de recrutement vivent désormais
+  //  sur les LIGNES DE MÉTIER du référentiel (champs
+  //  puissanceArmee / ageMin / ageMax). Les 4 paramètres
+  //  ci-dessous sont conservés comme REFLIS de compatibilité — lus
+  //  uniquement si la ligne de métier ne porte pas le champ (config
+  //  éditée antérieure à la migration armeesBanque2026) et SEMÉS
+  //  sur les lignes par la migration pour préserver toute
+  //  personnalisation ; plus éditables dans l'onglet Paramètres.)
   puissanceGeneral: number
   puissanceSoldat: number
   soldatAgeMin: number
@@ -230,6 +240,8 @@ export const DEFAULT_PARAMS: GameParams = {
   taxNourrHautes: 0.75,
   taxNaissFaibles: 1.25,
   taxNaissHautes: 0.75,
+  // Replis d'armée (arbitrage 2026-10-28 : les valeurs vivent sur
+  //  les lignes de métier Soldat / Commandant du référentiel).
   puissanceGeneral: 45,
   puissanceSoldat: 15,
   soldatAgeMin: 16,
@@ -330,13 +342,19 @@ export const PARAM_META: {
   { key: 'taxNaissHautes', label: 'Taxes fortes — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'proxRiviereNourriture', label: 'Proximité rivière — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord d\'une rivière » (marqueur (y)).' },
   { key: 'proxMerNourriture', label: 'Proximité mer — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord de la mer » (marqueur (y)).' },
-  { key: 'puissanceGeneral', label: 'Puissance d\'un commandant', groupe: 'Armées' },
-  { key: 'puissanceSoldat', label: 'Puissance d\'un soldat', groupe: 'Armées' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut « les armées
+  //  rejoignent la banque » : puissanceGeneral et puissanceSoldat
+  //  ne sont plus éditables ici — ils vivent sur les lignes de
+  //  métier (Soldat / Commandant) du référentiel ; les paramètres
+  //  restent comme REFLI de compatibilité.)
   { key: 'armeePrixOr', label: 'Prix de levée — Or par tranche de force', groupe: 'Armées', aide: 'Levée d\'une armée : ce prix est facturé pour chaque tranche de points de force de la puissance cible (règle du classeur : 1 Or tous les 2 points) — payé UNE FOIS à la levée, pas d\'entretien.' },
   { key: 'armeePriXPuissance', label: 'Prix de levée — points de force par tranche', groupe: 'Armées' },
   { key: 'maxMarchands', label: 'Nombre maximal de routes commerciales par joueur', groupe: 'Armées', aide: '0 par défaut. Compte les ROUTES détenues (ville d\'origine), pas les marchands — renommé le 2026-10-24 (sous-vague 3b « routes dissociées ») ; la clé maxMarchands est conservée pour les configs existantes. Les règles qui accordent une route supplémentaire l\'augmentent.' },
-  { key: 'soldatAgeMin', label: 'Âge minimal de recrutement', groupe: 'Armées' },
-  { key: 'soldatAgeMax', label: 'Âge maximal de recrutement', groupe: 'Armées' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut « les armées
+  //  rejoignent la banque » : soldatAgeMin et soldatAgeMax ne sont
+  //  plus éditables ici — ils vivent sur la ligne de métier Soldat
+  //  du référentiel ; les paramètres restent comme REFLI de
+  //  compatibilité.)
   { key: 'vassalPrelevement', label: "Part des revenus d'habitants reversée au suzerain", groupe: 'Vassaux', unite: 'proportion', aide: "Un vassal prête serment à un autre joueur : à chaque fin de tour, il reverse cette part des gains d'Or de ses habitants à son suzerain (0,5 = 50 %)." },
   { key: 'maxLog', label: 'Taille maximale du journal', groupe: 'Système' },
   { key: 'maxHistory', label: 'Tours d’historique conservés (snapshots)', groupe: 'Système', aide: 'Chaque tour ajoute un snapshot par joueur (stocks + apports). Les plus anciens au-delà du plafond sont retirés.' },

@@ -392,9 +392,15 @@ export interface Player {
   /** Notes libres du joueur (retour Thibaut 2026-10-15) : pense-bête
    *  affiché en bas de l'onglet Pays. Champ optionnel. */
   notes?: string
-  /** Stratégies militaires I : la prochaine levée d'armée coûte 50 Or de
-   *  moins (flag consommé à la première levée — revue 2026-10-15). */
-  prochaineArmeeReduite?: boolean
+  // (RETRAIT 2026-10-28, arbitrage Thibaut « les armées rejoignent la
+  //  banque » : le champ `prochaineArmeeReduite` (Stratégies
+  //  militaires I — la prochaine levée d'armée coûtait 50 Or de
+  //  moins, flag consommé à la première levée, revue 2026-10-15)
+  //  était MORT depuis la purge du système de progrès du 2026-10-24
+  //  (aucun producteur ne le posait plus) : il est retiré du type et
+  //  de prixArmee. Une vieille sauvegarde qui porte encore le champ
+  //  en JSON reste chargée sans erreur (champ inconnu ignoré).
+  //  L'ancien contenu reste dans l'historique git, règle 9.)
   resources: Record<string, ResourceState> // clés = RESOURCES
   villes: City[]
   /** Carte dynastie courante — RETIRÉE le 2026-10-24 (retour arbitre :

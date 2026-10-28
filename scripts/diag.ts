@@ -108,6 +108,11 @@ try {
       case 'garnisonVille': return `Garnison ${signe(e.valeur)}`
       case 'placesMetier': return `${e.metier} ${signe(e.valeur)}`
       case 'logements': return `${e.logement} ${signe(e.valeur)}`
+      // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+      //  réductions de levée, rejoignent la banque » — canal de
+      //  réduction de levée d'armée porté par les fiches de
+      //  construction (champ reductionLeveeArmee).)
+      case 'reductionLeveeArmee': return `levée d'armée −${e.valeur} Or`
       case 'fluxParAmenagement': return `${e.ressource} ${signe(e.valeur)} par ${e.noms.join(' / ')}`
       case 'fluxParVilleCultureMonde': return `${e.ressource} ${signe(e.valeur)} par ville de la culture`
       default: return JSON.stringify(e)
@@ -117,7 +122,8 @@ try {
     `${r.id} — ${r.nom}${r.groupe ? ` (${r.groupe})` : ''}` +
     (r.conditions ? ` [si ${Object.entries(r.conditions).map(([k, v]) => `${k}=${v}`).join(', ')}]` : '') +
     ` : ${r.effets.map(effetCourt).join(' · ')}`
-  const CANAUX_CONNUS = ['placesMetier', 'logements', 'fluxVille', 'garnisonVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde']
+  // (Canal reductionLeveeArmee ajouté le 2026-10-28 — cf. effetCourt.)
+  const CANAUX_CONNUS = ['placesMetier', 'logements', 'reductionLeveeArmee', 'fluxVille', 'garnisonVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde']
   const canaux: string[] = []
   for (const r of regles) for (const e of r.effets) if (!canaux.includes(e.type)) canaux.push(e.type)
   const inconnus = canaux.filter((c) => !CANAUX_CONNUS.includes(c)).sort()

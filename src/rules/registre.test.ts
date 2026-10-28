@@ -38,10 +38,14 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  migrationPoids, reductionCout, reductionLeveeArmee, emissaires,
 //  scienceInstantanee, ressourcesInstantanees, demographieVille —
 //  sont retirés du contrat : le référentiel ne produit QUE les
-//  quatre types ci-dessous.)
+//  quatre types ci-dessous.
+//  (RESTAURÉ le 2026-10-28, arbitrage Thibaut « les armées, et
+//  surtout les réductions de levée, rejoignent la banque » :
+//  reductionLeveeArmee revient AVEC un producteur — les fiches de
+//  constructions — et rejoint le contrat ci-dessous.)
 const TYPES_CONNUSS = new Set([
   'fluxVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde',
-  'garnisonVille', 'placesMetier', 'logements',
+  'garnisonVille', 'placesMetier', 'logements', 'reductionLeveeArmee',
 ])
 
 test('registre : TOUTE construction à effets du référentiel a SA règle', () => {

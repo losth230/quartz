@@ -7,10 +7,35 @@
 
 import type { GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf } from './gameData'
+import { cfgOf, metierDef } from './gameData'
+import type { Cfg } from './gameData'
+import { reductionLeveeBatiments } from './constructions'
 import { emptyRecap, fullName } from './shared'
 
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
+
+// (Arbitrage Thibaut 2026-10-28 : « je me fiche qu'ils vivent dans les
+//  paramètres, général et soldat sont des métiers, ils doivent donc
+//  vivre dans la banque » — les PUISSANCES d'armée et les ÂGES de
+//  recrutement vivent sur les LIGNES DE MÉTIER du référentiel
+//  (champs données puissanceArmee / ageMin / ageMax, complétés par la
+//  migration armeesBanque2026 depuis les paramètres sauvegardés) ;
+//  repli sur les paramètres historiques si la ligne ne porte pas le
+//  champ — les 4 paramètres restent des REFLIS de compatibilité.)
+
+/** Puissance d'armée d'un porteur de métier — ligne de métier du
+ *  référentiel (ex. Soldat : 15, Commandant : 45), repli sur le
+ *  paramètre historique. */
+export function puissanceArmeeMetier(nomMetier: string, C: Cfg, repli: number): number {
+  return metierDef(nomMetier, C.config)?.puissanceArmee ?? repli
+}
+
+/** Bornes d'âge de recrutement des soldats — ligne du métier Soldat
+ *  (ex. 16-30 ans), repli sur les paramètres soldatAgeMin/soldatAgeMax. */
+export function agesRecrutementSoldat(C: Cfg): { min: number; max: number } {
+  const def = metierDef(C.p.metierSoldat, C.config)
+  return { min: def?.ageMin ?? C.p.soldatAgeMin, max: def?.ageMax ?? C.p.soldatAgeMax }
+}
 
 export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
   const C = cfgOf(state.config)
@@ -24,9 +49,14 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
     })
     // commandant mort ?
     const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
-    let puissance = armee.soldats.length * C.p.puissanceSoldat
+    // (Arbitrage Thibaut 2026-10-28 : puissances lues sur les lignes
+    //  de métier Soldat / Commandant du référentiel.)
+    const puissanceSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+    const puissanceCommandant = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+    const ages = agesRecrutementSoldat(C)
+    let puissance = armee.soldats.length * puissanceSoldat
     if (cmd && cmd.statut !== 'Décédé') {
-      puissance += C.p.puissanceGeneral
+      puissance += puissanceCommandant
     } else if (armee.commandant) {
       armee.commandant = null
       recap.commandantTombe = armee.nom
@@ -40,7 +70,7 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       const candidats = pop.filter(
         (c) =>
           c.statut !== 'Décédé' &&
-          c.age >= C.p.soldatAgeMin && c.age <= C.p.soldatAgeMax &&
+          c.age >= ages.min && c.age <= ages.max &&
           !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
       )
       if (candidats.length === 0) break
@@ -48,7 +78,7 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       s.metier = C.p.metierSoldat
       s.armee = armee.nom
       armee.soldats.push(s.id)
-      puissance += C.p.puissanceSoldat
+      puissance += puissanceSoldat
       state.log.push({
         turn: state.turn + 1, type: 'Armée', joueur: p.n,
         texte: `${fullName(s)} rejoint l'armée « ${armee.nom} » comme soldat.`,
@@ -58,7 +88,9 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
   }
 }
 
-/** Recalcule la puissance affichée d'une armée (après édition manuelle). */
+/** Recalcule la puissance affichée d'une armée (après édition manuelle).
+ *  (Arbitrage Thibaut 2026-10-28 : puissances lues sur les lignes de
+ *  métier — même lecture que recruitForArmies.) */
 export function recomputeArmy(state: GameState, p: Player, armee: { nom: string; soldats: string[]; commandant: string | null; puissance: number }) {
   const C = cfgOf(state.config)
   const pop = state.population[p.n] ?? []
@@ -67,7 +99,7 @@ export function recomputeArmy(state: GameState, p: Player, armee: { nom: string;
     armee.soldats.filter((id) => {
       const s = pop.find((x) => x.id === id)
       return s && s.statut !== 'Décédé'
-    }).length * C.p.puissanceSoldat + (cmd && cmd.statut !== 'Décédé' ? C.p.puissanceGeneral : 0)
+    }).length * puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat) + (cmd && cmd.statut !== 'Décédé' ? puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral) : 0)
 }
 
 /**
@@ -166,41 +198,35 @@ export function libererSoldats(
 
 /** Prix de levée d'une armée : Or facturés pour sa puissance CIBLE,
  *  1 Or tous les 2 points de force (paramétrable via armeePrixOr /
- *  armeePriXPuissance). Payé UNE FOIS à la levée — pas d'entretien. */
+ *  armeePriXPuissance). Payé UNE FOIS à la levée — pas d'entretien.
+ *  (Arbitrage Thibaut 2026-10-28 : « les armées, et surtout les
+ *  réductions de levée, rejoignent la banque » — les réductions de
+ *  levée ne sont plus codées en dur par NOM de bâtiment : le champ
+ *  reductionLeveeArmee vit sur les fiches de construction (Terrain
+ *  d'entrainement : 10, Ecole militaire : 25, Grande caserne : 8,
+ *  Guilde des explorateurs : 20), passe par le canal de banque
+ *  reductionLeveeArmee et se lit par reductionLeveeBatiments(ville,
+ *  C) pour la ville de levée — la levée se passe DANS une
+ *  habitation, retour Thibaut 2026-10-15.)
+ *  Le flag `prochaineArmeeReduite` (Stratégies militaires I, −50 Or
+ *  sur la prochaine levée — revue 2026-10-15) est RETIRÉ : mort
+ *  depuis la purge du système de progrès du 2026-10-24 (aucun
+ *  producteur ne le posait plus) ; un champ résiduel d'une vieille
+ *  sauvegarde est simplement ignoré.
+ *  Historique préservé : (RETRAIT 2026-10-27, audit — merveilles
+ *  supprimées : plus de réduction de levée par merveille) ;
+ *  (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
+ *  système de progrès, retour arbitre).) */
 export function prixArmee(
   puissanceCible: number,
-  C: { p: { armeePrixOr: number; armeePriXPuissance: number } },
-  p?: Player,
-  state?: GameState,
+  C: Cfg,
   ville?: { batiments?: string[] },
 ): number {
   const tranche = Math.max(1, C.p.armeePriXPuissance)
   if (puissanceCible <= 0) return 0
-  let prix = (puissanceCible / tranche) * C.p.armeePrixOr
-  // Réductions automatiques (revue 2026-10-15) :
-  if (p && state) {
-    // (RETRAIT 2026-10-27, audit — merveilles supprimées : plus de
-    //  réduction de levée par merveille.)
-    // (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
-    //  système de progrès, retour arbitre.)
-    // Stratégies militaires I : la PROCHAINE armée coûte 50 Or de moins
-    if (p.prochaineArmeeReduite) prix -= 50
-    //  (one-shot — flag consommé à la levée ; consommé par ArmiesPanel).
-    // Bonus des BÂTIMENTS DE LA VILLE DE LEVÉE (retour Thibaut
-    //  2026-10-15) : la levée se passe DANS une habitation — le
-    //  joueur choisit la ville, ses bâtiments s'appliquent :
-    //  · Terrain d'entrainement (Château) : −10 Or ;
-    //  · Ecole militaire (Château) : −25 Or ;
-    //  · Grande caserne (Capitale) : −8 Or ;
-    //  · Guilde des explorateurs : −20 Or.
-    if (ville?.batiments) {
-      if (ville.batiments.includes("Terrain d'entrainement")) prix -= 10
-      if (ville.batiments.includes('Ecole militaire')) prix -= 25
-      if (ville.batiments.includes('Grande caserne')) prix -= 8
-      if (ville.batiments.includes('Guilde des explorateurs')) prix -= 20
-    }
-  }
-  return Math.max(0, Math.round(prix))
+  const prix = (puissanceCible / tranche) * C.p.armeePrixOr
+  const reduction = ville ? reductionLeveeBatiments(ville, C) : 0
+  return Math.max(0, Math.round(prix - reduction))
 }
 
 /** Plafond d'armées — SUPPRIMÉ (retour joueur 2026-10-18) : plus aucun

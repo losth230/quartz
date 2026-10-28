@@ -47,6 +47,21 @@ export interface MetierDef {
    *  Champ DONNÉE du référentiel — sert à l'ascension sociale
    *  (vague D) et ne change RIEN à l'affectation actuelle. */
   qualite?: 'roturier' | 'bourgeois' | 'noble'
+  /** PUISSANCE D'ARMÉE du porteur (arbitrage Thibaut 2026-10-28 :
+   *  « général et soldat sont des métiers, ils doivent donc vivre
+   *  dans la banque ») — champ DONNÉES de la ligne de métier, lu par
+   *  puissanceArmeeMetier (engine/armees.ts) ; repli sur le paramètre
+   *  historique (puissanceSoldat / puissanceGeneral) si absent.
+   *  ex. Soldat : 15, Commandant : 45. */
+  puissanceArmee?: number
+  /** Âge MINIMAL de recrutement (arbitrage 2026-10-28, même retour :
+   *  puissanceArmee — arbitrage Thibaut : les âges de recrutement du
+   *  soldat vivent sur la ligne de métier Soldat ; repli sur
+   *  soldatAgeMin si absent. ex. 16. */
+  ageMin?: number
+  /** Âge MAXIMAL de recrutement — ligne de métier Soldat (ex. 30) ;
+   *  repli sur soldatAgeMax si absent. */
+  ageMax?: number
 }
 export interface TraitDef {
   name: string
@@ -219,6 +234,16 @@ export interface ConstructionRef {
    *  version du groupe (Ville/Château) de la ville qui porte le
    *  bâtiment. */
   routesApportees?: number
+  /** RÉDUCTION DE LEVÉE D'ARMÉE (arbitrage Thibaut 2026-10-28 : « les
+   *  armées, et surtout les réductions de levée, rejoignent la
+   *  banque ») — champ DONNÉES de la fiche de construction, en Or,
+   *  débitée à la LEVÉE uniquement. Le bonus quitte les noms codés en
+   *  NOM dans prixArmee — ex. Terrain d'entrainement : 10, Ecole
+   *  militaire : 25, Guilde des explorateurs : 20, Grande caserne :
+   *  8. Traduit en effet de banque `reductionLeveeArmee` par le registre, lu par
+   *  reductionLeveeBatiments (engine/constructions.ts) pour la ville
+   *  de levée. Champ optionnel : absent = aucune réduction. */
+  reductionLeveeArmee?: number
   /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
    *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
    *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de
@@ -394,6 +419,14 @@ export interface GameConfig {
    *  « crédité automatiquement » du palier 220 Tourisme : tous les
    *  paliers sont des aides de jeu au plateau (décision Thibaut). */
   pontificats2026?: boolean
+  /** Migration armées-banque (arbitrage Thibaut 2026-10-28 : « tout ce
+   *  qui est logique de se trouver en banque doit rejoindre la
+   *  banque ») — puissances d'armée (puissanceArmee) et âges de recrutement (ageMin/ageMax)
+   *  semés sur les lignes de métier Soldat / Commandant depuis les
+   *  paramètres sauvegardés ; réductions de levée (reductionLeveeArmee) complétées sur les
+   *  fiches de constructions. Une fois posé, la migration ne se
+   *  rejoue pas. */
+  armeesBanque2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -1484,6 +1517,34 @@ export function cfgOf(config?: GameConfig): Cfg {
   // (2026-10-24 : le bloc de migration slotsVides2026 — complétion
   //  des slots vides d'arbres depuis le référentiel — est supprimé
   //  avec le système de progrès.)
+  // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+  //  réductions de levée, rejoignent la banque » — les réductions de
+  //  levée quittent la liste codée en dur de prixArmee pour les
+  //  fiches de construction (champ reductionLeveeArmee) ; les
+  //  puissances d'armée (puissanceArmee) et les âges de recrutement
+  //  (ageMin / ageMax) quittent les paramètres pour les lignes de
+  //  métier Soldat / Commandant. Migration à drapeau : les valeurs
+  //  SAUVEGARDÉES sont SEMÉES sur les lignes pour préserver toute
+  //  personnalisation ; sans bump de tampon (règle (x)).)
+  if (!merged.armeesBanque2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    for (const m of merged.metiers) {
+      if (m.metier === pm.metierSoldat) {
+        if (m.puissanceArmee === undefined) m.puissanceArmee = (pm.puissanceSoldat as number) ?? 15
+        if (m.ageMin === undefined) m.ageMin = (pm.soldatAgeMin as number) ?? 16
+        if (m.ageMax === undefined) m.ageMax = (pm.soldatAgeMax as number) ?? 30
+      }
+      if (m.metier === pm.metierCommandant) {
+        if (m.puissanceArmee === undefined) m.puissanceArmee = (pm.puissanceGeneral as number) ?? 45
+      }
+    }
+    for (const c of merged.constructions ?? []) {
+      if (c.reductionLeveeArmee !== undefined) continue
+      const d = DEFAULT_CONFIG.constructions.find((x) => x.nom === c.nom && x.groupe === c.groupe)
+      if (d?.reductionLeveeArmee !== undefined) c.reductionLeveeArmee = d.reductionLeveeArmee
+    }
+    merged.armeesBanque2026 = true
+  }
   if (!merged.taxes25) {
     const pm = merged.params as unknown as Record<string, unknown>
     if (pm.taxOrFaibles === 0.5) pm.taxOrFaibles = 0.75

@@ -1,14 +1,16 @@
 // ══════════════════════════════════════════════════════════════════════
 //  Armées : lever, renommer, nommer un commandant, définir la cible,
 //  dissoudre (portage de LeverArmee / NommerCommandant / RetirerArmee).
-//  Général = 45 pts, Soldat = 15 pts, soldat = adulte 16-30 ans.
+//  Puissances et âges lus sur les LIGNES DE MÉTIER du référentiel
+//  (arbitrage Thibaut 2026-10-28 : « général et soldat sont des
+//  métiers, ils doivent donc vivre dans la banque »).
 // ══════════════════════════════════════════════════════════════════════
 
 import { useState } from 'react'
 import { useGame } from '../state/store'
 import type { GameState, Player } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
-import { prixArmee, infligerPertes, libererSoldats } from '../engine/armees'
+import { prixArmee, infligerPertes, libererSoldats, puissanceArmeeMetier, agesRecrutementSoldat } from '../engine/armees'
 import { isNobleDyn } from '../engine/shared'
 import { Card, NumberInput, Select, TextInput, Button, fmt } from './ui'
 
@@ -19,10 +21,11 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
   const [commandant, setCommandant] = useState('')
   const [puissance, setPuissance] = useState(90)
   // Revue Thibaut 2026-10-15 : la levée se passe DANS une habitation
-  //  — le joueur choisit la ville, les bonus de ses bâtiments
-  //  s'appliquent (Terrain d'entrainement −10 Or, Ecole militaire
-  //  −25, Grande caserne −8, Guilde des explorateurs −20,
-  //  Autel eud Guer' −20).
+  //  — le joueur choisit la ville, les RÉDUCTIONS DE LEVÉE portées
+  //  par ses bâtiments s'appliquent (arbitrage Thibaut 2026-10-28 :
+  //  elles vivent sur les fiches de construction et passent par la
+  //  banque, canal reductionLeveeArmee — plus aucune liste codée en
+  //  dur, cf. Référentiels).
   const [villeLevee, setVilleLevee] = useState('')
   // Pertes par armée (revue 2026-10-17) : saisie locale du nombre de
   //  soldats à tuer (l'ordre d'engagement = ordre du tableau).
@@ -31,6 +34,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
 
   if (!state) return null
   const C = cfgOf(state.config)
+  const ages = agesRecrutementSoldat(C)
   const p = state.players.find((x) => x.n === joueur)
   if (!p) return null
   const pop = state.population[joueur] ?? []
@@ -49,12 +53,13 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (target) fn(target, s)
     })
 
-  // Prix avec réductions automatiques : Vengeance de la terre (Sylvains,
-  //  −10 Or par apiculture) — mêmes paramètres que le débit.
+  // Prix avec les RÉDUCTIONS DE LEVÉE des bâtiments de la ville de
+  //  levée (arbitrage Thibaut 2026-10-28 : elles vivent dans la
+  //  banque, canal reductionLeveeArmee).
   const villeLeveeObj = p.villes.find((v) => v.nom === villeLevee)
-  const prix = prixArmee(puissance, C, p, state, villeLeveeObj)
-  // Prix SANS le bonus de la ville (pour afficher la réduction)
-  const prixBrut = prixArmee(puissance, C, p, state)
+  const prix = prixArmee(puissance, C, villeLeveeObj)
+  // Prix SANS les réductions de la ville (pour afficher l'économie)
+  const prixBrut = prixArmee(puissance, C)
   const orDispo = p.resources['Or']?.stock ?? 0
   const leverArmee = () => {
     const cmd = commandantsDispo.find((c) => c.id === commandant)
@@ -65,16 +70,19 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (!target) return
       // Prix de levée (classeur : 1 Or tous les 2 points de force) :
       // débité UNE FOIS à la levée — pas d'entretien par tour.
-      const prix2 = prixArmee(puissance, C, target, s, villeLeveeObj)
+      const prix2 = prixArmee(puissance, C, villeLeveeObj)
       const rs = target.resources['Or']
       if (rs && rs.stock < prix2) return
       if (rs && prix2 > 0) rs.stock -= prix2
-      // Stratégies militaires I : flag one-shot consommé.
-      if (target.prochaineArmeeReduite) target.prochaineArmeeReduite = false
+      // (RETRAIT 2026-10-28, arbitrage Thibaut « les armées rejoignent
+      //  la banque » : le flag one-shot prochaineArmeeReduite
+      //  « Stratégies militaires I » est mort depuis la purge du
+      //  système de progrès (2026-10-24) — il n'est plus consommé ni
+      //  lu ; un champ résiduel de vieille sauvegarde est ignoré.)
       target.armees.push({
         nom: nomArmee,
         puissanceCible: puissance,
-        puissance: C.p.puissanceGeneral,
+        puissance: puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral),
         commandant: cmd.id,
         soldats: [],
         cible: cible ? state.players.find((q) => q.n === cible)?.nom ?? null : null,
@@ -96,7 +104,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
 
   return (
     <div className="stack">
-      <Card title={`Armées de ${p.nom} — Soldat 15 pts, Général 45 pts`}>
+      <Card title={`Armées de ${p.nom} — ${C.p.metierSoldat} ${puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)} pts, ${C.p.metierCommandant} ${puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)} pts`}>
         {p.armees.length === 0 && <p className="muted">Aucune armée en lice.</p>}
         {p.armees.map((a, idx) => {
           const cmd = a.commandant ? vivants.find((c) => c.id === a.commandant) : undefined
@@ -245,7 +253,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
             ({C.p.armeePrixOr} Or tous les {C.p.armeePriXPuissance} points de force — payé une fois, pas d'entretien)
           </span>
           {prixBrut > prix && (
-            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (Grand écuyer, bâtiments de la ville)</span>
+            <span className="muted"> · réductions : −{fmt(prixBrut - prix)} Or (bâtiments de la ville de levée)</span>
           )}
           {orDispo < prix && <span className="neg"> ⚠ Or insuffisant ({fmt(orDispo)} disponible)</span>}
         </p>
@@ -254,12 +262,12 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
           Armées : {p.armees.length} (aucun plafond).
         </p>
         <p className="muted small">
-          Chaque tour, l'armée recrute automatiquement des soldats (adultes 16-30 ans)
+          Chaque tour, l'armée recrute automatiquement des soldats (adultes {ages.min}-{ages.max} ans)
           jusqu'à atteindre la puissance cible. Le prix de levée
-          (1 Or tous les 2 points de force) est débité une seule fois, à la création de
-          l'armée. Choisir une VILLE DE LEVÉE applique les bonus de ses bâtiments
-          (Terrain d'entrainement −10 Or, Ecole militaire −25, Grande caserne −8,
-          Guilde des explorateurs −20, Autel eud Guer' −20).
+          ({C.p.armeePrixOr} Or tous les {C.p.armeePriXPuissance} points de force) est débité une seule fois, à la création de
+          l'armée. Choisir une VILLE DE LEVÉE applique les RÉDUCTIONS DE LEVÉE portées
+          par ses bâtiments (arbitrage 2026-10-28 : elles vivent sur les fiches de
+          construction du référentiel — cf. Référentiels).
         </p>
       </Card>
     </div>

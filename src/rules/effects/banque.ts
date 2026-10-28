@@ -87,7 +87,10 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     // (RETRAIT 2026-10-24, purge R4 « complète » : les types restants
     //  SANS PRODUCTEUR — fluxJoueur, fluxCapitale, garnisonParRang,
     //  tourismeInstantane, habitantsVille, conversionPoids,
-    //  migrationPoids, reductionCout, reductionLeveeArmee,
+    //  migrationPoids, reductionCout, reductionLeveeArmee
+    //  (RESTAURÉ le 2026-10-28 avec un producteur : constructions,
+    //  arbitrage Thibaut « les armées, et surtout les réductions de
+    //  levée, rejoignent la banque »),
     //  emissaires, scienceInstantanee, ressourcesInstantanees,
     //  demographieVille (et les canaux instantanes/conversion/
     //  migration/reductions de la contribution) — sont supprimés :
@@ -111,13 +114,21 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       out.logements[e.logement] = (out.logements[e.logement] ?? 0) + e.valeur
       break
     }
+    // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+    //  réductions de levée, rejoignent la banque » — les réductions
+    //  de levée d'armée sont un canal de la contribution au même
+    //  titre que les flux et les logements.)
+    case 'reductionLeveeArmee': {
+      out.reductionLeveeArmee += e.valeur
+      break
+    }
   }
 }
 
 // ── Application de la banque ───────────────────────────────────────────────
 
 export function contributionVide(): ContributionEffets {
-  return { flux: {}, fluxEte: {}, garnison: 0, placesMetier: {}, logements: {} }
+  return { flux: {}, fluxEte: {}, garnison: 0, placesMetier: {}, logements: {}, reductionLeveeArmee: 0 }
 }
 
 /** Applique un ensemble de règles de la banque à un contexte et renvoie

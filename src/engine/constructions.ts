@@ -15,6 +15,7 @@
 
 import { DEFAULT_CONFIG, type GameConfig, type ConstructionRef, type EffetConstruction } from '../config/defaultConfig'
 import { cfgOf } from './gameData'
+import type { Cfg } from './gameData'
 import { reglePourConstruction } from '../rules/registry'
 import type { ContexteEffet } from '../rules/types'
 import type { Effet } from '../rules/types'
@@ -239,6 +240,32 @@ export function garnisonConstructionRef(ref: ConstructionRef, cfg?: GameConfig):
   return c ? c.garnison : 0
 }
 
+/** Réduction de levée d'armée portée par une construction (arbitrage
+ *  Thibaut 2026-10-28 : « les armées, et surtout les réductions de
+ *  levée, rejoignent la banque ») — canal reductionLeveeArmee de sa
+ *  règle de banque ; ex. Terrain d'entrainement : 10, Ecole
+ *  militaire : 25. Sans règle : aucune réduction. */
+export function reductionLeveeConstructionRef(ref: ConstructionRef, cfg?: GameConfig): number {
+  const c = contributionBanque(ref, cfg)
+  return c ? c.reductionLeveeArmee : 0
+}
+
+/** Réduction TOTALE de levée d'armée des BÂTIMENTS D'UNE VILLE — la
+ *  levée se passe DANS une habitation (retour Thibaut 2026-10-15 :
+ *  le joueur choisit la ville, ses bâtiments s'appliquent) ; les
+ *  valeurs vivent désormais sur les fiches du référentiel (champ
+ *  reductionLeveeArmee, arbitrage Thibaut 2026-10-28) et se lisent
+ *  par (nom, groupe) pour chaque bâtiment présent. Lecture sur la
+ *  config C passée — les éditions de Paramètres s'appliquent. */
+export function reductionLeveeBatiments(ville: { batiments?: string[] } | undefined, C: Cfg): number {
+  let total = 0
+  for (const b of ville?.batiments ?? []) {
+    const ref = constructionRef(b, C.config)
+    if (ref) total += reductionLeveeConstructionRef(ref, C.config)
+  }
+  return total
+}
+
 /** Résumé affichable des effets d'une construction (badges page Pays et
  *  wiki Référentiels) : « +2 Or / tour · été : +10 Nourriture ·
  *  Garnison +40 ». Le Tourisme apparaît comme flux (« +16 Tourisme /
@@ -260,6 +287,13 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   if (emp.length > 0) {
     parts.push(emp.map((e) => `${e.places} ${e.metier.toLowerCase()}`).join(', '))
   }
+  // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+  //  réductions de levée, rejoignent la banque » — la réduction de
+  //  levée d'armée se lit sur le CANAL reductionLeveeArmee et doit
+  //  être visible dans le picker « + Construire », les badges de la
+  //  carte et le wiki Référentiels.)
+  const reducLevee = reductionLeveeConstructionRef(ref, cfg)
+  if (reducLevee > 0) parts.push(`levée d'armée −${reducLevee} Or`)
   // Fiche bâtiments rang 1 (retour Thibaut 2026-10-26) : l'Herboristerie
   //  n'accueille plus de Guérisseur — ses effets ±5% maladie sont
   //  structurés (malContraction / bonusGuerison) et s'affichent dans le

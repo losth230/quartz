@@ -53,7 +53,7 @@ export function BatimentsParams({ config, setCfg }: TableProps) {
       </p>
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Groupe</th><th>Bâtiment</th><th>Coût</th><th>Prérequis</th><th>Effets (moteur)</th><th></th></tr></thead>
+          <thead><tr><th>Groupe</th><th>Bâtiment</th><th>Coût</th><th>Prérequis</th><th>Effets (moteur)</th><th>Réduc. levée (Or)</th><th></th></tr></thead>
           <tbody>
             {(config.constructions ?? []).map((c, i) => ({ c, i })).filter(({ c }) => c.categorie === 'Bâtiment').map(({ c, i }) => (
               <tr key={i}>
@@ -87,6 +87,21 @@ export function BatimentsParams({ config, setCfg }: TableProps) {
                       if (!t) return
                       if (!t.effets) t.effets = []
                       fn(t.effets)
+                    })}
+                  />
+                </td>
+                {/* (Arbitrage Thibaut 2026-10-28 : « les armées, et surtout
+                    les réductions de levée, rejoignent la banque » — la
+                    réduction de levée d'armée est un champ DONNÉES de la
+                    fiche de construction, éditable ici.) */}
+                <td>
+                  <NumberInput
+                    value={c.reductionLeveeArmee ?? 0}
+                    step={1} min={0} max={999}
+                    onChange={(v) => setCfg((cf) => {
+                      const t = cf.constructions[i]
+                      if (!t) return
+                      t.reductionLeveeArmee = Math.round(v)
                     })}
                   />
                 </td>

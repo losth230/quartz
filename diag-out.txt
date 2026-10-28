@@ -7,7 +7,7 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 3
+total : 87 règles — sources : batiment 41, amenagement 42, regime 1, culture 3
 ── canal placesMetier : 71 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
@@ -75,7 +75,7 @@ total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
   batiment.caserne@chateau — Caserne (Château) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@chateau — Tour de sorcier (Château) : Scientifique +1 · Maison de notable +1
-  batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2
+  batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.clinique@chateau — Clinique (Château) : Guérisseur +5
   batiment.cabinet-d-astronomie@chateau — Cabinet d'astronomie (Château) : Scientifique +4
   batiment.chapelle@chateau — Chapelle (Château) : Artiste +7
@@ -128,6 +128,11 @@ total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 
   batiment.tour-de-sorcier@chateau — Tour de sorcier (Château) : Scientifique +1 · Maison de notable +1
   batiment.quartier-intermediaire@chateau — Quartier intermédiaire (Château) : Maison +20
   batiment.haut-quartier@chateau — Haut quartier (Château) : Maison de notable +20
+── canal reductionLeveeArmee : 4 règles ──
+  batiment.terrain-d-entrainement@chateau — Terrain d'entrainement (Château) : levée d'armée −10 Or
+  batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
+  batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
+  batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
 ── canal fluxVille : 9 règles ──
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
@@ -137,9 +142,9 @@ total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 
   batiment.moulin-a-vent@ville — Moulin à vent (Ville) : Charbon -1 · Éleveur +4 · Fermier +15
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
   batiment.ecole-intermediaire@chateau — Ecole intermédiaire (Château) : Or -3 · Professeur +2 · Scientifique +1
-  batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1
+  batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
 ── canal garnisonVille : 1 règle ──
-  batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40
+  batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
 ── canal fluxParAmenagement : 1 règle ──
   regime.socialisme — Socialisme [si regime=Socialisme, saison=Été] : Nourriture +5 par Champ / Rizière
 ── canal fluxParVilleCultureMonde : 3 règles ──

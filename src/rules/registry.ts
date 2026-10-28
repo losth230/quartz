@@ -80,6 +80,14 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
       ...(ref.domicilesApportes ?? []).map((e): Effet => ({
         type: 'logements', logement: e.domicile, valeur: e.nombre,
       })),
+      // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+      //  réductions de levée, rejoignent la banque » — le champ
+      //  reductionLeveeArmee de la fiche de construction est
+      //  traduit en effet de banque, lu par reductionLeveeBatiments
+      //  pour le prix d'une levée dans la ville.)
+      ...(ref.reductionLeveeArmee
+        ? [{ type: 'reductionLeveeArmee', valeur: ref.reductionLeveeArmee } as Effet]
+        : []),
     ]
     if (effets.length === 0) continue
     const source: SourceRegle =

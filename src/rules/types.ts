@@ -70,7 +70,11 @@ export interface EffetFluxVille {
 //  (cultures). Types retirés : fluxJoueur (régimes & cultures
 //  historiques), fluxCapitale, garnisonParRang, tourismeInstantane,
 //  habitantsVille, conversionPoids, migrationPoids, reductionCout,
-//  reductionLeveeArmee, emissaires (avec son champ mort marchandsMax —
+//  reductionLeveeArmee — RESTAURÉ le 2026-10-28 avec un producteur
+//  (fiches de constructions, arbitrage Thibaut « les armées, et
+//  surtout les réductions de levée, rejoignent la banque » : le type
+//  rejoint les types vivants ci-dessous, voir
+//  EffetReductionLeveeArmee) —, emissaires (avec son champ mort marchandsMax —
 //  reliquat du métier de Marchand retiré), scienceInstantanee,
 //  ressourcesInstantanees, demographieVille — plomberie des
 //  techs/doctrines/dogmes/Lauriers, systèmes tous supprimés. L'ancien
@@ -125,6 +129,19 @@ export interface EffetPlacesMetier {
   valeur: number
 }
 
+/** Réduction d'Or sur une LEVÉE D'ARMÉE dans la ville du contexte
+ *  (arbitrage Thibaut 2026-10-28 : « les armées, et surtout les
+ *  réductions de levée, rejoignent la banque » — les
+ *  reductionLeveeArmee des fiches de constructions sont traduits en
+ *  effet de banque par le registre, comme les flux ; ex. Terrain
+ *  d'entrainement : −10 Or, Ecole militaire : −25 Or. Restauration
+ *  du type purgé le 2026-10-24 « sans producteur » : il revient
+ *  AVEC un producteur, même schéma que placesMetier/logements.) */
+export interface EffetReductionLeveeArmee {
+  type: 'reductionLeveeArmee'
+  valeur: number
+}
+
 /** Logements ajoutés au parc de la ville du contexte (retour Thibaut
  *  2026-10-27 : les logements passent par la banque — les
  *  taudisApportes et domicilesApportes du référentiel sont traduits en
@@ -143,6 +160,7 @@ export type Effet =
   | EffetFluxParVilleCultureMonde
   | EffetGarnisonVille
   | EffetPlacesMetier
+  | EffetReductionLeveeArmee
   | EffetLogements
 
 // ── Conditions ─────────────────────────────────────────────────────────────
@@ -242,4 +260,10 @@ export interface ContributionEffets {
    *  2026-10-27 : canal des taudisApportes / domicilesApportes,
    *  clé = type de logement). */
   logements: Record<string, number>
+  /** Réduction d'Or sur une LEVÉE D'ARMÉE dans la ville du contexte
+   *  (retour Thibaut 2026-10-28 : canal des reductionLeveeArmee des
+   *  fiches de constructions, lu par reductionLeveeBatiments —
+   *  engine/constructions.ts — pour le prix d'une levée dans la
+   *  ville). */
+  reductionLeveeArmee: number
 }

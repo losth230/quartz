@@ -21,7 +21,7 @@ import { partieMock } from './mocks'
 import {
   effetsConstructionRef, effetsEteConstructionRef, instantanesConstructionRef, eteSeulementRef,
   emplacementsConstructionRef, logementsConstructionRef, coutConstructionRef, prerequisConstruction,
-  constructionRef, resumeConstruction, reductionCampDeBatisseurs,
+  constructionRef, resumeConstruction, reductionCampDeBatisseurs, reductionLeveeConstructionRef,
 } from '../engine/constructions'
 import { productionTourismeBatiment } from '../engine/batiments'
 import { createGame } from '../engine/setup'
@@ -125,9 +125,12 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
     'référentiel constructions attendu (94 entrées après la fiche bâtiments rang 2, 2026-10-26)')
   // (Retour Thibaut 2026-10-27 : une construction porte une règle dès
   //  qu'elle a un effet QUELCONQUE — flux, emplacements de métiers ou
-  //  logements.)
+  //  logements. Arbitrage Thibaut 2026-10-28 : « les armées, et
+  //  surtout les réductions de levée, rejoignent la banque » — la
+  //  réduction de levée d'armée (champ reductionLeveeArmee) est un
+  //  effet de banque AU MÊME TITRE, canal reductionLeveeArmee.)
   const aEffet = (r: typeof refs[number]) =>
-    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length)
+    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length || r.reductionLeveeArmee)
   const regles = reglesConstructions(C)
   assert.equal(regles.length, refs.filter(aEffet).length)
   const parCle = new Map(regles.map((r) => [`${r.nom}|${r.groupe}`, r]))
@@ -170,6 +173,11 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
     for (const e of ref.domicilesApportes ?? []) attenduLog[e.domicile] = (attenduLog[e.domicile] ?? 0) + e.nombre
     assert.deepEqual(out.logements, attenduLog, `logements différents pour ${ref.nom}`)
     assert.deepEqual(logementsConstructionRef(ref), attenduLog, `canal moteur logements différent pour ${ref.nom}`)
+    // (2026-10-28, arbitrage Thibaut « les réductions de levée
+    //  rejoignent la banque ») réduction de levée : le moteur lit le
+    //  canal reductionLeveeArmee — aucune seconde interprétation.
+    assert.equal(out.reductionLeveeArmee, reductionLeveeConstructionRef(ref),
+      `réduction de levée différente pour ${ref.nom}`)
   }
 })
 
@@ -177,9 +185,11 @@ test('SANS règle de banque : production NULLE sur tous les canaux (repli texte 
   const C = cfgOf(undefined)
   const refs = C.config.constructions ?? []
   // (2026-10-27 : sans règle = sans flux, sans emplacements ET sans
-  //  logements — les trois familles d'effets passent par la banque.)
+  //  logements — les trois familles d'effets passent par la banque.
+  //  Arbitrage Thibaut 2026-10-28 : la réduction de levée est la
+  //  QUATRIÈME famille — une construction qui la porte a une règle.)
   const aEffet = (r: typeof refs[number]) =>
-    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length)
+    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length || r.reductionLeveeArmee)
   const sansEffets = refs.filter((r) => !aEffet(r))
   assert.ok(sansEffets.length > 0, 'des constructions sans effets structurés existent')
   for (const ref of sansEffets) {
@@ -193,6 +203,7 @@ test('SANS règle de banque : production NULLE sur tous les canaux (repli texte 
     assert.deepEqual(instantanesConstructionRef(ref), {}, `${ref.nom} : aucune valeur d'état attendue`)
     assert.deepEqual(emplacementsConstructionRef(ref), [], `${ref.nom} : aucun emplacement attendu`)
     assert.deepEqual(logementsConstructionRef(ref), {}, `${ref.nom} : aucun logement attendu`)
+    assert.equal(reductionLeveeConstructionRef(ref), 0, `${ref.nom} : aucune réduction de levée attendue`)
   }
 })
 
