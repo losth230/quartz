@@ -8,19 +8,21 @@
 //  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) — ni la culture
 //  NI le compte de vivants ne vivent en tête (retours Thibaut
 //  2026-10-26 : le tableau « Cultures présentes » porte la culture
-//  ET le total des vivants) ; (2) POPULATION, GARNISON & LOGEMENTS
-//  en 3 COLONNES (retour Thibaut 2026-10-26 : les tableaux cultures
-//  et garnison sont RÉDUITS pour loger un 3e tableau « Logements »
-//  — parc par type de domicile, occupés/capacité puis libres)
+//  ET le total des vivants) ; (2) POPULATION, GARNISON, LOGEMENTS
+//  & MÉTIERS en DAMIER 2×2 (retour Thibaut 2026-10-28 : « ils ne
+//  rentrent pas » sur une seule ligne — rangée 1 : culture +
+//  logements ; rangée 2 : garnison + métiers)
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
 //  plancher et total — arbitre : le détail reste TOUJOURS visible,
-//  relooké en classes CSS dédiées) ; (2bis) MÉTIERS en 4e tableau de
-//  la ligne (retour Thibaut 2026-10-27 : « un nouveau tableau avec
-//  les 3 tableaux de logement, culture et garnison, qui recense
-//  tous les métiers disponibles et occupés » — même données que le
-//  panneau Population, une ligne par métier occupé ou plafonné) ; (3) CONSTRUCTIONS :
+//  relooké en classes CSS dédiées) ; (2bis) MÉTIERS (retour
+//  Thibaut 2026-10-27 : « un nouveau tableau avec les 3 tableaux
+//  de logement, culture et garnison, qui recense tous les métiers
+//  disponibles et occupés » — même données que le panneau
+//  Population, une ligne par métier occupé ou plafonné ; retour
+//  2026-10-28 : format N/M « en poste / capacité » comme les
+//  logements) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
 //  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
@@ -268,14 +270,16 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
             arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
 
-        {/* POPULATION, GARNISON & LOGEMENTS en 3 COLONNES (retour
-            Thibaut 2026-10-26 : cultures et garnison réduites pour
-            loger le tableau Logements). La garnison est une VALEUR
-            D'ÉTAT (pas un flux) : base du rang + bâtiments + loi
-            éventuelle du régime ; ne change pas à chaque tour.
-            Arbitre : le tableau détaillé reste TOUJOURS visible —
-            relooké en classes CSS dédiées (.ville-table), plus de
-            styles inline ni de titre verbeux. */}
+        {/* POPULATION, GARNISON, LOGEMENTS & MÉTIERS en DAMIER 2×2
+            (retour Thibaut 2026-10-28 : « on va les mettre sur
+            deux lignes car ils ne rentrent pas » — rangée 1 :
+            culture + logements ; rangée 2 : garnison + métiers).
+            La garnison est une VALEUR D'ÉTAT (pas un flux) : base
+            du rang + bâtiments + loi éventuelle du régime ; ne
+            change pas à chaque tour. Arbitre : le tableau détaillé
+            reste TOUJOURS visible — relooké en classes CSS dédiées
+            (.ville-table), plus de styles inline ni de titre
+            verbeux. */}
         {(() => {
           const g = garnisonHabitationVille(p, ville, C, state)
           const lignes = detailGarnisonVille(p, ville, C, state)
@@ -284,7 +288,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const part = (nb: number) =>
             nbVivants > 0 ? `${Math.round((100 * nb) / nbVivants)} %` : '—'
           // ── LOGEMENTS (retour Thibaut 2026-10-26 : 3e tableau de
-          //  la ligne) : parc par type de domicile, meilleure qualité
+          //  la ligne — 2026-10-28 : rangée 1 du damier, à droite
+          //  des cultures) : parc par type de domicile, meilleure qualité
           //  d'abord — capacité du rang (City.domiciles, repli
           //  stockRang pour un état non normalisé) + apports des
           //  constructions (domicilesApportesVille : Poste de garde,
@@ -318,8 +323,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const habitantsLoges = habitantsLog.length - sansLogement
           // ── MÉTIERS (retour Thibaut 2026-10-27 : « ajouter un
           //  nouveau tableau […] qui recense tous les métiers
-          //  disponibles et occupés ») : 4e tableau de la ligne,
-          //  mêmes données que le panneau Population (helper moteur
+          //  disponibles et occupés ») : rangée 2 du damier, à
+          //  droite de la garnison (retour 2026-10-28), mêmes
+          //  données que le panneau Population (helper moteur
           //  occupationsMetierVille, testé) — une ligne par métier
           //  OCCUPÉ (en poste > 0) ou DISPONIBLE (cap finie :
           //  base du rang + emplacements des constructions), la
@@ -361,38 +367,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   </table>
                 )}
               </div>
-              <div>
-                <div className="ville-duo-titre">
-                  Garnison des habitations : <strong>{fmt(g)}</strong>
-                </div>
-                <table className="ville-table">
-                  <tbody>
-                    {lignes.map((l, i) => (
-                      <tr key={i}>
-                        <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
-                        <td>{l.label}</td>
-                        <td className={l.valeur < 0 ? 'num neg' : 'num'}>
-                          {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
-                        </td>
-                      </tr>
-                    ))}
-                    {plancher > 0 && (
-                      <tr>
-                        <td className="muted">plancher</td>
-                        <td>« Combler les lacunes » : minimum 30</td>
-                        <td className="num">+{fmt(plancher)}</td>
-                      </tr>
-                    )}
-                    <tr className="ligne-total">
-                      <td />
-                      <td><strong>Total</strong></td>
-                      <td className="num"><strong>{fmt(g)}</strong></td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              {/* ── LOGEMENTS : 3e tableau de la ligne (retour Thibaut
-                  2026-10-26 — cultures/garnison réduites d'autant).
+              {/* ── LOGEMENTS (retour Thibaut 2026-10-26 — puis
+                  rangée 1 du damier 2×2, retour 2026-10-28 :
+                  culture + logements ne tenaient plus sur la même
+                  ligne que garnison et métiers).
                   Colonnes : type · occupés/capacité (retour Thibaut
                   2026-10-27 : la colonne « places libres » est
                   retirée — redondante, cap − occupés se lit déjà
@@ -430,19 +408,50 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   </table>
                 )}
               </div>
+              <div>
+                <div className="ville-duo-titre">
+                  Garnison des habitations : <strong>{fmt(g)}</strong>
+                </div>
+                <table className="ville-table">
+                  <tbody>
+                    {lignes.map((l, i) => (
+                      <tr key={i}>
+                        <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
+                        <td>{l.label}</td>
+                        <td className={l.valeur < 0 ? 'num neg' : 'num'}>
+                          {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
+                        </td>
+                      </tr>
+                    ))}
+                    {plancher > 0 && (
+                      <tr>
+                        <td className="muted">plancher</td>
+                        <td>« Combler les lacunes » : minimum 30</td>
+                        <td className="num">+{fmt(plancher)}</td>
+                      </tr>
+                    )}
+                    <tr className="ligne-total">
+                      <td />
+                      <td><strong>Total</strong></td>
+                      <td className="num"><strong>{fmt(g)}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
               {/* ── MÉTIERS (retour Thibaut 2026-10-27) : tous les
                   métiers DISPONIBLES (cap finie — base du rang +
                   emplacements des constructions) et OCCUPÉS de la
                   ville, avec la ligne Sans-emploi (rôle neutre) et
-                  le total en poste / vivants. Colonnes : en poste ·
-                  places libres (« — » pour les métiers non
-                  plafonnés : rôles de cour, armée, Banquier,
+                  le total en poste / vivants. Format N/M COMME LES
+                  LOGEMENTS (retour Thibaut 2026-10-28) : en poste /
+                  capacité — « — » en dénominateur pour les métiers
+                  non plafonnés (rôles de cour, armée, Banquier,
                   Troubadour…). Surnombre en rouge (cap baissée,
                   aménagement perdu — cf. reaffecterMetiers). */}
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Tous les métiers disponibles et occupés de la ville : en poste / places libres. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » = métier non plafonné ici (règles propres)."
+                  title="Tous les métiers disponibles et occupés de la ville, au format en poste / capacité (comme les logements). Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
                 >
                   Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
                 </div>
@@ -455,22 +464,22 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                             ? l.metier
                             : <span className="muted" title="Sans-emploi : rôle neutre — impôt nul, aucun effet">Sans-emploi</span>}
                         </td>
-                        <td className="num">{fmt(l.enPoste)}</td>
                         <td className={
-                          Number.isFinite(l.cap) && l.cap - l.enPoste < 0
+                          Number.isFinite(l.cap) && l.enPoste > l.cap
                             ? 'num neg'
                             : 'num'
                         }>
-                          {Number.isFinite(l.cap)
-                            ? fmt(l.cap - l.enPoste)
-                            : <span className="muted">—</span>}
+                          {fmt(l.enPoste)}/{
+                            Number.isFinite(l.cap)
+                              ? fmt(l.cap)
+                              : <span className="muted">—</span>
+                          }
                         </td>
                       </tr>
                     ))}
                     <tr className="ligne-total">
                       <td><strong>Habitants en poste</strong></td>
                       <td className="num"><strong>{fmt(enPosteTotal)}/{fmt(nbVivants)}</strong></td>
-                      <td />
                     </tr>
                   </tbody>
                 </table>

@@ -709,32 +709,35 @@ input[type='range'] {
    logements — repli 2 colonnes sous 860px puis 1 sous 560px.
    Retour suivant « petites séparations + réduire le tableau de
    culture » : filet vertical discret entre les tableaux (même
-   teinte que les filets de .ville-table) et cultures RÉTRÉCIE
-   (0.8fr) au profit de garnison et logements qui portent des
-   textes plus longs. Le filet suit la colonne (padding gauche), le
-   repli 2 colonnes l'enlève aux tableaux de TÊTE DE RANGÉE
-   (impairs), le repli 1 colonne empile avec un filet horizontal.
+   teinte que les filets de .ville-table). Le filet suit la colonne
+   (padding gauche), le repli 1 colonne empile avec un filet
+   horizontal.
    Retour Thibaut 2026-10-27 « un nouveau tableau qui recense tous
    les métiers disponibles et occupés » : la ligne passe en
-   4 colonnes — cultures, garnison, logements, métiers — mêmes
-   filets et mêmes replis.)
+   4 colonnes — cultures, garnison, logements, métiers.
+   Retour Thibaut 2026-10-28 « ils ne rentrent pas » : DAMIER 2×2 —
+   rangée 1 cultures + logements, rangée 2 garnison + métiers ;
+   filet vertical entre colonnes (pairs), filet horizontal entre
+   rangées (2e rangée).)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée
    par un liseré accent (plus de styles inline dans VilleCarte). */
-.ville-duo-cols { display: grid; grid-template-columns: 0.8fr 1fr 1fr 1.1fr; gap: 4px 18px; }
-.ville-duo-cols > div:not(:first-child) {
+.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; }
+.ville-duo-cols > div:nth-child(even) {
   border-left: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
   padding-left: 18px;
 }
-@media (max-width: 860px) {
-  .ville-duo-cols { grid-template-columns: 1fr 1fr; }
-  .ville-duo-cols > div:nth-child(odd) { border-left: none; padding-left: 0; }
+.ville-duo-cols > div:nth-child(n+3) {
+  border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
+  padding-top: 8px;
 }
 @media (max-width: 560px) {
   .ville-duo-cols { grid-template-columns: 1fr; }
-  .ville-duo-cols > div:not(:first-child) {
+  .ville-duo-cols > div:nth-child(even) {
     border-left: none; padding-left: 0;
+  }
+  .ville-duo-cols > div:not(:first-child) {
     border-top: 1px solid color-mix(in srgb, var(--border) 65%, transparent);
     padding-top: 8px;
   }

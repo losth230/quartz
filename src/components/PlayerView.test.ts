@@ -113,7 +113,7 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   }
 })
 
-test('rendu VilleCarte : population, garnison, logements & métiers en 4 colonnes — tableaux propres (retours Thibaut 2026-10-26/27)', async () => {
+test('rendu VilleCarte : population, garnison, logements & métiers en damier 2×2 — tableaux propres (retours Thibaut 2026-10-26/27/28)', async () => {
   const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
@@ -127,9 +127,10 @@ test('rendu VilleCarte : population, garnison, logements & métiers en 4 colonne
     React.createElement(GameProvider, null, React.createElement(PlayerView, { joueur: 1 })),
   )
   const h = aplatir(html)
-  // Le bloc 2 colonnes (population à gauche, garnison à droite)
-  // est rendu dans la carte ville.
-  assert.ok(h.includes('ville-duo-cols'), 'colonnes population/garnison absentes de la carte ville')
+  // Le bloc damier 2×2 (retour Thibaut 2026-10-28 « ils ne
+  // rentrent pas » : rangée 1 cultures + logements, rangée 2
+  // garnison + métiers) est rendu dans la carte ville.
+  assert.ok(h.includes('ville-duo-cols'), 'damier population/garnison/logements/métiers absent de la carte ville')
 
   // ── Données dérivées de l'état (patron R3) : capitale du joueur 1 ──
   const C = cfgOf(etat.config)
@@ -179,7 +180,8 @@ test('rendu VilleCarte : population, garnison, logements & métiers en 4 colonne
     `garnison ${fmt(g)} de « ${cap.nom} » absente du titre de colonne`,
   )
   // ── LOGEMENTS (retour Thibaut 2026-10-26 : « réduit les tableaux
-  //  pour ajouter les logements ») : 3e tableau de la ligne — parc
+  //  pour ajouter les logements ») : rangée 1 du damier, à
+  //  droite des cultures (retour 2026-10-28) — parc
   //  par type de domicile, habitants/capacité puis libres, le tout
   //  DÉRIVÉ de l'état (patron R3 : stock City.domiciles + apports
   //  des constructions, occupés = habitants attribués — 1 logement
@@ -207,34 +209,48 @@ test('rendu VilleCarte : population, garnison, logements & métiers en 4 colonne
     const o = occLog.get(nom) ?? 0
     assert.ok(
       h.includes(`class="num">${esc(fmt(o))}/${esc(fmt(c))}</td>`),
-      `ligne logements « ${nom} » (${fmt(o)}/${fmt(c)}) absente du 3e tableau`,
+      `ligne logements « ${nom} » (${fmt(o)}/${fmt(c)}) absente du tableau logements`,
     )
   }
   // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau tableau
   //  avec les 3 tableaux de logement, culture et garnison, qui
-  //  recense tous les métiers disponibles et occupés ») : 4e
-  //  tableau de la ligne, DÉRIVÉ de l'état (patron R3 — même
+  //  recense tous les métiers disponibles et occupés ») : tableau
+  //  de la 2e rangée du damier, à droite de la garnison (retour
+  //  Thibaut 2026-10-28), DÉRIVÉ de l'état (patron R3 — même
   //  helper moteur que le panneau Population).
   const { occupationsMetierVille } = await import('../engine/metiers')
   const lignesMet = occupationsMetierVille(habitantsCap, cap, C, { state: etat, joueur: 1 })
   const enPosteTotal = lignesMet.reduce((n, l) => n + (l.metier ? l.enPoste : 0), 0)
   assert.ok(
     h.includes(`Métiers : <strong>${esc(fmt(enPosteTotal))}</strong> en poste`),
-    `titre « Métiers : ${fmt(enPosteTotal)} en poste » absent du 4e tableau`,
+    `titre « Métiers : ${fmt(enPosteTotal)} en poste » absent du tableau métiers`,
   )
   // Chaque métier disponible (cap finie) ou occupé rend SON nom, et
   //  la ligne Sans-emploi (rôle neutre) est toujours présente.
   for (const l of lignesMet) {
     assert.ok(
       h.includes(`>${esc(l.metier ?? 'Sans-emploi')}</`),
-      `métier « ${l.metier ?? 'Sans-emploi'} » absent du 4e tableau`,
+      `métier « ${l.metier ?? 'Sans-emploi'} » absent du tableau métiers`,
     )
   }
-  assert.ok(h.includes('Sans-emploi'), 'ligne « Sans-emploi » absente du 4e tableau')
+  assert.ok(h.includes('Sans-emploi'), 'ligne « Sans-emploi » absente du tableau métiers')
+  // Format N/M COMME LES LOGEMENTS (retour Thibaut 2026-10-28) :
+  //  en poste / capacité, « — » en dénominateur pour les métiers
+  //  non plafonnés, surnombre en rouge.
+  for (const l of lignesMet) {
+    const surnombre = Number.isFinite(l.cap) && l.enPoste > l.cap
+    const attenduNM = Number.isFinite(l.cap)
+      ? `class="num${surnombre ? ' neg' : ''}">${esc(fmt(l.enPoste))}/${esc(fmt(l.cap))}</td>`
+      : `class="num">${esc(fmt(l.enPoste))}/<span class="muted">—</span></td>`
+    assert.ok(
+      h.includes(attenduNM),
+      `ligne métiers « ${l.metier ?? 'Sans-emploi'} » (${fmt(l.enPoste)}/${Number.isFinite(l.cap) ? fmt(l.cap) : '—'}) absente du tableau métiers`,
+    )
+  }
   // Le pied rend le total en poste / vivants de la ville.
   assert.ok(
     h.includes(`<strong>${esc(fmt(enPosteTotal))}/${esc(fmt(nbVivants))}</strong>`),
-    `total « ${fmt(enPosteTotal)}/${fmt(nbVivants)} » (en poste/vivants) absent du 4e tableau`,
+    `total « ${fmt(enPosteTotal)}/${fmt(nbVivants)} » (en poste/vivants) absent du tableau métiers`,
   )
 })
 
