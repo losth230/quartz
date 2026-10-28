@@ -1596,3 +1596,20 @@ occupés, mais les métiers disponibles. » Décisions :
    inchangés).
 5. **Verrou de régression** : test de rendu dérivé du même helper moteur — chaque métier
    disponible affiché au format N/M, chaque métier hors offre absent du rendu.
+
+## Les quatre tableaux de la carte de ville passent en deux colonnes (arbitrage Thibaut, 2026-10-28, 3e retour du jour)
+
+« Pour les tableaux, plutôt que de les avoir en deux lignes de 2 tableaux, j'aimerais
+deux colonnes, une avec 3 tableaux : culture, logement et garnison, et une deuxième
+avec les métiers. » Décisions :
+
+1. **Deux colonnes** : le bloc population de la carte de ville abandonne le damier 2×2
+   du matin (SUPERSEDÉ) pour DEUX colonnes — à gauche « Cultures présentes »,
+   « Logements » et « Garnison des habitations » empilés, à droite « Métiers ». Un filet
+   vertical sépare les colonnes, des filets horizontaux séparent les tableaux empilés ;
+   sous 560 px tout empile en une colonne.
+2. **Contenu inchangé** : ni les données ni le format des tableaux ne bougent — le
+   format N/M des métiers (retour damier) reste tel quel ; seul le placement change.
+3. **Verrou de régression** : le test de rendu vérifie la présence des deux colonnes
+   (wrapper d'empilement) et l'ordre des titres — cultures, logements, garnison puis
+   métiers.
