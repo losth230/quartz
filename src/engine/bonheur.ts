@@ -147,7 +147,12 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   )
   const habitants = pop.length
   const travailleurs = pop.filter((c) => c.age >= C.p.adultAge).length
-  const enPoste = pop.filter((c) => c.metier).length
+  // (Retour Thibaut 2026-10-28 : les ENFANTS (âge < adultAge) sont
+  //  hors marché du travail — ils ne comptent ni comme demande
+  //  (travailleurs, ci-dessus) ni comme postes pourvus, même si un
+  //  métier leur a été affecté manuellement : pas des chômeurs,
+  //  même lecture que la ligne « Enfants » des tableaux de métiers.)
+  const enPoste = pop.filter((c) => c.metier && c.age >= C.p.adultAge).length
   const malades = pop.filter((c) => c.statut === 'Malade').length
 
   // EMPLOI : moyenne des deux écarts (structure + pourvu)

@@ -441,13 +441,19 @@ function premierPosteLibre(
 }
 
 interface OccupationMetier {
-  /** Métier concerné — null = ligne « Sans-emploi ». */
+  /** Métier concerné — null = ligne neutre (Sans-emploi, ou
+   *  Enfants quand enfants = true). */
   metier: string | null
   /** Occupants VIVANTS en poste (les Décédés ne comptent pas). */
   enPoste: number
   /** Capacité de la ville pour ce métier (capMetierVille) —
    *  Infinity = illimité (ou cité libre : hors champ des caps). */
   cap: number
+  /** Ligne neutre ENFANTS (retour Thibaut 2026-10-28) : vivants
+   *  d'âge < adultAge sans métier — pas des chômeurs ; ils
+   *  deviennent Sans-emploi à l'âge adulte (assignAdultMetier
+   *  leur attribue alors un poste si une place est libre). */
+  enfants?: boolean
 }
 
 /** Vue « métiers et places par ville » (vague 2 UI, rework habitants
@@ -456,8 +462,12 @@ interface OccupationMetier {
  *  référentiel ; les métiers personnalisés hors référentiel
  *  (anciennes sauvegardes) sont conservés en fin de liste ; la ligne
  *  « Sans-emploi » (neutre : impôt nul, aucun effet) est TOUJOURS
- *  présente, en dernière position. ville = null (cité libre) →
- *  toutes les caps sont infinies. */
+ *  présente, en dernière position — elle ne compte que les ADULTES
+ *  sans métier (retour Thibaut 2026-10-28 : les ENFANTS d'âge <
+ *  adultAge forment une ligne « Enfants » à part, juste avant,
+ *  uniquement s'il y en a ; un enfant porteur d'un métier affecté
+ *  manuellement reste compté dans sa ligne de métier).
+ *  ville = null (cité libre) → toutes les caps sont infinies. */
 export function occupationsMetierVille(
   habitants: Character[], ville: City | null, C: Cfg = cfgOf(),
   ctx?: { state: GameState; joueur: number },
@@ -465,8 +475,10 @@ export function occupationsMetierVille(
   const vivants = habitants.filter((c) => c.statut !== 'Décédé')
   const par: Record<string, number> = {}
   let sans = 0
+  let enfants = 0
   for (const c of vivants) {
     if (c.metier) par[c.metier] = (par[c.metier] ?? 0) + 1
+    else if (c.age < C.p.adultAge) enfants++
     else sans++
   }
   const lignes: OccupationMetier[] = []
@@ -480,6 +492,12 @@ export function occupationsMetierVille(
   }
   for (const m of Object.keys(par)) {
     if (!C.metiers.some((x) => x.metier === m)) ajoute(m)
+  }
+  // (Retour Thibaut 2026-10-28 : les enfants ne sont pas des
+  //  sans-emplois — ligne « Enfants » à part, AVANT le Sans-emploi
+  //  qui clôt toujours la liste, et uniquement s'il y en a.)
+  if (enfants > 0) {
+    lignes.push({ metier: null, enPoste: enfants, cap: Number.POSITIVE_INFINITY, enfants: true })
   }
   lignes.push({ metier: null, enPoste: sans, cap: Number.POSITIVE_INFINITY })
   return lignes

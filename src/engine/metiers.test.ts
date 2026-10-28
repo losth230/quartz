@@ -285,6 +285,37 @@ test('occupationsMetierVille : métiers hors référentiel conservés (anciennes
   assert.equal(vieux!.cap, Number.POSITIVE_INFINITY, 'hors référentiel = illimité')
 })
 
+test('occupationsMetierVille : les ENFANTS ne sont pas des sans-emplois (retour Thibaut 2026-10-28)', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  // 1 adulte en poste, 1 adulte sans métier, 2 enfants sans métier,
+  // 1 enfant porteur d'un métier (affectation manuelle — edge case).
+  const habitants = [
+    perso('a1', 30, { metier: C.p.metierChasseur }),
+    perso('s1', 40, {}),
+    perso('e1', 8, {}),
+    perso('e2', 12, {}),
+    perso('e3', 10, { metier: 'Fermier' }),
+  ]
+  const lignes = occupationsMetierVille(habitants, null, C)
+  const enfants = lignes.find((l) => l.metier === null && l.enfants)
+  assert.ok(enfants, 'ligne « Enfant » présente')
+  assert.equal(enfants!.enPoste, 2, 'les 2 enfants sans métier comptent comme Enfants')
+  assert.equal(enfants!.cap, Number.POSITIVE_INFINITY, 'cap illimitée (pas un métier plafonné)')
+  const sans = lignes.find((l) => l.metier === null && !l.enfants)
+  assert.ok(sans, 'ligne Sans-emploi présente')
+  assert.equal(sans!.enPoste, 1, 'le Sans-emploi ne compte QUE les adultes sans métier')
+  assert.equal(lignes[lignes.length - 1].metier, null, 'Sans-emploi toujours en dernière ligne')
+  assert.ok(!lignes[lignes.length - 1].enfants, 'la dernière ligne neutre est bien le Sans-emploi')
+  assert.ok(lignes.indexOf(enfants!) < lignes.indexOf(sans!), 'ligne Enfant AVANT le Sans-emploi')
+  const fermier = lignes.find((l) => l.metier === 'Fermier')
+  assert.ok(fermier && fermier!.enPoste === 1, 'un enfant porteur d\'un métier reste compté dans sa ligne de métier')
+  // Sans enfant : pas de ligne Enfant (pas de bruit « Enfant 0 »,
+  // même logique anti-bruit que les métiers inoccupés).
+  const vide = occupationsMetierVille([perso('a2', 30, {})], null, C)
+  assert.ok(!vide.some((l) => l.enfants), 'aucune ligne Enfant quand il n\'y a pas d\'enfant')
+})
+
 // ── Vague 3a : emplacements, priorisation, été, taxes, garnison ──────────
 
 test('reaffecterMetiers (vague 3a) : priorisation — un sans-emploi prend un poste AUTRE que Chasseur d\'abord', () => {

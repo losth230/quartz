@@ -351,7 +351,9 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           habitants 2026-10-20) : par ville, une ligne par métier occupé
           ou plafonné — en poste, capacité, places libres — la ligne
           Sans-emploi (rôle neutre : impôt nul, aucun effet) est toujours
-          présente. Helper moteur occupationsMetierVille (testé). */}
+          présente (les ENFANTS ne sont pas des sans-emplois — retour
+          Thibaut 2026-10-28 : ligne « Enfant » à part). Helper moteur
+          occupationsMetierVille (testé). */}
       <CarteMetiersPlaces
         vivants={vivants}
         villesOcc={villesOcc}

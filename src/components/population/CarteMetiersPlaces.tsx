@@ -4,7 +4,9 @@
 //  vague 2 UI (rework habitants 2026-10-20) : par ville, une ligne
 //  par métier occupé ou plafonné — en poste, capacité, places
 //  libres — la ligne Sans-emploi (rôle neutre : impôt nul, aucun
-//  effet) est toujours présente. Helper moteur
+//  effet) est toujours présente ; les ENFANTS ne sont pas des
+//  sans-emplois (retour Thibaut 2026-10-28) : ligne « Enfant » à
+//  part juste avant, uniquement s'il y en a. Helper moteur
 //  occupationsMetierVille (testé).
 // ══════════════════════════════════════════════════════════════════════
 
@@ -43,7 +45,7 @@ export function CarteMetiersPlaces({
               const villeObj = villesDuJoueur?.find((vv) => vv.nom === v.nom) ?? null
               const lignes = occupationsMetierVille(habitants, villeObj, C, ctx)
               return lignes.map((l, i) => (
-                <tr key={`${v.nom}-${l.metier ?? 'sans'}`}>
+                <tr key={`${v.nom}-${l.metier ?? (l.enfants ? 'enfants' : 'sans')}`}>
                   <td>
                     {i === 0
                       ? <strong>{v.nom}{villeObj?.type ? ` (${villeObj.type})` : estCite ? ' (cité libre)' : ''}</strong>
@@ -52,9 +54,15 @@ export function CarteMetiersPlaces({
                   <td>
                     <span
                       className={`badge ${l.metier ? 'badge-info' : 'badge-neutral'}`}
-                      title={l.metier ? (descMetier(l.metier) || undefined) : 'Sans-emploi : rôle neutre — impôt nul, aucun effet'}
+                      title={l.metier
+                        ? (descMetier(l.metier) || undefined)
+                        : l.enfants
+                          // (Retour Thibaut 2026-10-28 : les enfants ne
+                          //  sont pas des sans-emplois — ligne à part.)
+                          ? 'Enfant : pas un sans-emploi — devient Sans-emploi à l\'âge adulte'
+                          : 'Sans-emploi : rôle neutre — impôt nul, aucun effet'}
                     >
-                      {l.metier ?? 'Sans-emploi'}
+                      {l.metier ?? (l.enfants ? 'Enfant' : 'Sans-emploi')}
                     </span>
                   </td>
                   <td>{l.enPoste}</td>

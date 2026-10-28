@@ -22,7 +22,9 @@
 //  disponibles et occupés » — même données que le panneau
 //  Population ; retour 2026-10-28 : format N/M « en poste /
 //  capacité » comme les logements, et SEULS les métiers PRÉSENTS
-//  (occupés) de la ville s'affichent) ; (3) CONSTRUCTIONS :
+//  (occupés) de la ville s'affichent ; retour 2026-10-28 bis :
+//  les ENFANTS ne sont pas des sans-emplois — ligne « Enfant »
+//  à part qui devient Sans-emploi à l'âge adulte) ; (3) CONSTRUCTIONS :
 //  aménagements et bâtiments (choix à catégories — marqueur (y)) —
 //  les COÛTS des aménagements vivent dans le POPUP de fabrication
 //  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
@@ -330,8 +332,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           //  2026-10-28 « n'affiche que les métiers présents dans
           //  la ville » : seuls les métiers OCCUPÉS (en poste > 0)
           //  s'affichent — les disponibles inoccupés (cap finie,
-          //  0 en poste) quittent le tableau ; Sans-emploi reste
-          //  (rôle neutre des habitants de la ville).
+          //  0 en poste) quittent le tableau. Même retour : les
+          //  ENFANTS ne sont pas des sans-emplois — ligne neutre
+          //  « Enfant » à part (cap illimitée), le Sans-emploi ne
+          //  compte que les adultes.
           const lignesMet = occupationsMetierVille(
             habitantsLog, ville, C, { state, joueur },
           )
@@ -447,8 +451,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   2026-10-28 « n'affiche que les métiers présents
                   dans la ville ») : UNIQUEMENT les métiers OCCUPÉS
                   (en poste > 0) — les disponibles inoccupés ne
-                  s'affichent pas — avec la ligne Sans-emploi
-                  (rôle neutre) et le total en poste / vivants.
+                  s'affichent pas — avec les lignes neutres
+                  Enfant (les enfants ne sont pas des
+                  sans-emplois — retour 2026-10-28 : ligne à part,
+                  ils deviennent Sans-emploi à l'âge adulte) et
+                  Sans-emploi (adultes, rôle neutre), et le total
+                  en poste / vivants.
                   Format N/M COMME LES
                   LOGEMENTS (retour Thibaut 2026-10-28) : en poste /
                   capacité — « — » en dénominateur pour les métiers
@@ -458,18 +466,20 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               <div>
                 <div
                   className="ville-duo-titre"
-                  title="Les métiers occupés de la ville, au format en poste / capacité (comme les logements) ; les métiers disponibles mais inoccupés ne sont pas listés. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
+                  title="Les métiers occupés de la ville, au format en poste / capacité (comme les logements) ; les métiers disponibles mais inoccupés ne sont pas listés. Ligne Enfant : les enfants ne sont pas des sans-emplois — ils deviennent Sans-emploi à l'âge adulte. Cap cumulative : base du rang d'habitation + emplacements des bâtiments et aménagements (ex. Poste de garde : +4 Garde) ; « — » en dénominateur = métier non plafonné ici (règles propres)."
                 >
                   Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
                 </div>
                 <table className="ville-table">
                   <tbody>
                     {metiersPresents.map((l) => (
-                      <tr key={l.metier ?? 'sans'}>
+                      <tr key={l.metier ?? (l.enfants ? 'enfants' : 'sans')}>
                         <td>
                           {l.metier
                             ? l.metier
-                            : <span className="muted" title="Sans-emploi : rôle neutre — impôt nul, aucun effet">Sans-emploi</span>}
+                            : l.enfants
+                              ? <span className="muted" title="Enfant : pas un sans-emploi — devient Sans-emploi à l'âge adulte (un métier lui est attribué si un poste est libre)">Enfant</span>
+                              : <span className="muted" title="Sans-emploi : rôle neutre — impôt nul, aucun effet">Sans-emploi</span>}
                         </td>
                         <td className={
                           Number.isFinite(l.cap) && l.enPoste > l.cap

@@ -227,15 +227,26 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
   )
   // Seuls les métiers PRÉSENTS dans la ville (occupés) s'affichent
   //  (retour Thibaut 2026-10-28 « n'affiche que les métiers présents
-  //  dans la ville ») — la ligne Sans-emploi (rôle neutre) reste.
+  //  dans la ville ») ; les lignes neutres restent : Sans-emploi
+  //  (adultes, rôle neutre) et Enfant (retour 2026-10-28 bis : les
+  //  enfants ne sont pas des sans-emplois — ligne à part).
   const presents = lignesMet.filter((l) => l.metier === null || l.enPoste > 0)
   for (const l of presents) {
+    const label = l.metier ?? (l.enfants ? 'Enfant' : 'Sans-emploi')
     assert.ok(
-      h.includes(`>${esc(l.metier ?? 'Sans-emploi')}</`),
-      `métier « ${l.metier ?? 'Sans-emploi'} » absent du tableau métiers`,
+      h.includes(`>${esc(label)}</`),
+      `ligne « ${label} » absente du tableau métiers`,
     )
   }
   assert.ok(h.includes('Sans-emploi'), 'ligne « Sans-emploi » absente du tableau métiers')
+  // La ligne Enfant recense les enfants SANS métier (les adultes
+  //  sans métier restent au Sans-emploi) — la fixture en compte 17.
+  const ligneEnfant = lignesMet.find((l) => l.enfants)
+  assert.ok(ligneEnfant, 'fixture : des enfants dans la capitale (sinon adapter ce test)')
+  assert.ok(
+    h.includes('class="muted" title="Enfant : pas un sans-emploi'),
+    'tooltip de la ligne Enfant absent du tableau métiers',
+  )
   // Un métier disponible mais INOCCUPÉ (cap finie, 0 en poste —
   //  ex. les 0/0 de la fixture) ne s'affiche PAS.
   for (const l of lignesMet) {
@@ -247,15 +258,17 @@ test('rendu VilleCarte : population, garnison, logements & métiers en damier 2�
   }
   // Format N/M COMME LES LOGEMENTS (retour Thibaut 2026-10-28) :
   //  en poste / capacité, « — » en dénominateur pour les métiers
-  //  non plafonnés, surnombre en rouge — sur les lignes affichées.
+  //  non plafonnés, surnombre en rouge — sur les lignes affichées
+  //  (Enfant et Sans-emploi inclus : cap illimitée → N/—).
   for (const l of presents) {
     const surnombre = Number.isFinite(l.cap) && l.enPoste > l.cap
     const attenduNM = Number.isFinite(l.cap)
       ? `class="num${surnombre ? ' neg' : ''}">${esc(fmt(l.enPoste))}/${esc(fmt(l.cap))}</td>`
       : `class="num">${esc(fmt(l.enPoste))}/<span class="muted">—</span></td>`
+    const label = l.metier ?? (l.enfants ? 'Enfant' : 'Sans-emploi')
     assert.ok(
       h.includes(attenduNM),
-      `ligne métiers « ${l.metier ?? 'Sans-emploi'} » (${fmt(l.enPoste)}/${Number.isFinite(l.cap) ? fmt(l.cap) : '—'}) absente du tableau métiers`,
+      `ligne métiers « ${label} » (${fmt(l.enPoste)}/${Number.isFinite(l.cap) ? fmt(l.cap) : '—'}) absente du tableau métiers`,
     )
   }
   // Le pied rend le total en poste / vivants de la ville.
