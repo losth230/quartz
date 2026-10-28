@@ -1574,3 +1574,25 @@ sans-emploi par défaut à l'âge adulte. » Décisions :
 5. **Verrous de régression** : test moteur (ligne Enfant, Sans-emploi adulte, ordre,
    edge cases), test bonheur (des enfants porteurs d'un métier ne changent pas l'Emploi)
    et test de rendu (labels et tooltip de la ligne Enfant dans la carte de ville).
+
+## Le tableau Métiers de la carte de ville recense les métiers disponibles (arbitrage Thibaut, 2026-10-28)
+
+« Il faut également que dans le tableau des métiers s'affichent non pas tous les métiers
+occupés, mais les métiers disponibles. » Décisions :
+
+1. **Offre de la ville** : le tableau Métiers de la carte de ville liste les métiers
+   DISPONIBLES — chaque métier plafonné offrant au moins une place (base du rang +
+   emplacements des aménagements), occupé ou non. Un emplacement offert mais non pourvu
+   s'affiche au format 0/N.
+2. **Hors offre** : les métiers non plafonnés (Dirigeant, Banquier, armée, Troubadour…)
+   ne s'affichent plus sur la carte, même occupés ; un surnombre sur cap 0 (aménagement
+   perdu depuis) disparaît aussi de la carte — état transitoire corrigé par la
+   réaffectation, toujours visible dans la carte « Métiers et places par ville » du
+   panneau Population.
+3. **Comptages globaux** : le titre (« Métiers : N en poste ») et le pied (« Habitants
+   en poste X/vivants ») restent GLOBAUX — N inclut les métiers non affichés (ex. le
+   Dirigeant) ; seules les lignes sont filtrées.
+4. **Lignes neutres** : Enfant et Sans-emploi restent affichées (arbitrages précédents
+   inchangés).
+5. **Verrou de régression** : test de rendu dérivé du même helper moteur — chaque métier
+   disponible affiché au format N/M, chaque métier hors offre absent du rendu.
