@@ -1,0 +1,151 @@
+// ═══════════════════════════════════════════════════════════════════════════
+//  TESTS MIGRATION PAR BONHEUR (arbitrage Thibaut 2026-10-28)
+//
+//   · départ LINÉAIRE : 0 % à 100 de bonheur, max à 0, moitié à 50
+//     (« entre 0 % et 10 %, le 10 % à 0 de bonheur, le 0 % à 100 ») ;
+//   · destinations : TOUTES les villes du monde, transfert physique
+//     inter-joueurs au besoin (comme l'ancienne migration scolaire) ;
+//   · qui part : tous les vivants SAUF Dirigeant/Héritier ;
+//   · pondération : culture identique ×N × (1 + bonheur/100) ;
+//   · toute migration = perteDemenagement + entrée « Système » au
+//     journal avec le motif « cherche meilleure vie ».
+// ═══════════════════════════════════════════════════════════════════════════
+
+import { test } from 'node:test'
+import assert from 'node:assert/strict'
+import { createGame, defaultSetups } from './setup'
+import { cfgOf } from './gameData'
+import { makeRng } from './rng'
+import { bonheurVilleComplete } from './bonheur'
+import { probaDepartBonheur, poidsDestination, migrationBonheur } from './migrationBonheur'
+import type { Character, City, GameState } from './types'
+
+function partie(seed = 20261028): { state: GameState; C: ReturnType<typeof cfgOf> } {
+  const state = createGame(defaultSetups(), seed, 'local')
+  const C = cfgOf(state.config)
+  return { state, C }
+}
+
+/** Habitant de test (tuple de 3 traits, cf. Character). */
+function hab(id: string, age: number, o: { metier?: string | null; ville?: string; culture?: string } = {}): Character {
+  return {
+    id, nom: 'Test', prenom: `Pers-${id}`, dynastie: 'Roturier', sexe: 'M', age,
+    culture: o.culture ?? 'Déisme', ville: o.ville ?? 'Capitale', orientation: 'Hétérosexuel',
+    traits: ['Fécond', 'Fécond', 'Fécond'], statut: 'Sain', mariage: null, mariageId: null,
+    mere: null, mereId: null, pere: null, pereId: null,
+    pereBio: null, pereBioId: null, enfantBatard: false,
+    metier: o.metier ?? null, fecondite: 0, armee: null,
+  }
+}
+
+function villeTest(nom: string, culture?: string): City {
+  return { nom, type: 'Ville', culture, batiments: [], amenagements: [] } as unknown as City
+}
+
+// ── Formules pures ──────────────────────────────────────────────────
+
+test('proba de départ : LINÉAIRE — 0 % à 100 de bonheur, max à 0, moitié à 50', () => {
+  const { C } = partie()
+  C.p.migrationBonheurMax = 0.10
+  assert.equal(probaDepartBonheur(100, C), 0, '0 % à 100 de bonheur (retour arbitre)')
+  assert.equal(probaDepartBonheur(0, C), 0.10, '10 % à 0 de bonheur (retour arbitre)')
+  assert.ok(Math.abs(probaDepartBonheur(50, C) - 0.05) < 1e-12, '5 % à 50')
+  assert.equal(probaDepartBonheur(75, C), 0.025, '2,5 % à 75')
+  C.p.migrationBonheurMax = 0
+  assert.equal(probaDepartBonheur(0, C), 0, 'proba max nulle = flux coupé')
+})
+
+test('poids de destination : culture identique ×N, bonheur monotone, effets multipliés', () => {
+  const { C } = partie()
+  C.p.migrationBonheurCulture = 4
+  const c = hab('m1', 30, { culture: 'Nordique' })
+  const memeCulture = villeTest('A', 'Nordique')
+  const autreCulture = villeTest('B', 'Méridionale')
+  assert.equal(poidsDestination(c, memeCulture, 0, C), 4, '×4 même culture à bonheur 0')
+  assert.equal(poidsDestination(c, autreCulture, 0, C), 1, '×1 autre culture à bonheur 0')
+  assert.equal(poidsDestination(c, memeCulture, 100, C), 8, '×4 ×2 à bonheur 100')
+  assert.equal(poidsDestination(c, autreCulture, 100, C), 2, '×1 ×2 à bonheur 100')
+  // ville sans culture renseignée (champ optionnel) : pas de bonus
+  assert.equal(poidsDestination(c, villeTest('C'), 0, C), 1)
+})
+
+// ── Flux complet (déterministe — graines fixes) ──────────────────────
+
+test('flux : à proba max 1, les villes malheureuses se vident au profit du monde — conservé, journalisé, déménageur perd tout', () => {
+  const { state, C } = partie()
+  C.p.migrationBonheurMax = 1 // p = (100 − bonheur)/100 ≈ 0,6 au départ
+  // Photographie avant : id → (joueur, ville)
+  const avant = new Map<string, { joueur: number; ville: string }>()
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) avant.set(c.id, { joueur: Number(nStr), ville: c.ville })
+  }
+  const totalAvant = Object.values(state.population).reduce((a, l) => a + (l?.length ?? 0), 0)
+  migrationBonheur(state, makeRng(424242))
+  // 1. Aucune perte, aucun doublon — les habitants sont transférés
+  const apres = new Map<string, { joueur: number; ville: string }>()
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) {
+      assert.ok(!apres.has(c.id), `le migrant ${c.id} n apparaît qu une fois`)
+      apres.set(c.id, { joueur: Number(nStr), ville: c.ville })
+    }
+  }
+  assert.equal(apres.size, avant.size, 'conservation exacte de la population mondiale')
+  const totalApres = Object.values(state.population).reduce((a, l) => a + (l?.length ?? 0), 0)
+  assert.equal(totalApres, totalAvant)
+  // 2. Le flux a tourné à cette graine : des habitants ont bougé
+  let bouge = 0
+  for (const [id, a] of apres) {
+    const b = avant.get(id)!
+    if (a.joueur !== b.joueur || a.ville !== b.ville) bouge++
+  }
+  assert.ok(bouge > 50, `le flux a déplacé massivement (${bouge} migrants à proba max 1)`)
+  // 3. Chaque migrant : entrée au journal + métier ET domicile perdus
+  const logs = state.log.filter((e) => e.texte.includes('cherche meilleure vie'))
+  assert.equal(logs.length, bouge, 'une entrée « Système » par migration')
+  for (const [id, a] of apres) {
+    const b = avant.get(id)!
+    if (a.joueur === b.joueur && a.ville === b.ville) continue
+    const c = [...(state.population[a.joueur] ?? [])].find((x) => x.id === id)!
+    assert.equal(c.metier, null, `${id} : métier perdu au déménagement`)
+    assert.equal(c.domicile, null, `${id} : domicile perdu au déménagement`)
+  }
+})
+
+test('flux : à proba max nulle, RIEN ne bouge (interrupteur)', () => {
+  const { state, C } = partie()
+  C.p.migrationBonheurMax = 0
+  const avant = JSON.stringify(state.population)
+  migrationBonheur(state, makeRng(777))
+  assert.equal(JSON.stringify(state.population), avant, 'aucun transfert à proba 0')
+  assert.equal(state.log.filter((e) => e.texte.includes('cherche meilleure vie')).length, 0)
+})
+
+test('flux : Dirigeant et Héritier ne partent jamais, même à proba max 1', () => {
+  const { state, C } = partie()
+  C.p.migrationBonheurMax = 1
+  const p0 = state.players[0]
+  const dir = hab('dir1', 40, { metier: C.p.metierDirigeant, ville: p0.villes[0].nom })
+  const her = hab('her1', 20, { metier: C.p.metierHeritierStr, ville: p0.villes[0].nom })
+  state.population[p0.n] = [dir, her]
+  migrationBonheur(state, makeRng(1234))
+  // NB : d autres habitants peuvent ARRIVER chez p0 (flux à proba
+  //  max 1) — on ne compte pas la longueur, on vérifie les ancrés.
+  const chezP0 = state.population[p0.n]
+  assert.ok(chezP0.includes(dir) && chezP0.includes(her), 'aucun départ des ancrés')
+  assert.equal(dir.ville, p0.villes[0].nom, 'le Dirigeant reste ancré')
+  assert.equal(her.ville, p0.villes[0].nom, 'l Héritier reste ancré')
+  assert.equal(dir.metier, C.p.metierDirigeant, 'titre conservé')
+  assert.equal(her.metier, C.p.metierHeritierStr, 'titre conservé')
+})
+
+test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les premiers tours', () => {
+  const { state, C } = partie(20261101)
+  assert.equal(C.p.migrationBonheurMax, 0.10)
+  assert.equal(C.p.migrationBonheurCulture, 4)
+  // au setup : villes sans bâtiments → bonheur d'emblée < 100
+  const b0 = bonheurVilleComplete(state, state.players[0], state.players[0].villes[0], C)
+  assert.ok(b0 < 100, `le bonheur initial est dégradé (${b0}/100) — le flux a prise`)
+  for (let t = 0; t < 3; t++) migrationBonheur(state, makeRng(1000 + t))
+  const logs = state.log.filter((e) => e.texte.includes('cherche meilleure vie'))
+  assert.ok(logs.length > 0, 'au moins un départ en 3 tours aux défauts (graine fixe)')
+})

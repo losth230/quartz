@@ -50,6 +50,7 @@ import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
 import { appliquerBonusProximite } from './villes'
 import { populationTurn } from './population'
+import { migrationBonheur } from './migrationBonheur'
 import { recruitForArmies } from './armees'
 import { snapshotRessources } from './journal'
 
@@ -263,6 +264,15 @@ export function runTurn(state: GameState): GameState {
   for (const p of state.players) {
     populationTurn(state, p, rng)
   }
+
+  // 4bis. Migration par bonheur (arbitrage Thibaut 2026-10-28) : plus
+  //  le bonheur d'une ville est bas, plus ses habitants ont de chances
+  //  de la quitter (linéaire : 0 % à 100 de bonheur, 10 % à 0) pour
+  //  une ville du monde tirée au hasard PONDÉRÉ (culture du migrant,
+  //  bonheur de la candidate — engine/migrationBonheur.ts). APRÈS
+  //  tous les moteurs de population : un migrant n'est pas retraité
+  //  (vieillissement, maladie) au même tour chez son nouveau porteur.
+  migrationBonheur(state, rng)
 
   // 5. Armées (RecruitForArmies)
   for (const p of state.players) {

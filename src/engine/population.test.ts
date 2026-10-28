@@ -5,10 +5,14 @@
 //  scolarité » — migrerPopulation (un enfant sans Professeur dans sa
 //  ville partait, 10 %/2 %/1 %, étudier ailleurs) est supprimé du
 //  moteur avec l'étape 3.6bis du tour. Ces tests verrouillent le
-//  retrait : plus AUCUN déplacement automatique de population, les
-//  enfants restent dans leur ville, qu'un Professeur existe ou non
-//  ailleurs. Les seuls déplacements restants sont volontaires
-//  (mariages/cour, transferts — cf. cour.test.ts quand il existe).
+//  retrait : plus AUCUN déplacement SCOLAIRE, qu'un Professeur
+//  existe ou non ailleurs.
+//  (AMENDEMENT même jour, 2e arbitrage : le flux de migration par
+//   BONHEUR (engine/migrationBonheur.ts) RÉINTRODUIT des départs
+//   automatiques — l'invariant « les enfants restent dans leur
+//   ville » n'est PLUS le contrat ; le test ci-dessous coupe le
+//   flux (migrationBonheurMax = 0) pour isoler le contrat scolaire,
+//   et le flux lui-même vit dans migrationBonheur.test.ts.)
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -33,9 +37,12 @@ function perso(id: string, age: number, o: { metier?: string | null; ville?: str
   }
 }
 
-test('retrait migration scolaire : aucun enfant ne quitte sa ville, même avec un Professeur ailleurs', () => {
+test('retrait migration scolaire : aucun départ « scolarité », même avec un Professeur ailleurs', () => {
   const state = createGame(defaultSetups(), 20261028, 'local')
   const C = cfgOf(state.config)
+  // (Amendement flux bonheur : flux COUPÉ pour isoler le contrat
+  //  scolaire — à proba 0, tout déplacement résiduel serait un bug.)
+  C.p.migrationBonheurMax = 0
   const p0 = state.players[0]
   const p1 = state.players[1]
   // La ville de p0 n'a AUCUN Professeur ; celle de p1 en a un —
@@ -56,8 +63,8 @@ test('retrait migration scolaire : aucun enfant ne quitte sa ville, même avec u
   const c2 = pop0.find((c) => c.id === 'c2')
   assert.ok(c1, 'c1 est toujours dans la population de son joueur')
   assert.ok(c2, 'c2 est toujours dans la population de son joueur')
-  assert.equal(c1?.ville, p0.villes[0].nom, 'c1 n a jamais quitté sa ville')
-  assert.equal(c2?.ville, p0.villes[0].nom, 'c2 n a jamais quitté sa ville')
+  assert.equal(c1?.ville, p0.villes[0].nom, 'à flux bonheur coupé, c1 ne bouge pas')
+  assert.equal(c2?.ville, p0.villes[0].nom, 'à flux bonheur coupé, c2 ne bouge pas')
   // Aucune trace de scolarité dans tout le journal de 20 tours.
   const scol = state.log.filter((e) => e.texte.includes('scolarité'))
   assert.deepEqual(scol, [], 'plus aucune entrée « scolarité » au journal')

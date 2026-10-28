@@ -1,0 +1,126 @@
+// ══════════════════════════════════════════════════════════════════════
+//  MIGRATION PAR BONHEUR (arbitrage Thibaut 2026-10-28)
+//
+//  « Un flux de migration en fonction du bonheur : plus le bonheur
+//    est bas, plus un habitant a de chances de quitter sa ville,
+//    pour une autre ville aléatoire, pondérée par la culture
+//    similaire et le bonheur de chacune des villes. »
+//
+//  Arbitrages actés (2026-10-28) :
+//   · PROBA DE DÉPART — LINÉAIRE, retour explicite Thibaut : « entre
+//     0 % et 10 %, le 10 % étant à 0 de bonheur et le 0 % à 100 » —
+//       p = migrationBonheurMax × (100 − bonheur) / 100
+//     soit à défauts (0,10) : 0 % à 100 de bonheur, 5 % à 50,
+//     10 % à 0. Un tirage PAR HABITANT vivant, à chaque fin de tour.
+//   · DESTINATIONS — TOUTES les villes du monde, tous joueurs : un
+//     habitant change de joueur au besoin (transfert physique de
+//     son tableau de population, même principe que l'ancienne
+//     migration scolaire retirée le 2026-10-28 ; les cités libres
+//     ne sont PAS destinations — « toutes les villes du monde »
+//     s'entend des villes des joueurs).
+//   · QUI PART — tous les VIVANTS sauf Dirigeant et Héritier
+//     (règle établie 2026-10-21 : ils ne déménagent jamais —
+//     neDemenageJamais, cf. shared.ts).
+//   · PONDÉRATION (pas filtrage) du tirage de destination :
+//       poids = (culture identique ? migrationBonheurCulture : 1)
+//               × (1 + bonheur de la ville candidate / 100)
+//     une ville de SA culture pèse 4× (défaut), une ville à 100 de
+//     bonheur pèse 2× une ville à 0 — les deux effets se multiplient.
+//   · CONSÉQUENCES — convention établie de tout changement de
+//     résidence : perteDemenagement (métier ET domicile perdus,
+//     retour Sans-emploi jusqu'à la réaffectation du tour suivant) ;
+//     entrée de journal type « Système » avec le motif « cherche
+//     meilleure vie ».
+//   · PLACEMENT — étape 4bis du tour, APRÈS tous les moteurs de
+//     population (étape 4) : un migrant n'est PAS retraité au même
+//     tour (vieillissement, maladie, fécondité) chez son nouveau
+//     porteur — l'ancienne migration scolaire vivait DANS
+//     populationTurn et cumulait ces effets sur les migrants
+//     inter-joueurs.
+//   · Pas de plafond par ville (retour Thibaut : linéaire 0-10 %,
+//     sans cap) ; un habitant ne migre qu'UNE fois par tour
+//     (ensemble des déplacés de l'appel).
+// ══════════════════════════════════════════════════════════════════════
+
+import type { Character, City, GameState, Player } from './types'
+import type { Rng } from './rng'
+import { cfgOf, type Cfg } from './gameData'
+import { fullName, neDemenageJamais, perteDemenagement } from './shared'
+import { bonheurVilleComplete } from './bonheur'
+
+/** Probabilité qu'un habitant quitte sa ville : LINÉAIRE en bonheur
+ *  (arbitrage Thibaut 2026-10-28 : 0 % à 100, max à 0). Pure. */
+export function probaDepartBonheur(bonheur: number, C: Cfg): number {
+  return Math.max(0, (C.p.migrationBonheurMax * (100 - bonheur)) / 100)
+}
+
+/** Poids d'attraction d'une ville candidate pour un migrant :
+ *  culture identique à la sienne ×N, bonheur ×(1 + b/100). Pure. */
+export function poidsDestination(c: Character, ville: City, bonheur: number, C: Cfg): number {
+  const culture = (ville.culture ?? '') === c.culture ? C.p.migrationBonheurCulture : 1
+  return culture * (1 + bonheur / 100)
+}
+
+/** Fiche d'une ville du monde pour le tirage. */
+interface FicheVille { joueur: Player; ville: City; bonheur: number }
+
+/** Flux de migration par bonheur — étape 4bis du tour (tour.ts).
+ *  Parcourt les villes de chaque joueur, calcule le bonheur UNE fois
+ *  par ville et par tour, tire chaque habitant éligible au départ,
+ *  puis la destination pondérée parmi toutes les autres villes du
+ *  monde (fiche source exclue par IDENTITÉ, pas par nom : plusieurs
+ *  joueurs peuvent avoir une ville homonyme, ex. « Capitale »). */
+export function migrationBonheur(state: GameState, rng: Rng): void {
+  const C = cfgOf(state.config)
+  const fiches: FicheVille[] = state.players.flatMap((p) =>
+    p.villes.map((v) => ({ joueur: p, ville: v, bonheur: bonheurVilleComplete(state, p, v, C) })),
+  )
+  // Une seule ville au monde : nulle part où aller.
+  if (fiches.length < 2) return
+  /** ids déjà déplacés CET appel (pas de double migration). */
+  const deplaces = new Set<string>()
+
+  for (const p of state.players) {
+    // Habitants éligibles par ville — PHOTO AVANT tout déplacement :
+    //  les migrants arrivés chez p au fil de l'appel ne sont pas
+    //  re-tirés (même garantie que l'ancienne migration scolaire).
+    const parVille = new Map<string, Character[]>()
+    for (const c of state.population[p.n] ?? []) {
+      if (c.statut === 'Décédé' || neDemenageJamais(c, C)) continue
+      const l = parVille.get(c.ville)
+      if (l) l.push(c)
+      else parVille.set(c.ville, [c])
+    }
+    for (const v of p.villes) {
+      const habitants = parVille.get(v.nom)
+      if (!habitants || habitants.length === 0) continue
+      const src = fiches.find((f) => f.joueur.n === p.n && f.ville.nom === v.nom)
+      if (!src) continue
+      const candidats = fiches.filter((f) => f !== src)
+      for (const c of [...habitants]) {
+        if (deplaces.has(c.id)) continue
+        if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
+        const dest = rng.pickWeighted(candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C))
+        // Transfert physique chez le porteur de la ville de destination
+        //  (principe conservé de l'ancienne migration scolaire).
+        if (dest.joueur.n !== p.n) {
+          const src2 = state.population[p.n] ?? []
+          const i = src2.indexOf(c)
+          if (i >= 0) src2.splice(i, 1)
+          const dst = state.population[dest.joueur.n] ?? (state.population[dest.joueur.n] = [])
+          dst.push(c)
+        }
+        const avant = c.ville
+        c.ville = dest.ville.nom
+        perteDemenagement(c, C)
+        deplaces.add(c.id)
+        state.log.push({
+          turn: state.turn + 1, type: 'Système', joueur: p.n,
+          texte: dest.joueur.n === p.n
+            ? `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`
+            : `${fullName(c)} quitte ${avant} pour ${dest.ville.nom} chez ${dest.joueur.nom} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`,
+        })
+      }
+    }
+  }
+}
