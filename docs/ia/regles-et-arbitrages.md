@@ -1525,14 +1525,21 @@ et Héritier ») :
    `migrationBonheurCulture` (1,25 — v2) et `migrationBonheurMemeJoueur` (1,5 — v2,
    NOUVEAU). Pas de plafond par ville : la linéarité 0-10 % fait foi. À proba max 0,
    le flux est coupé.
-6. **COUPLES INSÉPARABLES (amendement du jour, retour CI du flux v1)** : le tirage
-   individuel séparait des époux entre porteurs — or le moteur interdit le remariage
-   tant que l'époux vit (cour) : un « divorcé par la distance » ne pouvait plus jamais
-   fonder de foyer. Un marié ne part donc qu'AVEC son conjoint de la même ville (le
-   foyer suit, sans tirage propre) ; si le conjoint est ancré (Dirigeant, Héritier,
+6. **FOYER COMPLET (amendement du jour, retour CI du flux v1 puis 4e retour
+   arbitre « lorsqu'un personnage déménage, il déménage avec son/sa conjoint.e et
+   leurs enfants non mariés »)** : le tirage individuel séparait des époux entre
+   porteurs — or le moteur interdit le remariage tant que l'époux vit (cour) : un
+   « divorcé par la distance » ne pouvait plus jamais fonder de foyer. Un départ
+   emporte donc le conjoint de la même ville ET leurs ENFANTS NON MARIÉS de la ville
+   (mereId/pereId d'un membre du couple, sans mariageId — la majorité n'exclut pas,
+   seul le mariage fait foyer propre ; un enfant marié part avec SON conjoint à son
+   propre tirage, jamais emporté par ses parents), tous sans tirage propre, à la
+   destination du tirage du foyer ; si le conjoint est ancré (Dirigeant, Héritier,
    en armée), le foyer NE PART PAS ; si le conjoint est absent de la ville (défunt ou
-   domicilié ailleurs), l'habitant part seul. Invariant : aucun mariage ne traverse
-   deux porteurs après le flux.
+   domicilié ailleurs), l'habitant part avec ses enfants non mariés ; un enfant ancré
+   (Héritier, soldat) RESTE — il ne déménage jamais et n'entrave pas le départ du
+   reste du foyer. Invariants : aucun mariage ne traverse deux porteurs après le
+   flux, et aucun enfant non marié ne reste sans parent dans sa ville de départ.
 7. **Cultures recalculées** : les arrivées pouvant renverser la majorité, le flux
    recalcule la culture de chaque ville (majorité des vivants) en fin d'étape 4bis —
    l'invariant de l'étape 3.6 de populationTurn tient aussi après le flux.
