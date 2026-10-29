@@ -194,12 +194,16 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
   //  DÉRIVÉ de l'état (patron R3 : stock City.domiciles + apports
   //  des constructions, occupés = habitants attribués — 1 logement
   //  = 1 habitant, retour du 2026-10-26).
-  const { vivantsVille, domicilesApportesVille } = await import('../engine/domiciles')
+  // (refonte 12 lois, 2026-10-29 : la loi de VILLE de la culture
+  //  (domicilesCultureVille — Communautarisme « Logements élargis »
+  //  +5 Taudis, Lunisme « Villes Saintes » +2 Palais) compte dans
+  //  le parc, MÊME convention que les apports de constructions.)
+  const { vivantsVille, domicilesApportesVille, domicilesCultureVille } = await import('../engine/domiciles')
   const capLog = new Map<string, number>()
   for (const e of Array.isArray(cap.domiciles) ? cap.domiciles : []) {
     capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
   }
-  for (const e of domicilesApportesVille(cap, C)) {
+  for (const e of [...domicilesApportesVille(cap, C), ...domicilesCultureVille(cap, C)]) {
     capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
   }
   const capTotale = [...capLog.values()].reduce((a, b) => a + b, 0)
