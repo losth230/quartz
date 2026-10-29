@@ -1524,7 +1524,8 @@ et Héritier ») :
 5. **Paramètres** (groupe Population) : `migrationBonheurMax` (0,10),
    `migrationBonheurCulture` (1,25 — v2) et `migrationBonheurMemeJoueur` (1,5 — v2,
    NOUVEAU). Pas de plafond par ville : la linéarité 0-10 % fait foi. À proba max 0,
-   le flux est coupé.
+   le flux est coupé. AMENDÉ le 2026-10-29 (5e arbitrage) : s'ajoutent
+   `migrationBonheurEmploi` (1,5) et `migrationBonheurLogement` (1,5) — cf. point 8.
 6. **FOYER COMPLET (amendement du jour, retour CI du flux v1 puis 4e retour
    arbitre « lorsqu'un personnage déménage, il déménage avec son/sa conjoint.e et
    leurs enfants non mariés »)** : le tirage individuel séparait des époux entre
@@ -1543,6 +1544,22 @@ et Héritier ») :
 7. **Cultures recalculées** : les arrivées pouvant renverser la majorité, le flux
    recalcule la culture de chaque ville (majorité des vivants) en fin d'étape 4bis —
    l'invariant de l'étape 3.6 de populationTurn tient aussi après le flux.
+8. **FACTEURS EMPLOI & LOGEMENT (arbitrage Thibaut, 2026-10-29, 5e retour du flux :
+   « un habitant sans métier qui migre a davantage d'intérêt à rejoindre une ville
+   avec des emplois disponibles, idem pour le logement »)** : le poids d'une candidate
+   est multiplié par `migrationBonheurEmploi` (défaut 1,5) si le TIRÉ est sans
+   métier et que la ville a des postes non pourvus (postes offerts > adultes en
+   poste), et par `migrationBonheurLogement` (défaut 1,5) s'il est sans domicile
+   et que la ville a des lits libres (logements > habitants vivants) — les deux se
+   multiplient avec les facteurs v2 (même joueur, culture, bonheur). Le statut
+   regardé est celui du tiré AVANT départ : à l'arrivée, perteDemenagement laisse
+   tous les migrants sans métier ni domicile ; le foyer (conjoint, enfants) suit le
+   statut de son chef sans influer. Les disponibilités sont photographiées UNE fois
+   par ville et par tour au début du flux — les arrivées du flux n'occupent ni
+   poste ni lit (réaffectation au tour suivant). NB setup : au démarrage toutes les
+   villes ont postes et lits libres — les facteurs pèsent alors uniformément sur
+   toutes les candidates (aucun changement de tirage) ; ils ne différencient que
+   les mondes où certaines villes saturent.
 
 ## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
 
