@@ -1647,7 +1647,15 @@ banque (source `culture`, effet `fluxParVilleCultureMonde` supprimés).
    v3 `logementsLibres`), affichés dans le tableau Logements de la carte
    de ville, NON attribuables nommément (`attribuerDomicilesVille` ne
    lit que `ville.domiciles`). NB : aucun rang n'offre de Palais — la loi
-   Lunisme est le premier fournisseur.
+   Lunisme est le premier fournisseur. (REMPLACÉ le même jour, 6e retour
+   arbitre Thibaut : « il faut que les lits des lois puissent abriter
+   des habitants, sinon ça ne sert à rien » — les lits des lois sont
+   désormais ATTRIBUTABLES nommément : `attribuerDomicilesVille` ajoute
+   `domicilesCultureVille` au stock de service, au même titre que le
+   stock du rang ; les Palais issus de la loi restent RÉSERVÉS aux
+   nobles (retour 2026-10-28). ASYMÉTRIE assumée : les lits des
+   CONSTRUCTIONS restent non attribuables — convention inchangée, non
+   visée par le retour.)
 2. **Monuments pieux** : les « bâtiments de faction » n'existent plus
    comme donnée depuis le 2026-10-19 — l'ancienne loi (crédit de +4
    Science à la construction, `scienceParConstruction`) est retirée ;
