@@ -182,7 +182,8 @@ Laboratoire de Falheim, Dashboard) et les textes des Lauriers
 Scientifique — (NOTE 2026-10-29, refonte « 12 lois » : le champ
 `scienceParConstruction` de la culture Déisme est RETIRÉ — la
 nouvelle loi Déisme « Monuments pieux » est un emplacement de
-Scientifique par bâtiment, cf. section « Refonte des cultures ») — dont les conditions II/III/IV sont **CADUQUES** (elles
+Scientifique par bâtiment DE FACTION (marqueur `batimentDeFaction`,
+cf. section « Refonte des cultures ») — dont les conditions II/III/IV sont **CADUQUES** (elles
 référencent des arbres qui n'existent plus) : redesign de la voie à
 arbitrer.
 
@@ -1632,7 +1633,7 @@ banque (source `culture`, effet `fluxParVilleCultureMonde` supprimés).
 | Culture | Loi de VILLE | Loi d'HABITANT |
 | --- | --- | --- |
 | Communautarisme (Parité) | **Logements élargis** — +5 Taudis au parc | **Bourgeoisie facile** — seuil bourgeois 100 → 80 |
-| Déisme (Masculine) | **Monuments pieux** — +1 place de Scientifique par bâtiment | **Lavages de main** — −2 % de contraction des maladies |
+| Déisme (Masculine) | **Monuments pieux** — +1 place de Scientifique par bâtiment de faction | **Lavages de main** — −2 % de contraction des maladies |
 | Lunisme (Masculine) | **Villes Saintes** — +2 Palais au parc | **Foi supérieure** — nobles : +1 Tourisme/tour |
 | Naturalisme (Parité) | **Champs nourriciers** — fermiers : +1 Nourriture/tour en été | **Walpurgis** — fertFactor 1,1 (+10 % naissances) |
 | Sethisme (Féminine) | **Caravanes** — ≥3 aménagements : +1 route au cap | **Conseil des Sages** — nobles : +0,1 Science/tour |
@@ -1652,7 +1653,13 @@ banque (source `culture`, effet `fluxParVilleCultureMonde` supprimés).
    Science à la construction, `scienceParConstruction`) est retirée ;
    la nouvelle loi est un **EMPLACEMENT** : +1 place de Scientifique
    par bâtiment (catégorie Bâtiment, aménagements exclus) dans les
-   villes de culture Déisme.
+   villes de culture Déisme. (REMPLACÉ le même jour, retour arbitre
+   Thibaut : « les bâtiments de faction vont revenir — laisse le
+   Monuments pieux sur eux » : la loi ne compte plus TOUS les
+   bâtiments mais les seuls **BÂTIMENTS DE FACTION**, identifiés par
+   le marqueur `batimentDeFaction` du référentiel — marqueur
+   dormant, aucune entrée ne le porte aujourd'hui, la loi compte 0
+   emplacement jusqu'au retour des 19 constructions de faction.)
 3. **Lavages de main** : modificateur additif de contraction
    (`maladieContractMod` −0,02), lu sur la culture PROPRE du personnage.
 4. **Bourgeoisie facile** : le seuil bourgeois devient un PARAMÈTRE de
