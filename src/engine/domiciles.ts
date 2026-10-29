@@ -114,12 +114,18 @@ export function taudisApportesVille(ville: City, C: Cfg): number {
 /** Domiciles apportés par la LOI DE VILLE de la culture de la ville
  *  (refonte « 12 lois » des cultures, 2026-10-29) : Communautarisme
  *  « Logements élargis » +5 Taudis, Lunisme « Villes Saintes » +2
- *  Palais. MÊME convention que les apports de constructions : comptés
- *  dans le parc de logements (logementsVille → bonheur et magnét
- *  migratoire v3), affichés VilleCarte, NON ATTRIBUTABLES
- *  (attribuerDomicilesVille ne lit que ville.domiciles — convention
- *  existante des apports, à documenter : ces lits servent le score
- *  de logement, pas l'attribution nominative). */
+ *  Palais. Comptés dans le parc de logements (logementsVille →
+ *  bonheur et magnét migratoire v3), affichés VilleCarte.
+ *  REMPLACÉ (retour Thibaut 2026-10-29, 6e retour du jour : « il
+ *  faut que les lits des lois puissent abriter des habitants, sinon
+ *  ça ne sert à rien ») : les lits des lois sont désormais
+ *  ATTRIBUTABLES — attribuerDomicilesVille les ajoute au stock de
+ *  service, au même titre que le stock du rang (historisé :
+ *  convention initiale calquée sur les apports, non attribuables).
+ *  Les apports de CONSTRUCTIONS restent du parc non attribuable
+ *  (convention inchangée, non visée par le retour) ; les Palais
+ *  issus de la loi passent par la réserve noble commune
+ *  (reserveNobleDomicile, retour 2026-10-28). */
 export function domicilesCultureVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
   const cult = cultureDef(ville.culture, C.config)
   const out: Array<{ domicile: string; nombre: number }> = []
@@ -165,7 +171,13 @@ export function vivantsVille(state: GameState, nJoueur: number, ville: City): Ch
  *  non-noble ne peut ni recevoir ni garder un domicile réservé —
  *  il est relogé dans le meilleur reste, la place réservée reste
  *  au stock pour les nobles. Stock épuisé : `Character.domicile =
- *  null` (sans logement). Retourne le nombre d'habitants LOGÉS. */
+ *  null` (sans logement). Retourne le nombre d'habitants LOGÉS.
+ *  LITS DES LOIS (retour Thibaut 2026-10-29, 6e retour du jour :
+ *  « il faut que les lits des lois puissent abriter des habitants,
+ *  sinon ça ne sert à rien ») : domicilesCultureVille (loi de ville
+ *  de la culture — Communautarisme +5 Taudis, Lunisme +2 Palais)
+ *  ENTRE dans le stock de service au même titre que le stock du
+ *  rang ; les apports de constructions restent hors attribution. */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
   //  existante dont les villes n'ont pas de stock (sauvegardées avant
@@ -176,6 +188,17 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
   // stock restant : copie de travail
   const stock = new Map<string, number>()
   for (const e of ville.domiciles ?? []) stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
+  // (retour Thibaut 2026-10-29, 6e retour du jour : « il faut que
+  //  les lits des lois puissent abriter des habitants, sinon ça ne
+  //  sert à rien ») — les lits de la LOI DE VILLE de la culture
+  //  ENTRENT dans le stock d'attribution, au même titre que le
+  //  stock du rang ; les apports de constructions
+  //  (domicilesApportesVille) restent hors attribution, convention
+  //  inchangée. Les Palais issus de la loi passent par la même
+  //  réserve noble que les autres (reserveNobleDomicile).
+  for (const e of domicilesCultureVille(ville, C)) {
+    stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
+  }
   // ordre de service : prestige décroissant (haut rang d'abord),
   //  tri STABLE — les ex æquo gardent l'ordre du recensement
   const servs = [...pop].sort((a, b) => (b.prestige ?? 0) - (a.prestige ?? 0))

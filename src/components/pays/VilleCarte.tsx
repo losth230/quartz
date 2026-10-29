@@ -318,8 +318,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           }
           // (refonte 12 lois, 2026-10-29 : loi de VILLE de la
           //  culture — Communautarisme « Logements élargis » +5
-          //  Taudis, Lunisme « Villes Saintes » +2 Palais — même
-          //  convention que les apports de constructions.)
+          //  Taudis, Lunisme « Villes Saintes » +2 Palais.
+          //  REMPLACÉ 2026-10-29, 6e retour Thibaut : ces lits
+          //  sont désormais ATTRIBUTABLES — occLog ci-dessous
+          //  reflète leur occupation, les sans-abri chutent.)
           for (const e of domicilesCultureVille(ville, C)) {
             capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
           }

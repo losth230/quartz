@@ -124,8 +124,10 @@ export function logementsVille(ville: City, C: Cfg): number {
     : null
   // (refonte 12 lois, 2026-10-29 : loi de VILLE de la culture —
   //  Communautarisme « Logements élargis » +5 Taudis, Lunisme
-  //  « Villes Saintes » +2 Palais — MÊME convention que les apports
-  //  de constructions, comptés dans le parc, non attribuables.)
+  //  « Villes Saintes » +2 Palais. REMPLACÉ 2026-10-29, 6e retour
+  //  Thibaut : ces lits sont désormais aussi ATTRIBUTABLES — le
+  //  parc ne change pas, l'occupation monte, le score reste
+  //  cohérent.)
   const apportes = domicilesApportesVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
     + domicilesCultureVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
   if (stockVille !== null) return stockVille + apportes

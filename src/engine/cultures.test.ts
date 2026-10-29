@@ -17,7 +17,7 @@ import assert from 'node:assert/strict'
 import { cfgOf, cultureDef } from './gameData'
 import { partieMock } from '../rules/mocks'
 import { migrerCultures, type CultureDef } from '../config/defaultConfig'
-import { domicilesCultureVille } from './domiciles'
+import { attribuerDomicilesVille, domicilesCultureVille } from './domiciles'
 import { logementsVille } from './bonheur'
 import { capMetierVille } from './metiers'
 import { detailGainsVille, multProdRang, consoNourrHabitant } from './economie'
@@ -114,6 +114,56 @@ test('lois de ville : +5 Taudis (Communautarisme) / +2 Palais (Lunisme) au parc'
   assert.equal(logementsVille(ville, C), base + 2, '+2 Palais comptés dans le parc')
   ville.culture = 'Zélotisme'
   assert.deepEqual(domicilesCultureVille(ville, C), [], 'les cultures sans loi de logement ne rapportent rien')
+})
+
+// ── Lits des lois : ATTRIBUTABLES (retour Thibaut 2026-10-29, 6e
+//  retour du jour : « il faut que les lits des lois puissent abriter
+//  des habitants, sinon ça ne sert à rien ») ─────────────────────────
+
+test('lits des lois ATTRIBUTABLES : un sans-abri reçoit un Taudis de « Logements élargis », un noble un Palais de « Villes Saintes »', () => {
+  const ctx = partieMock()
+  const { state, ville } = ctx
+  const p = ctx.joueur
+  const C = cfgOf(state.config)
+  const vivants = (state.population[p.n] ?? []).filter(
+    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
+  )
+  assert.ok(vivants.length >= 6, "assez d'habitants pour saturer les +5 lits et laisser un sans-abri")
+  // parc VIDE, tous sans domicile, tous roturiers : sans loi de
+  //  logement (culture Nordique du mock), personne n'est logé
+  ville.domiciles = []
+  for (const c of vivants) {
+    c.domicile = null
+    c.prestige = 0
+    c.dynastie = C.p.dynastieRoturier
+  }
+  ville.culture = 'Culture Nordique'
+  assert.equal(attribuerDomicilesVille(state, p, ville, C), 0,
+    "sans loi de logement et parc vide : personne n'est logé")
+  // Communautarisme : les +5 Taudis de « Logements élargis » sont
+  //  attribués NOMMÉMENT (parc vide par ailleurs)
+  ville.culture = 'Communautarisme'
+  const logesCom = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(logesCom, 5, 'exactement les 5 Taudis de la loi sont attribués')
+  assert.equal(vivants.filter((c) => c.domicile === 'Taudis').length, 5,
+    '5 habitants reçoivent chacun un Taudis issu de la loi')
+  assert.ok(vivants.slice(5).every((c) => c.domicile === null),
+    'au-delà des 5 lits de la loi : sans domicile, pas de surbooking')
+  // Lunisme : les +2 Palais « Villes Saintes » sont RÉSERVÉS aux
+  //  NOBLES (retour 2026-10-28) — sans noble, ils restent vides
+  ville.culture = 'Lunisme'
+  for (const c of vivants) c.domicile = null
+  assert.equal(attribuerDomicilesVille(state, p, ville, C), 0,
+    'sans noble, les Palais de la loi restent vides')
+  // UN noble (prestige 300, premier servi) : il prend un Palais de
+  //  la loi, personne d'autre n'y touche
+  vivants[0].prestige = 300
+  for (const c of vivants) c.domicile = null
+  const logesLun = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(logesLun, 1)
+  assert.equal(vivants[0].domicile, 'Palais', 'le noble est logé dans un Palais issu de la loi')
+  assert.ok(vivants.slice(1).every((c) => c.domicile === null),
+    'les non-nobles ne touchent pas les Palais de la loi')
 })
 
 // ── Déisme « Monuments pieux » ─────────────────────────────────────────────

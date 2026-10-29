@@ -30,7 +30,19 @@ import type { GameState, Player, City } from './types'
 function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
   const C = cfgOf()
   const state = createGame(defaultSetups(), 424242, 'local')
-  return { state, p: state.players[0], ville: state.players[0].villes[0], C }
+  const ville = state.players[0].villes[0]
+  // (retour Thibaut 2026-10-29, 6e retour du jour : « il faut que les
+  //  lits des lois puissent abriter des habitants, sinon ça ne sert
+  //  à rien ») — les lits des lois sont désormais ATTRIBUTABLES ; or
+  //  la ville témoin du setup est COMMUNAUTARISTE (loi « Logements
+  //  élargis » +5 Taudis), ce qui changerait les capacités des tests
+  //  de MÉCANIQUE d'attribution ci-dessous. Ces derniers travaillent
+  //  sur le STOCK DU RANG SEUL : la ville témoin passe en culture
+  //  SANS loi de logement (même convention que le mock partieMock
+  //  des règles). L'attribution NOMINATIVE des lits des lois est
+  //  testée dans engine/cultures.test.ts.
+  ville.culture = 'Culture Nordique'
+  return { state, p: state.players[0], ville, C }
 }
 
 // ── Vague A : référentiel ─────────────────────────────────────────────
