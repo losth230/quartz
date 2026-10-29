@@ -1515,6 +1515,14 @@ et Héritier ») :
    (plusieurs joueurs peuvent avoir une ville homonyme, ex. « Capitale ») — la seule
    exclue du tirage : un personnage peut REVENIR vers une ville d'où il vient (retour
    Thibaut explicite : « ce n'est pas un bug »).
+   AMENDEMENT v3 (6e arbitrage, 2026-10-29 : « la formule se base sur le
+   bonheur et tous les autres modificateurs sont additifs ») :
+   `poids = attrait × (1 + même joueur + culture identique + bonus du
+   tiré)` — l'attrait `1 + bonheur/100` (×[1 ; 2]) reste la seule base
+   multiplicative ; défauts +0,5 même joueur, +0,25 culture, +1
+   emploi/logement pour qui manque. Exemple arbitre : culture + même
+   joueur = attrait × 1,75. Le multiplicatif v2 ci-dessus est REMPLACÉ
+   (historisé).
 3. **Conséquences** : tout déménagement applique `perteDemenagement` (métier ET domicile
    perdus — convention établie) et journalise en type « Système » avec le motif
    « cherche meilleure vie » ; un habitant ne migre qu'UNE fois par tour.
@@ -1526,6 +1534,11 @@ et Héritier ») :
    NOUVEAU). Pas de plafond par ville : la linéarité 0-10 % fait foi. À proba max 0,
    le flux est coupé. AMENDÉ le 2026-10-29 (5e arbitrage) : s'ajoutent
    `migrationBonheurEmploi` (1,5) et `migrationBonheurLogement` (1,5) — cf. point 8.
+   AMENDÉ le 2026-10-29 (6e arbitrage, v3 ADDITIVE) : `migrationBonheurCulture`
+   **0,25**, `migrationBonheurMemeJoueur` **0,5**, `migrationBonheurEmploi`
+   **1**, `migrationBonheurLogement` **1** — bonus ADDITIFS sur la base
+   d'attrait du bonheur (cf. points 2 et 8) ; les multiplicatifs ×1,25/×1,5
+   (v2) et ×1,5 (emploi/logement) sont REMPLACÉS (historisés).
 6. **FOYER COMPLET (amendement du jour, retour CI du flux v1 puis 4e retour
    arbitre « lorsqu'un personnage déménage, il déménage avec son/sa conjoint.e et
    leurs enfants non mariés »)** : le tirage individuel séparait des époux entre
@@ -1560,6 +1573,14 @@ et Héritier ») :
    villes ont postes et lits libres — les facteurs pèsent alors uniformément sur
    toutes les candidates (aucun changement de tirage) ; ils ne différencient que
    les mondes où certaines villes saturent.
+   AMENDEMENT v3 (6e arbitrage, 2026-10-29 : « on peut mettre facteur emploi et
+   facteur logement à ×2 ») : les facteurs deviennent des BONUS ADDITIFS —
+   défaut +1 chacun (la ville pèse ×2 pour qui manque), passés en argument
+   `bonusAdditifs` de `poidsDestination` où ils S'ADDITIONNENT aux
+   modificateurs même joueur (+0,5) et culture (+0,25) :
+   `poids = attrait × (1 + joueur + culture + bonus)` ; le multiplicatif ×1,5
+   du 5e arbitrage est REMPLACÉ (historisé). La photographie des disponibilités
+   et le statut du TIRÉ avant départ sont conservés tels quels.
 
 ## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
 
