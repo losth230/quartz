@@ -123,6 +123,7 @@ test('lois de ville : +5 Taudis (Communautarisme) / +2 Palais (Lunisme) au parc'
 test('lits des lois ATTRIBUTABLES : un sans-abri reçoit un Taudis de « Logements élargis », un noble un Palais de « Villes Saintes »', () => {
   const ctx = partieMock()
   const { state, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const p = ctx.joueur
   const C = cfgOf(state.config)
   const vivants = (state.population[p.n] ?? []).filter(
