@@ -103,6 +103,7 @@ test('migrerCultures : vieilles configs → nouveaux champs, clés mortes suppri
 test('lois de ville : +5 Taudis (Communautarisme) / +2 Palais (Lunisme) au parc', () => {
   const ctx = partieMock()
   const { state, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   const base = logementsVille(ville, C)
   ville.culture = 'Communautarisme'
@@ -120,6 +121,7 @@ test('lois de ville : +5 Taudis (Communautarisme) / +2 Palais (Lunisme) au parc'
 test('Déisme « Monuments pieux » : +1 place de Scientifique par bâtiment', () => {
   const ctx = partieMock()
   const { state, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   ville.batiments = ['Poste de garde', 'Caserne']
   ville.amenagements = []
@@ -142,6 +144,7 @@ test('Déisme « Monuments pieux » : +1 place de Scientifique par bâtiment', (
 test('Déisme « Lavages de main » : −2 % de contraction (culture propre)', () => {
   const ctx = partieMock()
   const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   const pop = state.population[joueur.n] ?? []
   // neutraliser les modificateurs partagés (bâtiments, guérisseurs)
@@ -168,6 +171,7 @@ test('Déisme « Lavages de main » : −2 % de contraction (culture propre)', (
 test('Naturalisme « Champs nourriciers » : +1 Nourriture par fermier en été', () => {
   const ctx = partieMock({ saison: 'Été' })
   const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   // fabriquer un fermier roturier dans la ville
   const vivants = (state.population[joueur.n] ?? []).filter(
@@ -221,6 +225,7 @@ test('Communautarisme « Bourgeoisie facile » : bourgeois dès 80 de prestige',
 test('Sethisme « Caravanes » : +1 route au cap par ville sethiste à ≥3 aménagements', () => {
   const ctx = partieMock()
   const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   const base = maxRoutesJoueur(joueur, C)
   ville.culture = 'Sethisme'
@@ -280,6 +285,7 @@ test('lois d\'habitants : nobles +1 Tourisme (Lunisme), +0,1 Science (Sethisme),
 test('Zélotisme « Corps de fer » : garde zélotiste = garnisonParGarde + 10', () => {
   const ctx = partieMock()
   const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   // un garde unique dans la ville, culture neutre puis zélotiste
   for (const x of state.population[joueur.n] ?? []) {
@@ -304,6 +310,7 @@ test('Zélotisme « Corps de fer » : garde zélotiste = garnisonParGarde + 10',
 test('Zélotisme « Ferveur martiale » : −20 × rang hors culture, une fois, plancher 0', () => {
   const ctx = partieMock()
   const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
   const rang = rangNiveau(ville, C)
   // PAS de ville zélotiste dans le monde : aucun malus

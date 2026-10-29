@@ -55,7 +55,7 @@ test('registreComplet : ids uniques, régime intégré, PLUS AUCUNE règle cultu
   assert.ok(ids.includes('regime.socialisme'), 'id manquant dans le registre complet : regime.socialisme')
   // (RETRAIT 2026-10-29, refonte « 12 lois » : la source 'culture'
   //  est VIDE — plus aucune règle de pays culturelle dans la banque.)
-  assert.ok(regles.every((r) => r.source !== 'culture'), 'aucune règle de culture dans la banque')
+  assert.ok(regles.every((r) => (r.source as string) !== 'culture'), 'aucune règle de culture dans la banque')
   assert.ok(!ids.some((id) => id.startsWith('culture.')), 'aucun id culture.* dans le registre')
 })
 
