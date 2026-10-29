@@ -206,14 +206,16 @@ export function faireConstruire(o: {
       //  « bâtiments de faction » n'existent plus comme donnée
       //  depuis le 2026-10-19 ; la nouvelle loi Déisme « Monuments
       //  pieux » est un EMPLACEMENT de Scientifique par bâtiment,
-      //  lu par emplacementsMetierVille. Historique git, règle 9.)
+      //  lu par emplacementsMetierVille. La mention « règle de
+      //  culture : +N Science » du journal de construction part
+      //  avec le crédit. Historique git, règle 9.)
       // Tourisme (retour Thibaut 2026-10-16) : la construction monte
       //  la production Tourisme ; le stock est RECALCULÉ =
       //  production courante (jamais cumulé).
       resynchroniserTourisme(s, t, `${nom} construit(e) à ${ville.nom}`)
       s.log.push({
         turn: s.turn, type: 'Système', joueur: t.n,
-        texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}${sci > 0 ? ` — règle de culture : +${fmt(sci)} Science` : ''}.`,
+        texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}.`,
       })
     })
   return construire
