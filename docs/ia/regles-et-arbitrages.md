@@ -1696,3 +1696,69 @@ banque (source `culture`, effet `fluxParVilleCultureMonde` supprimés).
    20 × rang de l'habitation, appliqué UNE fois par habitation (pas de
    cumul si plusieurs villes zélotistes), **plancher 0**. La ligne
    « culture » apparaît dans le détail de garnison.
+
+## Refonte des régimes — 8 lois (arbitrages Thibaut, 2026-10-29)
+
+Proposition de Thibaut (4 régimes politiques × 2 lois), revue puis actée.
+**Principe réaffirmé par Thibaut** : un bonus de VILLE s'applique au
+joueur qui CONTRÔLE la ville ; un bonus d'HABITANT s'applique à
+l'habitant porteur, donc au joueur qui le possède (ex. Sethisme : les
+Caravanes créditent le propriétaire de la ville, la Science des nobles
+sethistes suit le noble où qu'il vive). **Périmètre** : chaque loi est
+lue par le MOTEUR là où elle agit — la VOIE BANQUE est CLOSE pour les
+régimes (source `regime` retirée du registre, 84 → 83 règles) ;
+Élections et Droit Divin étaient déjà codées, Conscription existait en
+texte depuis l'origine mais n'avait JAMAIS été codée.
+
+### Les 8 lois (défauts du référentiel)
+
+| Régime | Loi 1 | Loi 2 |
+| --- | --- | --- |
+| Autoritarisme | **Conscription** — prix de levée d'armée −10 Or par rang du pays | **Frontières closes** — départs migratoires ×0,8 (20 % de chances de moins de partir) |
+| Socialisme | **Terre d'accueil** — +1 Or par migrant arrivant | **Redistribution** — bourgeois 1 / nobles 2 Nourriture par tour |
+| Démocratie | **Élections** — sacre d'avènement gratuit | **Le pouvoir du peuple** — +5 Bonheur par habitation |
+| Monarchie | **Droit Divin** — +1 serment | **Vassaux dévoués** — tribut reçu ×1,05 |
+
+### Arbitrages et interprétations actés
+
+1. **Conscription** : −10 Or × rang du PAYS (`rangPaysNiveau` :
+   Baronnie 1, Comté 2, Duché 3, Royaume 4, Empire 5 — hors échelle 0)
+   dans `prixArmee`, CUMULÉ à la réduction de ville (Terrain
+   d'entraînement −10), PLANCHER 0. La levée reste payée par le joueur
+   qui lève, via ses propres ressources.
+2. **Frontières closes** : multiplicateur ×0,8 sur la probabilité de
+   DÉPART du tirage migratoire (les arrivées ne changent pas).
+3. **Terre d'accueil** : +1 Or par migrant ARRIVANT — foyer ENTIER (un
+   foyer de 3 comptant 3 migrants), déménagements INTERNES inclus,
+   crédité au joueur DESTINATAIRE, une ligne de log par migrant.
+4. **Redistribution** : la consommation passe par
+   `consoNourrHabitant(c, C, regime?)` — bourgeois 1 (défaut 2),
+   nobles 2 (défaut 4) Nourriture/tour. (REMPLACÉ/historisé :
+   l'ancienne loi Socialisme de la banque « Pour le peuple » était la
+   dernière règle vivante de la source `regime`.)
+5. **Élections** : sacre d'avènement GRATUIT (structurelle :
+   `engine/sante.ts`, `fDemocratie`) — déjà codée depuis l'origine.
+6. **Le pouvoir du peuple** : +5 Bonheur par HABITATION du joueur,
+   plafonné à 100 (`bonusBonheurRegime` + `bonheurVilleComplete`
+   min(100, …)).
+7. **Droit Divin** : +1 SERMENT (structurelle : `engine/tour.ts`,
+   `bonusMonarchie`) — déjà codé.
+8. **Vassaux dévoués** : le tribut REÇU est ×1,05 — le vassal paie SA
+   part (la différence est CRÉÉE : aucun vassal ne paie plus, seul le
+   suzerain reçoit davantage).
+9. **(RETRAIT banque)** : la source `regime` quitte le registre —
+   `reglesRegimes`/`effetsRegime` supprimés ; anciennes lois
+   « garnison des habitations +15 par rang d'habitation »
+   (`garnisonParRang`) et « +5 Nourriture d'été pour champs et
+   rizières » (`nourrEteChampRiziere`) REMPLACÉES/historisées (git).
+   Le canal du récap ressources est RENOMMÉ « Lois des cultures »
+   (clé `loisCultures` — il ne porte plus que les lois d'HABITANT des
+   cultures ; l'ancienne clé `regimesCultures` reste orpheline dans
+   les vieux historiques pour ne pas corrompre les sauvegardes).
+10. **Paramétrage intégral** : les 7 montants chiffrés
+    (`leveeOrParRangPays` 10, `departHabitantsMult` 0,8,
+    `orParMigrant` 1, `consoNourrBourgeoisRegime` 1,
+    `consoNourrNobleRegime` 2, `bonheurParHabitation` 5,
+    `tributVassalMult` 1,05) vivent dans le référentiel — éditables
+    via l'onglet Régimes des Paramètres et visibles dans le wiki
+    Référentiels (colonne « Loi chiffrée »).
