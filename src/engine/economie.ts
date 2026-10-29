@@ -9,7 +9,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
-import { cfgOf, cultureDef, metierDef, type Cfg } from './gameData'
+import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './geographie'
 import { rangDe } from './statutSocial'
@@ -57,12 +57,17 @@ export function multProdRang(c: Character, C: Cfg): number {
  *  Thibaut 2026-10-26) : roturier consoNourrParHab (base), bourgeois
  *  consoNourrBourgeois, noble consoNourrNoble. Le rang dérivé du
  *  PRESTIGE — les mineurs (prestige 0) restent à la base. */
-export function consoNourrHabitant(c: Character, C: Cfg): number {
+export function consoNourrHabitant(c: Character, C: Cfg, regime?: string): number {
   // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
   //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
   const r = rangDe(c, C)
-  return r === 'noble' ? C.p.consoNourrNoble
-    : r === 'bourgeois' ? C.p.consoNourrBourgeois
+  // (Refonte « 8 lois » des régimes, 2026-10-29, Socialisme
+  //  « Redistribution ») : le régime du joueur PORTEUR remplace le
+  //  défaut moteur pour les bourgeois (1) et les nobles (2) —
+  //  arbitrage Thibaut 2026-10-29.
+  const reg = regimeDef(regime ?? '', C.config)
+  return r === 'noble' ? (reg?.consoNourrNobleRegime ?? C.p.consoNourrNoble)
+    : r === 'bourgeois' ? (reg?.consoNourrBourgeoisRegime ?? C.p.consoNourrBourgeois)
     : C.p.consoNourrParHab
 }
 
@@ -209,7 +214,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  (arbitrage Thibaut 2026-10-26) : roturier base, bourgeois 2,
   //  noble 4 Nourriture par vivant et par tour.
   const conso: Record<string, number> = {}
-  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C), 0)
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C, p.regime), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}

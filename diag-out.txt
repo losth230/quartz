@@ -1,5 +1,5 @@
 createGame OK — 8 joueurs
-4 tours OK — turn 5 · saison Hiver · log 749 entrées
+4 tours OK — turn 5 · saison Hiver · log 726 entrées
 commandants disponibles pour J1 : 4
 levée + recrutement OK — Armée 1:3 soldats, Armée 2:3 soldats
 dissolution armée idx=1 : OK
@@ -7,7 +7,7 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 84 règles — sources : batiment 41, amenagement 42, regime 1
+total : 83 règles — sources : batiment 41, amenagement 42
 ── canal placesMetier : 71 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
@@ -145,8 +145,6 @@ total : 84 règles — sources : batiment 41, amenagement 42, regime 1
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
 ── canal garnisonVille : 1 règle ──
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
-── canal fluxParAmenagement : 1 règle ──
-  regime.socialisme — Socialisme [si regime=Socialisme, saison=Été] : Nourriture +5 par Champ / Rizière
 
 ═══ SCÉNARIOS DE DÉGRADATION (runTurn sur état cloné puis dégradé) ═══
   [ÉCHEC runTurn] population supprimée → Cannot read properties of undefined (reading '1')

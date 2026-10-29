@@ -49,9 +49,12 @@ export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: 
   }
   // (RETRAIT 2026-10-24 : plus de garnison des technologies — système
   //  de progrès supprimé, retour arbitre.)
-  const regime = C.regimes.find((r) => r.nom === p.regime)
-  const bonus = regime?.garnisonParRang ?? 0
-  if (bonus) g += bonus * rangNiveau(ville, C)
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la loi
+  //  « Conscription » de l'Autoritarisme — garnison des habitations
+  //  +N par rang d'habitation (champ garnisonParRang) — est
+  //  REMPLACÉE par la réduction du prix de levée d'armée
+  //  (leveeOrParRangPays, engine/armees.ts) : plus de bonus de
+  //  garnison du régime.
   // (Refonte 12 lois, 2026-10-29, Zélotisme « Ferveur
   //  martiale » : si au moins une ville de culture porteuse de la
   //  loi existe dans le MONDE (villes des JOUEURS, cités libres

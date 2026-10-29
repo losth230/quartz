@@ -8,10 +8,31 @@
 //  Thibaut « toute production passe par la banque » : les montants
 //  vivent dans le registre src/rules/registry.ts, ce module ne fait
 //  que LIRE la banque) :
+//  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes — REMPLACÉ :
+//  la VOIE BANQUE est CLOSE pour les régimes, la source 'regime'
+//  quitte le registre (reglesRegimes supprimé) — les lois des
+//  régimes sont lues par le MOTEUR là où elles agissent, cf. les
+//  arbitrages détaillés ci-dessous.)
 //    · régime — Autoritarisme : garnison des habitations +15 par rang
 //      d'habitation (champ `garnisonParRang`) ;
 //    · régime — Socialisme : +5 Nourriture par tour d'été pour les
 //      champs et rizières (champ `nourrEteChampRiziere`) ;
+//      (REFONTE « 8 LOIS DES RÉGIMES », 2026-10-29 — REMPLACÉ/
+//      HISTORISÉ : les deux lois chiffrées ci-dessus sont RETIRÉES
+//      du référentiel (champs supprimés, purgés par migrerRegimes).
+//      Chaque régime porte DEUX lois lues par le MOTEUR là où
+//      elles agissent : Autoritarisme « Conscription » (prix de
+//      levée d'armée −10 Or par rang du pays, engine/armees.ts) et
+//      « Frontières closes » (départs ×0,8,
+//      engine/migrationBonheur.ts) ; Socialisme « Terre d'accueil »
+//      (+1 Or par migrant arrivant, engine/migrationBonheur.ts) et
+//      « Redistribution » (bourgeois 1 / noble 2 Nourriture,
+//      engine/economie.ts) ; Démocratie « Le pouvoir du peuple »
+//      (+5 Bonheur par habitation, engine/bonheur.ts — « Élections »,
+//      sacre d'avènement gratuit, reste structurelle : engine/sante.ts) ;
+//      Monarchie « Vassaux dévoués » (tribut reçu ×1,05,
+//      engine/vassalite.ts — « Droit Divin », +1 serment, reste
+//      structurelle : engine/tour.ts).)
 //    · culture — Communautarisme / Lunisme / Zélotisme : la capitale
 //      génère +N d'une ressource par habitation de cette culture dans
 //      le monde (champs `capitalNourrParHabMonde`, etc.).
@@ -23,8 +44,13 @@
 //      garnison : lues par engine/domiciles, metiers, economie,
 //      commerce, garnisons) et des lois d'HABITANT (culture PROPRE
 //      du personnage, où qu'il vive — nobles et gardes :
-//      loisHabitants ci-dessous, canal « Régimes & cultures » du
-//      récap). Seule la loi du RÉGIME reste dans la banque.)
+//      loisHabitants ci-dessous, canal « Lois des cultures » du
+//      récap — RENOMMÉ 2026-10-29 avec la refonte « 8 lois » des
+//      régimes, ex « Régimes & cultures »).)
+//      (REMPLACÉ 2026-10-29, refonte « 8 lois » des régimes : « Seule
+//      la loi du RÉGIME reste dans la banque » ne tient plus — la
+//      source 'regime' QUITTE la banque avec reglesRegimes, cf. les
+//      arbitrages ci-dessus.)
 //  Les autres attributs des cultures (hérédité, fécondité,
 //  mariages homosexuels) sont appliqués dans setup / naissances /
 //  metiers. Les règles restées textuelles (terres de
@@ -33,18 +59,18 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { City, GameState, Player, Saison } from './types'
+import type { City, GameState, Player } from './types'
 import { detailGainsVille } from './economie'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { garnisonBatiment, productionTourismeBatiment } from './batiments'
 import { effetsCommerceJoueur } from './commerce'
-import { reglesRegimes } from '../rules/registry'
-import { appliquerRegles } from '../rules/effects/banque'
+// (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : imports de
+//  la banque supprimés avec la source 'regime' — plus aucune loi de
+//  régime ne vit dans le registre.)
 
 export { nomRang } from './rangs'
 export { rangNiveau } from './rangs'
 export { garnisonHabitationVille, malusFerveurMartiale } from './garnisons'
-import { rangNiveau } from './rangs'
 import { garnisonHabitationVille, malusFerveurMartiale } from './garnisons'
 import { rangDe } from './statutSocial'
 // (RETRAIT 2026-10-24, purge R4 : l'import morte `capitaleDe` (factions)
@@ -57,12 +83,14 @@ import { rangDe } from './statutSocial'
 export interface LigneDetailGarnison {
   label: string
   valeur: number
-  /** catégorie affichable : bâtiment / régime /
+  /** catégorie affichable : bâtiment /
    *  ministre / métier (Garde) / culture (Ferveur martiale —
-   *  refonte 12 lois 2026-10-29) — (RETRAIT 2026-10-24 :
+   *  refonte 12 lois 2026-10-29) — (RETRAIT 2026-10-29, refonte
+   *  « 8 lois » : 'régime' supprimé avec la loi de garnison du
+   *  régime) — (RETRAIT 2026-10-24 :
    *  « technologie », supprimée avec le système de progrès, reste
    *  lue dans les vieilles sauvegardes sans être produite) */
-  origine: 'bâtiment' | 'technologie' | 'régime' | 'métier' | 'culture'
+  origine: 'bâtiment' | 'technologie' | 'métier' | 'culture'
 }
 
 export function detailGarnisonVille(
@@ -76,10 +104,11 @@ export function detailGarnisonVille(
   for (const b of ville.batiments) push('bâtiment', b, garnisonBatiment(b, C, ville.type))
   // 2. (RETRAIT 2026-10-24 : technologies — lignes de garnison des
   //  techs supprimées avec le système de progrès.)
-  // 3. Loi du régime (ex. Autoritarisme : +15 par rang d'habitation)
-  const regime = C.regimes.find((r) => r.nom === p.regime)
-  const bonus = regime?.garnisonParRang ?? 0
-  if (bonus) push('régime', `${p.regime} : ${bonus} × rang de la ville`, bonus * rangNiveau(ville, C))
+  // 3. (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la loi
+  //    de garnison du régime — Autoritarisme « Conscription »,
+  //    +N par rang d'habitation (garnisonParRang) — est REMPLACÉE
+  //    par la réduction du prix de levée d'armée (leveeOrParRangPays,
+  //    engine/armees.ts) : plus aucune ligne de garnison du régime.
   // 4. Gardes en poste (vague 3a) : +garnisonParGarde Garnison
   //    STATIQUE par Garde vivant en poste dans la ville.
   if (state) {
@@ -115,19 +144,17 @@ export function garnisonHabitationsPays(p: Player, C: Cfg, state?: GameState): n
   return g
 }
 
-/** Effets par tour de la loi chiffrée du régime du pays (ex.
- *  Socialisme : +N Nourriture d'été par champ et rizière). VOIE
- *  BANQUE (brûlage #3 source 2/3, 2026-10-20) : la règle vit dans le
- *  registre (reglesRegimes — id regime.<slug>, conditions régime +
- *  été, effet fluxParAmenagement) ; cette fonction ne fait que LIRE
- *  la banque, plus aucun montant codé ici. */
-export function effetsRegime(state: GameState, p: Player, saison: Saison, C: Cfg): Record<string, number> {
-  // (RETRAIT 2026-10-24, purge R4 : plus de PORTS injectés au contexte —
-  //  les types d'effets conservés ne consomment aucun service moteur.)
-  return appliquerRegles(reglesRegimes(C), {
-    state, joueur: p, saison,
-  }).flux
-}
+// (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : effetsRegime
+//  est supprimé avec la source 'regime' de la banque — plus aucune
+//  production de régime ne passe par le registre (dernière règle
+//  vivante : Socialisme « Pour le peuple », REMPLACÉE par « Terre
+//  d'accueil » et « Redistribution »). Les lois des régimes vivent
+//  désormais dans le moteur : armees (Conscription),
+//  migrationBonheur (Frontières closes, Terre d'accueil), economie
+//  (Redistribution), bonheur (Pouvoir du peuple), vassalite
+//  (Vassaux dévoués) ; Élections (sacre gratuit) et Droit Divin
+//  (+1 serment) restent structurelles : sante.ts / tour.ts.
+//  Historique git.)
 
 /** Détail d'une loi d'HABITANT (refonte « 12 lois » des cultures,
  *  2026-10-29) — une ligne par loi chiffrée appliquée à la
@@ -276,20 +303,20 @@ export function resynchroniserTourisme(
   })
 }
 
-/** Étape moteur : crédite au stock les effets de la loi du régime et
- *  des lois d'habitants des cultures (canal « régimes & cultures »
- *  du récap ressources, étape 3septies du FinDeTour).
+/** Étape moteur : crédite au stock les lois d'HABITANT des cultures
+ *  (canal « Lois des cultures » du récap ressources, étape 3septies
+ *  du FinDeTour).
  *  (refonte 12 lois, 2026-10-29 : REMPLACÉE la « règle de pays de
  *  la culture » — +N par habitation de cette culture dans le monde
  *  — par les lois d'HABITANT, portées par la culture PROPRE de
- *  chaque personnage.) */
+ *  chaque personnage.)
+ *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : plus
+ *  aucune loi de régime via la banque — la signature perd
+ *  `saison`, le canal ne porte plus que les lois d'habitants.) */
 export function appliquerEffetsRegimesCultures(
-  state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
+  state: GameState, p: Player, C: Cfg = cfgOf(state.config),
 ): Record<string, number> {
   const out: Record<string, number> = {}
-  for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
-    out[res] = (out[res] ?? 0) + v
-  }
   for (const [res, v] of Object.entries(loisHabitants(state, p, C))) {
     out[res] = (out[res] ?? 0) + v
   }
@@ -301,7 +328,7 @@ export function appliquerEffetsRegimesCultures(
     const parts = Object.entries(out).map(([r, v]) => `${v > 0 ? '+' : ''}${v} ${r}`).join(', ')
     state.log.push({
       turn: state.turn + 1, type: 'Système', joueur: p.n,
-      texte: `🏛 ${p.nom} — loi du régime « ${p.regime} » et lois d'habitants des cultures : ${parts}.`,
+      texte: `🏛 ${p.nom} — lois d'habitants des cultures : ${parts}.`,
     })
   }
   return out

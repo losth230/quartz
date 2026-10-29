@@ -138,13 +138,48 @@ export interface CultureDef {
 export interface RegimeDef {
   nom: string
   loi: string
-  /** Loi chiffrée appliquée AUTOMATIQUEMENT par le moteur
-   *  (engine/regimes.ts) : garnison des habitations +N par rang
-   *  d'habitation (Autoritarisme), +N Nourriture par tour d'été pour les
-   *  champs et rizières (Socialisme). Champs optionnels : absents
+  /** Lois chiffrées des régimes, appliquées AUTOMATIQUEMENT par le
+   *  moteur (refonte « 8 lois » des régimes, 2026-10-29 — retour
+   *  Thibaut : chaque régime porte DEUX lois, lues par le moteur là
+   *  où elles agissent ; REMPLACÉ/HISTORISÉ : les anciens champs
+   *  garnisonParRang (+15 par rang d'habitation — Autoritarisme)
+   *  et nourrEteChampRiziere (+5 Nourriture d'été par Champ et
+   *  Rizière — Socialisme, dernière règle de la source 'regime' de
+   *  la banque, retirée avec la refonte) sont SUPPRIMÉS : les lois
+   *  vivent désormais dans le moteur. Champs optionnels : absents
    *  des vieilles configurations, complétés par migrerRegimes. */
-  garnisonParRang?: number
-  nourrEteChampRiziere?: number
+  /** Autoritarisme « Conscription » : Or de RÉDUCTION du prix de
+   *  levée d'armée par RANG DU PAYS du joueur (engine/armees.ts,
+   *  prixArmee — le texte de la loi existait dès l'origine, jamais
+   *  codé avant la refonte). */
+  leveeOrParRangPays?: number
+  /** Autoritarisme « Frontières closes » : multiplicateur des
+   *  probabilités de DÉPART de chaque habitant du joueur (0,8 =
+   *  20 % de chances de moins de partir —
+   *  engine/migrationBonheur.ts, arbitrage Thibaut 2026-10-29). */
+  departHabitantsMult?: number
+  /** Socialisme « Terre d'accueil » : Or reçus par MIGRANT arrivant
+   *  dans une ville du joueur (engine/migrationBonheur.ts). */
+  orParMigrant?: number
+  /** Socialisme « Redistribution » : Nourriture consommée par tour
+   *  par un BOURGEOIS vivant du joueur, à la place du défaut moteur
+   *  consoNourrBourgeois (engine/economie.ts). */
+  consoNourrBourgeoisRegime?: number
+  /** Socialisme « Redistribution » : Nourriture consommée par tour
+   *  par un NOBLE vivant du joueur, à la place du défaut moteur
+   *  consoNourrNoble (engine/economie.ts). */
+  consoNourrNobleRegime?: number
+  /** Démocratie « Le pouvoir du peuple » : Bonheur ajouté dans
+   *  chacune des habitations du joueur (plafond 100 —
+   *  engine/bonheur.ts ; Élections, sacre gratuit, reste
+   *  structurelle : engine/sante.ts). */
+  bonheurParHabitation?: number
+  /** Monarchie « Vassaux dévoués » : multiplicateur du tribut REÇU
+   *  des vassaux par un suzerain de ce régime (arbitrage Thibaut
+   *  2026-10-29 : ×1,05 — le vassal paie sa part, la différence est
+   *  créée pour le suzerain ; engine/vassalite.ts. Droit Divin,
+   *  +1 serment, reste structurelle : engine/tour.ts). */
+  tributVassalMult?: number
 }
 /** Événements de saison (été/hiver) RETIRÉS du référentiel le
  *  2026-10-24 (retour arbitre Thibaut) : la table `events` (18
@@ -886,9 +921,26 @@ export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
 export function migrerRegimes(list: RegimeDef[] | undefined): RegimeDef[] {
   const defs = DEFAULT_CONFIG.regimes
   if (!Array.isArray(list) || list.length === 0) return defs
+  // (Refonte « 8 lois » des régimes, 2026-10-29 : construction
+  //  EXPLICITE — les anciens champs morts (garnisonParRang,
+  //  nourrEteChampRiziere) portés par les vieilles configurations
+  //  sont PURGÉS ; les champs de la refonte absents de la ligne
+  //  sont complétés par les DÉFAUTS du référentiel, un 0 explicite
+  //  reste un 0 = loi désactivée.)
   return list.map((r) => {
     const d = defs.find((x) => x.nom === r?.nom)
-    return d ? { ...d, ...r } : r
+    if (!d) return r
+    return {
+      nom: r.nom,
+      loi: r.loi,
+      leveeOrParRangPays: r.leveeOrParRangPays ?? d.leveeOrParRangPays,
+      departHabitantsMult: r.departHabitantsMult ?? d.departHabitantsMult,
+      orParMigrant: r.orParMigrant ?? d.orParMigrant,
+      consoNourrBourgeoisRegime: r.consoNourrBourgeoisRegime ?? d.consoNourrBourgeoisRegime,
+      consoNourrNobleRegime: r.consoNourrNobleRegime ?? d.consoNourrNobleRegime,
+      bonheurParHabitation: r.bonheurParHabitation ?? d.bonheurParHabitation,
+      tributVassalMult: r.tributVassalMult ?? d.tributVassalMult,
+    }
   })
 }
 

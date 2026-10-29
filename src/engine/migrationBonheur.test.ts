@@ -46,6 +46,13 @@ import type { Character, City, GameState } from './types'
 function partie(seed = 20261028): { state: GameState; C: ReturnType<typeof cfgOf> } {
   const state = createGame(defaultSetups(), seed, 'local')
   const C = cfgOf(state.config)
+  // (Refonte « 8 lois » des régimes, 2026-10-29) : les lois de
+  //  régime (Frontières closes ×0,8 sur les départs, Terre
+  //  d'accueil +1 Or par migrant…) modifieraient les tirages de
+  //  TOUS ces tests de flux — on neutralise le régime de chaque
+  //  joueur ; les lois de régime ont leurs tests dédiés
+  //  (src/engine/regimes.test.ts et ci-dessous).
+  for (const pl of state.players) pl.regime = 'Aucun régime (test migration)'
   return { state, C }
 }
 
@@ -337,4 +344,40 @@ test('flux : un migrant SANS DOMICILE choisit la ville aux lits libres', () => {
   migrationBonheur(state, makeRng(8))
   assert.ok(state.population[p2.n]?.includes(mig), 'le sans-domicile rejoint la ville qui loge (p2)')
   assert.equal(mig.ville, p2.villes[0].nom, 'même destination, ville de p2')
+})
+
+// ── Refonte « 8 lois » des régimes : Socialisme « Terre d'accueil » ──────
+
+test("flux : Terre d'accueil — chaque migrant arrivant rapporte 1 Or au joueur destinataire", () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10
+  C.p.migrationBonheurLogement = 1e9 // le facteur logement écrase tous les autres
+  const [p0, , p2] = state.players
+  const mig = hab('ta-1', 30, { ville: p0.villes[0].nom, metier: 'Employé' }) // pourvu…
+  // …mais sans domicile : le migrant rejoint la ville aux lits libres (p2).
+  mondeReduit(state, mig)
+  p2.regime = 'Socialisme'
+  const orAvant = p2.resources['Or'].stock
+  migrationBonheur(state, makeRng(8))
+  assert.equal(mig.ville, p2.villes[0].nom, 'le migrant est bien arrivé dans la ville de p2')
+  const lignesTA = state.log.filter((e) => e.texte.includes("Terre d'accueil"))
+  assert.ok(lignesTA.length >= 1, 'au moins une ligne « Terre d\'accueil »')
+  assert.ok(lignesTA.every((e) => e.joueur === p2.n), 'l\'Or va au joueur destinataire (p2)')
+  assert.ok(lignesTA.every((e) => e.texte.includes('reçoit 1 Or (1 migrant(s) arrivé(s)'), 'format : « reçoit 1 Or (1 migrant(s) arrivé(s)… »'))
+  assert.equal(p2.resources['Or'].stock, orAvant + lignesTA.length, 'stock Or crédité du nombre EXACT de migrants reçus')
+})
+
+test("flux : les autres régimes ne reçoivent RIEN à l'arrivée de migrants", () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10
+  C.p.migrationBonheurLogement = 1e9
+  const [p0, , p2] = state.players
+  const mig = hab('ta-2', 30, { ville: p0.villes[0].nom, metier: 'Employé' })
+  mondeReduit(state, mig)
+  p2.regime = 'Monarchie' // PAS la Terre d'accueil
+  const orAvant = p2.resources['Or'].stock
+  migrationBonheur(state, makeRng(8))
+  assert.equal(mig.ville, p2.villes[0].nom, 'le migrant est bien arrivé chez p2')
+  assert.equal(state.log.filter((e) => e.texte.includes("Terre d'accueil")).length, 0, 'aucune ligne « Terre d\'accueil »')
+  assert.equal(p2.resources['Or'].stock, orAvant, 'aucun Or crédité')
 })

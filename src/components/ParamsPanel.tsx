@@ -213,19 +213,36 @@ export function ParamsPanel() {
 
       {onglet === 'Régimes' && (
         <Card title="Régimes politiques (lois)">
-          <p className="muted small">Colonnes chiffrées = lois appliquées à chaque fin de tour. 0 = désactivé.</p>
+          <p className="muted small">
+            Colonnes chiffrées = lois du régime, lues automatiquement par le moteur là où
+            elles agissent (refonte « 8 lois », 2026-10-29). 0 = désactivé.
+          </p>
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Régime</th><th>Loi (texte)</th><th>Garnison/rang</th><th>Nourr./été rizière</th></tr>
+                <tr>
+                  <th>Régime</th><th>Loi (texte)</th>
+                  <th>Conscription (−Or/rang du pays)</th>
+                  <th>Frontières closes (× départs)</th>
+                  <th>Terre d'accueil (Or/migrant)</th>
+                  <th>Redistribution (bourgeois)</th>
+                  <th>Redistribution (noble)</th>
+                  <th>Pouvoir du peuple (+Bonheur/habitation)</th>
+                  <th>Vassaux dévoués (× tribut reçu)</th>
+                </tr>
               </thead>
               <tbody>
                 {config.regimes.map((r, i) => (
                   <tr key={i}>
                     <td><TextInput value={r.nom} onChange={(v) => setCfg((c) => { c.regimes[i].nom = v })} /></td>
                     <td><TextInput value={r.loi} onChange={(v) => setCfg((c) => { c.regimes[i].loi = v })} /></td>
-                    <td><NumberInput value={r.garnisonParRang ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].garnisonParRang = v })} /></td>
-                    <td><NumberInput value={r.nourrEteChampRiziere ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].nourrEteChampRiziere = v })} /></td>
+                    <td><NumberInput value={r.leveeOrParRangPays ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].leveeOrParRangPays = v })} /></td>
+                    <td><NumberInput step={0.05} value={r.departHabitantsMult ?? 1} onChange={(v) => setCfg((c) => { c.regimes[i].departHabitantsMult = v })} /></td>
+                    <td><NumberInput value={r.orParMigrant ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].orParMigrant = v })} /></td>
+                    <td><NumberInput value={r.consoNourrBourgeoisRegime ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].consoNourrBourgeoisRegime = v })} /></td>
+                    <td><NumberInput value={r.consoNourrNobleRegime ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].consoNourrNobleRegime = v })} /></td>
+                    <td><NumberInput value={r.bonheurParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].bonheurParHabitation = v })} /></td>
+                    <td><NumberInput step={0.05} value={r.tributVassalMult ?? 1} onChange={(v) => setCfg((c) => { c.regimes[i].tributVassalMult = v })} /></td>
                   </tr>
                 ))}
               </tbody>

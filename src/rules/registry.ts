@@ -114,7 +114,11 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
  *  garnisons ; lois d'HABITANT : regimes.loisHabitants). Seules
  *  restent les constructions et les régimes.) */
 export function registreComplet(C: Cfg): RegleBanque[] {
-  return [...reglesConstructions(C), ...reglesRegimes(C)]
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la source
+  //  'regime' quitte le registre — plus aucune loi de régime ne
+  //  passe par la banque ; reglesRegimes supprimé. Le registre
+  //  complet = les règles des constructions.)
+  return [...reglesConstructions(C)]
   // (RETRAIT 2026-10-24, retour arbitre : la source 'tech' — règles de
   //  banque des technologies de progrès — est supprimée avec le
   //  système de progrès, plus aucun producteur ni consommateur.)
@@ -123,31 +127,19 @@ export function registreComplet(C: Cfg): RegleBanque[] {
 
 // ── Régimes & cultures (sources 'regime' / 'culture' — brûlage #3 source 2/3) ──
 
-/** Règles de banque des LOIS DE PRODUCTION des régimes politiques
- *  (retour Thibaut « toute production passe par la banque », source
- *  2/3 du brûlage #3, 2026-10-20) : générées depuis le référentiel,
- *  montants = DONNÉES. Aujourd'hui seule la loi nourrEteChampRiziere
- *  est un FLUX (Socialisme : +N Nourriture d'été par Champ/Rizière)
- *  — l'été est une CONDITION de la règle, plus un if du moteur. La
- *  garnison de l'Autoritarisme (champ RÉFÉRENTIEL garnisonParRang —
- *  pas le type d'effet de banque, retiré le 2026-10-24 purge R4)
- *  reste une VALEUR D'ÉTAT (garnisonHabitationVille), pas une
- *  production : hors banque. */
-export function reglesRegimes(C: Cfg): RegleBanque[] {
-  const out: RegleBanque[] = []
-  for (const regime of C.regimes) {
-    const n = regime.nourrEteChampRiziere ?? 0
-    if (!n) continue
-    out.push({
-      id: 'regime.' + slug(regime.nom),
-      source: 'regime',
-      nom: regime.nom,
-      conditions: { regime: regime.nom, saison: 'Été' },
-      effets: [{ type: 'fluxParAmenagement', ressource: 'Nourriture', valeur: n, noms: ['Champ', 'Rizière'] }],
-    })
-  }
-  return out
-}
+// (RETRAIT 2026-10-29, refonte « 8 lois » des régimes :
+//  reglesRegimes est SUPPRIMÉ avec la source 'regime' de la banque.
+//  Sa seule règle vivante était le Socialisme « Pour le peuple »
+//  (regime.socialisme — +N Nourriture d'été par Champ/Rizière,
+//  effet fluxParAmenagement), REMPLACÉE par « Terre d'accueil » et
+//  « Redistribution ». Les DEUX lois de chaque régime vivent
+//  désormais dans le moteur : engine/armees.ts (Conscription),
+//  engine/migrationBonheur.ts (Frontières closes, Terre d'accueil),
+//  engine/economie.ts (Redistribution), engine/bonheur.ts (Le
+//  pouvoir du peuple), engine/vassalite.ts (Vassaux dévoués) ;
+//  Élections (sacre gratuit) et Droit Divin (+1 serment) restent
+//  structurelles : engine/sante.ts / engine/tour.ts. L'ancien
+//  contenu reste dans l'historique git, règle 9.)
 
 // ── (RETRAIT 2026-10-29, refonte « 12 lois » des cultures) ──────────
 //  Source 'culture' — règles de pays des cultures : SUPPRIMÉE. Les

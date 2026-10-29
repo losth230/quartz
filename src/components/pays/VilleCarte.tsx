@@ -50,7 +50,7 @@ import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
 import { constructionsRefs, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
-import { scoresVille, bonheurVille } from '../../engine/bonheur'
+import { scoresVille, bonheurVille, bonusBonheurRegime } from '../../engine/bonheur'
 import { initStockVille, stockRang, vivantsVille, domicilesApportesVille, domicilesCultureVille } from '../../engine/domiciles'
 import { occupationsMetierVille } from '../../engine/metiers'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
@@ -236,7 +236,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             facteurs, indicateur PUR à ce jour. */}
         {(() => {
           const s = scoresVille(state, p, ville, C)
-          const b = bonheurVille(s)
+          // (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie
+          //  « Le pouvoir du peuple ») : bonus de Bonheur du régime
+          //  du joueur, plafonné à 100 — même calcul que le moteur
+          //  (bonheurVilleComplete).
+          const bonus = bonusBonheurRegime(p, C)
+          const b = Math.min(100, bonheurVille(s) + bonus)
           const axes: Array<[string, number]> = [
             ['Emploi', s.emploi],
             ['Logement', s.logement],
@@ -249,11 +254,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           return (
             <div
               className="bonheur-bloc"
-              title="Bonheur : moyenne simple des 5 facteurs (emploi, logement, sécurité, tourisme, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré)"
+              title="Bonheur : moyenne simple des 5 facteurs (emploi, logement, sécurité, tourisme, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré) + la loi du régime (refonte « 8 lois », plafonné à 100)"
             >
               <div className="bonheur-moyen">
                 Bonheur <strong style={{ color: coul(b) }}>{b}</strong>
                 <span className="muted">/100</span>
+                {bonus > 0 && <span className="muted small"> ({p.regime} +{bonus})</span>}
               </div>
               {axes.map(([label, v]) => (
                 <div key={label} className="bonheur-axe" title={`${label} : ${v}/100`}>

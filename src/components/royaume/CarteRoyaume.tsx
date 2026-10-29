@@ -29,9 +29,15 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
     ? (p.rang as string)
     : rangParDefaut(p.regime, C)
   const rangDef = rangs.find((r) => r.nom === rangActuel)
-  // Loi chiffrée du régime (appliquée automatiquement par le moteur) ?
-  const loiChiffree = (regimeDef?.garnisonParRang ?? 0) !== 0
-    || (regimeDef?.nourrEteChampRiziere ?? 0) !== 0
+  // Lois chiffrées du régime (lues automatiquement par le moteur,
+  // refonte « 8 lois » des régimes, 2026-10-29) ?
+  const loiChiffree = (regimeDef?.leveeOrParRangPays ?? 0) !== 0
+    || (regimeDef?.departHabitantsMult ?? 1) !== 1
+    || (regimeDef?.orParMigrant ?? 0) !== 0
+    || (regimeDef?.consoNourrBourgeoisRegime ?? 0) !== 0
+    || (regimeDef?.consoNourrNobleRegime ?? 0) !== 0
+    || (regimeDef?.bonheurParHabitation ?? 0) !== 0
+    || (regimeDef?.tributVassalMult ?? 1) !== 1
 
   return (
     <Card title={`🏰 Royaume de ${p.nom}`}>
@@ -67,9 +73,9 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
               <div className="muted small">Loi : {regimeDef.loi}</div>
               {loiChiffree && (
                 <div className="small">
-                  <Badge tone="good">loi chiffrée appliquée automatiquement</Badge>{' '}
+                  <Badge tone="good">lois chiffrées appliquées automatiquement</Badge>{' '}
                   <span className="muted small">
-                    (canal « régimes & cultures » du récap ressources)
+                    (lues par le moteur là où elles agissent — refonte « 8 lois »)
                   </span>
                 </div>
               )}

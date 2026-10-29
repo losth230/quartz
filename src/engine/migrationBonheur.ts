@@ -104,7 +104,7 @@
 
 import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf, type Cfg } from './gameData'
+import { cfgOf, regimeDef, type Cfg } from './gameData'
 import { fullName, neDemenageJamais, perteDemenagement } from './shared'
 import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bonheur'
 import { updateCityCultures } from './culture'
@@ -113,6 +113,14 @@ import { updateCityCultures } from './culture'
  *  (arbitrage Thibaut 2026-10-28 : 0 % à 100, max à 0). Pure. */
 export function probaDepartBonheur(bonheur: number, C: Cfg): number {
   return Math.max(0, (C.p.migrationBonheurMax * (100 - bonheur)) / 100)
+}
+
+/** (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
+ *  « Frontières closes ») : multiplicateur des probabilités de
+ *  DÉPART des habitants d'un joueur — 0,8 = 20 % de chances de
+ *  moins de partir (arbitrage Thibaut : MULTIPLICATIF). Pure. */
+export function multDepartRegime(p: Player, C: Cfg): number {
+  return regimeDef(p.regime, C.config)?.departHabitantsMult ?? 1
 }
 
 /** Poids d'attraction d'une ville candidate pour un migrant — v3
@@ -243,7 +251,11 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
         const enfantsFoyer = (parVilleTous.get(v.nom) ?? []).filter((e) =>
           !e.mariageId && !deplaces.has(e.id) && !neDemenageJamais(e, C) && !e.armee &&
           (idsFoyer.has(e.mereId ?? '') || idsFoyer.has(e.pereId ?? '')))
-        if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
+        // (Refonte « 8 lois » des régimes, 2026-10-29,
+        //  Autoritarisme « Frontières closes ») : probabilité de
+        //  départ × departHabitantsMult (0,8 = 20 % de chances de
+        //  moins de partir).
+        if (!rng.chance(probaDepartBonheur(src.bonheur, C) * multDepartRegime(p, C))) continue
         // Bonus emploi & logement (v3 ADDITIVE, 6e arbitrage
         //  2026-10-29) : S'ADDITIONNENT dans la parenthèse sur la
         //  base d'attrait du bonheur — le statut regardé est celui
@@ -275,6 +287,23 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
             turn: state.turn + 1, type: 'Système', joueur: p.n,
             texte: `${fullName(m)} ${verbe} ${avant} pour ${dest.ville.nom}${chez} (bonheur ${src.bonheur}/100 — cherche meilleure vie).`,
           })
+        }
+        // (Refonte « 8 lois » des régimes, 2026-10-29, Socialisme
+        //  « Terre d'accueil ») : le joueur destinataire reçoit +N
+        //  Or par MIGRANT ARRIVANT dans une de ses villes — le foyer
+        //  ENTIER compte (conjoint, enfants), déménagements
+        //  INTERNES inclus (arbitrage Thibaut : la loi récompense
+        //  l'ARRIVÉE, pas le franchissement d'une frontière).
+        const orParMig = regimeDef(dest.joueur.regime, C.config)?.orParMigrant ?? 0
+        if (orParMig > 0) {
+          for (const m of foyer) {
+            const rs = dest.joueur.resources['Or']
+            if (rs) rs.stock += orParMig
+            state.log.push({
+              turn: state.turn + 1, type: 'Système', joueur: dest.joueur.n,
+              texte: `🌍 Terre d'accueil — ${dest.joueur.nom} reçoit ${orParMig} Or (1 migrant(s) arrivé(s) : ${fullName(m)}).`,
+            })
+          }
         }
       }
     }

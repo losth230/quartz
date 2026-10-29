@@ -80,17 +80,14 @@ export interface EffetFluxVille {
 //  techs/doctrines/dogmes/Lauriers, systèmes tous supprimés. L'ancien
 //  contenu reste dans l'historique git, règle 9.)
 
-/** Production par tour, par AMÉNAGEMENT portant l'un des noms listés,
- *  dans TOUTES les villes du joueur (ex. Socialisme : +N Nourriture
- *  d'été par Champ et Rizière — champ nourrEteChampRiziere du
- *  référentiel, brûlage #3 source 2/3). */
-export interface EffetFluxParAmenagement {
-  type: 'fluxParAmenagement'
-  ressource: string
-  valeur: number
-  /** noms d'aménagements comptés (ex. ['Champ', 'Rizière']) */
-  noms: string[]
-}
+// ── (RETRAIT 2026-10-29, refonte « 8 lois » des régimes) ──────────
+//  EffetFluxParAmenagement : SUPPRIMÉ avec la source 'regime' de la
+//  banque — sa seule règle vivante était le Socialisme « Pour le
+//  peuple » (+N Nourriture d'été par Champ/Rizière, champ
+//  nourrEteChampRiziere), REMPLACÉE par « Terre d'accueil » et
+//  « Redistribution » lues par le moteur. Aucune construction du
+//  référentiel n'utilisait ce type. L'ancien contenu reste dans
+//  l'historique git, règle 9.
 
 // ── (RETRAIT 2026-10-29, refonte « 12 lois » des cultures) ──────────
 //  EffetFluxParVilleCultureMonde : SUPPRIMÉ avec la source
@@ -153,7 +150,6 @@ export interface EffetLogements {
 /** Union : TOUS les types d'effets de la banque. */
 export type Effet =
   | EffetFluxVille
-  | EffetFluxParAmenagement
   | EffetGarnisonVille
   | EffetPlacesMetier
   | EffetReductionLeveeArmee
@@ -166,13 +162,14 @@ export type Effet =
  *  (RETRAIT 2026-10-24, purge R4 : les conditions SANS PRODUCTEUR sont
  *  supprimées — peuple, pontificatMin, ageMin, vassal, suzerainDeCite
  *  (plomberie des règles de factions/dogmes, systèmes supprimés).
- *  Les producteurs actuels n'utilisent que saison, regime et
- *  culture. L'ancien contenu reste dans l'historique git, règle 9.) */
+ *  Les producteurs actuels n'utilisent que la saison. L'ancien
+ *  contenu reste dans l'historique git, règle 9.) */
 export interface ConditionRegle {
   /** Saison requise (ex. effets d'été). */
   saison?: string
-  /** Régime politique du joueur requis (ex. Socialisme). */
-  regime?: string
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la
+  //  condition `regime` est supprimée avec la source 'regime' —
+  //  plus aucune loi de régime ne vit dans la banque.)
   // (RETRAIT 2026-10-29, refonte « 12 lois » : la condition
   //  `culture` est supprimée avec la source 'culture' — les règles
   //  de pays des cultures n'existent plus.)
@@ -195,7 +192,10 @@ export interface ConditionRegle {
 export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
-  | 'regime'          // loi chiffrée du régime politique
+  //  'regime' RETIRÉ le 2026-10-29 (refonte « 8 lois » des régimes :
+  //  plus aucune loi de régime ne passe par la banque — les lois
+  //  vivent dans le moteur) — la valeur n'est jamais à réutiliser
+  //  (stabilité des règles déjà saisies).
   //  'culture' RETIRÉ le 2026-10-29 (refonte « 12 lois » :
   //  suppression des règles de pays des cultures) — la valeur
   //  n'est jamais à réutiliser (stabilité des règles saisies).

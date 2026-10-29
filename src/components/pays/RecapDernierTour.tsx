@@ -28,11 +28,13 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
             </p>
           )
         }
-        const { production, batiments, amenagements, nourrEte, autres, population, vassalite, regimesCultures, citesLibres, commerce } = row.apports
+        const { production, batiments, amenagements, nourrEte, autres, population, vassalite, loisCultures, regimesCultures, citesLibres, commerce } = row.apports
         const amen = amenagements ?? {}
         const nEte = nourrEte ?? {}
         const aut = autres ?? {}
-        const reg = regimesCultures ?? {}
+        // (Refonte « 8 lois », 2026-10-29 : la clé loisCultures remplace
+        //  regimesCultures — repli sur l'ancienne clé des vieux historiques.)
+        const reg = loisCultures ?? regimesCultures ?? {}
         const cl = citesLibres ?? {}
         const com = commerce ?? {}
         const val = (d: Record<string, number> | undefined, r: string) => (d ?? {})[r] ?? 0
@@ -56,7 +58,7 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
                 <tr>
                   <th>Ressource</th><th>Production</th><th>Bâtiments</th>
                   <th>Aménagements</th><th>Autres</th>
-                  <th>Habitants</th><th>Régimes & cultures</th><th>Cités libres</th><th>Commerce</th><th>Vassalité</th><th>Total</th>
+                  <th>Habitants</th><th>Lois des cultures</th><th>Cités libres</th><th>Commerce</th><th>Vassalité</th><th>Total</th>
                 </tr>
               </thead>
               <tbody>

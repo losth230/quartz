@@ -7,9 +7,10 @@
 
 import type { GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf, metierDef } from './gameData'
+import { cfgOf, metierDef, regimeDef } from './gameData'
 import type { Cfg } from './gameData'
 import { reductionLeveeBatiments } from './constructions'
+import { rangPaysNiveau } from './rangs'
 import { emptyRecap, fullName } from './shared'
 
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
@@ -308,16 +309,28 @@ export function libererSoldats(
  *  Historique préservé : (RETRAIT 2026-10-27, audit — merveilles
  *  supprimées : plus de réduction de levée par merveille) ;
  *  (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
- *  système de progrès, retour arbitre).) */
+ *  système de progrès, retour arbitre).)
+ *  (Refonte « 8 lois » des régimes, 2026-10-29 : la Conscription
+ *  REVIT comme loi du régime AUTORITARISME — prix de levée −10 Or
+ *  par RANG DU PAYS du joueur qui lève (champ leveeOrParRangPays),
+ *  lue ci-dessous, S'ADDITIONNANT aux réductions de la ville.) */
 export function prixArmee(
   puissanceCible: number,
   C: Cfg,
   ville?: { batiments?: string[] },
+  p?: { regime?: string; rang?: string },
 ): number {
   const tranche = Math.max(1, C.p.armeePriXPuissance)
   if (puissanceCible <= 0) return 0
   const prix = (puissanceCible / tranche) * C.p.armeePrixOr
-  const reduction = ville ? reductionLeveeBatiments(ville, C) : 0
+  // (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
+  //  « Conscription ») : réduction du prix de levée par RANG DU
+  //  PAYS du joueur qui lève (leveeOrParRangPays × rangPaysNiveau)
+  //  — le texte de la loi existait dès l'origine du jeu, il
+  //  n'avait JAMAIS été codé avant la refonte. S'ADDITIONNE aux
+  //  réductions de la ville de levée, plancher 0.
+  const reduction = (ville ? reductionLeveeBatiments(ville, C) : 0)
+    + (regimeDef(p?.regime ?? '', C.config)?.leveeOrParRangPays ?? 0) * rangPaysNiveau(p, C)
   return Math.max(0, Math.round(prix - reduction))
 }
 

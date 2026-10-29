@@ -47,8 +47,12 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  fluxParVilleCultureMonde quitte le contrat avec la source
 //  'culture' — plus aucune production de culture ne passe par la
 //  banque ; seuls restent les types des constructions et du régime.)
+// (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le type
+//  'fluxParAmenagement' est supprimé avec la source 'regime' de la
+//  banque — la dernière règle qui le portait (Socialisme « Pour le
+//  peuple ») est REMPLACÉE par les lois du moteur.)
 const TYPES_CONNUSS = new Set([
-  'fluxVille', 'fluxParAmenagement',
+  'fluxVille',
   'garnisonVille', 'placesMetier', 'logements', 'reductionLeveeArmee',
 ])
 

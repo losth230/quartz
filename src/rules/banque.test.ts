@@ -93,27 +93,26 @@ test('placesMetier et logements : canaux dédiés de la contribution', () => {
   assert.equal(out.garnison, 0)
 })
 
-test('conditions saison / regime (ET logique)', () => {
+test('conditions saison (ET logique)', () => {
   // (RETRAIT 2026-10-24, purge R4 : les conditions peuple/vassal/
   //  suzerainDeCite n'existent plus au contrat — leurs producteurs
-  //  (factions/dogmes) sont supprimés. Restent saison/regime/culture,
-  //  les seules posées par le registre. Le mock de base est
-  //  Autoritarisme / Été.)
+  //  (factions/dogmes) sont supprimés.)
+  // (RETRAIT 2026-10-29, refontes « 12 lois » puis « 8 lois » des
+  //  régimes : les conditions regime/culture n'existent plus au
+  //  contrat avec les sources 'regime'/'culture' de la banque —
+  //  il ne reste que la condition saison, la seule encore posée
+  //  par le registre. Le mock de base est Été.)
   const regle: RegleBanque = {
-    id: 'test.cond', source: 'regime', nom: 'Test',
-    conditions: { regime: 'Socialisme', saison: 'Hiver' },
+    id: 'test.cond', source: 'batiment', nom: 'Test',
+    conditions: { saison: 'Hiver' },
     effets: [{ type: 'fluxVille', ressource: 'Or', valeur: 10 }],
   }
-  // ni le régime ni la saison → rien
+  // pas la saison → rien
   const base = partieMock()
   assert.equal(appliquerRegles([regle], base).flux['Or'], undefined)
-  // saison OK mais régime faux → rien (ET)
-  const norlsHiver = partieMock({ saison: 'Hiver' })
-  assert.equal(appliquerRegles([regle], norlsHiver).flux['Or'], undefined)
-  // tout OK → effet
-  const socialiste = partieMock({ saison: 'Hiver' })
-  socialiste.joueur.regime = 'Socialisme'
-  assert.equal(appliquerRegles([regle], socialiste).flux['Or'], 10)
+  // saison OK → effet
+  const hiver = partieMock({ saison: 'Hiver' })
+  assert.equal(appliquerRegles([regle], hiver).flux['Or'], 10)
 })
 
 // ── 2. Voie unique : le moteur ne lit QUE la banque ───────────────────────

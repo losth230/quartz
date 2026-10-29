@@ -64,11 +64,13 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
 
   // Prix avec les RÉDUCTIONS DE LEVÉE des bâtiments de la ville de
   //  levée (arbitrage Thibaut 2026-10-28 : elles vivent dans la
-  //  banque, canal reductionLeveeArmee).
+  //  banque, canal reductionLeveeArmee) et la loi du régime
+  //  Autoritarisme « Conscription » (refonte « 8 lois » des
+  //  régimes, 2026-10-29 : −N Or par rang du pays du joueur).
   const villeLeveeObj = p.villes.find((v) => v.nom === villeLevee)
-  const prix = prixArmee(puissance, C, villeLeveeObj)
+  const prix = prixArmee(puissance, C, villeLeveeObj, p)
   // Prix SANS les réductions de la ville (pour afficher l'économie)
-  const prixBrut = prixArmee(puissance, C)
+  const prixBrut = prixArmee(puissance, C, undefined, p)
   const orDispo = p.resources['Or']?.stock ?? 0
   const leverArmee = () => {
     const cmd = commandantsDispo.find((c) => c.id === commandant)
@@ -79,7 +81,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (!target) return
       // Prix de levée (classeur : 1 Or tous les 2 points de force) :
       // débité UNE FOIS à la levée — pas d'entretien par tour.
-      const prix2 = prixArmee(puissance, C, villeLeveeObj)
+      const prix2 = prixArmee(puissance, C, villeLeveeObj, target)
       const rs = target.resources['Or']
       if (rs && rs.stock < prix2) return
       if (rs && prix2 > 0) rs.stock -= prix2
@@ -123,7 +125,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
           // la ville de renfort (arbitrage Thibaut 2026-10-28).
           const deltaRenfort = Math.round(renfortParArmee[idx] ?? 15)
           const villeRenfortObj = p.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
-          const prixRenfort = prixArmee(deltaRenfort, C, villeRenfortObj)
+          const prixRenfort = prixArmee(deltaRenfort, C, villeRenfortObj, p)
           return (
             <div key={idx} className={`mini ${cmdMort ? 'warn-box' : ''}`}>
               <div className="mini-title">
@@ -246,7 +248,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   value={String(deltaRenfort)}
                   options={Array.from({ length: 20 }, (_, k) => (k + 1) * 15).map((d) => ({
                     value: String(d),
-                    label: `+${fmt(d)} pts (${fmt(prixArmee(d, C, villeRenfortObj))} Or)`,
+                    label: `+${fmt(d)} pts (${fmt(prixArmee(d, C, villeRenfortObj, p))} Or)`,
                   }))}
                   onChange={(v) => setRenfortParArmee((m) => ({ ...m, [idx]: Math.round(Number(v)) }))}
                 />
@@ -267,7 +269,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                     setPlayer((x, s) => {
                       const armee = x.armees[idx]
                       const villeObj = x.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
-                      const prix2 = prixArmee(delta, C, villeObj)
+                      const prix2 = prixArmee(delta, C, villeObj, x)
                       const rs = x.resources['Or']
                       if (rs && rs.stock < prix2) return
                       if (rs && prix2 > 0) rs.stock -= prix2
@@ -311,7 +313,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
               value={String(puissance)}
               options={Array.from({ length: 18 }, (_, k) => 45 + k * 15).map((v) => ({
                 value: String(v),
-                label: `${fmt(v)} pts (${fmt(prixArmee(v, C, villeLeveeObj))} Or)`,
+                label: `${fmt(v)} pts (${fmt(prixArmee(v, C, villeLeveeObj, p))} Or)`,
               }))}
               onChange={(v) => setPuissance(Math.round(Number(v)))}
             />

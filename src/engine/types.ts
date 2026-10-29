@@ -474,9 +474,14 @@ export interface ApportsTour {
   population: Record<string, number>
   /** tribut de vassalité net (négatif = payé, positif = reçu) */
   vassalite: Record<string, number>
-  /** lois chiffrées des régimes politiques & cultures (engine/regimes.ts) —
-   *  garnison de la loi du régime, bonus de capitale de la culture, etc.
-   *  Champ optionnel : absent des historiques d'avant l'ajout du canal. */
+  /** lois d'HABITANT des cultures (engine/regimes.ts) — canal « Lois
+   *  des cultures » du récap. Champ optionnel : absent des
+   *  historiques d'avant l'ajout du canal.
+   *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la clé
+   *  regimesCultures devient ORPHELINE — RENOMMÉE loisCultures,
+   *  plus aucune loi de régime ne passe par la banque ; la clé
+   *  des vieux historiques est simplement ignorée.) */
+  loisCultures?: Record<string, number>
   regimesCultures?: Record<string, number>
   /** (RETRAIT 2026-10-22, nettoyage du code mort : le canal
    *  « habitations » — consommation des rangs d'habitation, vide

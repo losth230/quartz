@@ -550,21 +550,26 @@
   "regimes": [
     {
       "nom": "Autoritarisme",
-      "loi": "Conscription : garnison des habitations +15 par rang des habitations. Coût de levée d'armée -10 par rang du pays.",
-      "garnisonParRang": 15
+      "loi": "Conscription : prix de levée d'armée -10 Or par rang du pays. Frontières closes : vos habitants ont 20 % de chances de moins de partir.",
+      "leveeOrParRangPays": 10,
+      "departHabitantsMult": 0.8
     },
     {
       "nom": "Socialisme",
-      "loi": "Pour le peuple : +5 Nourriture par tour d'été pour les champs et rizières.",
-      "nourrEteChampRiziere": 5
+      "loi": "Terre d'accueil : chaque fois qu'un migrant arrive dans une de vos villes, recevez 1 Or. Redistribution : les bourgeois ne consomment que 1 nourriture par tour et les nobles que 2 nourriture par tour.",
+      "orParMigrant": 1,
+      "consoNourrBourgeoisRegime": 1,
+      "consoNourrNobleRegime": 2
     },
     {
       "nom": "Démocratie",
-      "loi": "Elections : le sacre d'avènement est gratuit."
+      "loi": "Elections : le sacre d'avènement est gratuit. Le pouvoir du peuple : +5 Bonheur dans chacune de vos habitations.",
+      "bonheurParHabitation": 5
     },
     {
       "nom": "Monarchie",
-      "loi": "Droit Divin : vous possédez 1 serment supplémentaire."
+      "loi": "Droit Divin : vous possédez 1 serment supplémentaire. Vassaux dévoués : les taxes des vassaux rapportent 5 % de ressources supplémentaires.",
+      "tributVassalMult": 1.05
     }
   ],
   "banquesNoms": [

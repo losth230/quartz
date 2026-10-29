@@ -29,12 +29,13 @@ import type {
  *  L'ancien contenu reste dans l'historique git, règle 9.) */
 export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: ContexteEffet): boolean {
   if (!cond) return true
-  const { joueur } = ctx
   if (cond.saison && ctx.saison !== cond.saison) return false
   // (RETRAIT 2026-10-24 : les conditions `tech` / `techNom` — tech
   //  débloquée requise — sont supprimées avec le système de
   //  progrès, retour arbitre.)
-  if (cond.regime && joueur.regime !== cond.regime) return false
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la
+  //  condition `regime` est supprimée avec la source 'regime' —
+  //  plus aucune loi de régime ne vit dans la banque.)
   // (RETRAIT 2026-10-29, refonte « 12 lois » : condition `culture`
   //  supprimée avec la source 'culture'.)
   return true
@@ -54,20 +55,12 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       break
     }
 
-    case 'fluxParAmenagement': {
-      // Production CUMULABLE : valeur × nombre d'aménagements portant
-      //  l'un des noms listés dans TOUTES les villes du joueur (ex.
-      //  Socialisme : +5 Nourriture d'été par Champ/Rizière — la
-      //  saison est une CONDITION de la règle, pas un if ici).
-      let nb = 0
-      for (const v of ctx.joueur.villes) {
-        for (const a of v.amenagements ?? []) {
-          if (e.noms.includes(a)) nb++
-        }
-      }
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
+    // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le cas
+    //  'fluxParAmenagement' est supprimé avec la source 'regime' de
+    //  la banque — sa seule règle vivante (Socialisme « Pour le
+    //  peuple ») est REMPLACÉE par des lois lues par le moteur.
+    //  Aucune construction du référentiel ne produisait ce type.
+    //  Historique git, règle 9.)
     // (RETRAIT 2026-10-29, refonte « 12 lois » des cultures : le
     //  canal fluxParVilleCultureMonde est supprimé avec la source
     //  'culture' — règles de pays « +N par ville de cette culture

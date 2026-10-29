@@ -26,7 +26,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { regimeDef, type Cfg } from './gameData'
 import { garnisonHabitationVille } from './garnisons'
 import { capMetierVille } from './metiers'
 import { metiersDisponiblesRang } from './habitations'
@@ -190,8 +190,20 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
 }
 
 /** Bonheur complet d'une ville (moyenne simple des 5 scores). */
+/** (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie « Le
+ *  pouvoir du peuple ») : Bonheur ajouté dans CHACUNE des
+ *  habitations du joueur (bonheurParHabitation, défaut 5). Les
+ *  scores purs des 5 axes sont inchangés — le bonus est un
+ *  rehaussement du TOTAL, plafonné à 100. Pure. */
+export function bonusBonheurRegime(p: Player, C: Cfg): number {
+  return regimeDef(p.regime, C.config)?.bonheurParHabitation ?? 0
+}
+
+/** Bonheur complet d'une ville : formule des 5 axes + la loi du
+ *  régime « Le pouvoir du peuple » (Démocratie, +5 par habitation
+ *  — refonte « 8 lois », 2026-10-29), plafonné à 100. */
 export function bonheurVilleComplete(state: GameState, p: Player, ville: City, C: Cfg): number {
-  return bonheurVille(scoresVille(state, p, ville, C))
+  return Math.min(100, bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C))
 }
 
 /** Bonheur d'un joueur : moyenne des bonheurs de ses villes
