@@ -146,6 +146,10 @@ test('evaluerFamilles : un roturier qui franchit 100 journalise toujours son acc
   // un roturier de dynastie, célibataire (chemin « appliquer »)
   const rot = pop.find((c) => !isNobleDyn(c.dynastie, C) && c.statut !== 'Décédé' && c.age >= C.p.adultAge && !c.mariageId)
   if (!rot) return // skip silencieux
+  // (refonte 12 lois, 2026-10-29 : culture à seuil bourgeois 100 —
+  //  la loi « Bourgeoisie facile » du Communautarisme abaisse le
+  //  seuil à 80 et un communautariste serait déjà bourgeois à 99)
+  rot.culture = 'Lunisme'
   rot.prestige = 99
   rot.metier = C.p.metierChasseur
   rot.domicile = 'Maison'
@@ -244,10 +248,15 @@ test('B6 : mariageMemeRang — bonus de même rang social, libres entre conditio
   // deux personnages IDENTIQUES par ailleurs (même métier, âge,
   //  culture vide, sans traits) — SEUL le prestige (donc le rang)
   //  diffère : l'écart de probabilité est exactement le paramètre.
-  const a = perso({ metier: 'Chasseur' })
-  const roturier = perso({ metier: 'Chasseur' })
+  // (refonte 12 lois, 2026-10-29 : dynastie ROTURIER obligatoire —
+  //  rangDe (le rang du mariage depuis la refonte) traite une
+  //  dynastie noble comme noble quel que soit le prestige ; les
+  //  personnages fictifs du test doivent rester comparables par le
+  //  prestige seul.)
+  const a = perso({ dynastie: C.p.dynastieRoturier, metier: 'Chasseur' })
+  const roturier = perso({ dynastie: C.p.dynastieRoturier, metier: 'Chasseur' })
   roturier.prestige = 10
-  const bourgeois = perso({ metier: 'Chasseur' })
+  const bourgeois = perso({ dynastie: C.p.dynastieRoturier, metier: 'Chasseur' })
   bourgeois.prestige = 150   // même métier : seule différence = le rang
   a.prestige = 10
   const memeRang = computeMarriageProbability(a, roturier, C)

@@ -105,9 +105,16 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
 }
 
 /** Registre complet : toutes les règles migrées. Appelé par le moteur
- *  aux sites d'application (une fois par tour, cacheable). */
+ *  aux sites d'application (une fois par tour, cacheable).
+ *  (REFONTE 12 LOIS, 2026-10-29 : la source 'culture' est RETIRÉE —
+ *  reglesCultures et l'effet fluxParVilleCultureMonde disparaissent
+ *  avec les règles de pays « +N par habitation de cette culture dans
+ *  le monde » ; les lois des cultures vivent DÉSORMAIS dans le
+ *  moteur (lois de VILLE : domiciles/metiers/economie/commerce/
+ *  garnisons ; lois d'HABITANT : regimes.loisHabitants). Seules
+ *  restent les constructions et les régimes.) */
 export function registreComplet(C: Cfg): RegleBanque[] {
-  return [...reglesConstructions(C), ...reglesRegimes(C), ...reglesCultures(C)]
+  return [...reglesConstructions(C), ...reglesRegimes(C)]
   // (RETRAIT 2026-10-24, retour arbitre : la source 'tech' — règles de
   //  banque des technologies de progrès — est supprimée avec le
   //  système de progrès, plus aucun producteur ni consommateur.)
@@ -142,36 +149,15 @@ export function reglesRegimes(C: Cfg): RegleBanque[] {
   return out
 }
 
-/** Règles de banque des RÈGLES DE PAYS des cultures (source 2/3 du
- *  brûlage #3, 2026-10-20) : +N d'une ressource PAR VILLE de cette
- *  culture dans le MONDE (tous joueurs confondus — ex. Lunisme :
- *  +4 Tourisme par ville lunisme). Les cultures sans loi chiffrée
- *  (ex. Déisme : scienceParConstruction est un instantané de
- *  construction) ne génèrent PAS de règle. */
-export function reglesCultures(C: Cfg): RegleBanque[] {
-  const LOIS: Array<[string, 'capitalNourrParHabMonde' | 'capitalTourismeParHabMonde' | 'capitalOrParHabMonde']> = [
-    ['Nourriture', 'capitalNourrParHabMonde'],
-    ['Tourisme', 'capitalTourismeParHabMonde'],
-    ['Or', 'capitalOrParHabMonde'],
-  ]
-  const out: RegleBanque[] = []
-  for (const cult of C.config.cultures) {
-    const effets: Effet[] = []
-    for (const [res, champ] of LOIS) {
-      const v = cult[champ] ?? 0
-      if (v) effets.push({ type: 'fluxParVilleCultureMonde', ressource: res, valeur: v })
-    }
-    if (effets.length === 0) continue
-    out.push({
-      id: 'culture.' + slug(cult.nom),
-      source: 'culture',
-      nom: cult.nom,
-      conditions: { culture: cult.nom },
-      effets,
-    })
-  }
-  return out
-}
+// ── (RETRAIT 2026-10-29, refonte « 12 lois » des cultures) ──────────
+//  Source 'culture' — règles de pays des cultures : SUPPRIMÉE. Les
+//  règles « +N d'une ressource PAR VILLE de cette culture dans le
+//  MONDE » (reglesCultures, effet fluxParVilleCultureMonde, champs
+//  capitalNourr/Tourisme/OrParHabMonde) sont remplacées par les 12
+//  lois : lois de VILLE (logements, emplacements de Scientifique,
+//  fermiers d'été, routes, garnison — lues par le moteur) et lois
+//  d'HABITANT (nobles et gardes — regimes.loisHabitants). L'ancien
+//  contenu reste dans l'historique git, règle 9.
 
 /** Cache du registre par référence de config (les règles ne dépendent
  *  que du référentiel — recalculées seulement si la config change). */

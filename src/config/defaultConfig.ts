@@ -78,17 +78,62 @@ export interface CultureDef {
   heredite: string
   homoAutorisee: boolean
   fertFactor: number
-  reglePays: string
-  reglePerso: string
-  /** Règles chiffrées appliquées AUTOMATIQUEMENT par le moteur
-   *  (engine/regimes.ts, engine/metiers.ts) : la capitale génère +N d'une
-   *  ressource par habitation de cette culture dans le monde, et chaque
-   *  construction de bâtiment rapporte +N Science. Champs optionnels :
-   *  absents des vieilles configurations, complétés par migrerCultures. */
-  capitalNourrParHabMonde?: number
-  capitalTourismeParHabMonde?: number
-  capitalOrParHabMonde?: number
-  scienceParConstruction?: number
+  /** (RENOMMÉS 2026-10-29, refonte « 12 lois » — anciens reglePays /
+   *  reglePerso : une culture porte une loi de VILLE (culture
+   *  majoritaire de la ville, ville.culture) et une loi d'HABITANT
+   *  (la culture PROPRE du personnage, où qu'il vive).) */
+  regleVille: string
+  regleHabitant: string
+  /** 12 LOIS DES CULTURES (refonte 2026-10-29, arbitrages Thibaut) :
+   *  lois chiffrées appliquées AUTOMATIQUEMENT par le moteur, champs
+   *  optionnels — absents des vieilles configurations, complétés par
+   *  migrerCultures. ANCIENS CHAMPS REMPLACÉS/HISTORISÉS :
+   *  capitalNourr/Tourisme/OrParHabMonde (règles de pays « +N par
+   *  habitation de cette culture dans le monde » — retirées avec la
+   *  refonte) et scienceParConstruction (Déisme « +N Science par
+   *  construction », retiré : les « bâtiments de faction » n'existent
+   *  plus depuis le 2026-10-19, la nouvelle loi Déisme est un
+   *  EMPLACEMENT de Scientifique par bâtiment). */
+  /** Communautarisme « Logements élargis » : +N Taudis au parc de
+   *  logements de chaque ville de cette culture. */
+  taudisParHabitation?: number
+  /** Lunisme « Villes Saintes » : +N Palais au parc de logements de
+   *  chaque ville de cette culture. */
+  palaisParHabitation?: number
+  /** Communautarisme « Bourgeoisie facile » : seuil de prestige
+   *  bourgeois de cette culture (défaut 100 ailleurs). */
+  prestigeSeuilBourgeois?: number
+  /** Déisme « Monuments pieux » : +N places de Scientifique par
+   *  BÂTIMENT (catégorie Bâtiment, aménagements exclus) de la ville. */
+  scientifiqueParBatiment?: number
+  /** Déisme « Lavages de main » : modificateur additif de la
+   *  probabilité de contracter les maladies (−0,02 = −2 %). */
+  maladieContractMod?: number
+  /** Lunisme « Foi supérieure » : +N Tourisme par tour et par NOBLE
+   *  (rang rangDe) de cette culture. */
+  tourismeParNoble?: number
+  /** Naturalisme « Champs nourriciers » : +N Nourriture par tour
+   *  d'ÉTÉ et par FERMIER de la ville (métier déjà `ete`). */
+  nourrEteParFermier?: number
+  /** Sethisme « Caravanes » : nombre d'aménagements requis pour
+   *  ouvrir la route bonus. */
+  caravanesSeuilAmenagements?: number
+  /** Sethisme « Caravanes » : routes commerciales bonus au cap du
+   *  joueur par ville de cette culture qualifiée. */
+  caravanesRoutesBonus?: number
+  /** Sethisme « Conseil des Sages » : +N Science par tour et par
+   *  NOBLE (rang rangDe) de cette culture. */
+  scienceParNoble?: number
+  /** Zélotisme « Ferveur martiale » : garnison des habitations qui ne
+   *  sont PAS de cette culture réduite de N × rang de l'habitation
+   *  (malus mondial, une fois par habitation, plancher 0). */
+  garnisonHorsCultureParRang?: number
+  /** Zélotisme « Corps de fer » : +N Garnison STATIQUE par Garde de
+   *  cette culture — SE CUMULE au défaut moteur garnisonParGarde. */
+  garnisonParGardeCulture?: number
+  /** Zélotisme « Corps de fer » : +N Or par tour et par Garde de
+   *  cette culture (flux). */
+  orParGarde?: number
 }
 export interface RegimeDef {
   nom: string
@@ -613,12 +658,24 @@ function normaliserCultures(): CultureDef[] {
     //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
     //  s'applique qu'aux valeurs absentes ou non finies)
     fertFactor: Number.isFinite(Number(c.fertFactor)) ? Number(c.fertFactor) : 1,
-    reglePays: c.reglePays || '',
-    reglePerso: c.reglePerso || '',
-    capitalNourrParHabMonde: Number(c.capitalNourrParHabMonde) || undefined,
-    capitalTourismeParHabMonde: Number(c.capitalTourismeParHabMonde) || undefined,
-    capitalOrParHabMonde: Number(c.capitalOrParHabMonde) || undefined,
-    scienceParConstruction: Number(c.scienceParConstruction) || undefined,
+    // (refonte 12 lois, 2026-10-29 : reglePays/reglePerso RENOMMÉS
+    //  regleVille/regleHabitant — repli croisé pour les référentiels
+    //  anciens ; les 13 champs chiffrés des lois sont optionnels.)
+    regleVille: c.regleVille || c.reglePays || '',
+    regleHabitant: c.regleHabitant || c.reglePerso || '',
+    taudisParHabitation: Number(c.taudisParHabitation) || undefined,
+    palaisParHabitation: Number(c.palaisParHabitation) || undefined,
+    prestigeSeuilBourgeois: Number(c.prestigeSeuilBourgeois) || undefined,
+    scientifiqueParBatiment: Number(c.scientifiqueParBatiment) || undefined,
+    maladieContractMod: Number(c.maladieContractMod) || undefined,
+    tourismeParNoble: Number(c.tourismeParNoble) || undefined,
+    nourrEteParFermier: Number(c.nourrEteParFermier) || undefined,
+    caravanesSeuilAmenagements: Number(c.caravanesSeuilAmenagements) || undefined,
+    caravanesRoutesBonus: Number(c.caravanesRoutesBonus) || undefined,
+    scienceParNoble: Number(c.scienceParNoble) || undefined,
+    garnisonHorsCultureParRang: Number(c.garnisonHorsCultureParRang) || undefined,
+    garnisonParGardeCulture: Number(c.garnisonParGardeCulture) || undefined,
+    orParGarde: Number(c.orParGarde) || undefined,
   }))
 }
 
@@ -777,13 +834,40 @@ export function migrateTraits(t: TraitDef[] | undefined): TraitDef[] {
 /** Complète les cultures d'une configuration existante avec les champs
  *  chiffrés ajoutés après coup (par nom — les valeurs éditées par
  *  l'utilisateur priment sur les défauts, les champs manquants viennent
- *  du référentiel). */
+ *  du référentiel).
+ *  (REFONTE 12 LOIS, 2026-10-29 : construction EXPLICITE — les clés
+ *  mortes des anciennes lois (reglePays/reglePerso renommés,
+ *  capitalNourr/Tourisme/OrParHabMonde, scienceParConstruction) sont
+ *  supprimées des configurations existantes ; REMPLACÉ le simple
+ *  spread { ...d, ...c } qui les ressuscitait. fertFactor : patron
+ *  taxes25 — la valeur 1 de l'ANCIEN défaut ne doit pas bloquer le
+ *  nouveau défaut (Naturalisme « Walpurgis » 1,1) : si l'utilisateur
+ *  n'a pas édité la valeur (1 = ancien défaut) et que le nouveau défaut
+ *  diffère, le nouveau défaut s'applique.) */
 export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
   const defs = DEFAULT_CONFIG.cultures
   if (!Array.isArray(list) || list.length === 0) return defs
+  const CHAMPS = [
+    'taudisParHabitation', 'palaisParHabitation', 'prestigeSeuilBourgeois',
+    'scientifiqueParBatiment', 'maladieContractMod', 'tourismeParNoble',
+    'nourrEteParFermier', 'caravanesSeuilAmenagements', 'caravanesRoutesBonus',
+    'scienceParNoble', 'garnisonHorsCultureParRang', 'garnisonParGardeCulture',
+    'orParGarde',
+  ] as const
   return list.map((c) => {
     const d = defs.find((x) => x.nom === c?.nom)
-    return d ? { ...d, ...c } : c
+    if (!d) return c
+    const out: CultureDef = {
+      nom: c.nom, heredite: c.heredite, homoAutorisee: c.homoAutorisee,
+      regleVille: c.regleVille ?? d.regleVille,
+      regleHabitant: c.regleHabitant ?? d.regleHabitant,
+      fertFactor: c.fertFactor === 1 && d.fertFactor !== 1 ? d.fertFactor : (c.fertFactor ?? d.fertFactor),
+    }
+    for (const ch of CHAMPS) {
+      if (c[ch] !== undefined) out[ch] = c[ch] as never
+      else if (d[ch] !== undefined) out[ch] = d[ch] as never
+    }
+    return out
   })
 }
 

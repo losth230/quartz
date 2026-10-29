@@ -9,10 +9,10 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
-import { cfgOf, metierDef, type Cfg } from './gameData'
+import { cfgOf, cultureDef, metierDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './geographie'
-import { rangSocial, prestigeDe } from './statutSocial'
+import { rangDe } from './statutSocial'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -47,7 +47,9 @@ import { rangSocial, prestigeDe } from './statutSocial'
  *  de métier du villageois (ressources 1/2 et bonus Ponton), AVANT le
  *  calcul des taxes (le gain amplifié est taxé comme les autres). */
 export function multProdRang(c: Character, C: Cfg): number {
-  const r = rangSocial(prestigeDe(c))
+  // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
+  //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
+  const r = rangDe(c, C)
   return r === 'noble' ? C.p.prodMultNoble : r === 'bourgeois' ? C.p.prodMultBourgeois : 1
 }
 
@@ -56,7 +58,9 @@ export function multProdRang(c: Character, C: Cfg): number {
  *  consoNourrBourgeois, noble consoNourrNoble. Le rang dérivé du
  *  PRESTIGE — les mineurs (prestige 0) restent à la base. */
 export function consoNourrHabitant(c: Character, C: Cfg): number {
-  const r = rangSocial(prestigeDe(c))
+  // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
+  //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
+  const r = rangDe(c, C)
   return r === 'noble' ? C.p.consoNourrNoble
     : r === 'bourgeois' ? C.p.consoNourrBourgeois
     : C.p.consoNourrParHab
@@ -141,6 +145,13 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  chaque Pêcheur de la ville produit +0,5 Bétail par tour, AVANT
   //  le calcul des taxes (taxé comme les autres gains).
   const ponton = villeCotiere(ville) && (ville.batiments ?? []).includes('Ponton')
+  // (Refonte 12 lois, 2026-10-29, Naturalisme « Champs
+  //  nourriciers » : si la VILLE est de culture Naturalisme, chaque
+  //  FERMIER produit +1 Nourriture par tour d'ÉTÉ — le Fermier est
+  //  déjà un métier `ete` du référentiel (sa production de base ne
+  //  vient que l'été) ; le bonus suit la même saison, ×
+  //  multiplicateur de rang, AVANT les taxes, comme le bonus Ponton.)
+  const champsNourriciers = cultureDef(ville.culture, C.config)?.nourrEteParFermier ?? 0
   for (const c of vivants) {
     if (!c.metier) continue
     const td = metierDef(c.metier, C.config)
@@ -153,6 +164,9 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     const mult = multProdRang(c, C)
     if (ponton && c.metier === 'Pêcheur') {
       metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5 * mult
+    }
+    if (champsNourriciers && state.saison === 'Été' && c.metier === 'Fermier') {
+      metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + champsNourriciers * mult
     }
     if (td.ressource1 && td.valeur1 !== 0) {
       metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1 * mult

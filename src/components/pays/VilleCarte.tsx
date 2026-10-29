@@ -51,7 +51,7 @@ import { constructionsRefs, coutConstructionRef, resumeConstruction } from '../.
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
 import { scoresVille, bonheurVille } from '../../engine/bonheur'
-import { initStockVille, stockRang, vivantsVille, domicilesApportesVille } from '../../engine/domiciles'
+import { initStockVille, stockRang, vivantsVille, domicilesApportesVille, domicilesCultureVille } from '../../engine/domiciles'
 import { occupationsMetierVille } from '../../engine/metiers'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
@@ -316,6 +316,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           for (const e of domicilesApportesVille(ville, C)) {
             capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
           }
+          // (refonte 12 lois, 2026-10-29 : loi de VILLE de la
+          //  culture — Communautarisme « Logements élargis » +5
+          //  Taudis, Lunisme « Villes Saintes » +2 Palais — même
+          //  convention que les apports de constructions.)
+          for (const e of domicilesCultureVille(ville, C)) {
+            capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          }
           const habitantsLog = vivantsVille(state, p.n, ville)
           const occLog = new Map<string, number>()
           for (const c of habitantsLog) {
@@ -451,11 +458,26 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                           </td>
                         </tr>
                       ))}
+                      {/* (refonte 12 lois, 2026-10-29 : le plancher
+                          réconcilie le total CLAMPÉ (≥ 0) avec les
+                          lignes — Ferveur martiale peut rendre la
+                          somme négative, le total affiche 0 ;
+                          REMPLACÉ l'unique ligne « Combler les
+                          lacunes » minimum 30, plancher historique
+                          des technologies supprimées le 2026-10-24,
+                          conservé pour un total POSITIF non détaillé.) */}
                       {plancher > 0 && (
                         <tr>
                           <td className="muted">plancher</td>
                           <td>« Combler les lacunes » : minimum 30</td>
                           <td className="num">+{fmt(plancher)}</td>
+                        </tr>
+                      )}
+                      {plancher < 0 && (
+                        <tr>
+                          <td className="muted">plancher</td>
+                          <td>Ferveur martiale : garnison maintenue à 0</td>
+                          <td className="num">{fmt(plancher)}</td>
                         </tr>
                       )}
                       <tr className="ligne-total">

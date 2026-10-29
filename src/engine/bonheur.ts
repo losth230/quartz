@@ -31,7 +31,7 @@ import { garnisonHabitationVille } from './garnisons'
 import { capMetierVille } from './metiers'
 import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
-import { domicilesApportesVille } from './domiciles'
+import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
 import { tourismeCourant } from './regimes'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
@@ -122,7 +122,12 @@ export function logementsVille(ville: City, C: Cfg): number {
   const stockVille = Array.isArray(ville.domiciles)
     ? ville.domiciles.reduce((acc, e) => acc + e.nombre, 0)
     : null
+  // (refonte 12 lois, 2026-10-29 : loi de VILLE de la culture —
+  //  Communautarisme « Logements élargis » +5 Taudis, Lunisme
+  //  « Villes Saintes » +2 Palais — MÊME convention que les apports
+  //  de constructions, comptés dans le parc, non attribuables.)
   const apportes = domicilesApportesVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
+    + domicilesCultureVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
   if (stockVille !== null) return stockVille + apportes
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),

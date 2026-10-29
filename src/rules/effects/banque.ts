@@ -23,7 +23,9 @@ import type {
  *  peuple, vassal, suzerainDeCite (plus les notes documentaires
  *  ageMin/pontificatMin « suivi manuel au plateau ») — sont
  *  supprimées avec leurs champs de ConditionRegle ; seules restent
- *  saison, regime et culture, les seules produites par le registre.
+ *  saison et regime, les seules produites par le registre.
+ *  (RETRAIT 2026-10-29, refonte « 12 lois » : la condition
+ *  `culture` est supprimée avec la source 'culture'.)
  *  L'ancien contenu reste dans l'historique git, règle 9.) */
 export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: ContexteEffet): boolean {
   if (!cond) return true
@@ -33,7 +35,8 @@ export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: Contex
   //  débloquée requise — sont supprimées avec le système de
   //  progrès, retour arbitre.)
   if (cond.regime && joueur.regime !== cond.regime) return false
-  if (cond.culture && joueur.culture !== cond.culture) return false
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : condition `culture`
+  //  supprimée avec la source 'culture'.)
   return true
 }
 
@@ -65,19 +68,11 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
       break
     }
-    case 'fluxParVilleCultureMonde': {
-      // Production par VILLE de la culture du joueur dans le MONDE
-      //  entier, tous joueurs confondus (ex. Lunisme : +4 Tourisme
-      //  par ville de culture Lunisme).
-      let nb = 0
-      for (const q of ctx.state.players) {
-        for (const v of q.villes) {
-          if (v.culture === ctx.joueur.culture) nb++
-        }
-      }
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
+    // (RETRAIT 2026-10-29, refonte « 12 lois » des cultures : le
+    //  canal fluxParVilleCultureMonde est supprimé avec la source
+    //  'culture' — règles de pays « +N par ville de cette culture
+    //  dans le monde » remplacées par les lois de VILLE et
+    //  d'HABITANT lues par le moteur. Historique git, règle 9.)
     // (RETRAIT 2026-10-24, retour arbitre : les types d'effets des
     //  TECHS — fluxSiCapitale, fluxParVille, fluxParVilleProximite,
     //  fluxParRangHabitation, fluxParBatiment,

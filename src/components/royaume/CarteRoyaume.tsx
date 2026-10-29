@@ -45,14 +45,16 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
                 Hérédité {String(cult.heredite).toLowerCase()} ·
                 mariage homosexuel {cult.homoAutorisee ? 'autorisé' : 'interdit'}
               </div>
-              {cult.reglePays && <div className="small muted">Règle de pays : {cult.reglePays}</div>}
-              {cult.reglePerso && <div className="small muted">Règle de personnage : {cult.reglePerso}</div>}
+              {cult.regleVille && <div className="small muted">Loi de ville : {cult.regleVille}</div>}
+              {cult.regleHabitant && <div className="small muted">Loi d'habitant : {cult.regleHabitant}</div>}
               <div className="muted small">
                 Ce que fait la culture : l'hérédité conditionne l'accès aux métiers
                 héréditaires ; la fécondité influe sur les
                 naissances ; les mariages homosexuels (si autorisés) permettent des
-                unions de même sexe (sans conception) ; la règle de pays et les lois
-                chiffrées sont appliquées automatiquement à chaque fin de tour.
+                unions de même sexe (sans conception) ; les lois de ville (culture
+                majoritaire de la cité) et les lois d'habitant (culture propre de
+                chacun, refonte « 12 lois » 2026-10-29) sont appliquées
+                automatiquement par le moteur à chaque fin de tour.
               </div>
             </>
           )}

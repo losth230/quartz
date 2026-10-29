@@ -45,7 +45,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { cultureDef, type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
 import { logementsConstructionRef } from './constructions'
 import { rangDe } from './statutSocial'
@@ -109,6 +109,23 @@ export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: s
  *  Bas quartier +20). */
 export function taudisApportesVille(ville: City, C: Cfg): number {
   return domicilesApportesVille(ville, C).find((e) => e.domicile === 'Taudis')?.nombre ?? 0
+}
+
+/** Domiciles apportés par la LOI DE VILLE de la culture de la ville
+ *  (refonte « 12 lois » des cultures, 2026-10-29) : Communautarisme
+ *  « Logements élargis » +5 Taudis, Lunisme « Villes Saintes » +2
+ *  Palais. MÊME convention que les apports de constructions : comptés
+ *  dans le parc de logements (logementsVille → bonheur et magnét
+ *  migratoire v3), affichés VilleCarte, NON ATTRIBUTABLES
+ *  (attribuerDomicilesVille ne lit que ville.domiciles — convention
+ *  existante des apports, à documenter : ces lits servent le score
+ *  de logement, pas l'attribution nominative). */
+export function domicilesCultureVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
+  const cult = cultureDef(ville.culture, C.config)
+  const out: Array<{ domicile: string; nombre: number }> = []
+  if (cult?.taudisParHabitation) out.push({ domicile: 'Taudis', nombre: cult.taudisParHabitation })
+  if (cult?.palaisParHabitation) out.push({ domicile: 'Palais', nombre: cult.palaisParHabitation })
+  return out
 }
 
 // ── Attribution ──────────────────────────────────────────────────────

@@ -56,7 +56,7 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { Character, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { cultureDef, type Cfg } from './gameData'
 import { isNobleDyn } from './shared'
 import { qualiteDomicile } from './domiciles'
 import { bonheurVilleComplete } from './bonheur'
@@ -67,11 +67,23 @@ import { fullName } from './shared'
 export type RangSocial = 'roturier' | 'bourgeois' | 'noble'
 
 /** Rang social dérivé du prestige (arbitrage 2026-10-24 :
- *  0-100 roturier, 100-250 bourgeois, 250+ noble). */
-export function rangSocial(prestige: number): RangSocial {
+ *  0-100 roturier, 100-250 bourgeois, 250+ noble).
+ *  (Refonte 12 lois, 2026-10-29 : le seuil bourgeois 100 devient un
+ *  PARAMÈTRE — la loi d'habitant du Communautarisme « Bourgeoisie
+ *  facile » l'abaisse à 80 (seuilBourgeoisCulture) ; le seuil noble
+ *  250 reste fixe. Défaut 100 pour tout appel direct.) */
+export function rangSocial(prestige: number, seuilBourgeois = 100): RangSocial {
   if (prestige >= 250) return 'noble'
-  if (prestige >= 100) return 'bourgeois'
+  if (prestige >= seuilBourgeois) return 'bourgeois'
   return 'roturier'
+}
+
+/** Seuil de prestige BOURGEOIS selon la CULTURE propre d'un
+ *  personnage (refonte 12 lois, 2026-10-29 : Communautarisme
+ *  « Bourgeoisie facile » — 80, champ prestigeSeuilBourgeois ;
+ *  défaut 100 pour les autres cultures et cultures inconnues). */
+export function seuilBourgeoisCulture(culture: string | null | undefined, C: Cfg): number {
+  return cultureDef(culture ?? '', C.config)?.prestigeSeuilBourgeois ?? 100
 }
 
 /** RANG D'UN PERSONNAGE (retour Thibaut 2026-10-26 : « il faut des
@@ -81,7 +93,10 @@ export function rangSocial(prestige: number): RangSocial {
  *  LE rang affiché (colonne Rang, cour) et journalisé (changements). */
 export function rangDe(c: Character, C: Cfg): RangSocial {
   if (isNobleDyn(c.dynastie, C)) return 'noble'
-  return rangSocial(prestigeDe(c))
+  // (refonte 12 lois, 2026-10-29 : seuil bourgeois selon la culture
+  //  PROPRE du personnage — « Bourgeoisie facile » du
+  //  Communautarisme abaisse le seuil à 80)
+  return rangSocial(prestigeDe(c), seuilBourgeoisCulture(c.culture, C))
 }
 
 /** PRESTIGE DE BASE d'un noble de NAISSANCE (retour Thibaut

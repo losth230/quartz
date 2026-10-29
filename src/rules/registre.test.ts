@@ -43,8 +43,12 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  surtout les réductions de levée, rejoignent la banque » :
 //  reductionLeveeArmee revient AVEC un producteur — les fiches de
 //  constructions — et rejoint le contrat ci-dessous.)
+//  (RETRAIT 2026-10-29, refonte « 12 lois » des cultures :
+//  fluxParVilleCultureMonde quitte le contrat avec la source
+//  'culture' — plus aucune production de culture ne passe par la
+//  banque ; seuls restent les types des constructions et du régime.)
 const TYPES_CONNUSS = new Set([
-  'fluxVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde',
+  'fluxVille', 'fluxParAmenagement',
   'garnisonVille', 'placesMetier', 'logements', 'reductionLeveeArmee',
 ])
 
@@ -78,7 +82,8 @@ test('registre : chaque effet des règles est un type CONNU de la banque', () =>
   const regles = registreComplet(C_DEFAUT)
   // (RETRAIT 2026-10-24 : le seuil était > 20 AVEC les règles des
   //  technologies de progrès (source 'tech') — sans elles, le registre
-  //  des constructions/régimes/cultures en compte 14.)
+  //  en compte 14. RETRAIT 2026-10-29, refonte « 12 lois » : la
+  //  source 'culture' est vide, il reste constructions + régimes.)
   assert.ok(regles.length > 10, 'le registre doit contenir les constructions à effets')
   for (const r of regles) {
     assert.ok(Array.isArray(r.effets) && r.effets.length > 0, `règle sans effet : ${r.id}`)

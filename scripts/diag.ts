@@ -114,7 +114,8 @@ try {
       //  construction (champ reductionLeveeArmee).)
       case 'reductionLeveeArmee': return `levée d'armée −${e.valeur} Or`
       case 'fluxParAmenagement': return `${e.ressource} ${signe(e.valeur)} par ${e.noms.join(' / ')}`
-      case 'fluxParVilleCultureMonde': return `${e.ressource} ${signe(e.valeur)} par ville de la culture`
+      // (RETRAIT 2026-10-29, refonte « 12 lois » : canal
+      //  fluxParVilleCultureMonde supprimé avec la source 'culture'.)
       default: return JSON.stringify(e)
     }
   }
@@ -123,7 +124,9 @@ try {
     (r.conditions ? ` [si ${Object.entries(r.conditions).map(([k, v]) => `${k}=${v}`).join(', ')}]` : '') +
     ` : ${r.effets.map(effetCourt).join(' · ')}`
   // (Canal reductionLeveeArmee ajouté le 2026-10-28 — cf. effetCourt.)
-  const CANAUX_CONNUS = ['placesMetier', 'logements', 'reductionLeveeArmee', 'fluxVille', 'garnisonVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde']
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : le canal
+  //  fluxParVilleCultureMonde est retiré avec la source 'culture'.)
+  const CANAUX_CONNUS = ['placesMetier', 'logements', 'reductionLeveeArmee', 'fluxVille', 'garnisonVille', 'fluxParAmenagement']
   const canaux: string[] = []
   for (const r of regles) for (const e of r.effets) if (!canaux.includes(e.type)) canaux.push(e.type)
   const inconnus = canaux.filter((c) => !CANAUX_CONNUS.includes(c)).sort()

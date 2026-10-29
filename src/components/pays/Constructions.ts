@@ -22,7 +22,7 @@ import { coutAmenagement } from '../../engine/amenagements'
 import { constructionRef, prerequisConstruction, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { rangNiveau } from '../../engine/regimes'
 import { batimentsCapitale, capitaleDe } from '../../engine/factions'
-import { cultureDef, type Cfg } from '../../engine/gameData'
+import { type Cfg } from '../../engine/gameData'
 import { villeCotiere } from '../../engine/villes'
 import { resynchroniserTourisme } from '../../engine/regimes'
 import { fmt } from '../ui'
@@ -200,13 +200,13 @@ export function faireConstruire(o: {
         if (rs) rs.stock -= v
         if (v > 0) parts.push(`${fmt(v)} ${res}`)
       }
-      // Règle de culture : ex. Déisme — +N Science par bâtiment construit
-      // (champ paramétrable, onglets « Cultures & régimes »).
-      const sci = type === 'batiment' ? (cultureDef(t.culture, C.config)?.scienceParConstruction ?? 0) : 0
-      if (sci > 0) {
-        const rsSci = t.resources['Science']
-        if (rsSci) rsSci.stock += sci
-      }
+      // (RETRAIT 2026-10-29, refonte « 12 lois » : le crédit de
+      //  +N Science par bâtiment construit (ancienne loi Déisme,
+      //  champ scienceParConstruction) est supprimé — les
+      //  « bâtiments de faction » n'existent plus comme donnée
+      //  depuis le 2026-10-19 ; la nouvelle loi Déisme « Monuments
+      //  pieux » est un EMPLACEMENT de Scientifique par bâtiment,
+      //  lu par emplacementsMetierVille. Historique git, règle 9.)
       // Tourisme (retour Thibaut 2026-10-16) : la construction monte
       //  la production Tourisme ; le stock est RECALCULÉ =
       //  production courante (jamais cumulé).

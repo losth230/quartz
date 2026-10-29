@@ -10,7 +10,7 @@ import type { Rng } from './rng'
 import { cfgOf, metierDef, cultureDef, traitDef, type Cfg } from './gameData'
 import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
-import { rangSocial, prestigeDe } from './statutSocial'
+import { rangDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
@@ -137,7 +137,10 @@ export function computeMarriageProbability(f: Character, h: Character, C: Cfg = 
   // MÊME RANG SOCIAL (vague E, arbitrage Thibaut 2026-10-24 : les
   //  mariages restent LIBRES — un bonus favorise les unions de
   //  même condition, aucune interdiction entre conditions).
-  if (rangSocial(prestigeDe(f)) === rangSocial(prestigeDe(h))) score += C.p.mariageMemeRang
+  // (refonte 12 lois, 2026-10-29 : rangDe des deux fiancés — le
+  //  seuil bourgeois peut être ABAISSÉ par la loi d'habitant du
+  //  Communautarisme « Bourgeoisie facile » (80 au lieu de 100))
+  if (rangDe(f, C) === rangDe(h, C)) score += C.p.mariageMemeRang
   // écart d'âge
   score -= Math.abs(f.age - h.age) * C.p.mariageParAnEcart
   // bâtards
@@ -326,6 +329,17 @@ function emplacementsMetierVille(
   //  emplacementsRoutesVille) — ctx optionnel car les cités libres
   //  sont hors du champ des caps et certains appelants n'ont pas le
   //  state sous la main.
+  // (Refonte 12 lois, 2026-10-29, Déisme « Monuments pieux » : +N
+  //  places de Scientifique par BÂTIMENT (catégorie « Bâtiment » —
+  //  les AMÉNAGEMENTS sont exclus) de la ville, si la VILLE est de
+  //  culture Déisme. Les « bâtiments de faction » du classeur
+  //  n'existent plus comme donnée depuis le 2026-10-19 : l'ancienne
+  //  loi (crédit de +4 Science à la construction, retirée avec la
+  //  refonte) est REMPLACÉE/HISTORISÉE par cet emplacement.)
+  if (metier === 'Scientifique') {
+    const n = cultureDef(ville.culture, C.config)?.scientifiqueParBatiment ?? 0
+    if (n) total += n * (ville.batiments ?? []).length
+  }
   if (ctx) total += emplacementsRoutesVille(metier, ctx.state, ctx.joueur, ville.nom, C)
   return total
 }

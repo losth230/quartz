@@ -92,15 +92,12 @@ export interface EffetFluxParAmenagement {
   noms: string[]
 }
 
-/** Production par tour, par VILLE de la culture du joueur dans le
- *  MONDE entier, tous joueurs confondus (ex. Lunisme : +N Tourisme
- *  par ville de culture Lunisme — règle de pays du classeur, champs
- *  capitalNourr/Tourisme/OrParHabMonde). */
-export interface EffetFluxParVilleCultureMonde {
-  type: 'fluxParVilleCultureMonde'
-  ressource: string
-  valeur: number
-}
+// ── (RETRAIT 2026-10-29, refonte « 12 lois » des cultures) ──────────
+//  EffetFluxParVilleCultureMonde : SUPPRIMÉ avec la source
+//  'culture' (règles de pays « +N par ville de cette culture dans le
+//  monde », champs capitalNourr/Tourisme/OrParHabMonde) — remplacé
+//  par les lois de VILLE et d'HABITANT lues par le moteur. L'ancien
+//  contenu reste dans l'historique git, règle 9.
 
 // ── (RETRAIT 2026-10-24, retour arbitre) ──────────────────────────────
 //  Effets des technologies de progrès (source 'tech', brûlage #3
@@ -157,7 +154,6 @@ export interface EffetLogements {
 export type Effet =
   | EffetFluxVille
   | EffetFluxParAmenagement
-  | EffetFluxParVilleCultureMonde
   | EffetGarnisonVille
   | EffetPlacesMetier
   | EffetReductionLeveeArmee
@@ -177,8 +173,9 @@ export interface ConditionRegle {
   saison?: string
   /** Régime politique du joueur requis (ex. Socialisme). */
   regime?: string
-  /** Culture du joueur requise (ex. Lunisme — règle de pays). */
-  culture?: string
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : la condition
+  //  `culture` est supprimée avec la source 'culture' — les règles
+  //  de pays des cultures n'existent plus.)
   // (RETRAIT 2026-10-24 : les conditions `tech` et `techNom` —
   //  technologie débloquée requise — sont supprimées avec le
   //  système de progrès, retour arbitre.)
@@ -199,7 +196,9 @@ export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
   | 'regime'          // loi chiffrée du régime politique
-  | 'culture'         // règle de pays culturelle
+  //  'culture' RETIRÉ le 2026-10-29 (refonte « 12 lois » :
+  //  suppression des règles de pays des cultures) — la valeur
+  //  n'est jamais à réutiliser (stabilité des règles saisies).
   //  'merveille' RETIRÉ le 2026-10-27 (audit : suppression des
   //  merveilles, retour Thibaut) — la valeur n'est jamais à réutiliser
   //  (stabilité des règles déjà saisies).

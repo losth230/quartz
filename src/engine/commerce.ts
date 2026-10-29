@@ -48,7 +48,7 @@ import type {
   City, GameState, Player, RouteCommerce, Saison,
 } from './types'
 import type { GameConfig } from '../config/defaultConfig'
-import { cfgOf, type Cfg } from './gameData'
+import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { constructionRef, effetsConstructionRef, effetsEteConstructionRef, routesApporteesConstructionRef } from './constructions'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
@@ -292,6 +292,20 @@ export function maxRoutesJoueur(
   for (const v of p.villes) {
     for (const b of v.batiments) {
       max += routesApporteesConstructionRef(constructionRef(b, C.config, v.type))
+    }
+  }
+  // (Refonte 12 lois, 2026-10-29, Sethisme « Caravanes » : chaque
+  //  VILLE de culture Sethisme comptant au moins
+  //  caravanesSeuilAmenagements aménagements monte le cap de
+  //  caravanesRoutesBonus route(s). Le cap maxRoutesJoueur est PAR
+  //  JOUEUR — le « cap de cette ville » de l'arbitrage se traduit
+  //  mécaniquement par +1 au cap du joueur par ville qualifiée ;
+  //  il reste une ANNONCE, jamais bloquante.)
+  for (const v of p.villes) {
+    const cult = cultureDef(v.culture, C.config)
+    if (cult?.caravanesRoutesBonus
+      && (v.amenagements ?? []).length >= (cult.caravanesSeuilAmenagements ?? 0)) {
+      max += cult.caravanesRoutesBonus
     }
   }
   return max

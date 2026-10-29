@@ -490,52 +490,61 @@
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Parité",
-      "reglePays": "Entraide : votre capitale génère +3 Nourriture par habitation de cette culture dans le monde.",
-      "reglePerso": "Générosité : les personnages gouverneurs réduisent la puissance des révoltes de 20 pts supplémentaires.",
-      "capitalNourrParHabMonde": 3
+      "regleVille": "Logements élargis : les habitations ont +5 Taudis.",
+      "regleHabitant": "Bourgeoisie facile : seuil de prestige bourgeois abaissé (100 → 80).",
+      "taudisParHabitation": 5,
+      "prestigeSeuilBourgeois": 80
     },
     {
       "nom": "Déisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
-      "reglePays": "Prier les dieux : chaque fois que vous construisez un bâtiment de faction, vous gagnez 4 Science.",
-      "reglePerso": "Enfant Divin : un personnage Héritier génère +6 Tourisme par rang de la capitale.",
-      "scienceParConstruction": 4
+      "regleVille": "Monuments pieux : les bâtiments offrent +1 emplacement de Scientifique.",
+      "regleHabitant": "Lavages de main : réduit les chances de contracter des maladies de 2 %.",
+      "scientifiqueParBatiment": 1,
+      "maladieContractMod": -0.02
     },
     {
       "nom": "Lunisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
-      "reglePays": "Prêcheurs : votre capitale génère +4 Tourisme par habitation de cette culture dans le monde.",
-      "reglePerso": "Soldats de la Lumière : lorsqu'une armée attaque une habitation, la garnison de celle-ci est réduite de 15 par rang de votre pays.",
-      "capitalTourismeParHabMonde": 4
+      "regleVille": "Villes Saintes : les habitations ont +2 emplacements de Palais.",
+      "regleHabitant": "Foi supérieure : les nobles rapportent +1 Tourisme par tour.",
+      "palaisParHabitation": 2,
+      "tourismeParNoble": 1
     },
     {
       "nom": "Naturalisme",
       "homoAutorisee": false,
-      "fertFactor": 1,
+      "fertFactor": 1.1,
       "heredite": "Parité",
-      "reglePays": "Ecologisme : vos habitations construites sur des cases de forêt produisent +1 Bois.",
-      "reglePerso": "Walpurgis : les personnages possèdent 0,1 Fécondité."
+      "regleVille": "Champs nourriciers : les fermiers rapportent +1 Nourriture par tour en été.",
+      "regleHabitant": "Walpurgis : fertFactor 1,1 (+10 % de naissances).",
+      "nourrEteParFermier": 1
     },
     {
       "nom": "Sethisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
-      "reglePays": "Adaptation : vos habitations génèrent +1 Or par case de désert dans leur enceinte.",
-      "reglePerso": "Sorcellerie : votre dirigeant génèrent +1 Science par rang de votre capitale."
+      "regleVille": "Caravanes : une fois 3 aménagements atteints, +1 route commerciale disponible.",
+      "regleHabitant": "Conseil des Sages : les nobles rapportent +0,1 Science par tour.",
+      "caravanesSeuilAmenagements": 3,
+      "caravanesRoutesBonus": 1,
+      "scienceParNoble": 0.1
     },
     {
       "nom": "Zélotisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
-      "reglePays": "Supériorité évidente : votre capitale génère +2 Or par habitation de cette culture dans le monde.",
-      "reglePerso": "Par le fer : les personnages génèrent un dé de manœuvre rouge s'ils sont commandants.",
-      "capitalOrParHabMonde": 2
+      "regleVille": "Ferveur martiale : les garnisons des habitations qui ne sont pas de cette culture sont réduites de 20 points par rang de l'habitation.",
+      "regleHabitant": "Corps de fer : les Gardes produisent +10 Garnison et +0,2 Or par tour.",
+      "garnisonHorsCultureParRang": 20,
+      "garnisonParGardeCulture": 10,
+      "orParGarde": 0.2
     }
   ],
   "regimes": [

@@ -2,30 +2,30 @@
 //  TESTS RÉGIMES & CULTURES ↔ BANQUE (voie unique, brûlage #3 source
 //  2/3, 2026-10-20)
 //
-//  Retour Thibaut « toute production passe par la banque » : les lois
-//  chiffrées des régimes (Socialisme) et les règles de pays des
-//  cultures (Communautarisme, Lunisme, Zélotisme) vivent dans le
-//  REGISTRE (reglesRegimes / reglesCultures) et le moteur ne fait que
-//  LIRE la banque. Ces tests verrouillent :
-//   · le contenu exact du registre (conditions régime/culture et
-//     saison DANS les règles, montants = données) ;
-//   · ce qui reste HORS banque : garnison Autoritarisme (valeur
-//     d'état), Déisme (instantané de construction) ;
-//   · les valeurs produites (été, cumul par aménagement, villes de la
-//     culture dans le MONDE, tous joueurs confondus) ;
-//   · le crédit réel des stocks (chemin moteur complet) et le détail
-//     lu sur la banque (page « Pays » — ordre N/T/O conservé).
+//  Retour Thibaut « toute production passe par la banque » : la loi
+//  chiffrée du RÉGIME (Socialisme) vit dans le REGISTRE
+//  (reglesRegimes) et le moteur ne fait que LIRE la banque.
+//  (RETRAIT 2026-10-29, refonte « 12 lois » : la source 'culture'
+//  QUITTE la banque — les règles de pays des cultures
+//  (reglesCultures, effet fluxParVilleCultureMonde, champs
+//  capitalNourr/Tourisme/OrParHabMonde) sont supprimées ; les lois
+//  des cultures vivent DÉSORMAIS dans le moteur et sont testées dans
+//  src/engine/cultures.test.ts. Ces tests verrouillent :
+//   · le contenu exact du registre régime (conditions dans la règle) ;
+//   · l'ABSENCE de toute règle culture dans la banque ;
+//   · les valeurs produites par la loi du régime (été, cumul) ;
+//   · le crédit réel des stocks (chemin moteur complet, étape
+//     3septies : régime + lois d'habitants des cultures).
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import type { Player } from '../engine/types'
 import {
-  effetsRegime, effetsCulturePays, detailCulturePays,
-  appliquerEffetsRegimesCultures, nbVillesCultureMonde,
+  effetsRegime, loisHabitants, detailLoisHabitants,
+  appliquerEffetsRegimesCultures,
 } from '../engine/regimes'
 import { cfgOf } from '../engine/gameData'
-import { reglesRegimes, reglesCultures, registreComplet } from './registry'
+import { reglesRegimes, registreComplet } from './registry'
 
 const C_DEFAUT = cfgOf(undefined)
 import { partieMock } from './mocks'
@@ -48,27 +48,15 @@ test('registre régimes : 1 règle regime.socialisme, conditions dans la règle'
   assert.ok(!regles.some((r) => r.nom === 'Autoritarisme'), 'Autoritarisme reste hors banque (garnison)')
 })
 
-// ── registre : contenu exact des règles cultures ───────────────────────────
-
-test('registre cultures : 3 règles exactes, Déisme absent (instantané)', () => {
-  const regles = reglesCultures(C_DEFAUT)
-  assert.equal(regles.length, 3, 'seules les cultures à lois chiffrées ont une règle')
-  const com = regles.find((r) => r.id === 'culture.communautarisme')
-  assert.equal(com?.conditions?.culture, 'Communautarisme', 'condition de culture dans la RÈGLE')
-  assert.deepEqual(com?.effets, [{ type: 'fluxParVilleCultureMonde', ressource: 'Nourriture', valeur: 3 }])
-  const lun = regles.find((r) => r.id === 'culture.lunisme')
-  assert.deepEqual(lun?.effets, [{ type: 'fluxParVilleCultureMonde', ressource: 'Tourisme', valeur: 4 }])
-  const zel = regles.find((r) => r.id === 'culture.zelotisme')
-  assert.deepEqual(zel?.effets, [{ type: 'fluxParVilleCultureMonde', ressource: 'Or', valeur: 2 }])
-  assert.ok(!regles.some((r) => r.nom === 'Déisme'), 'Déisme : scienceParConstruction = instantané de construction')
-})
-
-test('registreComplet : ids uniques, les 4 nouvelles règles intégrées', () => {
-  const ids = registreComplet(C_DEFAUT).map((r) => r.id)
+test('registreComplet : ids uniques, régime intégré, PLUS AUCUNE règle culture', () => {
+  const regles = registreComplet(C_DEFAUT)
+  const ids = regles.map((r) => r.id)
   assert.equal(new Set(ids).size, ids.length, 'ids uniques')
-  for (const id of ['regime.socialisme', 'culture.communautarisme', 'culture.lunisme', 'culture.zelotisme']) {
-    assert.ok(ids.includes(id), 'id manquant dans le registre complet : ' + id)
-  }
+  assert.ok(ids.includes('regime.socialisme'), 'id manquant dans le registre complet : regime.socialisme')
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : la source 'culture'
+  //  est VIDE — plus aucune règle de pays culturelle dans la banque.)
+  assert.ok(regles.every((r) => r.source !== 'culture'), 'aucune règle de culture dans la banque')
+  assert.ok(!ids.some((id) => id.startsWith('culture.')), 'aucun id culture.* dans le registre')
 })
 
 // ── production : la loi du régime lue sur la banque ────────────────────────
@@ -93,78 +81,27 @@ test('autre régime que Socialisme : la règle ne s’applique pas (condition re
   assert.deepEqual(effetsRegime(state, joueur, 'Été', cfgOf(state.config)), {})
 })
 
-// ── production : la règle de pays lue sur la banque ────────────────────────
+// ── lois d'habitants : culture hors référentiel → aucune loi ───────────────
 
-test('Lunisme : +4 Tourisme par ville lunisme du MONDE (ville d’un autre joueur incluse)', () => {
-  const ctx = partieMock()
-  const { state, joueur, ville } = ctx
-  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
-  const C = cfgOf(state.config)
-  joueur.culture = 'Lunisme'
-  ville.culture = 'Lunisme'
-  assert.equal(nbVillesCultureMonde(state, 'Lunisme'), 1)
-  assert.equal(effetsCulturePays(state, joueur, C)['Tourisme'], 4)
-  // une ville de la culture chez un AUTRE joueur compte aussi (règle « monde »)
-  state.players.push({ ...joueur, n: 2, nom: 'Autre', villes: [{ ...ville, nom: 'Oslo' }] } as Player)
-  assert.equal(nbVillesCultureMonde(state, 'Lunisme'), 2)
-  assert.equal(effetsCulturePays(state, joueur, C)['Tourisme'], 8, '4 × 2 villes')
-})
-
-test('joueur sans ville : effetsCulturePays vide (garde conservée)', () => {
+test('loisHabitants : culture hors référentiel (mock « Culture Nordique ») → aucune loi', () => {
   const ctx = partieMock()
   const { state, joueur } = ctx
-  joueur.culture = 'Lunisme'
-  joueur.villes = []
-  assert.deepEqual(effetsCulturePays(state, joueur, cfgOf(state.config)), {})
-})
-
-test('Déisme : aucun flux de règle de pays (science = instantané de construction)', () => {
-  const ctx = partieMock()
-  const { state, joueur, ville } = ctx
-  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
-  joueur.culture = 'Déisme'
-  ville.culture = 'Déisme'
-  assert.deepEqual(effetsCulturePays(state, joueur, C), {})
-  assert.deepEqual(detailCulturePays(state, joueur, C), [])
+  assert.deepEqual(loisHabitants(state, joueur, C), {})
+  assert.deepEqual(detailLoisHabitants(state, joueur, C), [])
 })
 
 // ── chemin moteur complet : stocks réellement crédités ─────────────────────
 
-test('appliquerEffetsRegimesCultures : Socialisme + Lunisme crédités au stock', () => {
+test('appliquerEffetsRegimesCultures : loi du régime créditée au stock, aucune loi de culture', () => {
   const ctx = partieMock({ saison: 'Été' })
   const { state, joueur, ville } = ctx
   assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   joueur.regime = 'Socialisme'
-  joueur.culture = 'Lunisme'
-  ville.culture = 'Lunisme'
   ville.amenagements = ['Champ']
   const nAvant = joueur.resources['Nourriture'].stock
-  const tAvant = joueur.resources['Tourisme'].stock
   const out = appliquerEffetsRegimesCultures(state, joueur, 'Été', cfgOf(state.config))
   assert.equal(out['Nourriture'], 5, 'loi du régime via la banque')
-  assert.equal(out['Tourisme'], 4, 'règle de pays via la banque')
   assert.equal(joueur.resources['Nourriture'].stock, nAvant + 5, 'stock Nourriture crédité')
-  assert.equal(joueur.resources['Tourisme'].stock, tAvant + 4, 'stock Tourisme crédité')
-})
-
-// ── détail de la page « Pays » : montants lus sur la banque ────────────────
-
-test('detailCulturePays : Lunisme parVille 4 / Zélotisme Or parVille 2 (lu sur la banque)', () => {
-  const ctx = partieMock()
-  const { state, joueur, ville } = ctx
-  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
-  const C = cfgOf(state.config)
-  joueur.culture = 'Lunisme'
-  ville.culture = 'Lunisme'
-  const d = detailCulturePays(state, joueur, C)
-  assert.equal(d.length, 1)
-  assert.deepEqual(d[0], { res: 'Tourisme', parVille: 4, nbVillesMonde: 1, nbVillesPerso: 1, total: 4 })
-  joueur.culture = 'Zélotisme'
-  ville.culture = 'Zélotisme'
-  const z = detailCulturePays(state, joueur, C)
-  assert.equal(z.length, 1)
-  assert.equal(z[0].res, 'Or', 'ordre Nourriture/Tourisme/Or conservé par la règle')
-  assert.equal(z[0].parVille, 2)
-  assert.equal(z[0].total, 2)
+  assert.ok(!('Tourisme' in out), 'aucune production de culture (source \'culture\' retirée de la banque)')
 })

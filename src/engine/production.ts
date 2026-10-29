@@ -21,7 +21,7 @@ import { calculerGainsPopulation, detailGainsVille } from './economie'
 import { effetsBatimentsVille, detailsBatimentsJoueur } from './batiments'
 import { effetsAmenagementsVille, effetsNourrEteAmenagementsVille, detailsAmenagementsJoueur } from './amenagements'
 import { effetsAutresVille, effetsNourrEteAutresVille, estNourrEte, detailsAutresJoueur } from './autres'
-import { effetsRegime, effetsCulturePays, detailCulturePays } from './regimes'
+import { effetsRegime, loisHabitants, detailLoisHabitants } from './regimes'
 import { citesLibresDe, detailCiteLibre } from './citesLibres'
 import { bonusProximite } from './villes'
 import { effetsCommerceJoueur, detailCommerceJoueur } from './commerce'
@@ -133,14 +133,16 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
   }
 
   // Régimes & cultures : lois chiffrées du régime (ex. Socialisme :
-  // +N Nourriture d'été par champ et rizière) + règle de pays de la
-  // culture (ex. Communautarisme : +N Nourriture par habitation de
-  // cette culture dans le monde) — étape 3septies du moteur.
+  // +N Nourriture d'été par champ et rizière) + lois d'HABITANT des
+  // cultures (refonte 12 lois, 2026-10-29 — ex. Lunisme « Foi
+  //  supérieure » : +N Tourisme par noble luniste ; REMPLACÉ
+  //  l'ancienne règle de pays « +N par habitation de cette culture
+  //  dans le monde ») — étape 3septies du moteur.
   const regimesCultures: Record<string, number> = {}
   for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
     regimesCultures[res] = (regimesCultures[res] ?? 0) + v
   }
-  for (const [res, v] of Object.entries(effetsCulturePays(state, p, C))) {
+  for (const [res, v] of Object.entries(loisHabitants(state, p, C))) {
     regimesCultures[res] = (regimesCultures[res] ?? 0) + v
   }
 
@@ -371,9 +373,9 @@ export function provenancesApports(
   for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
     push(res, 'Régimes & cultures', `loi du régime « ${p.regime} »`, v)
   }
-  for (const d of detailCulturePays(state, p, C)) {
+  for (const d of detailLoisHabitants(state, p, C)) {
     push(d.res, 'Régimes & cultures',
-      `règle de pays « ${p.culture} » : +${d.parVille} × ${d.nbVillesMonde} ville(s) de cette culture dans le monde (dont ${d.nbVillesPerso} chez toi)`, d.total)
+      `loi d'habitant « ${d.loi} » (${d.culture}) : +${d.parHab} × ${d.nb}`, d.total)
   }
 
 

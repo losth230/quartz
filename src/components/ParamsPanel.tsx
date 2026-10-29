@@ -174,12 +174,12 @@ export function ParamsPanel() {
       )}
 
       {onglet === 'Cultures' && (
-        <Card title="Cultures (hérédité, fécondité, règles)">
-          <p className="muted small">Colonnes chiffrées = lois appliquées à chaque fin de tour. 0 = désactivé.</p>
+        <Card title="Cultures (hérédité, fécondité, 12 lois)">
+          <p className="muted small">Refonte « 12 lois » (2026-10-29) : loi de VILLE (culture majoritaire de la cité) et loi d'HABITANT (culture propre de chacun). Colonnes chiffrées = lois appliquées par le moteur. 0 = désactivé.</p>
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Facteur fécondité</th><th>Nourr./hab monde</th><th>Tourisme/hab</th><th>Or/hab</th><th>Science/constr.</th><th>Règle du pays</th><th>Règle des personnages</th></tr>
+                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. (ville)</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
               </thead>
               <tbody>
                 {config.cultures.map((t, i) => (
@@ -188,12 +188,21 @@ export function ParamsPanel() {
                     <td><TextInput value={t.heredite} onChange={(v) => setCfg((c) => { c.cultures[i].heredite = v })} /></td>
                     <td><input type="checkbox" checked={t.homoAutorisee} onChange={(e) => setCfg((c) => { c.cultures[i].homoAutorisee = e.target.checked })} /></td>
                     <td><NumberInput value={t.fertFactor} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].fertFactor = v })} /></td>
-                    <td><NumberInput value={t.capitalNourrParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalNourrParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.capitalTourismeParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalTourismeParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.capitalOrParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalOrParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.scienceParConstruction ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].scienceParConstruction = v })} /></td>
-                    <td><TextInput value={t.reglePays} onChange={(v) => setCfg((c) => { c.cultures[i].reglePays = v })} /></td>
-                    <td><TextInput value={t.reglePerso} onChange={(v) => setCfg((c) => { c.cultures[i].reglePerso = v })} /></td>
+                    <td><NumberInput value={t.taudisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].taudisParHabitation = v })} /></td>
+                    <td><NumberInput value={t.palaisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].palaisParHabitation = v })} /></td>
+                    <td><NumberInput value={t.prestigeSeuilBourgeois ?? 100} onChange={(v) => setCfg((c) => { c.cultures[i].prestigeSeuilBourgeois = v })} /></td>
+                    <td><NumberInput value={t.scientifiqueParBatiment ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].scientifiqueParBatiment = v })} /></td>
+                    <td><NumberInput value={t.maladieContractMod ?? 0} step={0.01} onChange={(v) => setCfg((c) => { c.cultures[i].maladieContractMod = v })} /></td>
+                    <td><NumberInput value={t.tourismeParNoble ?? 0} step={0.1} onChange={(v) => setCfg((c) => { c.cultures[i].tourismeParNoble = v })} /></td>
+                    <td><NumberInput value={t.nourrEteParFermier ?? 0} step={0.1} onChange={(v) => setCfg((c) => { c.cultures[i].nourrEteParFermier = v })} /></td>
+                    <td><NumberInput value={t.caravanesSeuilAmenagements ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].caravanesSeuilAmenagements = v })} /></td>
+                    <td><NumberInput value={t.caravanesRoutesBonus ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].caravanesRoutesBonus = v })} /></td>
+                    <td><NumberInput value={t.scienceParNoble ?? 0} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].scienceParNoble = v })} /></td>
+                    <td><NumberInput value={t.garnisonHorsCultureParRang ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].garnisonHorsCultureParRang = v })} /></td>
+                    <td><NumberInput value={t.garnisonParGardeCulture ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].garnisonParGardeCulture = v })} /></td>
+                    <td><NumberInput value={t.orParGarde ?? 0} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].orParGarde = v })} /></td>
+                    <td><TextInput value={t.regleVille} onChange={(v) => setCfg((c) => { c.cultures[i].regleVille = v })} /></td>
+                    <td><TextInput value={t.regleHabitant} onChange={(v) => setCfg((c) => { c.cultures[i].regleHabitant = v })} /></td>
                   </tr>
                 ))}
               </tbody>
