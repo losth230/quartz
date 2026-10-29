@@ -43,8 +43,13 @@ export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: Contex
 
 // ── Application d'un effet ──────────────────────────────────────────────────
 
-/** Applique UN effet à une contribution (accumulate). */
-function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): void {
+/** Applique UN effet à une contribution (accumulate).
+ *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le
+ *  contexte n'est plus lu — les cas qui l'utilisaient
+ *  (fluxParAmenagement, fluxParVilleCultureMonde) sont retirés
+ *  avec les sources 'regime' et 'culture' de la banque ; le
+ *  paramètre devient _ctx, muet pour noUnusedParameters.) */
+function appliquerEffet(e: Effet, _ctx: ContexteEffet, out: ContributionEffets): void {
   switch (e.type) {
     case 'fluxVille': {
       if (e.ete) {
@@ -125,7 +130,7 @@ export function appliquerRegles(regles: RegleBanque[], ctx: ContexteEffet): Cont
   const out = contributionVide()
   for (const r of regles) {
     if (!conditionsRemplies(r.conditions, ctx)) continue
-    for (const e of r.effets) appliquerEffet(e, ctx, out)
+    for (const e of r.effets) appliquerEffet(e, ctx, out) // (signature : _ctx muet)
   }
   return out
 }
