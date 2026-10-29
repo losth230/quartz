@@ -17,7 +17,11 @@
 //     × culture identique ×1,25 × (1 + bonheur/100) — les trois effets
 //     se multiplient ; retour vers une ville d'origine légitime ;
 //   · toute migration = perteDemenagement + entrée « Système » au
-//     journal avec le motif « cherche meilleure vie ».
+//     journal avec le motif « cherche meilleure vie » ;
+//   · FACTEURS EMPLOI & LOGEMENT (5e retour arbitre, 2026-10-29) :
+//     un sans-métier pèse ×N une ville aux postes non pourvus,
+//     un sans-domicile ×N une ville aux lits libres — les deux
+//     ne parlent QUE pour qui manque et là où c'est libre.
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -26,7 +30,10 @@ import { createGame, defaultSetups } from './setup'
 import { cfgOf } from './gameData'
 import { makeRng } from './rng'
 import { bonheurVilleComplete } from './bonheur'
-import { probaDepartBonheur, poidsDestination, migrationBonheur } from './migrationBonheur'
+import {
+  probaDepartBonheur, poidsDestination, migrationBonheur,
+  facteurEmploi, facteurLogement,
+} from './migrationBonheur'
 import type { Character, City, GameState } from './types'
 
 function partie(seed = 20261028): { state: GameState; C: ReturnType<typeof cfgOf> } {
@@ -256,10 +263,70 @@ test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les 
   assert.equal(C.p.migrationBonheurMax, 0.10)
   assert.equal(C.p.migrationBonheurCulture, 1.25)
   assert.equal(C.p.migrationBonheurMemeJoueur, 1.5)
+  assert.equal(C.p.migrationBonheurEmploi, 1.5)
+  assert.equal(C.p.migrationBonheurLogement, 1.5)
   // au setup : villes sans bâtiments → bonheur d'emblée < 100
   const b0 = bonheurVilleComplete(state, state.players[0], state.players[0].villes[0], C)
   assert.ok(b0 < 100, `le bonheur initial est dégradé (${b0}/100) — le flux a prise`)
   for (let t = 0; t < 3; t++) migrationBonheur(state, makeRng(1000 + t))
   const logs = state.log.filter((e) => e.texte.includes('cherche meilleure vie'))
   assert.ok(logs.length > 0, 'au moins un départ en 3 tours aux défauts (graine fixe)')
+})
+
+// ── Facteurs emploi & logement (5e arbitrage, 2026-10-29) ──────────
+
+/** Monde réduit déterministe (graine fixe) : 3 joueurs, 1 ville
+ *  chacun. La ville de p1 est SATURÉE (60 adultes en poste > 44
+ *  postes offerts ; 60 vivants > 58 lits), celle de p2 est LIBRE
+ *  (vide : postes et lits disponibles), celle de p0 porte le
+ *  migrant (bonheur 23/100 à cette graine → départ certain à
+ *  proba max 10). */
+function mondeReduit(state: GameState, migrant: Character): void {
+  const [p0, p1, p2] = state.players
+  state.players = [p0, p1, p2]
+  state.population[p1.n] = Array.from({ length: 60 }, (_, i) =>
+    hab(`sat${i}`, 30, { ville: p1.villes[0].nom, metier: 'Saturation' }))
+  state.population[p2.n] = []
+  state.population[p0.n] = [migrant]
+}
+
+test('facteurs emploi & logement : purs — ne parlent que pour qui manque et là où c\'est libre', () => {
+  const { C } = partie()
+  assert.equal(C.p.migrationBonheurEmploi, 1.5, 'défaut verrouillé (retour 2026-10-29)')
+  assert.equal(C.p.migrationBonheurLogement, 1.5, 'défaut verrouillé (retour 2026-10-29)')
+  assert.equal(facteurEmploi(true, true, C), 1.5, 'sans métier × ville qui embauche = ×1,5')
+  assert.equal(facteurEmploi(false, true, C), 1, 'migrant pourvu : le facteur emploi se tait')
+  assert.equal(facteurEmploi(true, false, C), 1, 'ville sans poste libre : le facteur emploi se tait')
+  assert.equal(facteurEmploi(false, false, C), 1)
+  assert.equal(facteurLogement(true, true, C), 1.5, 'sans domicile × ville qui loge = ×1,5')
+  assert.equal(facteurLogement(false, true, C), 1, 'migrant logé : le facteur logement se tait')
+  assert.equal(facteurLogement(true, false, C), 1, 'ville sans lit libre : le facteur logement se tait')
+  assert.equal(facteurLogement(false, false, C), 1)
+})
+
+test('flux : un migrant SANS MÉTIER choisit la ville aux postes non pourvus', () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10 // départ certain (bonheur 23/100 au monde réduit)
+  C.p.migrationBonheurEmploi = 1e9 // le facteur emploi écrase tous les autres
+  const [p0, , p2] = state.players
+  const mig = hab('chom', 30, { ville: p0.villes[0].nom }) // sans métier…
+  mig.domicile = 'Chez-lui' // …mais logé : seul le facteur emploi parle
+  mondeReduit(state, mig)
+  migrationBonheur(state, makeRng(7))
+  assert.ok(state.population[p2.n]?.includes(mig), 'le chômeur rejoint la ville qui embauche (p2)')
+  assert.equal(mig.ville, p2.villes[0].nom, 'même destination, ville de p2')
+})
+
+test('flux : un migrant SANS DOMICILE choisit la ville aux lits libres', () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10
+  C.p.migrationBonheurLogement = 1e9 // le facteur logement écrase tous les autres
+  const [p0, , p2] = state.players
+  const mig = hab('sdf', 30, { ville: p0.villes[0].nom, metier: 'Employé' }) // pourvu…
+  // …mais sans domicile (champ absent = sans-logement) : seul le
+  //  facteur logement parle.
+  mondeReduit(state, mig)
+  migrationBonheur(state, makeRng(8))
+  assert.ok(state.population[p2.n]?.includes(mig), 'le sans-domicile rejoint la ville qui loge (p2)')
+  assert.equal(mig.ville, p2.villes[0].nom, 'même destination, ville de p2')
 })

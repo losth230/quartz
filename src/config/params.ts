@@ -37,6 +37,19 @@ export interface GameParams {
    *  privilégiée) dans le tirage pondéré de destination — se multiplie
    *  avec le facteur culture et l'attrait du bonheur. */
   migrationBonheurMemeJoueur: number
+  /** (Arbitrage Thibaut 2026-10-29, 5e retour du flux de migration)
+   *  Poids multiplicatif d'une ville candidate AUX POSTES NON
+   *  POURVUS quand le migrant est SANS MÉTIER — attire les
+   *  chômeurs vers les villes qui embauchent. Se multiplie avec
+   *  les facteurs v2 (même joueur, culture, bonheur) et le
+   *  facteur logement. */
+  migrationBonheurEmploi: number
+  /** (Arbitrage Thibaut 2026-10-29, 5e retour du flux de migration)
+   *  Poids multiplicatif d'une ville candidate AUX LITS LIBRES
+   *  quand le migrant est SANS DOMICILE — attire les
+   *  sans-logement vers les villes qui logent. Se multiplie avec
+   *  les facteurs v2 et le facteur emploi. */
+  migrationBonheurLogement: number
   consoNourrParHab: number
   /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
    *  un bourgeois vivant consomme consoNourrBourgeois Nourriture
@@ -205,6 +218,9 @@ export const DEFAULT_PARAMS: GameParams = {
   migrationBonheurMax: 0.10,
   migrationBonheurCulture: 1.25,
   migrationBonheurMemeJoueur: 1.5,
+  // (Arbitrage Thibaut 2026-10-29 — facteurs emploi & logement)
+  migrationBonheurEmploi: 1.5,
+  migrationBonheurLogement: 1.5,
   consoNourrParHab: 1,
   consoNourrBourgeois: 2,
   consoNourrNoble: 4,
@@ -321,6 +337,8 @@ export const PARAM_META: {
   { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
   { key: 'migrationBonheurCulture', label: 'Migration par bonheur — poids d\'une ville de SA culture', groupe: 'Population', aide: 'Destination pondérée : ×N pour une ville de la culture du migrant (défaut 1,25 — retour du jour : le ×4 de la mise en place est remplacé), ×1,5 pour une ville du même joueur, ×(1 + bonheur/100) pour l\'attrait de la ville candidate. Les trois effets se multiplient.' },
   { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — poids d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Destination pondérée (retour du jour) : ×N pour une ville du même joueur que le migrant (défaut 1,5 — la migration interne est privilégiée). Se multiplie avec le poids culture et l\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
+  { key: 'migrationBonheurEmploi', label: 'Migration par bonheur — poids d\'une ville avec des EMPLOIS disponibles', groupe: 'Population', aide: 'Facteur d\'attrait (retour 2026-10-29) : un migrant SANS MÉTIER pèse ×N une ville candidate qui a des postes non pourvus (plus d\'offres que d\'adultes en poste). Se multiplie avec le même joueur, la culture, le bonheur et le facteur logement.' },
+  { key: 'migrationBonheurLogement', label: 'Migration par bonheur — poids d\'une ville avec des LOGEMENTS disponibles', groupe: 'Population', aide: 'Facteur d\'attrait (retour 2026-10-29) : un migrant SANS DOMICILE pèse ×N une ville candidate qui a plus de lits que d\'habitants vivants. Se multiplie avec le même joueur, la culture, le bonheur et le facteur emploi.' },
   { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
   { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
   { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },

@@ -72,13 +72,27 @@
 //   · Pas de plafond par ville (retour Thibaut : linéaire 0-10 %,
 //     sans cap) ; un habitant ne migre qu'UNE fois par tour
 //     (ensemble des déplacés de l'appel).
+//   · FACTEURS EMPLOI & LOGEMENT (5e arbitrage, 2026-10-29 : « un
+//     habitant sans métier qui migre a davantage d'intérêt à
+//     rejoindre une ville avec des emplois disponibles, idem pour
+//     le logement ») : le poids d'une candidate est multiplié par
+//     migrationBonheurEmploi (défaut 1,5) si le TIRÉ est sans
+//     métier et que la ville a des postes non pourvus
+//     (offres > adultes en poste), et par
+//     migrationBonheurLogement (défaut 1,5) s'il est sans
+//     domicile et que la ville a des lits libres
+//     (logements > vivants) — les deux se multiplient avec les
+//     facteurs v2. Le statut regardé est celui du tiré AVANT
+//     départ (à l'arrivée, perteDemenagement laisse TOUS les
+//     migrants sans métier ni domicile) ; le foyer suit le statut
+//     de son chef, sans influer sur le tirage.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf, type Cfg } from './gameData'
 import { fullName, neDemenageJamais, perteDemenagement } from './shared'
-import { bonheurVilleComplete } from './bonheur'
+import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bonheur'
 import { updateCityCultures } from './culture'
 
 /** Probabilité qu'un habitant quitte sa ville : LINÉAIRE en bonheur
@@ -99,8 +113,36 @@ export function poidsDestination(
   return joueur * culture * (1 + bonheur / 100)
 }
 
-/** Fiche d'une ville du monde pour le tirage. */
-interface FicheVille { joueur: Player; ville: City; bonheur: number }
+/** Facteur EMPLOI du tirage de destination (5e arbitrage Thibaut
+ *  2026-10-29) : un migrant SANS MÉTIER est attiré ×N vers une
+ *  ville aux postes non pourvus. Se multiplie avec les facteurs
+ *  v2 et le facteur logement. Pure. */
+export function facteurEmploi(sansMetier: boolean, emploisLibres: boolean, C: Cfg): number {
+  return sansMetier && emploisLibres ? C.p.migrationBonheurEmploi : 1
+}
+
+/** Facteur LOGEMENT du tirage de destination (5e arbitrage
+ *  Thibaut 2026-10-29) : un migrant SANS DOMICILE est attiré ×N
+ *  vers une ville aux lits libres. Se multiplie avec les
+ *  facteurs v2 et le facteur emploi. Pure. */
+export function facteurLogement(sansDomicile: boolean, logementsLibres: boolean, C: Cfg): number {
+  return sansDomicile && logementsLibres ? C.p.migrationBonheurLogement : 1
+}
+
+/** Fiche d'une ville du monde pour le tirage — photographiée UNE
+ *  fois par ville et par tour. Les disponibilités (5e arbitrage
+ *  2026-10-29) sont figées au début du flux : les postes et lits
+ *  ne sont crédités que par populationTurn et les constructions,
+ *  jamais par le flux lui-même. */
+interface FicheVille {
+  joueur: Player
+  ville: City
+  bonheur: number
+  /** La ville offre plus de postes qu'elle n'a d'adultes en poste. */
+  emploisLibres: boolean
+  /** La ville a plus de lits que d'habitants vivants. */
+  logementsLibres: boolean
+}
 
 /** Flux de migration par bonheur — étape 4bis du tour (tour.ts).
  *  Parcourt les villes de chaque joueur, calcule le bonheur UNE fois
@@ -111,7 +153,23 @@ interface FicheVille { joueur: Player; ville: City; bonheur: number }
 export function migrationBonheur(state: GameState, rng: Rng): void {
   const C = cfgOf(state.config)
   const fiches: FicheVille[] = state.players.flatMap((p) =>
-    p.villes.map((v) => ({ joueur: p, ville: v, bonheur: bonheurVilleComplete(state, p, v, C) })),
+    p.villes.map((v) => {
+      // Disponibilités photographiées ici (5e arbitrage 2026-10-29) :
+      //  postes non pourvus = postes offerts − adultes en poste ;
+      //  lits libres = stock de logements − vivants. Les arrivées
+      //  du flux n'occupent ni poste ni lit (les migrants arrivent
+      //  sans métier ni domicile, réaffectés au tour suivant).
+      const vivants = (state.population[p.n] ?? []).filter(
+        (c) => c.statut !== 'Décédé' && c.ville === v.nom,
+      )
+      const enPoste = vivants.filter((c) => c.metier && c.age >= C.p.adultAge).length
+      return {
+        joueur: p, ville: v,
+        bonheur: bonheurVilleComplete(state, p, v, C),
+        emploisLibres: emploisOffertsVille(state, p, v, C) > enPoste,
+        logementsLibres: logementsVille(v, C) > vivants.length,
+      }
+    }),
   )
   // Une seule ville au monde : nulle part où aller.
   if (fiches.length < 2) return
@@ -161,8 +219,13 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
           !e.mariageId && !deplaces.has(e.id) && !neDemenageJamais(e, C) && !e.armee &&
           (idsFoyer.has(e.mereId ?? '') || idsFoyer.has(e.pereId ?? '')))
         if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
-        const dest = rng.pickWeighted(
-          candidats, (f) => poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n))
+        // Facteurs emploi & logement (5e arbitrage 2026-10-29) :
+        //  le statut regardé est celui du TIRÉ avant départ —
+        //  foyer (conjoint, enfants) suit sans influer.
+        const dest = rng.pickWeighted(candidats, (f) =>
+          poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n)
+          * facteurEmploi(!c.metier, f.emploisLibres, C)
+          * facteurLogement(!c.domicile, f.logementsLibres, C))
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
         //  scolaire) — conjoint et enfants suivent sans tirage propre.
