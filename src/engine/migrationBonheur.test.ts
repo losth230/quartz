@@ -15,13 +15,20 @@
 //   · cultures des villes recalculées après le flux (majorité).
 //   · pondération v2 (3e retour du jour) : ville du MÊME JOUEUR ×1,5
 //     × culture identique ×1,25 × (1 + bonheur/100) — les trois effets
-//     se multiplient ; retour vers une ville d'origine légitime ;
+//     se multiplient (REMPLACÉE par la v3 ADDITIVE du 6e retour
+//     2026-10-29 : attrait × (1 + joueur +0,5 + culture +0,25 +
+//     bonus emploi/logement du tiré)) ; retour vers une ville
+//     d'origine légitime ;
 //   · toute migration = perteDemenagement + entrée « Système » au
 //     journal avec le motif « cherche meilleure vie » ;
 //   · FACTEURS EMPLOI & LOGEMENT (5e retour arbitre, 2026-10-29) :
 //     un sans-métier pèse ×N une ville aux postes non pourvus,
 //     un sans-domicile ×N une ville aux lits libres — les deux
 //     ne parlent QUE pour qui manque et là où c'est libre.
+//     V3 ADDITIVE (6e retour arbitre, 2026-10-29) : la formule se
+//     base sur le bonheur, tous les autres modificateurs sont
+//     ADDITIFS — même joueur +0,5, culture +0,25, emploi +1,
+//     logement +1 (la ville pèse ×2 pour qui manque).
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -71,24 +78,25 @@ test('proba de départ : LINÉAIRE — 0 % à 100 de bonheur, max à 0, moitié 
   assert.equal(probaDepartBonheur(0, C), 0, 'proba max nulle = flux coupé')
 })
 
-test('poids de destination v2 : même joueur ×1,5, culture identique ×1,25, bonheur monotone — les trois effets se multiplient', () => {
+test('poids de destination v3 ADDITIVE : la formule se base sur le bonheur, les autres modificateurs s\'additionnent', () => {
   const { C } = partie()
-  C.p.migrationBonheurCulture = 1.25
-  C.p.migrationBonheurMemeJoueur = 1.5
+  assert.equal(C.p.migrationBonheurCulture, 0.25, 'défaut verrouillé (v3, 6e retour 2026-10-29)')
+  assert.equal(C.p.migrationBonheurMemeJoueur, 0.5, 'défaut verrouillé (v3, 6e retour 2026-10-29)')
   const c = hab('m1', 30, { culture: 'Nordique' })
   const memeCulture = villeTest('A', 'Nordique')
   const autreCulture = villeTest('B', 'Méridionale')
-  assert.equal(poidsDestination(c, memeCulture, 0, C), 1.25, '×1,25 même culture à bonheur 0 (le ×4 du matin est REMPLACÉ)')
-  assert.equal(poidsDestination(c, autreCulture, 0, C), 1, '×1 autre culture à bonheur 0')
-  assert.equal(poidsDestination(c, memeCulture, 100, C), 2.5, '×1,25 ×2 à bonheur 100')
-  assert.equal(poidsDestination(c, autreCulture, 100, C), 2, '×1 ×2 à bonheur 100')
-  // Même joueur (retour du jour, v2) : migration interne privilégiée
-  assert.equal(poidsDestination(c, autreCulture, 0, C, true), 1.5, '×1,5 même joueur à bonheur 0')
-  assert.equal(poidsDestination(c, memeCulture, 100, C, true), 3.75, '×1,5 ×1,25 ×2 — les trois effets se multiplient')
-  assert.equal(poidsDestination(c, autreCulture, 100, C, true), 3, '×1,5 ×1 ×2 à bonheur 100')
+  assert.equal(poidsDestination(c, autreCulture, 0, C), 1, 'base 1 sans modificateur à bonheur 0')
+  assert.equal(poidsDestination(c, autreCulture, 100, C), 2, 'l\'attrait du bonheur reste la base multiplicative ×[1 ; 2]')
+  assert.equal(poidsDestination(c, memeCulture, 0, C), 1.25, 'culture identique : +0,25 (le multiplicatif ×1,25 v2 est REMPLACÉ)')
+  assert.equal(poidsDestination(c, autreCulture, 0, C, true), 1.5, 'même joueur : +0,5')
+  assert.equal(poidsDestination(c, memeCulture, 0, C, true), 1.75, 'l\'exemple de l\'arbitre : culture + joueur = attrait × 1,75')
+  assert.equal(poidsDestination(c, memeCulture, 100, C, true), 3.5, 'attrait ×2 × 1,75')
+  // bonus additifs du tiré (emploi + logement additionnés par l\'appelant)
+  assert.equal(poidsDestination(c, autreCulture, 0, C, true, 1), 2.5, 'même joueur + 1 bonus du tiré')
+  assert.equal(poidsDestination(c, memeCulture, 100, C, true, 2), 7.5, 'attrait ×2 × (1 + 0,5 + 0,25 + 2) — tout s\'additionne')
   // ville sans culture renseignée (champ optionnel) : pas de bonus culture
   assert.equal(poidsDestination(c, villeTest('C'), 0, C), 1)
-  assert.equal(poidsDestination(c, villeTest('C'), 0, C, true), 1.5, 'sans culture, le facteur même joueur reste seul')
+  assert.equal(poidsDestination(c, villeTest('C'), 0, C, true), 1.5, 'sans culture, le bonus même joueur reste seul')
 })
 
 // ── Flux complet (déterministe — graines fixes) ──────────────────────
@@ -261,10 +269,10 @@ test('couples inséparables : conjoint ANCRÉ (Dirigeant/Héritier/en armée) �
 test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les premiers tours', () => {
   const { state, C } = partie(20261101)
   assert.equal(C.p.migrationBonheurMax, 0.10)
-  assert.equal(C.p.migrationBonheurCulture, 1.25)
-  assert.equal(C.p.migrationBonheurMemeJoueur, 1.5)
-  assert.equal(C.p.migrationBonheurEmploi, 1.5)
-  assert.equal(C.p.migrationBonheurLogement, 1.5)
+  assert.equal(C.p.migrationBonheurCulture, 0.25)
+  assert.equal(C.p.migrationBonheurMemeJoueur, 0.5)
+  assert.equal(C.p.migrationBonheurEmploi, 1)
+  assert.equal(C.p.migrationBonheurLogement, 1)
   // au setup : villes sans bâtiments → bonheur d'emblée < 100
   const b0 = bonheurVilleComplete(state, state.players[0], state.players[0].villes[0], C)
   assert.ok(b0 < 100, `le bonheur initial est dégradé (${b0}/100) — le flux a prise`)
@@ -290,18 +298,18 @@ function mondeReduit(state: GameState, migrant: Character): void {
   state.population[p0.n] = [migrant]
 }
 
-test('facteurs emploi & logement : purs — ne parlent que pour qui manque et là où c\'est libre', () => {
+test('bonus emploi & logement : purs, ADDITIFS — ne parlent que pour qui manque et là où c\'est libre', () => {
   const { C } = partie()
-  assert.equal(C.p.migrationBonheurEmploi, 1.5, 'défaut verrouillé (retour 2026-10-29)')
-  assert.equal(C.p.migrationBonheurLogement, 1.5, 'défaut verrouillé (retour 2026-10-29)')
-  assert.equal(facteurEmploi(true, true, C), 1.5, 'sans métier × ville qui embauche = ×1,5')
-  assert.equal(facteurEmploi(false, true, C), 1, 'migrant pourvu : le facteur emploi se tait')
-  assert.equal(facteurEmploi(true, false, C), 1, 'ville sans poste libre : le facteur emploi se tait')
-  assert.equal(facteurEmploi(false, false, C), 1)
-  assert.equal(facteurLogement(true, true, C), 1.5, 'sans domicile × ville qui loge = ×1,5')
-  assert.equal(facteurLogement(false, true, C), 1, 'migrant logé : le facteur logement se tait')
-  assert.equal(facteurLogement(true, false, C), 1, 'ville sans lit libre : le facteur logement se tait')
-  assert.equal(facteurLogement(false, false, C), 1)
+  assert.equal(C.p.migrationBonheurEmploi, 1, 'défaut verrouillé (v3, 6e retour : la ville pèse ×2)')
+  assert.equal(C.p.migrationBonheurLogement, 1, 'défaut verrouillé (v3, 6e retour : la ville pèse ×2)')
+  assert.equal(facteurEmploi(true, true, C), 1, 'sans métier × ville qui embauche = +1 (le ×1,5 du 5e retour est REMPLACÉ)')
+  assert.equal(facteurEmploi(false, true, C), 0, 'migrant pourvu : le bonus emploi se tait')
+  assert.equal(facteurEmploi(true, false, C), 0, 'ville sans poste libre : le bonus emploi se tait')
+  assert.equal(facteurEmploi(false, false, C), 0)
+  assert.equal(facteurLogement(true, true, C), 1, 'sans domicile × ville qui loge = +1')
+  assert.equal(facteurLogement(false, true, C), 0, 'migrant logé : le bonus logement se tait')
+  assert.equal(facteurLogement(true, false, C), 0, 'ville sans lit libre : le bonus logement se tait')
+  assert.equal(facteurLogement(false, false, C), 0)
 })
 
 test('flux : un migrant SANS MÉTIER choisit la ville aux postes non pourvus', () => {

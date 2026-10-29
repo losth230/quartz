@@ -53,6 +53,14 @@
 //     culture 1,25× (défaut — le ×4 du matin est REMPLACÉ), une ville
 //     à 100 de bonheur 2× une ville à 0 — les trois effets se
 //     multiplient.
+//     AMENDEMENT v3 (6e arbitrage du flux, 2026-10-29 : « la formule
+//     se base sur le bonheur et tous les autres modificateurs sont
+//     additifs ») : poids = attrait × (1 + même joueur + culture +
+//     bonus additifs du tiré) — l'attrait = 1 + bonheur/100 reste la
+//     seule base multiplicative ×[1 ; 2] ; défauts +0,5 même joueur,
+//     +0,25 culture, +1 emploi/logement pour qui manque (exemple
+//     arbitre : culture + même joueur = attrait × 1,75). Le
+//     multiplicatif v2 ci-dessus est REMPLACÉ (historisé).
 //   · RETOUR POSSIBLE : un personnage peut migrer vers une ville
 //     d'où il VIENT (retour Thibaut explicite : « ce n'est pas un
 //     bug ») — aucune ville n'est interdite pour ses anciennes
@@ -86,6 +94,12 @@
 //     départ (à l'arrivée, perteDemenagement laisse TOUS les
 //     migrants sans métier ni domicile) ; le foyer suit le statut
 //     de son chef, sans influer sur le tirage.
+//     AMENDEMENT v3 (6e arbitrage, 2026-10-29) : les facteurs
+//     emploi/logement deviennent ADDITIFS — défaut +1 chacun (« on
+//     peut mettre facteur emploi et facteur logement à ×2 » : la
+//     ville pèse ×2 pour qui manque) ; le multiplicatif ×1,5 du 5e
+//     arbitrage est REMPLACÉ (historisé) et les bonus S'ADDITIONNENT
+//     aux modificateurs joueur/culture au lieu de se multiplier.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
@@ -101,32 +115,43 @@ export function probaDepartBonheur(bonheur: number, C: Cfg): number {
   return Math.max(0, (C.p.migrationBonheurMax * (100 - bonheur)) / 100)
 }
 
-/** Poids d'attraction d'une ville candidate pour un migrant :
- *  ville du même joueur ×1,5, culture identique ×1,25, bonheur
- *  ×(1 + b/100) — les trois effets se multiplient (v2, retour
- *  Thibaut du jour ; le culture ×4 du matin est REMPLACÉ). Pure. */
+/** Poids d'attraction d'une ville candidate pour un migrant — v3
+ *  ADDITIVE (6e arbitrage Thibaut 2026-10-29 : « la formule se
+ *  base sur le bonheur et tous les autres modificateurs sont
+ *  additifs ») : poids = attrait × (1 + même joueur + culture +
+ *  bonusAdditifs du tiré). L'attrait = 1 + bonheur/100, ×[1 ; 2],
+ *  reste la seule base multiplicative ; défauts +0,5 même joueur,
+ *  +0,25 culture, bonus emploi/logement +1 pour qui manque (le
+ *  multiplicatif v2 ×1,5 ×1,25 ×attrait est REMPLACÉ — exemple
+ *  arbitre : culture + même joueur = attrait × 1,75). Pure. */
 export function poidsDestination(
-  c: Character, ville: City, bonheur: number, C: Cfg, memeJoueur = false,
+  c: Character, ville: City, bonheur: number, C: Cfg,
+  memeJoueur = false, bonusAdditifs = 0,
 ): number {
-  const joueur = memeJoueur ? C.p.migrationBonheurMemeJoueur : 1
-  const culture = (ville.culture ?? '') === c.culture ? C.p.migrationBonheurCulture : 1
-  return joueur * culture * (1 + bonheur / 100)
+  const attrait = 1 + bonheur / 100
+  const joueur = memeJoueur ? C.p.migrationBonheurMemeJoueur : 0
+  const culture = (ville.culture ?? '') === c.culture ? C.p.migrationBonheurCulture : 0
+  return attrait * (1 + joueur + culture + bonusAdditifs)
 }
 
-/** Facteur EMPLOI du tirage de destination (5e arbitrage Thibaut
- *  2026-10-29) : un migrant SANS MÉTIER est attiré ×N vers une
- *  ville aux postes non pourvus. Se multiplie avec les facteurs
- *  v2 et le facteur logement. Pure. */
+/** Bonus ADDITIF d'EMPLOI du tirage de destination (v3, 6e
+ *  arbitrage Thibaut 2026-10-29) : un migrant SANS MÉTIER porte
+ *  la candidate aux postes non pourvus à +migrationBonheurEmploi
+ *  (défaut +1 : la ville pèse ×2 pour un chômeur — le
+ *  multiplicatif ×1,5 du 5e arbitrage est REMPLACÉ). Renvoie 0
+ *  quand le bonus ne parle pas. Pure. */
 export function facteurEmploi(sansMetier: boolean, emploisLibres: boolean, C: Cfg): number {
-  return sansMetier && emploisLibres ? C.p.migrationBonheurEmploi : 1
+  return sansMetier && emploisLibres ? C.p.migrationBonheurEmploi : 0
 }
 
-/** Facteur LOGEMENT du tirage de destination (5e arbitrage
- *  Thibaut 2026-10-29) : un migrant SANS DOMICILE est attiré ×N
- *  vers une ville aux lits libres. Se multiplie avec les
- *  facteurs v2 et le facteur emploi. Pure. */
+/** Bonus ADDITIF de LOGEMENT du tirage de destination (v3, 6e
+ *  arbitrage Thibaut 2026-10-29) : un migrant SANS DOMICILE porte
+ *  la candidate aux lits libres à +migrationBonheurLogement
+ *  (défaut +1 : la ville pèse ×2 pour un sans-logement — le
+ *  multiplicatif ×1,5 du 5e arbitrage est REMPLACÉ). Renvoie 0
+ *  quand le bonus ne parle pas. Pure. */
 export function facteurLogement(sansDomicile: boolean, logementsLibres: boolean, C: Cfg): number {
-  return sansDomicile && logementsLibres ? C.p.migrationBonheurLogement : 1
+  return sansDomicile && logementsLibres ? C.p.migrationBonheurLogement : 0
 }
 
 /** Fiche d'une ville du monde pour le tirage — photographiée UNE
@@ -219,13 +244,15 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
           !e.mariageId && !deplaces.has(e.id) && !neDemenageJamais(e, C) && !e.armee &&
           (idsFoyer.has(e.mereId ?? '') || idsFoyer.has(e.pereId ?? '')))
         if (!rng.chance(probaDepartBonheur(src.bonheur, C))) continue
-        // Facteurs emploi & logement (5e arbitrage 2026-10-29) :
-        //  le statut regardé est celui du TIRÉ avant départ —
-        //  foyer (conjoint, enfants) suit sans influer.
+        // Bonus emploi & logement (v3 ADDITIVE, 6e arbitrage
+        //  2026-10-29) : S'ADDITIONNENT dans la parenthèse sur la
+        //  base d'attrait du bonheur — le statut regardé est celui
+        //  du TIRÉ avant départ, le foyer (conjoint, enfants) suit
+        //  sans influer.
         const dest = rng.pickWeighted(candidats, (f) =>
-          poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n)
-          * facteurEmploi(!c.metier, f.emploisLibres, C)
-          * facteurLogement(!c.domicile, f.logementsLibres, C))
+          poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n,
+            facteurEmploi(!c.metier, f.emploisLibres, C)
+            + facteurLogement(!c.domicile, f.logementsLibres, C)))
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
         //  scolaire) — conjoint et enfants suivent sans tirage propre.

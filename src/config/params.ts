@@ -26,29 +26,35 @@ export interface GameParams {
    *  Linéaire : p = migrationBonheurMax × (100 − bonheur) / 100
    *  (0 % à 100 de bonheur, défaut 10 % à 0). */
   migrationBonheurMax: number
-  /** (Arbitrage Thibaut 2026-10-28, v2 au 3e retour du jour : ×1,25,
-   *  le ×4 de la mise en place du matin est REMPLACÉ) Poids
-   *  multiplicatif d'une ville candidate de SA culture dans le tirage
-   *  pondéré de destination (se multiplie avec le facteur même joueur
-   *  et l'attrait du bonheur, ×[1 ; 2]). */
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux :
+   *  « la formule se base sur le bonheur et tous les autres
+   *  modificateurs sont additifs » — le poids multiplicatif v2 ×1,25
+   *  du 3e retour est REMPLACÉ) BONUS ADDITIF d'une ville candidate de
+   *  SA culture : poids = attrait × (1 + même joueur + culture +
+   *  bonus du tiré), l'attrait ×[1 ; 2] du bonheur restant la seule
+   *  base multiplicative. */
   migrationBonheurCulture: number
-  /** (Arbitrage Thibaut 2026-10-28, v2) Poids multiplicatif d'une ville
-   *  candidate du MÊME JOUEUR que le migrant (migration interne
-   *  privilégiée) dans le tirage pondéré de destination — se multiplie
-   *  avec le facteur culture et l'attrait du bonheur. */
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le poids multiplicatif v2 ×1,5 du 3e retour est REMPLACÉ) BONUS
+   *  ADDITIF d'une ville candidate du MÊME JOUEUR que le migrant
+   *  (migration interne privilégiée) : s'ADDITIONNE au bonus culture
+   *  et aux bonus du tiré sur la base d'attrait du bonheur
+   *  (exemple arbitre : culture + même joueur = attrait × 1,75). */
   migrationBonheurMemeJoueur: number
-  /** (Arbitrage Thibaut 2026-10-29, 5e retour du flux de migration)
-   *  Poids multiplicatif d'une ville candidate AUX POSTES NON
-   *  POURVUS quand le migrant est SANS MÉTIER — attire les
-   *  chômeurs vers les villes qui embauchent. Se multiplie avec
-   *  les facteurs v2 (même joueur, culture, bonheur) et le
-   *  facteur logement. */
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le multiplicatif ×1,5 du 5e retour est REMPLACÉ) BONUS ADDITIF
+   *  d'une ville candidate AUX POSTES NON POURVUS quand le migrant
+   *  est SANS MÉTIER — attire les chômeurs vers les villes qui
+   *  embauchent. Défaut +1 : la ville pèse ×2 pour un chômeur
+   *  (« on peut mettre facteur emploi et facteur logement à ×2 »).
+   *  S'additionne aux bonus même joueur/culture et logement. */
   migrationBonheurEmploi: number
-  /** (Arbitrage Thibaut 2026-10-29, 5e retour du flux de migration)
-   *  Poids multiplicatif d'une ville candidate AUX LITS LIBRES
-   *  quand le migrant est SANS DOMICILE — attire les
-   *  sans-logement vers les villes qui logent. Se multiplie avec
-   *  les facteurs v2 et le facteur emploi. */
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le multiplicatif ×1,5 du 5e retour est REMPLACÉ) BONUS ADDITIF
+   *  d'une ville candidate AUX LITS LIBRES quand le migrant est
+   *  SANS DOMICILE — attire les sans-logement vers les villes qui
+   *  logent. Défaut +1 : la ville pèse ×2 pour un sans-logement.
+   *  S'additionne aux bonus même joueur/culture et emploi. */
   migrationBonheurLogement: number
   consoNourrParHab: number
   /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
@@ -216,11 +222,13 @@ export const DEFAULT_PARAMS: GameParams = {
   migrationMonde: 0.01,
   // (Arbitrage Thibaut 2026-10-28 — flux de migration par bonheur)
   migrationBonheurMax: 0.10,
-  migrationBonheurCulture: 1.25,
-  migrationBonheurMemeJoueur: 1.5,
-  // (Arbitrage Thibaut 2026-10-29 — facteurs emploi & logement)
-  migrationBonheurEmploi: 1.5,
-  migrationBonheurLogement: 1.5,
+  // (v3 ADDITIVE, 6e arbitrage Thibaut 2026-10-29 : bonus ADDITIFS sur
+  //  la base d'attrait du bonheur — les multiplicatifs v2 ×1,25/×1,5
+  //  et les ×1,5 emploi/logement du 5e retour sont REMPLACÉS)
+  migrationBonheurCulture: 0.25,
+  migrationBonheurMemeJoueur: 0.5,
+  migrationBonheurEmploi: 1,
+  migrationBonheurLogement: 1,
   consoNourrParHab: 1,
   consoNourrBourgeois: 2,
   consoNourrNoble: 4,
@@ -335,10 +343,10 @@ export const PARAM_META: {
   //  restent comme REFLIS de compatibilité. Remplacée le jour même
   //  par le flux de migration par BONHEUR ci-dessous.)
   { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
-  { key: 'migrationBonheurCulture', label: 'Migration par bonheur — poids d\'une ville de SA culture', groupe: 'Population', aide: 'Destination pondérée : ×N pour une ville de la culture du migrant (défaut 1,25 — retour du jour : le ×4 de la mise en place est remplacé), ×1,5 pour une ville du même joueur, ×(1 + bonheur/100) pour l\'attrait de la ville candidate. Les trois effets se multiplient.' },
-  { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — poids d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Destination pondérée (retour du jour) : ×N pour une ville du même joueur que le migrant (défaut 1,5 — la migration interne est privilégiée). Se multiplie avec le poids culture et l\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
-  { key: 'migrationBonheurEmploi', label: 'Migration par bonheur — poids d\'une ville avec des EMPLOIS disponibles', groupe: 'Population', aide: 'Facteur d\'attrait (retour 2026-10-29) : un migrant SANS MÉTIER pèse ×N une ville candidate qui a des postes non pourvus (plus d\'offres que d\'adultes en poste). Se multiplie avec le même joueur, la culture, le bonheur et le facteur logement.' },
-  { key: 'migrationBonheurLogement', label: 'Migration par bonheur — poids d\'une ville avec des LOGEMENTS disponibles', groupe: 'Population', aide: 'Facteur d\'attrait (retour 2026-10-29) : un migrant SANS DOMICILE pèse ×N une ville candidate qui a plus de lits que d\'habitants vivants. Se multiplie avec le même joueur, la culture, le bonheur et le facteur emploi.' },
+  { key: 'migrationBonheurCulture', label: 'Migration par bonheur — bonus d\'une ville de SA culture', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : la formule se base sur l\'attrait du bonheur (×[1 ; 2]) et tous les autres modificateurs S\'ADDITIONNENT — +0,25 (défaut) pour une ville de la culture du migrant, +0,5 pour une ville du même joueur, +1 emploi/logement pour qui manque. Culture + même joueur = attrait × 1,75.' },
+  { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — bonus d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : +0,5 (défaut) pour une ville du même joueur que le migrant — la migration interne est privilégiée en S\'ADDITIONNANT aux autres bonus sur la base d\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
+  { key: 'migrationBonheurEmploi', label: 'Migration par bonheur — bonus d\'une ville avec des EMPLOIS disponibles', groupe: 'Population', aide: 'Bonus ADDITIF (retour 2026-10-29, v3) : +1 (défaut) pour une ville candidate aux postes non pourvus SI le migrant est sans métier — la ville pèse ×2 pour un chômeur. S\'additionne avec même joueur, culture et logement sur la base d\'attrait du bonheur.' },
+  { key: 'migrationBonheurLogement', label: 'Migration par bonheur — bonus d\'une ville avec des LOGEMENTS disponibles', groupe: 'Population', aide: 'Bonus ADDITIF (retour 2026-10-29, v3) : +1 (défaut) pour une ville candidate qui a plus de lits que d\'habitants SI le migrant est sans domicile — la ville pèse ×2 pour un sans-logement. S\'additionne avec les autres modificateurs sur la base d\'attrait du bonheur.' },
   { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
   { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
   { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },
