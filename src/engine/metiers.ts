@@ -330,15 +330,22 @@ function emplacementsMetierVille(
   //  sont hors du champ des caps et certains appelants n'ont pas le
   //  state sous la main.
   // (Refonte 12 lois, 2026-10-29, Déisme « Monuments pieux » : +N
-  //  places de Scientifique par BÂTIMENT (catégorie « Bâtiment » —
-  //  les AMÉNAGEMENTS sont exclus) de la ville, si la VILLE est de
-  //  culture Déisme. Les « bâtiments de faction » du classeur
-  //  n'existent plus comme donnée depuis le 2026-10-19 : l'ancienne
-  //  loi (crédit de +4 Science à la construction, retirée avec la
-  //  refonte) est REMPLACÉE/HISTORISÉE par cet emplacement.)
+  //  places de Scientifique par BÂTIMENT DE FACTION de la ville,
+  //  si la VILLE est de culture Déisme. Les « bâtiments de faction »
+  //  du classeur n'existent plus comme donnée depuis le 2026-10-19 :
+  //  l'ancienne loi (crédit de +4 Science à la construction, retirée
+  //  avec la refonte) est REMPLACÉE/HISTORISÉE par cet emplacement.
+  //  REMPLACÉ le 2026-10-29 bis (retour arbitre Thibaut : « les
+  //  bâtiments de faction vont revenir — laisse le Monuments pieux
+  //  sur eux ») : la loi ne compte plus TOUS les bâtiments mais les
+  //  seuls bâtiments de faction — marqueur `batimentDeFaction` du
+  //  référentiel, aucune entrée ne le porte aujourd'hui, la loi
+  //  DORT à 0 emplacement jusqu'à leur retour.)
   if (metier === 'Scientifique') {
     const n = cultureDef(ville.culture, C.config)?.scientifiqueParBatiment ?? 0
-    if (n) total += n * (ville.batiments ?? []).length
+    if (n) total += n * (ville.batiments ?? []).filter(
+      (b) => constructionRef(b, C.config)?.batimentDeFaction === true,
+    ).length
   }
   if (ctx) total += emplacementsRoutesVille(metier, ctx.state, ctx.joueur, ville.nom, C)
   return total

@@ -179,7 +179,7 @@ export function ParamsPanel() {
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. (ville)</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
+                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. faction</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
               </thead>
               <tbody>
                 {config.cultures.map((t, i) => (

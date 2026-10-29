@@ -118,18 +118,33 @@ test('lois de ville : +5 Taudis (Communautarisme) / +2 Palais (Lunisme) au parc'
 
 // ── Déisme « Monuments pieux » ─────────────────────────────────────────────
 
-test('Déisme « Monuments pieux » : +1 place de Scientifique par bâtiment', () => {
+test('Déisme « Monuments pieux » : +1 place de Scientifique par BÂTIMENT DE FACTION', () => {
   const ctx = partieMock()
   const { state, ville } = ctx
   assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
   const C = cfgOf(state.config)
-  ville.batiments = ['Poste de garde', 'Caserne']
+  // (retour arbitre Thibaut 2026-10-29 : « les bâtiments de faction
+  //  vont revenir, laisse le Monuments pieux sur eux ») — la loi
+  //  compte les seuls bâtiments portant le marqueur. Aucune entrée
+  //  du référentiel ne le porte aujourd'hui : on en INJECTE deux
+  //  (même patron que les tiers 2/3 de pays/Constructions.test.ts).
+  C.config.constructions.push(
+    { categorie: 'Bâtiment', groupe: 'Ville', famille: 'Economique', nom: 'Sanctuaire', batimentDeFaction: true },
+    { categorie: 'Bâtiment', groupe: 'Ville', famille: 'Militaire', nom: 'Grand autel', batimentDeFaction: true },
+  )
+  ville.batiments = ['Sanctuaire', 'Poste de garde', 'Grand autel']
   ville.amenagements = []
   ville.culture = 'Déisme'
   const capDeiste = capMetierVille('Scientifique', ville, C)
   ville.culture = 'Lunisme'
   const capAutre = capMetierVille('Scientifique', ville, C)
-  assert.equal(capDeiste - capAutre, 2, '+1 par BÂTIMENT (2 bâtiments), seulement en ville déiste')
+  assert.equal(capDeiste - capAutre, 2, '+1 par BÂTIMENT DE FACTION (2 sur 3 bâtiments), seulement en ville déiste')
+  // bâtiments sans marqueur : la loi DORT (référentiel actuel = 0 partout)
+  ville.culture = 'Déisme'
+  ville.batiments = ['Poste de garde', 'Caserne']
+  const capNormaux = capMetierVille('Scientifique', ville, C)
+  ville.culture = 'Lunisme'
+  assert.equal(capNormaux - capMetierVille('Scientifique', ville, C), 0, 'sans bâtiment de faction la loi dort à 0')
   // les aménagements ne comptent pas
   ville.culture = 'Déisme'
   ville.batiments = []

@@ -321,6 +321,16 @@ export interface ConstructionRef {
   malContraction?: number
   bonusGuerison?: number
   bonusGuerisonGlobal?: number
+  /** BÂTIMENT DE FACTION (retour arbitre Thibaut 2026-10-29 : « les
+   *  bâtiments de faction vont revenir — laisse le Monuments pieux du
+   *  Déisme sur eux ») : marqueur porté par les constructions de
+   *  faction à leur retour (les 19 du système de faction, retirées
+   *  le 2026-10-19 « à refaire »). Aujourd'hui AUCUNE entrée du
+   *  référentiel ne le porte : la loi Déisme « Monuments pieux »
+   *  (+N emplacement de Scientifique par bâtiment de faction) compte
+   *  0 et DORT jusqu'à leur retour. Lu par emplacementsMetierVille
+   *  (engine/metiers.ts). Champ optionnel : absent = faux. */
+  batimentDeFaction?: boolean
 }
 /** Un emplacement de métier accordé par une construction (vague 3a). */
 export interface EmplacementDef {

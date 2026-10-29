@@ -500,7 +500,7 @@
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
-      "regleVille": "Monuments pieux : les bâtiments offrent +1 emplacement de Scientifique.",
+      "regleVille": "Monuments pieux : les bâtiments de faction offrent +1 emplacement de Scientifique.",
       "regleHabitant": "Lavages de main : réduit les chances de contracter des maladies de 2 %.",
       "scientifiqueParBatiment": 1,
       "maladieContractMod": -0.02
