@@ -177,9 +177,12 @@ en Science, déduit automatiquement puis remboursé à la reprise ;
 Progrès.
 
 Ce qui RESTE : la **ressource Science** (impôts, métiers
-Chercheur/Scientifique, `scienceParConstruction`, Observatoire,
+Chercheur/Scientifique, Observatoire,
 Laboratoire de Falheim, Dashboard) et les textes des Lauriers
-Scientifique — dont les conditions II/III/IV sont **CADUQUES** (elles
+Scientifique — (NOTE 2026-10-29, refonte « 12 lois » : le champ
+`scienceParConstruction` de la culture Déisme est RETIRÉ — la
+nouvelle loi Déisme « Monuments pieux » est un emplacement de
+Scientifique par bâtiment, cf. section « Refonte des cultures ») — dont les conditions II/III/IV sont **CADUQUES** (elles
 référencent des arbres qui n'existent plus) : redesign de la voie à
 arbitrer.
 
@@ -1179,7 +1182,11 @@ total : 86 règles — sources : batiment 40, amenagement 42, regime 1, culture 
 Chaque ligne porte l'id stable, le nom (et le groupe Ville/Château),
 les conditions éventuelles (`[si regime=Socialisme, saison=Été]`) et
 les effets signés. Un effet bizarre en partie se localise par canal
-puis par nom — plus de lecture séquentielle. Une règle multi-canaux
+puis par nom — plus de lecture séquentielle.
+(NOTE 2026-10-29, refonte « 12 lois » : l'extrait ci-dessus est
+HISTORIQUE — le canal `fluxParVilleCultureMonde` et la source
+`culture` sont retirés du registre ; il ne reste que les canaux
+des constructions et du régime, 84 règles.) Une règle multi-canaux
 apparaît dans chaque canal concerné (le canal est un filtre, pas un
 tri) ; un canal inconnu est signalé `⚠`.
 
@@ -1604,3 +1611,73 @@ retirée le 2026-10-19) disparaît à son tour. Décisions :
 4. **Tests de régression** : sur 20 tours avec un Professeur disponible chez un autre
    joueur, aucun enfant ne quitte sa ville et aucune entrée « scolarité » n'apparaît
    au journal.
+
+
+## Refonte des cultures — 12 lois (arbitrages Thibaut, 2026-10-29)
+
+Proposition de Thibaut (« voici ce que je pensais faire des cultures »),
+revue design puis actée. **Périmètre** : une culture porte une **loi de
+VILLE** (joue pour la culture MAJORITAIRE de la cité, `ville.culture`)
+et une **loi d'HABITANT** (joue pour la culture PROPRE du personnage,
+où qu'il vive). Les 6 noms de cultures sont conservés ; les régimes
+(loi de royaume) ne sont pas touchés. Toutes les ANCIENNES lois sont
+REMPLACÉES/HISTORISÉES (Entraide, Prier les dieux/Enfant Divin,
+Prêcheurs/Soldats de la Lumière, Ecologisme, Adaptation/Sorcellerie,
+Supériorité évidente/Par le fer — historique git) : les règles de pays
+« +N par habitation de cette culture dans le monde » quittent la
+banque (source `culture`, effet `fluxParVilleCultureMonde` supprimés).
+
+### Les 12 lois (défauts du référentiel)
+
+| Culture | Loi de VILLE | Loi d'HABITANT |
+| --- | --- | --- |
+| Communautarisme (Parité) | **Logements élargis** — +5 Taudis au parc | **Bourgeoisie facile** — seuil bourgeois 100 → 80 |
+| Déisme (Masculine) | **Monuments pieux** — +1 place de Scientifique par bâtiment | **Lavages de main** — −2 % de contraction des maladies |
+| Lunisme (Masculine) | **Villes Saintes** — +2 Palais au parc | **Foi supérieure** — nobles : +1 Tourisme/tour |
+| Naturalisme (Parité) | **Champs nourriciers** — fermiers : +1 Nourriture/tour en été | **Walpurgis** — fertFactor 1,1 (+10 % naissances) |
+| Sethisme (Féminine) | **Caravanes** — ≥3 aménagements : +1 route au cap | **Conseil des Sages** — nobles : +0,1 Science/tour |
+| Zélotisme (Féminine) | **Ferveur martiale** — habitations hors culture : −20 Garnison × rang | **Corps de fer** — Gardes : +10 Garnison, +0,2 Or/tour |
+
+### Arbitrages et interprétations actés
+
+1. **Logements élargis / Villes Saintes** : les lits de la loi suivent la
+   MÊME convention que les apports de constructions — comptés dans le
+   parc (`logementsVille` → axe Logement du bonheur et magnét migratoire
+   v3 `logementsLibres`), affichés dans le tableau Logements de la carte
+   de ville, NON attribuables nommément (`attribuerDomicilesVille` ne
+   lit que `ville.domiciles`). NB : aucun rang n'offre de Palais — la loi
+   Lunisme est le premier fournisseur.
+2. **Monuments pieux** : les « bâtiments de faction » n'existent plus
+   comme donnée depuis le 2026-10-19 — l'ancienne loi (crédit de +4
+   Science à la construction, `scienceParConstruction`) est retirée ;
+   la nouvelle loi est un **EMPLACEMENT** : +1 place de Scientifique
+   par bâtiment (catégorie Bâtiment, aménagements exclus) dans les
+   villes de culture Déisme.
+3. **Lavages de main** : modificateur additif de contraction
+   (`maladieContractMod` −0,02), lu sur la culture PROPRE du personnage.
+4. **Bourgeoisie facile** : le seuil bourgeois devient un PARAMÈTRE de
+   `rangSocial` (`seuilBourgeoisCulture` : 80 pour le Communautarisme,
+   100 ailleurs) ; `rangDe` (le rang affiché ET mécanique : conso/prod,
+   mariage, hébergement, lois nobles) l'applique. Le seuil noble (250)
+   ne bouge pas.
+5. **Champs nourriciers** : le Fermier est déjà un métier `ete` — le
+   bonus suit la même saison ; × multiplicateur de rang, avant taxes
+   (même pattern que le bonus Ponton/Pêcheur).
+6. **Foi supérieure / Conseil des Sages / Corps de fer (Or)** : lois
+   d'HABITANT agrégées par `loisHabitants` (canal « Régimes &
+   cultures » du récap, étape 3septies avec la loi du régime ; le
+   Tourisme luniste compte dans « stock = production »). « Noble » =
+   le rang `rangDe` (noblesse de naissance incluse).
+7. **Caravanes** : le cap `maxRoutesJoueur` est PAR JOUEUR — le « cap de
+   cette ville » se traduit par **+1 au cap du joueur par ville sethiste
+   qualifiée** (≥3 aménagements). Le cap reste une annonce, jamais
+   bloquant.
+8. **Corps de fer (Garnison)** : le +10 est une valeur d'ÉTAT qui **SE
+   CUMULE** au défaut moteur `garnisonParGarde` (un Garde zélotiste =
+   20) ; le +0,2 Or/tour est un flux (banque des lois d'habitant).
+9. **Ferveur martiale** : malus MONDIAL permanent — dès qu'au moins une
+   ville de culture Zélotisme existe (villes des JOUEURS, cités libres
+   hors champ), chaque habitation qui n'est PAS de cette culture perd
+   20 × rang de l'habitation, appliqué UNE fois par habitation (pas de
+   cumul si plusieurs villes zélotistes), **plancher 0**. La ligne
+   « culture » apparaît dans le détail de garnison.
