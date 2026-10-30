@@ -1833,7 +1833,7 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 | Dogme | Effet (type référentiel, valeur) |
 |---|---|
 | Dogme du Travail | travailNourriture +1 — sans-emplois de la culture : +1 Nourriture/tour (avant taxes, sans multiplicateur de rang) |
-| Dogme de la Famille | fecondite +0,1 — fécondité ×1,1 pour les personnages de la culture, CÔTÉ HOMME ET CÔTÉ FEMME (dans un couple, chaque époux porteur multiplie sa part) |
+| Dogme de la Famille | fecondite +0,1 — fécondité ×1,1 pour les personnages de la culture, CÔTÉ HOMME ET CÔTÉ FEMME : chaque époux apporte SA part de fécondité au JET de conception (un époux porteur multiplie sa part) — mais la fécondité AFFICHÉE d'une épouse ne monte jamais à cause de la culture de son mari (5e retour) |
 | Dogme de la Patrie | gardeParHabitation +2 — cap de Garde +2 dans les villes de la culture |
 | Dogme de l'Égalité | consoNourrBourgeois 1 — les bourgeois de la culture consomment 1 Nourriture (FIXE : l'emporte sur régime et défaut) |
 | Dogme de la Solidarité | taudisParHabitation +5 — +5 Taudis par habitation de la culture (lits attribuables, entrée séparée de la loi) |
@@ -1857,10 +1857,19 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
   sur la loi de régime et le défaut moteur ; sans `state` (cités
   libres), le dogme n'est pas consulté.
 - **Famille** (correctif arbitre 30/10, 4e retour : « le
-  multiplicateur est côté homme et femme ») : le ×1,1 porte sur le
-  facteur du personnage (homme ou femme) ET sur la part de l'ÉPOUX
-  dans le facteur de conception — une femme d'une autre culture
-  mariée à un porteur conçoit elle aussi ×1,1.
+  multiplicateur est côté homme et femme » ; PUIS 5e retour : « le
+  calcul de la conception prend en compte la fécondité homme et la
+  fécondité femme — une femme n'a pas à gagner en fécondité si son
+  mari est d'une culture féconde ») : chaque personnage porte la
+  fécondité de SA culture propre (côté homme et côté femme). Le JET
+  de conception (qui multiplie la fécondité homme et la fécondité
+  femme) fait intervenir chaque époux avec le dogme de SA culture :
+  un mari porteur multiplie SA part dans le JET (une épouse
+  non porteuse conçoit ×1,1 avec lui), un couple porteur des deux
+  côtés conçoit ×1,21. Mais la fécondité AFFICHÉE d'une épouse
+  (computeFecondite) ne monte JAMAIS à cause de la culture de son
+  mari — le facteur de l'époux de l'affichage ne porte plus son
+  dogme.
 - **Nationalisme** (correctif arbitre 30/10, 4e retour : « ce n'est
   pas un nouveau jet, mais pris en compte dans le test de
   conversion culturelle déjà présent ») : PAS de tirage séparé —
@@ -1896,6 +1905,18 @@ journalise ; un refus part au journal « Système »). La carte
 Référentiels) montre la table complète — retour de la carte
 retirée le 24/10. L'annonce de palier à chaque fin de tour reste
 non codée (choix ci-dessus).
+
+**ONGLET « Dogmes » (5e retour arbitre Thibaut du 30/10 : « il
+faudrait un onglet Dogmes, au même titre qu'un onglet royaume et
+Pays »)** : nouvelle section de premier niveau de la navigation
+(🕯 Dogmes, entre Pays et Population), avec la barre J1..J8 —
+vue TOUTES CULTURES PRÉSENTES : une carte par culture (Tourisme
+moteur, paliers franchis, dominant, dogmes pris avec descriptions,
+paliers en attente et CHOIX INTERACTIF quand le joueur sélectionné
+est dominant — même mutateur généralisé à toute culture), plus la
+table complète du référentiel (12 dogmes, effets moteur, cultures
+qui les ont pris). La carte « Culture du pays » de la page Pays
+reste inchangée.
 
 **Historique** : un ancien système de dogmes (effets d'affichage
 Pontife/Fidèles, jamais branché moteur) a été retiré le 2026-10-24
