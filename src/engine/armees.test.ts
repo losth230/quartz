@@ -123,6 +123,36 @@ test('recruitForArmies : bornes d âge de la ligne Soldat (31 ans exclu par déf
   assert.equal(armee.puissance, 30, '2 soldats × 15 = 30 (puissance cible atteinte)')
 })
 
+// (CORRECTIF audit a2 du 2026-10-30 : le dernier recrutement ne
+//  franchit plus la puissance cible — la recrue n'est engagée que
+//  si ses points TIENNENT dans la cible.)
+test('recruitForArmies : le dernier recrutement ne FRANCHIT plus la cible (audit a2)', () => {
+  const state = partie()
+  const p = state.players[0]
+  state.population[p.n] = [perso('s1', 20), perso('s2', 21), perso('s3', 22)]
+  const armee: Army = {
+    nom: 'Légion', puissanceCible: 50, puissance: 40,
+    commandant: null, soldats: [],
+  }
+  p.armees = [armee]
+  // stockée 40, cible 50 : une recrue (15 pts) porterait à 55 > 50
+  // → AUCUNE recrue engagée, la stockée ne franchit pas la cible
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 40, 'la stockée reste à 40 : une recrue l aurait portée à 55, au-delà de la cible 50')
+  assert.equal(armee.soldats.length, 0, 'aucune recrue : elle ne tiendrait pas dans la cible')
+  assert.ok(state.population[p.n].every((c) => c.armee === null), 'aucun habitant enrôlé')
+  // cible 70 (écart 30 = 2 × 15, aligné) : comportement inchangé
+  armee.puissanceCible = 70
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 70, 'écart aligné (2 × 15) : la cible est atteinte comme avant')
+  assert.equal(armee.soldats.length, 2)
+  // cible 75 depuis 70 : l'écart restant (5) < Soldat (15) → rien
+  armee.puissanceCible = 75
+  recruitForArmies(state, p, makeRng(20261028))
+  assert.equal(armee.puissance, 70, 'l armée reste juste SOUS la cible : le Soldat est indivisible')
+  assert.equal(armee.soldats.length, 2)
+})
+
 test('prixArmee : 1 Or / 2 pts ; réductions de levée des bâtiments de la ville (banque), plancher 0', () => {
   const state = partie()
   const C = cfgOf(state.config)

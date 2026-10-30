@@ -77,8 +77,11 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
         texte: `${p.nom} : le commandant de l'armée « ${armee.nom} » est tombé — à remplacer !`,
       })
     }
-    // recruter jusqu'à la puissance cible
-    while (puissance < armee.puissanceCible) {
+    // recruter jusqu'à la puissance cible — SANS la franchir
+    // (CORRECTIF audit a2 du 2026-10-30 : le dernier recrutement ne
+    //  dépasse plus la cible — une recrue n'est engagée que si ses
+    //  points tiennent dans la cible restante.)
+    while (puissance + puissanceSoldat <= armee.puissanceCible) {
       const candidats = pop.filter(
         (c) =>
           c.statut !== 'Décédé' &&
@@ -109,7 +112,12 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
 //  commandant). La puissance STOCKÉE fait foi pour TOUTE armée :
 //  pertes et fin de service sont soustractives sur la puissance ET
 //  la cible (pas de remplissage automatique), recruitForArmies
-//  recrute au-dessus de la stockée vers la cible. Historique :
+//  recrute au-dessus de la stockée vers la cible — SANS la
+//  franchir (CORRECTIF audit a2 du 2026-10-30 : une recrue n'est
+//  engagée que si ses points TIENNENT dans la cible ; le Soldat
+//  étant indivisible, une armée peut rester juste SOUS la cible si
+//  l'écart restant est inférieur aux points du Soldat ; à écart
+//  multiple des points du Soldat, comportement inchangé). Historique :
 //  « Recalcule la puissance affichée d'une armée (après édition
 //  manuelle) — arbitrage 2026-10-28 : puissances lues sur les
 //  lignes de métier, même lecture que recruitForArmies ». RESTAURÉ
