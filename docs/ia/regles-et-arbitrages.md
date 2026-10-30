@@ -1791,8 +1791,9 @@ présentes » : une photographie sociale de la ville.
 
 ## Dogmes de culture — paliers de Tourisme (arbitrages Thibaut, 2026-10-30)
 
-Quand une CULTURE (pas un joueur) atteint un palier de Tourisme, le
-joueur dominant de cette culture choisit un DOGME qui affecte les
+Quand une CULTURE (pas un joueur) atteint un palier de Tourisme,
+le joueur ayant le plus de Tourisme dans cette culture — le
+PONTIFE — choisit un DOGME qui affecte les
 habitants ou les villes de cette culture. La MISE EN FORME a été
 codée en 1re séance (fondations, table vide) ; en 2e séance du
 30/10, les **12 DOGMES DÉFINITIFS retenus par Thibaut** sont entrés
@@ -1806,11 +1807,14 @@ au référentiel et leurs effets sont BRANCHÉS MOTEUR.
    villes de cette culture, TOUS JOUEURS confondus, SANS les cités
    libres. Même lecture que le tableau de production de la ville
    (`productionVille`, canal « total »).
-3. **Dominant** : le joueur dont les villes de la culture
-   totalisent le plus de Tourisme — le choix du palier lui revient
-   au moment du choix (il peut CHANGER d'un palier à l'autre ;
-   égalité : plus petit n° de joueur, déterminisme). Le dogme est
-   inscrit au nom du dominant, pas de l'appelant.
+3. **Pontife** (rebaptisé au 6e retour, 2026-10-30 — arbitrage
+   Thibaut « remplace dominant par pontife » : le rôle s'appelait
+   « dominant » dans les arbitrages du 30/10) : le joueur dont les
+   villes de la culture totalisent le plus de Tourisme — le choix
+   du palier lui revient au moment du choix (il peut CHANGER d'un
+   palier à l'autre ; égalité : plus petit n° de joueur,
+   déterminisme). Le dogme est inscrit au nom du pontife, pas de
+   l'appelant.
 4. **Cumul** : dogmes, lois et effets de culture se CUMULENT.
 5. **Choix validé** : le dogme doit exister dans la table
    `dogmes` du référentiel POUR CETTE culture — les 12 dogmes du
@@ -1891,13 +1895,13 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 - **Fraternité** : zéro effet moteur tant que les révoltes
   n'existent pas — retour Thibaut explicite « non implémenté ».
 - **Pas d'annonce de palier au journal de fin de tour** (choix
-  maintenu) : l'entrée « Culture » part du CHOISIR du dominant ;
+  maintenu) : l'entrée « Culture » part du CHOISIR du pontife ;
   une annonce répétée tant que le choix pend serait du bruit.
 
 **Affichage** : carte « Culture du pays » (page Pays) — total
 Tourisme de la culture tous joueurs, palier en cours, dogmes pris
 (avec la description du référentiel), paliers en attente (badge
-warn + dominant) et CHOIX INTERACTIF : le dominant clique un
+warn + pontife) et CHOIX INTERACTIF : le pontife clique un
 dogme disponible par palier en attente (mutateur
 `choisirDogmeJoueur` de PlayerView → `choisirDogme` valide et
 journalise ; un refus part au journal « Système »). La carte
@@ -1911,9 +1915,9 @@ faudrait un onglet Dogmes, au même titre qu'un onglet royaume et
 Pays »)** : nouvelle section de premier niveau de la navigation
 (🕯 Dogmes, entre Pays et Population), avec la barre J1..J8 —
 vue TOUTES CULTURES PRÉSENTES : une carte par culture (Tourisme
-moteur, paliers franchis, dominant, dogmes pris avec descriptions,
+moteur, paliers franchis, pontife, dogmes pris avec descriptions,
 paliers en attente et CHOIX INTERACTIF quand le joueur sélectionné
-est dominant — même mutateur généralisé à toute culture), plus la
+est pontife — même mutateur généralisé à toute culture), plus la
 table complète du référentiel (12 dogmes, effets moteur, cultures
 qui les ont pris). La carte « Culture du pays » de la page Pays
 reste inchangée.
@@ -1923,3 +1927,26 @@ Pontife/Fidèles, jamais branché moteur) a été retiré le 2026-10-24
 « un éventuel retour des dogmes repartira de zéro » — c'est ce
 retour ; la purge cfgOf ne retire plus que les entrées ANCIEN
 format (sans champ `culture`), le nouveau format passe.
+
+**6e retour (2026-10-30) — « pontife » + correctif de la table vide** :
+(1) arbitrage Thibaut « remplace dominant par pontife » : le rôle
+« joueur ayant le plus de Tourisme dans la culture » s'appelle
+désormais le PONTIFE — renommé partout (UI, journal, moteur,
+identifiants : `joueurPontifeCulture`), la logique est inchangée
+(le terme « dominant » reste cité dans les arbitrages historiques
+ci-dessus et le journal technique, append-only). (2) INCIDENT
+signalé par Thibaut : « je n'arrive pas à choisir de dogme,
+la table du référentiel est vide » — les configs sauvegardées
+AVANT le 24/10 portent la table `dogmes` à l'ANCIEN format ;
+la purge de cfgOf la filtrait en table VIDE, qui (une fois
+convergée et re-sauvegardée) ÉCRASAIT les 12 dogmes du défaut à
+chaque relecture : l'onglet Dogmes voyait un référentiel vide et
+n'offrait aucun choix. Correctif (cfgOf) : une table dogmes
+absente, VIDE, ou tout ancien format retombe sur les DÉFAUTS du
+référentiel ; seule une table au NOUVEAU format la masque — les
+vieilles sauvegardes récupèrent les 12 dogmes d'elles-mêmes.
+Verrouillé aux tests (config.test.ts : convergence + relecture ;
+dogmes.test.ts : garde-fou réécrit). Amendement documenté : la
+propriété « une table explicitement vidée par l'arbitre reste
+vide » est retirée — pour vider le référentiel, on retire les
+entrées du défaut, pas via une config vide.

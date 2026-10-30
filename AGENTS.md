@@ -78,7 +78,7 @@ src/
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
 └── engine/*.test.ts, rules/*.test.ts, state/*.test.ts, components/*.test.ts
-                             — tests natifs node:test (277) + tests de rendu (13 fichiers, 22 tests)
+                             — tests natifs node:test (278) + tests de rendu (13 fichiers, 22 tests)
                              (compteurs réalignés 2026-10-30, 2e séance — dogmes)
 ```
 
@@ -107,7 +107,7 @@ protocoles possible dans un salon.
    moteur : sans ce check, un identifiant non défini dans le handler part en
    production (incident 2026-10-19 : `cfgMondiale`, ReferenceError à chaque
    résolution serveur, déployé vert par tous les contrôles).
-3. `npm test` — tests natifs `node --test` (277 : fusion, migrations, régression 20 tours
+3. `npm test` — tests natifs `node --test` (278 : fusion, migrations, régression 20 tours
    avec invariants, config, registre, banque, mutateurs, métiers, commerce, santé,
    bonheur, domiciles, statut social, santé/Guérisseur, dogmes de culture —
    fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts)
