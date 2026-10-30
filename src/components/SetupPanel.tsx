@@ -30,6 +30,21 @@ const CULTURES = CULTURES_ALL ?? []
 const PEUPLES = PEUPLES_ALL ?? []
 const REGIMES = REGIMES_ALL ?? []
 
+// F2 (audit 2026-10-27) : le code de salon est le SEUL secret d'un salon
+//  (RLS ouverte par conception, pas d'authentification) — un code court ou
+//  devinable (« chasse-peche »…) laisse quiconque connaît l'URL publique
+//  rejoindre, pousser des sections pour un autre n° de joueur, publier dans
+//  la config mondiale '__config__' ou forcer le tour à distance. Le
+//  générateur produit 16 caractères sans caractères ambigus (I, O, l, 0, 1).
+const ALPHABET_SALON = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+export function genererCodeSalon(): string {
+  let out = ''
+  for (let i = 0; i < 16; i++) {
+    out += ALPHABET_SALON[Math.floor(Math.random() * ALPHABET_SALON.length)]
+  }
+  return out
+}
+
 export function SetupPanel() {
   const { newGame, joinGame, monNumero, setMonNumero } = useGame()
   const [setups, setSetups] = useState<SetupLine[]>(() => defaultSetups().map((s, i) => ({
@@ -246,6 +261,12 @@ export function SetupPanel() {
             <span className="field-label">Code du salon (mode multijoueur)</span>
             <TextInput value={salon} onChange={setSalon} />
           </label>
+          <Button
+            title="Générer un code long et aléatoire — recommandé : le code du salon est le seul secret du salon, les codes courts sont devinables"
+            onClick={() => setSalon(genererCodeSalon())}
+          >
+            🎲 Générer un code
+          </Button>
         </div>
         <Button
           tone="primary"
@@ -256,6 +277,8 @@ export function SetupPanel() {
         </Button>
         <p className="muted small">
           Même code de salon = même partie en temps réel ; sans Supabase, jouable en local.
+          Préférez un code généré (🎲) : le code du salon est le seul secret de la partie
+          (il n'y a pas de compte joueur), un code court est devinable.
         </p>
       </Card>
     </div>

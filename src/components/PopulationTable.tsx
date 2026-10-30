@@ -10,11 +10,13 @@
 //  sont proposés (Chasseur, Gouverneur) — et arbre généalogique de la
 //  famille dirigeante (déplacé ici depuis la page Royaume).
 //  Retour Thibaut (2026-10-14) : la population est séparée en deux
-//  tableaux — « La cour » (tous les nobles du joueur, affichés
-//  AU-DESSUS) et la population « classique ». Chaque personnage peut
-//  être DONNÉ à un autre joueur ; deux nobles peuvent être MARIÉS
-//  manuellement (y compris de joueurs différents — ex. la fille du
-//  joueur 1 avec le fils du joueur 2).
+//  tableaux — « La cour » (personnages selon leur RANG social —
+//  retour Thibaut 2026-10-26 : des nobles DÈS LE DÉPART, le rang
+//  suit la dynastie de naissance + l'ascension par prestige)
+//  affichés AU-DESSUS et la population « classique ». Chaque
+//  personnage peut être DONNÉ à un autre joueur ; deux nobles
+//  peuvent être MARIÉS manuellement (y compris de joueurs
+//  différents — ex. la fille du joueur 1 avec le fils du joueur 2).
 //  Retour Thibaut (2026-10-14, suite) : la section Population affiche
 //  AUSSI les CITÉS LIBRES comme des onglets « comme si c'étaient des
 //  joueurs » (joueur négatif = index de la cité) — mêmes tableaux
@@ -37,7 +39,8 @@ import { cfgOf } from '../engine/gameData'
 import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
 import { metiersAccessibles } from '../engine/metiers'
-import { isNobleDyn, fullName, deplacerPersonnage, toutesLesPopulations } from '../engine/shared'
+import { fullName, deplacerPersonnage, toutesLesPopulations } from '../engine/shared'
+import { rangDe } from '../engine/statutSocial'
 import { marierPersonnages } from '../engine/cour'
 import { metiersAccessiblesCite, pseudoJoueurDeCite, ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre } from '../engine/citesLibres'
 import { GenealogyTree } from './GenealogyTree'
@@ -95,14 +98,23 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   }
   const nomPorteur = p?.nom ?? cite?.nom ?? ''
 
-  // ── Séparation cour / population classique (retour Thibaut) ───────
-  const estNoble = (c: Character) => isNobleDyn(c.dynastie, C)
+  // ── Séparation cour / population classique (retours Thibaut
+  //  2026-10-26 : « le tableau supérieur montre les personnages
+  //  selon leur RANG, pas leur dynastie » PUIS « il faut des nobles
+  //  dès le début — la colonne dynastie doit correspondre à la
+  //  colonne rang ») : l'appartenance à la cour suit le RANG D'UN
+  //  PERSONNAGE (rangDe, cf. statutSocial.ts) — NOBLE DE NAISSANCE
+  //  si la dynastie est noble (la famille dirigeante et sa parenté
+  //  siègent donc à la cour DÈS LE DÉPART), sinon rang dérivé du
+  //  prestige (bourgeois ≥ 100, anobli ≥ 250). Les roturiers de
+  //  dynastie gravissent la cour par le prestige.
+  const estDeCour = (c: Character) => rangDe(c, C) !== 'roturier'
 
   const { rowsCour, rowsClassique } = useMemo(() => {
     const filtres = { statut: filtreStatut, ville: filtreVille, metier: filtreMetier, dynastie: filtreDyn }
     return {
-      rowsCour: filtrerEtTrier(pop.filter(estNoble), filtres, tri),
-      rowsClassique: filtrerEtTrier(pop.filter((c) => !estNoble(c)), filtres, tri),
+      rowsCour: filtrerEtTrier(pop.filter(estDeCour), filtres, tri),
+      rowsClassique: filtrerEtTrier(pop.filter((c) => !estDeCour(c)), filtres, tri),
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pop, C, filtreDyn, filtreVille, filtreMetier, filtreStatut, tri])
@@ -243,7 +255,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const vivants = pop.filter((c) => c.statut !== 'Décédé')
   const villesOcc = cite ? [{ nom: cite.nom }] : (p?.villes ?? [])
   const accessibles = p
-    ? metiersAccessibles(state, p)
+    ? metiersAccessibles(state)
     : (cite ? metiersAccessiblesCite(state, cite) : [])
   // ── Ajout manuel d'habitants ────────────────────────────────────────
   const villesAjout = cite ? [cite.nom] : (p?.villes.map((v) => v.nom) ?? [])
@@ -318,14 +330,14 @@ export function PopulationTable({ joueur }: { joueur: number }) {
   const entetes = (
     <thead>
       <tr>
-        <th>Nom</th><th>Dynastie</th><th>Sx</th><th>Âge</th><th>Ville</th>
-        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Rang</th><th>Traits</th>
+        <th>Nom</th><th>Dynastie · Rang</th><th>Sx</th><th>Âge</th><th>Ville</th>
+        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Traits</th>
         <th>Statut</th><th>Mariage</th><th>Fécondité</th><th>Actions</th>
       </tr>
     </thead>
   )
 
-  const courVivants = pop.filter((c) => estNoble(c) && c.statut !== 'Décédé').length
+  const courVivants = pop.filter((c) => estDeCour(c) && c.statut !== 'Décédé').length
   const classiqueVivants = vivants.length - courVivants
 
   return (
@@ -339,7 +351,9 @@ export function PopulationTable({ joueur }: { joueur: number }) {
           habitants 2026-10-20) : par ville, une ligne par métier occupé
           ou plafonné — en poste, capacité, places libres — la ligne
           Sans-emploi (rôle neutre : impôt nul, aucun effet) est toujours
-          présente. Helper moteur occupationsMetierVille (testé). */}
+          présente (les ENFANTS ne sont pas des sans-emplois — retour
+          Thibaut 2026-10-28 : ligne « Enfant » à part). Helper moteur
+          occupationsMetierVille (testé). */}
       <CarteMetiersPlaces
         vivants={vivants}
         villesOcc={villesOcc}
@@ -357,11 +371,12 @@ export function PopulationTable({ joueur }: { joueur: number }) {
         onAjouterNobles={ajouterNobles}
       />
 
-      <Card title={`👑 La cour de ${nomPorteur} — ${courVivants} vivants / ${pop.filter(estNoble).length} au total`}>
+      <Card title={`👑 La cour de ${nomPorteur} — ${courVivants} vivants / ${pop.filter(estDeCour).length} au total`}>
         {blocFiltres}
         <p className="muted small">
-          Tous les nobles {cite ? 'de la cité libre' : 'du joueur (dynastie dirigeante et familles nobles)'} — filtres et tri
-          appliqués aussi au tableau « Population » ci-dessous.
+          Personnages selon leur RANG — nobles de NAISSANCE (dynastie noble) et, par ascension, bourgeois (prestige ≥ 100) et nobles (≥ 250) {cite ? 'de la cité libre' : 'du joueur'} —
+          filtres et tri appliqués aussi au tableau « Population » ci-dessous. La cour commence noble : la famille dirigeante y siège dès le départ ;
+          le prestige y ajoute les roturiers anoblis (bourgeois à 100, anobli à 250).
         </p>
         <div className="table-wrap">
           <table className="tbl small pop-tbl">
@@ -370,21 +385,21 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               {rowsCour.length
                 ? rowsCour.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
                     .map((c) => <LignePersonnage key={c.id} c={c} avecMariage {...propsLigne} />)
-                : <tr><td colSpan={14} className="muted">aucun noble</td></tr>}
+                : <tr><td colSpan={13} className="muted">aucun personnage de haut rang — ni dynastie noble, ni prestige ≥ 100 (bourgeois à 100, anobli à 250)</td></tr>}
             </tbody>
           </table>
         </div>
         <p className="muted small">
-          « ➡ Donner à… » transfère le noble à un autre porteur (il y est éditable et y produit).
-          « 💍 Marier avec… » unit deux nobles DU MÊME porteur (retour Thibaut (z) : on ne
-          cible plus les autres joueurs ni les cités) : la personne mariée déménage
+          « ➡ Donner à… » transfère le personnage à un autre porteur (il y est éditable et y produit).
+          « 💍 Marier avec… » unit deux personnages DU MÊME porteur : la personne mariée déménage
           dans la ville de son conjoint (confirmation avant de marier un Dirigeant).
           Si un mariage ou un don est refusé, le motif s'affiche en rouge sous le métier
-          (déjà marié, non noble, mineur…).
+          (déjà marié, mineur… — le mariage manuel unit deux NOBLES : dynastie noble
+          de naissance ou anobli à 250 de prestige).
         </p>
       </Card>
 
-      <Card title={`Population de ${nomPorteur} — ${classiqueVivants} vivants / ${pop.filter((c) => !estNoble(c)).length} au total`}>
+      <Card title={`Population de ${nomPorteur} — ${classiqueVivants} vivants / ${pop.filter((c) => !estDeCour(c)).length} au total`}>
         <div className="table-wrap">
           <table className="tbl small pop-tbl">
             {entetes}
@@ -392,7 +407,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               {rowsClassique.length
                 ? rowsClassique.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
                     .map((c) => <LignePersonnage key={c.id} c={c} avecMariage={false} {...propsLigne} />)
-                : <tr><td colSpan={14} className="muted">aucun habitant</td></tr>}
+                : <tr><td colSpan={13} className="muted">aucun habitant</td></tr>}
             </tbody>
           </table>
               {(() => {
@@ -409,7 +424,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               })()}
         </div>
         <p className="muted small">
-          Population « classique » {cite ? 'de la cité libre' : 'du joueur'} (hors nobles){cite
+          Population « classique » {cite ? 'de la cité libre' : 'du joueur'} (hors cour — roturiers : dynastie roturière ET prestige sous 100){cite
             ? ' — le statut (Sain/Malade/Décédé) y est éditable : les cités libres ne passent pas au moteur démographique'
             : ' ; une ville transférée à un autre joueur emmène ses habitants classiques, la cour reste auprès de son joueur'}.
         </p>

@@ -7,7 +7,7 @@ import { useGame } from '../state/store'
 import { Button } from './ui'
 
 export function TurnBar() {
-  const { state, mode, salon, saving, conflit, saveLocaleEchec, nextTurn, exportState, importState, reset, barriere, forceNextTurn } = useGame()
+  const { state, mode, salon, saving, conflit, saveLocaleEchec, calculTour, nextTurn, exportState, importState, reset, barriere, forceNextTurn } = useGame()
   const fileRef = useRef<HTMLInputElement>(null)
   // (RETRAIT 2026-10-19, brûlage audit R5) : la bascule de protocole
   //  v1/v2 (state « proto2 » + toggleProto2) a été retirée — le
@@ -37,6 +37,12 @@ export function TurnBar() {
         </span>
         {saving && <span className="muted">sauvegarde…</span>}
       </div>
+      {/* F4 (audit 2026-10-27) : runTurn local en cours — le calcul
+          figure jusqu'à 3 s à 16 000 habitants, le bandeau s'affiche
+          AVANT le travail bloquant (yield au navigateur). */}
+      {calculTour && (
+        <div className="banner-info">⏳ Calcul du tour en cours…</div>
+      )}
       {conflit && (
         <div className="banner-warn">
           ⚠ Une modification d'un autre joueur est arrivée pendant votre édition — l'état a été rechargé.
@@ -59,8 +65,16 @@ export function TurnBar() {
             {barriere.monTourPousse && ' — en attente des autres joueurs…'}
           </div>
         )}
-        <Button tone="primary" onClick={nextTurn} disabled={mode === 'supabase' && barriere.monTourPousse}>
-          {mode === 'supabase' && barriere.monTourPousse ? '⏳ En attente…' : '▶ Tour suivant'}
+        <Button
+          tone="primary"
+          onClick={nextTurn}
+          disabled={calculTour || (mode === 'supabase' && barriere.monTourPousse)}
+        >
+          {calculTour
+            ? '⏳ Calcul…'
+            : mode === 'supabase' && barriere.monTourPousse
+              ? '⏳ En attente…'
+              : '▶ Tour suivant'}
         </Button>
         {mode === 'supabase' && barriere.monTourPousse && (
           <Button

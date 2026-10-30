@@ -9,6 +9,7 @@
 import { useEffect } from 'react'
 import { DEFAULT_CONFIG, parseMetiersBaseTexte } from '../../config/defaultConfig'
 import { Card, TextInput, NumberInput, Button, Select } from '../ui'
+import { CoutEditor } from './ConstructionsParams'
 import type { TableProps } from './logiqueParams'
 
 export function PaysRangsParams({ config, setCfg }: TableProps) {
@@ -89,7 +90,22 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
                   />
                 </td>
                 <td><TextInput value={h.rang} onChange={(v) => setCfg((c) => { c.typesHabitation[i].rang = v })} /></td>
-                <td><TextInput value={h.cout} onChange={(v) => setCfg((c) => { c.typesHabitation[i].cout = v })} /></td>
+                {/* (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+                    le coût d'amélioration vit en DONNÉES STRUCTURÉES
+                    `couts` (paires ressource/valeur, même éditeur que les
+                    constructions) — plus de texte à analyser. */}
+                <td>
+                  <CoutEditor
+                    valeur={h.couts}
+                    ressources={config.ressources}
+                    set={(fn) => setCfg((c) => {
+                      const t = c.typesHabitation[i]
+                      if (!t) return
+                      if (!t.couts) t.couts = []
+                      fn(t.couts)
+                    })}
+                  />
+                </td>
                 <td><NumberInput value={h.habitantsRequis} step={10} min={0} onChange={(v) => setCfg((c) => { c.typesHabitation[i].habitantsRequis = v })} /></td>
                 <td><TextInput value={(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ')} onChange={(v) => setCfg((c) => { c.typesHabitation[i].metiersBase = parseMetiersBaseTexte(v, c.metiers.map((m) => m.metier)) })} /></td>
                 <td><TextInput value={h.domicilesDisponibles ?? ''} onChange={(v) => setCfg((c) => { c.typesHabitation[i].domicilesDisponibles = v })} /></td>
@@ -102,8 +118,46 @@ export function HabitationsParams({ config, setCfg }: TableProps) {
         </table>
       </div>
       <Button onClick={() => setCfg((c) => {
-        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', cout: '', habitantsRequis: 0, metiersBase: [], domicilesDisponibles: '' })
+        c.typesHabitation.push({ type: 'Ville', rang: 'Nouveau rang', couts: [], habitantsRequis: 0, metiersBase: [], domicilesDisponibles: '' })
       })}>+ Ajouter un rang d'habitation</Button>
+    </Card>
+  )
+}
+
+/** (retour Thibaut 2026-10-26 : « ajoute les différents types de
+ *  logement dans les paramètres ») — éditeur de la table DOMICILES :
+ *  nom du type + qualité 0-4. La qualité d'un logement EST son gain
+ *  de prestige par tour pour l'habitant logé (cf. gainPrestigeTour,
+ *  statutSocial.ts) ; l'attribution sert les habitants par prestige
+ *  décroissant, un logement = un habitant, sans délogement. */
+export function DomicilesParams({ config, setCfg }: TableProps) {
+  return (
+    <Card title={`Types de logement (${config.domiciles.length}) — qualité = gain de prestige par tour`}>
+      <p className="muted small">
+        Échelle de référence 0-4 : Taudis 0, Maison 1, Auberge 2, Maison de notable 3,
+        Palais 4. Les stocks de départ par rang d'habitation restent dans la table
+        « Types &amp; rangs d'habitation » ci-dessus (colonne affichage) ; au setup,
+        la capitale démarre avec 8 Palais à la place de la Maison de notable.
+      </p>
+      <div className="table-wrap">
+        <table className="tbl small">
+          <thead><tr><th>Logement</th><th>Qualité (0-4)</th><th></th></tr></thead>
+          <tbody>
+            {config.domiciles.map((d, i) => (
+              <tr key={i}>
+                <td><TextInput value={d.domicile} onChange={(v) => setCfg((c) => { c.domiciles[i].domicile = v })} /></td>
+                <td><NumberInput value={d.qualite} step={1} min={0} onChange={(v) => setCfg((c) => { c.domiciles[i].qualite = v })} /></td>
+                <td>
+                  <Button tone="danger" onClick={() => setCfg((c) => { c.domiciles.splice(i, 1) })}>✕</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <Button onClick={() => setCfg((c) => {
+        c.domiciles.push({ domicile: 'Nouveau logement', qualite: 0 })
+      })}>+ Ajouter un type de logement</Button>
     </Card>
   )
 }

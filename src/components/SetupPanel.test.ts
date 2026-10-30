@@ -10,6 +10,7 @@
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
+import { genererCodeSalon } from './SetupPanel'
 import { prepareRendu, partieRendu, esc } from './testRendu'
 
 prepareRendu()
@@ -45,4 +46,20 @@ test('rendu SetupPanel : la page Nouvelle partie s’affiche sans crash', async 
   for (let n = 2; n <= 8; n++) {
     assert.ok(html.includes(`Joueur ${String(n)}</option>`), `option « Joueur ${n} » absente`)
   }
+})
+
+// ── F2 (audit 2026-10-27) : générateur de code de salon ──
+test('F2 : le code de salon généré est long, sans caractères ambigus, et différent à chaque tirage', () => {
+  const ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789'
+  const codes = new Set<string>()
+  for (let i = 0; i < 50; i++) {
+    const c = genererCodeSalon()
+    codes.add(c)
+    assert.equal(c.length, 16, `code de 16 caractères attendu, reçu ${c}`)
+    for (const ch of c) {
+      assert.ok(ALPHABET.includes(ch), `caractère ${ch} hors alphabet sans ambigus`)
+      assert.ok(!'IOl01'.includes(ch), `caractère ambigu ${ch} interdit`)
+    }
+  }
+  assert.ok(codes.size > 45, `50 tirages doivent produire des codes quasi tous distincts (${codes.size})`)
 })

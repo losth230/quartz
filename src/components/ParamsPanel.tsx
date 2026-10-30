@@ -11,13 +11,13 @@
 
 import { useState } from 'react'
 import { useGame } from '../state/store'
-import { cfgOf, cloneDefaultConfig } from '../config/defaultConfig'
+import { cfgOf, cloneDefaultConfig, validerFormeConfig } from '../config/defaultConfig'
 import type { GameConfig } from '../config/defaultConfig'
 import { PARAM_META, PARAM_STRINGS_META } from '../config/params'
 import { Card, NumberInput, TextInput, Button } from './ui'
 import {
   BatimentsParams, AmenagementsParams, PaysRangsParams,
-  HabitationsParams, CouleursParams,
+  HabitationsParams, DomicilesParams, CouleursParams,
 } from './ConfigTables'
 
 const ONGLETS = [
@@ -174,12 +174,12 @@ export function ParamsPanel() {
       )}
 
       {onglet === 'Cultures' && (
-        <Card title="Cultures (hérédité, fécondité, règles)">
-          <p className="muted small">Colonnes chiffrées = lois appliquées à chaque fin de tour. 0 = désactivé.</p>
+        <Card title="Cultures (hérédité, fécondité, 12 lois)">
+          <p className="muted small">Refonte « 12 lois » (2026-10-29) : loi de VILLE (culture majoritaire de la cité) et loi d'HABITANT (culture propre de chacun). Colonnes chiffrées = lois appliquées par le moteur. 0 = désactivé.</p>
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Facteur fécondité</th><th>Nourr./hab monde</th><th>Tourisme/hab</th><th>Or/hab</th><th>Science/constr.</th><th>Règle du pays</th><th>Règle des personnages</th></tr>
+                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. faction</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
               </thead>
               <tbody>
                 {config.cultures.map((t, i) => (
@@ -188,12 +188,21 @@ export function ParamsPanel() {
                     <td><TextInput value={t.heredite} onChange={(v) => setCfg((c) => { c.cultures[i].heredite = v })} /></td>
                     <td><input type="checkbox" checked={t.homoAutorisee} onChange={(e) => setCfg((c) => { c.cultures[i].homoAutorisee = e.target.checked })} /></td>
                     <td><NumberInput value={t.fertFactor} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].fertFactor = v })} /></td>
-                    <td><NumberInput value={t.capitalNourrParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalNourrParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.capitalTourismeParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalTourismeParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.capitalOrParHabMonde ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].capitalOrParHabMonde = v })} /></td>
-                    <td><NumberInput value={t.scienceParConstruction ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].scienceParConstruction = v })} /></td>
-                    <td><TextInput value={t.reglePays} onChange={(v) => setCfg((c) => { c.cultures[i].reglePays = v })} /></td>
-                    <td><TextInput value={t.reglePerso} onChange={(v) => setCfg((c) => { c.cultures[i].reglePerso = v })} /></td>
+                    <td><NumberInput value={t.taudisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].taudisParHabitation = v })} /></td>
+                    <td><NumberInput value={t.palaisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].palaisParHabitation = v })} /></td>
+                    <td><NumberInput value={t.prestigeSeuilBourgeois ?? 100} onChange={(v) => setCfg((c) => { c.cultures[i].prestigeSeuilBourgeois = v })} /></td>
+                    <td><NumberInput value={t.scientifiqueParBatiment ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].scientifiqueParBatiment = v })} /></td>
+                    <td><NumberInput value={t.maladieContractMod ?? 0} step={0.01} onChange={(v) => setCfg((c) => { c.cultures[i].maladieContractMod = v })} /></td>
+                    <td><NumberInput value={t.tourismeParNoble ?? 0} step={0.1} onChange={(v) => setCfg((c) => { c.cultures[i].tourismeParNoble = v })} /></td>
+                    <td><NumberInput value={t.nourrEteParFermier ?? 0} step={0.1} onChange={(v) => setCfg((c) => { c.cultures[i].nourrEteParFermier = v })} /></td>
+                    <td><NumberInput value={t.caravanesSeuilAmenagements ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].caravanesSeuilAmenagements = v })} /></td>
+                    <td><NumberInput value={t.caravanesRoutesBonus ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].caravanesRoutesBonus = v })} /></td>
+                    <td><NumberInput value={t.scienceParNoble ?? 0} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].scienceParNoble = v })} /></td>
+                    <td><NumberInput value={t.garnisonHorsCultureParRang ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].garnisonHorsCultureParRang = v })} /></td>
+                    <td><NumberInput value={t.garnisonParGardeCulture ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].garnisonParGardeCulture = v })} /></td>
+                    <td><NumberInput value={t.orParGarde ?? 0} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].orParGarde = v })} /></td>
+                    <td><TextInput value={t.regleVille} onChange={(v) => setCfg((c) => { c.cultures[i].regleVille = v })} /></td>
+                    <td><TextInput value={t.regleHabitant} onChange={(v) => setCfg((c) => { c.cultures[i].regleHabitant = v })} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -204,19 +213,36 @@ export function ParamsPanel() {
 
       {onglet === 'Régimes' && (
         <Card title="Régimes politiques (lois)">
-          <p className="muted small">Colonnes chiffrées = lois appliquées à chaque fin de tour. 0 = désactivé.</p>
+          <p className="muted small">
+            Colonnes chiffrées = lois du régime, lues automatiquement par le moteur là où
+            elles agissent (refonte « 8 lois », 2026-10-29). 0 = désactivé.
+          </p>
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Régime</th><th>Loi (texte)</th><th>Garnison/rang</th><th>Nourr./été rizière</th></tr>
+                <tr>
+                  <th>Régime</th><th>Loi (texte)</th>
+                  <th>Conscription (−Or/rang du pays)</th>
+                  <th>Frontières closes (× départs)</th>
+                  <th>Terre d'accueil (Or/migrant)</th>
+                  <th>Redistribution (bourgeois)</th>
+                  <th>Redistribution (noble)</th>
+                  <th>Pouvoir du peuple (+Bonheur/habitation)</th>
+                  <th>Vassaux dévoués (× tribut reçu)</th>
+                </tr>
               </thead>
               <tbody>
                 {config.regimes.map((r, i) => (
                   <tr key={i}>
                     <td><TextInput value={r.nom} onChange={(v) => setCfg((c) => { c.regimes[i].nom = v })} /></td>
                     <td><TextInput value={r.loi} onChange={(v) => setCfg((c) => { c.regimes[i].loi = v })} /></td>
-                    <td><NumberInput value={r.garnisonParRang ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].garnisonParRang = v })} /></td>
-                    <td><NumberInput value={r.nourrEteChampRiziere ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].nourrEteChampRiziere = v })} /></td>
+                    <td><NumberInput value={r.leveeOrParRangPays ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].leveeOrParRangPays = v })} /></td>
+                    <td><NumberInput step={0.05} value={r.departHabitantsMult ?? 1} onChange={(v) => setCfg((c) => { c.regimes[i].departHabitantsMult = v })} /></td>
+                    <td><NumberInput value={r.orParMigrant ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].orParMigrant = v })} /></td>
+                    <td><NumberInput value={r.consoNourrBourgeoisRegime ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].consoNourrBourgeoisRegime = v })} /></td>
+                    <td><NumberInput value={r.consoNourrNobleRegime ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].consoNourrNobleRegime = v })} /></td>
+                    <td><NumberInput value={r.bonheurParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].bonheurParHabitation = v })} /></td>
+                    <td><NumberInput step={0.05} value={r.tributVassalMult ?? 1} onChange={(v) => setCfg((c) => { c.regimes[i].tributVassalMult = v })} /></td>
                   </tr>
                 ))}
               </tbody>
@@ -232,7 +258,14 @@ export function ParamsPanel() {
 
       {onglet === 'Pays & rangs' && <PaysRangsParams config={config} setCfg={setCfg} />}
 
-      {onglet === 'Habitations' && <HabitationsParams config={config} setCfg={setCfg} />}
+      {onglet === 'Habitations' && (
+        <>
+          <HabitationsParams config={config} setCfg={setCfg} />
+          {/* (retour Thibaut 2026-10-26 : les types de logement dans
+              les paramètres — table domiciles : nom + qualité 0-4) */}
+          <DomicilesParams config={config} setCfg={setCfg} />
+        </>
+      )}
 
       {onglet === 'Couleurs' && <CouleursParams config={config} setCfg={setCfg} />}
 
@@ -355,6 +388,14 @@ function JsonPanel({ config, setCfg, replaceState, exportState, importState }: {
         <Button tone="primary" onClick={() => {
           try {
             const parsed = JSON.parse(text) as GameConfig
+            // F6 (audit 2026-10-27) : validation de FORME avant import —
+            //  un champ au mauvais type (« constructions: 42 ») cassait
+            //  l'UI au premier rendu après un import « réussi ».
+            const problemes = validerFormeConfig(parsed)
+            if (problemes.length) {
+              setMsg(`Import refusé — ${problemes.join(' ; ')}`)
+              return
+            }
             setCfg((c) => {
               for (const k of Object.keys(parsed) as (keyof GameConfig)[]) {
                 ;(c as unknown as Record<string, unknown>)[k as string] = parsed[k]

@@ -54,3 +54,73 @@ test('rendu PopulationTable : la page Population s’affiche sans crash', async 
     )
   }
 })
+
+test('rendu PopulationTable : la cour commence NOBLE (rang de naissance) et accueille l’ascension par prestige (retour Thibaut 2026-10-26)', async () => {
+  const etat = await partieRendu()
+  // (retour Thibaut : « il faut des nobles dès le début — la colonne
+  //  dynastie doit correspondre à la colonne rang »). Après 2 tours
+  //  personne n’a prestige ≥ 100, mais les membres de dynastie NOBLE
+  //  (famille dirigeante du setup) sont noble de NAISSANCE (rangDe) :
+  //  la cour n’est PAS vide au départ.
+  const { cfgOf } = await import('../engine/gameData')
+  const { rangDe } = await import('../engine/statutSocial')
+  const { saveLocal } = await import('../state/storage')
+  const C = cfgOf(etat.config)
+  const popTot = etat.population[1] ?? []
+  const pop1 = popTot.filter((c) => c.statut !== 'Décédé')
+  assert.ok(pop1.length > 2, 'population témoin trop courte')
+  // (retour Thibaut 2026-10-26 : « un noble de naissance doit avoir
+  //  300 prestige de base ») : les nobles de naissance sont sur leur
+  //  base 300 (± 2 tours de gains) ; côté ROTURIERS personne n'a
+  //  encore 100+ par l'ascension après 2 tours.
+  const roturiersDeDynastie = popTot.filter((c) => c.dynastie === C.p.dynastieRoturier)
+  assert.ok(
+    roturiersDeDynastie.every((c) => (c.prestige ?? 0) < 100),
+    '2 tours : aucun roturier n’a encore le rang par le prestige',
+  )
+  const noblesNaissance = pop1.filter((c) => rangDe(c, C) === 'noble')
+  assert.ok(noblesNaissance.length >= 2, `des nobles de naissance dès le départ (trouvé ${noblesNaissance.length})`)
+  assert.ok(
+    noblesNaissance.every((c) => (c.prestige ?? 0) >= 280),
+    `nobles de naissance sur leur base 300 (trouvé ${noblesNaissance.map((c) => c.prestige ?? 0).join(', ')})`,
+  )
+  // Graver l’ascension sur deux ROTURIERS de dynastie : un anobli
+  //  (300) et un bourgeois (150) — ils rejoignent la cour par le
+  //  prestige, en plus des nobles de naissance.
+  const roturiers = pop1.filter((c) => c.dynastie === C.p.dynastieRoturier)
+  assert.ok(roturiers.length >= 2, 'des roturiers de dynastie à graver')
+  roturiers[0].prestige = 300
+  roturiers[1].prestige = 150
+  saveLocal(etat)
+
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { GameProvider } = await import('../state/store')
+  const { PopulationTable } = await import('./PopulationTable')
+  const html = renderToString(
+    React.createElement(GameProvider, null, React.createElement(PopulationTable, { joueur: 1 })),
+  )
+  const h = aplatir(html)
+  const nom = etat.players.find((p) => p.n === 1)?.nom ?? 'Joueur 1'
+  // Comptes attendus : la cour = nobles de naissance + les deux
+  //  roturiers gravés ; le titre de la carte porte CES comptes-là.
+  const estDeCour = (c: typeof popTot[number]) => rangDe(c, C) !== 'roturier'
+  const courVivants = pop1.filter(estDeCour).length
+  const courTot = popTot.filter(estDeCour).length
+  assert.ok(
+    h.includes(`👑 La cour de ${esc(nom)} — ${String(courVivants)} vivants / ${String(courTot)} au total`),
+    `la cour commence noble (rang de naissance) : attendu ${courVivants} vivants / ${courTot} au total`,
+  )
+  assert.ok(
+    h.includes('Personnages selon leur RANG'),
+    'sous-titre « Personnages selon leur RANG » absent',
+  )
+  // La colonne Rang signale la noblesse de naissance (title de la
+  //  ligne) — la colonne dynastie et la colonne rang se correspondent.
+  assert.ok(h.includes('NOBLE DE NAISSANCE'), 'marqueur « NOBLE DE NAISSANCE » absent de la colonne Rang')
+  // La carte Population prend le reste (roturiers de dynastie ET de prestige).
+  assert.ok(
+    h.includes(`Population de ${esc(nom)} — ${String(pop1.length - courVivants)} vivants / ${String(popTot.length - courTot)} au total`),
+    `la population classique compte les roturiers (attendu ${pop1.length - courVivants} vivants / ${popTot.length - courTot} au total)`,
+  )
+})
