@@ -143,6 +143,8 @@ export interface GameParams {
   conversionProba: number
   conversionPoidsLocal: number
   conversionMemeCulture: number
+  // ── Dogmes de culture (fondations 2026-10-30) ──
+  palierTourismeDogme: number
   // ── Taxes ──
   taxOrFaibles: number
   taxOrHautes: number
@@ -270,6 +272,13 @@ export const DEFAULT_PARAMS: GameParams = {
   conversionProba: 0.1,
   conversionPoidsLocal: 5,
   conversionMemeCulture: 5,
+  // ── Dogmes de culture (fondations 2026-10-30) ──
+  //  Palier de Tourisme d'une culture ouvrant le choix d'un dogme
+  //  (arbitrage Thibaut 30/10 : 50 → 1er dogme, 100 → 2e… cumul à
+  //  l'infini, un dogme par palier, jamais remplaçable ; tourisme
+  //  de culture = somme des villes de la culture, tous joueurs,
+  //  sans les cités libres).
+  palierTourismeDogme: 50,
   // Effet des taxes Faibles/Fortes — ±25 % (retour Thibaut, marqueur
   //  (z) — avant ±50 % ; les configs existantes encore aux anciens
   //  défauts sont migrées ciblément par cfgOf, champ taxes25).
@@ -387,6 +396,7 @@ export const PARAM_META: {
   { key: 'traitHeriteEssais', label: 'Nombre d\'essais d\'héritage par trait', groupe: 'Traits' },
   { key: 'traitTirageSlot', label: 'Proba de tirage aléatoire par slot libre', groupe: 'Traits' },
   { key: 'conversionProba', label: 'Proba de tentative de conversion culturelle', groupe: 'Culture', unite: 'proba' },
+  { key: 'palierTourismeDogme', label: 'Dogmes — palier de Tourisme d\'une culture', groupe: 'Culture', unite: 'Tourisme', aide: 'Quand le Tourisme d\'une culture (somme des valeurs de Tourisme de ses villes, tous joueurs, SANS les cités libres) franchit un palier, le joueur ayant le plus de Tourisme dans cette culture choisit un dogme. Un dogme à chaque palier, cumul à l\'infini, jamais remplaçable ; dogmes, lois et effets de culture se cumulent. (Fondations 2026-10-30 : aucun dogme n\'est encore défini au référentiel.)' },
   { key: 'conversionPoidsLocal', label: 'Poids des voisins de même culture', groupe: 'Culture' },
   { key: 'conversionMemeCulture', label: 'Poids de sa propre culture', groupe: 'Culture' },
   { key: 'taxNourrFaibles', label: 'Taxes faibles — multiplicateur Nourriture', groupe: 'Taxes' },

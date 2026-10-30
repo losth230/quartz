@@ -519,6 +519,37 @@ export interface HistoryRow {
   apports?: ApportsTour
 }
 
+/** Dogme de culture (fondations « mise en forme » 2026-10-30,
+ *  arbitrages Thibaut du 30/10) : quand le Tourisme d'une CULTURE
+ *  (somme des valeurs de Tourisme des villes de cette culture,
+ *  tous joueurs confondus, SANS les cités libres) franchit un
+ *  palier (50, 100, 150… — paramètre palierTourismeDogme), le
+ *  joueur ayant le plus de Tourisme dans cette culture choisit un
+ *  dogme qui affecte les habitants ou les villes de cette culture.
+ *  Un dogme à CHAQUE palier, les dogmes se CUMULENT à l'infini et
+ *  ne sont JAMAIS remplaçables ; le dominant peut changer d'un
+ *  palier à l'autre ; dogmes, lois et effets de culture se
+ *  CUMULENT. (À ce stade AUCUN dogme n'existe au référentiel —
+ *  aucune règle moteur ne lit encore ce champ : cf.
+ *  engine/dogmes.ts.) */
+export interface Dogme {
+  /** Culture concernée — le dogme affecte les habitants et les
+   *  villes de cette culture, tous joueurs confondus. */
+  culture: string
+  /** Palier de Tourisme qui a ouvert le choix (palierTourismeDogme
+   *  × N : 50, 100, 150…). */
+  palier: number
+  /** Nom du dogme choisi — doit exister dans la table `dogmes` du
+   *  référentiel (DogmeDef, encore vide à ce stade). */
+  nom: string
+  /** N° du joueur DOMINANT (le plus de Tourisme dans cette culture)
+   *  au moment du choix — pas nécessairement le joueur qui exécute
+   *  l'action. */
+  choisiPar: number
+  /** Tour auquel le dogme a été choisi. */
+  choisiAuTour: number
+}
+
 export interface GameSetup {
   joueurs: {
     nom: string
@@ -563,6 +594,11 @@ export interface GameState {
   /** Routes commerciales des marchands (marqueur (t), engine/commerce.ts).
    *  Champ optionnel : absent des vieilles sauvegardes → liste vide. */
   routesCommerce?: RouteCommerce[]
+  /** Dogmes de culture pris — un par palier de Tourisme franchi
+   *  (fondations 2026-10-30, engine/dogmes.ts). Champ optionnel :
+   *  absent des sauvegardes antérieures au 30/10/2026 → complété
+   *  en liste vide par normaliserEtat. */
+  dogmes?: Dogme[]
   log: LogEntry[]
   history: HistoryRow[]
 }
