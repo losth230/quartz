@@ -23,8 +23,9 @@ import { normaliserEtat } from './villes'
 import {
   creerRouteCommerce, ressourcesCopiables, effetsCommerceJoueur,
   routesCommerceDe, routesCommerceVers, routesCommerceVersCite,
-  nettoyerRoutesCommerce, supprimerRouteCommerce,
+  nettoyerRoutesCommerce, supprimerRouteCommerce, maxRoutesJoueur,
 } from './commerce'
+import { resumeConstruction } from './constructions'
 import { capMetierVille } from './metiers'
 import { metiersAccessiblesCite, emissairesEffectifsCite } from './citesLibres'
 import { tourismeCourant } from './regimes'
@@ -248,4 +249,36 @@ test('routes dissociées (3b) : purge des vieilles routes « marchand titulaire 
     'les accesseurs ne voient pas les routes de l ancien modèle')
   assert.equal(capMetierVille('Bûcheron', copieur.villes[0], cfgOf(state.config), { state, joueur: copieur.n }), 0,
     'les vieilles routes (marchandId) n ouvrent aucun emplacement, même en copiant un aménagement qui en porte')
+})
+
+test('maxRoutesJoueur : les routes viennent du RÉFÉRENTIEL (routesApportees), plus de noms codés en dur (retour Thibaut 2026-10-27)', () => {
+  const state = partieDeuxJoueurs()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  assert.ok(p.villes.length >= 1, 'le joueur a au moins une ville')
+  const base = C.p.maxMarchands
+  // au setup, aucun bâtiment : cap = maxMarchands
+  assert.equal(maxRoutesJoueur(p, C), base, 'cap de base = maxMarchands')
+  // UNE Échoppe : +1 route (champ routesApportees du référentiel)
+  p.villes[0].batiments.push('Echoppe')
+  assert.equal(maxRoutesJoueur(p, C), base + 1, 'Échoppe → +1 route')
+  // + la Place du marché (version Ville — sa description promet aussi
+  //  1 route ; l'ancien comptage en dur la MANQUAIT) : +1
+  p.villes[0].batiments.push('Place du marché')
+  assert.equal(maxRoutesJoueur(p, C), base + 2, 'Place du marché → +1 route de plus')
+  // bâtiment sans routesApportées : rien
+  p.villes[0].batiments.push('Poste de garde')
+  assert.equal(maxRoutesJoueur(p, C), base + 2, 'Poste de garde → +0 route')
+  // bâtiment HORS référentiel : n'apporte rien (convention banque)
+  p.villes[0].batiments.push('Bâtiment inventé')
+  assert.equal(maxRoutesJoueur(p, C), base + 2, 'bâtiment hors référentiel → +0 route')
+})
+
+test('resumeConstruction : l Échoppe AFFICHE sa route commerciale dans le résumé (retour Thibaut 2026-10-27)', () => {
+  const C = cfgOf(undefined)
+  const ref = C.config.constructions.find((c) => c.nom === 'Echoppe' && c.groupe === 'Ville')
+  assert.ok(ref, 'Échoppe [Ville] au référentiel')
+  assert.equal(ref.routesApportees, 1, 'champ routesApportees = 1')
+  const r = resumeConstruction(ref)
+  assert.match(r, /route commerciale/, `le résumé du picker affiche la route : « ${r} »`)
 })

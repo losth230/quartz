@@ -33,8 +33,10 @@ import { makeRng } from './rng'
 import { cfgOf, peupleDef, metierDef, type Cfg } from './gameData'
 import { rangPaysNiveau } from './factions'
 import { isNobleDyn, perteDemenagement } from './shared'
+import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { resynchroniserTourisme } from './regimes'
 import { routesCommerceVersCite } from './commerce'
+import { consoNourrHabitant } from './economie'
 
 /** Consommation d'une cité libre : même règle qu'une ville de joueur —
  *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour. */
@@ -57,12 +59,15 @@ export function garnisonCiteLibre(state: GameState, C: Cfg): number {
   return 100 + 40 * maxRang
 }
 
-/** Multiplicateur de taxes d'une cité libre (comme une ville de joueur :
- *  module TOUTES les ressources produites par ses habitants). */
-export function facteurTaxesCite(cite: CiteLibre, C: Cfg): number {
+/** Multiplicateur de taxes d'une cité libre, PAR RESSOURCE (comme une
+ *  ville de joueur — arbitrage Thibaut 2026-10-28 « changement des
+ *  taxes ») : la Nourriture part du côté des naissances — Faible :
+ *  Nourriture ×taxNourrFaibles, toutes les AUTRES ressources
+ *  ×taxOrFaibles ; Forte : l'inverse ; Moyenne : ×1. */
+export function facteurTaxesCite(cite: CiteLibre, C: Cfg, ressource: string): number {
   const t = cite.taxes ?? 'Moyenne'
-  if (t === 'Faible') return C.p.taxOrFaibles
-  if (t === 'Forte') return C.p.taxOrHautes
+  if (t === 'Faible') return ressource === 'Nourriture' ? C.p.taxNourrFaibles : C.p.taxOrFaibles
+  if (t === 'Forte') return ressource === 'Nourriture' ? C.p.taxNourrHautes : C.p.taxOrHautes
   return 1
 }
 
@@ -96,7 +101,9 @@ export function citesSuzerainesDe(state: GameState, p: Player): CiteLibre[] {
 /** Détail des gains d'une cité libre, canal par canal :
  *    metiers     : production brute des metiers des habitants vivants —
  *                 les Chasseurs produisent 1,1 × la Nourriture,
- *    taxeMult   : multiplicateur de taxes de la cité,
+ *    taxeMult   : multiplicateur de taxes de la cité PAR RESSOURCE
+ *                (arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr*,
+ *                toutes les autres ressources ×taxOr*),
  *    taxes      : production taxée (= metiers × taxeMult),
  *    conso      : consommation de la cité (négative — Nourriture par
  *                habitant vivant, comme une ville de joueur),
@@ -111,7 +118,7 @@ export interface DetailCiteLibre {
   enfants: number
   chasseurs: number
   metiers: Record<string, number>
-  taxeMult: number
+  taxeMult: Record<string, number>
   taxes: Record<string, number>
   conso: Record<string, number>
   net: Record<string, number>
@@ -142,17 +149,25 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
       metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + v
     }
   }
-  // Taxes de la cité : le niveau module TOUTES les ressources
-  const taxeMult = facteurTaxesCite(cite, C)
+  // Taxes de la cité : le niveau module la production PAR RESSOURCE
+  //  (arbitrage Thibaut 2026-10-28 : la Nourriture part du côté des
+  //  naissances, toutes les autres ressources à l'envers).
+  const taxeMult: Record<string, number> = {}
+  for (const res of Object.keys(metiers)) taxeMult[res] = facteurTaxesCite(cite, C, res)
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
-    const tv = v * taxeMult
+    const tv = v * taxeMult[res]
     if (tv !== 0) taxes[res] = tv
   }
   // Consommation de la cité : comme une ville de joueur — la population
-  //  vivante consomme consoNourrParHab Nourriture par habitant et par tour.
+  //  vivante consomme selon son RANG SOCIAL (arbitrage Thibaut
+  //  2026-10-26 : base par tête, bourgeois 2, noble 4 — consoNourrHabitant,
+  //  engine/economie.ts). Le prestige des cités libres n'étant pas
+  //  calculé (evaluerFamilles ne court que pour les joueurs), leurs
+  //  habitants sont aujourd'hui tous à la consommation de base — la
+  //  règle est prête si le prestige y est ajouté un jour.
   const conso: Record<string, number> = {}
-  const consoNourr = C.p.consoNourrParHab * vivants.length
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}
@@ -307,6 +322,10 @@ function ajouterCiteLibre(
       fecondite: 0,
       armee: null,
     }
+    // nouvelle famille noble = nobles de NAISSANCE : 300 de base
+    //  (retour Thibaut 2026-10-26) — clé posée seulement pour les
+    //  nobles (le format compact omet la clé sinon)
+    if (noble) c.prestige = PRESTIGE_NOBLE_NAISSANCE
     pop.push(c)
     ajoutes++
   }

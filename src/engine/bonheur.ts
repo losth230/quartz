@@ -26,12 +26,12 @@
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { regimeDef, type Cfg } from './gameData'
 import { garnisonHabitationVille } from './garnisons'
 import { capMetierVille } from './metiers'
 import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
-import { taudisApportesVille } from './domiciles'
+import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
 import { tourismeCourant } from './regimes'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
@@ -115,19 +115,27 @@ export function logementsVille(ville: City, C: Cfg): number {
   //  du TEXTE en dernier recours (config très ancienne). Fini la
   //  double source : le texte « domicilesDisponibles » est
   //  HISTORIQUE.)
-  // stock du rang + TAUDIS apportés par les aménagements (fiches
-  //  2026-10-25 : les aménagements construits ajoutent des logements
-  //  au parc de la ville)
+  // stock du rang + DOMICILES apportés par les constructions de la
+  //  ville (fiches 2026-10-25 : les aménagements ajoutent leurs
+  //  Taudis ; fiche bâtiments 2026-10-26 : les bâtiments aussi —
+  //  Taudis, Maisons, Maisons de notable — domicilesApportesVille)
   const stockVille = Array.isArray(ville.domiciles)
     ? ville.domiciles.reduce((acc, e) => acc + e.nombre, 0)
     : null
-  const taudis = taudisApportesVille(ville, C)
-  if (stockVille !== null) return stockVille + taudis
+  // (refonte 12 lois, 2026-10-29 : loi de VILLE de la culture —
+  //  Communautarisme « Logements élargis » +5 Taudis, Lunisme
+  //  « Villes Saintes » +2 Palais. REMPLACÉ 2026-10-29, 6e retour
+  //  Thibaut : ces lits sont désormais aussi ATTRIBUTABLES — le
+  //  parc ne change pas, l'occupation monte, le score reste
+  //  cohérent.)
+  const apportes = domicilesApportesVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
+    + domicilesCultureVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
+  if (stockVille !== null) return stockVille + apportes
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),
   )
   if (Array.isArray(def?.domicilesRang)) {
-    return def!.domicilesRang!.reduce((acc, e) => acc + e.nombre, 0) + taudis
+    return def!.domicilesRang!.reduce((acc, e) => acc + e.nombre, 0) + apportes
   }
   const txt = def?.domicilesDisponibles ?? ''
   let total = 0
@@ -135,7 +143,7 @@ export function logementsVille(ville: City, C: Cfg): number {
     const m = part.trim().match(/^(\d+)\s/)
     if (m) total += Number(m[1])
   }
-  return total + taudis
+  return total + apportes
 }
 
 // ── Scores d'une ville réelle ────────────────────────────────────────
@@ -146,7 +154,12 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   )
   const habitants = pop.length
   const travailleurs = pop.filter((c) => c.age >= C.p.adultAge).length
-  const enPoste = pop.filter((c) => c.metier).length
+  // (Retour Thibaut 2026-10-28 : les ENFANTS (âge < adultAge) sont
+  //  hors marché du travail — ils ne comptent ni comme demande
+  //  (travailleurs, ci-dessus) ni comme postes pourvus, même si un
+  //  métier leur a été affecté manuellement : pas des chômeurs,
+  //  même lecture que la ligne « Enfants » des tableaux de métiers.)
+  const enPoste = pop.filter((c) => c.metier && c.age >= C.p.adultAge).length
   const malades = pop.filter((c) => c.statut === 'Malade').length
 
   // EMPLOI : moyenne des deux écarts (structure + pourvu)
@@ -155,7 +168,9 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   const pourvu = scoreOptimum(enPoste, travailleurs)
   const emploi = Math.round((structure + pourvu) / 2)
 
-  // LOGEMENT : par habitant (arbitrage v3)
+  // LOGEMENT : par habitant (arbitrage v3 — retourné cohérent par
+  //  le retour Thibaut 2026-10-26 : 1 logement = 1 habitant,
+  //  l'attribution loge désormais AUSSI par habitant)
   const logement = scoreOptimum(logementsVille(ville, C), habitants)
 
   // SÉCURITÉ : cible 100 × rang (arbitrage v3)
@@ -175,8 +190,20 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
 }
 
 /** Bonheur complet d'une ville (moyenne simple des 5 scores). */
+/** (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie « Le
+ *  pouvoir du peuple ») : Bonheur ajouté dans CHACUNE des
+ *  habitations du joueur (bonheurParHabitation, défaut 5). Les
+ *  scores purs des 5 axes sont inchangés — le bonus est un
+ *  rehaussement du TOTAL, plafonné à 100. Pure. */
+export function bonusBonheurRegime(p: Player, C: Cfg): number {
+  return regimeDef(p.regime, C.config)?.bonheurParHabitation ?? 0
+}
+
+/** Bonheur complet d'une ville : formule des 5 axes + la loi du
+ *  régime « Le pouvoir du peuple » (Démocratie, +5 par habitation
+ *  — refonte « 8 lois », 2026-10-29), plafonné à 100. */
 export function bonheurVilleComplete(state: GameState, p: Player, ville: City, C: Cfg): number {
-  return bonheurVille(scoresVille(state, p, ville, C))
+  return Math.min(100, bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C))
 }
 
 /** Bonheur d'un joueur : moyenne des bonheurs de ses villes

@@ -10,7 +10,9 @@
 //    est ré-ancrée sur la première ville de la cible si la sienne
 //    n'existe pas chez elle.
 //  · marierPersonnages : mariage MANUEL de l'arbitre entre deux nobles
-//    vivants, majeurs et non mariés. La personne mariée DÉMÉNAGE dans
+//    (RANG noble : dynastie noble de naissance OU anobli à 250+ de
+//    prestige — arbitrage Thibaut 2026-10-27 : « un bourgeois qui
+//    devient noble doit pouvoir être marié manuellement ») vivants, majeurs et non mariés. La personne mariée DÉMÉNAGE dans
 //    la ville de son conjoint (retour Thibaut 2026-10-14, marqueur (o))
 //    : elle quitte la population de son porteur et rejoint celle du
 //    porteur de son époux·se — changement de joueur ou de cité libre
@@ -27,7 +29,8 @@
 
 import type { Character, GameState, Player } from './types'
 import { cfgOf } from './gameData'
-import { isNobleDyn, fullName, deplacerPersonnage, populationDe, porteurDe, nomDe, memeDetenteur, perteDemenagement, neDemenageJamais } from './shared'
+import { fullName, deplacerPersonnage, populationDe, porteurDe, nomDe, memeDetenteur, perteDemenagement, neDemenageJamais } from './shared'
+import { rangDe } from './statutSocial'
 
 /** Donne un personnage (habitant ou noble) à un autre joueur : cadeau,
  *  exile, rachat… Il quitte la population du joueur source, rejoint
@@ -56,8 +59,8 @@ export function marierPersonnages(state: GameState, a: Character, b: Character):
   if (a.statut === 'Décédé' || b.statut === 'Décédé') return 'Un des deux personnages est décédé.'
   if (a.age < C.p.adultAge || b.age < C.p.adultAge) return 'Les deux doivent être majeurs pour se marier.'
   if (a.mariageId || b.mariageId) return 'Un des deux personnages est déjà marié.'
-  if (!isNobleDyn(a.dynastie, C) || !isNobleDyn(b.dynastie, C)) {
-    return 'Le mariage manuel unit deux NOBLES (la population se marie au fil des tours).'
+  if (rangDe(a, C) !== 'noble' || rangDe(b, C) !== 'noble') {
+    return 'Le mariage manuel unit deux NOBLES — dynastie noble de naissance ou anobli à 250 de prestige (la population se marie au fil des tours).'
   }
   // Arbitrage complémentaire (2026-10-21) : un Dirigeant ou un Héritier
   //  ne déménage JAMAIS. Si les DEUX époux sont ancrés (Dirigeant ou

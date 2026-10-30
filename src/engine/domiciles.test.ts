@@ -1,10 +1,17 @@
 // ═══════════════════════════════════════════════════════════════════════════
 //  TESTS DOMICILES — vagues A+C (design domiciles/ascension 2026-10-24)
-//   · table domiciles (qualité 1-5) + domicilesRang structuré du rang ;
+//   · table domiciles (qualité 0-4 : Taudis 0 → Palais 4) + domicilesRang structuré du rang ;
 //   · qualite des métiers (roturier/bourgeois/noble) ;
 //   · stock de la ville (City.domiciles) complété par normaliserEtat ;
-//   · foyers (couples + enfants mineurs) et attribution (meilleure
-//     qualité d'abord, sans dépasser le stock).
+//   · attribution : 1 logement = 1 HABITANT (retour Thibaut
+//     2026-10-26 — plus de foyers), ordre de service par PRESTIGE
+//     décroissant (les bâtiments les plus qualitatifs aux
+//     personnages de haut rang), meilleure qualité d'abord, sans
+//     dépasser le stock ;
+//   · réservation (retour Thibaut 2026-10-28, 5e retour du jour) :
+//     Maison de notable et Palais RÉSERVÉS au rang NOBLE — un
+//     roturier ou un bourgeois ne peut ni les recevoir ni les
+//     garder.
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -14,14 +21,28 @@ import { cfgOf, type Cfg } from './gameData'
 import { migrerEtat } from './migrations'
 import {
   domicileDef, qualiteDomicile, stockRang, totalLogementsVille,
-  foyersDeVille, attribuerDomicilesVille, initStockVille,
+  vivantsVille, attribuerDomicilesVille, initStockVille,
+  taudisApportesVille, domicilesApportesVille, reserveNobleDomicile,
 } from './domiciles'
+import { constructionRef, resumeConstruction, prerequisConstruction } from './constructions'
 import type { GameState, Player, City } from './types'
 
 function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
   const C = cfgOf()
   const state = createGame(defaultSetups(), 424242, 'local')
-  return { state, p: state.players[0], ville: state.players[0].villes[0], C }
+  const ville = state.players[0].villes[0]
+  // (retour Thibaut 2026-10-29, 6e retour du jour : « il faut que les
+  //  lits des lois puissent abriter des habitants, sinon ça ne sert
+  //  à rien ») — les lits des lois sont désormais ATTRIBUTABLES ; or
+  //  la ville témoin du setup est COMMUNAUTARISTE (loi « Logements
+  //  élargis » +5 Taudis), ce qui changerait les capacités des tests
+  //  de MÉCANIQUE d'attribution ci-dessous. Ces derniers travaillent
+  //  sur le STOCK DU RANG SEUL : la ville témoin passe en culture
+  //  SANS loi de logement (même convention que le mock partieMock
+  //  des règles). L'attribution NOMINATIVE des lits des lois est
+  //  testée dans engine/cultures.test.ts.
+  ville.culture = 'Culture Nordique'
+  return { state, p: state.players[0], ville, C }
 }
 
 // ── Vague A : référentiel ─────────────────────────────────────────────
@@ -47,15 +68,28 @@ test('domicileDef / qualiteDomicile : lookup nom-insensible à la casse', () => 
   assert.ok(domicileDef('Auberge', C))
 })
 
-test('stockRang : Hameau = 50 Maisons + 10 Auberges (données converties)', () => {
+test('stockRang : Hameau = 50 Taudis + 1 Maison de notable (fiche habitations 2026-10-26)', () => {
   const { C } = partieTemoin()
   const stock = stockRang('Ville', 'Hameau', C)
-  const maison = stock.find((e) => e.domicile === 'Maison')
-  const auberge = stock.find((e) => e.domicile === 'Auberge')
-  assert.ok(maison, 'des Maisons au Hameau')
-  assert.equal(maison?.nombre, 50)
-  assert.equal(auberge?.nombre, 10)
-  assert.equal(stock.reduce((a, e) => a + e.nombre, 0), 60)
+  const taudis = stock.find((e) => e.domicile === 'Taudis')
+  const notable = stock.find((e) => e.domicile === 'Maison de notable')
+  assert.ok(taudis, 'des Taudis au Hameau')
+  assert.equal(taudis?.nombre, 50)
+  assert.equal(notable?.nombre, 1, '1 Maison de notable au Hameau')
+  assert.equal(stock.reduce((a, e) => a + e.nombre, 0), 51)
+})
+
+test('setup : la CAPITALE démarre avec 8 PALAIS, pas 1 Maison de notable (arbitrage Thibaut 2026-10-26)', () => {
+  const { ville } = partieTemoin()
+  const stock = ville.domiciles ?? []
+  const palais = stock.find((e) => e.domicile === 'Palais')
+  assert.ok(palais, 'des Palais dans la capitale au départ')
+  assert.equal(palais?.nombre, 8, '8 Palais (la famille dirigeante y siège)')
+  assert.ok(!stock.some((e) => e.domicile === 'Maison de notable'),
+    'plus de Maison de notable dans le stock initial de la capitale')
+  const taudis = stock.find((e) => e.domicile === 'Taudis')
+  assert.equal(taudis?.nombre, 50, 'les 50 Taudis du rang Hameau restent')
+  assert.equal(totalLogementsVille(ville), 58, '50 Taudis + 8 Palais = 58 logements')
 })
 
 test('qualite des métiers : catégories arbitrees (aménagement→roturier, bâtiment→bourgeois, cour→noble)', () => {
@@ -89,73 +123,137 @@ test('initStockVille : le rang DÉFINIT l\'offre (écrase le stock)', () => {
   const { ville, C } = partieTemoin()
   initStockVille(ville, C)
   const total1 = totalLogementsVille(ville)
-  assert.equal(total1, 60) // Hameau : 50 + 10
+  assert.equal(total1, 51) // Hameau : 50 Taudis + 1 Maison de notable
   // on change le rang : le stock suit
   ville.rang = 'Cité'
   initStockVille(ville, C)
-  assert.equal(totalLogementsVille(ville), 150) // Cité : 100 + 50
+  assert.equal(totalLogementsVille(ville), 121) // Cité : 100 + 20 + 1
 })
 
-test('foyersDeVille : couples + enfants mineurs (partition sans doublon)', () => {
-  const { state, p, ville, C } = partieTemoin()
-  const foyers = foyersDeVille(state, p.n, ville, C)
-  const pop = (state.population[p.n] ?? []).filter(
-    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
-  )
-  // chaque adulte apparaît une seule fois (chef ou conjoint)
-  const chefsEtConjoints = foyers.flatMap((f) => [f.chef, ...(f.conjoint ? [f.conjoint] : [])])
-  const ids = chefsEtConjoints.map((c) => c.id)
-  assert.equal(new Set(ids).size, ids.length, 'aucun adulte en double')
-  // tous les mineurs sont rattachés
-  const mineurs = pop.filter((c) => c.age < C.p.adultAge)
-  const rattaches = foyers.flatMap((f) => f.enfants)
-  assert.equal(rattaches.length, mineurs.length, 'tous les mineurs rattachés')
-  // couverture : adultes + mineurs = population
-  assert.equal(chefsEtConjoints.length + rattaches.length, pop.length)
-})
-
-test('attribuerDomicilesVille : loge tout le monde si stock suffisant (meilleure qualité d\'abord)', () => {
+test('attribuerDomicilesVille : 1 logement = 1 habitant — chaque vivant consomme une place (retour Thibaut 2026-10-26)', () => {
   const { state, p, ville, C } = partieTemoin()
   initStockVille(ville, C)
   const loges = attribuerDomicilesVille(state, p, ville, C)
-  const foyers = foyersDeVille(state, p.n, ville, C)
-  assert.equal(loges, foyers.length, 'tous les foyers logés (60 logements > foyers)')
-  // chaque foyer a un domicile connu
-  for (const f of foyers) {
-    assert.ok(f.domicile, `foyer de ${f.chef.prenom} sans domicile`)
-    assert.ok(qualiteDomicile(f.domicile, C) > 0, `domicile inconnu : ${f.domicile}`)
-    assert.equal(f.conjoint?.domicile ?? f.domicile, f.domicile, 'le conjoint partage le domicile')
+  const vivants = vivantsVille(state, p.n, ville)
+  // (fiche habitations 2026-10-26 : stock du Hameau = 50 Taudis +
+  //  1 Maison de notable = 51 logements. La partie témoin porte
+  //  53 habitants : avec 1 logement = 1 habitant, EXACTEMENT
+  //  min(51, population) est logé — 2 habitants restent dehors
+  //  (l'ancienne attribution par foyer logeait tout le monde : les
+  //  familles partageaient une place ; c'est précisément ce que le
+  //  retour Thibaut retire).)
+  const capacite = totalLogementsVille(ville)
+  assert.equal(loges, Math.min(capacite, vivants.length),
+    `logés = min(capacité ${capacite}, habitants ${vivants.length})`)
+  assert.equal(vivants.filter((c) => c.domicile).length, loges, 'un logement par habitant logé, pas de surbooking')
+  for (const c of vivants.filter((c) => c.domicile)) {
+    assert.ok(domicileDef(c.domicile, C), `domicile inconnu : ${c.domicile}`)
   }
-  // les Maisons (qualité 2) d'abord, pas les Masures (la table du rang n'en a pas de toute façon)
+  // meilleure qualité d'abord : la Maison de notable part au
+  //  premier servi (tous à prestige 0 → ordre de recensement)
+  assert.ok(vivants.some((c) => c.domicile === 'Maison de notable'),
+    'la Maison de notable est attribuée (meilleure qualité d\'abord)')
 })
 
-test('attribuerDomicilesVille : stock insuffisant → foyers sans domicile, pas de surbooking', () => {
+test('attribuerDomicilesVille : les bâtiments les plus qualitatifs servent le HAUT RANG (prestige décroissant)', () => {
+  const { state, p, ville, C } = partieTemoin()
+  const vivants = vivantsVille(state, p.n, ville)
+  assert.ok(vivants.length >= 4, 'partie témoin assez peuplée')
+  // un noble (prestige 300) et un bourgeois (120) ; le reste à 0
+  for (const c of vivants) c.domicile = null
+  // (base 300 des nobles de naissance, retour Thibaut 2026-10-26 :
+  //  écrasée ici pour que SEULS vivants[0] et vivants[1] aient du
+  //  prestige — le test vérifie l'ORDRE de service, pas la base)
+  for (const c of vivants) c.prestige = 0
+  vivants[0].prestige = 300
+  vivants[1].prestige = 120
+  // parc réduit : 1 Maison de notable (qualité 3) + 1 Maison (1)
+  ville.domiciles = [
+    { domicile: 'Maison de notable', nombre: 1 },
+    { domicile: 'Maison', nombre: 1 },
+  ]
+  const loges = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges, 2, 'seuls 2 habitants logés (2 logements)')
+  assert.equal(vivants[0].domicile, 'Maison de notable',
+    'le personnage de haut rang (300) prend la Maison de notable')
+  assert.equal(vivants[1].domicile, 'Maison',
+    'le bourgeois (120) prend la Maison — meilleur reste')
+  // les prestige 0 (dont les mineurs) restent dehors
+  for (const c of vivants.slice(2)) {
+    assert.equal(c.domicile, null, `« ${c.prenom} » (prestige ${c.prestige ?? 0}) devait rester dehors`)
+  }
+})
+
+test('attribuerDomicilesVille : Maison de notable et Palais RÉSERVÉS aux nobles (retour Thibaut 2026-10-28, 5e retour du jour)', () => {
+  const { state, p, ville, C } = partieTemoin()
+  const vivants = vivantsVille(state, p.n, ville)
+  // le helper : exactement les deux types nommés par le retour
+  assert.ok(reserveNobleDomicile('Palais') && reserveNobleDomicile('maison de notable'),
+    'Palais et Maison de notable sont réservés (insensible à la casse)')
+  assert.ok(!reserveNobleDomicile('Maison') && !reserveNobleDomicile(null),
+    'Maison et null ne le sont pas')
+  // un parc TRÈS large en domiciles réservés, personne de noble
+  //  (dynastie roturier, prestige 0) : les réservés restent VIDES
+  ville.domiciles = [
+    { domicile: 'Maison de notable', nombre: 2 },
+    { domicile: 'Palais', nombre: 2 },
+    { domicile: 'Maison', nombre: 1 },
+  ]
+  for (const c of vivants) {
+    c.domicile = null
+    c.prestige = 0
+    c.dynastie = C.p.dynastieRoturier
+  }
+  const loges0 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges0, 1, 'sans noble, seule la Maison part — les réservés restent vides')
+  assert.ok(
+    vivants.every((c) => c.domicile === null || c.domicile === 'Maison'),
+    'aucun roturier en Maison de notable ni au Palais',
+  )
+  // UN noble (par le prestige — rangDe : ≥ 250) : il prend un
+  //  PALAIS (meilleure qualité), personne d'autre ne le suit
+  vivants[0].prestige = 300
+  for (const c of vivants) c.domicile = null
+  const loges1 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges1, 2)
+  assert.equal(vivants[0].domicile, 'Palais', 'le noble (300) prend un Palais')
+  assert.ok(vivants.slice(1).every((c) => c.domicile === null || c.domicile === 'Maison'),
+    'les non-nobles ne touchent pas les réservés',
+  )
+  // un BOURGEOIS qui détenait un Palais (attribution antérieure
+  //  au retour) ne le GARDE pas : relogé dans le meilleur reste
+  vivants[1].prestige = 120
+  vivants[1].domicile = 'Palais'
+  for (const c of vivants) if (c !== vivants[0] && c !== vivants[1]) c.domicile = null
+  const loges2 = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(vivants[0].domicile, 'Palais', 'le noble garde son Palais')
+  assert.equal(vivants[1].domicile, 'Maison', 'le bourgeois (120) perd le Palais — relogé en Maison')
+  assert.equal(loges2, 2)
+})
+
+test('attribuerDomicilesVille : stock insuffisant → habitants sans domicile, pas de surbooking', () => {
   const { state, p, ville, C } = partieTemoin()
   // stock ridicule : 2 logements
   ville.domiciles = [{ domicile: 'Maison', nombre: 2 }]
   const loges = attribuerDomicilesVille(state, p, ville, C)
-  assert.equal(loges, 2, 'seuls 2 foyers logés')
-  // RELIRE les foyers APRÈS attribution (les objets capturés avant
-  //  portent l'état périmé — le champ Character.domicile a bougé).
-  const foyers = foyersDeVille(state, p.n, ville, C)
-  const avecDomicile = foyers.filter((f) => f.domicile).length
-  assert.equal(avecDomicile, 2)
+  assert.equal(loges, 2, 'seuls 2 habitants logés')
+  // RELIRE les vivants APRÈS attribution
+  const vivants = vivantsVille(state, p.n, ville)
+  assert.equal(vivants.filter((c) => c.domicile).length, 2)
   // les autres sans domicile — champ null, pas d'inconnu
-  for (const f of foyers.filter((f) => !f.domicile)) {
-    assert.equal(f.chef.domicile, null)
-    assert.equal(f.conjoint?.domicile ?? null, null)
+  for (const c of vivants.filter((c) => !c.domicile)) {
+    assert.equal(c.domicile, null)
   }
 })
 
-test('attribuerDomicilesVille : idempotent — un foyer logé garde son domicile', () => {
+test('attribuerDomicilesVille : idempotent — un habitant logé garde son domicile', () => {
   const { state, p, ville, C } = partieTemoin()
   initStockVille(ville, C)
   attribuerDomicilesVille(state, p, ville, C)
-  const foyers1 = foyersDeVille(state, p.n, ville, C)
-  const domiciles1 = foyers1.map((f) => f.domicile)
+  const d1 = vivantsVille(state, p.n, ville).map((c) => c.domicile)
   attribuerDomicilesVille(state, p, ville, C)
-  const foyers2 = foyersDeVille(state, p.n, ville, C)
-  assert.deepEqual(foyers2.map((f) => f.domicile), domiciles1, 'attribution stable')
+  const d2 = vivantsVille(state, p.n, ville).map((c) => c.domicile)
+  assert.deepEqual(d2, d1, 'attribution stable')
 })
 
 test('normaliserEtat + attribuer : les vieilles parties gagnent leurs domiciles sans mutation d\'état parasites', () => {
@@ -166,7 +264,10 @@ test('normaliserEtat + attribuer : les vieilles parties gagnent leurs domiciles 
   const avant = state.turn
   attribuerDomicilesVille(state, p, ville, C)
   assert.equal(state.turn, avant, 'pas de mutation du tour')
-  assert.ok(foyersDeVille(state, p.n, ville, C).every((f) => f.domicile), 'tout le monde logé')
+  const vivants = vivantsVille(state, p.n, ville)
+  const loges = vivants.filter((c) => c.domicile).length
+  assert.equal(loges, Math.min(totalLogementsVille(ville), vivants.length),
+    'l\'attribution initialise le stock et loge (1 logement = 1 habitant)')
 })
 
 
@@ -193,4 +294,127 @@ test('audit merge : vieille partie tamponnée (v4) sans stock — attribution r�
   const loges = attribuerDomicilesVille(state, p, ville, C)
   assert.ok(loges > 0, `l'attribution initialise le stock et loge (${loges})`)
   assert.ok(Array.isArray(ville.domiciles), 'stock posé par défense en profondeur')
+})
+
+// ── Fiche aménagements 3 tiers (retour Thibaut 2026-10-26) ────────────
+
+test('fiche aménagements : Taudis apportés — cumul sur les aménagements de la ville', () => {
+  const { ville, C } = partieTemoin()
+  // Champ = 5 Taudis, Baleinier = aucun (null dans le référentiel)
+  ville.amenagements = ['Champ', 'Champ', 'Baleinier']
+  assert.equal(taudisApportesVille(ville, C), 10, '5 + 5 + 0')
+  // le tier 2 en remplace un de base : 5 + 8
+  ville.amenagements = ['Champ', 'Champ (tier 2)']
+  assert.equal(taudisApportesVille(ville, C), 13, '5 + 8')
+})
+
+test('fiche aménagements : Scierie tier 2 — 2 Tisseurs (correction fiche 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  const ref = constructionRef('Scierie (tier 2)', C.config)
+  assert.ok(ref, 'Scierie tier 2 dans le référentiel')
+  assert.equal(ref.taudisApportes, 8)
+  const emp = ref.emplacements ?? []
+  const tisseur = emp.find((e) => e.metier === 'Tisseur')
+  const bucheron = emp.find((e) => e.metier === 'Bûcheron')
+  assert.equal(tisseur?.places, 2, '2 emplacements de Tisseur (fiche, ex-1)')
+  assert.equal(bucheron?.places, 4, '4 emplacements de Bûcheron')
+})
+
+test('fiche aménagements : Mine d\'Or — 1 Marchand = 2 Commerçants (arbitrage Thibaut 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  // le Marchand étant retiré du jeu, ses emplacements sont remplacés
+  //  par le DOUBLE de Commerçants : 3→6, 7→14, 12→24.
+  for (const [tier, attendu] of [[1, 6], [2, 14], [3, 24]] as const) {
+    const nom = tier === 1 ? "Mine d'Or" : `Mine d'Or (tier ${tier})`
+    const ref = constructionRef(nom, C.config)
+    assert.ok(ref, `${nom} dans le référentiel`)
+    const commercants = (ref.emplacements ?? []).find((e) => e.metier === 'Commerçant')
+    assert.equal(commercants?.places, attendu, `${nom} : ${attendu} Commerçants`)
+  }
+})
+
+test('fiche aménagements : resumeConstruction affiche les Taudis (retour Thibaut 2026-10-26)', () => {
+  const { C } = partieTemoin()
+  // Le résumé est LA source affichée partout (picker Aménager/Améliorations,
+  //  lignes de carte, Constructions) : les Taudis y sont désormais visibles.
+  assert.ok(resumeConstruction(constructionRef('Champ', C.config)).includes('+5 Taudis'),
+    'Champ : « +5 Taudis » dans le résumé')
+  const scierie2 = resumeConstruction(constructionRef('Scierie (tier 2)', C.config))
+  assert.ok(scierie2.includes('+8 Taudis'), 'Scierie tier 2 : « +8 Taudis »')
+  assert.ok(scierie2.includes('2 tisseur'), 'Scierie tier 2 : 2 tisseurs dans le résumé')
+})
+
+// ── Fiche bâtiments rang 1 + 2 (retour Thibaut 2026-10-26) ─────────────
+
+test('fiche bâtiments : Taudis apportés par les BÂTIMENTS (Poste de garde + Bas quartier)', () => {
+  const { ville, C } = partieTemoin()
+  ville.batiments = ['Poste de garde', 'Bas quartier']
+  assert.equal(taudisApportesVille(ville, C), 30, '10 + 20')
+  // rang 2 : la Caserne cumule pareil
+  ville.batiments = ['Poste de garde', 'Caserne']
+  assert.equal(taudisApportesVille(ville, C), 20, '10 + 10')
+})
+
+test('fiche bâtiments : domicilesApportesVille — Maisons et Maisons de notable', () => {
+  const { ville, C } = partieTemoin()
+  // Quartier intermédiaire +20 Maisons, Haut quartier +20 Maisons de
+  //  notable (Château, rang 2) — cumul par type de domicile.
+  ville.batiments = ['Quartier intermédiaire', 'Haut quartier']
+  assert.deepEqual(domicilesApportesVille(ville, C), [
+    { domicile: 'Maison', nombre: 20 },
+    { domicile: 'Maison de notable', nombre: 20 },
+  ])
+  // Tour de sorcier : +1 Maison de notable, +1 Scientifique (lui
+  //  aussi lu par la carte, pas ici)
+  const tour = constructionRef('Tour de sorcier', C.config)
+  assert.deepEqual(tour?.domicilesApportes, [{ domicile: 'Maison de notable', nombre: 1 }])
+})
+
+test('fiche bâtiments : resumeConstruction affiche les domiciles apportés (pluriel)', () => {
+  const { C } = partieTemoin()
+  const quart = resumeConstruction(constructionRef('Quartier intermédiaire', C.config))
+  assert.ok(quart.includes('+20 Maisons'), '« +20 Maisons » (pluriel)')
+  const haut = resumeConstruction(constructionRef('Haut quartier', C.config))
+  assert.ok(haut.includes('+20 Maisons de notable'), '« +20 Maisons de notable »')
+  const tour = resumeConstruction(constructionRef('Tour de sorcier', C.config))
+  assert.ok(tour.includes('+1 Maison de notable'), '« +1 Maison de notable » (singulier)')
+})
+
+test('fiche bâtiments : prérequis rang 2 lus depuis le champ coût (« X requis »)', () => {
+  const { C } = partieTemoin()
+  assert.equal(prerequisConstruction(constructionRef('Caserne', C.config)), 'Poste de garde')
+  assert.equal(prerequisConstruction(constructionRef('Ecole militaire', C.config)), "Terrain d'entrainement")
+  assert.equal(prerequisConstruction(constructionRef('Clinique', C.config)), 'Herboristerie')
+  // le remplacement n'est PAS un prérequis : Silo à grain remplace la
+  //  Grange via le champ dédié (pas de « requis » dans le coût)
+  assert.equal(prerequisConstruction(constructionRef('Silo à grain', C.config)), null)
+  assert.equal(constructionRef('Silo à grain', C.config)?.remplaceBatiment, 'Grange')
+})
+
+test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudis', () => {
+  const { C } = partieTemoin()
+  for (const g of ['Ville', 'Château']) {
+    const ref = C.config.constructions.find((c) => c.nom === 'Caserne' && c.groupe === g)
+    assert.ok(ref, `Caserne ${g} dans le référentiel`)
+    assert.equal(ref?.rangMinHabitation, 2, `${g} : rang 2`)
+    assert.equal(ref?.taudisApportes, 10, `${g} : +10 Taudis`)
+    assert.deepEqual((ref?.emplacements ?? []).find((e) => e.metier === 'Garde'), { metier: 'Garde', places: 4 })
+  }
+})
+
+test('fiche bâtiments : l\'Herboristerie (rang 1) n\'accueille plus de Guérisseur — la Clinique (rang 2) en accueille 5', () => {
+  const { C } = partieTemoin()
+  const herb = constructionRef('Herboristerie', C.config)
+  assert.ok(herb, 'Herboristerie au référentiel')
+  assert.equal(herb?.emplacements, undefined, 'plus d\'emplacements : uniquement ±5% maladie')
+  assert.equal(herb?.malContraction, 0.05)
+  assert.equal(herb?.bonusGuerison, 0.05)
+  const clin = constructionRef('Clinique', C.config)
+  assert.ok(clin, 'Clinique au référentiel')
+  assert.equal(clin?.rangMinHabitation, 2)
+  assert.deepEqual((clin?.emplacements ?? []).find((e) => e.metier === 'Guérisseur'), { metier: 'Guérisseur', places: 5 })
+  // le résumé de l'Herboristerie reste STRUCTURÉ (effets ±5%) pour que
+  //  le picker ne retombe pas sur la description du classeur
+  assert.ok(resumeConstruction(herb).includes('+5% guérison'),
+    'Herboristerie : « +5% guérison » dans le résumé structuré')
 })

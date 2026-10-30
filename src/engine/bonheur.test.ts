@@ -105,6 +105,28 @@ test('scoresVille : variations ciblées reprennent les scénarios simulés', () 
   assert.equal(s2.sante, 100, 'plus de malades → santé 100')
 })
 
+test('scoresVille : les ENFANTS ne comptent pas dans le facteur Emploi (retour Thibaut 2026-10-28)', () => {
+  const { state, p, ville, C } = partieTemoin()
+  const pop = (state.population[p.n] ?? []).filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
+  const enfants = pop.filter((c) => c.age < C.p.adultAge)
+  const adultes = pop.filter((c) => c.age >= C.p.adultAge)
+  assert.ok(adultes.length > 0, 'fixture : des adultes dans la ville témoin')
+  // Tous les ADULTES en poste → facteur « pourvu » à son optimum.
+  for (const c of adultes) c.metier = c.metier ?? C.p.metierChasseur
+  // Scénario A : enfants SANS métier — déjà hors du comptage (ni
+  //  demande, ni pourvus).
+  for (const c of enfants) c.metier = null
+  const sA = scoresVille(state, p, ville, C)
+  // Scénario B : les MÊMES enfants porteurs d'un métier (affectation
+  //  manuelle, edge case) — un enfant n'est NI un chômeur NI un
+  //  poste pourvu : l'Emploi ne doit pas bouger (l'ancienne formule
+  //  gonflait enPoste → malus d'excès).
+  for (const c of enfants) c.metier = C.p.metierChasseur
+  const sB = scoresVille(state, p, ville, C)
+  assert.equal(sB.emploi, sA.emploi, 'des enfants porteurs d\'un métier ne changent pas le facteur Emploi')
+  assert.ok(sA.emploi > 0, 'tous les adultes en poste → Emploi non nul')
+})
+
 test('bonheurVilleComplete + bonheurJoueur : moyennes cohérentes sur partie réelle', () => {
   const { state, p, C } = partieTemoin()
   const b1 = bonheurVilleComplete(state, p, p.villes[0], C)
