@@ -27,11 +27,46 @@ SUCCESS sur la tête v4 (`e03a6deb`, run #1585).
 
 | Réf | Problème | Statut |
 |-----|----------|--------|
+| A0 | CI « jeu » ROUGE à la tête depuis `2f253c09` (29/10, refonte 8 lois) : le test de rendu `ArmiesPanel` calculait `prixArmee` SANS le joueur alors que le panneau le passe (loi Conscription du régime Autoritarisme du joueur 1) → 45 Or attendus vs 35 Or rendus | 🔴→✅ **découvert à l'audit, corrigé le jour même** (`a1523107`) |
 | A1 | `normaliserEtat` ne complète pas `p.armees` → crash fin de tour sur un état ingéré dont un joueur manque le champ (sauvegardes antérieures aux armées, 2026-10-17) | 🟠 **reproduit** — correctif d'une ligne proposé, à arbitrer |
 | A2 | Perf : fin de tour à 16 000 habitants = 3,2-4,3 s (1,7-3,2 s à l'audit du 27/10) ; le nouveau flux migrationBonheur y compte ≈ 0,21 s | 🟡 surveillance — mitigé par le bandeau F4, partie live très en dessous de 16k |
 | a1 | `malusFerveurMartiale` n'applique que la PREMIÈRE culture martiale présente (ordre du référentiel) | 🟡 conforme à l'arbitrage actuel (une seule culture : Zélotisme) — à redécouvrir si une 2e culture martiale arrive |
 | a2 | `recruitForArmies` peut faire dépasser la puissance CIBLE d'un dernier recrutement (soldat indivisible, pas de clamp) | 🟡 mineur, cohérent avec le modèle « stockée fait foi » — à noter, pas d'action proposée |
 | a3 | `AGENTS.md` : compteurs de tests périmés (157 natifs / 15 de rendu annoncés ; réalité 254 / 21) | ✅ corrigé dans le même commit docs que le présent rapport |
+
+## A0 — CI « jeu » rouge à la tête depuis `2f253c09` : découvert à l'audit, corrigé le jour même 🔴→✅
+
+Le check « jeu » était en ÉCHEC sur la tête `849d64c2` (depuis le commit
+`2f253c09` du 29/10, refonte « 8 lois » — le « fix CI » `849d64c2` n'a pas
+suffi) ; les commits docs de l'audit en héritaient. **Le live n'a jamais été
+impacté** : le workflow `deploy.yaml` tourne indépendamment de la CI jeu
+(déployé SUCCESS, site et jeu répondent 200).
+
+**Cause** : le test de rendu `ArmiesPanel.test.ts` vérifiait le prix de levée
+avec `prixArmee(90, C)` — SANS le joueur — alors que la refonte 8 lois a fait
+passer le JOUEUR au panneau (`prixArmee(90, C, villeLeveeObj, p)`). Le joueur 1
+de la fixture est Autoritarisme : sa loi « Conscription » réduit le prix de
+10 Or × rang du pays → le panneau rend **35 Or** quand le test attendait
+**45 Or**. Le test de rendu n'étant joué qu'en CI (React indisponible en
+local jusqu'ici), le faux échec est resté invisible hors CI.
+
+**Reproduction locale** (nouvel outillage — voir journal du 30/10) : harnais
+de rendu reconstruit SANS npm (bloqué) par tarballs `curl` de npmjs —
+react 18.3.1 + react-dom + scheduler 0.23.2, stub `@supabase/supabase-js`,
+binaire esbuild 0.23.1 ; les 12 fichiers de tests de rendu sont bundlés puis
+joués par `node --test`. Avant correctif : 20 pass / 1 fail
+(ArmiesPanel uniquement).
+
+**Correctif** (`a1523107`, poussé le jour même — réparation d'urgence, la
+convention interdit de laisser la CI rouge) : le test calcule le prix
+COMME LE PANNEAU — `prixArmee(90, C, undefined, p1)`, sans ville de levée
+sélectionnée (valeur effective `''` du Select en cascade → `villeLeveeObj`
+undefined), avec le joueur. Après correctif : **21/21 rendus verts** en
+local + 254/254 natifs, diag identique.
+
+**Bénéfice collatéral** : les tests de rendu sont désormais jouables EN
+LOCAL (le harnais est réutilisable — cf. `.tmp-rendu/` et journal), fin du
+« rouge invisible hors CI ».
 
 ## A1 — `normaliserEtat` oublie `p.armees` : crash fin de tour sur vieilles sauvegardes 🟠
 
@@ -82,7 +117,7 @@ lois d'habitant par culture, détails de gains par ressource).
 
 Pas d'action proposée : le bandeau « ⏳ Calcul du tour… » (F4) tient le
 signalement utilisateur, la partie en ligne est très loin de 16k habitants, et
-la CI reste verte. À re-bencher à la prochaine grosse vague moteur ; si le
+la CI du moteur reste verte. À re-bencher à la prochaine grosse vague moteur ; si le
 temps double encore, un profilage des `detailGainsVille`/`attribuerDomicilesVille`
 sera le premier réflexe.
 
@@ -142,6 +177,7 @@ sera le premier réflexe.
 
 | # | Action | Qui | Statut |
 |---|--------|-----|--------|
+| 0 | A0 : corriger le test de rendu ArmiesPanel (prix calculé comme le panneau) | IA | ✅ corrigé ce jour (`a1523107`) — urgence CI |
 | 1 | A1 : compléter `p.armees` dans `normaliserEtat` + test de non-régression | IA | ⏳ **proposition, à arbitrer par Thibaut** |
 | 2 | a3 : compteurs AGENTS.md (254 natifs / 21 rendu) | IA | ✅ corrigé ce jour |
 | 3 | A2 : re-bench 16k à la prochaine grosse vague moteur | IA | ⏳ surveillance |
@@ -151,9 +187,12 @@ sera le premier réflexe.
 
 - **254/254 tests natifs** rejoués en local (moteur, règles, config, état,
   supabase — harnais `node --experimental-strip-types` + loader du dépôt,
-  identique à la CI pour le bundle moteur) ; les tests de rendu UI
-  (12 fichiers / 21 tests, nécessitent React) sont couverts par la CI verte
-  de la tête `849d64c2` (CI jeu + build + Edge Function + deploy Pages).
+  identique à la CI pour le bundle moteur). Les tests de rendu UI
+  (12 fichiers / 21 tests, nécessitent React) : la CI de la tête `849d64c2`
+  était ROUGE sur ce lot (constat A0 ci-dessus) ; ils sont désormais rejoués
+  **EN LOCAL** grâce au harnais de rendu reconstruit (cf. A0) — **21/21
+  verts** après correctif, avec le correctif poussé (`a1523107`) la CI jeu
+  est revenue au vert sur la tête corrigée.
 - `scripts/diag.ts` rejoué : **IDENTIQUE** à `diag-out.txt` de la tête
   (14 lignes [ÉCHEC] informatives attendues, aucune dérive).
 - Bench scalabilité 16k : cf. A2. Repro A1 : cf. section A1.
