@@ -38,3 +38,15 @@ export function rangNiveau(ville: City, C: Cfg): number {
     .findIndex((d) => nomRang(d.rang).toLowerCase() === nom)
   return idx >= 0 ? idx + 1 : 1
 }
+
+/** Niveau du RANG DE PAYS d'un joueur dans l'échelle féodale (1 =
+ *  Baronnie, 2 = Comté, 3 = Duché, 4 = Royaume, 5 = Empire —
+ *  index+1 ; 0 = hors échelle, aucun bonus « par rang du pays »).
+ *  (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
+ *  « Conscription » : réduction du prix de levée d'armée par rang
+ *  du pays — engine/armees.ts, prixArmee.) */
+export function rangPaysNiveau(p: { rang?: string } | undefined, C: Cfg): number {
+  if (!p?.rang) return 0
+  const idx = (C.config.paysRangs ?? []).findIndex((d) => d.nom === p.rang)
+  return idx >= 0 ? idx + 1 : 0
+}

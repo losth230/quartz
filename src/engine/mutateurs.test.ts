@@ -61,7 +61,7 @@ function partieHuitJoueurs(): GameState {
  *  « Roturier » (isNobleDyn, shared.ts). */
 function perso(
   id: string, dynastie: string, ville: string,
-  o: { age?: number; statut?: Character['statut']; mariage?: string | null; mariageId?: string | null; sexe?: 'M' | 'F' } = {},
+  o: { age?: number; statut?: Character['statut']; mariage?: string | null; mariageId?: string | null; sexe?: 'M' | 'F'; prestige?: number } = {},
 ): Character {
   return {
     id,
@@ -70,6 +70,9 @@ function perso(
     dynastie,
     sexe: o.sexe ?? 'F',
     age: o.age ?? 30,
+    // pas de « prestige: undefined » explicite (test migrations compact :
+    // JSON.stringify l'omet, on ne le pose que s'il est défini)
+    ...(o.prestige !== undefined ? { prestige: o.prestige } : {}),
     culture: 'Déisme',
     ville,
     orientation: 'Hétérosexuel',
@@ -233,6 +236,28 @@ test('marierPersonnages : gardes-fous (même personnage, mineur, déjà marié, 
   // Aucun garde-fou franchi : a et b restent non mariés, rien n a bougé.
   assert.equal(a.mariage, null)
   assert.equal(b.mariage, null)
+})
+
+test('marierPersonnages : l\'ANOBLI (roturier devenu noble, 250+) est mariable — le bourgeois non (arbitrage Thibaut 2026-10-27)', () => {
+  const state = partieHuitJoueurs()
+  const noble = perso('an-n', 'Valois', 'Capitale 1')
+  const bourgeois = perso('an-b', 'Roturier', 'Capitale 1', { prestige: 150 })
+  const anobli = perso('an-a', 'Roturier', 'Capitale 1', { prestige: 250 })
+  const roturier = perso('an-r', 'Roturier', 'Capitale 1')
+  state.population[1] = [noble, bourgeois, anobli, roturier]
+  // bourgeois : rang 'bourgeois' (100-249) → REFUSÉ
+  const refus = marierPersonnages(state, noble, bourgeois)
+  assert.match(refus ?? '', /NOBLES/, 'le bourgeois (150 prestige) reste exclu')
+  assert.equal(bourgeois.mariageId, null, 'rien n\'a muté côté bourgeois')
+  // roturier pur (0 prestige) : toujours refusé
+  assert.match(marierPersonnages(state, noble, roturier) ?? '', /NOBLES/,
+    'le roturier (0 prestige) reste exclu')
+  // anobli : rang 'noble' par le prestige (250+) → ACCEPTÉ (en dernier :
+  //  le garde-fou « déjà marié » précède le check de noblesse au moteur)
+  assert.equal(marierPersonnages(state, noble, anobli), null, 'l\'anobli (250+) est mariable manuellement')
+  assert.equal(anobli.mariageId, noble.id, 'lien par id côté anobli')
+  assert.equal(noble.mariageId, anobli.id, 'lien par id côté noble')
+  assert.ok(state.log.some((l) => l.type === 'Mariage'), 'log de mariage de l\'anobli')
 })
 
 // ── M1 : identité démographique par IDS (audit 2026-10-19, arbitrage

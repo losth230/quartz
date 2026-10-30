@@ -89,10 +89,13 @@ test('Guérisseur : +2 % guérison et −2 % contraction par Guérisseur en post
   assert.ok(def, 'métier Guérisseur au référentiel')
   assert.equal(def?.qualite, 'roturier')
   assert.equal(def?.valeur1, 0)
-  // l'Herboristerie ouvre un emplacement de Guérisseur
-  const herb = C.config.constructions.find((c) => c.nom === 'Herboristerie')
-  assert.ok(herb?.emplacements?.some((e) => e.metier === 'Guérisseur'),
-    "l'Herboristerie accueille un Guérisseur")
+  // Fiche bâtiments rang 2 (2026-10-26) : l'Herboristerie ne porte
+  //  PLUS d'emplacement de Guérisseur (elle ne fait que moduler les
+  //  chances de maladie ±5 %) — le poste vient désormais de la
+  //  CLINIQUE (rang 2, +5 emplacements).
+  const clinique = C.config.constructions.find((c) => c.nom === 'Clinique')
+  assert.ok(clinique?.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 5),
+    'la Clinique (rang 2) accueille 5 Guérisseurs')
 })
 
 test('Guérisseur : effet moteur — la maladie d\'un habitant de la ville est modulée (via maladieStep)', () => {

@@ -8,8 +8,10 @@
 //      Capitale),
 //    · aménagements (production exacte du référentiel, terrain),
 //    · autres (lignes « Autres » des villes : ressource × nombre × bonus),
-//    · régimes & cultures (lois chiffrées du régime et règle de pays de
-//      la culture — engine/regimes.ts, paramétrables dans les référentiels),
+//    · lois des cultures (lois d'HABITANT des cultures —
+//      engine/regimes.ts, paramétrables dans les référentiels ;
+//      RETRAIT 2026-10-29, refonte « 8 lois » : les lois de régime
+//      ne passent plus par la banque),
 //    · vassalité (tribut payé / reçu, paramètre vassalPrelevement).
 //  La production affichée est CALCULÉE (non modifiable) : le stock du
 //  tour N égale le stock du tour N−1 plus la production par tour.
@@ -21,7 +23,7 @@ import { calculerGainsPopulation, detailGainsVille } from './economie'
 import { effetsBatimentsVille, detailsBatimentsJoueur } from './batiments'
 import { effetsAmenagementsVille, effetsNourrEteAmenagementsVille, detailsAmenagementsJoueur } from './amenagements'
 import { effetsAutresVille, effetsNourrEteAutresVille, estNourrEte, detailsAutresJoueur } from './autres'
-import { effetsRegime, effetsCulturePays, detailCulturePays } from './regimes'
+import { loisHabitants, detailLoisHabitants } from './regimes'
 import { citesLibresDe, detailCiteLibre } from './citesLibres'
 import { bonusProximite } from './villes'
 import { effetsCommerceJoueur, detailCommerceJoueur } from './commerce'
@@ -44,9 +46,13 @@ export interface ProductionDetail {
   nourrEte: Record<string, number>
   /** lignes « Autres » des villes (ressource × nombre × bonus) */
   autres: Record<string, number>
-  /** lois chiffrées du régime et règle de pays de la culture
-   *  (engine/regimes.ts) : garnison de la loi, bonus de capitale… */
-  regimesCultures: Record<string, number>
+  /** lois d'HABITANT des cultures (engine/regimes.ts) — canal
+   *  « Lois des cultures » du récap.
+   *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : les
+   *  lois des régimes ne passent plus par ce canal — la source
+   *  'regime' quitte la banque ; la clé regimesCultures est
+   *  RENOMMÉE loisCultures.) */
+  loisCultures: Record<string, number>
   /** taxes reçues des cités libres sous suzeraineté du joueur
    *  (engine/citesLibres.ts — étape 3decies) */
   citesLibres: Record<string, number>
@@ -132,16 +138,18 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
     }
   }
 
-  // Régimes & cultures : lois chiffrées du régime (ex. Socialisme :
-  // +N Nourriture d'été par champ et rizière) + règle de pays de la
-  // culture (ex. Communautarisme : +N Nourriture par habitation de
-  // cette culture dans le monde) — étape 3septies du moteur.
-  const regimesCultures: Record<string, number> = {}
-  for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
-    regimesCultures[res] = (regimesCultures[res] ?? 0) + v
-  }
-  for (const [res, v] of Object.entries(effetsCulturePays(state, p, C))) {
-    regimesCultures[res] = (regimesCultures[res] ?? 0) + v
+  // Lois des cultures : lois d'HABITANT des cultures (refonte 12
+  // lois, 2026-10-29 — ex. Lunisme « Foi supérieure » : +N Tourisme
+  // par noble luniste ; REMPLACÉ l'ancienne règle de pays « +N par
+  // habitation de cette culture dans le monde ») — étape 3septies
+  // du moteur.
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : les lois
+  // des RÉGIMES ne passent plus par ce canal — plus aucune loi de
+  // régime via la banque ; le canal est RENOMMÉ « Lois des
+  // cultures » et ne porte plus que loisHabitants.)
+  const loisCultures: Record<string, number> = {}
+  for (const [res, v] of Object.entries(loisHabitants(state, p, C))) {
+    loisCultures[res] = (loisCultures[res] ?? 0) + v
   }
 
   // (Proximité : agrégée plus bas, juste avant le total.)
@@ -199,12 +207,12 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
   const armees: Record<string, number> = {}
   // Total
   const total: Record<string, number> = {}
-  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, armees]) {
+  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, armees]) {
     for (const [res, v] of Object.entries(canal)) {
       total[res] = (total[res] ?? 0) + v
     }
   }
-  return { base, habitants, batiments, amenagements, nourrEte, autres, regimesCultures, citesLibres, commerce, proximite, vassalite, armees, total }
+  return { base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, armees, total }
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -284,7 +292,7 @@ export function productionVille(
 /** Canal d'un apport (colonne du récap ressources). */
 export type CanalApport =
   | 'Base' | 'Habitants' | 'Bâtiments' | 'Aménagements' | 'Nourr - été' | 'Autres'
-  | 'Régimes & cultures' | 'Cités libres' | 'Commerce' | 'Proximité' | 'Vassalité'
+  | 'Lois des cultures' | 'Cités libres' | 'Commerce' | 'Proximité' | 'Vassalité'
 
 export interface ProvenanceApport {
   /** canal de l'apport (colonne du récap) */
@@ -296,7 +304,13 @@ export interface ProvenanceApport {
 }
 
 /** Pour chaque ressource, la liste des origines de ses apports par
- *  tour — une entrée par origine. Ressources sans apport : absentes. */
+ *  tour — une entrée par origine. Ressources sans apport : absentes.
+ *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : plus de
+ *  ligne « loi du régime » ici — effetsRegime est supprimé et les
+ *  lois des régimes agissent dans leurs canaux propres (armées,
+ *  migration, économie, bonheur, vassalité) ; le canal des lois
+ *  d'habitant est RENOMMÉ « Lois des cultures », comme la
+ *  colonne du récap ressources.) */
 export function provenancesApports(
   state: GameState, p: Player, C: Cfg,
 ): Record<string, ProvenanceApport[]> {
@@ -367,13 +381,16 @@ export function provenancesApports(
       `${l.source || 'sans source'} (${l.villes.join(', ')}) : ${l.nombre} × ${l.bonus}`, l.effets)
   }
 
-  // Régimes & cultures : loi du régime + règle de pays de la culture
-  for (const [res, v] of Object.entries(effetsRegime(state, p, saison, C))) {
-    push(res, 'Régimes & cultures', `loi du régime « ${p.regime} »`, v)
-  }
-  for (const d of detailCulturePays(state, p, C)) {
-    push(d.res, 'Régimes & cultures',
-      `règle de pays « ${p.culture} » : +${d.parVille} × ${d.nbVillesMonde} ville(s) de cette culture dans le monde (dont ${d.nbVillesPerso} chez toi)`, d.total)
+  // Lois des cultures : lois d'HABITANT des cultures uniquement.
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la boucle
+  //  effetsRegime « loi du régime » est retirée — les lois des
+  //  régimes (Conscription, Frontières closes, Terre d'accueil,
+  //  Redistribution, Pouvoir du peuple, Élections, Droit Divin,
+  //  Vassaux dévoués) agissent dans leurs canaux propres et ne
+  //  passent plus par la banque ni par ce récap.)
+  for (const d of detailLoisHabitants(state, p, C)) {
+    push(d.res, 'Lois des cultures',
+      `loi d'habitant « ${d.loi} » (${d.culture}) : +${d.parHab} × ${d.nb}`, d.total)
   }
 
 

@@ -8,7 +8,7 @@
 import { retirerDeLIndexPopulation } from './indexPopulation'
 import type { Character, GameState, Player, PlayerRecap } from './types'
 import { makeRng, type Rng } from './rng'
-import { cfgOf, traitDef, type Cfg } from './gameData'
+import { cfgOf, cultureDef, traitDef, type Cfg } from './gameData'
 import { buildingDef } from './gameData2'
 import { bump, fullName, isNobleDyn, toutesLesPopulations } from './shared'
 import { metierAllowedForCharacter } from './metiers'
@@ -69,6 +69,11 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
   ).length
   contractMod -= guerisseurs * C.p.guerisseurContraction
   cureMod += guerisseurs * C.p.guerisseurGuerison
+  // (Refonte 12 lois, 2026-10-29, Déisme « Lavages de main » :
+  //  −2 % de contraction pour un habitant de culture Déisme — sa
+  //  culture PROPRE, où qu'il vive (loi d'HABITANT, pas loi de
+  //  ville). Champ maladieContractMod (−0,02), additif au reste.)
+  contractMod += cultureDef(c.culture, C.config)?.maladieContractMod ?? 0
   if (c.statut === 'Sain' || c.statut === 'Enceinte') {
     // (RETRAIT 2026-10-25 : plus de surrisque grossesse — les
     //  femmes enceintes contractent comme les autres)
