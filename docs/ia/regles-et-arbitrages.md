@@ -1793,11 +1793,10 @@ présentes » : une photographie sociale de la ville.
 
 Quand une CULTURE (pas un joueur) atteint un palier de Tourisme, le
 joueur dominant de cette culture choisit un DOGME qui affecte les
-habitants ou les villes de cette culture. À ce stade, seule la
-MISE EN FORME est codée (retour Thibaut : « code la mise en forme
-sans dogme réellement créé, les dogmes définitifs viendront plus
-tard ») : la table `dogmes` du référentiel est VIDE, aucun effet
-moteur ne lit encore un dogme.
+habitants ou les villes de cette culture. La MISE EN FORME a été
+codée en 1re séance (fondations, table vide) ; en 2e séance du
+30/10, les **12 DOGMES DÉFINITIFS retenus par Thibaut** sont entrés
+au référentiel et leurs effets sont BRANCHÉS MOTEUR.
 
 1. **Paliers** : un palier tous les 50 de Tourisme (paramètre
    éditable `palierTourismeDogme`, groupe Culture) — 50, 100, 150…
@@ -1814,22 +1813,80 @@ moteur ne lit encore un dogme.
    inscrit au nom du dominant, pas de l'appelant.
 4. **Cumul** : dogmes, lois et effets de culture se CUMULENT.
 5. **Choix validé** : le dogme doit exister dans la table
-   `dogmes` du référentiel POUR CETTE culture — table encore VIDE,
-   `choisirDogme` refuse donc tout nom tant que les dogmes
-   définitifs n'y sont pas (le choix deviendra possible sans
-   toucher au code).
+   `dogmes` du référentiel POUR CETTE culture — les 12 dogmes du
+   30/10 sont GÉNÉRIQUES (`culture: '*'` : proposés à toute
+   culture). Un dogme est UNIQUE par culture : le cumul à l'infini
+   porte sur des dogmes DIFFÉRENTS, jamais le même deux fois
+   (`choisirDogme` refuse le doublon).
 
 **Distinction** : les seuils `tourismeSeuils` du référentiel
 (Rang I/II/III à 100/180/340) sont les PONTIFICATS, par JOUEUR —
 mécanisme distinct des dogmes, par CULTURE, cumulables à l'infini.
 
+### Les 12 dogmes (défauts du référentiel, 2e séance du 30/10)
+
+Tous GÉNÉRIQUES (`culture: '*'`) ; les chiffres vivent dans le
+champ `effets` de la table (source de vérité : éditer la valeur au
+référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
+`effetsDogmeCulture`).
+
+| Dogme | Effet (type référentiel, valeur) |
+|---|---|
+| Dogme du Travail | travailNourriture +1 — sans-emplois de la culture : +1 Nourriture/tour (avant taxes, sans multiplicateur de rang) |
+| Dogme de la Famille | fecondite +0,1 — fécondité ×1,1 pour les personnages de la culture |
+| Dogme de la Patrie | gardeParHabitation +2 — cap de Garde +2 dans les villes de la culture |
+| Dogme de l'Égalité | consoNourrBourgeois 1 — les bourgeois de la culture consomment 1 Nourriture (FIXE : l'emporte sur régime et défaut) |
+| Dogme de la Solidarité | taudisParHabitation +5 — +5 Taudis par habitation de la culture (lits attribuables, entrée séparée de la loi) |
+| Dogme de la Fraternité | AUCUN effet moteur — révoltes −20 % : la mécanique des révoltes n'est PAS implémentée (le dogme est au référentiel, son effet viendra avec elle) |
+| Dogme de la Liberté | bonheurVille +10 — +10 Bonheur dans les villes de la culture (avant le plafond 100) |
+| Dogme de la Santé | maladieContractMod −0,05 — −5 points de contraction pour les personnages de la culture |
+| Dogme de l'Évangile | pressionCulture +0,1 — poids de la culture ×1,1 dans la conversion culturelle (le poids FINAL, présence locale incluse) |
+| Dogme de la Mère Patrie | tributVassal +0,05 — tribut REÇU par un suzerain de la culture ×1,05 (les DEUX chemins : fin de tour et impôt manuel ; le vassal paie SA part, la différence est créée) |
+| Dogme des Guerres Saintes | garnisonHorsCulture −40 — garnison des villes d'une AUTRE culture −40, une fois PAR culture porteuse (les villes porteuses sont protégées, plancher 0) |
+| Dogme du Nationalisme | conversionLocale +0,15 — habitants d'autres cultures vivant dans une ville de la culture : +15 %/tour de se convertir à elle (jet SUPPLÉMENTAIRE dédié après la tentative normale) |
+
+### Interprétations d'implémentation (à arbitrer)
+
+- **Loi d'habitant vs loi de ville** : Travail, Famille, Égalité et
+  Santé portent sur la culture PROPRE du personnage, où qu'il vive
+  (même lecture que la loi « Lavages de main » du Déisme) ;
+  Patrie, Solidarité, Liberté, Évangile et Nationalisme portent sur
+  la culture de la VILLE ; Guerres Saintes et Mère Patrie sur les
+  cultures porteuses au MONDE (garnison / tribut).
+- **Égalité** : le dogme FIXE la consommation (1), il l'emporte
+  sur la loi de régime et le défaut moteur ; sans `state` (cités
+  libres), le dogme n'est pas consulté.
+- **Famille** : la fécondité modélisée étant la proba de
+  conception (côté femme), le ×1,1 s'applique là — un homme de la
+  culture marié à une femme d'une autre culture ne transmet pas
+  le bonus.
+- **Mère Patrie** : la culture du SUZERAIN compte (tribut reçu),
+  pas celle du vassal — la différence ×1,05 est CRÉÉE pour le
+  suzerain (même arbitrage que la loi « Vassaux dévoués »).
+- **Guerres Saintes** : à montant FIXE (pas × rang, contrairement
+  à la Ferveur martiale), cumulées entre cultures porteuses,
+  plancher 0 ; les cités libres ne portent pas la protection.
+- **Nationalisme** : jet dédié vers la culture d'ACCUEIL, APRÈS la
+  tentative normale — la conversion normale n'est jamais
+  « doublée », seulement complétée ; le log porte la mention
+  « (dogme du Nationalisme) ».
+- **Fraternité** : zéro effet moteur tant que les révoltes
+  n'existent pas — retour Thibaut explicite « non implémenté ».
+- **Pas d'annonce de palier au journal de fin de tour** (choix
+  maintenu) : l'entrée « Culture » part du CHOISIR du dominant ;
+  une annonce répétée tant que le choix pend serait du bruit.
+
 **Affichage** : carte « Culture du pays » (page Pays) — total
-Tourisme de la culture tous joueurs, palier en cours, dogmes pris,
-paliers en attente (badge warn + dominant), note « aucun dogme
-encore défini » tant que la table est vide. L'entrée de journal
-« Culture » est posée au moment du CHOISIR ; l'annonce de palier
-à chaque fin de tour viendra avec les dogmes réels (une annonce
-répétée tant que le choix pend serait du bruit).
+Tourisme de la culture tous joueurs, palier en cours, dogmes pris
+(avec la description du référentiel), paliers en attente (badge
+warn + dominant) et CHOIX INTERACTIF : le dominant clique un
+dogme disponible par palier en attente (mutateur
+`choisirDogmeJoueur` de PlayerView → `choisirDogme` valide et
+journalise ; un refus part au journal « Système »). La carte
+« Dogmes de culture » du wiki (onglet Tourisme, page
+Référentiels) montre la table complète — retour de la carte
+retirée le 24/10. L'annonce de palier à chaque fin de tour reste
+non codée (choix ci-dessus).
 
 **Historique** : un ancien système de dogmes (effets d'affichage
 Pontife/Fidèles, jamais branché moteur) a été retiré le 2026-10-24
