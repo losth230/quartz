@@ -1788,3 +1788,51 @@ présentes » : une photographie sociale de la ville.
 5. **Position** : colonne droite de la carte de ville, SOUS le
    tableau des métiers (le wrapper d'empilement sert désormais aux
    deux colonnes — filets identiques entre tous les tableaux).
+
+## Dogmes de culture — paliers de Tourisme (arbitrages Thibaut, 2026-10-30)
+
+Quand une CULTURE (pas un joueur) atteint un palier de Tourisme, le
+joueur dominant de cette culture choisit un DOGME qui affecte les
+habitants ou les villes de cette culture. À ce stade, seule la
+MISE EN FORME est codée (retour Thibaut : « code la mise en forme
+sans dogme réellement créé, les dogmes définitifs viendront plus
+tard ») : la table `dogmes` du référentiel est VIDE, aucun effet
+moteur ne lit encore un dogme.
+
+1. **Paliers** : un palier tous les 50 de Tourisme (paramètre
+   éditable `palierTourismeDogme`, groupe Culture) — 50, 100, 150…
+   Un dogme à CHAQUE palier ; les dogmes se CUMULENT à l'infini,
+   jamais retirés, jamais remplacés.
+2. **Tourisme d'une culture** : SOMME des valeurs de Tourisme des
+   villes de cette culture, TOUS JOUEURS confondus, SANS les cités
+   libres. Même lecture que le tableau de production de la ville
+   (`productionVille`, canal « total »).
+3. **Dominant** : le joueur dont les villes de la culture
+   totalisent le plus de Tourisme — le choix du palier lui revient
+   au moment du choix (il peut CHANGER d'un palier à l'autre ;
+   égalité : plus petit n° de joueur, déterminisme). Le dogme est
+   inscrit au nom du dominant, pas de l'appelant.
+4. **Cumul** : dogmes, lois et effets de culture se CUMULENT.
+5. **Choix validé** : le dogme doit exister dans la table
+   `dogmes` du référentiel POUR CETTE culture — table encore VIDE,
+   `choisirDogme` refuse donc tout nom tant que les dogmes
+   définitifs n'y sont pas (le choix deviendra possible sans
+   toucher au code).
+
+**Distinction** : les seuils `tourismeSeuils` du référentiel
+(Rang I/II/III à 100/180/340) sont les PONTIFICATS, par JOUEUR —
+mécanisme distinct des dogmes, par CULTURE, cumulables à l'infini.
+
+**Affichage** : carte « Culture du pays » (page Pays) — total
+Tourisme de la culture tous joueurs, palier en cours, dogmes pris,
+paliers en attente (badge warn + dominant), note « aucun dogme
+encore défini » tant que la table est vide. L'entrée de journal
+« Culture » est posée au moment du CHOISIR ; l'annonce de palier
+à chaque fin de tour viendra avec les dogmes réels (une annonce
+répétée tant que le choix pend serait du bruit).
+
+**Historique** : un ancien système de dogmes (effets d'affichage
+Pontife/Fidèles, jamais branché moteur) a été retiré le 2026-10-24
+« un éventuel retour des dogmes repartira de zéro » — c'est ce
+retour ; la purge cfgOf ne retire plus que les entrées ANCIEN
+format (sans champ `culture`), le nouveau format passe.
