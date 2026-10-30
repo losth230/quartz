@@ -99,6 +99,21 @@ export function rangDe(c: Character, C: Cfg): RangSocial {
   return rangSocial(prestigeDe(c), seuilBourgeoisCulture(c.culture, C))
 }
 
+/** Classes sociales PRÉSENTES dans une ville (retour Thibaut
+ *  2026-10-28, 6e retour du jour : « un tableau avec les classes
+ *  sociales présentes dans la ville (roturier, bourgeois, noble) »)
+ *  — comptage des VIVANTS par rangDe, ordre hiérarchique noble →
+ *  bourgeois → roturier, classes présentes seulement (> 0, la
+ *  carte de ville n'affiche pas les classes vides). */
+export function compterClassesSociales(
+  habitants: Character[], C: Cfg,
+): Array<{ rang: RangSocial; nombre: number }> {
+  const n: Record<RangSocial, number> = { noble: 0, bourgeois: 0, roturier: 0 }
+  for (const c of habitants) n[rangDe(c, C)]++
+  const ordre: RangSocial[] = ['noble', 'bourgeois', 'roturier']
+  return ordre.filter((r) => n[r] > 0).map((r) => ({ rang: r, nombre: n[r] }))
+}
+
 /** PRESTIGE DE BASE d'un noble de NAISSANCE (retour Thibaut
  *  2026-10-26 : « un noble de naissance doit avoir 300 prestige de
  *  base ») : posé à la création du personnage (setup, naissances,

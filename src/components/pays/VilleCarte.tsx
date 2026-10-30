@@ -12,7 +12,11 @@
 //  & MÉTIERS en DEUX COLONNES (retour Thibaut 2026-10-28 : damier
 //  2×2 « ils ne rentrent pas » — SUPERSEDÉ le même jour, 3e
 //  retour : colonne gauche culture + logements + garnison
-//  EMPILÉS, colonne droite les métiers)
+//  EMPILÉS, colonne droite les métiers — puis 6e retour du
+//  jour : SOUS les métiers, tableau des CLASSES SOCIALES
+//  présentes (retour Thibaut 2026-10-28 : noble, bourgeois,
+//  roturier — classes présentes seulement, ordre hiérarchique,
+//  mêmes colonnes que les cultures))
 //  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
 //  majoritaire en gras avec liseré, part en %, total des vivants
 //  — ET tableau détaillé de la garnison, origine par origine avec
@@ -59,6 +63,7 @@ import { effetsNourrEteAutresVille } from '../../engine/autres'
 import { supprimerVille, transfererVille } from '../../engine/villes'
 import { couleurRessource, fondRessource, type Cfg } from '../../engine/gameData'
 import { villeDevientCiteLibre } from '../../engine/citesLibres'
+import { compterClassesSociales } from '../../engine/statutSocial'
 import { NumberInput, Select, TextInput, Button, fmt, TAX_OPTIONS } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { faireConstruire, faireBatParFamille } from './Constructions'
@@ -378,6 +383,15 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const metiersAffiches = lignesMet.filter(
             (l) => l.metier === null || l.enPoste > 0 || (Number.isFinite(l.cap) && l.cap >= 1),
           )
+          // ── CLASSES SOCIALES (retour Thibaut 2026-10-28, 6e
+          //  retour : « un tableau avec les classes sociales
+          //  présentes dans la ville (roturier, bourgeois, noble) »)
+          //  — sous le tableau des métiers, mêmes colonnes que
+          //  Cultures présentes (label + nombre + part des
+          //  vivants), classes PRÉSENTES seulement (> 0), ordre
+          //  hiérarchique noble → bourgeois → roturier (rangDe :
+          //  noble de naissance ou prestige ≥ 250, bourgeois ≥ 100).
+          const classesSociales = compterClassesSociales(habitantsLog, C)
           return (
             <div className="ville-duo-cols">
               <div className="ville-col-stack">
@@ -519,6 +533,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   non plafonnés (rôles de cour, armée, Banquier,
                   Troubadour…). Surnombre en rouge (cap baissée,
                   aménagement perdu — cf. reaffecterMetiers). */}
+              <div className="ville-col-stack">
               <div>
                 <div
                   className="ville-duo-titre"
@@ -556,6 +571,44 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                     </tr>
                   </tbody>
                 </table>
+              </div>
+              {/* ── CLASSES SOCIALES (retour Thibaut 2026-10-28,
+                  6e retour : « ajoute sous le tableau des métiers
+                  un tableau avec les classes sociales présentes
+                  dans la ville (roturier, bourgeois, noble) ») :
+                  classes PRÉSENTES seulement (nombre > 0), ordre
+                  hiérarchique noble → bourgeois → roturier,
+                  mêmes colonnes que Cultures présentes (label ·
+                  nombre · part des vivants). Le rang suit rangDe :
+                  noble de NAISSANCE (dynastie noble) ou prestige
+                  ≥ 250 ; bourgeois ≥ 100 ; roturier sinon. */}
+              <div>
+                <div
+                  className="ville-duo-titre"
+                  title="Classes sociales présentes dans la ville (habitants vivants) : nobles, bourgeois et roturiers. Le rang suit la règle du prestige : noble de naissance (dynastie noble) ou prestige ≥ 250, bourgeois ≥ 100, roturier sinon — cf. panneau Population."
+                >
+                  Classes sociales
+                </div>
+                {classesSociales.length === 0 ? (
+                  <div className="muted small">aucun habitant</div>
+                ) : (
+                  <table className="ville-table">
+                    <tbody>
+                      {classesSociales.map((cl) => (
+                        <tr key={cl.rang}>
+                          <td>
+                            {cl.rang === 'noble'
+                              ? <strong>Noble</strong>
+                              : <span className="muted">{cl.rang[0].toUpperCase() + cl.rang.slice(1)}</span>}
+                          </td>
+                          <td className="num">{fmt(cl.nombre)}</td>
+                          <td className="num muted">{part(cl.nombre)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
               </div>
             </div>
           )

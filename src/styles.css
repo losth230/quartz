@@ -729,7 +729,10 @@ input[type='range'] {
    horizontaux entre les tableaux empilés.
    Retour 2026-10-28 (4e retour du jour) : délimitations CLAIRES
    entre les tableaux — filets plein ton (var(--border)) entre
-   colonnes et entre tableaux empilés.)
+   colonnes et entre tableaux empilés.
+   Retour 2026-10-28 (6e retour du jour) : la colonne droite
+   empile AUSSI (métiers puis classes sociales) — le wrapper
+   ville-col-stack sert donc aux deux colonnes.)
    .ville-table : tableau compact dédié aux cartes de ville —
    séparateurs discrets, valeurs numériques alignées à droite en
    tabulaire, ligne total détachée par un filet, majoritaire marquée

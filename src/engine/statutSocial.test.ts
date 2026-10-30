@@ -18,6 +18,7 @@ import { runTurn } from './tour'
 import { attribuerDomicilesVille, initStockVille } from './domiciles'
 import {
   rangSocial, rangDe, prestigeDe, gainPrestigeTour, evaluerFamilles,
+  compterClassesSociales,
 } from './statutSocial'
 import { fullName, isNobleDyn } from './shared'
 import type { Character, GameState, Player } from './types'
@@ -270,4 +271,29 @@ test('B6 : mariageMemeRang — bonus de même rang social, libres entre conditio
     Math.abs((memeRang - rangsDifferents) - attendu) < 1e-9,
     `écart = mariageMemeRang (${attendu})`,
   )
+})
+
+// ── Classes sociales (carte de ville — 6e retour Thibaut 2026-10-28) ──
+
+test('compterClassesSociales : ordre hiérarchique noble > bourgeois > roturier, classes présentes seulement', () => {
+  const C = cfgOf()
+  const habitants = [
+    perso({ dynastie: 'Valmont' }),                                  // noble de naissance
+    perso({ dynastie: 'Valmont', prestige: 300 }),                   // noble (naissance ET prestige)
+    perso({ dynastie: C.p.dynastieRoturier, prestige: 250 }),        // noble par le prestige seul
+    perso({ dynastie: C.p.dynastieRoturier, prestige: 150 }),       // bourgeois
+    perso({ dynastie: C.p.dynastieRoturier, prestige: 0 }),         // roturier
+  ]
+  assert.deepEqual(compterClassesSociales(habitants, C), [
+    { rang: 'noble', nombre: 3 },
+    { rang: 'bourgeois', nombre: 1 },
+    { rang: 'roturier', nombre: 1 },
+  ])
+  // une seule classe présente → une seule ligne
+  assert.deepEqual(
+    compterClassesSociales([perso({ dynastie: C.p.dynastieRoturier, prestige: 120 })], C),
+    [{ rang: 'bourgeois', nombre: 1 }],
+  )
+  // ville vide → tableau vide (la carte affiche « aucun habitant »)
+  assert.deepEqual(compterClassesSociales([], C), [])
 })

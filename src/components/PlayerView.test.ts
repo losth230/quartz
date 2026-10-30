@@ -131,7 +131,7 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
   //  retour du jour : colonne gauche cultures + logements +
   //  garnison EMPILÉS, colonne droite les métiers — SUPERSEDÉ
   //  le damier 2×2 du matin) est rendu dans la carte ville.
-  assert.ok(h.includes('ville-duo-cols'), 'les deux colonnes (3 tableaux empilés + métiers) absentes de la carte ville')
+  assert.ok(h.includes('ville-duo-cols'), 'les deux colonnes (3 tableaux empilés + métiers + classes sociales) absentes de la carte ville')
   assert.ok(h.includes('ville-col-stack'), 'la colonne des 3 tableaux empilés absente de la carte ville')
   assert.ok(
     h.indexOf('Cultures présentes') < h.indexOf('Logements : <strong>') &&
@@ -293,6 +293,42 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
     h.includes(`<strong>${esc(fmt(enPosteTotal))}/${esc(fmt(nbVivants))}</strong>`),
     `total « ${fmt(enPosteTotal)}/${fmt(nbVivants)} » (en poste/vivants) absent du tableau métiers`,
   )
+  // ── CLASSES SOCIALES (retour Thibaut 2026-10-28, 6e retour :
+  //  « sous le tableau des métiers, un tableau avec les classes
+  //  sociales présentes dans la ville ») : même colonne droite
+  //  empilée, APRÈS le tableau des métiers — classes PRÉSENTES
+  //  seulement, ordre hiérarchique noble → bourgeois → roturier,
+  //  mêmes colonnes que les cultures (label · nombre · part des
+  //  vivants), dérivées du MÊME helper moteur que la carte.
+  const { compterClassesSociales } = await import('../engine/statutSocial')
+  const classes = compterClassesSociales(habitantsCap, C)
+  assert.ok(h.includes('Classes sociales'), 'titre « Classes sociales » absent de la carte ville')
+  assert.ok(
+    h.indexOf('Métiers : <strong>') < h.indexOf('Classes sociales'),
+    'le tableau des classes sociales doit suivre le tableau des métiers (colonne droite empilée)',
+  )
+  for (const cl of classes) {
+    const label = cl.rang[0].toUpperCase() + cl.rang.slice(1)
+    const partCl = nbVivants > 0 ? `${Math.round((100 * cl.nombre) / nbVivants)} %` : '—'
+    const cellule = cl.rang === 'noble'
+      ? `<strong>${label}</strong></td><td class="num">${esc(fmt(cl.nombre))}</td><td class="num muted">${partCl}</td>`
+      : `<span class="muted">${label}</span></td><td class="num">${esc(fmt(cl.nombre))}</td><td class="num muted">${partCl}</td>`
+    assert.ok(
+      h.includes(cellule),
+      `ligne classes sociales « ${label} » (${fmt(cl.nombre)}, ${partCl}) absente de la carte ville`,
+    )
+  }
+  // Les classes ABSENTES de la ville ne s'affichent pas — la
+  //  fixture compte des nobles et des roturiers (cf. rangDe :
+  //  dynasties nobles au setup), pas forcément de bourgeois.
+  for (const rang of ['noble', 'bourgeois', 'roturier'] as const) {
+    if (classes.some((cl) => cl.rang === rang)) continue
+    const label = rang[0].toUpperCase() + rang.slice(1)
+    assert.ok(
+      !h.includes(`>${label}</strong></td>`) && !h.includes(`>${label}</span></td>`),
+      `classe absente « ${label} » ne doit pas s'afficher dans le tableau des classes sociales`,
+    )
+  }
 })
 
 test('rendu VilleCarte : production épurée par défaut — non produites cachées, toggle « tout afficher » (retour Thibaut 2026-10-26)', async () => {
