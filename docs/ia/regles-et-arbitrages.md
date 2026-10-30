@@ -1833,7 +1833,7 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 | Dogme | Effet (type référentiel, valeur) |
 |---|---|
 | Dogme du Travail | travailNourriture +1 — sans-emplois de la culture : +1 Nourriture/tour (avant taxes, sans multiplicateur de rang) |
-| Dogme de la Famille | fecondite +0,1 — fécondité ×1,1 pour les personnages de la culture |
+| Dogme de la Famille | fecondite +0,1 — fécondité ×1,1 pour les personnages de la culture, CÔTÉ HOMME ET CÔTÉ FEMME (dans un couple, chaque époux porteur multiplie sa part) |
 | Dogme de la Patrie | gardeParHabitation +2 — cap de Garde +2 dans les villes de la culture |
 | Dogme de l'Égalité | consoNourrBourgeois 1 — les bourgeois de la culture consomment 1 Nourriture (FIXE : l'emporte sur régime et défaut) |
 | Dogme de la Solidarité | taudisParHabitation +5 — +5 Taudis par habitation de la culture (lits attribuables, entrée séparée de la loi) |
@@ -1843,7 +1843,7 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 | Dogme de l'Évangile | pressionCulture +0,1 — poids de la culture ×1,1 dans la conversion culturelle (le poids FINAL, présence locale incluse) |
 | Dogme de la Mère Patrie | tributVassal +0,05 — tribut REÇU par un suzerain de la culture ×1,05 (les DEUX chemins : fin de tour et impôt manuel ; le vassal paie SA part, la différence est créée) |
 | Dogme des Guerres Saintes | garnisonHorsCulture −40 — garnison des villes d'une AUTRE culture −40, une fois PAR culture porteuse (les villes porteuses sont protégées, plancher 0) |
-| Dogme du Nationalisme | conversionLocale +0,15 — habitants d'autres cultures vivant dans une ville de la culture : +15 %/tour de se convertir à elle (jet SUPPLÉMENTAIRE dédié après la tentative normale) |
+| Dogme du Nationalisme | conversionLocale +0,15 — habitants d'autres cultures vivant dans une ville de la culture : +15 % de chances DANS le tirage de conversion de se convertir à elle (pas de jet séparé) |
 
 ### Interprétations d'implémentation (à arbitrer)
 
@@ -1856,20 +1856,29 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 - **Égalité** : le dogme FIXE la consommation (1), il l'emporte
   sur la loi de régime et le défaut moteur ; sans `state` (cités
   libres), le dogme n'est pas consulté.
-- **Famille** : la fécondité modélisée étant la proba de
-  conception (côté femme), le ×1,1 s'applique là — un homme de la
-  culture marié à une femme d'une autre culture ne transmet pas
-  le bonus.
+- **Famille** (correctif arbitre 30/10, 4e retour : « le
+  multiplicateur est côté homme et femme ») : le ×1,1 porte sur le
+  facteur du personnage (homme ou femme) ET sur la part de l'ÉPOUX
+  dans le facteur de conception — une femme d'une autre culture
+  mariée à un porteur conçoit elle aussi ×1,1.
+- **Nationalisme** (correctif arbitre 30/10, 4e retour : « ce n'est
+  pas un nouveau jet, mais pris en compte dans le test de
+  conversion culturelle déjà présent ») : PAS de tirage séparé —
+  dans le tirage pondéré existant, la culture d'accueil gagne
+  +0,15 × le poids total des autres cultures. Les chances en plus
+  ne mènent QUE vers la culture d'accueil (jamais une tierce
+  culture), et le log est l'entrée de conversion normale.
+- **Portée générale** (confirmée par l'arbitre) : aucun dogme
+  n'a d'effet sur les personnages des autres cultures — seuls les
+  habitants de la culture porteuse (loi d'habitant) ou les villes
+  de la culture (loi de ville) sont touchés, selon la ligne du
+  tableau ci-dessus.
 - **Mère Patrie** : la culture du SUZERAIN compte (tribut reçu),
   pas celle du vassal — la différence ×1,05 est CRÉÉE pour le
   suzerain (même arbitrage que la loi « Vassaux dévoués »).
 - **Guerres Saintes** : à montant FIXE (pas × rang, contrairement
   à la Ferveur martiale), cumulées entre cultures porteuses,
   plancher 0 ; les cités libres ne portent pas la protection.
-- **Nationalisme** : jet dédié vers la culture d'ACCUEIL, APRÈS la
-  tentative normale — la conversion normale n'est jamais
-  « doublée », seulement complétée ; le log porte la mention
-  « (dogme du Nationalisme) ».
 - **Fraternité** : zéro effet moteur tant que les révoltes
   n'existent pas — retour Thibaut explicite « non implémenté ».
 - **Pas d'annonce de palier au journal de fin de tour** (choix
