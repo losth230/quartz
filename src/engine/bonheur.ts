@@ -33,6 +33,7 @@ import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
 import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
 import { tourismeCourant } from './regimes'
+import { effetsDogmeCulture } from './dogmes'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
 
@@ -107,7 +108,7 @@ export function emploisOffertsVille(state: GameState, p: Player, ville: City, C:
  *  du TEXTE historique en dernier recours (config très ancienne).
  *  1 logement = 1 habitant logé (arbitrage « 1 personne =
  *  1 maison », 2026-10-24). */
-export function logementsVille(ville: City, C: Cfg): number {
+export function logementsVille(ville: City, C: Cfg, state?: GameState): number {
   // (correctif audit B2, 2026-10-24 : source UNIQUE de vérité — le
   //  stock de la ville (City.domiciles, posé à la création et tenu
   //  par initStockVille) ; repli sur domicilesRang du rang si le
@@ -129,7 +130,7 @@ export function logementsVille(ville: City, C: Cfg): number {
   //  parc ne change pas, l'occupation monte, le score reste
   //  cohérent.)
   const apportes = domicilesApportesVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
-    + domicilesCultureVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
+    + domicilesCultureVille(ville, C, state).reduce((acc, e) => acc + e.nombre, 0)
   if (stockVille !== null) return stockVille + apportes
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),
@@ -171,7 +172,7 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   // LOGEMENT : par habitant (arbitrage v3 — retourné cohérent par
   //  le retour Thibaut 2026-10-26 : 1 logement = 1 habitant,
   //  l'attribution loge désormais AUSSI par habitant)
-  const logement = scoreOptimum(logementsVille(ville, C), habitants)
+  const logement = scoreOptimum(logementsVille(ville, C, state), habitants)
 
   // SÉCURITÉ : cible 100 × rang (arbitrage v3)
   const securite = scoreOptimum(garnisonHabitationVille(p, ville, C, state), 100 * rangNiveau(ville, C))
@@ -201,9 +202,17 @@ export function bonusBonheurRegime(p: Player, C: Cfg): number {
 
 /** Bonheur complet d'une ville : formule des 5 axes + la loi du
  *  régime « Le pouvoir du peuple » (Démocratie, +5 par habitation
- *  — refonte « 8 lois », 2026-10-29), plafonné à 100. */
+ *  — refonte « 8 lois », 2026-10-29), plafonné à 100.
+ *  (Dogme de la Liberté, 2026-10-30 : +v bonheur dans les villes
+ *  de la culture porteuse (effet bonheurVille, défaut +10) — loi
+ *  de VILLE (culture majoritaire de la cité), cumulé au bonus de
+ *  régime, AVANT le plafond 100.) */
 export function bonheurVilleComplete(state: GameState, p: Player, ville: City, C: Cfg): number {
-  return Math.min(100, bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C))
+  const dogme = effetsDogmeCulture(state, ville.culture, 'bonheurVille', C)
+  return Math.min(
+    100,
+    bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme,
+  )
 }
 
 /** Bonheur d'un joueur : moyenne des bonheurs de ses villes

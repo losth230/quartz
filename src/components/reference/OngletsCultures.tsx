@@ -3,7 +3,11 @@
 //  Onglets « Cultures & régimes », « Tourisme » et
 //  « Cités libres ». (Dogmes retirés du référentiel le 2026-10-24,
 //  retour arbitre Thibaut — l'onglet redevient « Tourisme », la
-//  carte « Dogmes » disparaît.)
+//  carte « Dogmes » disparaît. RETOUR DES DOGMES DÉFINITIFS le
+//  2026-10-30 : la carte « Dogmes de culture » revient dans
+//  l'onglet Tourisme — table des 12 dogmes retenus par Thibaut,
+//  choisis en jeu par le joueur dominant de chaque culture, cf.
+//  engine/dogmes.ts.)
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
@@ -87,18 +91,54 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
 export function OngletTourisme({ C }: { C: Cfg }) {
   const cfg = C.config
   return (
-    <Card title="Seuils de tourisme">
-      <div className="table-wrap">
-        <table className="tbl small">
-          <thead><tr><th>Seuil</th><th>Bonus</th></tr></thead>
-          <tbody>
-            {cfg.tourismeSeuils.map((t, i) => (
-              <tr key={i}><td>{t.seuil}</td><td>{t.bonus}</td></tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </Card>
+    <>
+      <Card title="Seuils de tourisme">
+        <div className="table-wrap">
+          <table className="tbl small">
+            <thead><tr><th>Seuil</th><th>Bonus</th></tr></thead>
+            <tbody>
+              {cfg.tourismeSeuils.map((t, i) => (
+                <tr key={i}><td>{t.seuil}</td><td>{t.bonus}</td></tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+      {/* RETOUR DES DOGMES (2026-10-30) : la carte « Dogmes » retirée du
+          wiki le 2026-10-24 revient — elle montre la table du
+          référentiel (les chiffres lus par le moteur, source de
+          vérité), PAS les dogmes pris en jeu (ça vit sur la page Pays
+          de chaque joueur). */}
+      <Card title={`Dogmes de culture (${cfg.dogmes?.length ?? 0})`}>
+        <p className="muted small">
+          À chaque palier de {Math.max(1, C.p.palierTourismeDogme)} de Tourisme cumulé par une
+          culture (toutes les villes de la culture, tous joueurs, sans les cités libres),
+          le joueur ayant le plus de Tourisme dans cette culture choisit UN dogme — les dogmes
+          se cumulent à l'infini et ne sont jamais remplaçables.
+        </p>
+        <div className="table-wrap">
+          <table className="tbl small">
+            <thead>
+              <tr><th>Dogme</th><th>Culture</th><th>Description</th><th>Effets (moteur)</th></tr>
+            </thead>
+            <tbody>
+              {(cfg.dogmes ?? []).map((d, i) => (
+                <tr key={i}>
+                  <td><strong>{d.nom}</strong></td>
+                  <td>{d.culture === '*' ? 'toutes' : d.culture}</td>
+                  <td className="muted">{d.description}</td>
+                  <td className="muted">
+                    {(d.effets ?? []).length === 0
+                      ? '—'
+                      : (d.effets ?? []).map((e) => `${e.type} ${e.valeur > 0 ? '+' : ''}${e.valeur}`).join(' · ')}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </Card>
+    </>
   )
 }
 

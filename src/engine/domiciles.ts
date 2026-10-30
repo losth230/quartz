@@ -49,6 +49,7 @@ import { cultureDef, type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
 import { logementsConstructionRef } from './constructions'
 import { rangDe } from './statutSocial'
+import { effetsDogmeCulture } from './dogmes'
 
 // ── Lecture du référentiel ───────────────────────────────────────────
 
@@ -126,11 +127,26 @@ export function taudisApportesVille(ville: City, C: Cfg): number {
  *  (convention inchangée, non visée par le retour) ; les Palais
  *  issus de la loi passent par la réserve noble commune
  *  (reserveNobleDomicile, retour 2026-10-28). */
-export function domicilesCultureVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
+export function domicilesCultureVille(
+  ville: City, C: Cfg, state?: GameState,
+): Array<{ domicile: string; nombre: number }> {
   const cult = cultureDef(ville.culture, C.config)
   const out: Array<{ domicile: string; nombre: number }> = []
   if (cult?.taudisParHabitation) out.push({ domicile: 'Taudis', nombre: cult.taudisParHabitation })
   if (cult?.palaisParHabitation) out.push({ domicile: 'Palais', nombre: cult.palaisParHabitation })
+  // (Dogme de la Solidarité, 2026-10-30 : +v TAUDIS par habitation
+  //  de la culture porteuse (effet taudisParHabitation, défaut +5)
+  //  — même nature que la loi « Logements élargis » du
+  //  Communautarisme : entrée SÉPARÉE (pas fusionnée avec la loi,
+  //  pour garder les deux visibles au détail), lits ATTRIBUTABLES
+  //  par le même chemin (parc bonheur + attribution nominative).
+  //  Loi de VILLE : culture majoritaire de la cité. Le `state`
+  //  est OPTIONNEL : sans lui (appels sans état) le dogme n'est
+  //  pas consulté — comportement inchangé.)
+  if (state) {
+    const solid = effetsDogmeCulture(state, ville.culture, 'taudisParHabitation', C)
+    if (solid > 0) out.push({ domicile: 'Taudis', nombre: solid })
+  }
   return out
 }
 
@@ -196,7 +212,7 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
   //  (domicilesApportesVille) restent hors attribution, convention
   //  inchangée. Les Palais issus de la loi passent par la même
   //  réserve noble que les autres (reserveNobleDomicile).
-  for (const e of domicilesCultureVille(ville, C)) {
+  for (const e of domicilesCultureVille(ville, C, state)) {
     stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
   }
   // ordre de service : prestige décroissant (haut rang d'abord),

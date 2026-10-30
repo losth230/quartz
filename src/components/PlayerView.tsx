@@ -45,6 +45,7 @@ import { Card } from './ui'
 import { RessourcesBar } from './pays/RessourcesBar'
 import { AideAuto } from './pays/AideAuto'
 import { CulturePays } from './pays/CulturePays'
+import { choisirDogme } from '../engine/dogmes'
 import { VillesCarte } from './pays/VillesCarte'
 import { CommerceRoutes } from './pays/CommerceRoutes'
 import { RecapParTour } from './pays/RecapParTour'
@@ -72,6 +73,26 @@ export function PlayerView({ joueur }: { joueur: number }) {
       if (target) fn(target, s)
     })
 
+  // ── Dogmes de culture (2e séance du 30/10) : le joueur DOMINANT choisit
+  //    un dogme par palier de Tourisme franchi par la culture. Le joueur
+  //    est résolu DANS le mutateur (comme faireConstruire) — choisirDogme
+  //    valide tout seul (palier franchi, non consommé, dogme au
+  //    référentiel, dominant) et journalise en « Culture » ; un refus
+  //    part au journal « Système » (la vue ne propose que des choix
+  //    valides, ce garde-fou couvre les courses entre vues/joueurs).
+  const choisirDogmeJoueur = (palier: number, nom: string) =>
+    update((s) => {
+      const t = s.players.find((x) => x.n === joueur)
+      if (!t) return
+      const err = choisirDogme(s, t.culture, palier, nom)
+      if (err) {
+        s.log.push({
+          turn: s.turn, type: 'Système', joueur: t.n,
+          texte: `⚠ ${err}`,
+        })
+      }
+    })
+
   // ── Production / tour détaillée (calculée, non modifiable) ────────────
   // OPTIMISATION RENDU 2026-10-16 : ces calculs parcourent les
   //  populations entières (~4 ms à 16 000 habitants) — mémoïsés par
@@ -97,8 +118,9 @@ export function PlayerView({ joueur }: { joueur: number }) {
           (a)) — bloc repliable en tête de page Pays. */}
       <AideAuto />
 
-      {/* Culture du pays : règle de pays chiffrée + bonus adapté. */}
-      <CulturePays state={state} p={p} C={C} />
+      {/* Culture du pays : règles de ville/habitant + dogmes (le dominant
+          choisit — mutateur choisirDogmeJoueur ci-dessus). */}
+      <CulturePays state={state} p={p} C={C} choisir={choisirDogmeJoueur} />
 
       {/* Villes : aménagements, bâtiments, autres, cultures, taxes. */}
       <VillesCarte

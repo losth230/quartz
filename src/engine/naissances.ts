@@ -13,6 +13,7 @@ import { taxBirthFactor } from './economie'
 import { killCharacter } from './sante'
 import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
+import { effetsDogmeCulture } from './dogmes'
 
 
 // Index de population (vague 2) : module bas dédié indexPopulation.ts.
@@ -34,6 +35,12 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   proba *= factorMari
   proba *= traitsFertFactor(c, mari ?? null, C)
   proba *= cultureFertFactor(p.culture, C)
+  // (Dogme de la Famille, 2026-10-30 : +v de fécondité pour les
+  //  personnages de la culture porteuse (effet fecondite, défaut
+  //  +0,1), où qu'ils vivent — culture PROPRE du personnage
+  //  (c.culture), additif au facteur : ×(1+v). Cumulé au facteur
+  //  de culture du PORTEUR ci-dessus et aux traits.)
+  proba *= 1 + effetsDogmeCulture(state, c.culture, 'fecondite', C)
   proba *= orientationFertFactor(c.orientation)
   proba *= taxBirthFactor(ville, C)
   return proba

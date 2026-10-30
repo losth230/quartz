@@ -12,6 +12,7 @@ import { cfgOf, cultureDef, traitDef, type Cfg } from './gameData'
 import { buildingDef } from './gameData2'
 import { bump, fullName, isNobleDyn, toutesLesPopulations } from './shared'
 import { metierAllowedForCharacter } from './metiers'
+import { effetsDogmeCulture } from './dogmes'
 
 // ── Mortalité (rework habitants 2026-10-20) ──────────────────────────────
 //  Plus d'âge-plafond ni de résurrection : la maladie est la SEULE cause
@@ -74,6 +75,12 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
   //  culture PROPRE, où qu'il vive (loi d'HABITANT, pas loi de
   //  ville). Champ maladieContractMod (−0,02), additif au reste.)
   contractMod += cultureDef(c.culture, C.config)?.maladieContractMod ?? 0
+  // (Dogme de la Santé, 2026-10-30 : −5 points de contraction pour
+  //  les personnages de la culture porteuse (effet
+  //  maladieContractMod, valeur négative au référentiel), où
+  //  qu'ils vivent — culture PROPRE du personnage, même lecture que
+  //  la loi « Lavages de main » du Déisme, additif au reste.)
+  contractMod += effetsDogmeCulture(state, c.culture, 'maladieContractMod', C)
   if (c.statut === 'Sain' || c.statut === 'Enceinte') {
     // (RETRAIT 2026-10-25 : plus de surrisque grossesse — les
     //  femmes enceintes contractent comme les autres)

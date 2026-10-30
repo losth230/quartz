@@ -11,6 +11,7 @@ import { cfgOf } from './gameData'
 import { bump, fullName } from './shared'
 import { productionTourismeBatiment } from './batiments'
 import { detailGainsVille } from './economie'
+import { effetsDogmeCulture } from './dogmes'
 
 // ── Influence culturelle (ApplyCultureInfluence) ─────────────────────────
 
@@ -71,23 +72,52 @@ export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, rec
   }
   for (const c of pop) {
     if (c.statut === 'Décédé' || c.metier === C.p.metierDirigeant) continue
-    if (!rng.chance(C.p.conversionProba)) continue
-    const poids: Record<string, number> = {}
-    for (const [cult, w] of Object.entries(pression)) {
-      let weight = w
-      if (cult === c.culture) weight *= C.p.conversionMemeCulture // présence locale
-      const same = pop.filter((x) => x.statut !== 'Décédé' && x.ville === c.ville && x.culture === cult).length
-      weight += same * C.p.conversionPoidsLocal
-      poids[cult] = weight
+    // (Dogme du Nationalisme, 2026-10-30 : la culture de la ville
+    //  d'ACCUEIL du personnage, capturée AVANT toute conversion du
+    //  tour — un habitant d'une AUTRE culture vivant dans une ville
+    //  de la culture porteuse recevra, après la tentative normale,
+    //  un jet SUPPLÉMENTAIRE de +v chances de se convertir à elle
+    //  (effet conversionLocale, défaut +0,15).)
+    const culteAccueil = p.villes.find((v) => v.nom === c.ville)?.culture
+    const nationalism = culteAccueil && culteAccueil !== c.culture
+      ? effetsDogmeCulture(state, culteAccueil, 'conversionLocale', C)
+      : 0
+    if (rng.chance(C.p.conversionProba)) {
+      const poids: Record<string, number> = {}
+      for (const [cult, w] of Object.entries(pression)) {
+        let weight = w
+        if (cult === c.culture) weight *= C.p.conversionMemeCulture // présence locale
+        // (Dogme de l'Évangile, 2026-10-30 : la culture porteuse
+        //  est ×(1+v) plus importante dans la conversion
+        //  culturelle (effet pressionCulture, défaut ×1,1) — le
+        //  poids FINAL de la culture (pression + présence locale)
+        //  est multiplié, pas seulement la pression touristique.)
+        weight *= 1 + effetsDogmeCulture(state, cult, 'pressionCulture', C)
+        const same = pop.filter((x) => x.statut !== 'Décédé' && x.ville === c.ville && x.culture === cult).length
+        weight += same * C.p.conversionPoidsLocal
+        poids[cult] = weight
+      }
+      const entries = Object.entries(poids)
+      const nouvelle = rng.pickWeighted(entries, (e) => e[1])[0]
+      if (nouvelle !== c.culture) {
+        c.culture = nouvelle
+        bump(recap.conversions, nouvelle)
+        state.log.push({
+          turn: state.turn + 1, type: 'Culture', joueur: p.n,
+          texte: `${fullName(c)} se convertit à la culture ${nouvelle}.`,
+        })
+      }
     }
-    const entries = Object.entries(poids)
-    const nouvelle = rng.pickWeighted(entries, (e) => e[1])[0]
-    if (nouvelle !== c.culture) {
-      c.culture = nouvelle
-      bump(recap.conversions, nouvelle)
+    // (Dogme du Nationalisme, suite) : jet dédié APRÈS la tentative
+    //  normale — si celle-ci a déjà converti le personnage
+    //  (éventuellement vers la culture d'accueil), il ne se passe
+    //  rien ; le jet porte UNIQUEMENT vers la culture d'accueil.
+    if (nationalism > 0 && culteAccueil && c.culture !== culteAccueil && rng.chance(nationalism)) {
+      c.culture = culteAccueil
+      bump(recap.conversions, culteAccueil)
       state.log.push({
         turn: state.turn + 1, type: 'Culture', joueur: p.n,
-        texte: `${fullName(c)} se convertit à la culture ${nouvelle}.`,
+        texte: `${fullName(c)} se convertit à la culture ${culteAccueil} (dogme du Nationalisme).`,
       })
     }
   }
