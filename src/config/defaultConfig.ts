@@ -398,7 +398,7 @@ export interface DomicileDefConfig {
 
 /** Dogme de culture (fondations « mise en forme » 2026-10-30,
  *  arbitrages Thibaut du 30/10 — cf. engine/dogmes.ts) : un dogme
- *  est choisi par le joueur dominant d'une culture à chaque palier
+ *  est choisi par le pontife d'une culture à chaque palier
  *  de Tourisme franchi et affecte les habitants ou les villes de
  *  cette culture. RETOUR DES DOGMES DÉFINITIFS (2026-10-30, 2e
  *  séance — table des 12 dogmes retenus par Thibaut) : les effets
@@ -1533,18 +1533,35 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  purge idempotemment les configs antérieures au 24/10 tout en
   //  laissant passer les entrées du nouveau format. Sans bump de
   //  SCHEMA_VERSION_CONFIG (patron taxes25).
-  const dogmesFusionnes = (merged as { dogmes?: Array<{ culture?: unknown }> }).dogmes
-  //  On POSE toujours la table (clé absente des configs d'avant le
-  //  30/10 → liste vide) : gardeFous n'est appelé que dans la branche
-  //  « déjà convergée » de cfgOf, la clé doit donc être posée ICI
-  //  pour être bien typée dans les DEUX branches (nouvelles ET
-  //  anciennes configs). Une table explicitement vidée par l'arbitre
-  //  reste vide (défiltra → []), une table d'ancien format est purgée
-  //  de la même façon qu'avec un delete — sans jamais faire revenir
-  //  les entrées supprimées (règle (x)).
+  const dogmesBruts = (c as { dogmes?: Array<{ culture?: unknown }> }).dogmes
+  //  On POSE toujours la table : gardeFous n'est appelé que dans la
+  //  branche « déjà convergée » de cfgOf, la clé doit donc être posée
+  //  ICI pour être bien typée dans les DEUX branches (nouvelles ET
+  //  anciennes configs).
+  //  (INCIDENT 6e RETOUR, 2026-10-30 — « je n'arrive pas à choisir de
+  //  dogme, la table du référentiel est vide » signalé par Thibaut :
+  //  l'ancien code filtrait la table FUSIONNÉE {...DEFAULT_CONFIG,
+  //  ...c} — la table SAUVEGARDÉE (vieille table d'avant le 24/10 à
+  //  purger, ou [] déjà estampillé par une convergence précédente)
+  //  ÉCRASAIT les dogmes du défaut PUIS, une fois le [] convergé et
+  //  re-sauvegardé, les masquait à CHAQUE relecture (fusion : le []
+  //  de la config gagne sur le défaut). Correctif : la table
+  //  sauvegardée ne masque les défauts QUE si elle contient des
+  //  entrées du NOUVEAU format (table personnalisée) ; absente, VIDE
+  //  ([]), ou tout ANCIEN format (config d'avant le 30/10), on
+  //  retombe sur les DÉFAUTS — ce qui AMENDE la propriété « une table
+  //  explicitement vidée par l'arbitre reste vide » : pour vider le
+  //  référentiel, on retire les entrées du défaut ci-dessous, pas via
+  //  une config vide. Les entrées ANCIENNES supprimées ne reviennent
+  //  jamais (règle (x)) — elles restent purgées, seules celles du
+  //  défaut réapparaissent.)
+  const estDogmeNouveauFormat = (d: { culture?: unknown }) =>
+    typeof d?.culture === 'string' && d.culture !== ''
+  const tableSauvegardee = (Array.isArray(dogmesBruts) ? dogmesBruts : [])
+    .filter(estDogmeNouveauFormat)
+  const tableDefaut = (DEFAULT_CONFIG.dogmes ?? []).filter((d) => estDogmeNouveauFormat(d))
   ;(merged as { dogmes?: unknown }).dogmes =
-    (Array.isArray(dogmesFusionnes) ? dogmesFusionnes : [])
-      .filter((d) => typeof d?.culture === 'string' && d.culture !== '')
+    tableSauvegardee.length > 0 ? tableSauvegardee : tableDefaut
   // RETRAIT DES ÉVÉNEMENTS DE SAISON ET DES CARTES DYNASTIE (retour
   //  arbitre Thibaut 2026-10-24) : les tables `events`, `dynasties`,
   //  `eventEffets` et `dynastieEffets` n'existent plus dans le type

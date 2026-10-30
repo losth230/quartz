@@ -527,9 +527,11 @@ export interface HistoryRow {
  *  joueur ayant le plus de Tourisme dans cette culture choisit un
  *  dogme qui affecte les habitants ou les villes de cette culture.
  *  Un dogme à CHAQUE palier, les dogmes se CUMULENT à l'infini et
- *  ne sont JAMAIS remplaçables ; le dominant peut changer d'un
+ *  ne sont JAMAIS remplaçables ; le pontife peut changer d'un
  *  palier à l'autre ; dogmes, lois et effets de culture se
- *  CUMULENT. (À ce stade AUCUN dogme n'existe au référentiel —
+ *  CUMULENT. (6e retour 2026-10-30 : le rôle « joueur dominant »
+ *  est rebaptisé PONTIFE, arbitrage Thibaut « remplace dominant
+ *  par pontife ». À ce stade AUCUN dogme n'existe au référentiel —
  *  aucune règle moteur ne lit encore ce champ : cf.
  *  engine/dogmes.ts.) */
 export interface Dogme {
@@ -542,7 +544,7 @@ export interface Dogme {
   /** Nom du dogme choisi — doit exister dans la table `dogmes` du
    *  référentiel (DogmeDef, encore vide à ce stade). */
   nom: string
-  /** N° du joueur DOMINANT (le plus de Tourisme dans cette culture)
+  /** N° du PONTIFE (le plus de Tourisme dans cette culture)
    *  au moment du choix — pas nécessairement le joueur qui exécute
    *  l'action. */
   choisiPar: number

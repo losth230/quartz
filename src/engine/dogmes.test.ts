@@ -8,7 +8,7 @@
 //      villes de cette culture, TOUS JOUEURS confondus, SANS les
 //      cités libres (même lecture que le tableau de production de
 //      la ville — productionVille).
-//   3. Le choix revient au joueur DOMINANT de la culture au moment
+//   3. Le choix revient au PONTIFE de la culture au moment
 //      du choix (égalité : plus petit n° de joueur).
 //   4. Le dogme doit exister dans la table `dogmes` du référentiel —
 //      la table des 12 DOGMES DÉFINITIFS retenus par Thibaut y est
@@ -48,7 +48,7 @@ import { transfererTributVassal } from './vassalite'
 import { cloneDefaultConfig, type DogmeDef } from '../config/defaultConfig'
 import {
   tourismeVille, tourismeCulture, nbPaliersDogmes, dogmesCulture,
-  joueurDominantCulture, paliersDogmesEnAttente, choisirDogme,
+  joueurPontifeCulture, paliersDogmesEnAttente, choisirDogme,
   effetsDogmeCulture, dogmesDisponiblesCulture,
 } from './dogmes'
 
@@ -146,12 +146,12 @@ test('nbPaliersDogmes : un palier tous les palierTourismeDogme, cumul à l infin
   assert.equal(nbPaliersDogmes(50, C), 2, 'palier édité à 25 : 50 → 2')
 })
 
-test('joueurDominantCulture : le plus de Tourisme dans SES villes de la culture ; égalité → plus petit n° (arbitrage n°3)', () => {
+test('joueurPontifeCulture : le plus de Tourisme dans SES villes de la culture ; égalité → plus petit n° (arbitrage n°3)', () => {
   const { state, C } = partie()
   const base = state.players[0]
   // personne : undefined
-  assert.equal(joueurDominantCulture(state, 'Culture Nordique', C), undefined,
-    'aucun Tourisme dans la culture : pas de dominant')
+  assert.equal(joueurPontifeCulture(state, 'Culture Nordique', C), undefined,
+    'aucun Tourisme dans la culture : pas de pontife')
   // deux joueurs, la culture portée par leurs villes fantômes
   const j1 = joueurVille(base, 1, 'Culture Nordique', ['Conjuratoire'])
   const j2 = joueurVille(base, 2, 'Culture Nordique', ['Conjuratoire', 'Conjuratoire'])
@@ -160,18 +160,18 @@ test('joueurDominantCulture : le plus de Tourisme dans SES villes de la culture 
   state.population[1] = []
   state.population[2] = []
   state.population[3] = []
-  const dom = joueurDominantCulture(state, 'Culture Nordique', C)
-  assert.ok(dom, 'un dominant existe dès qu un joueur porte du Tourisme')
+  const dom = joueurPontifeCulture(state, 'Culture Nordique', C)
+  assert.ok(dom, 'un pontife existe dès qu un joueur porte du Tourisme')
   assert.equal(dom!.joueur.n, 2, 'deux Conjuratoires battent un seul')
   // égalité parfaite : le plus PETIT n° l emporte (déterminisme)
   const j0bis = joueurVille(base, 0, 'Culture Nordique', ['Conjuratoire'])
   state.players = [j0bis, j3]
   state.population[0] = []
-  const domEgalite = joueurDominantCulture(state, 'Culture Nordique', C)
+  const domEgalite = joueurPontifeCulture(state, 'Culture Nordique', C)
   assert.equal(domEgalite!.joueur.n, 0, 'égalité : le plus petit n° de joueur l emporte')
 })
 
-test('paliersDogmesEnAttente : franchis moins consommés, dominant évalué à la lecture', () => {
+test('paliersDogmesEnAttente : franchis moins consommés, pontife évalué à la lecture', () => {
   const { state, C } = partie()
   const base = state.players[0]
   const j1 = joueurVille(base, 1, 'Culture Nordique', ['Conjuratoire', 'Conjuratoire', 'Conjuratoire', 'Conjuratoire'])
@@ -185,7 +185,7 @@ test('paliersDogmesEnAttente : franchis moins consommés, dominant évalué à l
   assert.equal(attente.length, 4, '4 paliers franchis, 0 dogmes pris → 4 en attente')
   assert.deepEqual(attente.map((a) => a.palier), [t, 2 * t, 3 * t, 4 * t],
     'paliers dans l ordre croissant')
-  assert.equal(attente[0]!.dominant?.joueur.n, 1, 'le dominant porte le choix')
+  assert.equal(attente[0]!.pontife?.joueur.n, 1, 'le pontife porte le choix')
   // le choix d un palier consomme SON palier, pas les autres
   ajouterDogmes(C, 'Dogme A', 'Dogme B')
   assert.equal(choisirDogme(state, 'Culture Nordique', t, 'Dogme A'), null)
@@ -223,7 +223,7 @@ test('choisirDogme : cumul à l infini, jamais remplaçable, palier à franchir,
   // 3. palier non multiple du pas : refus
   assert.ok(choisirDogme(state, 'Culture Nordique', t + 1, 'Dogme A') !== null,
     'palier non multiple : refus')
-  // 4. succès : inscription + journal Culture + dominant
+  // 4. succès : inscription + journal Culture + pontife
   const nbLogs = state.log.length
   assert.equal(choisirDogme(state, 'Culture Nordique', t, 'Dogme A'), null, 'premier choix : succès')
   assert.equal(state.dogmes?.length, 1)
@@ -232,7 +232,7 @@ test('choisirDogme : cumul à l infini, jamais remplaçable, palier à franchir,
   assert.equal(d1!.culture, 'Culture Nordique')
   assert.equal(d1!.palier, t)
   assert.equal(d1!.nom, 'Dogme A')
-  assert.equal(d1!.choisiPar, 1, 'inscrit au nom du joueur DOMINANT, pas de l appelant')
+  assert.equal(d1!.choisiPar, 1, 'inscrit au nom du PONTIFE, pas de l appelant')
   assert.equal(d1!.choisiAuTour, state.turn)
   assert.equal(state.log.length, nbLogs + 1, 'une entrée de journal')
   assert.equal(state.log[state.log.length - 1]!.type, 'Culture')
@@ -268,7 +268,7 @@ test('normaliserEtat : state.dogmes complété pour les vieilles sauvegardes, in
   assert.deepEqual(state.dogmes, [entree], 'les dogmes pris ne sont JAMAIS touchés')
 })
 
-test('cfgOf garde-fou : clé absente → défaut hérité, table vidée respectée, ancien format purgé', () => {
+test('cfgOf garde-fou : clé absente → défaut hérité, ancien format → défaut, table perso nouveau format conservée', () => {
   const { state } = partie()
   // (RETOUR DES DOGMES DÉFINITIFS : le défaut porte maintenant les 12
   //  dogmes — une config sans la clé `dogmes` (sauvegarde d avant le
@@ -280,17 +280,29 @@ test('cfgOf garde-fou : clé absente → défaut hérité, table vidée respect�
   delete (cfg as { dogmes?: unknown }).dogmes
   const C = cfgOf(cfg as never)
   assert.equal(C.config.dogmes?.length, 12, 'clé absente → défaut du référentiel hérité (12 dogmes)')
-  // une table EXPLICITEMENT vidée par l arbitre reste vide
-  //  (défiltra → [], jamais de réintégration forcée)
-  C.config.dogmes = []
-  assert.deepEqual(cfgOf(C.config).config.dogmes, [], 'une table vidée par l arbitre reste vide')
+  // (INCIDENT 6e RETOUR 2026-10-30 — « je n arrive pas à choisir de
+  //  dogme, la table du référentiel est vide » : un [] estampillé
+  //  par la purge de l ancien format, une fois convergé et
+  //  re-sauvegardé, masquait les 12 défauts à CHAQUE relecture (le
+  //  [] de la config gagne la fusion {...DEFAULT_CONFIG, ...c}).
+  //  AMENDEMENT de l arbitrage « une table explicitement vidée par
+  //  l arbitre reste vide » : une table VIDE ne masque plus les
+  //  défauts — pour vider le référentiel, on retire les entrées du
+  //  DÉFAUT, pas via une config vide. Verrouillé ici.)
+  assert.equal(cfgOf({ ...(state.config as object), dogmes: [] } as never).config.dogmes?.length, 12,
+    'une table vide [] retombe sur les défauts (guérison des configs estampillées)')
   // l ANCIEN format (entrées sans champ culture — table d affichage
-  //  retirée le 24/10) est purgé par cfgOf, le NOUVEAU passe intact
+  //  retirée le 24/10) est purgé ET ne masque pas non plus les
+  //  défauts : on retombe sur les 12, et les entrées anciennes ne
+  //  reviennent PAS (règle (x))
   const ancien = cfgOf({
     ...(state.config as object),
     dogmes: [{ nom: 'Foi des anciens', bonus: '+1 Pontife' }],
   } as never)
-  assert.deepEqual(ancien.config.dogmes, [], 'l ancien format (sans champ culture) est purgé')
+  assert.equal(ancien.config.dogmes?.length, 12,
+    'l ancien format est purgé → les défauts (les entrées anciennes ne reviennent jamais)')
+  assert.ok(!ancien.config.dogmes?.some((d) => d.nom === 'Foi des anciens'),
+    'l entrée d ancien format ne revient jamais (règle (x))')
   const neuf = cfgOf({
     ...(state.config as object),
     dogmes: [{ nom: 'Dogme neuf', culture: 'Déisme', description: 'test' }],
