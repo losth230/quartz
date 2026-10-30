@@ -70,33 +70,31 @@ export interface EffetFluxVille {
 //  (cultures). Types retirés : fluxJoueur (régimes & cultures
 //  historiques), fluxCapitale, garnisonParRang, tourismeInstantane,
 //  habitantsVille, conversionPoids, migrationPoids, reductionCout,
-//  reductionLeveeArmee, emissaires (avec son champ mort marchandsMax —
+//  reductionLeveeArmee — RESTAURÉ le 2026-10-28 avec un producteur
+//  (fiches de constructions, arbitrage Thibaut « les armées, et
+//  surtout les réductions de levée, rejoignent la banque » : le type
+//  rejoint les types vivants ci-dessous, voir
+//  EffetReductionLeveeArmee) —, emissaires (avec son champ mort marchandsMax —
 //  reliquat du métier de Marchand retiré), scienceInstantanee,
 //  ressourcesInstantanees, demographieVille — plomberie des
 //  techs/doctrines/dogmes/Lauriers, systèmes tous supprimés. L'ancien
 //  contenu reste dans l'historique git, règle 9.)
 
-/** Production par tour, par AMÉNAGEMENT portant l'un des noms listés,
- *  dans TOUTES les villes du joueur (ex. Socialisme : +N Nourriture
- *  d'été par Champ et Rizière — champ nourrEteChampRiziere du
- *  référentiel, brûlage #3 source 2/3). */
-export interface EffetFluxParAmenagement {
-  type: 'fluxParAmenagement'
-  ressource: string
-  valeur: number
-  /** noms d'aménagements comptés (ex. ['Champ', 'Rizière']) */
-  noms: string[]
-}
+// ── (RETRAIT 2026-10-29, refonte « 8 lois » des régimes) ──────────
+//  EffetFluxParAmenagement : SUPPRIMÉ avec la source 'regime' de la
+//  banque — sa seule règle vivante était le Socialisme « Pour le
+//  peuple » (+N Nourriture d'été par Champ/Rizière, champ
+//  nourrEteChampRiziere), REMPLACÉE par « Terre d'accueil » et
+//  « Redistribution » lues par le moteur. Aucune construction du
+//  référentiel n'utilisait ce type. L'ancien contenu reste dans
+//  l'historique git, règle 9.
 
-/** Production par tour, par VILLE de la culture du joueur dans le
- *  MONDE entier, tous joueurs confondus (ex. Lunisme : +N Tourisme
- *  par ville de culture Lunisme — règle de pays du classeur, champs
- *  capitalNourr/Tourisme/OrParHabMonde). */
-export interface EffetFluxParVilleCultureMonde {
-  type: 'fluxParVilleCultureMonde'
-  ressource: string
-  valeur: number
-}
+// ── (RETRAIT 2026-10-29, refonte « 12 lois » des cultures) ──────────
+//  EffetFluxParVilleCultureMonde : SUPPRIMÉ avec la source
+//  'culture' (règles de pays « +N par ville de cette culture dans le
+//  monde », champs capitalNourr/Tourisme/OrParHabMonde) — remplacé
+//  par les lois de VILLE et d'HABITANT lues par le moteur. L'ancien
+//  contenu reste dans l'historique git, règle 9.
 
 // ── (RETRAIT 2026-10-24, retour arbitre) ──────────────────────────────
 //  Effets des technologies de progrès (source 'tech', brûlage #3
@@ -114,12 +112,48 @@ export interface EffetGarnisonVille {
   valeur: number
 }
 
+/** Emplacements de métier accordés dans la ville du contexte (retour
+ *  Thibaut 2026-10-27 : l'attribution de métiers passe par la banque —
+ *  les `emplacements` du référentiel sont traduits en effet
+ *  `placesMetier` par le registre, comme les flux ; ex. Poste de
+ *  garde : +4 Garde). */
+export interface EffetPlacesMetier {
+  type: 'placesMetier'
+  metier: string
+  valeur: number
+}
+
+/** Réduction d'Or sur une LEVÉE D'ARMÉE dans la ville du contexte
+ *  (arbitrage Thibaut 2026-10-28 : « les armées, et surtout les
+ *  réductions de levée, rejoignent la banque » — les
+ *  reductionLeveeArmee des fiches de constructions sont traduits en
+ *  effet de banque par le registre, comme les flux ; ex. Terrain
+ *  d'entrainement : −10 Or, Ecole militaire : −25 Or. Restauration
+ *  du type purgé le 2026-10-24 « sans producteur » : il revient
+ *  AVEC un producteur, même schéma que placesMetier/logements.) */
+export interface EffetReductionLeveeArmee {
+  type: 'reductionLeveeArmee'
+  valeur: number
+}
+
+/** Logements ajoutés au parc de la ville du contexte (retour Thibaut
+ *  2026-10-27 : les logements passent par la banque — les
+ *  taudisApportes et domicilesApportes du référentiel sont traduits en
+ *  effet `logements` ; ex. Champ : +5 Taudis, Quartier intermédiaire :
+ *  +20 Maisons). */
+export interface EffetLogements {
+  type: 'logements'
+  logement: string
+  valeur: number
+}
+
 /** Union : TOUS les types d'effets de la banque. */
 export type Effet =
   | EffetFluxVille
-  | EffetFluxParAmenagement
-  | EffetFluxParVilleCultureMonde
   | EffetGarnisonVille
+  | EffetPlacesMetier
+  | EffetReductionLeveeArmee
+  | EffetLogements
 
 // ── Conditions ─────────────────────────────────────────────────────────────
 
@@ -128,15 +162,17 @@ export type Effet =
  *  (RETRAIT 2026-10-24, purge R4 : les conditions SANS PRODUCTEUR sont
  *  supprimées — peuple, pontificatMin, ageMin, vassal, suzerainDeCite
  *  (plomberie des règles de factions/dogmes, systèmes supprimés).
- *  Les producteurs actuels n'utilisent que saison, regime et
- *  culture. L'ancien contenu reste dans l'historique git, règle 9.) */
+ *  Les producteurs actuels n'utilisent que la saison. L'ancien
+ *  contenu reste dans l'historique git, règle 9.) */
 export interface ConditionRegle {
   /** Saison requise (ex. effets d'été). */
   saison?: string
-  /** Régime politique du joueur requis (ex. Socialisme). */
-  regime?: string
-  /** Culture du joueur requise (ex. Lunisme — règle de pays). */
-  culture?: string
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la
+  //  condition `regime` est supprimée avec la source 'regime' —
+  //  plus aucune loi de régime ne vit dans la banque.)
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : la condition
+  //  `culture` est supprimée avec la source 'culture' — les règles
+  //  de pays des cultures n'existent plus.)
   // (RETRAIT 2026-10-24 : les conditions `tech` et `techNom` —
   //  technologie débloquée requise — sont supprimées avec le
   //  système de progrès, retour arbitre.)
@@ -156,9 +192,16 @@ export interface ConditionRegle {
 export type SourceRegle =
   | 'batiment'        // table constructions, catégorie Bâtiment
   | 'amenagement'    // table constructions, catégorie Aménagement
-  | 'merveille'      // table constructions, famille Merveille
-  | 'regime'          // loi chiffrée du régime politique
-  | 'culture'         // règle de pays culturelle
+  //  'regime' RETIRÉ le 2026-10-29 (refonte « 8 lois » des régimes :
+  //  plus aucune loi de régime ne passe par la banque — les lois
+  //  vivent dans le moteur) — la valeur n'est jamais à réutiliser
+  //  (stabilité des règles déjà saisies).
+  //  'culture' RETIRÉ le 2026-10-29 (refonte « 12 lois » :
+  //  suppression des règles de pays des cultures) — la valeur
+  //  n'est jamais à réutiliser (stabilité des règles saisies).
+  //  'merveille' RETIRÉ le 2026-10-27 (audit : suppression des
+  //  merveilles, retour Thibaut) — la valeur n'est jamais à réutiliser
+  //  (stabilité des règles déjà saisies).
   //  'tech' RETIRÉ le 2026-10-24 (retour arbitre : suppression du
   //  système de progrès) — la valeur n'est jamais à réutiliser
   //  (stabilité des règles déjà saisies).
@@ -209,4 +252,17 @@ export interface ContributionEffets {
   fluxEte: Record<string, number>
   /** Garnison totale ajoutée au site. */
   garnison: number
+  /** Emplacements de métier par métier (retour Thibaut 2026-10-27 :
+   *  canal des `emplacements` du référentiel, clé = métier). */
+  placesMetier: Record<string, number>
+  /** Logements apportés au parc de la ville (retour Thibaut
+   *  2026-10-27 : canal des taudisApportes / domicilesApportes,
+   *  clé = type de logement). */
+  logements: Record<string, number>
+  /** Réduction d'Or sur une LEVÉE D'ARMÉE dans la ville du contexte
+   *  (retour Thibaut 2026-10-28 : canal des reductionLeveeArmee des
+   *  fiches de constructions, lu par reductionLeveeBatiments —
+   *  engine/constructions.ts — pour le prix d'une levée dans la
+   *  ville). */
+  reductionLeveeArmee: number
 }

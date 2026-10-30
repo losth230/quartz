@@ -7,11 +7,36 @@
 
 import type { GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf } from './gameData'
+import { cfgOf, metierDef, regimeDef } from './gameData'
+import type { Cfg } from './gameData'
+import { reductionLeveeBatiments } from './constructions'
+import { rangPaysNiveau } from './rangs'
 import { emptyRecap, fullName } from './shared'
-import { reductionLeveeArmeesMerveilles } from './merveilles'
 
 // ── Armées (RecruitForArmies) ────────────────────────────────────────────
+
+// (Arbitrage Thibaut 2026-10-28 : « je me fiche qu'ils vivent dans les
+//  paramètres, général et soldat sont des métiers, ils doivent donc
+//  vivre dans la banque » — les PUISSANCES d'armée et les ÂGES de
+//  recrutement vivent sur les LIGNES DE MÉTIER du référentiel
+//  (champs données puissanceArmee / ageMin / ageMax, complétés par la
+//  migration armeesBanque2026 depuis les paramètres sauvegardés) ;
+//  repli sur les paramètres historiques si la ligne ne porte pas le
+//  champ — les 4 paramètres restent des REFLIS de compatibilité.)
+
+/** Puissance d'armée d'un porteur de métier — ligne de métier du
+ *  référentiel (ex. Soldat : 15, Commandant : 45), repli sur le
+ *  paramètre historique. */
+export function puissanceArmeeMetier(nomMetier: string, C: Cfg, repli: number): number {
+  return metierDef(nomMetier, C.config)?.puissanceArmee ?? repli
+}
+
+/** Bornes d'âge de recrutement des soldats — ligne du métier Soldat
+ *  (ex. 16-30 ans), repli sur les paramètres soldatAgeMin/soldatAgeMax. */
+export function agesRecrutementSoldat(C: Cfg): { min: number; max: number } {
+  const def = metierDef(C.p.metierSoldat, C.config)
+  return { min: def?.ageMin ?? C.p.soldatAgeMin, max: def?.ageMax ?? C.p.soldatAgeMax }
+}
 
 export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
   const C = cfgOf(state.config)
@@ -23,13 +48,29 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       const s = pop.find((x) => x.id === id)
       return s && s.statut !== 'Décédé'
     })
-    // commandant mort ?
+    // (Arbitrage Thibaut 2026-10-28, 2e retour « les pertes baissent
+    //  ENCORE l'armée à 45 » : PLUS AUCUNE DÉRIVATION — la puissance
+    //  STOCKÉE fait foi pour TOUTE armée, suivie ou non. Le modèle
+    //  du matin (dérivation pour les armées suivies, migration par
+    //  les recrues d'un renfort) est abandonné : une armée de
+    //  plateau de 200 pts ne sera jamais couverte par ses
+    //  recrues réelles, et la dérivation l'écrasait à son seul
+    //  commandant (45) dès que ses rares recrues tombaient.)
+    // commandant mort ? (sa chute coûte ses points à la stockée,
+    //  comme une perte au combat.)
     const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
-    let puissance = armee.soldats.length * C.p.puissanceSoldat
+    // (Arbitrage Thibaut 2026-10-28 : puissances lues sur les lignes
+    //  de métier Soldat / Commandant du référentiel.)
+    const puissanceSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+    const puissanceCommandant = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+    const ages = agesRecrutementSoldat(C)
+    let puissance = armee.puissance
     if (cmd && cmd.statut !== 'Décédé') {
-      puissance += C.p.puissanceGeneral
+      // commandant vivant : ses points sont déjà dans la stockée
+      // (levée, renfort ou recrutement) — pas de double comptage
     } else if (armee.commandant) {
       armee.commandant = null
+      puissance = Math.max(0, puissance - puissanceCommandant)
       recap.commandantTombe = armee.nom
       state.log.push({
         turn: state.turn + 1, type: 'Armée', joueur: p.n,
@@ -41,7 +82,7 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       const candidats = pop.filter(
         (c) =>
           c.statut !== 'Décédé' &&
-          c.age >= C.p.soldatAgeMin && c.age <= C.p.soldatAgeMax &&
+          c.age >= ages.min && c.age <= ages.max &&
           !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
       )
       if (candidats.length === 0) break
@@ -49,7 +90,7 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
       s.metier = C.p.metierSoldat
       s.armee = armee.nom
       armee.soldats.push(s.id)
-      puissance += C.p.puissanceSoldat
+      puissance += puissanceSoldat
       state.log.push({
         turn: state.turn + 1, type: 'Armée', joueur: p.n,
         texte: `${fullName(s)} rejoint l'armée « ${armee.nom} » comme soldat.`,
@@ -59,24 +100,35 @@ export function recruitForArmies(state: GameState, p: Player, rng: Rng) {
   }
 }
 
-/** Recalcule la puissance affichée d'une armée (après édition manuelle). */
-export function recomputeArmy(state: GameState, p: Player, armee: { nom: string; soldats: string[]; commandant: string | null; puissance: number }) {
-  const C = cfgOf(state.config)
-  const pop = state.population[p.n] ?? []
-  const cmd = armee.commandant ? pop.find((x) => x.id === armee.commandant) : undefined
-  armee.puissance =
-    armee.soldats.filter((id) => {
-      const s = pop.find((x) => x.id === id)
-      return s && s.statut !== 'Décédé'
-    }).length * C.p.puissanceSoldat + (cmd && cmd.statut !== 'Décédé' ? C.p.puissanceGeneral : 0)
-}
+// (RETRAIT 2026-10-28, 2e retour arbitre « les pertes baissent encore
+//  l'armée à 45 » : recomputeArmy — dérivation « soldats × pts +
+//  commandant » — est SUPPRIMÉ. Il écrasait la puissance stockée
+//  d'une armée dont les recrues réelles ne couvraient qu'une
+//  fraction des points de plateau : une armée de 200 pts suivie de
+//  2 recrues perdant ses 2 soldats retombait à 45 (son seul
+//  commandant). La puissance STOCKÉE fait foi pour TOUTE armée :
+//  pertes et fin de service sont soustractives sur la puissance ET
+//  la cible (pas de remplissage automatique), recruitForArmies
+//  recrute au-dessus de la stockée vers la cible. Historique :
+//  « Recalcule la puissance affichée d'une armée (après édition
+//  manuelle) — arbitrage 2026-10-28 : puissances lues sur les
+//  lignes de métier, même lecture que recruitForArmies ». RESTAURÉ
+//  si un besoin d'alignement manuel émerge.)
 
 /**
- * INFLIGER DES PERTES (revue 2026-10-17) : tue `nb` soldats d'une armée
- *  (l'ordre du tableau = l'ordre d'engagement), retire leurs ids de
- *  l'armée, et tue le commandant en premier si demandé. Les soldats
- *  tombés au combat : statut « Décédé », conjoint libéré, puissance
- *  recalculée. Retourne la liste des noms des soldats tués.
+ * INFLIGER DES PERTES (revue 2026-10-17 ; arbitrages Thibaut
+ *  2026-10-28) : `nb` pertes coûtent `nb` × points du Soldat, sur
+ *  la puissance ET la puissance CIBLE — le commandant tué en
+ *  premier si demandé coûte ses points en plus ; pas de
+ *  remplissage automatique au tour suivant (2e retour). L'ARMÉE
+ *  EST LIÉE À LA POPULATION (3e retour) : les pertes tuent de
+ *  VRAIS habitants — les soldats suivis d'abord (ordre
+ *  d'engagement), puis le complément parmi les candidats
+ *  RECRUTABLES (mêmes critères que le recrutement : vivants, aux
+ *  âges du Soldat, sans armée, métier libre ou Chasseur), dans
+ *  l'ordre du recensement ; le pool épuisé, les points seuls
+ *  continuent de baisser (plancher 0). PLUS AUCUNE DÉRIVATION :
+ *  la puissance stockée fait foi. Retourne les noms des tués.
  */
 export function infligerPertes(
   state: GameState, p: Player, idxArmee: number, nb: number,
@@ -101,11 +153,25 @@ export function infligerPertes(
     c.armee = null
     tombes.push(fullName(c))
   }
+  // (Arbitrage Thibaut 2026-10-28, 2e retour « les pertes baissent
+  //  encore l'armée à 45 » : modèle UNIFIÉ — la puissance STOCKÉE
+  //  fait foi pour TOUTE armée, suivie ou non. Les pertes sont
+  //  SOUSTRACTIVES sur la puissance ET la puissance CIBLE (nb ×
+  //  points du soldat, + points du commandant s'il tombe), sans
+  //  AUCUNE dérivation : les recrues réelles d'une armée de
+  //  plateau n'en couvrent qu'une fraction, la dérivation
+  //  l'écrasait à son seul commandant. Les soldats réellement
+  //  suivis meurent dans l'ordre d'engagement, jusqu'à nb.)
+  const C = cfgOf(state.config)
+  const puSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+  const puCmd = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+  let cmdTomb = false
   if (tuerCommandant && armee.commandant) {
     const cmd = pop.find((x) => x.id === armee.commandant)
     if (cmd && cmd.statut !== 'Décédé') {
       tuer(cmd)
       armee.commandant = null
+      cmdTomb = true
     }
   }
   for (const id of [...armee.soldats]) {
@@ -113,21 +179,49 @@ export function infligerPertes(
     const c = pop.find((x) => x.id === id)
     if (c && c.statut !== 'Décédé') tuer(c)
   }
-  recomputeArmy(state, p, armee)
-  if (tombes.length > 0) {
-    state.log.push({
-      turn: state.turn, type: 'Armée', joueur: p.n,
-      texte: `⚔ Pertes — ${armee.nom} : ${tombes.length} tombé(s) au combat (${tombes.join(', ')}). Puissance restante : ${Math.round(armee.puissance)}.`,
-    })
+  // (Arbitrage Thibaut 2026-10-28, 3e retour « l'armée est liée à la
+  //  population » : au-delà des soldats suivis, le complément des
+  //  pertes est pris parmi les candidats RECRUTABLES — mêmes
+  //  critères que le recrutement (vivants, aux âges de la ligne
+  //  Soldat, sans armée, métier libre ou Chasseur), dans l'ordre du
+  //  recensement. Le pool épuisé, les points seuls continuent de
+  //  baisser : les Dirigeants et autres métiers ne meurent pas au
+  //  front.)
+  if (tombes.length < nb) {
+    const ages = agesRecrutementSoldat(C)
+    const candidats = pop.filter(
+      (c) =>
+        c.statut !== 'Décédé' &&
+        c.age >= ages.min && c.age <= ages.max &&
+        !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
+    )
+    for (const c of candidats) {
+      if (tombes.length >= nb) break
+      tuer(c)
+    }
   }
+  const perte = nb * puSoldat + (cmdTomb ? puCmd : 0)
+  armee.puissance = Math.max(0, armee.puissance - perte)
+  armee.puissanceCible = Math.max(0, armee.puissanceCible - perte)
+  state.log.push({
+    turn: state.turn, type: 'Armée', joueur: p.n,
+    texte: `⚔ Pertes — ${armee.nom} : ${nb} perte(s) au combat${cmdTomb ? ' — le commandant est tombé' : ''} (−${perte} pts sur la puissance et la cible)${tombes.length ? ` — tombés : ${tombes.join(', ')}` : ''}. Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
+  })
   return tombes
 }
 
 /**
- * FIN DE SERVICE (revue 2026-10-17) : N soldats quittent l'armée et
- *  redeviennent CHASSEURS (même convention que Dissoudre — ils restent
- *  vivants et productifs). Le commandant peut être démobilisé aussi.
- *  Puissance recalculée. Retourne les noms des soldats libérés.
+ * FIN DE SERVICE (revue 2026-10-17 ; arbitrages Thibaut 2026-10-28) :
+ *  N soldats quittent l'armée et redeviennent CHASSEURS (même
+ *  convention que Dissoudre — ils restent vivants et productifs) ;
+ *  le commandant peut être démobilisé aussi. Comme les pertes :
+ *  SOUSTRACTIF sur la puissance ET la puissance cible (nb × points
+ *  du soldat, + points du commandant), sans AUCUNE dérivation, pas
+ *  de remplissage automatique. L'ARMÉE EST LIÉE À LA POPULATION
+ *  (3e retour) : au-delà des soldats suivis, le complément est
+ *  pris parmi les candidats recrutables (vivants, âges du Soldat,
+ *  sans armée, métier libre ou Chasseur) qui redeviennent
+ *  Chasseurs. Retourne les noms des libérés.
  */
 export function libererSoldats(
   state: GameState, p: Player, idxArmee: number, nb: number,
@@ -143,11 +237,20 @@ export function libererSoldats(
     armee.soldats = armee.soldats.filter((id) => id !== c.id)
     liberes.push(fullName(c))
   }
+  // (Arbitrage Thibaut 2026-10-28, 2e retour : modèle UNIFIÉ —
+  //  SOUSTRACTIF sur la puissance ET la puissance cible, comme
+  //  les pertes, sans AUCUNE dérivation. Les soldats réellement
+  //  suivis redeviennent Chasseurs, jusqu'à nb.)
+  const C = cfgOf(state.config)
+  const puSoldat = puissanceArmeeMetier(C.p.metierSoldat, C, C.p.puissanceSoldat)
+  const puCmd = puissanceArmeeMetier(C.p.metierCommandant, C, C.p.puissanceGeneral)
+  let cmdLibere = false
   if (libererCommandant && armee.commandant) {
     const cmd = pop.find((x) => x.id === armee.commandant)
     if (cmd && cmd.statut !== 'Décédé') {
       liberer(cmd)
       armee.commandant = null
+      cmdLibere = true
     }
   }
   for (const id of [...armee.soldats]) {
@@ -155,54 +258,80 @@ export function libererSoldats(
     const c = pop.find((x) => x.id === id)
     if (c && c.statut !== 'Décédé') liberer(c)
   }
-  recomputeArmy(state, p, armee)
-  if (liberes.length > 0) {
-    state.log.push({
-      turn: state.turn, type: 'Armée', joueur: p.n,
-      texte: `🕊 Fin de service — ${armee.nom} : ${liberes.length} soldat(s) libéré(s) comme Chasseur(s) (${liberes.join(', ')}). Puissance restante : ${Math.round(armee.puissance)}.`,
-    })
+  // (Arbitrage Thibaut 2026-10-28, 3e retour : l'armée est liée à la
+  //  population — le complément vient des candidats recrutables,
+  //  qui quittent la vie civile (re-titrés Chasseurs) ; pool
+  //  épuisé, les points seuls baissent.)
+  if (liberes.length < nb) {
+    const ages = agesRecrutementSoldat(C)
+    const candidats = pop.filter(
+      (c) =>
+        c.statut !== 'Décédé' &&
+        c.age >= ages.min && c.age <= ages.max &&
+        !c.armee && (!c.metier || c.metier === C.p.metierChasseur),
+    )
+    for (const c of candidats) {
+      if (liberes.length >= nb) break
+      liberer(c)
+    }
   }
+  const perte = nb * puSoldat + (cmdLibere ? puCmd : 0)
+  armee.puissance = Math.max(0, armee.puissance - perte)
+  armee.puissanceCible = Math.max(0, armee.puissanceCible - perte)
+  state.log.push({
+    turn: state.turn, type: 'Armée', joueur: p.n,
+    texte: `🕊 Fin de service — ${armee.nom} : ${nb} soldat(s) démobilisé(s)${cmdLibere ? ' — et le commandant' : ''} (−${perte} pts sur la puissance et la cible)${liberes.length ? ` — libérés : ${liberes.join(', ')}` : ''}. Puissance restante : ${Math.round(armee.puissance)} (cible ${Math.round(armee.puissanceCible)}).`,
+  })
   return liberes
 }
 
 /** Prix de levée d'une armée : Or facturés pour sa puissance CIBLE,
  *  1 Or tous les 2 points de force (paramétrable via armeePrixOr /
- *  armeePriXPuissance). Payé UNE FOIS à la levée — pas d'entretien. */
+ *  armeePriXPuissance). Payé UNE FOIS à la levée — pas d'entretien.
+ *  (Arbitrage Thibaut 2026-10-28 : le RENFORT est EN TOUT POINT une
+ *  levée au sein d'une armée existante — même prix, mêmes réductions
+ *  de la ville de renfort ; la puissance cible est relevée de N et
+ *  le recrutement de chaque tour comble l'écart.)
+ *  (Arbitrage Thibaut 2026-10-28 : « les armées, et surtout les
+ *  réductions de levée, rejoignent la banque » — les réductions de
+ *  levée ne sont plus codées en dur par NOM de bâtiment : le champ
+ *  reductionLeveeArmee vit sur les fiches de construction (Terrain
+ *  d'entrainement : 10, Ecole militaire : 25, Grande caserne : 8,
+ *  Guilde des explorateurs : 20), passe par le canal de banque
+ *  reductionLeveeArmee et se lit par reductionLeveeBatiments(ville,
+ *  C) pour la ville de levée — la levée se passe DANS une
+ *  habitation, retour Thibaut 2026-10-15.)
+ *  Le flag `prochaineArmeeReduite` (Stratégies militaires I, −50 Or
+ *  sur la prochaine levée — revue 2026-10-15) est RETIRÉ : mort
+ *  depuis la purge du système de progrès du 2026-10-24 (aucun
+ *  producteur ne le posait plus) ; un champ résiduel d'une vieille
+ *  sauvegarde est simplement ignoré.
+ *  Historique préservé : (RETRAIT 2026-10-27, audit — merveilles
+ *  supprimées : plus de réduction de levée par merveille) ;
+ *  (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
+ *  système de progrès, retour arbitre).)
+ *  (Refonte « 8 lois » des régimes, 2026-10-29 : la Conscription
+ *  REVIT comme loi du régime AUTORITARISME — prix de levée −10 Or
+ *  par RANG DU PAYS du joueur qui lève (champ leveeOrParRangPays),
+ *  lue ci-dessous, S'ADDITIONNANT aux réductions de la ville.) */
 export function prixArmee(
   puissanceCible: number,
-  C: { p: { armeePrixOr: number; armeePriXPuissance: number } },
-  p?: Player,
-  state?: GameState,
+  C: Cfg,
   ville?: { batiments?: string[] },
+  p?: { regime?: string; rang?: string },
 ): number {
   const tranche = Math.max(1, C.p.armeePriXPuissance)
   if (puissanceCible <= 0) return 0
-  let prix = (puissanceCible / tranche) * C.p.armeePrixOr
-  // Réductions automatiques (revue 2026-10-15) :
-  if (p && state) {
-    // Merveilles (retour Thibaut 2026-10-15) : Temple de Bahamutt et
-    //  Ordre des chevaliers de Notan : -20/-25 Or sur les levées.
-    prix -= reductionLeveeArmeesMerveilles(p)
-    // (RETRAIT 2026-10-24 : Conscription I −10 Or supprimée avec le
-    //  système de progrès, retour arbitre.)
-    // Stratégies militaires I : la PROCHAINE armée coûte 50 Or de moins
-    if (p.prochaineArmeeReduite) prix -= 50
-    //  (one-shot — flag consommé à la levée ; consommé par ArmiesPanel).
-    // Bonus des BÂTIMENTS DE LA VILLE DE LEVÉE (retour Thibaut
-    //  2026-10-15) : la levée se passe DANS une habitation — le
-    //  joueur choisit la ville, ses bâtiments s'appliquent :
-    //  · Terrain d'entrainement (Château) : −10 Or ;
-    //  · Ecole militaire (Château) : −25 Or ;
-    //  · Grande caserne (Capitale) : −8 Or ;
-    //  · Guilde des explorateurs : −20 Or.
-    if (ville?.batiments) {
-      if (ville.batiments.includes("Terrain d'entrainement")) prix -= 10
-      if (ville.batiments.includes('Ecole militaire')) prix -= 25
-      if (ville.batiments.includes('Grande caserne')) prix -= 8
-      if (ville.batiments.includes('Guilde des explorateurs')) prix -= 20
-    }
-  }
-  return Math.max(0, Math.round(prix))
+  const prix = (puissanceCible / tranche) * C.p.armeePrixOr
+  // (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
+  //  « Conscription ») : réduction du prix de levée par RANG DU
+  //  PAYS du joueur qui lève (leveeOrParRangPays × rangPaysNiveau)
+  //  — le texte de la loi existait dès l'origine du jeu, il
+  //  n'avait JAMAIS été codé avant la refonte. S'ADDITIONNE aux
+  //  réductions de la ville de levée, plancher 0.
+  const reduction = (ville ? reductionLeveeBatiments(ville, C) : 0)
+    + (regimeDef(p?.regime ?? '', C.config)?.leveeOrParRangPays ?? 0) * rangPaysNiveau(p, C)
+  return Math.max(0, Math.round(prix - reduction))
 }
 
 /** Plafond d'armées — SUPPRIMÉ (retour joueur 2026-10-18) : plus aucun

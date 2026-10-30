@@ -14,6 +14,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js'
 import type { GameState } from '../engine/types'
 import type { GameConfig } from '../config/defaultConfig'
 import { elargirEtat } from '../state/storage'
+import { avecReprise } from './reprise'
 import { etatReseau } from '../engine/fusion'
 
 const LS_URL = 'cpe.supabase.url'
@@ -376,14 +377,19 @@ export async function lireBarriereV2(
 
 /** Invoquer la Edge Function de résolution serveur. Idempotente et
  *  verrouillée : l'invoquer plusieurs fois ou à plusieurs est sans
- *  effet si le tour est déjà publié. */
+ *  effet si le tour est déjà publié.
+ *  m1 (arbitrage Thibaut 2026-10-27) : chaque essai est limité à
+ *  60 s (AbortSignal — une Edge Function froide ou un réseau muet
+ *  laissait le client en attente INDÉFINIE), avec UNE reprise
+ *  automatique ; au 2e échec, l'erreur remonte EXPLICITE au store
+ *  pour être journalisée avant le repli local. */
 export async function resoudreTourServeur(
   salon: string, tour: number, attendus: number[],
 ): Promise<{ ok: boolean; dejaPublie?: boolean; tour?: number; error?: string }> {
   const creds = supabaseCreds()
   if (!creds) return { ok: false, error: 'supabase non configuré' }
   const { url, key } = creds
-  try {
+  const appeler = async (): Promise<{ ok: boolean; dejaPublie?: boolean; tour?: number; error?: string }> => {
     const resp = await fetch(`${url}/functions/v1/resoudre-tour`, {
       method: 'POST',
       headers: {
@@ -392,9 +398,12 @@ export async function resoudreTourServeur(
         apikey: key,
       },
       body: JSON.stringify({ salon, tour, attendus }),
+      signal: AbortSignal.timeout(60_000),
     })
     return await resp.json() as { ok: boolean; dejaPublie?: boolean; tour?: number; error?: string }
-  } catch (e) {
-    return { ok: false, error: String(e) }
   }
+  // dejaPublie = verdict DÉFINITIF (idempotence) : pas de reprise inutile.
+  const r = await avecReprise(appeler, (res) => res.ok || res.dejaPublie === true, 'Résolution serveur')
+  if (r.ok) return r.valeur
+  return { ok: false, error: r.erreur }
 }

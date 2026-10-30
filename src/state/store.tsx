@@ -74,6 +74,9 @@ interface GameContextValue {
   /** True si CE navigateur peut éditer la configuration : en local toujours ;
    *  en multijoueur, uniquement le créateur de la partie. */
   peutEditerConfig: boolean
+  /** F4 (audit 2026-10-27) : un runTurn LOCAL est en cours — la barre
+   *  de jeu affiche « ⏳ Calcul du tour… » pendant le travail bloquant. */
+  calculTour: boolean
   /** Édite la configuration commune — persistée et propagée à la partie en cours. */
   setGlobalCfg: (fn: (c: GameConfig) => void) => void
   newGame: (setups: SetupLine[], seed: number, mode: Mode, salon?: string) => void
@@ -101,6 +104,23 @@ const GameContext = createContext<GameContextValue | null>(null)
 function initialGlobalConfig(): GameConfig {
   const loaded = storage.loadGlobalConfig()
   return JSON.parse(JSON.stringify(cfgOf(loaded ?? undefined).config)) as GameConfig
+}
+
+/**
+ * CLONE SÉLECTIF (optimisation frappe 2026-10-16 — extrait en helper
+ * commun 2026-10-27, audit F3) : clone l'état en SÉPARANT la population
+ * (l'objet le plus lourd : 34 des 39 ms du clone) et la config (181 Ko,
+ * immuable entre deux saves — setGlobalCfg la remplace par un nouvel
+ * objet, jamais mutée). La config est réattachée PAR RÉFÉRENCE : sûr car
+ * aucun mutateur ne la touche en place.
+ */
+function clonerEtat(prev: GameState): GameState {
+  const popClone = structuredClone(prev.population)
+  return {
+    ...structuredClone({ ...prev, population: {}, config: undefined }),
+    population: popClone,
+    config: prev.config,
+  } as GameState
 }
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
@@ -141,6 +161,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   // R3 (audit 2026-10-19, arbitrage « bandeau d'alerte ») : miroir du
   //  retour de storage.saveLocal — persist l'arme à chaque flush.
   const [saveLocaleEchec, setSaveLocaleEchec] = useState(false)
+  // F4 (audit 2026-10-27) : un runTurn LOCAL est en cours — le calcul
+  //  figure 1,7 à 3,2 s à 16 000 habitants (bench 2026-10-27) et
+  //  figeait l'interface SANS signe visible. Le bandeau « ⏳ Calcul du
+  //  tour… » s'affiche AVANT le travail bloquant (yield au navigateur).
+  const [calculTour, setCalculTour] = useState(false)
   // ── TOUR-SIMULTANÉ (barrière stricte, 2026-10-16) ──
   // Mon n° de joueur : persisté par salon (localStorage) — chaque
   //  navigateur choisit son numéro à l'entrée du salon (SetupPanel).
@@ -164,13 +189,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => { barriereRef.current = barriere }, [barriere])
   const [lastSavedAt, setLastSavedAt] = useState<number | null>(null)
   const lastLocalEdit = useRef(0)
-  // Revue 2026-10-15 (Q2/Q3 — multijoueur simultané) : les joueurs
-  //  éditent CHACUN leur feuille en même temps. Un mutateur local ne doit
-  //  plus partir d'un état figé (le dernier rendu local) mais être
-  //  REJOUÉ au moment de la mutation sur l'état le plus récent (local ou
-  //  distant arrivé entre-temps) — les éditions simultanées de joueurs
-  //  différents se COMBINENT au lieu de s'écraser.
-  const pendingMutators = useRef<((s: GameState) => void)[]>([])
+  // (RETRAIT 2026-10-27, audit F3) : la file « pendingMutators » (rejeu
+  //  des mutateurs pendants décrit par la revue Q2/Q3 du 2026-10-15)
+  //  n'était JAMAIS alimentée — aucun push nulle part dans le code,
+  //  la file était toujours vide. Mécanique morte supprimée. Le
+  //  combinage des éditions simultanées vit ailleurs : chaque update()
+  //  clone l'état le PLUS RÉCENT (stateRef, rafraîchi par le realtime
+  //  et tenu à jour synchrone) — les feuilles différentes se combinent,
+  //  la même valeur éditée par deux joueurs suit le dernier clic.
+
 
   // Références miroirs : lectures fiables dans les callbacks asynchrones.
   const stateRef = useRef(state)
@@ -293,61 +320,49 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   /**
-   * CLONE SÉLECTIF (optimisation frappe 2026-10-16) : clone l'état en
-   *  SÉPARANT la population (l'objet le plus lourd : 34 des 39 ms du
-   *  clone) et la config (181 Ko, immuable entre deux saves —
-   *  setGlobalCfg la remplace par un nouvel objet, jamais mutée).
-   *  La config est réattachée PAR RÉFÉRENCE : sûr car aucun mutateur
-   *  ne la touche en place.
+   * Mutation locale : clone sélectif (helper clonerEtat ci-dessus),
+   * application du mutateur, puis persistance.
    */
   const update = useCallback((mutator: (s: GameState) => void) => {
-    // Revue (Q1) : clone STRUCTUREL. Les mutateurs pendants sont
-    //  rejoués dans l'ordre (Q2) : une mise à jour distante reçue
-    //  entre-temps sert de base — les éditions simultanées se
-    //  COMBINENT.
-    setState((prev) => {
-      if (!prev) return prev
-      const popClone = structuredClone(prev.population)
-      const draft = {
-        ...structuredClone({ ...prev, population: {}, config: undefined }),
-        population: popClone,
-        config: prev.config,
-      } as GameState
-      for (const m of pendingMutators.current) m(draft)
-      pendingMutators.current = []
-      mutator(draft)
-      lastLocalEdit.current = Date.now()
-      // BUG « actions non prises en compte » (2026-10-17) : stateRef
-      //  n'était mis à jour que par le useEffect de rendu — une
-      //  action suivie d'un « Fin de tour » RAPIDE capturait la
-      //  section sur un état SANS la dernière action. Mise à jour
-      //  SYNCHRONE : la section du prochain Fin de tour part
-      //  toujours de l'état le plus récent.
-      stateRef.current = draft
-      persist(draft, mode, salon)
-      // SECTION VIVANTE (bug « techs/constructions perdues au tour
-      //  suivant » 2026-10-17) : après avoir cliqué « Fin de tour »,
-      //  un joueur qui continue à jouer (déblocage d'une tech,
-      //  construction…) produisait des actions ABSENTES de sa
-      //  section déjà poussée — perdues à la résolution. Chaque
-      //  mutation RAFRAÎCHIT la section (upsert idempotent par
-      //  (salon, tour, joueur, 'section')) : elle reste exacte
-      //  jusqu'à la résolution, quel que soit le moment du clic.
-      if (mode === 'supabase' && salon && barriereRef.current.monTourPousse) {
-        const moi = monNumeroRef.current
-        void remote.pousserSectionV2(salon, moi, {
-          player: structuredClone(draft.players.find((q) => q.n === moi) ?? null),
-          population: structuredClone(draft.population[moi] ?? []),
-          // SEULEMENT mes routes (bug duplication : la section
-          //  embarquait toutes les routes du monde).
-          routes: structuredClone(draft.routesCommerce ?? []).filter((r) => r.joueur === moi),
-          citesLibres: structuredClone(draft.citesLibres ?? []),
-          log: structuredClone(draft.log.slice(-50)),
-          tour: draft.turn,
-        })
-      }
-      return draft
-    })
+    // F3 (audit 2026-10-27) : le mutateur s'applique HORS du updater
+    //  setState — un updater React doit être PUR (StrictMode
+    //  double-invoque les updaters en dev, un rendu concurrent
+    //  interrompu peut les rejouer) et persist / la poussée de
+    //  section sont des EFFETS DE BORD. La base est stateRef, tenu à
+    //  jour SYNCHRONEMENT à chaque setState du store : équivalent
+    //  exact de l'ancien `prev` (garde « Fin de tour rapide » du
+    //  2026-10-17 conservée), sans effet de bord dans le rendu.
+    const prev = stateRef.current
+    if (!prev) return
+    const draft = clonerEtat(prev)
+    mutator(draft)
+    lastLocalEdit.current = Date.now()
+    // Mise à jour SYNCHRONE (bug 2026-10-17) : la section du prochain
+    //  Fin de tour part toujours de l'état le plus récent.
+    stateRef.current = draft
+    setState(draft)
+    persist(draft, mode, salon)
+    // SECTION VIVANTE (bug « techs/constructions perdues au tour
+    //  suivant » 2026-10-17) : après avoir cliqué « Fin de tour »,
+    //  un joueur qui continue à jouer (déblocage d'une tech,
+    //  construction…) produisait des actions ABSENTES de sa
+    //  section déjà poussée — perdues à la résolution. Chaque
+    //  mutation RAFRAÎCHIT la section (upsert idempotent par
+    //  (salon, tour, joueur, 'section')) : elle reste exacte
+    //  jusqu'à la résolution, quel que soit le moment du clic.
+    if (mode === 'supabase' && salon && barriereRef.current.monTourPousse) {
+      const moi = monNumeroRef.current
+      void remote.pousserSectionV2(salon, moi, {
+        player: structuredClone(draft.players.find((q) => q.n === moi) ?? null),
+        population: structuredClone(draft.population[moi] ?? []),
+        // SEULEMENT mes routes (bug duplication : la section
+        //  embarquait toutes les routes du monde).
+        routes: structuredClone(draft.routesCommerce ?? []).filter((r) => r.joueur === moi),
+        citesLibres: structuredClone(draft.citesLibres ?? []),
+        log: structuredClone(draft.log.slice(-50)),
+        tour: draft.turn,
+      })
+    }
   }, [mode, salon, persist])
 
   /**
@@ -362,22 +377,25 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    */
   const nextTurn = useCallback(() => {
     // ── MODE LOCAL : runTurn immédiat ──
+    // F3/F4 (audit 2026-10-27) : runTurn s'exécute HORS du updater
+    //  setState (pureté du rendu — cf. update) et le bandeau de calcul
+    //  s'affiche AVANT le travail bloquant (1,7-3,2 s à 16 000
+    //  habitants) : on rend la main au navigateur le temps de peindre.
     if (mode !== 'supabase' || !salon) {
-      setState((prev) => {
-        if (!prev) return prev
-        const popClone = structuredClone(prev.population)
-        const draft = {
-          ...structuredClone({ ...prev, population: {}, config: undefined }),
-          population: popClone,
-          config: prev.config,
-        } as GameState
-        for (const m of pendingMutators.current) m(draft)
-        pendingMutators.current = []
+      void (async () => {
+        if (!stateRef.current) return
+        setCalculTour(true)
+        await new Promise((r) => setTimeout(r, 30))
+        const st = stateRef.current
+        if (!st) { setCalculTour(false); return }
+        const draft = clonerEtat(st)
         runTurn(draft)
         lastLocalEdit.current = Date.now()
+        stateRef.current = draft
+        setState(draft)
+        setCalculTour(false)
         persist(draft, mode, salon)
-        return draft
-      })
+      })()
       return
     }
     // ── MODE SUPABASE : barrière stricte ──
@@ -396,24 +414,32 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  local courant puis publication directe (l'ancien flux, utilisé
    *  quand la barrière est indisponible : schéma non migré, réseau
    *  KO, ou test en solo dans un salon multijoueur). */
-  const resoudreSeul = useCallback(async () => {
+  const resoudreSeul = useCallback(async (erreurServeur?: string) => {
     const st = stateRef.current
     if (!st) return
-    const popClone = structuredClone(st.population)
-    const draft = {
-      ...structuredClone({ ...st, population: {}, config: undefined }),
-      population: popClone,
-      config: st.config,
-    } as GameState
-    for (const m of pendingMutators.current) m(draft)
-    pendingMutators.current = []
+    const draft = clonerEtat(st)
+    // m1 (arbitrage Thibaut 2026-10-27) : la résolution serveur a
+    //  échoué après 2 essais — message VISIBLE dans le journal. Le
+    //  tour est quand même résolu localement (le joueur n'est jamais
+    //  bloqué), mais il SAIT pourquoi ça a tourné en local.
+    if (erreurServeur) {
+      draft.log.push({ turn: st.turn, type: 'Système', joueur: null, texte: `⚠️ ${erreurServeur} — résolution locale utilisée.` })
+    }
     // CONFIG MONDIALE : effet en fin de tour, comme tout le reste
     //  (seulement en réseau : en local sans réseau, la config commune
     //  locale fait foi — pas de serveur pour la config mondiale).
     if (mode === 'supabase' && salon) {
       appliquerConfigMondiale(draft, await remote.chargerConfigMondiale())
     }
-    runTurn(draft)
+    // F4 (audit 2026-10-27) : bandeau de calcul avant le travail
+    //  bloquant, comme la branche locale de nextTurn.
+    setCalculTour(true)
+    await new Promise((r) => setTimeout(r, 30))
+    try {
+      runTurn(draft)
+    } finally {
+      setCalculTour(false)
+    }
     stateRef.current = draft
     setState(draft)
     lastLocalEdit.current = Date.now()
@@ -484,8 +510,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
             setConflit(false)
           }
         } else {
-          // repli local (serveur indisponible)
-          await resoudreSeul()
+          // repli local (serveur indisponible) — m1 : après 2 essais
+          //  ratés, le message d'échec est journalisé VISIBLEMENT
+          //  (dejaPublie n'est PAS un échec : rien à signaler).
+          await resoudreSeul(res.dejaPublie ? undefined : res.error)
         }
       })()
       return
@@ -507,7 +535,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  déclaration : nextTurnV2 est défini avant les deux fonctions
    *  de repli qu'il appelle). */
   const pollerBarriereV2Ref = useRef<(attendus: number[], tour: number) => Promise<void>>(async () => {})
-  const resoudreBarriereLocaleV2Ref = useRef<(attendus: number[], tour: number) => Promise<void>>(async () => {})
+  const resoudreBarriereLocaleV2Ref = useRef<(attendus: number[], tour: number, erreurServeur?: string) => Promise<void>>(async () => {})
 
   const nextTurnV2 = useCallback(async (st: GameState, moi: number) => {
     const maSection: remote.SectionJoueur = {
@@ -568,7 +596,10 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         //  Function le ferait, on exécute runTurn, et on PUBLIE :
         //  les autres joueurs reçoivent le tour par le realtime.
         setBarriere({ prets: new Set(), monTourPousse: false })
-        await resoudreBarriereLocaleV2Ref.current(attendus, st.turn)
+        // m1 : le message d'échec (2 essais ratés) est fusionné dans
+        //  le tour PUBLIÉ — tous les joueurs voient pourquoi le
+        //  serveur a été contourné.
+        await resoudreBarriereLocaleV2Ref.current(attendus, st.turn, res.error)
       }
     } else {
       // attendre : poll léger des événements du tour ; quand la
@@ -583,7 +614,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
    *  sémantique qu'elle : télécharge l'état de référence, fusionne
    *  les sections du tour (cp_events), runTurn, PUBLIE. Les autres
    *  joueurs reçoivent le tour par le realtime — aucune perte. */
-  const resoudreBarriereLocaleV2 = useCallback(async (attendus: number[], tour: number) => {
+  const resoudreBarriereLocaleV2 = useCallback(async (attendus: number[], tour: number, erreurServeur?: string) => {
     const sections = await remote.lireSectionsV2(salon, tour)
     if (!sections) { await resoudreSeul(); return }
     const ref = await remote.loadRemote(salon)
@@ -592,6 +623,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     //  (src/engine/fusion.ts — tests fusion.test.ts). Les bugs de
     //  routes/cités/transferts corrigés en production y sont verrouillés.
     const draft = fusionnerSections(ref, sections)
+    // m1 (arbitrage Thibaut 2026-10-27) : échec serveur après 2 essais —
+    //  le message est fusionné dans le tour PUBLIÉ (visible par tous).
+    if (erreurServeur) {
+      draft.log.push({ turn: tour, type: 'Système', joueur: null, texte: `⚠️ ${erreurServeur} — résolution locale avec publication.` })
+    }
     const evts = await remote.lireEvenementsPartages(salon, tour)
     rejouerEvenementsPartages(draft, evts)
     // CONFIG MONDIALE : effet en fin de tour, comme tout le reste —
@@ -602,7 +638,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     //  configPriorite : le draft ne doit JAMAIS rouler sur cfgOf(undefined)).
     adopterConfig(draft, { locale: globalConfigRef.current })
     appliquerConfigMondiale(draft, await remote.chargerConfigMondiale())
-    runTurn(draft)
+    // F4 (audit 2026-10-27) : bandeau de calcul avant le travail
+    //  bloquant, comme la branche locale de nextTurn.
+    setCalculTour(true)
+    await new Promise((r) => setTimeout(r, 30))
+    try {
+      runTurn(draft)
+    } finally {
+      setCalculTour(false)
+    }
     const ok = await remote.publierEtatFusionne(salon, draft)
     if (ok) {
       stateRef.current = draft
@@ -655,7 +699,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
           // FONCTION SERVEUR INDISPONIBLE — même repli que le dernier
           //  pousseur : résolution LOCALE AVEC PUBLICATION.
           setBarriere({ prets: new Set(), monTourPousse: false })
-          await resoudreBarriereLocaleV2Ref.current(attendus, tour)
+          // m1 : même journalisation d'échec que le dernier pousseur.
+          await resoudreBarriereLocaleV2Ref.current(attendus, tour, res.error)
         }
         return
       }
@@ -855,11 +900,11 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const value = useMemo<GameContextValue>(() => ({
     state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec,
-    globalConfig, peutEditerConfig, setGlobalCfg,
+    globalConfig, peutEditerConfig, setGlobalCfg, calculTour,
     newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
     monNumero, setMonNumero: setMonNumeroPersist, barriere, forceNextTurn,
   }), [state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec, globalConfig, peutEditerConfig, setGlobalCfg,
-    newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
+    calculTour, newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
     monNumero, setMonNumeroPersist, barriere, forceNextTurn])
 
   return <GameContext.Provider value={value}>{children}</GameContext.Provider>

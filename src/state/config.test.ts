@@ -16,7 +16,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { adopterConfig, configAuChargement } from './configPriorite'
-import { cloneDefaultConfig, cfgOf, type GameConfig } from '../config/defaultConfig'
+import { cloneDefaultConfig, cfgOf, validerFormeConfig, type GameConfig } from '../config/defaultConfig'
 import { createGame, type SetupLine } from '../engine/setup'
 import type { GameState } from '../engine/types'
 
@@ -144,11 +144,14 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
   //  ne retire plus que les BÂTIMENTS de rang ≥ 2)
   assert.ok(C.config.constructions.some((x) => x.nom === 'Baleinier (tier 2)'),
     'fiches 2026-10-25 : les tiers 2 d aménagements sont au référentiel')
-  assert.ok(!C.config.constructions.some((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2),
-    'simplification maintenue : aucun BÂTIMENT de rang ≥ 2')
+  // (fiche bâtiments rang 2, 2026-10-26 : les BÂTIMENTS rang 2 sont
+  //  de retour au référentiel — la réactivation suit la même voie
+  //  que les tiers d'aménagements 2026-10-25)
+  assert.ok(C.config.constructions.some((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2),
+    'fiche bâtiments 2026-10-26 : les bâtiments rang 2 sont au référentiel')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon aménagement perso'),
     'un aménagement perso (hors référentiel) est conservé')
-  assert.equal(C.config.schemaVersion, 4, 'tampon v4 apposé')
+  assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
   // idempotence : la config convergée ne repasse PAS par les migrations
   const C2 = cfgOf(C.config)
   assert.ok(C2.config.constructions.some((x) => x.nom === 'Mon aménagement perso'),
@@ -158,15 +161,103 @@ test('config : migration v4 — les aménagements pré-vague-3a sont réalignés
     '', 're-lecture : description toujours vide')
 })
 
+// ── Migration v5 (retour Thibaut 2026-10-27 « tu as récupéré les
+//    anciennes règles des bâtiments, par exemple le bûcheron qui
+//    donne du bois plutôt que des emplacements de bûcheron ») ──────
+
+test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plus de double comptage Bois + Bûcheron), les merveilles purgées', () => {
+  const c = cloneDefaultConfig()
+  c.schemaVersion = 4 // config sauvegardée avant le bump v5
+  // Camp de bûcheron au VIEUX format (avant le rework « production →
+  //  emplacements ») : effet de flux +1 Bois, PAS d'emplacements,
+  //  textes hérités. C'est le bug constaté : l'effet de flux SURVIVAIT
+  //  à migrerConstructions (champ sauvegardé prioritaire) alors que
+  //  les emplacements étaient complétés par le défaut — le bâtiment
+  //  produisait le Bois de l'ancienne règle ET les emplacements de la
+  //  nouvelle (double comptage).
+  const iB = c.constructions.findIndex((x) => x.nom === 'Camp de bûcheron')
+  assert.ok(iB >= 0, 'Camp de bûcheron dans les défauts')
+  c.constructions[iB] = {
+    ...c.constructions[iB],
+    production: '+1 Bois par tour.',
+    cout: '5 Or + 1 Bétail',
+    description: 'Un camp de bûcherons.',
+    effets: [{ ressource: 'Bois', quantite: 1 }],
+  } as typeof c.constructions[number]
+  delete (c.constructions[iB] as { emplacements?: unknown }).emplacements
+  // les 4 MERVEILLES supprimées du référentiel (audit 2026-10-27)
+  //  traînent encore dans la config sauvegardée (le « (52) » constaté
+  //  dans l'onglet Paramètres) — purge à l'ouverture, arbitrage du jour.
+  const merveillesVieilles = ([
+    'Sanctuaire de Salmodiva', 'Jardins d\u2019Alexandrie',
+    'Mont Caracole', 'Grands bains',
+  ].map((nom) => ({
+    categorie: 'Bâtiment', groupe: 'Capitale', famille: 'Merveille',
+    nom, cout: '', production: '', description: '',
+    effets: [], rangMinHabitation: 1,
+  })) as typeof c.constructions)
+  c.constructions.push(...merveillesVieilles)
+  // un bâtiment PERSO doit survivre au réalignement
+  c.constructions.push({
+    categorie: 'Bâtiment', groupe: 'Ville', famille: '',
+    nom: 'Mon bâtiment perso', cout: '1 Or', production: '',
+    description: 'perso', effets: [],
+  } as typeof c.constructions[number])
+  const C = cfgOf(c)
+  const b = C.config.constructions.find((x) => x.nom === 'Camp de bûcheron')!
+  assert.deepEqual(b.effets, [],
+    'l ancien effet de flux (+1 Bois) disparaît — le bois ne vient QUE du métier Bûcheron')
+  assert.deepEqual(
+    (b.emplacements ?? []).map((e) => `${e.places} ${e.metier}`),
+    ['2 Bûcheron'], 'emplacements du RÉFÉRENTIEL (pas complétés par-dessus le flux)')
+  assert.equal(b.production, '', 'texte de production réaligné (vide)')
+  assert.equal(b.cout, '', 'texte de coût réaligné (vide)')
+  assert.deepEqual(b.couts, [
+    { ressource: 'Or', valeur: 5 }, { ressource: 'Bétail', valeur: 1 },
+  ], 'coût en données du référentiel')
+  assert.equal(
+    C.config.constructions.filter((x) => (x.famille ?? '') === 'Merveille').length,
+    0, 'les 4 merveilles sont purgées à l ouverture')
+  assert.equal(
+    C.config.constructions.filter((x) => x.categorie === 'Bâtiment').length,
+    49, '48 bâtiments du référentiel + le perso, ni perdus ni doublés')
+  assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
+    'un bâtiment perso (hors référentiel) est conservé')
+  assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
+  // idempotence : la re-lecture d une config convergée est stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.config.constructions.length, C.config.constructions.length,
+    're-lecture : le réalignement/purge est idempotent')
+  assert.ok(C2.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
+    're-lecture : le perso survit (pas de re-migration)')
+})
+
+test('config : une édition POST-convergence (tampon v5) n est PAS écrasée par le réalignement', () => {
+  // Le réalignement ne joue qu UNE fois, à la migration : une
+  //  personnalisation saisie APRÈS la convergence (config tamponnée
+  //  à la version courante) survit aux re-lectures.
+  const c = cloneDefaultConfig()
+  c.schemaVersion = 5
+  const iP = c.constructions.findIndex((x) => x.nom === 'Camp de bûcheron')
+  c.constructions[iP].description = 'note perso saisie après convergence'
+  const C = cfgOf(c)
+  assert.equal(
+    C.config.constructions.find((x) => x.nom === 'Camp de bûcheron')!.description,
+    'note perso saisie après convergence',
+    're-lecture : l édition post-convergence survit (pas de re-migration)')
+})
+
 // ── Retrait des descriptions d'aménagements (retour Thibaut
 //    2026-10-22 « retire carrément les descriptions ») ─────────────────────
 
-test('config : descriptions des aménagements vidées une bonne fois pour toutes, même sur une config déjà convergée v4', () => {
-  // Config déjà tamponnée v4 (aucune migration de complétion ne
-  //  rejouera) : la migration ciblée doit pourtant vider les
-  //  descriptions d'aménagements et poser son marqueur.
+test('config : descriptions des aménagements vidées une bonne fois pour toutes, même sur une config déjà convergée (tampon courant)', () => {
+  // Config déjà tamponnée à la version COURANTE (aucune migration de
+  //  complétion ne rejouera) : la migration ciblée doit pourtant vider
+  //  les descriptions d'aménagements et poser son marqueur. (Depuis
+  //  la v5, un simple tampon v4 re-passerait AUSSI par le bloc complet
+  //  de migrations — réalignement compris.)
   const c = cloneDefaultConfig()
-  c.schemaVersion = 4
+  c.schemaVersion = 5
   const iB = c.constructions.findIndex((x) => x.nom === 'Baleinier')
   const iC = c.constructions.findIndex((x) => x.nom === 'Champ')
   assert.ok(iB >= 0 && iC >= 0, 'Baleinier et Champ dans les défauts')
@@ -218,7 +309,7 @@ test('config : rangsHabitation (table dupliquée, morte) absente des défauts et
 
 test('config : migration one-shot — le TEXTE « metiersDisponibles » devient le tableau metiersBase (métiers au singulier), les tables legacy disparaissent', () => {
   const c = cloneDefaultConfig()
-  c.schemaVersion = 4 // config déjà convergée : la migration ciblée joue quand même
+  c.schemaVersion = 5 // config déjà convergée : la migration ciblée joue quand même
   const h = c.typesHabitation.find((t) => t.type === 'Ville' && t.rang === 'Hameau')!
   ;(h as unknown as { metiersDisponibles: string }).metiersDisponibles =
     '50 Chasseurs, 2 Gardes, 1 Commerçants, 3 InconnuDuReferentiel'
@@ -280,23 +371,22 @@ test('config : la mécanique d éducation est retirée — table educations abse
     're-lecture : toujours absentes')
 })
 
-// ── Simplification (retour Thibaut 2026-10-23) : bâtiments et
-//    aménagements de rang ≥ 2 retirés, MÊME des configs monde
-//    sauvegardées avant (« je vois encore le Moulin à vent ») ────
+// ── Fiche bâtiments rang 2 (retour Thibaut 2026-10-26) : les
+//    bâtiments rang ≥ 2 sont DE RETOUR — les configs monde
+//    sauvegardées avant sont RESYNCÉES sur le référentiel ──────
 
-test('config : les BÂTIMENTS rang >= 2 sont retirés, les AMÉNAGEMENTS tiers 2/3 passent (fiches 2026-10-25)', () => {
+test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées sur le référentiel (fiche bâtiments 2026-10-26)', () => {
   const c = cloneDefaultConfig()
-  // fiches 2026-10-25 : les aménagements tiers 2/3 sont DE RETOUR
-  //  (rangMinHabitation 2-3, catégorie Aménagement) ; les bâtiments
-  //  de rang ≥ 2 restent absents (simplification maintenue).
-  assert.ok(c.constructions.some((x) => x.categorie === 'Aménagement' && (x.rangMinHabitation ?? 0) >= 2),
-    'fiches 2026-10-25 : les tiers d aménagements sont au référentiel')
-  assert.ok(c.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
-    'les défauts ne portent AUCUN bâtiment de rang ≥ 2')
-  // une config monde SAUVEGARDÉE AVANT la simplification garde les
-  //  rangs 2/3 (la complétion n'ajoute que les manquantes, elle ne
-  //  retire jamais les disparues) :
-  c.schemaVersion = 4 // déjà convergée : le filtre joue quand même
+  // fiche bâtiments 2026-10-26 : les 23 bâtiments rang 2 (Caserne,
+  //  Réseau de routes, Tour de sorcier, quartiers, ports, guildes…)
+  //  sont au référentiel — répartis Ville et Château.
+  const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
+  assert.equal(rang2defs.length, 23, `23 bâtiments rang 2 attendus au référentiel (trouvé ${rang2defs.length})`)
+  // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
+  //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
+  //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL
+  //  courant — jamais de doublon.
+  c.schemaVersion = 5 // déjà convergée : la purge joue quand même
   c.constructions.push({
     categorie: 'Bâtiment', groupe: 'Ville', famille: 'Economique',
     nom: 'Moulin à vent', cout: '40 Bois',
@@ -306,14 +396,77 @@ test('config : les BÂTIMENTS rang >= 2 sont retirés, les AMÉNAGEMENTS tiers 2
     rangMinHabitation: 2,
   })
   const C = cfgOf(c)
-  assert.ok(!C.config.constructions.some((x) => x.nom === 'Moulin à vent'),
-    'rangMinHabitation 2 (BÂTIMENT) : le « Moulin à vent » est retiré par cfgOf')
-  assert.ok(C.config.constructions.every((x) => x.categorie !== 'Bâtiment' || (x.rangMinHabitation ?? 0) < 2),
-    'aucun BÂTIMENT rang ≥ 2 ne survit à la convergence (les aménagements passent)')
-  // idempotence : la re-lecture d une config déjà filtrée est stable
+  const moulins = C.config.constructions.filter((x) => x.nom === 'Moulin à vent' && x.categorie === 'Bâtiment')
+  assert.equal(moulins.length, 1,
+    'le Moulin à vent revient en UN seul exemplaire (le vieux est purgé, le référentiel réinjecté)')
+  assert.deepEqual(moulins[0].effets, [{ ressource: 'Charbon', quantite: -1 }],
+    'les effets sont ceux du RÉFÉRENTIEL (resync), pas ceux de la vieille config')
+  // (2026-10-27, retour Thibaut : coût en DONNÉES `couts` + champ
+  //  `requis` dédié — plus de texte « Silo à grain requis, 15 Or… ».)
+  assert.equal(moulins[0].cout, '', 'le texte de coût est vidé')
+  assert.equal(moulins[0].requis, 'Silo à grain', 'prérequis de la fiche (champ dédié)')
+  assert.deepEqual(moulins[0].couts, [
+    { ressource: 'Or', valeur: 15 }, { ressource: 'Bois', valeur: 4 }, { ressource: 'Bétail', valeur: 4 },
+  ], 'coût de la fiche (paires ressource/valeur)')
+  // tous les bâtiments rang 2 du référentiel passent la convergence
+  const rang2C = C.config.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
+  assert.equal(rang2C.length, rang2defs.length, 'ni perdus, ni doublés par la convergence')
+  // idempotence : la re-lecture d une config déjà resyncée est stable
   const C2 = cfgOf(C.config)
   assert.equal(C2.config.constructions.length, C.config.constructions.length,
-    're-lecture : le filtre ne retire rien de plus (idempotent)')
+    're-lecture : la purge/réinjection est idempotente')
+})
+
+// ── (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») : le
+//    coût des TYPES D'HABITATION passe aux DONNÉES `couts` ──────────
+
+test('config : le coût des types d habitation vit en DONNÉES `couts` (paires ressource/valeur), le texte est vidé', () => {
+  // Verrou global sur le RÉFÉRENTIEL : chaque rang porte des paires
+  //  {ressource, valeur} et un TEXTE de coût vide — plus rien à
+  //  analyser (l analyseur de texte est retiré du moteur).
+  const defs = cfgOf(undefined).config.typesHabitation
+  assert.equal(defs.length, 6, '6 rangs d habitation attendus (Ville + Château)')
+  for (const d of defs) {
+    assert.ok(Array.isArray(d.couts) && d.couts.length > 0,
+      `${d.type}/${d.rang} : champ couts attendu (données structurées)`)
+    assert.ok(!d.cout, `${d.type}/${d.rang} : le texte de coût doit être vidé`)
+  }
+  // Fidélité : Hameau = 20 Or + 10 Bois + 6 Bétail (l ancienne
+  //  chaîne « 20 Or + 10 Bois + 6 Bétail »), Forteresse = 120 Or +
+  //  10 Pierre + 12 Fer (l ancien « 12 Fer » au singulier du stock).
+  const hameau = defs.find((d) => d.type === 'Ville' && d.rang === 'Hameau')
+  assert.deepEqual(hameau?.couts, [
+    { ressource: 'Or', valeur: 20 }, { ressource: 'Bois', valeur: 10 }, { ressource: 'Bétail', valeur: 6 },
+  ], 'coût du Hameau (paires ressource/valeur)')
+  const forteresse = defs.find((d) => d.type === 'Château' && d.rang === 'Forteresse')
+  assert.deepEqual(forteresse?.couts, [
+    { ressource: 'Or', valeur: 120 }, { ressource: 'Pierre', valeur: 10 }, { ressource: 'Fer', valeur: 12 },
+  ], 'coût de la Forteresse (paires ressource/valeur)')
+})
+
+test('config : une config sauvegardée AVANT la migration reçoit les `couts` du défaut de même (type, rang) — champ sauvegardé prioritaire', () => {
+  // Une config d avant le 2026-10-27 ne porte PAS `couts` (seul le
+  //  TEXTE existait) : migrerTypesHabitation complète les paires
+  //  depuis la ligne du défaut de même (type, rang), idempotent.
+  const c = cloneDefaultConfig()
+  for (const d of c.typesHabitation) delete d.couts
+  const C = cfgOf(c)
+  const hameau = C.config.typesHabitation.find((d) => d.type === 'Ville' && d.rang === 'Hameau')
+  assert.deepEqual(hameau?.couts, [
+    { ressource: 'Or', valeur: 20 }, { ressource: 'Bois', valeur: 10 }, { ressource: 'Bétail', valeur: 6 },
+  ], 'les paires sont complétées depuis le défaut')
+  // idempotence : la re-lecture d une config déjà complétée est stable
+  const C2 = cfgOf(C.config)
+  assert.deepEqual(C2.config.typesHabitation.find((d) => d.type === 'Ville' && d.rang === 'Hameau')?.couts,
+    hameau?.couts, 're-lecture : les paires survivent')
+  // un rang PERSONNALISÉ (absent du défaut) reçoit un coût vide
+  //  (gratuit), pas de crash.
+  const c3 = cloneDefaultConfig()
+  c3.typesHabitation[0] = { ...c3.typesHabitation[0], rang: 'Bourgade' }
+  delete (c3.typesHabitation[0] as { couts?: unknown }).couts
+  const C3 = cfgOf(c3)
+  const bourgade = C3.config.typesHabitation.find((d) => d.rang === 'Bourgade')
+  assert.deepEqual(bourgade?.couts, [], 'rang personnalisé : coût vide (gratuit)')
 })
 
 // ── Retrait intégral des règles de factions + textes « Ministre »
@@ -329,7 +482,7 @@ test('config : fiches de peuples vidées (règles de factions retirées intégra
   // une config SAUVEGARDÉE AVANT garde ses fiches pleines + les
   //  reliquats structurés (reglesBase/ageII/ageIII d'avant le
   //  2026-10-19, encore rendus par l'onglet Peuples)
-  c.schemaVersion = 4 // déjà convergée : le garde-fou joue quand même
+  c.schemaVersion = 5 // déjà convergée : le garde-fou joue quand même
   c.peuplesLibres = [{
     nom: 'Basiléens', description: 'Fiche ancienne',
     lignes: [{ label: 'Âge III — Suzeraineté', texte: 'Vous pouvez posséder 1 Ministre supplémentaire.' }],
@@ -358,7 +511,7 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
   assert.ok(min, 'la ligne titre « Ministre » reste dans la table métiers')
   assert.equal(min!.description, '', 'description vide dans les défauts')
   // une config SAUVEGARDÉE AVANT garde les anciens textes morts
-  c.schemaVersion = 4 // déjà convergée : le garde-fou joue quand même
+  c.schemaVersion = 5 // déjà convergée : le garde-fou joue quand même
   min!.description = 'Plusieurs autorisés'
   const eff = c.metiersEffets.find((t) => t.metier === 'Ministre')!
   eff.effet = 'Octroie un ministre qui appartient à un ministère, maximum 1.'
@@ -375,4 +528,23 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
   const C2 = cfgOf(C.config)
   assert.equal(C2.metiers.find((t) => t.metier === 'Ministre')!.description, '',
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
+})
+
+// ── F6 (audit 2026-10-27) : validation de forme d'une config importée ──
+test('F6 : validerFormeConfig accepte une config saine et refuse les champs au mauvais type', () => {
+  // config saine : aucun problème
+  const saine = cloneDefaultConfig()
+  assert.equal(validerFormeConfig(saine).length, 0, 'une config par défaut est de forme acceptable')
+  assert.equal(validerFormeConfig({}).length, 0, 'un objet vide (clés absentes) est acceptable')
+  // champs au mauvais type : refus, un problème par table fautive
+  const mauvaise = { ...cloneDefaultConfig(), constructions: 42, params: ' Oops' }
+  const problemes = validerFormeConfig(mauvaise)
+  assert.ok(problemes.includes('« constructions » doit être un tableau'), `problème constructions manquant : ${problemes.join(' ; ')}`)
+  assert.ok(problemes.includes('« params » doit être un objet'), `problème params manquant : ${problemes.join(' ; ')}`)
+  // non-objet : refus explicite
+  assert.equal(validerFormeConfig('config').length, 1, 'une string est refusée')
+  assert.equal(validerFormeConfig([1, 2]).length, 1, 'un tableau est refusé')
+  // les tables valides ne lèvent PAS de faux positif
+  const bonne = { ...cloneDefaultConfig(), metiers: [] }
+  assert.equal(validerFormeConfig(bonne).length, 0, 'un tableau vide (même vide → garde-fous) reste de forme valide')
 })
