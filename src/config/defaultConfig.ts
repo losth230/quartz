@@ -400,19 +400,54 @@ export interface DomicileDefConfig {
  *  arbitrages Thibaut du 30/10 — cf. engine/dogmes.ts) : un dogme
  *  est choisi par le joueur dominant d'une culture à chaque palier
  *  de Tourisme franchi et affecte les habitants ou les villes de
- *  cette culture. À CE STADE AUCUN DOGME N'EST ENCORE DÉFINI (la
- *  table est vide) — les effets chiffrés des dogmes définitifs
- *  viendront avec eux sur le champ `effets`, cumulables avec les
- *  lois et effets de culture (arbitrage n°4). */
+ *  cette culture. RETOUR DES DOGMES DÉFINITIFS (2026-10-30, 2e
+ *  séance — table des 12 dogmes retenus par Thibaut) : les effets
+ *  chiffrés vivent sur le champ `effets`, lus PAR TYPE par les
+ *  hooks moteurs (effetsDogmeCulture, cumulables avec les lois et
+ *  effets de culture — arbitrage n°4).
+ *
+ *  Culture porteuse : « * » = dogme GÉNÉRIQUE, proposé au choix de
+ *  TOUTE culture (cas des 12 dogmes du 30/10) ; un nom de culture
+ *  restreint le dogme à cette culture. Un dogme est UNIQUE par
+ *  culture (le cumul à l'infini porte sur des dogmes DIFFÉRENTS).
+ *
+ *  Types d'effet branchés (moteur, cf. les docblocks « dogme » des
+ *  modules concernés) :
+ *   · travailNourriture (+1 : sans-emploi de la culture produit
+ *     +1 Nourriture/tour, avant taxes — economie.ts) ;
+ *   · fecondite (+0,1 : facteur de fécondité ×(1+v), personnages de
+ *     la culture — naissances.ts) ;
+ *   · gardeParHabitation (+2 : cap de Garde des villes de la
+ *     culture — metiers.ts) ;
+ *   · consoNourrBourgeois (1 : les bourgeois de la culture
+ *     consomment v Nourriture, l'emporte sur régime et défaut —
+ *     economie.ts) ;
+ *   · taudisParHabitation (+5 : Taudis par ville de la culture,
+ *     comme une loi de ville, lits attribuables — domiciles.ts) ;
+ *   · bonheurVille (+10 : bonheur des villes de la culture, avant
+ *     le plafond 100 — bonheur.ts) ;
+ *   · maladieContractMod (−0,05 : modificateur de contraction des
+ *     personnages de la culture, additif — sante.ts) ;
+ *   · pressionCulture (+0,1 : poids de la culture dans la
+ *     conversion culturelle ×(1+v) — culture.ts) ;
+ *   · tributVassal (+0,05 : tribut reçu par un suzerain de la
+ *     culture ×(1+v), la différence est créée — economie.ts,
+ *     vassalite.ts) ;
+ *   · garnisonHorsCulture (−40 : garnison des villes d'une AUTRE
+ *     culture, par culture porteuse, plancher 0 — garnisons.ts) ;
+ *   · conversionLocale (+0,15 : jet supplémentaire de conversion
+ *     vers la culture pour les habitants d'autres cultures vivant
+ *     dans une ville de la culture — culture.ts).
+ *  La Fraternité ne porte AUCUN effet (révoltes non implémentées). */
 export interface DogmeDef {
   nom: string
-  /** Culture porteuse : le dogme n'est proposé que pour cette
-   *  culture. */
+  /** Culture porteuse : « * » = proposé à toute culture ; un nom de
+   *  culture restreint le dogme à elle. */
   culture: string
   description: string
-  /** Effets chiffrés du dogme — aucun moteur ne les lit encore
-   *  (mise en forme seule, 2026-10-30) ; le branchement viendra
-   *  avec les dogmes définitifs. */
+  /** Effets chiffrés du dogme, lus par type par les hooks moteurs
+   *  (effetsDogmeCulture) — le référentiel est la source de
+   *  vérité : éditer la valeur change l'effet des dogmes déjà pris. */
   effets?: Array<{ type: string; valeur: number }>
 }
 
@@ -849,10 +884,107 @@ export const DEFAULT_CONFIG: GameConfig = {
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
   // (dogmes de l'ANCIEN système retirés du référentiel le 2026-10-24,
-  //  retour arbitre — RETOUR 2026-10-30 sous un nouveau format, table
-  //  volontairement VIDE : « code la mise en forme sans dogme
-  //  réellement créé », les dogmes définitifs viendront plus tard.)
-  dogmes: [] as DogmeDef[],
+  //  retour arbitre — RETOUR 2026-10-30 : mise en forme d'abord (table
+  //  vide), puis 2e séance du 30/10 : la table des 12 DOGMES DÉFINITIFS
+  //  retenus par Thibaut. Tous GÉNÉRIQUS (culture '*' : proposés au
+  //  choix de toute culture) ; les effets chiffrés sont lus PAR TYPE
+  //  par les hooks moteurs — cf. le docblock de DogmeDef. Un dogme est
+  //  unique par culture, jamais remplaçable.)
+  dogmes: [
+    {
+      nom: 'Dogme du Travail',
+      culture: '*',
+      description:
+        'Tous les sans-emplois de cette culture produisent +1 Nourriture par tour '
+        + '(production comme les métiers, avant les taxes, sans multiplicateur de rang).',
+      effets: [{ type: 'travailNourriture', valeur: 1 }],
+    },
+    {
+      nom: 'Dogme de la Famille',
+      culture: '*',
+      description:
+        '+0,1 de fécondité pour tous les personnages de cette culture, où qu\u2019ils vivent '
+        + '(additif au facteur de fécondité : ×1,1).',
+      effets: [{ type: 'fecondite', valeur: 0.1 }],
+    },
+    {
+      nom: 'Dogme de la Patrie',
+      culture: '*',
+      description:
+        '+2 métiers de Garde dans les habitations de cette culture (cap cumulée aux bases '
+        + 'du rang et aux emplacements des constructions de la ville).',
+      effets: [{ type: 'gardeParHabitation', valeur: 2 }],
+    },
+    {
+      nom: 'Dogme de l\u2019Égalité',
+      culture: '*',
+      description:
+        'Les Bourgeois de cette culture ne consomment que 1 Nourriture par tour '
+        + '(le dogme fixe la consommation : il l\u2019emporte sur le régime et le défaut moteur).',
+      effets: [{ type: 'consoNourrBourgeois', valeur: 1 }],
+    },
+    {
+      nom: 'Dogme de la Solidarité',
+      culture: '*',
+      description:
+        '+5 Taudis par habitation de cette culture (culture majoritaire de la cité — '
+        + 'même nature que la loi « Logements élargis », lits attribuables).',
+      effets: [{ type: 'taudisParHabitation', valeur: 5 }],
+    },
+    {
+      nom: 'Dogme de la Fraternité',
+      culture: '*',
+      description:
+        'Réduit les révoltes de 20 % — la mécanique des révoltes n\u2019est PAS implémentée '
+        + 'à ce stade : le dogme est au référentiel mais n\u2019a AUCUN effet moteur.',
+    },
+    {
+      nom: 'Dogme de la Liberté',
+      culture: '*',
+      description: '+10 Bonheur dans les villes de cette culture (avant le plafond de 100).',
+      effets: [{ type: 'bonheurVille', valeur: 10 }],
+    },
+    {
+      nom: 'Dogme de la Santé',
+      culture: '*',
+      description:
+        'Réduit de 5 points les chances de contracter une maladie pour les personnages '
+        + 'de cette culture (modificateur additif aux autres protections).',
+      effets: [{ type: 'maladieContractMod', valeur: -0.05 }],
+    },
+    {
+      nom: 'Dogme de l\u2019Évangile',
+      culture: '*',
+      description:
+        'Cette culture est 10 % plus importante dans la conversion culturelle '
+        + '(le poids de la culture dans les conversions ×1,1).',
+      effets: [{ type: 'pressionCulture', valeur: 0.1 }],
+    },
+    {
+      nom: 'Dogme de la Mère Patrie',
+      culture: '*',
+      description:
+        '+5 % de ressources produites par les vassaux : le tribut reçu par un suzerain '
+        + 'de cette culture est ×1,05 — le vassal paie sa part, la différence est créée.',
+      effets: [{ type: 'tributVassal', valeur: 0.05 }],
+    },
+    {
+      nom: 'Dogme des Guerres Saintes',
+      culture: '*',
+      description:
+        'La garnison des habitations d\u2019une AUTRE culture perd 40 (une fois par culture '
+        + 'porteuse du dogme ; les villes de la culture porteuse sont protégées ; plancher 0).',
+      effets: [{ type: 'garnisonHorsCulture', valeur: -40 }],
+    },
+    {
+      nom: 'Dogme du Nationalisme',
+      culture: '*',
+      description:
+        'Les habitants d\u2019autres cultures vivant dans des villes de cette culture ont '
+        + '15 % de chances supplémentaires par tour de se convertir à cette culture.',
+      effets: [{ type: 'conversionLocale', valeur: 0.15 }],
+    },
+  ] as DogmeDef[],
   citesLibres: ref.citesLibres,
   regleCitesLibres: ref.regleCitesLibres,
   victoires: ref.victoires,
