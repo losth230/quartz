@@ -121,8 +121,10 @@ export interface Character {
    *  emploi : NEUTRE, aucun effet au plateau, impôt nul. */
   metier: string | null
   /** Domicile du personnage (rework habitants 2026-10-20, vague 2 UI) :
-   *  null = sans domicile. Rempli par l'attribution aux foyers
-   *  (vague C, engine/domiciles.ts). Champ optionnel : absent des
+   *  null = sans domicile. Rempli par l'attribution aux habitants
+   *  (1 logement = 1 habitant — retour Thibaut 2026-10-26,
+   *  engine/domiciles.ts ; l'ancienne attribution par foyer est
+   *  retirée). Champ optionnel : absent des
    *  états migrés (compressé quand null). */
   domicile?: string | null
   /** PRESTIGE du personnage (vague D ascension sociale, 2026-10-24) :
@@ -130,8 +132,11 @@ export interface Character {
    *  tour (statutSocial.ts) : sans emploi -2, sans domicile -2,
    *  malade -2, domicile +0/+4 selon le type, métier +2 bourgeois /
    *  +5 noble, +1 si bonheur de la ville > 50. À l'âge adulte, un
-   *  enfant HÉRITE de 50 % du prestige moyen de ses parents. Rang
-   *  DÉRIVÉ : 0-100 roturier, 100-250 bourgeois, 250+ noble.
+   *  enfant HÉRITE de 50 % du prestige moyen de ses parents (un
+   *  enfant de dynastie NOBLE ne descend jamais sous 300 — base du
+   *  noble de naissance, retour Thibaut 2026-10-26). Rang DÉRIVÉ :
+   *  0-100 roturier, 100-250 bourgeois, 250+ noble ; les nobles de
+   *  NAISSANCE (dynastie noble) reçoivent 300 à leur création.
    *  Champ optionnel : absent des vieilles sauvegardes → 0
    *  (l'héritage des nouvelles générations fera le reste). */
   prestige?: number
@@ -164,8 +169,9 @@ export interface AutreDef {
  *  chaque ville est de type Ville (Hameau → Cité → Grande Cité) ou
  *  Château (Motte → Donjon → Forteresse). Chaque rang a un coût
  *  d'amélioration, un nombre d'habitants requis, les métiers
- *  disponibles à la base (ex. « 50 Chasseurs, 2 Gardes, 1 Commerçant,
- *  1 Gouverneur » — cap de BASE du rang, vague 3b) et les domiciles
+ *  disponibles à la base (ex. « 40 Chasseurs, 2 Gardes, 1 Commerçant,
+ *  1 Gouverneur » — cap de BASE du rang, vague 3b ; fiche
+ *  habitations 2026-10-26) et les domiciles
  *  disponibles (affichage seul pour l'instant). Arbitrage vague 3b
  *  (2026-10-22) : plus NI consommation par tour NI garnison de base
  *  — les Garnisons viennent des Gardes en poste. Table paramétrable
@@ -175,7 +181,18 @@ export interface HabitationDef {
   type: string
   /** nom du rang (Hameau, Cité, Grande Cité, Motte, Donjon, Forteresse) */
   rang: string
-  cout: string
+  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
+   *  textuel » — appliqué aux types d'habitation comme aux
+   *  bâtiments/aménagements) : le TEXTE de coût est VIDÉ dans le
+   *  référentiel — le coût vit dans `couts`. Champ gardé OPTIONNEL :
+   *  les configs sauvegardées qui portent encore l'ancien texte
+   *  restent valides (plus aucun lecteur). */
+  cout?: string
+  /** COÛT d'amélioration du rang en DONNÉES STRUCTURÉES (retour
+   *  Thibaut 2026-10-27 : paires {ressource, valeur} agrégées par
+   *  coutRang — même format que les `couts` des constructions, plus
+   *  d'analyse de texte). Champ optionnel : absent = gratuit. */
+  couts?: Array<{ ressource: string; valeur: number }>
   habitantsRequis: number
   /** métiers disponibles à la base du rang, format STRUCTURÉ (retour
    *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
@@ -183,9 +200,10 @@ export interface HabitationDef {
    *  l'ancien TEXTE « metiersDisponibles » est converti une bonne fois
    *  pour toutes par la migration ciblée de cfgOf). */
   metiersBase: Array<{ metier: string; places: number }>
-  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
-   *  HISTORIQUE conservé pour l'affichage de repli ; la donnée
-   *  vit désormais dans `domicilesRang` (vague A, 2026-10-24). */
+  /** domiciles disponibles, ex. « 50 Taudis, 1 Maison de notable »
+   *  — TEXTE d'affichage (wiki, éditeur, log de rang) ; la donnée
+   *  vit désormais dans `domicilesRang` (vague A, 2026-10-24 ;
+   *  fiche habitations 2026-10-26). */
   domicilesDisponibles: string
   /** domiciles du rang au format STRUCTURÉ (vague A, design
    *  domiciles 2026-10-24) : [{domicile: 'Maison', nombre: 50}, …].
@@ -233,7 +251,8 @@ export interface City {
    *  2026-10-24) : [{domicile: 'Maison', nombre: 50}, …] — l'offre
    *  de logements du rang (initStockVille à la création/changement
    *  de rang ; complété par normaliserEtat pour les vieilles
-   *  sauvegardes). 1 domicile = 1 logement (1 foyer). Champ
+   *  sauvegardes). 1 domicile = 1 logement (1 habitant — retour
+   *  Thibaut 2026-10-26). Champ
    *  optionnel : absent → []. */
   domiciles?: Array<{ domicile: string; nombre: number }>
   batiments: string[]
@@ -253,7 +272,10 @@ export interface Army {
   puissance: number
   commandant: string | null   // id du personnage
   soldats: string[]           // ids des personnages metier Soldat
-  cible: string | null        // ville / joueur visé
+  // (RETRAIT 2026-10-28, retour arbitre : le champ « cible »
+  //  (ville / joueur visé) ne servait à rien — la sélection de
+  //  cible disparaît de l'UI ; une vieille sauvegarde peut encore
+  //  porter la clé, elle est ignorée.)
 }
 
 /** Cité libre : habitation sans joueur (règle « Cités libres » du
@@ -270,8 +292,10 @@ export interface CiteLibre {
   type: string
   /** Culture des habitants de la cité. */
   culture?: string
-  /** Niveau de taxes de la cité (module TOUTES les ressources produites
-   *  par ses habitants, comme pour une ville de joueur). */
+  /** Niveau de taxes de la cité (module la production PAR RESSOURCE,
+   *  arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr* du côté des
+   *  naissances, toutes les autres ressources ×taxOr* à l'envers —
+   *  comme pour une ville de joueur). */
   taxes?: TaxeNiveau
   /** Type d'habitation de la cité (retour Thibaut 2026-10-14) : Hameau
    *  (rural) ou Château (fortifié), tiré AU HASARD à la création de la
@@ -371,9 +395,15 @@ export interface Player {
   /** Notes libres du joueur (retour Thibaut 2026-10-15) : pense-bête
    *  affiché en bas de l'onglet Pays. Champ optionnel. */
   notes?: string
-  /** Stratégies militaires I : la prochaine levée d'armée coûte 50 Or de
-   *  moins (flag consommé à la première levée — revue 2026-10-15). */
-  prochaineArmeeReduite?: boolean
+  // (RETRAIT 2026-10-28, arbitrage Thibaut « les armées rejoignent la
+  //  banque » : le champ `prochaineArmeeReduite` (Stratégies
+  //  militaires I — la prochaine levée d'armée coûtait 50 Or de
+  //  moins, flag consommé à la première levée, revue 2026-10-15)
+  //  était MORT depuis la purge du système de progrès du 2026-10-24
+  //  (aucun producteur ne le posait plus) : il est retiré du type et
+  //  de prixArmee. Une vieille sauvegarde qui porte encore le champ
+  //  en JSON reste chargée sans erreur (champ inconnu ignoré).
+  //  L'ancien contenu reste dans l'historique git, règle 9.)
   resources: Record<string, ResourceState> // clés = RESOURCES
   villes: City[]
   /** Carte dynastie courante — RETIRÉE le 2026-10-24 (retour arbitre :
@@ -444,9 +474,14 @@ export interface ApportsTour {
   population: Record<string, number>
   /** tribut de vassalité net (négatif = payé, positif = reçu) */
   vassalite: Record<string, number>
-  /** lois chiffrées des régimes politiques & cultures (engine/regimes.ts) —
-   *  garnison de la loi du régime, bonus de capitale de la culture, etc.
-   *  Champ optionnel : absent des historiques d'avant l'ajout du canal. */
+  /** lois d'HABITANT des cultures (engine/regimes.ts) — canal « Lois
+   *  des cultures » du récap. Champ optionnel : absent des
+   *  historiques d'avant l'ajout du canal.
+   *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la clé
+   *  regimesCultures devient ORPHELINE — RENOMMÉE loisCultures,
+   *  plus aucune loi de régime ne passe par la banque ; la clé
+   *  des vieux historiques est simplement ignorée.) */
+  loisCultures?: Record<string, number>
   regimesCultures?: Record<string, number>
   /** (RETRAIT 2026-10-22, nettoyage du code mort : le canal
    *  « habitations » — consommation des rangs d'habitation, vide

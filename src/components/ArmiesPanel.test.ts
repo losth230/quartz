@@ -49,7 +49,7 @@ test('rendu ArmiesPanel : la page Armées s’affiche sans crash', async () => {
   }
   // Le prix de levée affiché est celui du VRAI MOTEUR pour la
   // puissance par défaut (90) — pas une constante d'affichage.
-  const prix = prixArmee(90, C, p1, etat)
+  const prix = prixArmee(90, C)
   assert.ok(
     h.includes(`${fmt(prix)} Or`),
     `prix de levée moteur (${fmt(prix)} Or) non rendu`,

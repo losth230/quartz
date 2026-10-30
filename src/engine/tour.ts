@@ -50,6 +50,7 @@ import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
 import { appliquerBonusProximite } from './villes'
 import { populationTurn } from './population'
+import { migrationBonheur } from './migrationBonheur'
 import { recruitForArmies } from './armees'
 import { snapshotRessources } from './journal'
 
@@ -193,12 +194,16 @@ export function runTurn(state: GameState): GameState {
     autresParJoueur[p.n] = appliquerEffetsAutres(p)
   }
 
-  // 3septies. Régimes & cultures : lois chiffrées des régimes politiques
-  //  et règles de pays des cultures (engine/regimes.ts) — paramétrables
-  //  dans les référentiels, appliquées automatiquement chaque fin de tour.
-  const regimesCulturesParJoueur: Record<number, Record<string, number>> = {}
+  // 3septies. Lois des cultures : lois d'HABITANT des cultures
+  //  (engine/regimes.ts) — paramétrables dans les référentiels,
+  //  appliquées automatiquement chaque fin de tour.
+  //  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : les lois
+  //  des RÉGIMES ne passent plus par ce canal — plus aucune loi de
+  //  régime via la banque ; le canal est RENOMMÉ « Lois des
+  //  cultures » et ne porte plus que loisHabitants.)
+  const loisCulturesParJoueur: Record<number, Record<string, number>> = {}
   for (const p of state.players) {
-    regimesCulturesParJoueur[p.n] = appliquerEffetsRegimesCultures(state, p, state.saison, C)
+    loisCulturesParJoueur[p.n] = appliquerEffetsRegimesCultures(state, p, C)
     // Tourisme (retour Thibaut 2026-10-16) : le stock est RECALCULÉ
     //  pour égaler la production courante — jamais cumulé (stock = prod).
     resynchroniserTourisme(state, p, 'fin de tour')
@@ -264,6 +269,15 @@ export function runTurn(state: GameState): GameState {
     populationTurn(state, p, rng)
   }
 
+  // 4bis. Migration par bonheur (arbitrage Thibaut 2026-10-28) : plus
+  //  le bonheur d'une ville est bas, plus ses habitants ont de chances
+  //  de la quitter (linéaire : 0 % à 100 de bonheur, 10 % à 0) pour
+  //  une ville du monde tirée au hasard PONDÉRÉ (culture du migrant,
+  //  bonheur de la candidate — engine/migrationBonheur.ts). APRÈS
+  //  tous les moteurs de population : un migrant n'est pas retraité
+  //  (vieillissement, maladie) au même tour chez son nouveau porteur.
+  migrationBonheur(state, rng)
+
   // 5. Armées (RecruitForArmies)
   for (const p of state.players) {
     recruitForArmies(state, p, rng)
@@ -288,7 +302,7 @@ export function runTurn(state: GameState): GameState {
       amenagements: amenagementsParJoueur[p.n] ?? {},
       nourrEte: nourrEteParJoueur[p.n] ?? {},
       autres: autresParJoueur[p.n] ?? {},
-      regimesCultures: regimesCulturesParJoueur[p.n] ?? {},
+      loisCultures: loisCulturesParJoueur[p.n] ?? {},
       citesLibres: citesLibresParJoueur[p.n] ?? {},
       commerce: commerceParJoueur[p.n] ?? {},
       proximite: proximiteParJoueur[p.n] ?? {},

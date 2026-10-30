@@ -60,8 +60,7 @@ export function CitesLibresView() {
     })
 
   /** Recrute un émissaire pour un joueur (coût/rythme arbitres au
-   *  plateau : la réserve est libre d'édition, les
-   *  merveilles en octroient automatiquement). */
+   *  plateau : la réserve est libre d'édition). */
   const recruterEmissaire = (joueur: number, delta: number) =>
     update((s) => {
       const p = s.players.find((x) => x.n === joueur)

@@ -7,6 +7,7 @@
 
 import type { GameState } from './types'
 import type { Cfg } from './gameData'
+import { regimeDef } from './gameData'
 
 //  Chaque vassal reverse une part des revenus de ses habitants (gains
 //  d'Or, après taxes) à son suzerain. Les chaînes A→B→C fonctionnent :
@@ -25,8 +26,14 @@ export function transfererTributVassal(
     const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement
     if (part === 0) continue
     gains['Or'] = (gains['Or'] ?? 0) - part
+    // (Refonte « 8 lois » des régimes, 2026-10-29, Monarchie
+    //  « Vassaux dévoués ») : le tribut REÇU par un suzerain de ce
+    //  régime est multiplié (tributVassalMult, défaut ×1,05).
+    //  Arbitrage Thibaut : le vassal paie SA part — la différence
+    //  est CRÉÉE pour le suzerain.
+    const recu = part * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1)
     const gainsSuz = gainsParJoueur[suzerain.n] ?? (gainsParJoueur[suzerain.n] = {})
-    gainsSuz['Or'] = (gainsSuz['Or'] ?? 0) + part
+    gainsSuz['Or'] = (gainsSuz['Or'] ?? 0) + recu
     state.log.push({
       turn: state.turn + 1, type: 'Système', joueur: p.n,
       texte: `🤝 Vassalité — ${p.nom} verse ${Math.round(part * 10) / 10} Or à ${suzerain.nom} (tribut de vassalité : ${Math.round(C.p.vassalPrelevement * 100)} % des revenus de ses habitants).`,
