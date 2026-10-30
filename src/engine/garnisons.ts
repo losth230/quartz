@@ -70,22 +70,36 @@ export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: 
   return Math.max(0, g)
 }
 
-/** Malus de FERVEUR MARTIALE (refonte 12 lois, 2026-10-29) : la
- *  première loi `garnisonHorsCultureParRang` dont la culture est
- *  PRÉSENTE dans le monde (au moins une ville d'un JOUEUR de cette
- *  culture — les cités libres sont hors champ) réduit la garnison
- *  des habitations qui ne sont PAS de cette culture de N × rang de
+/** Malus de FERVEUR MARTIALE (refonte 12 lois, 2026-10-29) : les lois
+ *  `garnisonHorsCultureParRang` dont la culture est PRÉSENTE dans le
+ *  monde (au moins une ville d'un JOUEUR de cette culture — les
+ *  cités libres sont hors champ) réduisent la garnison des
+ *  habitations qui ne sont PAS de leur culture de N × rang de
  *  l'habitation (rangNiveau). Malus appliqué UNE fois par
- *  habitation, sans cumul si plusieurs villes de la culture ;
- *  plancher 0 dans garnisonHabitationVille. Exporté pour le détail
- *  UI (regimes.ts — ligne « culture » du tableau garnison). */
+ *  habitation ET PAR CULTURE martiale présente (CORRECTIF audit a1
+ *  du 2026-10-30 : la boucle historique s'arrêtait à la première
+ *  culture martiale présente — une deuxième loi présente dans le
+ *  monde était ignorée ; une habitation d'une culture martiale est
+ *  protégée de SA loi mais subit celle des autres cultures
+ *  martiales présentes ; à une seule culture martiale, Zélotisme,
+ *  le comportement est INCHANGÉ), sans cumul si plusieurs villes
+ *  d'une même culture. Plancher 0 dans garnisonHabitationVille.
+ *  Exporté pour le détail UI (regimes.ts — ligne « culture » du
+ *  tableau garnison). */
 export function malusFerveurMartiale(state: GameState, ville: City, C: Cfg): number {
+  // (CORRECTIF 2026-10-30, audit a1 : la boucle historique s'arrêtait
+  //  à la PREMIÈRE culture martiale présente (return) — une deuxième
+  //  loi garnisonHorsCultureParRang présente dans le monde était
+  //  ignorée. Chaque culture martiale présente applique maintenant
+  //  SA loi, une fois par habitation et par culture.)
+  let malus = 0
   for (const cult of C.config.cultures) {
     const n = cult.garnisonHorsCultureParRang ?? 0
     if (!n) continue
     const presente = state.players.some((q) => q.villes.some((v) => v.culture === cult.nom))
     if (!presente) continue
-    return ville.culture === cult.nom ? 0 : n * rangNiveau(ville, C)
+    if (ville.culture === cult.nom) continue
+    malus += n * rangNiveau(ville, C)
   }
-  return 0
+  return malus
 }

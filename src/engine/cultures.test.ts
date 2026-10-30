@@ -400,3 +400,42 @@ test('Zélotisme « Ferveur martiale » : −20 × rang hors culture, une fois, 
   for (const q of state.players.slice(1)) q.villes = []
   assert.equal(malusFerveurMartiale(state, ville, C), 0, 'plus aucune ville zélotiste : malus levé')
 })
+
+// (CORRECTIF audit a1 du 2026-10-30 : la boucle historique ignorait
+//  toute culture martiale présente APRÈS la première du référentiel.)
+test('Ferveur martiale : DEUX cultures martiales présentes — chaque loi s applique (audit a1)', () => {
+  const ctx = partieMock()
+  const { state, joueur, ville } = ctx
+  assert.ok(ville, 'le mock fournit toujours une ville (rétrécissement pour tsc strict)')
+  const C = cfgOf(state.config)
+  const rang = rangNiveau(ville, C)
+  // une ville zélotiste chez un autre joueur (loi −20 × rang)
+  const zelote: Player = { ...joueur, n: 1, nom: 'Zélote',
+    villes: [{ ...ville, nom: 'Zelopolis', culture: 'Zélotisme' }] } as unknown as Player
+  state.players.push(zelote)
+  // une DEUXIÈME culture martiale au référentiel (loi −10 × rang),
+  // encore ABSENTE du monde : sa loi ne compte pas
+  C.config.cultures.push({
+    nom: 'Marsisme', heredite: 'Patrilinéaire', homoAutorisee: false, fertFactor: 1,
+    regleVille: 'Loi de ville de test', regleHabitant: 'Loi d habitant de test',
+    garnisonHorsCultureParRang: 10,
+  })
+  assert.equal(malusFerveurMartiale(state, ville, C), 20 * rang,
+    'la loi de la culture martiale ABSENTE du monde ne compte pas')
+  // sa ville apparaît chez un autre joueur : les DEUX lois s'appliquent
+  state.players.push({ ...joueur, n: 2, nom: 'Marsiens',
+    villes: [{ ...ville, nom: 'Marsopolis', culture: 'Marsisme' }] } as unknown as Player)
+  assert.equal(malusFerveurMartiale(state, ville, C), 30 * rang,
+    'les lois des deux cultures martiales se cumulent : (20 + 10) × rang')
+  // une habitation zélotiste : protégée de SA loi, subit l'autre
+  assert.equal(malusFerveurMartiale(state, zelote.villes[0], C), 10 * rang,
+    'l habitation zélotiste est protégée de sa loi mais subit celle de Marsisme')
+  // une habitation marsiste : symétriquement
+  assert.equal(malusFerveurMartiale(state, state.players[2].villes[0], C), 20 * rang,
+    'l habitation marsiste est protégée de sa loi mais subit celle de Zélotisme')
+  // le malus reste UNE fois par culture : une 2e ville marsiste ne double rien
+  state.players.push({ ...joueur, n: 3, nom: 'Marsiens 2',
+    villes: [{ ...ville, nom: 'Marsopolis 2', culture: 'Marsisme' }] } as unknown as Player)
+  assert.equal(malusFerveurMartiale(state, ville, C), 30 * rang,
+    'une 2e ville marsiste ne cumule pas : malus UNE fois par culture et par habitation')
+})
