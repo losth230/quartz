@@ -73,11 +73,11 @@ export function PlayerView({ joueur }: { joueur: number }) {
       if (target) fn(target, s)
     })
 
-  // ── Dogmes de culture (2e séance du 30/10) : le joueur DOMINANT choisit
+  // ── Dogmes de culture (2e séance du 30/10) : le PONTIFE choisit
   //    un dogme par palier de Tourisme franchi par la culture. Le joueur
   //    est résolu DANS le mutateur (comme faireConstruire) — choisirDogme
   //    valide tout seul (palier franchi, non consommé, dogme au
-  //    référentiel, dominant) et journalise en « Culture » ; un refus
+  //    référentiel, pontife) et journalise en « Culture » ; un refus
   //    part au journal « Système » (la vue ne propose que des choix
   //    valides, ce garde-fou couvre les courses entre vues/joueurs).
   const choisirDogmeJoueur = (palier: number, nom: string) =>
@@ -118,7 +118,7 @@ export function PlayerView({ joueur }: { joueur: number }) {
           (a)) — bloc repliable en tête de page Pays. */}
       <AideAuto />
 
-      {/* Culture du pays : règles de ville/habitant + dogmes (le dominant
+      {/* Culture du pays : règles de ville/habitant + dogmes (le pontife
           choisit — mutateur choisirDogmeJoueur ci-dessus). */}
       <CulturePays state={state} p={p} C={C} choisir={choisirDogmeJoueur} />
 

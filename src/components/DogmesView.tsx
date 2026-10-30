@@ -4,10 +4,12 @@
 //  qu'un onglet royaume et Pays ») : vue TOUTES CULTURES des dogmes
 //  de culture — Tourisme de chaque culture présente, paliers franchis,
 //  dogmes pris (descriptions du référentiel), paliers en attente et
-//  CHOIX INTERACTIF au DOMINANT de la culture (même mutateur que la
-//  carte « Culture du pays » : choisirDogme valide tout seul — palier
-//  franchi, non consommé, dogme au référentiel, dominant — et
-//  journalise en « Culture » ; un refus part au journal « Système »)
+//  CHOIX INTERACTIF au PONTIFE de la culture (6e retour 2026-10-30,
+//  arbitrage Thibaut « remplace dominant par pontife » ; même
+//  mutateur que la carte « Culture du pays » : choisirDogme valide
+//  tout seul — palier franchi, non consommé, dogme au référentiel,
+//  pontife — et journalise en « Culture » ; un refus part au
+//  journal « Système »)
 //  + table complète du référentiel (les 12 dogmes et leurs effets
 //  moteur, avec les cultures qui les ont pris).
 // ══════════════════════════════════════════════════════════════════════
@@ -16,7 +18,7 @@ import { useGame } from '../state/store'
 import type { GameState } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import {
-  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurDominantCulture,
+  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture,
   dogmesDisponiblesCulture, choisirDogme,
 } from '../engine/dogmes'
 import { Badge, Card, fmt } from './ui'
@@ -28,8 +30,8 @@ export function DogmesView({ joueur }: { joueur: number }) {
 
   // Même mutateur que PlayerView (choisirDogmeJoueur), généralisé à
   //  TOUTE culture : le joueur SÉLECTIONNÉ (barre J1..J8) choisit pour
-  //  une culture quand il en est le DOMINANT — choisirDogme valide et
-  //  journalise au nom du dominant, un refus part au journal « Système ».
+  //  une culture quand il en est le PONTIFE — choisirDogme valide et
+  //  journalise au nom du pontife, un refus part au journal « Système ».
   const choisirDogmeJoueur = (culture: string, palier: number, nom: string) =>
     update((s: GameState) => {
       const t = s.players.find((x) => x.n === joueur)
@@ -56,7 +58,7 @@ export function DogmesView({ joueur }: { joueur: number }) {
           <div>
             À chaque palier de <strong>{pas} de Tourisme</strong> cumulé par une <strong>culture</strong>{' '}
             (toutes les villes de cette culture, tous joueurs, sans les cités libres), le joueur
-            ayant le plus de Tourisme dans cette culture — le <strong>dominant</strong> — choisit
+            ayant le plus de Tourisme dans cette culture — le <strong>pontife</strong> — choisit
             UN dogme pour elle.
           </div>
           <div className="muted small">
@@ -67,7 +69,7 @@ export function DogmesView({ joueur }: { joueur: number }) {
             villes de la culture sont touchés.
           </div>
           <div className="muted small">
-            Sélectionne un joueur dans la barre ci-dessus : s'il est dominant d'une culture avec un
+            Sélectionne un joueur dans la barre ci-dessus : s'il est pontife d'une culture avec un
             palier en attente, le choix interactif apparaît dans la carte de cette culture.
           </div>
         </div>
@@ -79,7 +81,7 @@ export function DogmesView({ joueur }: { joueur: number }) {
         const pris = dogmesCulture(state, culture)
         const enAttente = paliersFranchis - pris.length
         const prochainPalier = (pris.length + 1) * pas
-        const dominant = joueurDominantCulture(state, culture, C)
+        const pontife = joueurPontifeCulture(state, culture, C)
         const disponibles = dogmesDisponiblesCulture(state, culture, C)
         return (
           <Card key={culture} title={`🛕 ${culture}`}>
@@ -95,9 +97,9 @@ export function DogmesView({ joueur }: { joueur: number }) {
               <div className="muted small">
                 Tourisme de la culture {culture} : {fmt(tCult)} (toutes les villes de cette culture,
                 tous joueurs, sans les cités libres) — {paliersFranchis} palier(s) franchi(s) tous
-                les {pas}, {pris.length} dogme(s) choisi(s). Dominant :{' '}
-                {dominant ? <strong>{dominant.joueur.nom}</strong> : '—'}
-                {dominant ? ` (${fmt(dominant.tourisme)} Tourisme)` : ''}.
+                les {pas}, {pris.length} dogme(s) choisi(s). Pontife :{' '}
+                {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}
+                {pontife ? ` (${fmt(pontife.tourisme)} Tourisme)` : ''}.
               </div>
               {pris.length > 0 ? pris.map((d) => {
                 const ref = (C.config.dogmes ?? []).find((r) => r.nom === d.nom)
@@ -114,7 +116,7 @@ export function DogmesView({ joueur }: { joueur: number }) {
               }) : <div className="muted small">Aucun dogme choisi pour cette culture.</div>}
               {enAttente > 0 && (
                 <div>
-                  {dominant && dominant.joueur.n === joueur ? (
+                  {pontife && pontife.joueur.n === joueur ? (
                     <>
                       <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                       <span className="small">
@@ -148,8 +150,8 @@ export function DogmesView({ joueur }: { joueur: number }) {
                       <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                       <span className="small">
                         dogme à choisir par{' '}
-                        {dominant ? <strong>{dominant.joueur.nom}</strong> : '—'}{' '}
-                        (joueur dominant de la culture : le plus de Tourisme).
+                        {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}{' '}
+                        (pontife de la culture : le plus de Tourisme).
                       </span>
                     </>
                   )}

@@ -6,7 +6,7 @@
 //  carte « Dogmes » disparaît. RETOUR DES DOGMES DÉFINITIFS le
 //  2026-10-30 : la carte « Dogmes de culture » revient dans
 //  l'onglet Tourisme — table des 12 dogmes retenus par Thibaut,
-//  choisis en jeu par le joueur dominant de chaque culture, cf.
+//  choisis en jeu par le pontife de chaque culture, cf.
 //  engine/dogmes.ts.)
 // ══════════════════════════════════════════════════════════════════════
 
