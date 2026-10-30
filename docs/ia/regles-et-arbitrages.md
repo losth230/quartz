@@ -1762,3 +1762,29 @@ texte depuis l'origine mais n'avait JAMAIS été codée.
     `tributVassalMult` 1,05) vivent dans le référentiel — éditables
     via l'onglet Régimes des Paramètres et visibles dans le wiki
     Référentiels (colonne « Loi chiffrée »).
+
+## Classes sociales des villes — l'inventaire social (retour Thibaut, 2026-10-28, 6e retour du jour)
+
+Thibaut demande un tableau des classes sociales PRÉSENTES dans chaque
+ville, sous le tableau des métiers. Même esprit que « Cultures
+présentes » : une photographie sociale de la ville.
+
+### Arbitrages et interprétations actés
+
+1. **Classes présentes seulement** : une classe sans habitant dans la
+   ville ne s'affiche pas (cohérent avec Cultures présentes et avec
+   les tableaux métiers récents) ; ville vide → « aucun habitant ».
+2. **Ordre hiérarchique** : noble, puis bourgeois, puis roturier —
+   du sommet de l'échelle vers le bas, comme la colonne Rang du
+   panneau Population.
+3. **Le rang suit la règle moteur `rangDe`, sans redéfinition** :
+   noble de NAISSANCE (dynastie noble) ou prestige ≥ 250 ; bourgeois
+   ≥ 100 ; roturier sinon. La refonte 12 lois s'applique donc
+   TELLE QUELLE : un habitant Communautarisme passe bourgeois dès 80
+   (« Bourgeoisie facile ») dans ce tableau comme partout ailleurs.
+4. **Colonnes** : classe · nombre de vivants · part en % des vivants
+   de la ville (même convention d'arrondi que les cultures) ;
+   la classe Noble en gras, les autres en neutre.
+5. **Position** : colonne droite de la carte de ville, SOUS le
+   tableau des métiers (le wrapper d'empilement sert désormais aux
+   deux colonnes — filets identiques entre tous les tableaux).
