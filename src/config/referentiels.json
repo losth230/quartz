@@ -490,72 +490,86 @@
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Parité",
-      "reglePays": "Entraide : votre capitale génère +3 Nourriture par habitation de cette culture dans le monde.",
-      "reglePerso": "Générosité : les personnages gouverneurs réduisent la puissance des révoltes de 20 pts supplémentaires.",
-      "capitalNourrParHabMonde": 3
+      "regleVille": "Logements élargis : les habitations ont +5 Taudis.",
+      "regleHabitant": "Bourgeoisie facile : seuil de prestige bourgeois abaissé (100 → 80).",
+      "taudisParHabitation": 5,
+      "prestigeSeuilBourgeois": 80
     },
     {
       "nom": "Déisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
-      "reglePays": "Prier les dieux : chaque fois que vous construisez un bâtiment de faction, vous gagnez 4 Science.",
-      "reglePerso": "Enfant Divin : un personnage Héritier génère +6 Tourisme par rang de la capitale.",
-      "scienceParConstruction": 4
+      "regleVille": "Monuments pieux : les bâtiments de faction offrent +1 emplacement de Scientifique.",
+      "regleHabitant": "Lavages de main : réduit les chances de contracter des maladies de 2 %.",
+      "scientifiqueParBatiment": 1,
+      "maladieContractMod": -0.02
     },
     {
       "nom": "Lunisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
-      "reglePays": "Prêcheurs : votre capitale génère +4 Tourisme par habitation de cette culture dans le monde.",
-      "reglePerso": "Soldats de la Lumière : lorsqu'une armée attaque une habitation, la garnison de celle-ci est réduite de 15 par rang de votre pays.",
-      "capitalTourismeParHabMonde": 4
+      "regleVille": "Villes Saintes : les habitations ont +2 emplacements de Palais.",
+      "regleHabitant": "Foi supérieure : les nobles rapportent +1 Tourisme par tour.",
+      "palaisParHabitation": 2,
+      "tourismeParNoble": 1
     },
     {
       "nom": "Naturalisme",
       "homoAutorisee": false,
-      "fertFactor": 1,
+      "fertFactor": 1.1,
       "heredite": "Parité",
-      "reglePays": "Ecologisme : vos habitations construites sur des cases de forêt produisent +1 Bois.",
-      "reglePerso": "Walpurgis : les personnages possèdent 0,1 Fécondité."
+      "regleVille": "Champs nourriciers : les fermiers rapportent +1 Nourriture par tour en été.",
+      "regleHabitant": "Walpurgis : fertFactor 1,1 (+10 % de naissances).",
+      "nourrEteParFermier": 1
     },
     {
       "nom": "Sethisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
-      "reglePays": "Adaptation : vos habitations génèrent +1 Or par case de désert dans leur enceinte.",
-      "reglePerso": "Sorcellerie : votre dirigeant génèrent +1 Science par rang de votre capitale."
+      "regleVille": "Caravanes : une fois 3 aménagements atteints, +1 route commerciale disponible.",
+      "regleHabitant": "Conseil des Sages : les nobles rapportent +0,1 Science par tour.",
+      "caravanesSeuilAmenagements": 3,
+      "caravanesRoutesBonus": 1,
+      "scienceParNoble": 0.1
     },
     {
       "nom": "Zélotisme",
       "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
-      "reglePays": "Supériorité évidente : votre capitale génère +2 Or par habitation de cette culture dans le monde.",
-      "reglePerso": "Par le fer : les personnages génèrent un dé de manœuvre rouge s'ils sont commandants.",
-      "capitalOrParHabMonde": 2
+      "regleVille": "Ferveur martiale : les garnisons des habitations qui ne sont pas de cette culture sont réduites de 20 points par rang de l'habitation.",
+      "regleHabitant": "Corps de fer : les Gardes produisent +10 Garnison et +0,2 Or par tour.",
+      "garnisonHorsCultureParRang": 20,
+      "garnisonParGardeCulture": 10,
+      "orParGarde": 0.2
     }
   ],
   "regimes": [
     {
       "nom": "Autoritarisme",
-      "loi": "Conscription : garnison des habitations +15 par rang des habitations. Coût de levée d'armée -10 par rang du pays.",
-      "garnisonParRang": 15
+      "loi": "Conscription : prix de levée d'armée -10 Or par rang du pays. Frontières closes : vos habitants ont 20 % de chances de moins de partir.",
+      "leveeOrParRangPays": 10,
+      "departHabitantsMult": 0.8
     },
     {
       "nom": "Socialisme",
-      "loi": "Pour le peuple : +5 Nourriture par tour d'été pour les champs et rizières.",
-      "nourrEteChampRiziere": 5
+      "loi": "Terre d'accueil : chaque fois qu'un migrant arrive dans une de vos villes, recevez 1 Or. Redistribution : les bourgeois ne consomment que 1 nourriture par tour et les nobles que 2 nourriture par tour.",
+      "orParMigrant": 1,
+      "consoNourrBourgeoisRegime": 1,
+      "consoNourrNobleRegime": 2
     },
     {
       "nom": "Démocratie",
-      "loi": "Elections : le sacre d'avènement est gratuit."
+      "loi": "Elections : le sacre d'avènement est gratuit. Le pouvoir du peuple : +5 Bonheur dans chacune de vos habitations.",
+      "bonheurParHabitation": 5
     },
     {
       "nom": "Monarchie",
-      "loi": "Droit Divin : vous possédez 1 serment supplémentaire."
+      "loi": "Droit Divin : vous possédez 1 serment supplémentaire. Vassaux dévoués : les taxes des vassaux rapportent 5 % de ressources supplémentaires.",
+      "tributVassalMult": 1.05
     }
   ],
   "banquesNoms": [
@@ -2061,15 +2075,26 @@
       "groupe": "Ville",
       "famille": "Militaire",
       "nom": "Poste de garde",
-      "cout": "25 Or + 4 Fer",
+      "cout": "",
       "production": "",
-      "description": "+4 emplacements de Garde.",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Garde",
           "places": 4
+        }
+      ],
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
         }
       ]
     },
@@ -2078,25 +2103,45 @@
       "groupe": "Ville",
       "famille": "Militaire",
       "nom": "Herses",
-      "cout": "4 Or + 2 Bois",
+      "cout": "",
       "production": "",
-      "description": "Ajoute deux Herses lors de bataille de siège, aux endroits choisis par le défenseur.",
-      "rangMinHabitation": 1
+      "description": "",
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 4
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 2
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Camp de bûcheron",
-      "cout": "5 Or + 1 Bétail",
-      "production": "+2 emplacements de Bûcheron.",
-      "description": "+2 emplacements de Bûcheron.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Bûcheron",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 1
         }
       ]
     },
@@ -2105,15 +2150,25 @@
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Camp de mineur",
-      "cout": "5 Or + 1 Charbon",
-      "production": "+2 emplacements de Mineur.",
-      "description": "+2 emplacements de Mineur.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Mineur",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 1
         }
       ]
     },
@@ -2122,15 +2177,26 @@
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Echoppe",
-      "cout": "10 Or + 3 Bois",
-      "production": "+2 emplacements de Commerçant.",
-      "description": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "routesApportees": 1,
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Commerçant",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
         }
       ]
     },
@@ -2139,9 +2205,9 @@
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Grange",
-      "cout": "10 Or + 3 Bétail + 3 Bois",
-      "production": "+2 emplacements d'Éleveur, +4 emplacements de Fermier.",
-      "description": "+2 emplacements d'Éleveur, +4 emplacements de Fermier.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
@@ -2153,6 +2219,20 @@
           "metier": "Fermier",
           "places": 4
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 3
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
       ]
     },
     {
@@ -2160,16 +2240,20 @@
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Herboristerie",
-      "cout": "10 Or + 2 Pierre",
-      "production": "+1 emplacement de Guérisseur.",
-      "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
       "bonusGuerison": 0.05,
-      "emplacements": [
+      "couts": [
         {
-          "metier": "Guérisseur",
-          "places": 1
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 2
         }
       ]
     },
@@ -2178,15 +2262,424 @@
       "groupe": "Ville",
       "famille": "Economique",
       "nom": "Ponton",
-      "cout": "5 Or + 5 Bois",
-      "production": "+2 emplacements de Pêcheur.",
-      "description": "+2 emplacements de Pêcheur. Les pêcheurs de cette habitation produisent également +0,5 Bétail par tour. Habitations côtières uniquement (proximité Rivière ou Mer).",
+      "cout": "",
+      "production": "",
+      "description": "",
       "rangMinHabitation": 1,
       "effets": [],
       "emplacements": [
         {
           "metier": "Pêcheur",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Bas quartier",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "taudisApportes": 20,
+      "couts": [
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        },
+        {
+          "ressource": "Or",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Caserne",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ],
+      "requis": "Poste de garde"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Réseau de routes",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Tour de sorcier",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Quartier intermédiaire",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 20
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Camp de travailleurs",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Bûcheron",
+          "places": 2
+        },
+        {
+          "metier": "Mineur",
+          "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 4
+        }
+      ],
+      "requis": "Camp de bûcheron"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Silo à grain",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 3
+        },
+        {
+          "metier": "Fermier",
+          "places": 7
+        }
+      ],
+      "remplaceBatiment": "Grange",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 8
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Moulin à vent",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Éleveur",
+          "places": 4
+        },
+        {
+          "metier": "Fermier",
+          "places": 15
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 4
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 4
+        }
+      ],
+      "requis": "Silo à grain"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Place du marché",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "routesApportees": 1,
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 6
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 6
+        }
+      ],
+      "requis": "Echoppe"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Port de commerce",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 4
+        },
+        {
+          "metier": "Commerçant",
+          "places": 10
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 4
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ],
+      "requis": "Ponton"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Port de pêche",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Pêcheur",
+          "places": 6
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 4
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 4
+        }
+      ],
+      "requis": "Ponton"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Clinique",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 5
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 30
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        }
+      ],
+      "requis": "Herboristerie"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Guilde des artisans de la terre",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 30
+        }
+      ],
+      "remplaceBatiment": "Moulin à vent",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 16
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 6
         }
       ]
     },
@@ -2195,15 +2688,26 @@
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Poste de garde",
-      "cout": "25 Or + 4 Fer",
+      "cout": "",
       "production": "",
-      "description": "+4 emplacements de Garde.",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Garde",
           "places": 4
+        }
+      ],
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
         }
       ]
     },
@@ -2212,36 +2716,67 @@
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Herses",
-      "cout": "4 Or + 2 Bois",
+      "cout": "",
       "production": "",
-      "description": "Ajoute deux Herses lors de bataille de siège, aux endroits choisis par le défenseur.",
-      "rangMinHabitation": 1
+      "description": "",
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 4
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 2
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Terrain d'entrainement",
-      "cout": "12 Or + 3 Bois",
+      "reductionLeveeArmee": 10,
+      "cout": "",
       "production": "",
-      "description": "Si vous levez une armée dans cette habitation, dépensez 10 Or de moins.",
+      "description": "",
       "effets": [],
-      "rangMinHabitation": 1
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Camp de bûcheron",
-      "cout": "5 Or + 1 Bétail",
-      "production": "+2 emplacements de Bûcheron.",
-      "description": "+2 emplacements de Bûcheron.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Bûcheron",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 1
         }
       ]
     },
@@ -2250,15 +2785,25 @@
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Camp de mineur",
-      "cout": "5 Or + 1 Charbon",
-      "production": "+2 emplacements de Mineur.",
-      "description": "+2 emplacements de Mineur.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Mineur",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 1
         }
       ]
     },
@@ -2267,35 +2812,59 @@
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Camp d'ingénieur",
-      "cout": "10 Or + 2 Bois + 2 Fer.",
+      "cout": "",
       "production": "",
-      "description": "Les améliorations de fortifications (rouges) coûtent 6 Or et 2 Bois de moins.",
-      "rangMinHabitation": 1
+      "description": "",
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 2
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 2
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Conjuratoire",
-      "cout": "10 Or + 2 Pierre",
-      "production": "+15 Tourisme par tour.",
-      "description": "+15 Tourisme par tour.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Tourisme",
           "quantite": 15
         }
       ],
-      "rangMinHabitation": 1
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 2
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Ecole élémentaire",
-      "cout": "10 Or + 2 Bétail",
-      "production": "Consomme 1 Or par tour.",
-      "description": "Consomme 1 Or par tour.\n+1 emplacement de Professeur et +1 emplacement de chercheur (Scientifique).",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Or",
@@ -2313,22 +2882,43 @@
           "places": 1
         }
       ],
-      "ecoleRang": 1
+      "ecoleRang": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 2
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Echoppe",
-      "cout": "12 Or + 2 Bois",
-      "production": "+2 emplacements de Commerçant.",
-      "description": "+2 emplacements de Commerçant. Permet d'entretenir 1 route commerciale supplémentaire.",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "routesApportees": 1,
       "effets": [],
       "rangMinHabitation": 1,
       "emplacements": [
         {
           "metier": "Commerçant",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 2
         }
       ]
     },
@@ -2337,31 +2927,393 @@
       "groupe": "Château",
       "famille": "Economique",
       "nom": "Herboristerie",
-      "cout": "10 Or + 2 Pierre",
-      "production": "+1 emplacement de Guérisseur.",
-      "description": "Chances de contracter une maladie et de guérir d'une maladie augmentées de 5%.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "rangMinHabitation": 1,
       "malContraction": 0.05,
       "bonusGuerison": 0.05,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 2
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Bas quartier",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "taudisApportes": 20,
+      "couts": [
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        },
+        {
+          "ressource": "Or",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Caserne",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ],
+      "requis": "Poste de garde"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Réseau de routes",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Tour de sorcier",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Ecole militaire",
+      "reductionLeveeArmee": 25,
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ],
+      "requis": "Terrain d'entrainement"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Quartier intermédiaire",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 20
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Haut quartier",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 20
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Clinique",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
       "emplacements": [
         {
           "metier": "Guérisseur",
-          "places": 1
+          "places": 5
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 30
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        }
+      ],
+      "requis": "Herboristerie"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Cabinet d'astronomie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 4
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 5
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 4
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 2
         }
       ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Chapelle",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Artiste",
+          "places": 7
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 8
+        }
+      ],
+      "requis": "Conjuratoire"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Ecole intermédiaire",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Or",
+          "quantite": -3
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Professeur",
+          "places": 2
+        },
+        {
+          "metier": "Scientifique",
+          "places": 1
+        }
+      ],
+      "remplaceBatiment": "Ecole élémentaire",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 16
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des explorateurs",
+      "reductionLeveeArmee": 20,
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 2,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 60
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 12
+        }
+      ],
+      "requis": "Ecole militaire"
     },
     {
       "categorie": "Bâtiment",
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Banque centrale",
-      "cout": "12 Or + 6 Bois",
-      "production": "+8 Or par tour.",
-      "description": "+8 Or par tour.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Or",
           "quantite": 8
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
         }
       ]
     },
@@ -2370,13 +3322,24 @@
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Grande caserne",
-      "cout": "12 Or + 6 Bois",
+      "reductionLeveeArmee": 8,
+      "cout": "",
       "production": "",
-      "description": "Garnison +40. Coût de Levée -8 Or.",
+      "description": "",
       "effets": [
         {
           "ressource": "Garnison",
           "quantite": 40
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
         }
       ]
     },
@@ -2385,13 +3348,23 @@
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Hôtel de tourisme",
-      "cout": "12 Or + 6 Bois",
-      "production": "+12 Tourisme par tour.",
-      "description": "Tourisme +12.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Tourisme",
           "quantite": 12
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
         }
       ]
     },
@@ -2400,13 +3373,23 @@
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Jardin intérieur",
-      "cout": "12 Or + 6 Bois",
-      "production": "+14 Nourriture par tour.",
-      "description": "+14 Nourriture par tour.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Nourriture",
           "quantite": 14
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
         }
       ]
     },
@@ -2415,13 +3398,23 @@
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Observatoire",
-      "cout": "12 Or + 6 Bois",
-      "production": "+1 Science par tour.",
-      "description": "+1 Science par tour.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [
         {
           "ressource": "Science",
           "quantite": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 6
         }
       ]
     },
@@ -2431,8 +3424,8 @@
       "famille": "",
       "nom": "Baleinier",
       "terrain": "Baleine",
-      "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Pêcheur, 2 emplacements de Commerçant.",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2444,6 +3437,16 @@
           "metier": "Commerçant",
           "places": 2
         }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
       ]
     },
     {
@@ -2452,14 +3455,24 @@
       "famille": "",
       "nom": "Bâteau de pêche",
       "terrain": "Crabe",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Pêcheur.",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
         {
           "metier": "Pêcheur",
           "places": 2
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
         }
       ]
     },
@@ -2469,8 +3482,8 @@
       "famille": "",
       "nom": "Carrière",
       "terrain": "Pierre",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Mineur, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2479,7 +3492,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2487,8 +3510,8 @@
       "famille": "",
       "nom": "Champ",
       "terrain": "Plaine",
-      "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Fermier, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2497,7 +3520,17 @@
           "places": 3
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2505,8 +3538,8 @@
       "famille": "",
       "nom": "Foire",
       "terrain": "Plaine ou Désert",
-      "cout": "8 Or + 3 Bois",
-      "production": "1 emplacements de Artiste, 1 emplacements de Commerçant, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2519,7 +3552,17 @@
           "places": 1
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2527,8 +3570,8 @@
       "famille": "",
       "nom": "Mine de Charbon",
       "terrain": "Charbon",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Charbonnier, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2537,7 +3580,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2545,8 +3598,8 @@
       "famille": "",
       "nom": "Mine de Fer",
       "terrain": "Fer",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Forgeron, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2555,7 +3608,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2563,17 +3626,27 @@
       "famille": "",
       "nom": "Mine d'Or",
       "terrain": "Or",
-      "cout": "8 Or + 3 Bois",
-      "production": "3 emplacements de Commerçant, 5 Taudis",
-      "description": "Ses emplacements de Marchand ont disparu avec le métier (retiré du jeu).",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 3
+          "places": 6
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2581,8 +3654,8 @@
       "famille": "",
       "nom": "Observatoire",
       "terrain": "Geyser/Volcan",
-      "cout": "8 Or + 3 Bois",
-      "production": "1 emplacements de Scientifique, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2591,7 +3664,17 @@
           "places": 1
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2599,8 +3682,8 @@
       "famille": "",
       "nom": "Pâturage",
       "terrain": "Bétail",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Éleveur, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2609,7 +3692,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2617,8 +3710,8 @@
       "famille": "",
       "nom": "Rizière",
       "terrain": "Marais",
-      "cout": "8 Or + 3 Bois",
-      "production": "4 emplacements de Fermier, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2627,7 +3720,17 @@
           "places": 4
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2635,8 +3738,8 @@
       "famille": "",
       "nom": "Scierie",
       "terrain": "Forêt",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Bûcheron, 2 emplacements de Chasseur, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2649,7 +3752,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2657,8 +3770,8 @@
       "famille": "",
       "nom": "Sériciculture",
       "terrain": "Soie",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Tisseur, 2 emplacements de Chasseur, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2671,7 +3784,17 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
+      "taudisApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 8
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2679,8 +3802,8 @@
       "famille": "",
       "nom": "Site archéologique",
       "terrain": "Ruine",
-      "cout": "8 Or + 3 Bois",
-      "production": "2 emplacements de Archéologue, 5 Taudis",
+      "cout": "",
+      "production": "",
       "description": "",
       "effets": [],
       "emplacements": [
@@ -2689,73 +3812,15 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5
-    },
-    {
-      "categorie": "Bâtiment",
-      "groupe": "Ville",
-      "famille": "Merveille",
-      "nom": "Sanctuaire de Salmodiva",
-      "rangMinHabitation": 1,
-      "cout": "20 Or + 20 Bois",
-      "production": "+25 Nourriture par tour.",
-      "description": "+25 Nourriture par tour.",
-      "effets": [
-        {
-          "ressource": "Nourriture",
-          "quantite": 25
-        }
-      ]
-    },
-    {
-      "categorie": "Bâtiment",
-      "groupe": "Ville",
-      "famille": "Merveille",
-      "nom": "Jardins d'Alexandrie",
-      "rangMinHabitation": 1,
-      "cout": "40 Or + 10 Bétail + 40 Nourriture",
-      "production": "+40 Habitants lors de sa construction.",
-      "description": "+40 Habitants lors de sa construction (crédités automatiquement).",
-      "effets": [
-        {
-          "ressource": "Habitants",
-          "quantite": 40
-        }
-      ]
-    },
-    {
-      "categorie": "Bâtiment",
-      "groupe": "Ville",
-      "famille": "Merveille",
-      "nom": "Mont Caracole",
-      "rangMinHabitation": 1,
-      "cout": "30 Or + 15 Fer",
-      "production": "Garnison +40.",
-      "description": "Garnison +40. Tour de défense : l'habitation est protégée contre les tremblements de terre et éruptions volcaniques.",
-      "effets": [
-        {
-          "ressource": "Garnison",
-          "quantite": 40
-        }
-      ]
-    },
-    {
-      "categorie": "Bâtiment",
-      "groupe": "Ville",
-      "famille": "Merveille",
-      "nom": "Grands bains",
-      "rangMinHabitation": 1,
-      "cout": "30 Or + 10 Fer",
-      "production": "+4 Or par tour.",
-      "description": "+8 Tourisme. +4 Or par tour. Les marais à 5 cases ou moins sont protégés contre les inondations.",
-      "effets": [
+      "taudisApportes": 5,
+      "couts": [
         {
           "ressource": "Or",
-          "quantite": 4
+          "valeur": 8
         },
         {
-          "ressource": "Tourisme",
-          "quantite": 8
+          "ressource": "Bois",
+          "valeur": 3
         }
       ]
     },
@@ -2765,9 +3830,9 @@
       "famille": "",
       "nom": "Baleinier (tier 2)",
       "terrain": "Baleine",
-      "cout": "15 Or + 3 Pierre",
-      "production": "5 emplacements de Pêcheur, 5 emplacements de Commerçant",
-      "description": "Améliore Baleinier en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2780,7 +3845,17 @@
         }
       ],
       "rangMinHabitation": 2,
-      "remplaceAmenagement": "Baleinier"
+      "remplaceAmenagement": "Baleinier",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2788,9 +3863,9 @@
       "famille": "",
       "nom": "Baleinier (tier 3)",
       "terrain": "Baleine",
-      "cout": "35 Or + 3 Fer",
-      "production": "7 emplacements de Pêcheur, 10 emplacements de Commerçant",
-      "description": "Améliore Baleinier en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2803,7 +3878,17 @@
         }
       ],
       "rangMinHabitation": 3,
-      "remplaceAmenagement": "Baleinier (tier 2)"
+      "remplaceAmenagement": "Baleinier (tier 2)",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2811,9 +3896,9 @@
       "famille": "",
       "nom": "Bâteau de pêche (tier 2)",
       "terrain": "Crabe",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Pêcheur",
-      "description": "Améliore Bâteau de pêche en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2822,7 +3907,17 @@
         }
       ],
       "rangMinHabitation": 2,
-      "remplaceAmenagement": "Bâteau de pêche"
+      "remplaceAmenagement": "Bâteau de pêche",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2830,9 +3925,9 @@
       "famille": "",
       "nom": "Bâteau de pêche (tier 3)",
       "terrain": "Crabe",
-      "cout": "35 Or + 3 Fer",
-      "production": "7 emplacements de Pêcheur",
-      "description": "Améliore Bâteau de pêche en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2841,7 +3936,17 @@
         }
       ],
       "rangMinHabitation": 3,
-      "remplaceAmenagement": "Bâteau de pêche (tier 2)"
+      "remplaceAmenagement": "Bâteau de pêche (tier 2)",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2849,9 +3954,9 @@
       "famille": "",
       "nom": "Carrière (tier 2)",
       "terrain": "Pierre",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Mineur, 8 Taudis",
-      "description": "Améliore Carrière en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2861,7 +3966,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Carrière",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2869,9 +3984,9 @@
       "famille": "",
       "nom": "Carrière (tier 3)",
       "terrain": "Pierre",
-      "cout": "35 Or + 3 Fer",
-      "production": "6 emplacements de Mineur, 2 emplacements de Charbonnier, 10 Taudis",
-      "description": "Améliore Carrière en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2885,7 +4000,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Carrière (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2893,9 +4018,9 @@
       "famille": "",
       "nom": "Champ (tier 2)",
       "terrain": "Plaine",
-      "cout": "15 Or + 3 Pierre",
-      "production": "6 emplacements de Fermier, 8 Taudis",
-      "description": "Améliore Champ en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2905,7 +4030,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Champ",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2913,9 +4048,9 @@
       "famille": "",
       "nom": "Champ (tier 3)",
       "terrain": "Plaine",
-      "cout": "35 Or + 3 Fer",
-      "production": "10 emplacements de Fermier, 10 Taudis",
-      "description": "Améliore Champ en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2925,7 +4060,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Champ (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2933,9 +4078,9 @@
       "famille": "",
       "nom": "Foire (tier 2)",
       "terrain": "Plaine ou Désert",
-      "cout": "15 Or + 3 Pierre",
-      "production": "2 emplacements de Artiste, 2 emplacements de Commerçant, 8 Taudis",
-      "description": "Améliore Foire en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2949,7 +4094,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Foire",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2957,9 +4112,9 @@
       "famille": "",
       "nom": "Foire (tier 3)",
       "terrain": "Plaine ou Désert",
-      "cout": "35 Or + 3 Fer",
-      "production": "4 emplacements de Artiste, 4 emplacements de Commerçant, 10 Taudis",
-      "description": "Améliore Foire en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2973,7 +4128,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Foire (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -2981,9 +4146,9 @@
       "famille": "",
       "nom": "Mine de Charbon (tier 2)",
       "terrain": "Charbon",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Charbonnier, 8 Taudis",
-      "description": "Améliore Mine de Charbon en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -2993,7 +4158,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine de Charbon",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3001,9 +4176,9 @@
       "famille": "",
       "nom": "Mine de Charbon (tier 3)",
       "terrain": "Charbon",
-      "cout": "35 Or + 3 Fer",
-      "production": "6 emplacements de Charbonnier, 10 Taudis",
-      "description": "Améliore Mine de Charbon en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3013,7 +4188,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine de Charbon (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3021,9 +4206,9 @@
       "famille": "",
       "nom": "Mine de Fer (tier 2)",
       "terrain": "Fer",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Forgeron, 1 emplacements de Garde, 8 Taudis",
-      "description": "Améliore Mine de Fer en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3037,7 +4222,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine de Fer",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3045,9 +4240,9 @@
       "famille": "",
       "nom": "Mine de Fer (tier 3)",
       "terrain": "Fer",
-      "cout": "35 Or + 3 Fer",
-      "production": "6 emplacements de Forgeron, 3 emplacements de Garde, 10 Taudis",
-      "description": "Améliore Mine de Fer en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3061,7 +4256,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine de Fer (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3069,19 +4274,29 @@
       "famille": "",
       "nom": "Mine d'Or (tier 2)",
       "terrain": "Or",
-      "cout": "15 Or + 3 Pierre",
-      "production": "7 emplacements de Commerçant, 8 Taudis",
-      "description": "Améliore Mine d'Or en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 7
+          "places": 14
         }
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine d'Or",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3089,19 +4304,29 @@
       "famille": "",
       "nom": "Mine d'Or (tier 3)",
       "terrain": "Or",
-      "cout": "35 Or + 3 Fer",
-      "production": "12 emplacements de Commerçant, 10 Taudis",
-      "description": "Améliore Mine d'Or en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
           "metier": "Commerçant",
-          "places": 12
+          "places": 24
         }
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine d'Or (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3109,9 +4334,9 @@
       "famille": "",
       "nom": "Observatoire (tier 2)",
       "terrain": "Geyser/Volcan",
-      "cout": "15 Or + 3 Pierre",
-      "production": "3 emplacements de Scientifique, 8 Taudis",
-      "description": "Améliore Observatoire en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3121,7 +4346,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Observatoire",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3129,9 +4364,9 @@
       "famille": "",
       "nom": "Observatoire (tier 3)",
       "terrain": "Geyser/Volcan",
-      "cout": "35 Or + 3 Fer",
-      "production": "5 emplacements de Scientifique, 10 Taudis",
-      "description": "Améliore Observatoire en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3141,7 +4376,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Observatoire (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3149,9 +4394,9 @@
       "famille": "",
       "nom": "Pâturage (tier 2)",
       "terrain": "Bétail",
-      "cout": "15 Or + 3 Pierre",
-      "production": "5 emplacements de Éleveur, 8 Taudis",
-      "description": "Améliore Pâturage en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3161,7 +4406,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Pâturage",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3169,9 +4424,9 @@
       "famille": "",
       "nom": "Pâturage (tier 3)",
       "terrain": "Bétail",
-      "cout": "35 Or + 3 Fer",
-      "production": "8 emplacements de Éleveur, 10 Taudis",
-      "description": "Améliore Pâturage en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3181,7 +4436,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Pâturage (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3189,9 +4454,9 @@
       "famille": "",
       "nom": "Rizière (tier 2)",
       "terrain": "Marais",
-      "cout": "15 Or + 3 Pierre",
-      "production": "8 emplacements de Fermier, 8 Taudis",
-      "description": "Améliore Rizière en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3201,7 +4466,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Rizière",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3209,9 +4484,9 @@
       "famille": "",
       "nom": "Rizière (tier 3)",
       "terrain": "Marais",
-      "cout": "35 Or + 3 Fer",
-      "production": "15 emplacements de Fermier, 10 Taudis",
-      "description": "Améliore Rizière en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3221,7 +4496,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Rizière (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3229,9 +4514,9 @@
       "famille": "",
       "nom": "Scierie (tier 2)",
       "terrain": "Forêt",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Bûcheron, 1 emplacements de Tisseur, 8 Taudis",
-      "description": "Améliore Scierie en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3240,12 +4525,22 @@
         },
         {
           "metier": "Tisseur",
-          "places": 1
+          "places": 2
         }
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Scierie",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3253,9 +4548,9 @@
       "famille": "",
       "nom": "Scierie (tier 3)",
       "terrain": "Forêt",
-      "cout": "35 Or + 3 Fer",
-      "production": "6 emplacements de Bûcheron, 2 emplacements de Tisseur, 10 Taudis",
-      "description": "Améliore Scierie en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3269,7 +4564,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Scierie (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3277,9 +4582,9 @@
       "famille": "",
       "nom": "Sériciculture (tier 2)",
       "terrain": "Soie",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Tisseur, 2 emplacements de Commerçant, 8 Taudis",
-      "description": "Améliore Sériciculture en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3293,7 +4598,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Sériciculture",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3301,9 +4616,9 @@
       "famille": "",
       "nom": "Sériciculture (tier 3)",
       "terrain": "Soie",
-      "cout": "35 Or + 3 Fer",
-      "production": "6 emplacements de Tisseur, 5 emplacements de Commerçant, 10 Taudis",
-      "description": "Améliore Sériciculture en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3317,7 +4632,17 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Sériciculture (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3325,9 +4650,9 @@
       "famille": "",
       "nom": "Site archéologique (tier 2)",
       "terrain": "Ruine",
-      "cout": "15 Or + 3 Pierre",
-      "production": "4 emplacements de Archéologue, 8 Taudis",
-      "description": "Améliore Site archéologique en tier 2.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3337,7 +4662,17 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Site archéologique",
-      "taudisApportes": 8
+      "taudisApportes": 8,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 15
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 3
+        }
+      ]
     },
     {
       "categorie": "Aménagement",
@@ -3345,9 +4680,9 @@
       "famille": "",
       "nom": "Site archéologique (tier 3)",
       "terrain": "Ruine",
-      "cout": "35 Or + 3 Fer",
-      "production": "7 emplacements de Archéologue, 10 Taudis",
-      "description": "Améliore Site archéologique en tier 3.",
+      "cout": "",
+      "production": "",
+      "description": "",
       "effets": [],
       "emplacements": [
         {
@@ -3357,20 +4692,30 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Site archéologique (tier 2)",
-      "taudisApportes": 10
+      "taudisApportes": 10,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 35
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 3
+        }
+      ]
     }
   ],
   "typesHabitation": [
     {
       "type": "Ville",
       "rang": "Hameau",
-      "cout": "20 Or + 10 Bois + 6 Bétail",
+      "cout": "",
       "habitantsRequis": 0,
-      "domicilesDisponibles": "50 maisons, 10 Auberge",
+      "domicilesDisponibles": "50 Taudis, 1 Maison de notable",
       "metiersBase": [
         {
           "metier": "Chasseur",
-          "places": 50
+          "places": 40
         },
         {
           "metier": "Garde",
@@ -3387,25 +4732,39 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 50
         },
         {
-          "domicile": "Auberge",
-          "nombre": 10
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 6
         }
       ]
     },
     {
       "type": "Ville",
       "rang": "Cité",
-      "cout": "40 Or + 8 Bétail + 6 Pierres",
+      "cout": "",
       "habitantsRequis": 120,
-      "domicilesDisponibles": "100 maisons, 50 Auberge",
+      "domicilesDisponibles": "100 Taudis, 20 Maisons, 1 Maison de notable",
       "metiersBase": [
         {
           "metier": "Chasseur",
-          "places": 30
+          "places": 20
         },
         {
           "metier": "Garde",
@@ -3422,21 +4781,39 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 100
         },
         {
-          "domicile": "Auberge",
-          "nombre": 50
+          "domicile": "Maison",
+          "nombre": 20
+        },
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 8
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
         }
       ]
     },
     {
       "type": "Ville",
       "rang": "Grande Cité",
-      "cout": "40 Or + 12 Bétail + 12 Charbons",
+      "cout": "",
       "habitantsRequis": 200,
-      "domicilesDisponibles": "150 maisons, 100 Auberge",
+      "domicilesDisponibles": "150 Taudis, 100 Maisons, 1 Maison de notable",
       "metiersBase": [
         {
           "metier": "Garde",
@@ -3453,21 +4830,39 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 150
         },
         {
-          "domicile": "Auberge",
+          "domicile": "Maison",
           "nombre": 100
+        },
+        {
+          "domicile": "Maison de notable",
+          "nombre": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 12
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 12
         }
       ]
     },
     {
       "type": "Château",
       "rang": "Motte",
-      "cout": "20 Or + 12 Bois + 2 Bétail",
+      "cout": "",
       "habitantsRequis": 0,
-      "domicilesDisponibles": "50 maisons, 10 Auberge",
+      "domicilesDisponibles": "50 Taudis, 5 Maisons de notable",
       "metiersBase": [
         {
           "metier": "Chasseur",
@@ -3484,21 +4879,35 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 50
         },
         {
-          "domicile": "Auberge",
-          "nombre": 10
+          "domicile": "Maison de notable",
+          "nombre": 5
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 2
         }
       ]
     },
     {
       "type": "Château",
       "rang": "Donjon",
-      "cout": "40 Or + 2 Bétail + 12 Pierres",
+      "cout": "",
       "habitantsRequis": 120,
-      "domicilesDisponibles": "100 maisons, 50 Auberge",
+      "domicilesDisponibles": "100 Taudis, 10 Maisons de notable",
       "metiersBase": [
         {
           "metier": "Chasseur",
@@ -3515,21 +4924,35 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 100
         },
         {
-          "domicile": "Auberge",
-          "nombre": 50
+          "domicile": "Maison de notable",
+          "nombre": 10
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 2
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
         }
       ]
     },
     {
       "type": "Château",
       "rang": "Forteresse",
-      "cout": "120 Or + 10 Pierres + 12 Fer",
+      "cout": "",
       "habitantsRequis": 200,
-      "domicilesDisponibles": "150 maisons, 100 Auberge",
+      "domicilesDisponibles": "150 Taudis, 20 Maisons de notable",
       "metiersBase": [
         {
           "metier": "Garde",
@@ -3542,12 +4965,26 @@
       ],
       "domicilesRang": [
         {
-          "domicile": "Maison",
+          "domicile": "Taudis",
           "nombre": 150
         },
         {
-          "domicile": "Auberge",
-          "nombre": 100
+          "domicile": "Maison de notable",
+          "nombre": 20
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 120
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 12
         }
       ]
     }
@@ -3816,6 +5253,9 @@
       "regleGenre": "vide",
       "attribution": "Armée",
       "metier": "Soldat",
+      "puissanceArmee": 15,
+      "ageMin": 16,
+      "ageMax": 30,
       "qualite": "roturier"
     },
     {
@@ -3828,6 +5268,7 @@
       "regleGenre": "vide",
       "attribution": "Armée",
       "metier": "Commandant",
+      "puissanceArmee": 45,
       "qualite": "noble"
     },
     {

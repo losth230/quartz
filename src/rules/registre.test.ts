@@ -38,10 +38,22 @@ import { effetsConstructionRef, garnisonConstructionRef, instantanesConstruction
 //  migrationPoids, reductionCout, reductionLeveeArmee, emissaires,
 //  scienceInstantanee, ressourcesInstantanees, demographieVille —
 //  sont retirés du contrat : le référentiel ne produit QUE les
-//  quatre types ci-dessous.)
+//  quatre types ci-dessous.
+//  (RESTAURÉ le 2026-10-28, arbitrage Thibaut « les armées, et
+//  surtout les réductions de levée, rejoignent la banque » :
+//  reductionLeveeArmee revient AVEC un producteur — les fiches de
+//  constructions — et rejoint le contrat ci-dessous.)
+//  (RETRAIT 2026-10-29, refonte « 12 lois » des cultures :
+//  fluxParVilleCultureMonde quitte le contrat avec la source
+//  'culture' — plus aucune production de culture ne passe par la
+//  banque ; seuls restent les types des constructions et du régime.)
+// (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le type
+//  'fluxParAmenagement' est supprimé avec la source 'regime' de la
+//  banque — la dernière règle qui le portait (Socialisme « Pour le
+//  peuple ») est REMPLACÉE par les lois du moteur.)
 const TYPES_CONNUSS = new Set([
-  'fluxVille', 'fluxParAmenagement', 'fluxParVilleCultureMonde',
-  'garnisonVille',
+  'fluxVille',
+  'garnisonVille', 'placesMetier', 'logements', 'reductionLeveeArmee',
 ])
 
 test('registre : TOUTE construction à effets du référentiel a SA règle', () => {
@@ -74,7 +86,8 @@ test('registre : chaque effet des règles est un type CONNU de la banque', () =>
   const regles = registreComplet(C_DEFAUT)
   // (RETRAIT 2026-10-24 : le seuil était > 20 AVEC les règles des
   //  technologies de progrès (source 'tech') — sans elles, le registre
-  //  des constructions/régimes/cultures en compte 14.)
+  //  en compte 14. RETRAIT 2026-10-29, refonte « 12 lois » : la
+  //  source 'culture' est vide, il reste constructions + régimes.)
   assert.ok(regles.length > 10, 'le registre doit contenir les constructions à effets')
   for (const r of regles) {
     assert.ok(Array.isArray(r.effets) && r.effets.length > 0, `règle sans effet : ${r.id}`)
@@ -122,8 +135,9 @@ test('registre : le chemin moteur EST la banque (voie unique de production)', ()
     void tourismeBanque
   }
   assert.ok(verifiees > 5, `trop peu de règles vérifiées contre le moteur (${verifiees})`)
-  // (simplification 2026-10-23 : les constructions de rang 2+ sont
-  //  retirées du référentiel, il reste 11 constructions à effets).
+  // (fiche bâtiments rang 2, 2026-10-26 : les constructions de rang
+  //  2+ sont DE RETOUR au référentiel — Moulin à vent, Guilde des
+  //  artisans… consomment des ressources par effets).
 })
 
 test('doublons Ville/Château : le moteur rend les effets de la BONNE version (bug réel)', () => {
@@ -145,5 +159,9 @@ test('doublons Ville/Château : le moteur rend les effets de la BONNE version (b
   const ville = cfgOf(undefined).config.constructions.find((c) => c.nom === 'Echoppe' && c.groupe === 'Ville')
   const chateau = cfgOf(undefined).config.constructions.find((c) => c.nom === 'Echoppe' && c.groupe === 'Château')
   assert.ok(ville && chateau, 'les deux versions Echoppe existent')
-  assert.notEqual(ville.cout, chateau.cout, 'les coûts des deux versions diffèrent (donc le groupe compte)')
+  // (2026-10-27, retour Thibaut : les coûts sont des DONNÉES `couts` —
+  //  la résolution PAR GROUPE doit donner des paires distinctes :
+  //  Echoppe Ville = 10 Or + 3 Bois, Château = 12 Or + 2 Bois.)
+  assert.notEqual(JSON.stringify(ville.couts), JSON.stringify(chateau.couts),
+    'les coûts des deux versions diffèrent (donc le groupe compte)')
 })

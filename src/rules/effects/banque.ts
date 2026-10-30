@@ -23,24 +23,33 @@ import type {
  *  peuple, vassal, suzerainDeCite (plus les notes documentaires
  *  ageMin/pontificatMin « suivi manuel au plateau ») — sont
  *  supprimées avec leurs champs de ConditionRegle ; seules restent
- *  saison, regime et culture, les seules produites par le registre.
+ *  saison et regime, les seules produites par le registre.
+ *  (RETRAIT 2026-10-29, refonte « 12 lois » : la condition
+ *  `culture` est supprimée avec la source 'culture'.)
  *  L'ancien contenu reste dans l'historique git, règle 9.) */
 export function conditionsRemplies(cond: ConditionRegle | undefined, ctx: ContexteEffet): boolean {
   if (!cond) return true
-  const { joueur } = ctx
   if (cond.saison && ctx.saison !== cond.saison) return false
   // (RETRAIT 2026-10-24 : les conditions `tech` / `techNom` — tech
   //  débloquée requise — sont supprimées avec le système de
   //  progrès, retour arbitre.)
-  if (cond.regime && joueur.regime !== cond.regime) return false
-  if (cond.culture && joueur.culture !== cond.culture) return false
+  // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : la
+  //  condition `regime` est supprimée avec la source 'regime' —
+  //  plus aucune loi de régime ne vit dans la banque.)
+  // (RETRAIT 2026-10-29, refonte « 12 lois » : condition `culture`
+  //  supprimée avec la source 'culture'.)
   return true
 }
 
 // ── Application d'un effet ──────────────────────────────────────────────────
 
-/** Applique UN effet à une contribution (accumulate). */
-function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): void {
+/** Applique UN effet à une contribution (accumulate).
+ *  (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le
+ *  contexte n'est plus lu — les cas qui l'utilisaient
+ *  (fluxParAmenagement, fluxParVilleCultureMonde) sont retirés
+ *  avec les sources 'regime' et 'culture' de la banque ; le
+ *  paramètre devient _ctx, muet pour noUnusedParameters.) */
+function appliquerEffet(e: Effet, _ctx: ContexteEffet, out: ContributionEffets): void {
   switch (e.type) {
     case 'fluxVille': {
       if (e.ete) {
@@ -51,33 +60,17 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       break
     }
 
-    case 'fluxParAmenagement': {
-      // Production CUMULABLE : valeur × nombre d'aménagements portant
-      //  l'un des noms listés dans TOUTES les villes du joueur (ex.
-      //  Socialisme : +5 Nourriture d'été par Champ/Rizière — la
-      //  saison est une CONDITION de la règle, pas un if ici).
-      let nb = 0
-      for (const v of ctx.joueur.villes) {
-        for (const a of v.amenagements ?? []) {
-          if (e.noms.includes(a)) nb++
-        }
-      }
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
-    case 'fluxParVilleCultureMonde': {
-      // Production par VILLE de la culture du joueur dans le MONDE
-      //  entier, tous joueurs confondus (ex. Lunisme : +4 Tourisme
-      //  par ville de culture Lunisme).
-      let nb = 0
-      for (const q of ctx.state.players) {
-        for (const v of q.villes) {
-          if (v.culture === ctx.joueur.culture) nb++
-        }
-      }
-      if (nb > 0) out.flux[e.ressource] = (out.flux[e.ressource] ?? 0) + e.valeur * nb
-      break
-    }
+    // (RETRAIT 2026-10-29, refonte « 8 lois » des régimes : le cas
+    //  'fluxParAmenagement' est supprimé avec la source 'regime' de
+    //  la banque — sa seule règle vivante (Socialisme « Pour le
+    //  peuple ») est REMPLACÉE par des lois lues par le moteur.
+    //  Aucune construction du référentiel ne produisait ce type.
+    //  Historique git, règle 9.)
+    // (RETRAIT 2026-10-29, refonte « 12 lois » des cultures : le
+    //  canal fluxParVilleCultureMonde est supprimé avec la source
+    //  'culture' — règles de pays « +N par ville de cette culture
+    //  dans le monde » remplacées par les lois de VILLE et
+    //  d'HABITANT lues par le moteur. Historique git, règle 9.)
     // (RETRAIT 2026-10-24, retour arbitre : les types d'effets des
     //  TECHS — fluxSiCapitale, fluxParVille, fluxParVilleProximite,
     //  fluxParRangHabitation, fluxParBatiment,
@@ -87,7 +80,10 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
     // (RETRAIT 2026-10-24, purge R4 « complète » : les types restants
     //  SANS PRODUCTEUR — fluxJoueur, fluxCapitale, garnisonParRang,
     //  tourismeInstantane, habitantsVille, conversionPoids,
-    //  migrationPoids, reductionCout, reductionLeveeArmee,
+    //  migrationPoids, reductionCout, reductionLeveeArmee
+    //  (RESTAURÉ le 2026-10-28 avec un producteur : constructions,
+    //  arbitrage Thibaut « les armées, et surtout les réductions de
+    //  levée, rejoignent la banque »),
     //  emissaires, scienceInstantanee, ressourcesInstantanees,
     //  demographieVille (et les canaux instantanes/conversion/
     //  migration/reductions de la contribution) — sont supprimés :
@@ -99,13 +95,33 @@ function appliquerEffet(e: Effet, ctx: ContexteEffet, out: ContributionEffets): 
       out.garnison += e.valeur
       break
     }
+
+    // (Retour Thibaut 2026-10-27 : « des valeurs qui passent par la
+    //  banque » — les emplacements de métiers et les logements sont
+    //  des canaux de la contribution AU MÊME TITRE que les flux.)
+    case 'placesMetier': {
+      out.placesMetier[e.metier] = (out.placesMetier[e.metier] ?? 0) + e.valeur
+      break
+    }
+    case 'logements': {
+      out.logements[e.logement] = (out.logements[e.logement] ?? 0) + e.valeur
+      break
+    }
+    // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+    //  réductions de levée, rejoignent la banque » — les réductions
+    //  de levée d'armée sont un canal de la contribution au même
+    //  titre que les flux et les logements.)
+    case 'reductionLeveeArmee': {
+      out.reductionLeveeArmee += e.valeur
+      break
+    }
   }
 }
 
 // ── Application de la banque ───────────────────────────────────────────────
 
 export function contributionVide(): ContributionEffets {
-  return { flux: {}, fluxEte: {}, garnison: 0 }
+  return { flux: {}, fluxEte: {}, garnison: 0, placesMetier: {}, logements: {}, reductionLeveeArmee: 0 }
 }
 
 /** Applique un ensemble de règles de la banque à un contexte et renvoie
@@ -114,7 +130,7 @@ export function appliquerRegles(regles: RegleBanque[], ctx: ContexteEffet): Cont
   const out = contributionVide()
   for (const r of regles) {
     if (!conditionsRemplies(r.conditions, ctx)) continue
-    for (const e of r.effets) appliquerEffet(e, ctx, out)
+    for (const e of r.effets) appliquerEffet(e, ctx, out) // (signature : _ctx muet)
   }
   return out
 }
