@@ -49,7 +49,15 @@ test('rendu ArmiesPanel : la page Armées s’affiche sans crash', async () => {
   }
   // Le prix de levée affiché est celui du VRAI MOTEUR pour la
   // puissance par défaut (90) — pas une constante d'affichage.
-  const prix = prixArmee(90, C)
+  // (Refonte « 8 lois » des régimes, 2026-10-29 : le panneau passe
+  //  désormais le JOUEUR à prixArmee — la loi Autoritarisme
+  //  « Conscription » réduit le prix de 10 Or × rang du pays (le
+  //  joueur 1 de la fixture est Autoritarisme). Le test calcule
+  //  le prix COMME LE PANNEAU : sans ville de levée sélectionnée
+  //  (valeur effective '' du Select en cascade → villeLeveeObj
+  //  undefined), avec le joueur — sinon il attendait 45 Or quand
+  //  le panneau rend 35 Or, faux échec CI depuis le commit 2f253c09.)
+  const prix = prixArmee(90, C, undefined, p1)
   assert.ok(
     h.includes(`${fmt(prix)} Or`),
     `prix de levée moteur (${fmt(prix)} Or) non rendu`,
