@@ -30,8 +30,8 @@ SUCCESS sur la tête v4 (`e03a6deb`, run #1585).
 | A0 | CI « jeu » ROUGE à la tête depuis `2f253c09` (29/10, refonte 8 lois) : le test de rendu `ArmiesPanel` calculait `prixArmee` SANS le joueur alors que le panneau le passe (loi Conscription du régime Autoritarisme du joueur 1) → 45 Or attendus vs 35 Or rendus | 🔴→✅ **découvert à l'audit, corrigé le jour même** (`a1523107`) |
 | A1 | `normaliserEtat` ne complète pas `p.armees` → crash fin de tour sur un état ingéré dont un joueur manque le champ (sauvegardes antérieures aux armées, 2026-10-17) | 🔵 **arbitré par Thibaut (30/10) : PAS de correctif** — les vieilles sauvegardes locales antérieures aux armées sont obsolètes, il les supprime ; aucun état créé par `createGame` n'est concerné |
 | A2 | Perf : fin de tour à 16 000 habitants = 3,2-4,3 s (1,7-3,2 s à l'audit du 27/10) ; le nouveau flux migrationBonheur y compte ≈ 0,21 s | 🟡 surveillance — mitigé par le bandeau F4, partie live très en dessous de 16k |
-| a1 | `malusFerveurMartiale` n'applique que la PREMIÈRE culture martiale présente (ordre du référentiel) | 🟡 conforme à l'arbitrage actuel (une seule culture : Zélotisme) — à redécouvrir si une 2e culture martiale arrive |
-| a2 | `recruitForArmies` peut faire dépasser la puissance CIBLE d'un dernier recrutement (soldat indivisible, pas de clamp) | 🟡 mineur, cohérent avec le modèle « stockée fait foi » — à noter, pas d'action proposée |
+| a1 | `malusFerveurMartiale` n'applique que la PREMIÈRE culture martiale présente (ordre du référentiel) | ✅ **corrigé** (`2dc36c6e`) : toutes les lois présentes s'appliquent, une fois par habitation ET par culture — inchangé à une seule culture |
+| a2 | `recruitForArmies` peut faire dépasser la puissance CIBLE d'un dernier recrutement (soldat indivisible, pas de clamp) | ✅ **corrigé** (`d59383f9`) : la recrue n'est engagée que si ses points tiennent dans la cible — l'armée peut rester juste sous la cible (Soldat indivisible) |
 | a3 | `AGENTS.md` : compteurs de tests périmés (157 natifs / 15 de rendu annoncés ; réalité 254 / 21) | ✅ corrigé dans le même commit docs que le présent rapport |
 
 ## A0 — CI « jeu » rouge à la tête depuis `2f253c09` : découvert à l'audit, corrigé le jour même 🔴→✅
@@ -132,13 +132,24 @@ sera le premier réflexe.
   pas, seule la première (ordre du référentiel) s'appliquerait. Conforme à
   l'arbitrage du 27/10 (une seule culture concernée : Zélotisme, « appliqué
   UNE fois par habitation, sans cumul si plusieurs villes zélotistes ») ;
-  le docblock le documente déjà. À redécouvrir SI une deuxième culture
-  martiale est ajoutée.
+  le docblock le documente déjà. **CORRIGÉ le 30/10 (`2dc36c6e`, arbitrage
+  Thibaut « corrige les mineurs a1 et a2 »)** : chaque culture martiale
+  présente applique SA loi — une fois par habitation ET par culture ; une
+  habitation d'une culture martiale est protégée de SA loi mais subit
+  celle des autres cultures martiales présentes ; à une seule culture
+  (Zélotisme, l'état actuel du jeu) le comportement est INCHANGÉ (test
+  avec une 2e culture martiale injectée au référentiel).
 - **a2** — `recruitForArmies` recrute « tant que puissance < cible » : le
   dernier soldat fait franchir la cible (ex. 40 → 55 pour une cible à 50,
   Soldat = 15 pts). Le soldat étant indivisible, c'est cohérent avec le
   modèle « la puissance stockée fait foi » ; aucun clamp `min(cible)` posé.
-  Const sans action.
+  Const sans action. **CORRIGÉ le 30/10 (`d59383f9`, arbitrage Thibaut)** :
+  la recrue n'est engagée que si ses points TIENNENT dans la cible
+  (`while puissance + ptsSoldat <= cible`) — plus de dépassement ; le Soldat
+  étant indivisible, une armée peut rester juste SOUS la cible si l'écart
+  restant est inférieur aux points du Soldat ; à écart multiple des points
+  du Soldat (levée, renfort, pertes — alignés par construction), le
+  comportement est inchangé.
 - **a3** — `AGENTS.md` annonçait « tests natifs (157) + tests de rendu
   (12 fichiers, 15 tests) » : la réalité de la tête est **254 natifs**
   (vérifiés au rejeu : engine + rules + config + state + supabase) et
@@ -184,7 +195,8 @@ sera le premier réflexe.
 | 1 | A1 : compléter `p.armees` dans `normaliserEtat` + test de non-régression | IA | 🔵 arbitré Thibaut 30/10 : refusé — vieilles sauvegardes obsolètes, supprimées localement |
 | 2 | a3 : compteurs AGENTS.md (254 natifs / 21 rendu) | IA | ✅ corrigé ce jour |
 | 3 | A2 : re-bench 16k à la prochaine grosse vague moteur | IA | ⏳ surveillance |
-| 4 | a1 : rediscuter le malus si une 2e culture martiale arrive | IA/Thibaut | ⏳ différé (conforme à l'arbitrage actuel) |
+| 4 | a1 : rediscuter le malus si une 2e culture martiale arrive | IA/Thibaut | ✅ corrigé ce jour (`2dc36c6e`) — toutes les cultures martiales s'appliquent |
+| 5 | a2 : le dernier recrutement ne franchit plus la cible | IA | ✅ corrigé ce jour (`d59383f9`) — recrue engagée seulement si elle tient dans la cible |
 
 ## Validation
 
