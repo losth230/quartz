@@ -11,6 +11,12 @@
 
 import refJson from './referentiels.json'
 import { mergeParams, type GameParams, type GameParamStrings } from './params'
+// (2026-10-27, audit : HabitationDef n'est plus défini en double ici —
+//  l'UNIQUE définition vit dans engine/types.ts, importée puis
+//  ré-exportée pour ne pas casser les imports existants.)
+import type { HabitationDef } from '../engine/types'
+
+export type { HabitationDef }
 
 // ── Types des référentiels (issus du classeur) ─────────────────────────
 
@@ -41,6 +47,21 @@ export interface MetierDef {
    *  Champ DONNÉE du référentiel — sert à l'ascension sociale
    *  (vague D) et ne change RIEN à l'affectation actuelle. */
   qualite?: 'roturier' | 'bourgeois' | 'noble'
+  /** PUISSANCE D'ARMÉE du porteur (arbitrage Thibaut 2026-10-28 :
+   *  « général et soldat sont des métiers, ils doivent donc vivre
+   *  dans la banque ») — champ DONNÉES de la ligne de métier, lu par
+   *  puissanceArmeeMetier (engine/armees.ts) ; repli sur le paramètre
+   *  historique (puissanceSoldat / puissanceGeneral) si absent.
+   *  ex. Soldat : 15, Commandant : 45. */
+  puissanceArmee?: number
+  /** Âge MINIMAL de recrutement (arbitrage 2026-10-28, même retour :
+   *  puissanceArmee — arbitrage Thibaut : les âges de recrutement du
+   *  soldat vivent sur la ligne de métier Soldat ; repli sur
+   *  soldatAgeMin si absent. ex. 16. */
+  ageMin?: number
+  /** Âge MAXIMAL de recrutement — ligne de métier Soldat (ex. 30) ;
+   *  repli sur soldatAgeMax si absent. */
+  ageMax?: number
 }
 export interface TraitDef {
   name: string
@@ -57,57 +78,108 @@ export interface CultureDef {
   heredite: string
   homoAutorisee: boolean
   fertFactor: number
-  reglePays: string
-  reglePerso: string
-  /** Règles chiffrées appliquées AUTOMATIQUEMENT par le moteur
-   *  (engine/regimes.ts, engine/metiers.ts) : la capitale génère +N d'une
-   *  ressource par habitation de cette culture dans le monde, et chaque
-   *  construction de bâtiment rapporte +N Science. Champs optionnels :
-   *  absents des vieilles configurations, complétés par migrerCultures. */
-  capitalNourrParHabMonde?: number
-  capitalTourismeParHabMonde?: number
-  capitalOrParHabMonde?: number
-  scienceParConstruction?: number
+  /** (RENOMMÉS 2026-10-29, refonte « 12 lois » — anciens reglePays /
+   *  reglePerso : une culture porte une loi de VILLE (culture
+   *  majoritaire de la ville, ville.culture) et une loi d'HABITANT
+   *  (la culture PROPRE du personnage, où qu'il vive).) */
+  regleVille: string
+  regleHabitant: string
+  /** 12 LOIS DES CULTURES (refonte 2026-10-29, arbitrages Thibaut) :
+   *  lois chiffrées appliquées AUTOMATIQUEMENT par le moteur, champs
+   *  optionnels — absents des vieilles configurations, complétés par
+   *  migrerCultures. ANCIENS CHAMPS REMPLACÉS/HISTORISÉS :
+   *  capitalNourr/Tourisme/OrParHabMonde (règles de pays « +N par
+   *  habitation de cette culture dans le monde » — retirées avec la
+   *  refonte) et scienceParConstruction (Déisme « +N Science par
+   *  construction », retiré : les « bâtiments de faction » n'existent
+   *  plus depuis le 2026-10-19, la nouvelle loi Déisme est un
+   *  EMPLACEMENT de Scientifique par bâtiment). */
+  /** Communautarisme « Logements élargis » : +N Taudis au parc de
+   *  logements de chaque ville de cette culture. */
+  taudisParHabitation?: number
+  /** Lunisme « Villes Saintes » : +N Palais au parc de logements de
+   *  chaque ville de cette culture. */
+  palaisParHabitation?: number
+  /** Communautarisme « Bourgeoisie facile » : seuil de prestige
+   *  bourgeois de cette culture (défaut 100 ailleurs). */
+  prestigeSeuilBourgeois?: number
+  /** Déisme « Monuments pieux » : +N places de Scientifique par
+   *  BÂTIMENT (catégorie Bâtiment, aménagements exclus) de la ville. */
+  scientifiqueParBatiment?: number
+  /** Déisme « Lavages de main » : modificateur additif de la
+   *  probabilité de contracter les maladies (−0,02 = −2 %). */
+  maladieContractMod?: number
+  /** Lunisme « Foi supérieure » : +N Tourisme par tour et par NOBLE
+   *  (rang rangDe) de cette culture. */
+  tourismeParNoble?: number
+  /** Naturalisme « Champs nourriciers » : +N Nourriture par tour
+   *  d'ÉTÉ et par FERMIER de la ville (métier déjà `ete`). */
+  nourrEteParFermier?: number
+  /** Sethisme « Caravanes » : nombre d'aménagements requis pour
+   *  ouvrir la route bonus. */
+  caravanesSeuilAmenagements?: number
+  /** Sethisme « Caravanes » : routes commerciales bonus au cap du
+   *  joueur par ville de cette culture qualifiée. */
+  caravanesRoutesBonus?: number
+  /** Sethisme « Conseil des Sages » : +N Science par tour et par
+   *  NOBLE (rang rangDe) de cette culture. */
+  scienceParNoble?: number
+  /** Zélotisme « Ferveur martiale » : garnison des habitations qui ne
+   *  sont PAS de cette culture réduite de N × rang de l'habitation
+   *  (malus mondial, une fois par habitation, plancher 0). */
+  garnisonHorsCultureParRang?: number
+  /** Zélotisme « Corps de fer » : +N Garnison STATIQUE par Garde de
+   *  cette culture — SE CUMULE au défaut moteur garnisonParGarde. */
+  garnisonParGardeCulture?: number
+  /** Zélotisme « Corps de fer » : +N Or par tour et par Garde de
+   *  cette culture (flux). */
+  orParGarde?: number
 }
 export interface RegimeDef {
   nom: string
   loi: string
-  /** Loi chiffrée appliquée AUTOMATIQUEMENT par le moteur
-   *  (engine/regimes.ts) : garnison des habitations +N par rang
-   *  d'habitation (Autoritarisme), +N Nourriture par tour d'été pour les
-   *  champs et rizières (Socialisme). Champs optionnels : absents
+  /** Lois chiffrées des régimes, appliquées AUTOMATIQUEMENT par le
+   *  moteur (refonte « 8 lois » des régimes, 2026-10-29 — retour
+   *  Thibaut : chaque régime porte DEUX lois, lues par le moteur là
+   *  où elles agissent ; REMPLACÉ/HISTORISÉ : les anciens champs
+   *  garnisonParRang (+15 par rang d'habitation — Autoritarisme)
+   *  et nourrEteChampRiziere (+5 Nourriture d'été par Champ et
+   *  Rizière — Socialisme, dernière règle de la source 'regime' de
+   *  la banque, retirée avec la refonte) sont SUPPRIMÉS : les lois
+   *  vivent désormais dans le moteur. Champs optionnels : absents
    *  des vieilles configurations, complétés par migrerRegimes. */
-  garnisonParRang?: number
-  nourrEteChampRiziere?: number
-}
-/** Ligne de la table « types d'habitation » (feuille Ville du classeur) :
- *  chaque ville est de type Ville (Hameau → Cité → Grande Cité) ou
- *  Château (Motte → Donjon → Forteresse) ; chaque rang a un coût
- *  d'amélioration, un nombre d'habitants requis, une consommation
- *  par tour et une garnison de base — débités/appliqués
- *  automatiquement par le moteur (engine/habitations.ts). */
-export interface HabitationDef {
-  /** « Ville » ou « Château » */
-  type: string
-  /** nom du rang (Hameau, Cité, Grande Cité, Motte, Donjon, Forteresse) */
-  rang: string
-  cout: string
-  habitantsRequis: number
-  /** métiers disponibles à la BASE du rang, format STRUCTURÉ (retour
-   *  Thibaut 2026-10-23, formats unifiés : métiers TOUJOURS AU
-   *  SINGULIER, même format que les `emplacements` des constructions ;
-   *  l'ancien TEXTE « metiersDisponibles » est converti par la
-   *  migration ciblée de cfgOf, puis la clé disparaît). */
-  metiersBase: EmplacementDef[]
-  /** domiciles disponibles, ex. « 50 maisons, 10 Auberge » — TEXTE
-   *  historique conservé pour l'affichage de repli ; la donnée vit
-   *  dans `domicilesRang` (vague A, design domiciles 2026-10-24). */
-  domicilesDisponibles: string
-  /** domiciles du rang STRUCTURÉS (vague A, 2026-10-24) :
-   *  [{domicile: 'Maison', nombre: 50}, …] — 1 domicile = 1 logement.
-   *  Optionnel : absent des vieilles configs → complété par
-   *  migrerTypesHabitation (garde-fou idempotent). */
-  domicilesRang?: Array<{ domicile: string; nombre: number }>
+  /** Autoritarisme « Conscription » : Or de RÉDUCTION du prix de
+   *  levée d'armée par RANG DU PAYS du joueur (engine/armees.ts,
+   *  prixArmee — le texte de la loi existait dès l'origine, jamais
+   *  codé avant la refonte). */
+  leveeOrParRangPays?: number
+  /** Autoritarisme « Frontières closes » : multiplicateur des
+   *  probabilités de DÉPART de chaque habitant du joueur (0,8 =
+   *  20 % de chances de moins de partir —
+   *  engine/migrationBonheur.ts, arbitrage Thibaut 2026-10-29). */
+  departHabitantsMult?: number
+  /** Socialisme « Terre d'accueil » : Or reçus par MIGRANT arrivant
+   *  dans une ville du joueur (engine/migrationBonheur.ts). */
+  orParMigrant?: number
+  /** Socialisme « Redistribution » : Nourriture consommée par tour
+   *  par un BOURGEOIS vivant du joueur, à la place du défaut moteur
+   *  consoNourrBourgeois (engine/economie.ts). */
+  consoNourrBourgeoisRegime?: number
+  /** Socialisme « Redistribution » : Nourriture consommée par tour
+   *  par un NOBLE vivant du joueur, à la place du défaut moteur
+   *  consoNourrNoble (engine/economie.ts). */
+  consoNourrNobleRegime?: number
+  /** Démocratie « Le pouvoir du peuple » : Bonheur ajouté dans
+   *  chacune des habitations du joueur (plafond 100 —
+   *  engine/bonheur.ts ; Élections, sacre gratuit, reste
+   *  structurelle : engine/sante.ts). */
+  bonheurParHabitation?: number
+  /** Monarchie « Vassaux dévoués » : multiplicateur du tribut REÇU
+   *  des vassaux par un suzerain de ce régime (arbitrage Thibaut
+   *  2026-10-29 : ×1,05 — le vassal paie sa part, la différence est
+   *  créée pour le suzerain ; engine/vassalite.ts. Droit Divin,
+   *  +1 serment, reste structurelle : engine/tour.ts). */
+  tributVassalMult?: number
 }
 /** Événements de saison (été/hiver) RETIRÉS du référentiel le
  *  2026-10-24 (retour arbitre Thibaut) : la table `events` (18
@@ -175,12 +247,21 @@ export interface EffetConstruction {
   ete?: boolean
 }
 
+/** Paire structurée {ressource, valeur} — format des COÛTS de
+ *  construction (retour Thibaut 2026-10-27 : le coût ne doit plus
+ *  être un texte à analyser) et des réductions (Camp de
+ *  bâtisseurs). */
+export interface CoutRef {
+  ressource: string
+  valeur: number
+}
+
 export interface ConstructionRef {
   categorie: string   // 'Bâtiment' | 'Aménagement'
   groupe: string      // 'Ville' | 'Château' | 'Capitale' | 'Terrain'
-  famille: string      // Militaire / Economique / Guilde / Capitale / Merveille / ''
+  famille: string      // Militaire / Economique / Guilde / Capitale / ''
   nom: string
-  /** Merveilles ET aménagements tiers 2/3 : rang d'habitation
+  /** Aménagements tiers 2/3 : rang d'habitation
    *  MINIMUM requis pour construire/améliorer (1 = Hameau/Motte…,
    *  2 = Cité/Donjon, 3 = Grande Cité/Forteresse). Champ optionnel. */
   rangMinHabitation?: number
@@ -192,15 +273,71 @@ export interface ConstructionRef {
    *  (tier 3) » remplace « Baleinier (tier 2) ». Champ optionnel :
    *  absent = tier 1 (aménagement de base, constructible tel quel). */
   remplaceAmenagement?: string
-  cout: string
-  production: string
-  description: string
+  /** (RETRAIT 2026-10-27, retour Thibaut « le coût ne doit plus être
+   *  textuel ») : les TEXTES cout / production / description sont
+   *  VIDÉS dans le référentiel — le coût vit dans `couts`, le
+   *  prérequis dans `requis`, la production dans `effets` (banque).
+   *  Champs gardés OPTIONNELS : les configs sauvegardées qui portent
+   *  encore les anciens textes restent valides (plus aucun lecteur). */
+  cout?: string
+  production?: string
+  description?: string
+  /** COÛT de construction en DONNÉES STRUCTURÉES (retour Thibaut
+   *  2026-10-27 : paires {ressource, valeur} agrégées par
+   *  coutConstructionRef — plus d'analyse de texte). Champ
+   *  optionnel : absent = gratuit. */
+  couts?: CoutRef[]
+  /** Bâtiment PRÉREQUIS, à construire dans la MÊME ville (retour
+   *  Thibaut 2026-10-27 : le prérequis vivait dans le texte du coût —
+   *  il devient une DONNÉE ; ex. Caserne → « Poste de garde »).
+   *  Champ optionnel : aucun prérequis. */
+  requis?: string
+  /** Réduction de coût des aménagements accordée par CE bâtiment
+   *  (canal « Camp de bâtisseurs » — mécanisme dormant : le Camp
+   *  n'est pas au référentiel, reductionCampDeBatisseurs replie sur
+   *  {Or: 5, Bois: 1} tant que ce champ est absent). Données
+   *  structurées, retour Thibaut 2026-10-27. */
+  reduction?: CoutRef[]
   /** TAUDIS apportés au stock de logements de la ville (fiches
    *  aménagements 2026-10-25 : tier 1 = 5, tier 2 = 8, tier 3 = 10,
    *  sauf Baleinier/Bâteau de pêche qui n'en apportent pas).
    *  Champ optionnel : absent = 0. Comptés par le facteur Logement
    *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
   taudisApportes?: number
+  /** ROUTES commerciales apportées au cap conseillé du joueur
+   *  (retour Thibaut 2026-10-27 : « je ne vois pas dans l'échoppe la
+   *  possibilité de posséder une route commerciale supplémentaire » —
+   *  l'apport quitte les noms de bâtiments codés en dur de
+   *  maxRoutesJoueur et vit ICI, comme les autres effets ; ex.
+   *  Echoppe : 1. Champ optionnel : absent = 0. Comptés par
+   *  maxRoutesJoueur (commerce.ts) pour TOUTES les villes du joueur,
+   *  version du groupe (Ville/Château) de la ville qui porte le
+   *  bâtiment. */
+  routesApportees?: number
+  /** RÉDUCTION DE LEVÉE D'ARMÉE (arbitrage Thibaut 2026-10-28 : « les
+   *  armées, et surtout les réductions de levée, rejoignent la
+   *  banque ») — champ DONNÉES de la fiche de construction, en Or,
+   *  débitée à la LEVÉE uniquement. Le bonus quitte les noms codés en
+   *  NOM dans prixArmee — ex. Terrain d'entrainement : 10, Ecole
+   *  militaire : 25, Guilde des explorateurs : 20, Grande caserne :
+   *  8. Traduit en effet de banque `reductionLeveeArmee` par le registre, lu par
+   *  reductionLeveeBatiments (engine/constructions.ts) pour la ville
+   *  de levée. Champ optionnel : absent = aucune réduction. */
+  reductionLeveeArmee?: number
+  /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
+   *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
+   *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de
+   *  notable — les TAUDIS passent par taudisApportes). Champ
+   *  optionnel : absent = aucun. Comptés par le facteur Logement du
+   *  bonheur (bonheur.ts, domicilesApportesVille). */
+  domicilesApportes?: Array<{ domicile: string; nombre: number }>
+  /** Bâtiment remplacé par cette construction (fiche bâtiments rang 2,
+   *  2026-10-26 : Silo à grain → Grange, Moulin à vent ← Silo à grain,
+   *  Ecole intermédiaire → Ecole élémentaire, Guilde des artisans de
+   *  la terre → Moulin à vent). Champ de DONNÉE pour la mécanique
+   *  d'amélioration des bâtiments (à venir) — la description fait foi
+   *  en attendant. */
+  remplaceBatiment?: string
   /** Effets STRUCTURÉS (marqueur (s)) — source du moteur quand présents ;
    *  sinon repli sur l'analyse du texte exact (anciennes configs). */
   effets?: EffetConstruction[]
@@ -219,6 +356,16 @@ export interface ConstructionRef {
   malContraction?: number
   bonusGuerison?: number
   bonusGuerisonGlobal?: number
+  /** BÂTIMENT DE FACTION (retour arbitre Thibaut 2026-10-29 : « les
+   *  bâtiments de faction vont revenir — laisse le Monuments pieux du
+   *  Déisme sur eux ») : marqueur porté par les constructions de
+   *  faction à leur retour (les 19 du système de faction, retirées
+   *  le 2026-10-19 « à refaire »). Aujourd'hui AUCUNE entrée du
+   *  référentiel ne le porte : la loi Déisme « Monuments pieux »
+   *  (+N emplacement de Scientifique par bâtiment de faction) compte
+   *  0 et DORT jusqu'à leur retour. Lu par emplacementsMetierVille
+   *  (engine/metiers.ts). Champ optionnel : absent = faux. */
+  batimentDeFaction?: boolean
 }
 /** Un emplacement de métier accordé par une construction (vague 3a). */
 export interface EmplacementDef {
@@ -362,6 +509,14 @@ export interface GameConfig {
    *  « crédité automatiquement » du palier 220 Tourisme : tous les
    *  paliers sont des aides de jeu au plateau (décision Thibaut). */
   pontificats2026?: boolean
+  /** Migration armées-banque (arbitrage Thibaut 2026-10-28 : « tout ce
+   *  qui est logique de se trouver en banque doit rejoindre la
+   *  banque ») — puissances d'armée (puissanceArmee) et âges de recrutement (ageMin/ageMax)
+   *  semés sur les lignes de métier Soldat / Commandant depuis les
+   *  paramètres sauvegardés ; réductions de levée (reductionLeveeArmee) complétées sur les
+   *  fiches de constructions. Une fois posé, la migration ne se
+   *  rejoue pas. */
+  armeesBanque2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -543,13 +698,29 @@ function normaliserCultures(): CultureDef[] {
     nom: c.nom,
     heredite: c.heredite,
     homoAutorisee: c.homoAutorisee === true || c.homoAutorisee === 'true',
-    fertFactor: Number(c.fertFactor) || 1,
-    reglePays: c.reglePays || '',
-    reglePerso: c.reglePerso || '',
-    capitalNourrParHabMonde: Number(c.capitalNourrParHabMonde) || undefined,
-    capitalTourismeParHabMonde: Number(c.capitalTourismeParHabMonde) || undefined,
-    capitalOrParHabMonde: Number(c.capitalOrParHabMonde) || undefined,
-    scienceParConstruction: Number(c.scienceParConstruction) || undefined,
+    // (audit express 2026-10-26 : piège falsy-zéro — un futur
+    //  fertFactor 0 légal serait écrasé en 1 par `|| 1` (même
+    //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
+    //  s'applique qu'aux valeurs absentes ou non finies)
+    fertFactor: Number.isFinite(Number(c.fertFactor)) ? Number(c.fertFactor) : 1,
+    // (refonte 12 lois, 2026-10-29 : reglePays/reglePerso RENOMMÉS
+    //  regleVille/regleHabitant — repli croisé pour les référentiels
+    //  anciens ; les 13 champs chiffrés des lois sont optionnels.)
+    regleVille: c.regleVille || c.reglePays || '',
+    regleHabitant: c.regleHabitant || c.reglePerso || '',
+    taudisParHabitation: Number(c.taudisParHabitation) || undefined,
+    palaisParHabitation: Number(c.palaisParHabitation) || undefined,
+    prestigeSeuilBourgeois: Number(c.prestigeSeuilBourgeois) || undefined,
+    scientifiqueParBatiment: Number(c.scientifiqueParBatiment) || undefined,
+    maladieContractMod: Number(c.maladieContractMod) || undefined,
+    tourismeParNoble: Number(c.tourismeParNoble) || undefined,
+    nourrEteParFermier: Number(c.nourrEteParFermier) || undefined,
+    caravanesSeuilAmenagements: Number(c.caravanesSeuilAmenagements) || undefined,
+    caravanesRoutesBonus: Number(c.caravanesRoutesBonus) || undefined,
+    scienceParNoble: Number(c.scienceParNoble) || undefined,
+    garnisonHorsCultureParRang: Number(c.garnisonHorsCultureParRang) || undefined,
+    garnisonParGardeCulture: Number(c.garnisonParGardeCulture) || undefined,
+    orParGarde: Number(c.orParGarde) || undefined,
   }))
 }
 
@@ -708,13 +879,40 @@ export function migrateTraits(t: TraitDef[] | undefined): TraitDef[] {
 /** Complète les cultures d'une configuration existante avec les champs
  *  chiffrés ajoutés après coup (par nom — les valeurs éditées par
  *  l'utilisateur priment sur les défauts, les champs manquants viennent
- *  du référentiel). */
+ *  du référentiel).
+ *  (REFONTE 12 LOIS, 2026-10-29 : construction EXPLICITE — les clés
+ *  mortes des anciennes lois (reglePays/reglePerso renommés,
+ *  capitalNourr/Tourisme/OrParHabMonde, scienceParConstruction) sont
+ *  supprimées des configurations existantes ; REMPLACÉ le simple
+ *  spread { ...d, ...c } qui les ressuscitait. fertFactor : patron
+ *  taxes25 — la valeur 1 de l'ANCIEN défaut ne doit pas bloquer le
+ *  nouveau défaut (Naturalisme « Walpurgis » 1,1) : si l'utilisateur
+ *  n'a pas édité la valeur (1 = ancien défaut) et que le nouveau défaut
+ *  diffère, le nouveau défaut s'applique.) */
 export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
   const defs = DEFAULT_CONFIG.cultures
   if (!Array.isArray(list) || list.length === 0) return defs
+  const CHAMPS = [
+    'taudisParHabitation', 'palaisParHabitation', 'prestigeSeuilBourgeois',
+    'scientifiqueParBatiment', 'maladieContractMod', 'tourismeParNoble',
+    'nourrEteParFermier', 'caravanesSeuilAmenagements', 'caravanesRoutesBonus',
+    'scienceParNoble', 'garnisonHorsCultureParRang', 'garnisonParGardeCulture',
+    'orParGarde',
+  ] as const
   return list.map((c) => {
     const d = defs.find((x) => x.nom === c?.nom)
-    return d ? { ...d, ...c } : c
+    if (!d) return c
+    const out: CultureDef = {
+      nom: c.nom, heredite: c.heredite, homoAutorisee: c.homoAutorisee,
+      regleVille: c.regleVille ?? d.regleVille,
+      regleHabitant: c.regleHabitant ?? d.regleHabitant,
+      fertFactor: c.fertFactor === 1 && d.fertFactor !== 1 ? d.fertFactor : (c.fertFactor ?? d.fertFactor),
+    }
+    for (const ch of CHAMPS) {
+      if (c[ch] !== undefined) out[ch] = c[ch] as never
+      else if (d[ch] !== undefined) out[ch] = d[ch] as never
+    }
+    return out
   })
 }
 
@@ -723,9 +921,26 @@ export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
 export function migrerRegimes(list: RegimeDef[] | undefined): RegimeDef[] {
   const defs = DEFAULT_CONFIG.regimes
   if (!Array.isArray(list) || list.length === 0) return defs
+  // (Refonte « 8 lois » des régimes, 2026-10-29 : construction
+  //  EXPLICITE — les anciens champs morts (garnisonParRang,
+  //  nourrEteChampRiziere) portés par les vieilles configurations
+  //  sont PURGÉS ; les champs de la refonte absents de la ligne
+  //  sont complétés par les DÉFAUTS du référentiel, un 0 explicite
+  //  reste un 0 = loi désactivée.)
   return list.map((r) => {
     const d = defs.find((x) => x.nom === r?.nom)
-    return d ? { ...d, ...r } : r
+    if (!d) return r
+    return {
+      nom: r.nom,
+      loi: r.loi,
+      leveeOrParRangPays: r.leveeOrParRangPays ?? d.leveeOrParRangPays,
+      departHabitantsMult: r.departHabitantsMult ?? d.departHabitantsMult,
+      orParMigrant: r.orParMigrant ?? d.orParMigrant,
+      consoNourrBourgeoisRegime: r.consoNourrBourgeoisRegime ?? d.consoNourrBourgeoisRegime,
+      consoNourrNobleRegime: r.consoNourrNobleRegime ?? d.consoNourrNobleRegime,
+      bonheurParHabitation: r.bonheurParHabitation ?? d.bonheurParHabitation,
+      tributVassalMult: r.tributVassalMult ?? d.tributVassalMult,
+    }
   })
 }
 
@@ -779,52 +994,67 @@ export function migrerSwapSylvains(f: PeupleRef): PeupleRef {
 }
 
 /** Table des constructions (bâtiments / aménagements) d'une
- *  configuration existante : les entrées du référentiel
- *  par défaut absentes de la config (apparues depuis la sauvegarde)
- *  sont AJOUTÉES, sans toucher aux entrées déjà présentes. */
+ *  configuration existante. (Retour Thibaut 2026-10-27 : complétion
+ *  CHAMP À CHAMP par (nom, groupe) — le même patron que
+ *  migrerFactions.) Les entrées déjà présentes reçoivent les champs
+ *  NOUVEAUX du référentiel courant qu'elles ne portent pas (couts,
+ *  requis…) ; tout champ SAUVEGARDÉ garde la priorité — une édition
+ *  personnalisée dans Paramètres survit à la convergence. Les
+ *  entrées du référentiel par défaut absentes de la config (apparues
+ *  depuis la sauvegarde) sont AJOUTÉES. */
 export function migrerConstructions(
   list: ConstructionRef[] | undefined, defauts: ConstructionRef[],
 ): ConstructionRef[] {
   const out = [...(list ?? [])]
-  const noms = new Set(out.map((c) => c.nom))
+  for (let i = 0; i < out.length; i++) {
+    const d = defauts.find((x) => x.nom === out[i]!.nom && x.groupe === out[i]!.groupe)
+    if (d) out[i] = { ...d, ...out[i] }
+  }
+  const cles = new Set(out.map((c) => `${c.nom}|${c.groupe}`))
   for (const d of defauts) {
-    if (!noms.has(d.nom)) out.push(d)
+    if (!cles.has(`${d.nom}|${d.groupe}`)) out.push(d)
   }
   return out
 }
 
-/** (v4, retour Thibaut 2026-10-22) : RÉALIGNEMENT des aménagements
- *  d'une ancienne configuration sur le référentiel courant. Les configs
- *  sauvegardées AVANT le rework « production → emplacements » (vague
- *  3a, 2026-10-21) portent encore les ANCIENNES descriptions (« +2 Or
+/** (v4→v5, retours Thibaut 2026-10-22 puis 2026-10-27) : RÉALIGNEMENT
+ *  des constructions d'une ancienne configuration sur le référentiel
+ *  courant. Les configs sauvegardées AVANT le rework « production →
+ *  emplacements » portent encore les ANCIENNES descriptions (« +2 Or
  *  et +10 Nourriture par tour. ») ET les anciens effets structurés
- *  (encore lus par le moteur — l'aménagement continuait de produire !)
- *  sans champ `emplacements` : la partie en cours affichait donc des
- *  aménagements mensongers et hors rework, alors que les tiers 2/3
- *  (ajoutés neufs par migrerConstructions) étaient conformes — un
- *  mélange incohérent. migrerConstructions n'ajoutant que les
- *  entrées MANQUANTES par nom, les entrées existantes restaient figées.
- *  Arbitrage : un aménagement du référentiel est une donnée de
- *  RÉFÉRENCE, pas de personnalisation — toute entrée de même nom (et
- *  de catégorie Aménagement) est REMPLACÉE par l'entrée courante du
- *  référentiel (description, production, coût, terrain, emplacements,
- *  effets, rangMinHabitation, remplaceAmenagement). Les aménagements
- *  PERSO (noms hors référentiel) sont conservés tels quels. */
-export function realignerAmenagements(
+ *  (encore lus par le moteur — la construction continuait de
+ *  produire !) sans champ `emplacements` : la partie en cours
+ *  affichait donc des constructions mensongères et hors rework,
+ *  alors que les entrées ajoutées neuves par migrerConstructions
+ *  étaient conformes — un mélange incohérent. migrerConstructions
+ *  n'ajoutant que les entrées MANQUANTES par (nom, groupe), les
+ *  entrées existantes restaient figées.
+ *  v4 (vague 3a) : aménagements seuls.
+ *  v5 (2026-10-27, retour Thibaut « le bûcheron qui donne du bois
+ *  plutôt que des emplacements de bûcheron ») : les BÂTIMENTS sont
+ *  dans le même cas — les configs d'avant le rework portent les vieux
+ *  effets de flux (Camp de bûcheron +1 Bois) que la fusion champ à
+ *  champ de migrerConstructions conserve, en plus des emplacements
+ *  complétés par le défaut : DOUBLE COMPTAGE. Arbitrage : TOUTE
+ *  construction du référentiel (bâtiment OU aménagement) est une
+ *  donnée de RÉFÉRENCE, pas de personnalisation — toute entrée de
+ *  même (nom, groupe) est REMPLACÉE par l'entrée courante du
+ *  référentiel. Les constructions PERSO (clé absente du référentiel)
+ *  sont conservées telles quelles. */
+export function realignerConstructions(
   list: ConstructionRef[] | undefined, defauts: ConstructionRef[],
 ): ConstructionRef[] {
   if (!Array.isArray(list)) return defauts
-  const parNom = new Map(
-    defauts.filter((d) => d.categorie === 'Aménagement').map((d) => [d.nom, d]),
+  const parCle = new Map(
+    defauts.map((d) => [`${d.nom}|${d.groupe}`, d]),
   )
-  return list.map((c) =>
-    (c.categorie === 'Aménagement' ? parNom.get(c.nom) : undefined) ?? c)
+  return list.map((c) => parCle.get(`${c.nom}|${c.groupe}`) ?? c)
 }
 
 /** Table des types d'habitation (Ville / Château) d'une configuration
  *  existante — défauts du classeur si absents ou vides. */
 /** Parse le format de SAISIE TEXTE des métiers de base d'un rang
- *  (« 50 Chasseurs, 2 Gardes » — colonne historique du classeur, champ
+ *  (« 40 Chasseurs, 2 Gardes » — colonne historique du classeur, champ
  *  d'édition des Référentiels) en tableau STRUCTURÉ `metiersBase`
  *  (retour Thibaut 2026-10-23 : métiers TOUJOURS AU SINGULIER — un
  *  « s » final est retiré). Les entrées non reconnues dans
@@ -874,6 +1104,16 @@ export function migrerTypesHabitation(list: HabitationDef[] | undefined): Habita
     if (d.domicilesRang === undefined) {
       const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
       d.domicilesRang = ref?.domicilesRang ? [...ref.domicilesRang] : []
+    }
+    // (Retour Thibaut 2026-10-27 « le coût ne doit plus être textuel —
+    //  idem bâtiments/aménagements ») : le coût d'amélioration vit en
+    //  DONNÉES STRUCTURÉES `couts` — complété depuis la ligne du défaut
+    //  de même (type, rang) si absent (config sauvegardée avant la
+    //  migration) ; l'ancien TEXTE `cout` n'est plus lu nulle part.
+    //  Idempotent, même patron que domicilesRang.
+    if (d.couts === undefined) {
+      const ref = DEFAULT_CONFIG.typesHabitation.find((t) => t.type === d.type && t.rang === d.rang)
+      d.couts = ref?.couts ? [...ref.couts] : []
     }
   }
   return list
@@ -947,7 +1187,20 @@ function migrerVictoires(list: GameConfig['victoires']): GameConfig['victoires']
 //  de même nom remplacées ; aménagements perso conservés ; bâtiments
 //  et autres tables intouchés). Les tiers 2/3 de la vague 3c sont
 //  ajoutés par migrerConstructions.
-export const SCHEMA_VERSION_CONFIG = 4
+// Version 5 (2026-10-27, retour Thibaut « tu as récupéré les
+//  anciennes règles des bâtiments, par exemple le bûcheron qui donne
+//  du bois plutôt que des emplacements de bûcheron ») : les configs v4
+//  sauvegardées AVANT le rework « production → emplacements » des
+//  BÂTIMENTS portent encore les anciens effets de flux (Camp de
+//  bûcheron +1 Bois) que migrerConstructions conserve (champ
+//  sauvegardé prioritaire) en plus des emplacements complétés par le
+//  défaut — DOUBLE COMPTAGE. Arbitrage : le réalignement s'étend aux
+//  BÂTIMENTS (toute construction du référentiel = donnée de
+//  référence), et les 4 MERVEILLES encore portées par les vieilles
+//  configs sont purgées à l'ouverture (« on peut supprimer les
+//  anciennes parties, et oui, le réalignement doit être automatique
+//  au chargement »).
+export const SCHEMA_VERSION_CONFIG = 5
 
 /** Garde-fous appliqués à TOUTES les configurations, même convergées :
  *  chaque table du référentiel migrée doit contenir au moins une entrée
@@ -998,9 +1251,15 @@ function gardeFous(m: GameConfig): void {
   m.constructions = ouDefauts(m.constructions, DEFAULT_CONFIG.constructions)
   // Ajout des constructions du référentiel manquantes dans une config
   //  déjà convergée (revue 2026-10-15) : les NOUVELLES constructions
-  //  (ex. les 12 MERVEILLES) sont AJOUTÉES sans toucher aux existantes —
-  //  la personnalisation (coûts édités, suppressions) persiste. Clé : nom.
-  //  Une construction existante du même nom N'EST PAS écrasée.
+  //  (ex. les 12 MERVEILLES) sont AJOUTÉES sans toucher aux existantes.
+  //  NB (corrigé 2026-10-27, audit F5 — l'ancien commentaire disait
+  //  « suppressions persiste », ce qui contredisait le code) : une
+  //  construction du RÉFÉRENTIEL supprimée dans les Paramètres est
+  //  RÉ-AJOUTÉE ici à la prochaine lecture (comportement voulu et
+  //  verrouillé par config.test.ts : « les entrées manquantes du
+  //  référentiel sont ajoutées »). Ne persistent que les ÉDITIONS
+  //  (coûts, effets — champ sauvegardé prioritaire) et les lignes
+  //  PERSO (clé absente du référentiel). Clé : nom.
   if (Array.isArray(m.constructions)) {
     // Mise à jour des RANGS d'habitation (revue 2026-10-15 : les
     //  configs convergées gardaient les anciens défauts — sans
@@ -1020,6 +1279,37 @@ function gardeFous(m: GameConfig): void {
     }
   }
   m.couleurs = migrerCouleurs(m.couleurs)
+}
+
+/**
+ * F6 (audit 2026-10-27) : validation de FORME d'une configuration
+ * importée (onglet JSON des Paramètres). Le JSON importé n'est pas
+ * contrôlé par le type : un champ au mauvais type (« constructions: 42 »)
+ * passait le JSON.parse puis convergeait sans erreur et cassait l'UI au
+ * premier rendu. Contrat minimal, symétrique des garde-fous : les tables
+ * du référentiel présentes doivent être des TABLEAUX, `params` un objet.
+ * Retourne la liste des problèmes (vide = forme acceptable) — l'UI
+ * refuse l'import et AFFICHE les problèmes au lieu d'importer en aveugle.
+ */
+export function validerFormeConfig(c: unknown): string[] {
+  const problemes: string[] = []
+  if (!c || typeof c !== 'object' || Array.isArray(c)) {
+    return ['la configuration doit être un objet JSON (et non un tableau ou une valeur)']
+  }
+  const m = c as Record<string, unknown>
+  const TABLES = [
+    'constructions', 'traits', 'cultures', 'regimes', 'typesHabitation',
+    'paysRangs', 'victoires', 'peuplesLibres', 'peuplesAutres', 'metiers',
+  ]
+  for (const t of TABLES) {
+    if (t in m && !Array.isArray(m[t])) {
+      problemes.push(`« ${t} » doit être un tableau`)
+    }
+  }
+  if ('params' in m && (typeof m.params !== 'object' || m.params === null || Array.isArray(m.params))) {
+    problemes.push('« params » doit être un objet')
+  }
+  return problemes
 }
 
 /** Converge une configuration quelconque vers le format courant :
@@ -1196,10 +1486,21 @@ export function cfgOf(config?: GameConfig): Cfg {
     merged.constructions = (merged.constructions ?? []).filter((c) => !(c as { faction?: string }).faction)
     // constructions : ajout des entrées du référentiel apparues depuis
     //  la sauvegarde
-    // (v4) : réalignement des AMÉNAGEMENTS existants sur le
-    //  référentiel AVANT la complétion (retour Thibaut 2026-10-22 —
-    //  voir realignerAmenagements : descriptions/effets de la vague 3a)
-    merged.constructions = realignerAmenagements(merged.constructions, DEFAULT_CONFIG.constructions)
+    // (v5, retour Thibaut 2026-10-27 « purge à l'ouverture ») : les 4
+    //  MERVEILLES (Sanctuaire de Salmodiva, Jardins d'Alexandrie, Mont
+    //  Caracole, Grands bains) retirées du référentiel le 2026-10-27
+    //  sont POURGÉES des configs d'avant le retrait — sans ça, elles
+    //  restaient visibles dans l'onglet Paramètres des vieilles
+    //  parties (le « (52) » constaté). Les éventuels bâtiments
+    //  merveilles DÉJÀ CONSTRUITS dans les villes restent dans l'état :
+    //  bâtiments inconnus du référentiel, aucun effet, pas de crash.
+    merged.constructions = (merged.constructions ?? []).filter(
+      (c) => (c.famille ?? '') !== 'Merveille',
+    )
+    // (v4→v5) : réalignement des constructions existantes (BÂTIMENTS
+    //  depuis v5, aménagements depuis v4) sur le référentiel AVANT la
+    //  complétion — voir realignerConstructions.
+    merged.constructions = realignerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.constructions = migrerConstructions(merged.constructions, DEFAULT_CONFIG.constructions)
     merged.schemaVersion = SCHEMA_VERSION_CONFIG
   }
@@ -1362,6 +1663,34 @@ export function cfgOf(config?: GameConfig): Cfg {
   // (2026-10-24 : le bloc de migration slotsVides2026 — complétion
   //  des slots vides d'arbres depuis le référentiel — est supprimé
   //  avec le système de progrès.)
+  // (Retour Thibaut 2026-10-28 : « les armées, et surtout les
+  //  réductions de levée, rejoignent la banque » — les réductions de
+  //  levée quittent la liste codée en dur de prixArmee pour les
+  //  fiches de construction (champ reductionLeveeArmee) ; les
+  //  puissances d'armée (puissanceArmee) et les âges de recrutement
+  //  (ageMin / ageMax) quittent les paramètres pour les lignes de
+  //  métier Soldat / Commandant. Migration à drapeau : les valeurs
+  //  SAUVEGARDÉES sont SEMÉES sur les lignes pour préserver toute
+  //  personnalisation ; sans bump de tampon (règle (x)).)
+  if (!merged.armeesBanque2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    for (const m of merged.metiers) {
+      if (m.metier === pm.metierSoldat) {
+        if (m.puissanceArmee === undefined) m.puissanceArmee = (pm.puissanceSoldat as number) ?? 15
+        if (m.ageMin === undefined) m.ageMin = (pm.soldatAgeMin as number) ?? 16
+        if (m.ageMax === undefined) m.ageMax = (pm.soldatAgeMax as number) ?? 30
+      }
+      if (m.metier === pm.metierCommandant) {
+        if (m.puissanceArmee === undefined) m.puissanceArmee = (pm.puissanceGeneral as number) ?? 45
+      }
+    }
+    for (const c of merged.constructions ?? []) {
+      if (c.reductionLeveeArmee !== undefined) continue
+      const d = DEFAULT_CONFIG.constructions.find((x) => x.nom === c.nom && x.groupe === c.groupe)
+      if (d?.reductionLeveeArmee !== undefined) c.reductionLeveeArmee = d.reductionLeveeArmee
+    }
+    merged.armeesBanque2026 = true
+  }
   if (!merged.taxes25) {
     const pm = merged.params as unknown as Record<string, unknown>
     if (pm.taxOrFaibles === 0.5) pm.taxOrFaibles = 0.75
@@ -1595,8 +1924,32 @@ export function cfgOf(config?: GameConfig): Cfg {
   //  (tier 2)… remplaceAmenagement) — le filtre ne retire plus QUE
   //  les BÂTIMENTS de rang ≥ 2, qui restent supprimés. Les merveilles
   //  et aménagements de rang 2+ passent à nouveau.)
+  //  (RETRAIT 2026-10-27, audit + retour Thibaut « supprimer toutes
+  //  les merveilles pour l'instant » : les 4 merveilles du référentiel
+  //  disparaissent. (MÀJ même jour, retour Thibaut « purge à
+  //  l'ouverture » : les entrées encore portées par les vieilles
+  //  configs SONT purgées à la migration v5 — voir le bloc
+  //  constructions de cfgOf. Seuls les éventuels bâtiments merveilles
+  //  DÉJÀ CONSTRUITS dans les villes restent dans l'état : bâtiments
+  //  inconnus, aucun effet, pas de crash.)
+  //  (RÉACTIVATION TOTALE, fiche bâtiments rang 2, 2026-10-26 : les
+  //  BÂTIMENTS de rang 2 reviennent au référentiel (Caserne, Réseau
+  //  de routes, Tour de sorcier, Ecole militaire, quartiers, Silo à
+  //  grain, Moulin à vent, ports, Clinique, Cabinet d'astronomie,
+  //  Chapelle, Ecole intermédiaire, guildes — 25 entrées). Les configs
+  //  sauvegardées AVANT portaient les VIEILLES valeurs des bâtiments
+  //  rang 2 supprimés (la complétion ne remplace jamais un nom
+  //  connu) : PURGE de tous les bâtiments rang ≥ 2, puis
+  //  RÉINJECTION de ceux du RÉFÉRENTIEL courant — les nouvelles
+  //  valeurs de la fiche font foi, sans doublon possible.
+  //  Idempotent.)
   merged.constructions = (merged.constructions ?? []).filter(
-    (c) => (c.rangMinHabitation ?? 0) < 2 || c.categorie === 'Aménagement',
+    (c) => !((c.rangMinHabitation ?? 0) >= 2 && c.categorie === 'Bâtiment'),
+  )
+  merged.constructions.push(
+    ...DEFAULT_CONFIG.constructions.filter(
+      (c) => (c.rangMinHabitation ?? 0) >= 2 && c.categorie === 'Bâtiment',
+    ),
   )
   const resultat: Cfg = {
     p: merged.params,

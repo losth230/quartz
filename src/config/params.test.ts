@@ -68,8 +68,8 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   asAny.progres = [{ nom: 'Arbre v2', age: 1, brancheA: [], brancheB: [], techC: { nom: '', cout: '', description: '' } }]
   asAny.schemaVersion = 2
   const C = cfgOf(cfg)
-  assert.equal(SCHEMA_VERSION_CONFIG, 4)
-  assert.equal(C.config.schemaVersion, 4, 'tampon posé à la version courante')
+  assert.equal(SCHEMA_VERSION_CONFIG, 5)
+  assert.equal(C.config.schemaVersion, 5, 'tampon posé à la version courante')
   // referentiel converti : table metiers, champ metier — la vague 3a
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
   //  du nouveau référentiel derrière la table convertie : 1 Testeur +
@@ -129,4 +129,75 @@ test('params : les paramètres d éducation (chanceEduc*, profBonusEduc) sont su
   assert.ok(!('chanceEducNoble' in DEFAULT_PARAMS), 'chanceEducNoble supprimé')
   assert.ok(!('profBonusEduc' in DEFAULT_PARAMS), 'profBonusEduc supprimé')
   assert.ok('professeurBaseChance' in DEFAULT_PARAMS, 'professeurBaseChance reste (les Professeurs restent)')
+})
+
+test('défauts taxes 2026-10-28 : Nourriture ×1,25/×0,75 du côté des naissances, autres ressources ×0,75/×1,25 à l\'envers', () => {
+  // Arbitrage Thibaut 2026-10-28 « changement des taxes » : les clés
+  //  taxNourr* sont NOUVELLES ; les clés taxOr* changent de SENS (elles
+  //  ne portent plus que les ressources hors Nourriture — valeurs
+  //  inchangées) ; les naissances (taxNaiss*) ne bougent pas.
+  assert.equal(DEFAULT_PARAMS.taxNourrFaibles, 1.25, 'Faible : Nourriture ×1,25')
+  assert.equal(DEFAULT_PARAMS.taxNourrHautes, 0.75, 'Forte : Nourriture ×0,75')
+  assert.equal(DEFAULT_PARAMS.taxOrFaibles, 0.75, 'Faible : autres ressources ×0,75')
+  assert.equal(DEFAULT_PARAMS.taxOrHautes, 1.25, 'Forte : autres ressources ×1,25')
+  assert.equal(DEFAULT_PARAMS.taxNaissFaibles, 1.25, 'naissances ×1,25 en Faible (inchangé)')
+  assert.equal(DEFAULT_PARAMS.taxNaissHautes, 0.75, 'naissances ×0,75 en Forte (inchangé)')
+  // Une config SAUVEGARDÉE (avant l'arbitrage) reçoit les défauts des
+  //  clés nouvelles sans perdre ses personnalisations.
+  const p = mergeParams({ taxOrFaibles: 0.8 })
+  assert.equal(p.taxNourrFaibles, 1.25, 'clé nouvelle absente de la config → défaut posé par le merge')
+  assert.equal(p.taxNourrHautes, 0.75)
+  assert.equal(p.taxOrFaibles, 0.8, 'personnalisation existante conservée')
+})
+
+test('cfgOf : migration armeesBanque2026 — lignes de métier semées depuis les paramètres, réductions de levée posées, idempotente', () => {
+  // Arbitrage Thibaut 2026-10-28 « les armées rejoignent la banque » :
+  //  une config SAUVEGARDÉE avant l'arbitrage porte les valeurs dans
+  //  les PARAMÈTRES (puissanceSoldat & co.) et PAS sur les lignes de
+  //  métier / fiches de construction — la migration les sème vers le
+  //  référentiel en préservant toute personnalisation.
+  const cfg = cloneDefaultConfig()
+  // Config déjà CONVERGÉE (tampon courant) : c'est le cas réaliste d'une
+  //  sauvegarde d'avant l'arbitrage — sans le tampon, la conversion v2→v5
+  //  rejouerait et realignerConstructions remplacerait les fiches du
+  //  référentiel par celles du défaut (donnée de référence, pas de
+  //  personnalisation), masquant la migration testée ici.
+  cfg.schemaVersion = SCHEMA_VERSION_CONFIG
+  for (const m of cfg.metiers) {
+    const mm = m as unknown as { puissanceArmee?: number; ageMin?: number; ageMax?: number }
+    delete mm.puissanceArmee
+    delete mm.ageMin
+    delete mm.ageMax
+  }
+  for (const c of cfg.constructions) {
+    delete (c as unknown as { reductionLeveeArmee?: number }).reductionLeveeArmee
+  }
+  // Personnalisations sauvegardées : le PARAMÈTRE prime (semé vers la ligne).
+  cfg.params.puissanceSoldat = 20
+  cfg.params.soldatAgeMin = 18
+  // Valeur déjà présente sur une fiche : préservée (pas écrasée).
+  const caserne = cfg.constructions.find((c) => c.nom === 'Grande caserne')!
+  caserne.reductionLeveeArmee = 7
+  const C = cfgOf(cfg)
+  const soldat = C.metiers.find((m) => m.metier === DEFAULT_PARAMS.metierSoldat)!
+  assert.equal(soldat.puissanceArmee, 20, 'puissanceSoldat 20 semé depuis le paramètre sauvegardé')
+  assert.equal(soldat.ageMin, 18, 'soldatAgeMin 18 semé depuis le paramètre')
+  assert.equal(soldat.ageMax, 30, 'ageMax absent du paramètre personnalisé → défaut 30')
+  const commandant = C.metiers.find((m) => m.metier === DEFAULT_PARAMS.metierCommandant)!
+  assert.equal(commandant.puissanceArmee, 45, 'repli défaut 45 (paramètre non personnalisé)')
+  // Constructions : les fiches SANS champ le REÇOIVENT par la
+  //  migration armeesBanque2026 depuis le référentiel par (nom, groupe) ;
+  //  la valeur déjà présente est préservée (la migration ne touche
+  //  jamais un champ défini).
+  assert.equal(C.config.constructions.find((c) => c.nom === "Terrain d'entrainement")!.reductionLeveeArmee, 10, 'champ absent → posé par la migration depuis le référentiel')
+  assert.equal(C.config.constructions.find((c) => c.nom === 'Ecole militaire')!.reductionLeveeArmee, 25, 'idem Ecole militaire')
+  assert.equal(C.config.constructions.find((c) => c.nom === 'Guilde des explorateurs')!.reductionLeveeArmee, 20, 'idem Guilde des explorateurs')
+  assert.equal(C.config.constructions.find((c) => c.nom === 'Grande caserne')!.reductionLeveeArmee, 7, 'valeur déjà présente préservée')
+  // Le marqueur de migration est posé (marqueur (z), sans bump de tampon)
+  assert.equal(C.config.armeesBanque2026, true)
+  // Idempotente : un second passage ne change rien (le marqueur tient)
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.metiers.find((m) => m.metier === DEFAULT_PARAMS.metierSoldat)!.puissanceArmee, 20)
+  assert.equal(C2.config.constructions.find((c) => c.nom === "Terrain d'entrainement")!.reductionLeveeArmee, 10)
+  assert.equal(C2.config.constructions.find((c) => c.nom === 'Grande caserne')!.reductionLeveeArmee, 7)
 })

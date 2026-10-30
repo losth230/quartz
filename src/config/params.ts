@@ -11,14 +11,66 @@ export interface GameParams {
   adultAge: number
   setupAgeMax: number
   adulteryRate: number
-  /** Migration scolaire : enfant sans Professeur dans sa ville → ville
-   *  avec Professeur du même joueur. */
+  // (RETRAIT 2026-10-28, arbitrage Thibaut : la migration par
+  //  scolarité est supprimée du moteur — plus aucun lecteur. Les
+  //  3 paramètres ci-dessous sont conservés comme REFLIS de
+  //  compatibilité, car les configs sauvegardées les portent.)
+  /** (REFLI) Migration scolaire — plus aucun lecteur depuis le retrait. */
   migrationEcole: number
-  /** …ville avec Professeur du suzerain (ou du suzerain du suzerain). */
+  /** (REFLI) …suzerain — plus aucun lecteur depuis le retrait. */
   migrationSuzerain: number
-  /** …ville avec Professeur de n'importe quel joueur. */
+  /** (REFLI) …n'importe quel joueur — plus aucun lecteur. */
   migrationMonde: number
+  /** (Arbitrage Thibaut 2026-10-28) Probabilité MAXIMALE de départ
+   *  par le flux de migration par bonheur — atteinte à 0 de bonheur.
+   *  Linéaire : p = migrationBonheurMax × (100 − bonheur) / 100
+   *  (0 % à 100 de bonheur, défaut 10 % à 0). */
+  migrationBonheurMax: number
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux :
+   *  « la formule se base sur le bonheur et tous les autres
+   *  modificateurs sont additifs » — le poids multiplicatif v2 ×1,25
+   *  du 3e retour est REMPLACÉ) BONUS ADDITIF d'une ville candidate de
+   *  SA culture : poids = attrait × (1 + même joueur + culture +
+   *  bonus du tiré), l'attrait ×[1 ; 2] du bonheur restant la seule
+   *  base multiplicative. */
+  migrationBonheurCulture: number
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le poids multiplicatif v2 ×1,5 du 3e retour est REMPLACÉ) BONUS
+   *  ADDITIF d'une ville candidate du MÊME JOUEUR que le migrant
+   *  (migration interne privilégiée) : s'ADDITIONNE au bonus culture
+   *  et aux bonus du tiré sur la base d'attrait du bonheur
+   *  (exemple arbitre : culture + même joueur = attrait × 1,75). */
+  migrationBonheurMemeJoueur: number
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le multiplicatif ×1,5 du 5e retour est REMPLACÉ) BONUS ADDITIF
+   *  d'une ville candidate AUX POSTES NON POURVUS quand le migrant
+   *  est SANS MÉTIER — attire les chômeurs vers les villes qui
+   *  embauchent. Défaut +1 : la ville pèse ×2 pour un chômeur
+   *  (« on peut mettre facteur emploi et facteur logement à ×2 »).
+   *  S'additionne aux bonus même joueur/culture et logement. */
+  migrationBonheurEmploi: number
+  /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux —
+   *  le multiplicatif ×1,5 du 5e retour est REMPLACÉ) BONUS ADDITIF
+   *  d'une ville candidate AUX LITS LIBRES quand le migrant est
+   *  SANS DOMICILE — attire les sans-logement vers les villes qui
+   *  logent. Défaut +1 : la ville pèse ×2 pour un sans-logement.
+   *  S'additionne aux bonus même joueur/culture et emploi. */
+  migrationBonheurLogement: number
   consoNourrParHab: number
+  /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 100) —
+   *  un bourgeois vivant consomme consoNourrBourgeois Nourriture
+   *  par tour (au lieu de consoNourrParHab). */
+  consoNourrBourgeois: number
+  /** (Arbitrage Thibaut 2026-10-26, RANG SOCIAL : prestige ≥ 250) —
+   *  un noble vivant consomme consoNourrNoble Nourriture par tour. */
+  consoNourrNoble: number
+  /** (Arbitrage Thibaut 2026-10-26) — multiplicateur de production
+   *  du villageois selon son rang social : bourgeois ×prodMultBourgeois
+   *  (1,5), noble ×prodMultNoble (1 — le ×1,5 est RETIRÉ des nobles,
+   *  arbitrage corrigé du jour même : ils consomment 4 Nourriture),
+   *  roturier ×1. */
+  prodMultBourgeois: number
+  prodMultNoble: number
   gainsCrediteStock: number  // 1 = les gains de population créditent le stock
   // ── Fécondité ──
   fertBaseRate: number
@@ -94,9 +146,21 @@ export interface GameParams {
   // ── Taxes ──
   taxOrFaibles: number
   taxOrHautes: number
+  taxNourrFaibles: number
+  taxNourrHautes: number
   taxNaissFaibles: number
   taxNaissHautes: number
   // ── Armées ──
+  // (Arbitrage Thibaut 2026-10-28 : « général et soldat sont des
+  //  métiers, ils doivent donc vivre dans la banque » — les
+  //  PUISSANCES d'armée et les ÂGES de recrutement vivent désormais
+  //  sur les LIGNES DE MÉTIER du référentiel (champs
+  //  puissanceArmee / ageMin / ageMax). Les 4 paramètres
+  //  ci-dessous sont conservés comme REFLIS de compatibilité — lus
+  //  uniquement si la ligne de métier ne porte pas le champ (config
+  //  éditée antérieure à la migration armeesBanque2026) et SEMÉS
+  //  sur les lignes par la migration pour préserver toute
+  //  personnalisation ; plus éditables dans l'onglet Paramètres.)
   puissanceGeneral: number
   puissanceSoldat: number
   soldatAgeMin: number
@@ -152,10 +216,24 @@ export const DEFAULT_PARAMS: GameParams = {
   adultAge: 16,
   setupAgeMax: 50,
   adulteryRate: 0.03,
+  // (REFLI — retrait migration scolaire 2026-10-28, cf. interface)
   migrationEcole: 0.10,
   migrationSuzerain: 0.02,
   migrationMonde: 0.01,
+  // (Arbitrage Thibaut 2026-10-28 — flux de migration par bonheur)
+  migrationBonheurMax: 0.10,
+  // (v3 ADDITIVE, 6e arbitrage Thibaut 2026-10-29 : bonus ADDITIFS sur
+  //  la base d'attrait du bonheur — les multiplicatifs v2 ×1,25/×1,5
+  //  et les ×1,5 emploi/logement du 5e retour sont REMPLACÉS)
+  migrationBonheurCulture: 0.25,
+  migrationBonheurMemeJoueur: 0.5,
+  migrationBonheurEmploi: 1,
+  migrationBonheurLogement: 1,
   consoNourrParHab: 1,
+  consoNourrBourgeois: 2,
+  consoNourrNoble: 4,
+  prodMultBourgeois: 1.5,
+  prodMultNoble: 1,
   gainsCrediteStock: 1,
   fertBaseRate: 1.5,
   fertSingleFactor: 0.1,
@@ -192,13 +270,26 @@ export const DEFAULT_PARAMS: GameParams = {
   conversionProba: 0.1,
   conversionPoidsLocal: 5,
   conversionMemeCulture: 5,
-  // Effet des taxes Faibles/Fortes : ±25 % (retour Thibaut, marqueur
+  // Effet des taxes Faibles/Fortes — ±25 % (retour Thibaut, marqueur
   //  (z) — avant ±50 % ; les configs existantes encore aux anciens
   //  défauts sont migrées ciblément par cfgOf, champ taxes25).
+  // ARBITRAGE Thibaut 2026-10-28 « changement des taxes » : la
+  //  Nourriture part du côté des NAISSANCES — Faible = naissances et
+  //  Nourriture ×1,25 mais toutes les autres productions ×0,75 ;
+  //  Forte = l'inverse ; Moyenne = ×1 partout. Les nouvelles clés
+  //  taxNourr* reçoivent les défauts ci-dessous (mergeParams les pose
+  //  sur les configs existantes, sans migration) ; les clés taxOr*
+  //  changent de SENS — elles ne portent plus que les ressources hors
+  //  Nourriture (valeurs inchangées, les configs sauvegardées restent
+  //  valides telles quelles).
   taxOrFaibles: 0.75,
   taxOrHautes: 1.25,
+  taxNourrFaibles: 1.25,
+  taxNourrHautes: 0.75,
   taxNaissFaibles: 1.25,
   taxNaissHautes: 0.75,
+  // Replis d'armée (arbitrage 2026-10-28 : les valeurs vivent sur
+  //  les lignes de métier Soldat / Commandant du référentiel).
   puissanceGeneral: 45,
   puissanceSoldat: 15,
   soldatAgeMin: 16,
@@ -246,10 +337,21 @@ export const PARAM_META: {
 }[] = [
   { key: 'adultAge', label: 'Âge adulte', groupe: 'Population', aide: 'Âge à partir duquel un personnage reçoit un métier et peut se marier.' },
   { key: 'adulteryRate', label: 'Taux d\'adultère', groupe: 'Population', unite: 'proba' },
-  { key: 'migrationEcole', label: 'Migration scolaire (même joueur)', groupe: 'Population', unite: 'proba', aide: 'Un enfant sans éducation dont la ville n\'a pas de Professeur part vers une ville avec Professeur du même joueur.' },
-  { key: 'migrationSuzerain', label: 'Migration scolaire (suzerain)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de son suzerain, ou du suzerain de son suzerain.' },
-  { key: 'migrationMonde', label: 'Migration scolaire (monde)', groupe: 'Population', unite: 'proba', aide: '…vers une ville avec Professeur de n\'importe quel joueur.' },
-  { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant', groupe: 'Population' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut : la migration
+  //  par scolarité est supprimée du moteur — les paramètres
+  //  migrationEcole/Suzerain/Monde ne sont plus éditables ici et
+  //  restent comme REFLIS de compatibilité. Remplacée le jour même
+  //  par le flux de migration par BONHEUR ci-dessous.)
+  { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
+  { key: 'migrationBonheurCulture', label: 'Migration par bonheur — bonus d\'une ville de SA culture', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : la formule se base sur l\'attrait du bonheur (×[1 ; 2]) et tous les autres modificateurs S\'ADDITIONNENT — +0,25 (défaut) pour une ville de la culture du migrant, +0,5 pour une ville du même joueur, +1 emploi/logement pour qui manque. Culture + même joueur = attrait × 1,75.' },
+  { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — bonus d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : +0,5 (défaut) pour une ville du même joueur que le migrant — la migration interne est privilégiée en S\'ADDITIONNANT aux autres bonus sur la base d\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
+  { key: 'migrationBonheurEmploi', label: 'Migration par bonheur — bonus d\'une ville avec des EMPLOIS disponibles', groupe: 'Population', aide: 'Bonus ADDITIF (retour 2026-10-29, v3) : +1 (défaut) pour une ville candidate aux postes non pourvus SI le migrant est sans métier — la ville pèse ×2 pour un chômeur. S\'additionne avec même joueur, culture et logement sur la base d\'attrait du bonheur.' },
+  { key: 'migrationBonheurLogement', label: 'Migration par bonheur — bonus d\'une ville avec des LOGEMENTS disponibles', groupe: 'Population', aide: 'Bonus ADDITIF (retour 2026-10-29, v3) : +1 (défaut) pour une ville candidate qui a plus de lits que d\'habitants SI le migrant est sans domicile — la ville pèse ×2 pour un sans-logement. S\'additionne avec les autres modificateurs sur la base d\'attrait du bonheur.' },
+  { key: 'consoNourrParHab', label: 'Consommation Nourriture / habitant vivant (roturier)', groupe: 'Population', aide: 'Base pour tout habitant vivant ; le bourgeois et le noble (rang social, prestige ≥ 100 / ≥ 250) consomment davantage.' },
+  { key: 'consoNourrBourgeois', label: 'Consommation Nourriture / bourgeois vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un bourgeois (prestige ≥ 100) consomme 2 Nourriture par tour mais produit ×1,5.' },
+  { key: 'consoNourrNoble', label: 'Consommation Nourriture / noble vivant (rang)', groupe: 'Population', aide: 'Arbitrage 2026-10-26 : un noble (prestige ≥ 250) consomme 4 Nourriture par tour et produit ×1,5.' },
+  { key: 'prodMultBourgeois', label: 'Multiplicateur de production des bourgeois (rang)', groupe: 'Population', aide: 'La production du métier d\u2019un bourgeois vivant est multipliée par cette valeur (avant les taxes).' },
+  { key: 'prodMultNoble', label: 'Multiplicateur de production des nobles (rang)', groupe: 'Population', aide: 'CORRECTION du 2026-10-26 : le ×1,5 est retiré des nobles — ils consomment 4 Nourriture par tour et produisent ×1.' },
   { key: 'gainsCrediteStock', label: 'Gains de population crédités au stock (1 = oui)', groupe: 'Population' },
   { key: 'fertBaseRate', label: 'Fécondité de base (conception / tour)', groupe: 'Fécondité' },
   { key: 'fertSingleFactor', label: 'Facteur fécondité célibataire', groupe: 'Fécondité' },
@@ -287,19 +389,27 @@ export const PARAM_META: {
   { key: 'conversionProba', label: 'Proba de tentative de conversion culturelle', groupe: 'Culture', unite: 'proba' },
   { key: 'conversionPoidsLocal', label: 'Poids des voisins de même culture', groupe: 'Culture' },
   { key: 'conversionMemeCulture', label: 'Poids de sa propre culture', groupe: 'Culture' },
-  { key: 'taxOrFaibles', label: 'Taxes faibles — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
-  { key: 'taxOrHautes', label: 'Taxes fortes — multiplicateur sur toutes les ressources', groupe: 'Taxes' },
+  { key: 'taxNourrFaibles', label: 'Taxes faibles — multiplicateur Nourriture', groupe: 'Taxes' },
+  { key: 'taxNourrHautes', label: 'Taxes fortes — multiplicateur Nourriture', groupe: 'Taxes' },
+  { key: 'taxOrFaibles', label: 'Taxes faibles — multiplicateur autres ressources (hors Nourriture)', groupe: 'Taxes' },
+  { key: 'taxOrHautes', label: 'Taxes fortes — multiplicateur autres ressources (hors Nourriture)', groupe: 'Taxes' },
   { key: 'taxNaissFaibles', label: 'Taxes faibles — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'taxNaissHautes', label: 'Taxes fortes — multiplicateur naissances', groupe: 'Taxes' },
   { key: 'proxRiviereNourriture', label: 'Proximité rivière — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord d\'une rivière » (marqueur (y)).' },
   { key: 'proxMerNourriture', label: 'Proximité mer — Nourriture / tour', groupe: 'Villes', aide: 'Bonus automatique de chaque ville « au bord de la mer » (marqueur (y)).' },
-  { key: 'puissanceGeneral', label: 'Puissance d\'un commandant', groupe: 'Armées' },
-  { key: 'puissanceSoldat', label: 'Puissance d\'un soldat', groupe: 'Armées' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut « les armées
+  //  rejoignent la banque » : puissanceGeneral et puissanceSoldat
+  //  ne sont plus éditables ici — ils vivent sur les lignes de
+  //  métier (Soldat / Commandant) du référentiel ; les paramètres
+  //  restent comme REFLI de compatibilité.)
   { key: 'armeePrixOr', label: 'Prix de levée — Or par tranche de force', groupe: 'Armées', aide: 'Levée d\'une armée : ce prix est facturé pour chaque tranche de points de force de la puissance cible (règle du classeur : 1 Or tous les 2 points) — payé UNE FOIS à la levée, pas d\'entretien.' },
   { key: 'armeePriXPuissance', label: 'Prix de levée — points de force par tranche', groupe: 'Armées' },
   { key: 'maxMarchands', label: 'Nombre maximal de routes commerciales par joueur', groupe: 'Armées', aide: '0 par défaut. Compte les ROUTES détenues (ville d\'origine), pas les marchands — renommé le 2026-10-24 (sous-vague 3b « routes dissociées ») ; la clé maxMarchands est conservée pour les configs existantes. Les règles qui accordent une route supplémentaire l\'augmentent.' },
-  { key: 'soldatAgeMin', label: 'Âge minimal de recrutement', groupe: 'Armées' },
-  { key: 'soldatAgeMax', label: 'Âge maximal de recrutement', groupe: 'Armées' },
+  // (RETRAIT PARAM_META 2026-10-28, arbitrage Thibaut « les armées
+  //  rejoignent la banque » : soldatAgeMin et soldatAgeMax ne sont
+  //  plus éditables ici — ils vivent sur la ligne de métier Soldat
+  //  du référentiel ; les paramètres restent comme REFLI de
+  //  compatibilité.)
   { key: 'vassalPrelevement', label: "Part des revenus d'habitants reversée au suzerain", groupe: 'Vassaux', unite: 'proportion', aide: "Un vassal prête serment à un autre joueur : à chaque fin de tour, il reverse cette part des gains d'Or de ses habitants à son suzerain (0,5 = 50 %)." },
   { key: 'maxLog', label: 'Taille maximale du journal', groupe: 'Système' },
   { key: 'maxHistory', label: 'Tours d’historique conservés (snapshots)', groupe: 'Système', aide: 'Chaque tour ajoute un snapshot par joueur (stocks + apports). Les plus anciens au-delà du plafond sont retirés.' },
