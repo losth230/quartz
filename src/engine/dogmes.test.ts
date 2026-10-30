@@ -10,25 +10,38 @@
 //      la ville — productionVille).
 //   3. Le choix revient au joueur DOMINANT de la culture au moment
 //      du choix (égalité : plus petit n° de joueur).
-//   4. Le dogme doit exister dans la table `dogmes` du référentiel
-//      — ENCORE VIDE à ce stade : choisirDogme refuse tout nom
-//      tant que les dogmes définitifs n'y sont pas (le choix
-//      deviendra possible sans toucher au code).
+//   4. Le dogme doit exister dans la table `dogmes` du référentiel —
+//      la table des 12 DOGMES DÉFINITIFS retenus par Thibaut y est
+//      entrée à la 2e séance du 30/10 (entrées GÉNÉRIQUES,
+//      culture '*') : le choix est possible en jeu, un dogme est
+//      UNIQUE par culture (le cumul porte sur des dogmes
+//      différents).
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import type { Player, City, Dogme } from './types'
+import type { Player, City, Dogme, Character, GameState, PlayerRecap } from './types'
+import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { createGame } from './setup'
 import type { SetupLine } from './setup'
 import { productionVille } from './production'
 import { productionTourismeBatiment } from './batiments'
 import { normaliserEtat } from './villes'
+import { detailGainsVille, consoNourrHabitant, impotsVassaux } from './economie'
+import { computeFecondite } from './naissances'
+import { capMetierVille } from './metiers'
+import { domicilesCultureVille } from './domiciles'
+import { logementsVille, bonheurVilleComplete } from './bonheur'
+import { maladieStep } from './sante'
+import { garnisonHabitationVille, malusGuerresSaintes } from './garnisons'
+import { applyCultureInfluence } from './culture'
+import { transfererTributVassal } from './vassalite'
 import { cloneDefaultConfig, type DogmeDef } from '../config/defaultConfig'
 import {
   tourismeVille, tourismeCulture, nbPaliersDogmes, dogmesCulture,
   joueurDominantCulture, paliersDogmesEnAttente, choisirDogme,
+  effetsDogmeCulture, dogmesDisponiblesCulture,
 } from './dogmes'
 
 const SETUP: SetupLine[] = [{
@@ -183,10 +196,12 @@ test('choisirDogme : cumul à l infini, jamais remplaçable, palier à franchir,
   state.population[1] = []
   const t = productionTourismeBatiment('Conjuratoire', C, j1.villes[0]?.type)
   C.p.palierTourismeDogme = t
-  // 1. référentiel VIDE : tout choix est refusé (mise en forme seule)
-  const refus = choisirDogme(state, 'Culture Nordique', t, 'Dogme du Travail')
+  // 1. dogme ABSENT du référentiel : refus explicite (la table du
+  //    30/10 porte déjà les 12 dogmes définitifs — un nom inconnu
+  //    seul est refusé ; « Dogme du Travail » est maintenant VALABLE)
+  const refus = choisirDogme(state, 'Culture Nordique', t, 'Dogme Inconnu')
   assert.ok(refus !== null && refus.includes('introuvable dans le référentiel'),
-    `référentiel vide : refus explicte (${refus})`)
+    `dogme absent du référentiel : refus explicite (${refus})`)
   //  NB : capture dans une CONST locale — assert.equal (strictEqual)
   //  est typé « asserts actual is T » et rétrécirait state.dogmes à
   //  undefined pour tout le reste du test (tsc), cassant les accès
@@ -245,15 +260,419 @@ test('normaliserEtat : state.dogmes complété pour les vieilles sauvegardes, in
   assert.deepEqual(state.dogmes, [entree], 'les dogmes pris ne sont JAMAIS touchés')
 })
 
-test('cfgOf garde-fou : une config sans table dogmes reçoit une liste vide (pas de défaut à réintégrer)', () => {
+test('cfgOf garde-fou : clé absente → défaut hérité, table vidée respectée, ancien format purgé', () => {
   const { state } = partie()
+  // (RETOUR DES DOGMES DÉFINITIFS : le défaut porte maintenant les 12
+  //  dogmes — une config sans la clé `dogmes` (sauvegarde d avant le
+  //  30/10) hérite du DÉFAUT comme toute clé absente de la fusion
+  //  {...DEFAULT_CONFIG, ...c} : les vieilles sauvegardes récupèrent
+  //  le référentiel des dogmes, mêmes règles que n importe quelle
+  //  autre table)
   const cfg = { ...state.config } as Record<string, unknown>
   delete (cfg as { dogmes?: unknown }).dogmes
   const C = cfgOf(cfg as never)
-  assert.deepEqual(C.config.dogmes, [], 'config existante sans table dogmes → []')
-  // une table vidée par l arbitre reste vide (défaut vide, pas de ouDefauts)
+  assert.equal(C.config.dogmes?.length, 12, 'clé absente → défaut du référentiel hérité (12 dogmes)')
+  // une table EXPLICITEMENT vidée par l arbitre reste vide
+  //  (défiltra → [], jamais de réintégration forcée)
   C.config.dogmes = []
   assert.deepEqual(cfgOf(C.config).config.dogmes, [], 'une table vidée par l arbitre reste vide')
-  // et le défaut du référentiel est vide à ce stade (mise en forme seule)
-  assert.deepEqual(cloneDefaultConfig().dogmes, [], 'aucun dogme n est encore défini au référentiel')
+  // l ANCIEN format (entrées sans champ culture — table d affichage
+  //  retirée le 24/10) est purgé par cfgOf, le NOUVEAU passe intact
+  const ancien = cfgOf({
+    ...(state.config as object),
+    dogmes: [{ nom: 'Foi des anciens', bonus: '+1 Pontife' }],
+  } as never)
+  assert.deepEqual(ancien.config.dogmes, [], 'l ancien format (sans champ culture) est purgé')
+  const neuf = cfgOf({
+    ...(state.config as object),
+    dogmes: [{ nom: 'Dogme neuf', culture: 'Déisme', description: 'test' }],
+  } as never)
+  assert.equal(neuf.config.dogmes?.length, 1, 'le nouveau format DogmeDef passe intact')
+  assert.equal(neuf.config.dogmes?.[0]?.nom, 'Dogme neuf')
+  // et le défaut du référentiel porte les 12 dogmes GÉNÉRIQUES
+  const defDogmes = cloneDefaultConfig().dogmes
+  assert.equal(defDogmes?.length, 12, 'les 12 dogmes définitifs sont au référentiel')
+  assert.ok(defDogmes?.every((d) => d.culture === '*'),
+    'tous génériques : proposés au choix de toute culture')
+})
+
+// ═══════════════════════════════════════════════════════════════════════════
+//  TESTS DES 12 DOGMES DÉFINITIFS (2e séance du 30/10) : la table des
+//  dogmes retenus par Thibaut est au référentiel (générique, culture
+//  '*') ; chaque hook moteur est vérifié ci-dessous avec un dogme
+//  PRIS injecté directement dans state.dogmes (les validations de
+//  choisirDogme sont couvertes par les tests précédents — ici on
+//  teste les EFFETS, la culture porteuse lit le référentiel par nom).
+//  Interprétations verrouillées (à faire valider par l'arbitre) :
+//   · Travail/Égalité/Famille/Santé = culture PROPRE du personnage
+//     (loi d'habitant) ; Patrie/Solidarité/Liberté/Guerres
+//     Saintes/Évangile/Nationalisme = culture de la VILLE ;
+//   · l'Égalité FIXE la consommation (l'emporte sur régime et défaut) ;
+//   · la Mère Patrie porte sur la culture du SUZERAIN (tribut reçu) ;
+//   · la Fraternité n'a AUCUN effet moteur (révoltes non implémentées).
+// ═══════════════════════════════════════════════════════════════════════════
+
+/** Personnage de test complet (même contrat que metiers.test.ts —
+ *  tuples de 3 traits pour la CI tsc strict). */
+function persoDogme(id: string, age: number, o: { metier?: string | null; ville?: string } = {}): Character {
+  return {
+    id, nom: 'Test', prenom: `Pers-${id}`, dynastie: 'Roturier', sexe: 'F', age,
+    culture: 'Culture Nordique', ville: o.ville ?? 'Bergen', orientation: 'Hétérosexuel',
+    traits: ['Obstiné', 'Fécond', 'Fécond'], statut: 'Sain', mariage: null, mariageId: null,
+    mere: null, mereId: null, pere: null, pereId: null,
+    pereBio: null, pereBioId: null, enfantBatard: false,
+    metier: o.metier ?? null, fecondite: 0, armee: null,
+  }
+}
+
+/** Injecte un dogme PRIS par une culture (hook tests — passe par
+ *  le référentiel par nom, comme le moteur). */
+function prendre(state: GameState, culture: string, nom: string) {
+  state.dogmes = [
+    ...(state.dogmes ?? []),
+    { culture, palier: 50, nom, choisiPar: 1, choisiAuTour: 1 },
+  ]
+}
+
+/** PlayerRecap de test complet. */
+function recapTest(): PlayerRecap {
+  return {
+    conceptions: {}, naissances: {}, deces: {}, decesMaladie: 0,
+    mariagesNobles: {}, conversions: {}, metiersAttribues: {},
+    crises: [], commandantTombe: null,
+  }
+}
+
+/** Rng factice configurable (applyCultureInfluence/maladieStep) —
+ *  seule la face `chance` (et au besoin `pickWeighted`) est
+ *  configurable, le reste ne sert pas à ces hooks ; le cast final
+ *  évite d implémenter les 8 faces de l interface. */
+function fakeRng(o: {
+  chance?: (p: number) => boolean
+  pickWeighted?: <T>(items: T[], weight: (t: T) => number) => T
+}): Rng {
+  return {
+    chance: o.chance ?? (() => false),
+    pickWeighted: o.pickWeighted ?? ((items) => items[0]!),
+  } as unknown as Rng
+}
+
+test('référentiel : les 12 dogmes définitifs, génériques, aux effets attendus', () => {
+  const attendus: Record<string, Array<{ type: string; valeur: number }>> = {
+    'Dogme du Travail': [{ type: 'travailNourriture', valeur: 1 }],
+    'Dogme de la Famille': [{ type: 'fecondite', valeur: 0.1 }],
+    'Dogme de la Patrie': [{ type: 'gardeParHabitation', valeur: 2 }],
+    'Dogme de l\u2019Égalité': [{ type: 'consoNourrBourgeois', valeur: 1 }],
+    'Dogme de la Solidarité': [{ type: 'taudisParHabitation', valeur: 5 }],
+    // la Fraternité n a AUCUN effet moteur (révoltes non implémentées)
+    'Dogme de la Fraternité': [],
+    'Dogme de la Liberté': [{ type: 'bonheurVille', valeur: 10 }],
+    'Dogme de la Santé': [{ type: 'maladieContractMod', valeur: -0.05 }],
+    'Dogme de l\u2019Évangile': [{ type: 'pressionCulture', valeur: 0.1 }],
+    'Dogme de la Mère Patrie': [{ type: 'tributVassal', valeur: 0.05 }],
+    'Dogme des Guerres Saintes': [{ type: 'garnisonHorsCulture', valeur: -40 }],
+    'Dogme du Nationalisme': [{ type: 'conversionLocale', valeur: 0.15 }],
+  }
+  const def = cloneDefaultConfig().dogmes ?? []
+  assert.equal(def.length, 12, '12 dogmes au référentiel')
+  for (const d of def) {
+    assert.equal(d.culture, '*', `${d.nom} : générique (proposé à toute culture)`)
+    assert.ok(d.description.length > 0, `${d.nom} : décrit`)
+    const exp = attendus[d.nom]
+    assert.ok(exp !== undefined, `dogme inattendu au référentiel : ${d.nom}`)
+    assert.deepEqual(d.effets ?? [], exp, `${d.nom} : effets verrouillés (le référentiel est la source de vérité du moteur)`)
+  }
+})
+
+test('choisirDogme (2e séance) : générique « * » accepté, dogme UNIQUE par culture, disponibles filtrés', () => {
+  const { state, C } = partie()
+  const base = state.players[0]
+  const j1 = joueurVille(base, 1, 'Culture Nordique', ['Conjuratoire', 'Conjuratoire'])
+  state.players.push(j1)
+  state.population[1] = []
+  const t = productionTourismeBatiment('Conjuratoire', C, j1.villes[0]?.type)
+  C.p.palierTourismeDogme = t
+  // un dogme GÉNÉRIQUE du référentiel se choisit pour toute culture
+  assert.equal(choisirDogme(state, 'Culture Nordique', t, 'Dogme de la Liberté'), null,
+    'un dogme « * » est proposé à toute culture')
+  assert.equal(state.dogmes?.length, 1)
+  // UNIQUE par culture : le même nom est refusé au palier suivant
+  const doublon = choisirDogme(state, 'Culture Nordique', 2 * t, 'Dogme de la Liberté')
+  assert.ok(doublon !== null && doublon.includes('unique par culture'),
+    `le même dogme deux fois est refusé (${doublon})`)
+  // un AUTRE dogme au palier suivant : succès (cumul de dogmes différents)
+  assert.equal(choisirDogme(state, 'Culture Nordique', 2 * t, 'Dogme du Travail'), null)
+  assert.equal(state.dogmes?.length, 2, '2 dogmes différents cumulés')
+  // disponibles : le référentiel moins les dogmes déjà pris par la culture
+  const dispo = dogmesDisponiblesCulture(state, 'Culture Nordique', C)
+  assert.equal(dispo.length, 10, '12 au référentiel − 2 pris')
+  assert.ok(!dispo.some((d) => d.nom === 'Dogme de la Liberté' || d.nom === 'Dogme du Travail'),
+    'les dogmes pris n y sont plus proposés')
+  // effetsDogmeCulture : somme par type, lecture par nom au référentiel
+  assert.equal(effetsDogmeCulture(state, 'Culture Nordique', 'bonheurVille', C), 10)
+  assert.equal(effetsDogmeCulture(state, 'Culture Nordique', 'travailNourriture', C), 1)
+  assert.equal(effetsDogmeCulture(state, 'Déisme', 'bonheurVille', C), 0,
+    'une autre culture ne porte pas ces dogmes')
+})
+
+test('Dogme du Travail : +1 Nourriture par sans-emploi de la culture (detailGainsVille, avant les taxes)', () => {
+  const { state, C } = partie()
+  const p = state.players[0]
+  const ville = p.villes.find((v) => v.nom === 'Bergen')
+  assert.ok(ville, 'Bergen existe (setup)')
+  const chomeur = persoDogme('T1', 30, { ville: 'Bergen' })   // sans emploi, Nordique
+  const etranger = persoDogme('T2', 30, { ville: 'Bergen' })  // sans emploi
+  etranger.culture = 'Déisme'
+  state.population[p.n] = [chomeur, etranger]
+  const avant = detailGainsVille(state, p, ville, C).metiers['Nourriture'] ?? 0
+  prendre(state, 'Culture Nordique', 'Dogme du Travail')
+  const apres = detailGainsVille(state, p, ville, C).metiers['Nourriture'] ?? 0
+  // un seul des deux sans-emplois est de la culture porteuse : +1, pas +2
+  assert.equal(apres - avant, 1,
+    'seuls les sans-emplois de la culture porteuse produisent (+1, sans multiplicateur de rang)')
+})
+
+test('Dogme de l\u2019Égalité : un bourgeois de la culture consomme 1 Nourriture (l emporte sur le défaut)', () => {
+  const { state, C } = partie()
+  const bourgeois = persoDogme('E1', 40)
+  // 150 : entre le seuil bourgeois (100) et le seuil noble (250) —
+  //  prestige 300 l aurait rendu NOBLE (conso 4)
+  bourgeois.prestige = 150
+  assert.equal(consoNourrHabitant(bourgeois, C, 'Autoritarisme', state), 2,
+    'sans dogme : défaut bourgeois du référentiel (2, l Autoritarisme n a pas de loi de consommation)')
+  prendre(state, 'Culture Nordique', 'Dogme de l\u2019Égalité')
+  assert.equal(consoNourrHabitant(bourgeois, C, 'Autoritarisme', state), 1,
+    'avec dogme : le dogme FIXE la consommation à 1 (l emporte sur le régime et le défaut)')
+  // sans state (cités libres, appels sans état) : le dogme n est pas consulté
+  assert.equal(consoNourrHabitant(bourgeois, C, 'Autoritarisme'), 2,
+    'sans state, comportement inchangé (roturier de la même culture non plus)')
+  const roturier = persoDogme('E2', 30)
+  assert.equal(consoNourrHabitant(roturier, C, 'Autoritarisme', state), 1,
+    'le dogme ne touche que les bourgeois')
+})
+
+test('Dogme de la Famille : fécondité ×1,1 pour les personnages de la culture', () => {
+  const { state } = partie()
+  const p = state.players[0]
+  const femme = persoDogme('F1', 22, { ville: 'Bergen' }) // adulte, non mariée
+  state.population[p.n] = [femme]
+  const sans = computeFecondite(state, p, femme)
+  prendre(state, 'Culture Nordique', 'Dogme de la Famille')
+  const avec = computeFecondite(state, p, femme)
+  assert.ok(sans > 0, 'pré-condition : proba de conception positive')
+  assert.ok(Math.abs(avec / sans - 1.1) < 1e-9, '×(1+0,1) exactement')
+  // une AUTRE culture n est pas touchée
+  femme.culture = 'Déisme'
+  assert.ok(Math.abs(computeFecondite(state, p, femme) / sans - 1) < 1e-9,
+    'la fécondité d un personnage d une autre culture est inchangée')
+})
+
+test('Dogme de la Patrie : +2 métiers de Garde dans les villes de la culture (capMetierVille)', () => {
+  const { state, C } = partie()
+  const p = state.players[0]
+  const ville = p.villes.find((v) => v.nom === 'Bergen')
+  assert.ok(ville, 'Bergen existe (setup)')
+  const garde = C.p.metierGarde
+  const sans = capMetierVille(garde, ville, C, { state, joueur: p.n })
+  prendre(state, 'Culture Nordique', 'Dogme de la Patrie')
+  const avec = capMetierVille(garde, ville, C, { state, joueur: p.n })
+  assert.equal(avec - sans, 2, '+2 Gardes dans les villes de la culture porteuse (cumulée aux bases et emplacements)')
+  // hors culture de la ville : pas de bonus (loi de VILLE)
+  const villeEtrangere: City = { ...ville, culture: 'Déisme' }
+  assert.equal(
+    capMetierVille(garde, villeEtrangere, C, { state, joueur: p.n }),
+    capMetierVille(garde, villeEtrangere, C),
+    'la cap d une ville d une autre culture ne bouge pas',
+  )
+  // un autre métier n est pas touché
+  assert.equal(
+    capMetierVille('Chasseur', ville, C, { state, joueur: p.n }),
+    capMetierVille('Chasseur', ville, C),
+    'seul le métier de Garde porte le bonus',
+  )
+})
+
+test('Dogme de la Solidarité : +5 Taudis par habitation (entrée séparée, lits attribuables)', () => {
+  const { state, C } = partie()
+  const p = state.players[0]
+  const ville = p.villes.find((v) => v.nom === 'Bergen')
+  assert.ok(ville, 'Bergen existe (setup)')
+  const logementsAvant = logementsVille(ville, C, state)
+  const avant = domicilesCultureVille(ville, C, state)
+  prendre(state, 'Culture Nordique', 'Dogme de la Solidarité')
+  const apres = domicilesCultureVille(ville, C, state)
+  assert.ok(apres.find((e) => e.domicile === 'Taudis' && e.nombre === 5),
+    'entrée « Taudis » de 5, SÉPARÉE de la loi de culture (les deux restent visibles au détail)')
+  assert.equal(avant.length + 1, apres.length, 'une seule entrée ajoutée')
+  assert.equal(logementsVille(ville, C, state) - logementsAvant, 5,
+    'les LOGEMENTS de la ville montent de 5 (même parc que la loi « Logements élargis »)')
+  // sans state : le dogme n est pas consulté (appels sans état)
+  assert.equal(domicilesCultureVille(ville, C).length, avant.length,
+    'sans state, comportement inchangé')
+})
+
+test('Dogme de la Liberté : +10 Bonheur dans les villes de la culture (avant le plafond de 100)', () => {
+  const { state, C } = partie()
+  const p = state.players[0]
+  const ville = p.villes.find((v) => v.nom === 'Bergen')
+  assert.ok(ville, 'Bergen existe (setup)')
+  const sans = bonheurVilleComplete(state, p, ville, C)
+  prendre(state, 'Culture Nordique', 'Dogme de la Liberté')
+  const avec = bonheurVilleComplete(state, p, ville, C)
+  assert.equal(avec, Math.min(100, sans + 10), '+10 Bonheur, plafond 100')
+  assert.ok(avec <= 100, 'jamais au-dessus de 100')
+})
+
+test('Dogme de la Santé : −5 points de contraction pour les personnages de la culture (maladieStep)', () => {
+  const { state } = partie()
+  const p = state.players[0]
+  const habitant = persoDogme('S1', 30, { ville: 'Bergen' })
+  state.population[p.n] = [habitant]
+  const recap = recapTest()
+  const probas: number[] = []
+  maladieStep(state, p, habitant, fakeRng({
+    chance: (x) => { probas.push(x); return false },
+  }), recap)
+  prendre(state, 'Culture Nordique', 'Dogme de la Santé')
+  const probasDogme: number[] = []
+  maladieStep(state, p, habitant, fakeRng({
+    chance: (x) => { probasDogme.push(x); return false },
+  }), recap)
+  assert.ok(probas.length > 0 && probasDogme.length > 0, 'un tirage de contraction a eu lieu')
+  // le tirage reçoit max(0, proba + mod) : le mod −0,05 passe au
+  //  tirage, avec le PLANCHER 0 du moteur
+  assert.equal(probasDogme[0], Math.max(0, (probas[0] ?? 0) - 0.05),
+    'la proba de contraction perd exactement 0,05 (additif, plancher 0 du tirage)')
+  // un personnage d une AUTRE culture n est pas protégé (Lunisme :
+  //  aucune loi de santé — le Déisme porte −0,02 « Lavages de main »)
+  habitant.culture = 'Lunisme'
+  const probasEtranger: number[] = []
+  maladieStep(state, p, habitant, fakeRng({
+    chance: (x) => { probasEtranger.push(x); return false },
+  }), recap)
+  assert.equal(probasEtranger[0], probas[0],
+    'la culture propre du personnage seule compte (loi d habitant)')
+})
+
+test('Dogme des Guerres Saintes : −40 garnison hors culture porteuse, une fois par culture, plancher 0', () => {
+  const { state, C } = partie()
+  const p = state.players[0]
+  const ville = p.villes.find((v) => v.nom === 'Bergen')
+  assert.ok(ville, 'Bergen existe (setup)')
+  assert.equal(malusGuerresSaintes(state, ville, C), 0, 'sans dogme : pas de malus')
+  prendre(state, 'Culture Nordique', 'Dogme des Guerres Saintes')
+  const villeEtrangere: City = { ...ville, culture: 'Déisme' }
+  assert.equal(malusGuerresSaintes(state, villeEtrangere, C), 40,
+    'ville d une autre culture : −40')
+  assert.equal(malusGuerresSaintes(state, ville, C), 0,
+    'ville de la culture porteuse : protégée')
+  // une DEUXIÈME culture porteuse cumule (−80 sur une ville tierce)
+  prendre(state, 'Déisme', 'Dogme des Guerres Saintes')
+  const villeTierce: City = { ...ville, culture: 'Naturalisme' }
+  assert.equal(malusGuerresSaintes(state, villeTierce, C), 80,
+    'deux cultures porteuses : malus cumulé une fois par culture')
+  // et dans la garnison réelle (plancher 0)
+  const gAvant = garnisonHabitationVille(p, villeTierce, C)
+  const gApres = garnisonHabitationVille(p, villeTierce, C, state)
+  assert.equal(gApres, Math.max(0, gAvant - 80), 'le malus passe à la garnison réelle, plancher 0')
+})
+
+test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et jet dédié +0,15 (applyCultureInfluence)', () => {
+  // (a) Évangile : le poids FINAL de la culture porteuse ×1,1 dans le tirage
+  const pa = partie()
+  const pA = pa.state.players[0]
+  if (!pA) throw new Error('joueur absent')
+  const habitantA = persoDogme('N1', 30, { ville: 'Bergen' })
+  habitantA.culture = 'Déisme'
+  pa.state.population[pA.n] = [habitantA]
+  // la culture porteuse doit avoir du POIDS dans la pression : sans
+  //  Tourisme général, son poids vaut 0 (×1,1 ne se verrait pas) —
+  //  on lui donne du Tourisme général (hors villes)
+  pA.resources['Tourisme'] = { stock: 10, prod: 0 }
+  let poidsNordique = 0
+  const runA = () => {
+    habitantA.culture = 'Déisme' // reset : le tirage précédent a pu convertir
+    applyCultureInfluence(pa.state, pA, fakeRng({
+      chance: () => true, // tente la conversion à chaque tour
+      pickWeighted: <T,>(items: T[], weight: (t: T) => number): T => {
+        for (const it of items as Array<[string, number]>) {
+          if (it[0] === 'Culture Nordique') poidsNordique = weight(it as never)
+        }
+        return (items as Array<[string, number]>)[0] as unknown as T
+      },
+    }), recapTest())
+  }
+  runA()
+  const poidsSans = poidsNordique
+  prendre(pa.state, 'Culture Nordique', 'Dogme de l\u2019Évangile')
+  runA()
+  assert.ok(poidsSans > 0, 'pré-condition : la culture porteuse a un poids')
+  assert.ok(Math.abs(poidsNordique / poidsSans - 1.1) < 1e-9,
+    'Évangile : le poids de la culture porteuse ×1,1')
+  // (b) Nationalisme : jet SUPPLÉMENTAIRE dédié vers la culture d accueil
+  const pb = partie()
+  const pB = pb.state.players[0]
+  if (!pB) throw new Error('joueur absent')
+  const habitantB = persoDogme('N2', 30, { ville: 'Bergen' })
+  habitantB.culture = 'Déisme'
+  pb.state.population[pB.n] = [habitantB]
+  // sans dogme : une seule tentative (normale), rien ne se passe
+  let appels = 0
+  applyCultureInfluence(pb.state, pB, fakeRng({
+    chance: () => { appels++; return false },
+  }), recapTest())
+  assert.equal(appels, 1, 'sans dogme : un seul tirage par personnage')
+  assert.equal(habitantB.culture, 'Déisme')
+  // avec dogme : le tirage normal échoue, le jet dédié réussit
+  prendre(pb.state, 'Culture Nordique', 'Dogme du Nationalisme')
+  appels = 0
+  applyCultureInfluence(pb.state, pB, fakeRng({
+    chance: () => { appels++; return appels > 1 }, // normal : non ; dédié : oui
+  }), recapTest())
+  assert.equal(appels, 2, 'deux tirages : normal puis dédié au dogme')
+  assert.equal(habitantB.culture, 'Culture Nordique',
+    'converti vers la culture d accueil par le jet dédié')
+  assert.ok(pb.state.log.some((l) => l.texte.includes('(dogme du Nationalisme)')),
+    'le log du Nationalisme est dédié')
+})
+
+test('Dogme de la Mère Patrie : tribut reçu ×1,05 (les DEUX chemins : fin de tour et impôt manuel)', () => {
+  const { state, C } = partie()
+  const suzerain = state.players[0]
+  if (!suzerain) throw new Error('joueur absent')
+  const base = state.players[0]
+  // (a) fin de tour : transfererTributVassal
+  const vassal = joueurVille(base, 2, 'Culture Nordique', [])
+  vassal.vassalDe = suzerain.n
+  state.players.push(vassal)
+  state.population[2] = []
+  const part = 100 * C.p.vassalPrelevement
+  const gainsSans: Record<number, Record<string, number>> = { 2: { Or: 100 } }
+  transfererTributVassal(state, gainsSans, C)
+  const recuSans = gainsSans[suzerain.n]?.['Or'] ?? 0
+  assert.ok(Math.abs(recuSans - part) < 1e-9,
+    'sans dogme : le suzerain reçoit la part du vassal (Autoritarisme : pas de loi de tribut)')
+  prendre(state, suzerain.culture, 'Dogme de la Mère Patrie')
+  const gainsAvec: Record<number, Record<string, number>> = { 2: { Or: 100 } }
+  transfererTributVassal(state, gainsAvec, C)
+  const recuAvec = gainsAvec[suzerain.n]?.['Or'] ?? 0
+  assert.ok(Math.abs(recuAvec / recuSans - 1.05) < 1e-9,
+    'avec dogme : ×1,05 — le vassal paie SA part, la différence est CRÉÉE')
+  assert.ok(Math.abs((gainsAvec[2]?.['Or'] ?? 0) - (100 - part)) < 1e-9,
+    'le vassal paie toujours SA part (100 − part)')
+  // (b) impôt manuel : impotsVassaux (même multiplicateur) — le
+  //  relevé « sans » retire le dogme injecté en (a) (sinon il
+  //  cumulerait 0,05+0,05 = ×1,1)
+  const commercant = persoDogme('M1', 30, { metier: 'Commerçant', ville: vassal.villes[0]?.nom })
+  commercant.culture = 'Culture Nordique'
+  state.population[2] = [commercant]
+  state.dogmes = []
+  const impotsSans = impotsVassaux(state, suzerain, C)
+  assert.equal(impotsSans.length, 1, 'le vassal rapporte (Commerçant : Or)')
+  prendre(state, suzerain.culture, 'Dogme de la Mère Patrie')
+  const impotsAvec = impotsVassaux(state, suzerain, C)
+  assert.equal(impotsAvec.length, 1)
+  assert.ok(impotsSans[0] && impotsAvec[0])
+  assert.ok(Math.abs(impotsAvec[0]!.montant / impotsSans[0]!.montant - 1.05) < 1e-9,
+    'l impôt manuel des vassaux porte le même ×1,05')
 })

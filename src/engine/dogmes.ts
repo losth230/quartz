@@ -34,6 +34,7 @@
 import type { GameState, Player, City, Dogme } from './types'
 import { cfgOf, type Cfg } from './gameData'
 import { productionVille } from './production'
+import type { DogmeDef } from '../config/defaultConfig'
 
 /** Tourisme d'une VILLE : sa production Tourisme par tour —
  *  exactement la valeur affichée en bas du cadre de la ville
@@ -133,6 +134,47 @@ export function paliersDogmesEnAttente(
   return out
 }
 
+/** Somme des VALEURS d'effets d'un TYPE donné parmi les dogmes pris
+ *  par une culture (0 si aucun — les hooks moteurs sont INERTES
+ *  tant qu'aucun dogme n'est pris, diag inchangé). Les chiffres
+ *  vivent dans le RÉFÉRENTIEL (DogmeDef.effets), lus par le NOM du
+ *  dogme pris : éditer la table change l'effet des dogmes DÉJÀ
+ *  pris — le référentiel est la source de vérité, pas l'état (même
+ *  philosophie que les lois de culture). Les types d'effet de la
+ *  table du 30/10 : travailNourriture, fecondite,
+ *  gardeParHabitation, consoNourrBourgeois, taudisParHabitation,
+ *  bonheurVille, maladieContractMod, pressionCulture, tributVassal,
+ *  garnisonHorsCulture, conversionLocale (la Fraternité ne porte
+ *  AUCUN effet — mécanique des révoltes non implémentée). */
+export function effetsDogmeCulture(
+  state: GameState, culture: string, type: string, C: Cfg = cfgOf(state.config),
+): number {
+  if (!state.dogmes?.length) return 0
+  let total = 0
+  for (const d of state.dogmes) {
+    if (d.culture !== culture) continue
+    const ref = (C.config.dogmes ?? []).find((r) => r.nom === d.nom)
+    if (!ref?.effets) continue
+    for (const e of ref.effets) if (e.type === type) total += e.valeur
+  }
+  return total
+}
+
+/** Dogmes du référentiel DISPONIBLES au choix d'une culture : les
+ *  entrées « toutes cultures » (DogmeDef.culture === '*', cas de la
+ *  table du 30/10 — dogmes génériques proposés à toute culture)
+ *  ou propres à la culture, NON déjà prises (un dogme est UNIQUE
+ *  par culture : le cumul à l'infini porte sur des dogmes
+ *  DIFFÉRENTS, jamais le même deux fois). */
+export function dogmesDisponiblesCulture(
+  state: GameState, culture: string, C: Cfg = cfgOf(state.config),
+): DogmeDef[] {
+  const pris = new Set(dogmesCulture(state, culture).map((d) => d.nom))
+  return (C.config.dogmes ?? []).filter(
+    (d) => (d.culture === '*' || d.culture === culture) && !pris.has(d.nom),
+  )
+}
+
 /** CHOISIR un dogme (mutateur, appelé par le client du joueur
  *  dominant via l'UI de la carte culture) : valide que le palier
  *  est franchi, pas encore consommé, et que le dogme existe dans
@@ -161,10 +203,20 @@ export function choisirDogme(
   if (palier / pas > atteints) {
     return `Le palier ${palier} de Tourisme n'est pas encore franchi par la culture ${culture}.`
   }
-  // le dogme doit exister au référentiel, pour cette culture
-  const ref = (C.config.dogmes ?? []).find((d) => d.culture === culture && d.nom === nom)
+  // (RETOUR DES DOGMES DÉFINITIFS, 2026-10-30 2e séance) : le dogme
+  //  doit être UNIQUE par culture — le cumul à l'infini (arbitrage
+  //  n°1) porte sur des dogmes DIFFÉRENTS, jamais le même deux fois.
+  if (dogmesCulture(state, culture).some((d) => d.nom === nom)) {
+    return `Le dogme « ${nom} » est déjà pris par la culture ${culture} — un dogme est unique par culture.`
+  }
+  // le dogme doit exister au référentiel, pour cette culture : les
+  //  entrées génériques (culture '*', table du 30/10 — dogmes
+  //  proposés à TOUTE culture) ou propres à la culture
+  const ref = (C.config.dogmes ?? []).find(
+    (d) => (d.culture === culture || d.culture === '*') && d.nom === nom,
+  )
   if (!ref) {
-    return `Dogme « ${nom} » introuvable dans le référentiel (culture ${culture}) — aucun dogme n'est encore défini.`
+    return `Dogme « ${nom} » introuvable dans le référentiel pour la culture ${culture}.`
   }
   const dominant = joueurDominantCulture(state, culture, C)
   if (!dominant) {
