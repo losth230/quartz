@@ -16,6 +16,14 @@
 //      culture '*') : le choix est possible en jeu, un dogme est
 //      UNIQUE par culture (le cumul porte sur des dogmes
 //      différents).
+//   5. CORRECTIF FAMILLE (5e retour arbitre Thibaut du 30/10) :
+//      « le calcul de la conception prend en compte la fécondité
+//      homme et la fécondité femme — une femme n'a pas à gagner en
+//      fécondité si son mari est d'une culture féconde » : dans le
+//      JET de conception, chaque époux apporte SA part de fécondité
+//      avec le dogme de SA culture propre ; la fécondité AFFICHÉE
+//      d'une épouse ne monte jamais à cause de la culture de son
+//      mari.
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -29,7 +37,7 @@ import { productionVille } from './production'
 import { productionTourismeBatiment } from './batiments'
 import { normaliserEtat } from './villes'
 import { detailGainsVille, consoNourrHabitant, impotsVassaux } from './economie'
-import { computeFecondite } from './naissances'
+import { computeFecondite, conceptionEtNaissances } from './naissances'
 import { capMetierVille } from './metiers'
 import { domicilesCultureVille } from './domiciles'
 import { logementsVille, bonheurVilleComplete } from './bonheur'
@@ -459,40 +467,97 @@ test('Dogme de l\u2019Égalité : un bourgeois de la culture consomme 1 Nourritu
     'le dogme ne touche que les bourgeois')
 })
 
-test('Dogme de la Famille : fécondité ×1,1 — côté femme, côté homme ET via l époux (correctif arbitre)', () => {
+test('Dogme de la Famille : fécondité ×1,1 côté femme et côté homme — le dogme du mari vit dans le JET, pas dans la fécondité affichée de l épouse (5e retour arbitre)', () => {
   const { state } = partie()
   const p = state.players[0]
   const femme = persoDogme('F1', 22, { ville: 'Bergen' })
   const homme = persoDogme('H1', 25, { ville: 'Bergen' })
   homme.sexe = 'M'
-  // une femme d une AUTRE culture mariée à un homme porteur
+  // une femme d une AUTRE culture mariée à un homme PORTEUR (5e retour :
+  //  « une femme n'a pas à gagner en fécondité si son mari est d'une
+  //  culture féconde » — sa fécondité AFFICHÉE ne bouge pas)
   const mariee = persoDogme('F2', 22, { ville: 'Bergen' })
   mariee.culture = 'Déisme'
   mariee.mariageId = 'H1'
   homme.mariageId = 'F2'
-  state.population[p.n] = [femme, homme, mariee]
+  // une femme PORTEUSE mariée à un homme d une autre culture
+  const porteuse = persoDogme('F3', 22, { ville: 'Bergen' })
+  const etranger = persoDogme('H2', 25, { ville: 'Bergen' })
+  etranger.sexe = 'M'
+  etranger.culture = 'Déisme'
+  porteuse.mariageId = 'H2'
+  etranger.mariageId = 'F3'
+  // un couple PORTEUR des deux côtés
+  const coupleF = persoDogme('F4', 22, { ville: 'Bergen' })
+  const coupleH = persoDogme('H3', 25, { ville: 'Bergen' })
+  coupleH.sexe = 'M'
+  coupleF.mariageId = 'H3'
+  coupleH.mariageId = 'F4'
+  state.population[p.n] = [femme, homme, mariee, porteuse, etranger, coupleF, coupleH]
+  // ── JET de conception (conceptionEtNaissances) : la proba de
+  //    conception de chaque femme éligible est capturée par un rng
+  //    enregistreur (chance → false : aucune grossesse, aucune
+  //    autre consommation d aléa). Ordre d itération = ordre du
+  //    pop : [femme, mariee, porteuse, coupleF].
+  const jetConception = (): number[] => {
+    const probas: number[] = []
+    const rng = { chance: (q: number) => { probas.push(q); return false } } as unknown as Rng
+    conceptionEtNaissances(state, p, rng, recapTest())
+    return probas
+  }
   // relevés SANS dogme (avant de le prendre)
   const femmeSans = computeFecondite(state, p, femme)
   const hommeSans = computeFecondite(state, p, homme)
   const marieeSans = computeFecondite(state, p, mariee)
+  const porteuseSans = computeFecondite(state, p, porteuse)
+  const etrangerSans = computeFecondite(state, p, etranger)
+  const coupleFSans = computeFecondite(state, p, coupleF)
+  const coupleHSans = computeFecondite(state, p, coupleH)
+  const jetSans = jetConception()
   prendre(state, 'Culture Nordique', 'Dogme de la Famille')
   const femmeAvec = computeFecondite(state, p, femme)
   const hommeAvec = computeFecondite(state, p, homme)
   const marieeAvec = computeFecondite(state, p, mariee)
-  assert.ok(femmeSans > 0 && hommeSans > 0 && marieeSans > 0,
-    'pré-conditions : probas positives (femme seule, homme, femme mariée)')
+  const porteuseAvec = computeFecondite(state, p, porteuse)
+  const etrangerAvec = computeFecondite(state, p, etranger)
+  const coupleFAvec = computeFecondite(state, p, coupleF)
+  const coupleHAvec = computeFecondite(state, p, coupleH)
+  const jetAvec = jetConception()
+  assert.ok(femmeSans > 0 && hommeSans > 0 && marieeSans > 0 && porteuseSans > 0
+    && etrangerSans > 0 && coupleFSans > 0 && coupleHSans > 0,
+    'pré-conditions : probas positives (femmes seules/mariées, hommes)')
+  assert.equal(jetSans.length, 4, '4 femmes éligibles au jet (femme, mariee, porteuse, coupleF)')
+  assert.ok(jetSans.every((q) => q > 0), 'probas de conception positives avant dogme')
+  // ── fécondité AFFICHÉE (computeFecondite) ──
   assert.ok(Math.abs(femmeAvec / femmeSans - 1.1) < 1e-9,
-    'côté FEMME : ×(1+0,1) exactement')
+    'côté FEMME : ×(1+0,1) exactement (culture propre)')
   // (correctif arbitre Thibaut 30/10 : « le multiplicateur est
   //  côté homme et femme »)
   assert.ok(Math.abs(hommeAvec / hommeSans - 1.1) < 1e-9,
     'côté HOMME : ×(1+0,1) exactement')
-  assert.ok(Math.abs(marieeAvec / marieeSans - 1.1) < 1e-9,
-    'via l ÉPOUX porteur : un mari de la culture multiplie SA part — la conception ×1,1 même pour une épouse d une autre culture')
-  // un personnage d une AUTRE culture (non marié à un porteur) n est pas touché
-  femme.culture = 'Déisme'
-  assert.ok(Math.abs(computeFecondite(state, p, femme) / femmeSans - 1) < 1e-9,
+  assert.ok(Math.abs(porteuseAvec / porteuseSans - 1.1) < 1e-9,
+    'une femme porteuse mariée à un non-porteur : ×1,1 (sa propre part)')
+  assert.ok(Math.abs(coupleFAvec / coupleFSans - 1.1) < 1e-9,
+    'un couple porteur des deux côtés : la fécondité AFFICHÉE de l épouse ×1,1 (sa part seule, pas ×1,21)')
+  assert.ok(Math.abs(coupleHAvec / coupleHSans - 1.1) < 1e-9,
+    'la fécondité affichée de l époux porteur ×1,1 (sa part)')
+  // (5e retour arbitre Thibaut du 30/10 : « une femme n'a pas à gagner
+  //  en fécondité si son mari est d'une culture féconde »)
+  assert.ok(Math.abs(marieeAvec / marieeSans - 1) < 1e-9,
+    'fécondité AFFICHÉE de l épouse d un porteur : INCHANGÉE (5e retour)')
+  assert.ok(Math.abs(etrangerAvec / etrangerSans - 1) < 1e-9,
     'la fécondité d un personnage d une autre culture est inchangée')
+  // ── JET de conception (« le calcul de la conception prend en compte
+  //    la fécondité homme et la fécondité femme » — chaque époux apporte
+  //    SA part, avec le dogme de SA culture propre) ──
+  assert.ok(Math.abs(jetAvec[0]! / jetSans[0]! - 1.1) < 1e-9,
+    'jet d une femme porteuse célibataire : ×1,1 (sa part)')
+  assert.ok(Math.abs(jetAvec[1]! / jetSans[1]! - 1.1) < 1e-9,
+    'jet d une épouse NON porteuse d un mari PORTEUR : ×1,1 via la part de fécondité de LUI (le calcul de la conception prend en compte la fécondité homme)')
+  assert.ok(Math.abs(jetAvec[2]! / jetSans[2]! - 1.1) < 1e-9,
+    'jet d une épouse PORTEUSE d un mari non porteur : ×1,1 (sa part à elle)')
+  assert.ok(Math.abs(jetAvec[3]! / jetSans[3]! - 1.21) < 1e-9,
+    'jet d un couple PORTEUR des deux côtés : ×1,21 (chaque époux porteur multiplie SA part)')
 })
 
 test('Dogme de la Patrie : +2 métiers de Garde dans les villes de la culture (capMetierVille)', () => {

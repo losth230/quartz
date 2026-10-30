@@ -23,12 +23,21 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   //  la proba de conception RÉELLE du tour (conceptionEtNaissances) —
   //  facteurs d'âge, traits des époux (fert_add), culture, orientation
   //  et taxes de la ville.
+  //  (AMENDEMENT 5e retour arbitre Thibaut du 30/10 : « une femme n'a
+  //  pas à gagner en fécondité si son mari est d'une culture féconde »
+  //  — le dogme de la Famille porté par l'ÉPOUX agit dans le JET de
+  //  conception (conceptionEtNaissances multiplie la part de fécondité
+  //  de CHAQUE époux, la sienne comprise) mais n'apparaît PLUS dans la
+  //  fécondité AFFICHÉE de son épouse : le facteur du mari ci-dessous
+  //  ne porte plus son dogme. Le champ affiché est donc la proba de
+  //  conception SANS la part de dogme de l'époux.)
   const C = cfgOf(state.config)
   if (c.statut === 'Décédé' || c.age < C.p.adultAge) return 0
   // (Dogme de la Famille, CORRECTIF arbitre Thibaut du 30/10 — 4e
   //  retour : « le multiplicateur est côté homme ET femme » — le
-  //  facteur du personnage ET celui de son époux portent chacun le
-  //  dogme de LEUR culture propre. Cf. le bloc mari ci-dessous.)
+  //  facteur de CHAQUE personnage porte le dogme de SA culture
+  //  propre (return masculin ci-dessus, part de la femme ci-dessous
+  //  — la part de l'époux vit dans le jet, cf. conceptionEtNaissances).)
   if (c.sexe !== 'F') {
     return maleAgeFactor(c.age) * orientationFertFactor(c.orientation)
       * (1 + effetsDogmeCulture(state, c.culture, 'fecondite', C))
@@ -36,13 +45,17 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   const ville = p.villes.find((v) => v.nom === c.ville)
   const mari = c.mariageId ? indexPopulationMonde(state).get(c.mariageId) : undefined
   if (mari && mari.sexe !== 'M') return 0
-  // (Dogme de la Famille, côté ÉPOUX : un MARI de la culture
-  //  porteuse multiplie SA part du facteur de conception — une
-  //  femme d'une autre culture mariée à un porteur conçoit
-  //  elle aussi ×(1+v). Culture PROPRE de l'époux, où qu'il vive.)
+  // (Dogme de la Famille, CORRECTIF arbitre Thibaut du 30/10 — 5e
+  //  retour : « une femme n'a pas à gagner en fécondité si son mari
+  //  est d'une culture féconde » — le facteur de l'époux ci-dessous
+  //  ne porte PLUS le dogme de SA culture : la fécondité affichée
+  //  d'une épouse ne monte jamais à cause de la culture de son
+  //  mari. Le bonus d'un époux porteur agit UNIQUEMENT dans le JET
+  //  de conception (conceptionEtNaissances, sa part de fécondité
+  //  à lui — le calcul de la conception prend en compte la
+  //  fécondité homme ET la fécondité femme).)
   const factorMari = mari
     ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation)
-      * (1 + effetsDogmeCulture(state, mari.culture, 'fecondite', C))
     : C.p.fertSingleFactor
   let proba = C.p.fertBaseRate
   proba *= femaleAgeFactor(c.age)
@@ -53,9 +66,10 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   //  personnages de la culture porteuse (effet fecondite, défaut
   //  +0,1), où qu'ils vivent — culture PROPRE du personnage
   //  (c.culture), additif au facteur : ×(1+v). Côté FEMME ici,
-  //  côté homme dans le return masculin ci-dessus et dans le
-  //  facteur de l'époux. Cumulé au facteur de culture du PORTEUR
-  //  ci-dessus et aux traits.)
+  //  côté homme dans le return masculin ci-dessus. 5e retour : le
+  //  dogme du MARI ne passe PAS dans la fécondité affichée de
+  //  l'épouse (il reste dans le jet de conception). Cumulé au
+  //  facteur de culture du PORTEUR ci-dessus et aux traits.)
   proba *= 1 + effetsDogmeCulture(state, c.culture, 'fecondite', C)
   proba *= orientationFertFactor(c.orientation)
   proba *= taxBirthFactor(ville, C)
@@ -142,12 +156,30 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     // Mariage homosexuel (culture l'autorisant — mariages dans metiers.ts) :
     // pas de conception entre épouses de même sexe.
     if (mari && mari.sexe !== 'M') continue
-    const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) : C.p.fertSingleFactor
+    // (Dogme de la Famille, CORRECTIF arbitre Thibaut du 30/10 — 5e
+    //  retour : « le calcul de la conception prend en compte la
+    //  fécondité homme et la fécondité femme » — le JET de conception
+    //  multiplie la part de fécondité de CHAQUE époux, et chaque part
+    //  porte le dogme de la culture PROPRE de l'époux : le facteur du
+    //  mari ci-dessous porte le sien (un mari de la culture porteuse
+    //  multiplie SA part ×1,1), la part de la mère porte le sien
+    //  ci-dessous (×(1+v) de SA culture propre, où qu'elle vive). La
+    //  fécondité AFFICHÉE de l'épouse (computeFecondite) ne porte PAS
+    //  le dogme du mari — une femme n'a pas à gagner en fécondité si
+    //  son mari est d'une culture féconde.)
+    const factorMari = mari
+      ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation)
+        * (1 + effetsDogmeCulture(state, mari.culture, 'fecondite', C))
+      : C.p.fertSingleFactor
     let proba = C.p.fertBaseRate
     proba *= femaleAgeFactor(mere.age)
     proba *= factorMari
     proba *= traitsFertFactor(mere, mari ?? null, C)
     proba *= cultureFertFactor(p.culture, C)
+    // (Dogme de la Famille — part de la MÈRE : culture PROPRE de la
+    //  mère (loi d'habitant), où qu'elle vive ; même multiplicateur
+    //  que la fécondité affichée de computeFecondite, côté femme.)
+    proba *= 1 + effetsDogmeCulture(state, mere.culture, 'fecondite', C)
     proba *= orientationFertFactor(mere.orientation)
     proba *= taxBirthFactor(ville, C)
     if (rng.chance(proba)) {

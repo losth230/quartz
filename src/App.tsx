@@ -8,6 +8,7 @@ import { TurnBar } from './components/TurnBar'
 import { Dashboard } from './components/Dashboard'
 import { PlayerView } from './components/PlayerView'
 import { RoyaumeView } from './components/RoyaumeView'
+import { DogmesView } from './components/DogmesView'
 import { PopulationTable } from './components/PopulationTable'
 import { CitesLibresView } from './components/CitesLibresView'
 import { ArmiesPanel } from './components/ArmiesPanel'
@@ -22,12 +23,16 @@ import { ErrorBoundary } from './components/ErrorBoundary'
 
 // (RETRAIT 2026-10-24, retour arbitre : la section « progres » est
 //  supprimée avec le système de progrès.)
-type Section = 'accueil' | 'royaume' | 'joueur' | 'population' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
+type Section = 'accueil' | 'royaume' | 'joueur' | 'dogmes' | 'population' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'accueil', label: '🏛 Accueil' },
   { key: 'royaume', label: '🏰 Royaume' },
   { key: 'joueur', label: '👑 Pays' },
+  // (5e retour arbitre Thibaut du 30/10 : « il faudrait un onglet
+  //  Dogmes, au même titre qu'un onglet royaume et Pays » — vue
+  //  TOUTES CULTURES : paliers, dogmes pris, choix du dominant.)
+  { key: 'dogmes', label: '🕯 Dogmes' },
   { key: 'population', label: '👥 Population' },
   { key: 'citeslibres', label: '🗼 Cités libres' },
   { key: 'armees', label: '⚔ Armées' },
@@ -141,7 +146,7 @@ export default function App() {
         ))}
       </nav>
 
-      {(section === 'royaume' || section === 'joueur' || section === 'population' || section === 'armees') && joueursBars}
+      {(section === 'royaume' || section === 'joueur' || section === 'population' || section === 'armees' || section === 'dogmes') && joueursBars}
 
       <main className="main">
         {!state && section !== 'setup' && section !== 'referentiels' && section !== 'parametres' ? (
@@ -155,6 +160,7 @@ export default function App() {
             {section === 'accueil' && <Dashboard />}
             {section === 'royaume' && <RoyaumeView joueur={joueur} />}
             {section === 'joueur' && <PlayerView joueur={joueur} />}
+            {section === 'dogmes' && <DogmesView joueur={joueur} />}
             {section === 'population' && <PopulationTable joueur={joueur} />}
             {section === 'citeslibres' && <CitesLibresView />}
             {section === 'armees' && <ArmiesPanel joueur={joueur} />}
