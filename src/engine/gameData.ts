@@ -10,10 +10,11 @@ import {
   couleurJoueur, couleurRessource, fondRessource, migrerCouleurs,
   COULEURS_JOUEURS_DEFAUT, COULEURS_RESSOURCES_DEFAUT, TRANSPARENCE_LIGNES_DEFAUT,
   type Cfg, type GameConfig, type MetierDef, type TraitDef, type CultureDef,
+  type RegimeDef,
   type CouleursConfig,
 } from '../config/defaultConfig'
 
-export type { GameConfig, CultureDef, Cfg, CouleursConfig }
+export type { GameConfig, CultureDef, RegimeDef, Cfg, CouleursConfig }
 export { couleurJoueur, couleurRessource, fondRessource, migrerCouleurs, COULEURS_JOUEURS_DEFAUT, COULEURS_RESSOURCES_DEFAUT, TRANSPARENCE_LIGNES_DEFAUT }
 
 export const RESOURCES: string[] = DEFAULT_CONFIG.ressources
@@ -41,6 +42,16 @@ export function traitDef(name: string, cfg?: GameConfig): TraitDef | undefined {
 }
 export function cultureDef(nom: string, cfg?: GameConfig): CultureDef | undefined {
   return (cfg ?? DEFAULT_CONFIG).cultures.find((c) => c.nom === nom)
+}
+/** Fiche d'un régime politique par nom (refonte « 8 lois » des
+ *  régimes, 2026-10-29 : les lois chiffrées des régimes vivent sur
+ *  la fiche — leveeOrParRangPays, departHabitantsMult, orParMigrant,
+ *  consoNourrBourgeoisRegime, consoNourrNobleRegime,
+ *  bonheurParHabitation, tributVassalMult — et sont lues par le
+ *  MOTEUR là où elles agissent ; plus aucune loi de régime ne
+ *  passe par la banque.) */
+export function regimeDef(nom: string, cfg?: GameConfig): RegimeDef | undefined {
+  return (cfg ?? DEFAULT_CONFIG).regimes.find((r) => r.nom === nom)
 }
 export function peupleDef(nom: string, cfg?: GameConfig): PeupleDef | undefined {
   const c = cfg ?? DEFAULT_CONFIG

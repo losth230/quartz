@@ -5,9 +5,11 @@
 //    · Ville     : Hameau → Cité (120 hab.) → Grande Cité (200 hab.) ;
 //    · Château   : Motte  → Donjon (120 hab.) → Forteresse (200 hab.).
 //  Vague 3b (arbitrage 2026-10-22) : chaque rang définit les MÉTIERS
-//  disponibles à la base (cap de base, ex. Hameau : 50 Chasseurs,
-//  2 Gardes, 1 Commerçant, 1 Gouverneur) et les DOMICILES
-//  disponibles (affichage seul pour l'instant). La consommation par
+//  disponibles à la base (cap de base, ex. Hameau : 40 Chasseurs,
+//  2 Gardes, 1 Commerçant, 1 Gouverneur — fiche habitations
+//  2026-10-26) et les DOMICILES disponibles (le TEXTE sert
+//  à l'affichage ; la DONNÉE vit dans domicilesRang, vague A
+//  2026-10-24). La consommation par
 //  tour et la garnison de base des rangs sont SUPPRIMÉES : la
 //  garnison vient des Gardes en poste (regimes.ts, vague 3a) —
 //  (nettoyage 2026-10-22, retour Thibaut : les no-ops qui restaient
@@ -25,7 +27,7 @@
 
 import type { City, GameState, Player } from './types'
 import { type Cfg } from './gameData'
-import { parseCoutTexte } from './constructions'
+import { agregerCouts } from './constructions'
 import { nomRang, rangsDefsType } from './rangs'
 export { nomRang, rangsDefsType } from './rangs'
 
@@ -53,16 +55,24 @@ export function rangsDisponibles(type: string, C: Cfg): string[] {
   return rangsDefsType(type, C).map((d) => d.rang)
 }
 
-/** Habitants requis pour le rang d'habitation d'une ville. */
-export function habitantsRequisVille(ville: City, C: Cfg): number {
-  return habitationDef(ville, C)?.habitantsRequis ?? 0
+// (RETRAIT 2026-10-27, AUDIT : habitantsRequisVille — habitants requis
+//  du rang d'une ville — était du CODE MORT, plus AUCUN appelant.
+//  Historique git.)
+
+/** Coût d'amélioration d'un rang d'habitation — DONNÉES STRUCTURÉES
+ *  (retour Thibaut 2026-10-27 « idem bâtiments/aménagements » : le
+ *  coût ne doit plus être textuel — paires {ressource, valeur} du
+ *  champ `couts`, agrégées par agregerCouts, même format que les
+ *  constructions). Vide / inconnu = gratuit. */
+export function coutRang(def: import('./types').HabitationDef | undefined): Record<string, number> {
+  return agregerCouts(def?.couts)
 }
 
-/** Coût d'un rang d'habitation (colonne « Coût d'amélioration » du
- *  référentiel, ex. « 20 Or + 10 Bois + 6 Bétail »), en quantités
- *  positives. Vide / inconnu = gratuit. */
+/** Coût du rang d'habitation d'une ville (construction /
+ *  amélioration — lecture du champ `couts`, plus de texte à
+ *  analyser). */
 export function coutHabitation(ville: City, C: Cfg): Record<string, number> {
-  return parseCoutTexte(habitationDef(ville, C)?.cout ?? '')
+  return coutRang(habitationDef(ville, C))
 }
 
 /** Débite automatiquement du stock le coût d'habitation du rang

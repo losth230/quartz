@@ -1,40 +1,54 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  DOMICILES — STOCK DES VILLES ET ATTRIBUTION AUX FOYERS
+//  DOMICILES — STOCK DES VILLES ET ATTRIBUTION AUX HABITANTS
 //  (vague A+C du design domiciles/ascension, 2026-10-24)
 //
 //  PRINCIPES (arbitrages Thibaut) :
 //   · SIMPLE : un type de domicile porte un nom + une qualité 0-4 ;
 //     pas de capacité ni coût — les bâtiments constructibles
 //     viendront plus tard ;
-//   · UNITÉ (arbitrage final Thibaut 2026-10-24 : « 1 personne =
-//     1 maison ») : le BONHEUR compare le stock aux HABITANTS de
-//     la ville. L'ATTRIBUTION, elle, loge des FOYERS (une maison
-//     par famille — un foyer occupe 1 place) : l'unité de
-//     l'attribution est le foyer, l'unité de mesure du bonheur
-//     est la personne — deux échelles VOLONTAIRES (la maison
-//     familiale abrite plusieurs personnes, le score mesure la
-//     pression immobilière par tête).
+//   · UNITÉ (retour Thibaut 2026-10-26 : « je ne veux pas que les
+//     logements soient associés à des familles, je veux 1 logement
+//     = 1 habitant ») : un logement sert UNE personne — adulte OU
+//     enfant mineur. L'ancienne attribution par FOYER (une maison
+//     par famille, les mineurs suivaient leurs parents) est
+//     RETIRÉE. L'unité de l'attribution et l'unité de mesure du
+//     bonheur (l'axe Logement compare le stock aux habitants)
+//     sont désormais LA MÊME échelle ;
+//   · PRIORITÉ (retour Thibaut 2026-10-26 : « les bâtiments les
+//     plus qualitatifs soient priorisés pour les personnages de
+//     haut rang ») : l'ordre de service est le PRESTIGE
+//     décroissant — nobles avant bourgeois avant roturiers, les
+//     mineurs (sans prestige propre) servis en dernier. Dans cet
+//     ordre, chacun prend la MEILLEURE qualité restante : les
+//     Maisons de notable partent aux personnages de haut rang,
+//     les Taudis aux derniers servis ;
 //   · le stock d'une ville vit DANS la ville (City.domiciles :
 //     [{domicile: 'Maison', nombre: 50}, …]) — initialisé du rang
 //     d'habitation à la création/changement de rang (normaliserEtat
 //     le complète pour les vieilles sauvegardes) ;
-//   · l'attribution est PAR FOYER (le couple + ses enfants mineurs
-//     partagent le sort du foyer) : un foyer = un adulte marié OU
-//     un adulte seul — les mineurs suivent leurs parents ;
-//   · un foyer ne peut pas être attribué AU-DESSUS de sa condition
-//     (un roturier n'entre pas dans un Palais) ; en dessous, il
-//     peut (c'est le mécanisme de chute — à venir en vague D) ;
-//   · l'attribution attribue la MEILLEURE qualité disponible d'abord
-//     (les Maisons avant les Masures) — simple et lisible.
+//   · RÉSERVATION (retour Thibaut 2026-10-28, 5e retour du jour :
+//     « il faut être noble minimum pour avoir une maison de
+//     notable ou un palais ») : la Maison de notable et le Palais
+//     sont RÉSERVÉS au rang NOBLE — un roturier ou un bourgeois ne
+//     peut ni les recevoir ni les GARDER (SUPERSEDÉ l'ancien
+//     principe « pas de restriction par condition sociale ») ;
+//     l'ordre de prestige fait le tri, la restriction le garantit ;
+//   · on ne déloge personne : un habitant garde son domicile
+//     s'il existe encore au stock (l'ordre de prestige ne sert
+//     qu'à répartir les places LIBRES) — SAUF s'il n'est plus
+//     éligible à un domicile réservé (non-noble en Maison de
+//     notable / Palais : relogé comme les autres, la place
+//     réservée reste au stock pour les nobles) ;
 //
-//  Le champ Character.domicile (posé en vague 2 du rework habitants,
-//  « aucun effet en vague 1 ») devient la clé : nom du type de
+//  Le champ Character.domicile est la clé : nom du type de
 //  domicile ('Maison', 'Auberge'…), null = sans domicile.
 // ═══════════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { cultureDef, type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
+import { logementsConstructionRef } from './constructions'
+import { rangDe } from './statutSocial'
 
 // ── Lecture du référentiel ───────────────────────────────────────────
 
@@ -47,7 +61,9 @@ export function domicileDef(nom: string | null | undefined, C: Cfg): { domicile:
   return C.config.domiciles.find((d) => d.domicile.toLowerCase() === n.toLowerCase())
 }
 
-/** Qualité d'un domicile (1-5 ; 0 = inconnu / sans domicile). */
+/** Qualité d'un domicile (échelle 0-4 : Taudis 0 → Palais 4 —
+ *  correctif échelle du 2026-10-25 ; 0 est une valeur LÉGALE, pas
+ *  seulement « inconnu » ; 0 aussi sans domicile). */
 export function qualiteDomicile(nom: string | null | undefined, C: Cfg): number {
   return domicileDef(nom, C)?.qualite ?? 0
 }
@@ -66,128 +82,162 @@ export function totalLogementsVille(ville: City): number {
   return (ville.domiciles ?? []).reduce((acc, e) => acc + e.nombre, 0)
 }
 
-/** TAUDIS apportés par les AMÉNAGEMENTS de la ville (fiches
- *  2026-10-25 : chaque aménagement construit ajoute ses Taudis au
- *  parc de logements — tier 1 : 5, tier 2 : 8, tier 3 : 10, sauf
- *  Baleinier et Bâteau de pêche). Les noms d'aménagements des
- *  vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
+/** Domiciles apportés au parc de logements d'une ville par ses
+ *  CONSTRUCTIONS (AMÉNAGEMENTS et BÂTIMENTS — fiche bâtiments rang 2,
+ *  2026-10-26) : Taudis et autres types, lus VIA LA BANQUE (retour
+ *  Thibaut 2026-10-27 : les taudisApportes / domicilesApportes du
+ *  référentiel sont traduits en effets `logements` — ce canal est la
+ *  voie moteur unique, comme les flux). Agrégat par type ; les noms
+ *  des vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
  *  la lecture est par nom de construction dans le référentiel. */
-export function taudisApportesVille(ville: City, C: Cfg): number {
-  let total = 0
-  for (const nom of ville.amenagements ?? []) {
+export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
+  const total = new Map<string, number>()
+  for (const nom of [...(ville.amenagements ?? []), ...(ville.batiments ?? [])]) {
     const ref = C.config.constructions.find((c) => c.nom === nom)
-    total += ref?.taudisApportes ?? 0
-  }
-  return total
-}
-
-// ── Foyers ────────────────────────────────────────────────────────────
-
-/** Un foyer : un adulte (marié ou seul) + ses enfants mineurs.
- *  Les enfants majeurs non mariés forment leur propre foyer
- *  (design « à la charge du joueur pour l'ajustement » — les
- *  règles de démographie existantes gèrent les âges). */
-export interface Foyer {
-  chef: Character
-  conjoint: Character | null
-  enfants: Character[]
-  domicile: string | null
-}
-
-/** Foyers d'une population de ville : partition des habitants.
- *  ADULTE = age ≥ adultAge ; les enfants (age < adultAge) suivent
- *  leur mère (mereId), sinon leur père (pereId), sinon le premier
- *  adulte de la ville (garde-fou). (Correctif docblock audit B4,
- *  2026-10-25 — le code a toujours utilisé mereId/pereId.) */
-export function foyersDeVille(state: GameState, nJoueur: number, ville: City, C: Cfg): Foyer[] {
-  const pop = (state.population[nJoueur] ?? []).filter(
-    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
-  )
-  const adultes = pop.filter((c) => c.age >= C.p.adultAge)
-  const enfants = pop.filter((c) => c.age < C.p.adultAge)
-  const parId = new Map(pop.map((c) => [c.id, c] as const))
-  const foyers: Foyer[] = []
-  const pris = new Set<string>()
-
-  // 1. couples : chaque adulte marié une seule fois (mariageId partagé)
-  for (const a of adultes) {
-    if (pris.has(a.id)) continue
-    const conj = a.mariageId ? parId.get(a.mariageId) : undefined
-    if (conj && !pris.has(conj.id) && conj.statut !== 'Décédé') {
-      pris.add(a.id); pris.add(conj.id)
-      foyers.push({ chef: a, conjoint: conj, enfants: [], domicile: a.domicile ?? null })
+    if (!ref) continue
+    for (const [domicile, nombre] of Object.entries(logementsConstructionRef(ref, C.config))) {
+      if (nombre > 0) total.set(domicile, (total.get(domicile) ?? 0) + nombre)
     }
   }
-  // 2. célibataires
-  for (const a of adultes) {
-    if (pris.has(a.id)) continue
-    pris.add(a.id)
-    foyers.push({ chef: a, conjoint: null, enfants: [], domicile: a.domicile ?? null })
-  }
-  // 3. enfants mineurs rattachés
-  for (const e of enfants) {
-    const parent = parId.get(e.mereId ?? '') ?? parId.get(e.pereId ?? '')
-    const foyer = parent
-      ? foyers.find((f) => f.chef.id === parent.id || f.conjoint?.id === parent.id)
-      : undefined
-    ;(foyer ?? foyers[0])?.enfants.push(e)
-  }
-  return foyers
+  return [...total.entries()].map(([domicile, nombre]) => ({ domicile, nombre }))
+}
+
+/** TAUDIS apportés par les constructions de la ville (canal Taudis
+ *  de domicilesApportesVille — fiches aménagements 2026-10-25 : tier
+ *  1 = 5, tier 2 = 8, tier 3 = 10, sauf Baleinier et Bâteau de
+ *  pêche ; fiche bâtiments 2026-10-26 : Poste de garde/Caserne +10,
+ *  Bas quartier +20). */
+export function taudisApportesVille(ville: City, C: Cfg): number {
+  return domicilesApportesVille(ville, C).find((e) => e.domicile === 'Taudis')?.nombre ?? 0
+}
+
+/** Domiciles apportés par la LOI DE VILLE de la culture de la ville
+ *  (refonte « 12 lois » des cultures, 2026-10-29) : Communautarisme
+ *  « Logements élargis » +5 Taudis, Lunisme « Villes Saintes » +2
+ *  Palais. Comptés dans le parc de logements (logementsVille →
+ *  bonheur et magnét migratoire v3), affichés VilleCarte.
+ *  REMPLACÉ (retour Thibaut 2026-10-29, 6e retour du jour : « il
+ *  faut que les lits des lois puissent abriter des habitants, sinon
+ *  ça ne sert à rien ») : les lits des lois sont désormais
+ *  ATTRIBUTABLES — attribuerDomicilesVille les ajoute au stock de
+ *  service, au même titre que le stock du rang (historisé :
+ *  convention initiale calquée sur les apports, non attribuables).
+ *  Les apports de CONSTRUCTIONS restent du parc non attribuable
+ *  (convention inchangée, non visée par le retour) ; les Palais
+ *  issus de la loi passent par la réserve noble commune
+ *  (reserveNobleDomicile, retour 2026-10-28). */
+export function domicilesCultureVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
+  const cult = cultureDef(ville.culture, C.config)
+  const out: Array<{ domicile: string; nombre: number }> = []
+  if (cult?.taudisParHabitation) out.push({ domicile: 'Taudis', nombre: cult.taudisParHabitation })
+  if (cult?.palaisParHabitation) out.push({ domicile: 'Palais', nombre: cult.palaisParHabitation })
+  return out
 }
 
 // ── Attribution ──────────────────────────────────────────────────────
 
-/** Attribue les domiciles d'une ville à ses foyers : la MEILLEURE
- *  qualité d'abord, sans dépasser le stock (stock.consume au fur et
- *  mesure). Un foyer garde son domicile s'il est déjà attribué et
- *  existe encore dans le stock. Retourne le nombre de foyers LOGÉS
- *  à l'issue de l'appel — déjà logés + nouvellement logés
- *  (les changements portent le champ
- *  `Character.domicile` du chef ET du conjoint — les enfants mineurs
- *  suivent sans champ propre : le domicile est celui du foyer).
- *
- *  CONDITIONS (vague C) : pas encore de restriction par condition
- *  sociale (roturier/bourgeois) — la vague D (ascension) l'ajoutera
- *  avec les statuts de dynastie. Pour l'instant tout le monde peut
- *  habiter partout (simple, lisible). */
+/** Domiciles RÉSERVÉS aux NOBLES (retour Thibaut 2026-10-28, 5e
+ * retour du jour : « il faut être noble minimum pour avoir une
+ * maison de notable ou un palais ») — la Maison de notable et le
+ * Palais ne sont ni attribués ni conservés par un roturier ou un
+ * bourgeois, même servi avant les nobles restants. Comparaison
+ * insensible à la casse (même tolérance que domicileDef). */
+export function reserveNobleDomicile(nom: string | null | undefined): boolean {
+  const n = (nom ?? '').trim().toLowerCase()
+  return n === 'maison de notable' || n === 'palais'
+}
+
+/** Habitants VIVANTS d'une ville — l'unité d'attribution (retour
+ *  Thibaut 2026-10-26 : 1 logement = 1 habitant, plus de foyers). */
+export function vivantsVille(state: GameState, nJoueur: number, ville: City): Character[] {
+  return (state.population[nJoueur] ?? []).filter(
+    (c) => c.statut !== 'Décédé' && c.ville === ville.nom,
+  )
+}
+
+/** Attribue les domiciles d'une ville à ses HABITANTS, une place par
+ *  personne (retour Thibaut 2026-10-26 : « je ne veux pas que les
+ *  logements soient associés à des familles, je veux 1 logement = 1
+ *  habitant. Et je veux également que les bâtiments les plus
+ *  qualitatifs soient priorisés pour les personnages de haut rang »).
+ *  Ordre de service : PRESTIGE DÉCROISSANT (nobles d'abord — les
+ *  mineurs, sans prestige propre, sont servis en dernier, à
+ *  prestation égale l'ordre de recensement fait foi) ; dans cet
+ *  ordre chacun GARDE son domicile s'il existe encore au stock
+ *  (on ne déloge personne — l'ordre de priorité ne sert qu'à
+ *  répartir les places libres), sinon prend la MEILLEURE qualité
+ *  restante. RÉSERVATION (retour Thibaut 2026-10-28 : il faut être
+ *  NOBLE minimum pour une Maison de notable ou un Palais) : un
+ *  non-noble ne peut ni recevoir ni garder un domicile réservé —
+ *  il est relogé dans le meilleur reste, la place réservée reste
+ *  au stock pour les nobles. Stock épuisé : `Character.domicile =
+ *  null` (sans logement). Retourne le nombre d'habitants LOGÉS.
+ *  LITS DES LOIS (retour Thibaut 2026-10-29, 6e retour du jour :
+ *  « il faut que les lits des lois puissent abriter des habitants,
+ *  sinon ça ne sert à rien ») : domicilesCultureVille (loi de ville
+ *  de la culture — Communautarisme +5 Taudis, Lunisme +2 Palais)
+ *  ENTRE dans le stock de service au même titre que le stock du
+ *  rang ; les apports de constructions restent hors attribution. */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
   //  existante dont les villes n'ont pas de stock (sauvegardées avant
   //  la vague, tampon schema déjà à jour → migrerEtat ne rejouera
   //  pas la v1) se voit initialiser le stock au rang courant.
   if (!Array.isArray(ville.domiciles)) initStockVille(ville, C)
-  const foyers = foyersDeVille(state, p.n, ville, C)
+  const pop = vivantsVille(state, p.n, ville)
   // stock restant : copie de travail
   const stock = new Map<string, number>()
   for (const e of ville.domiciles ?? []) stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
-  // ordre : meilleure qualité d'abord (les foyers déjà logés gardent
-  //  leur logement — on ne déloge personne, on complète)
+  // (retour Thibaut 2026-10-29, 6e retour du jour : « il faut que
+  //  les lits des lois puissent abriter des habitants, sinon ça ne
+  //  sert à rien ») — les lits de la LOI DE VILLE de la culture
+  //  ENTRENT dans le stock d'attribution, au même titre que le
+  //  stock du rang ; les apports de constructions
+  //  (domicilesApportesVille) restent hors attribution, convention
+  //  inchangée. Les Palais issus de la loi passent par la même
+  //  réserve noble que les autres (reserveNobleDomicile).
+  for (const e of domicilesCultureVille(ville, C)) {
+    stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
+  }
+  // ordre de service : prestige décroissant (haut rang d'abord),
+  //  tri STABLE — les ex æquo gardent l'ordre du recensement
+  const servs = [...pop].sort((a, b) => (b.prestige ?? 0) - (a.prestige ?? 0))
+  // types par qualité décroissante : les bâtiments les plus
+  //  qualitatifs partent aux premiers servis (haut rang)
   const typesTries = [...C.config.domiciles].sort((a, b) => b.qualite - a.qualite)
   let loges = 0
-  for (const f of foyers) {
-    if (f.domicile && (stock.get(f.domicile) ?? 0) > 0) {
-      // déjà logé dans un type existant au stock : consomme sa place
-      stock.set(f.domicile, (stock.get(f.domicile) ?? 0) - 1)
+  for (const c of servs) {
+    // RANG du personnage : la Maison de notable et le Palais sont
+    //  RÉSERVÉS aux nobles (retour Thibaut 2026-10-28, 5e retour
+    //  du jour — rangDe : dynastie noble OU prestige ≥ 250).
+    const noble = rangDe(c, C) === 'noble'
+    // déjà logé dans un type existant au stock : garde sa place —
+    //  SAUF domicile réservé non éligible (relogé comme les autres,
+    //  la place réservée reste au stock)
+    if (
+      c.domicile &&
+      (stock.get(c.domicile) ?? 0) > 0 &&
+      (noble || !reserveNobleDomicile(c.domicile))
+    ) {
+      stock.set(c.domicile, (stock.get(c.domicile) ?? 0) - 1)
       loges++
       continue
     }
-    // à loger : meilleure qualité disponible
+    // à loger : meilleure qualité restante — les domiciles RÉSERVÉS
+    //  ne sont proposés qu'aux nobles
+    let place: string | null = null
     for (const t of typesTries) {
+      if (!noble && reserveNobleDomicile(t.domicile)) continue
       const restant = stock.get(t.domicile) ?? 0
       if (restant > 0) {
         stock.set(t.domicile, restant - 1)
-        f.chef.domicile = t.domicile
-        if (f.conjoint) f.conjoint.domicile = t.domicile
-        f.domicile = t.domicile
-        loges++
+        place = t.domicile
         break
       }
     }
-    // rien de libre : foyer sans domicile — chef et conjoint à null
-    if (!f.domicile) {
-      f.chef.domicile = null
-      if (f.conjoint) f.conjoint.domicile = null
-    }
+    // rien de libre : sans domicile
+    c.domicile = place
+    if (place) loges++
   }
   return loges
 }

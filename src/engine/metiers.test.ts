@@ -5,8 +5,9 @@
 //  Arbitrages actés :
 //   · vague 3b (rangs & bâtiments tier 1, 2026-10-22) : caps
 //     CUMULATIVES — cap d'un métier = BASE DU RANG d'habitation
-//     (colonne « Métiers disponibles », ex. Hameau : 50 Chasseurs,
-//     2 Gardes, 1 Commerçant, 1 Gouverneur) + EMPLACEMENTS des
+//     (colonne « Métiers disponibles », ex. Hameau : 40 Chasseurs,
+//     2 Gardes, 1 Commerçant, 1 Gouverneur — fiche habitations
+//     2026-10-26) + EMPLACEMENTS des
 //     bâtiments ET aménagements ; les paramètres capMetierChasseur*
 //     sont supprimés ;
 //   · Garde/Commerçant/Gouverneur : plafonnés par la base du rang ;
@@ -40,7 +41,7 @@ import type { Character, City, GameState } from './types'
 import { cfgOf } from './gameData'
 import { capMetierVille, reaffecterMetiers, occupationsMetierVille } from './metiers'
 import { invaliderIndexPopulation } from './indexPopulation'
-import { detailGainsVille } from './economie'
+import { detailGainsVille, multProdRang, consoNourrHabitant } from './economie'
 import * as habitationsMod from './habitations'
 import { garnisonHabitationVille, detailGarnisonVille } from './regimes'
 
@@ -72,7 +73,7 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   const ville: City = { ...p.villes[0] }
   ville.type = 'Ville'
   ville.amenagements = []
-  assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 50, 'cap de BASE du rang Hameau : 50 Chasseurs')
+  assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 40, 'cap de BASE du rang Hameau : 40 Chasseurs (fiche habitations 2026-10-26, ex-50)')
   ville.type = 'Château'
   ville.rang = 'Motte'
   assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 40, 'cap de BASE du rang Motte : 40 Chasseurs')
@@ -80,7 +81,7 @@ test('capMetierVille (vague 3a) : Chasseur = cap défaut + emplacements ; métie
   assert.equal(capMetierVille(C.p.metierChasseur, ville, C), 20, 'cap de BASE du rang Donjon : 20 Chasseurs')
   // vague 3a : une Scierie ajoute 2 emplacements de Chasseur et 2 de Bûcheron
   const scierie: City = { ...p.villes[0], type: 'Ville', amenagements: ['Scierie'] }
-  assert.equal(capMetierVille(C.p.metierChasseur, scierie, C), 52, 'Chasseur : cap défaut 50 + 2 emplacements de la Scierie')
+  assert.equal(capMetierVille(C.p.metierChasseur, scierie, C), 42, 'Chasseur : cap défaut 40 + 2 emplacements de la Scierie')
   assert.equal(capMetierVille('Bûcheron', scierie, C), 2, 'Bûcheron : 2 emplacements (Scierie)')
   assert.equal(capMetierVille('Bûcheron', ville, C), 0, 'métier productif sans aménagement : cap 0')
   // Marchand RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut) : titre
@@ -236,7 +237,7 @@ test('occupationsMetierVille (vague 3a) : emplacements par aménagement, métier
   const chasseur = lignes.find((l) => l.metier === C.p.metierChasseur)
   assert.ok(chasseur, 'Chasseur listé (plafonné → toujours affiché, même à 0)')
   assert.equal(chasseur!.enPoste, 3, '3 Chasseurs en poste')
-  assert.equal(chasseur!.cap, 50, 'cap Ville 50 (aucun emplacement Chasseur ici)')
+  assert.equal(chasseur!.cap, 40, 'cap Ville 40 (aucun emplacement Chasseur ici ; fiche habitations 2026-10-26)')
   // (l'ex-Marchand de ce test est remplacé par un Fermier le
   //  2026-10-24 : le métier de Marchand est retiré du jeu — le
   //  Fermier occupe la même niche de métier productif plafonné par
@@ -282,6 +283,37 @@ test('occupationsMetierVille : métiers hors référentiel conservés (anciennes
   assert.ok(vieux, 'métier personnalisé hors référentiel conservé')
   assert.equal(vieux!.enPoste, 1)
   assert.equal(vieux!.cap, Number.POSITIVE_INFINITY, 'hors référentiel = illimité')
+})
+
+test('occupationsMetierVille : les ENFANTS ne sont pas des sans-emplois (retour Thibaut 2026-10-28)', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  // 1 adulte en poste, 1 adulte sans métier, 2 enfants sans métier,
+  // 1 enfant porteur d'un métier (affectation manuelle — edge case).
+  const habitants = [
+    perso('a1', 30, { metier: C.p.metierChasseur }),
+    perso('s1', 40, {}),
+    perso('e1', 8, {}),
+    perso('e2', 12, {}),
+    perso('e3', 10, { metier: 'Fermier' }),
+  ]
+  const lignes = occupationsMetierVille(habitants, null, C)
+  const enfants = lignes.find((l) => l.metier === null && l.enfants)
+  assert.ok(enfants, 'ligne « Enfant » présente')
+  assert.equal(enfants!.enPoste, 2, 'les 2 enfants sans métier comptent comme Enfants')
+  assert.equal(enfants!.cap, Number.POSITIVE_INFINITY, 'cap illimitée (pas un métier plafonné)')
+  const sans = lignes.find((l) => l.metier === null && !l.enfants)
+  assert.ok(sans, 'ligne Sans-emploi présente')
+  assert.equal(sans!.enPoste, 1, 'le Sans-emploi ne compte QUE les adultes sans métier')
+  assert.equal(lignes[lignes.length - 1].metier, null, 'Sans-emploi toujours en dernière ligne')
+  assert.ok(!lignes[lignes.length - 1].enfants, 'la dernière ligne neutre est bien le Sans-emploi')
+  assert.ok(lignes.indexOf(enfants!) < lignes.indexOf(sans!), 'ligne Enfant AVANT le Sans-emploi')
+  const fermier = lignes.find((l) => l.metier === 'Fermier')
+  assert.ok(fermier && fermier!.enPoste === 1, 'un enfant porteur d\'un métier reste compté dans sa ligne de métier')
+  // Sans enfant : pas de ligne Enfant (pas de bruit « Enfant 0 »,
+  // même logique anti-bruit que les métiers inoccupés).
+  const vide = occupationsMetierVille([perso('a2', 30, {})], null, C)
+  assert.ok(!vide.some((l) => l.enfants), 'aucune ligne Enfant quand il n\'y a pas d\'enfant')
 })
 
 // ── Vague 3a : emplacements, priorisation, été, taxes, garnison ──────────
@@ -359,6 +391,66 @@ test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, 
   invaliderIndexPopulation()
   const avecTrouv = detailGainsVille(state, p, ville, C)
   assert.equal(avecTrouv.bonusTaxes['Tourisme'], undefined, 'aucun bonus sur une ressource non produite')
+})
+
+test('RANG SOCIAL (arbitrage Thibaut 2026-10-26, CORRIGÉ du jour même : ×1,5 retiré des nobles) : bourgeois 2 Nourriture + ×1,5 — noble 4 Nourriture, ×1 — roturier base', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  const ville = p.villes[0]
+  // 3 villageois de MÊME métier (Bûcheron, toute saison), de rangs
+  //  différents — le rang est DÉRIVÉ DU PRESTIGE, pas de la qualité
+  //  du métier (réponse au constat « aucune différence réelle entre
+  //  roturier et bourgeois »).
+  const rotu = perso('r-30', 30, { metier: 'Bûcheron' })
+  const bourg = perso('b-30', 30, { metier: 'Bûcheron' })
+  const noble = perso('n-30', 30, { metier: 'Bûcheron' })
+  rotu.prestige = 50   // roturier  (< 100)
+  bourg.prestige = 150 // bourgeois (100-250)
+  noble.prestige = 300 // noble     (250+)
+  // helpers directs
+  assert.equal(multProdRang(rotu, C), 1, 'roturier : ×1')
+  assert.equal(C.p.prodMultBourgeois, 1.5, 'verrou arbitrage : bourgeois ×1,5')
+  assert.equal(multProdRang(bourg, C), C.p.prodMultBourgeois, 'bourgeois : ×1,5')
+  assert.equal(C.p.prodMultNoble, 1, 'verrou CORRECTION : le ×1,5 est RETIRÉ des nobles — prodMultNoble = 1')
+  assert.equal(multProdRang(noble, C), 1, 'noble : ×1 (corrigé — plus de ×1,5)')
+  assert.equal(consoNourrHabitant(rotu, C), C.p.consoNourrParHab, 'roturier : conso base')
+  assert.equal(consoNourrHabitant(bourg, C), C.p.consoNourrBourgeois, 'bourgeois : 2 Nourriture')
+  assert.equal(consoNourrHabitant(noble, C), C.p.consoNourrNoble, 'noble : 4 Nourriture')
+  // production brute : le bûcheron bourgeois produit ×1,5 — le noble
+  //  ×1 (×1,5 retiré, CORRECTION) : sa production est IDENTIQUE à la
+  //  base (le multiplicateur reste appliqué AVANT les taxes).
+  for (const [cible, mult, attendu] of [
+    [bourg, C.p.prodMultBourgeois, 'bourgeois ×1,5'],
+    [noble, C.p.prodMultNoble, 'noble ×1'],
+  ] as const) {
+    state.population[p.n] = [rotu]
+    invaliderIndexPopulation()
+    const base = detailGainsVille(state, p, ville, C)
+    state.population[p.n] = [cible]
+    invaliderIndexPopulation()
+    const d = detailGainsVille(state, p, ville, C)
+    for (const [res, v] of Object.entries(base.metiers)) {
+      assert.ok(Math.abs(d.metiers[res] - v * mult) < 1e-9,
+        `${cible.prenom} (${attendu}) : production ${res} ×${mult} (reçue ${d.metiers[res]}, base ${v})`)
+    }
+    assert.ok(Math.abs(d.taxes['Bois'] - base.taxes['Bois'] * mult) < 1e-9,
+      'le multiplicateur s\u2019applique AVANT les taxes (taxe sur le gain multiplié)')
+  }
+  // consommation par rang : 1 + 2 + 4 = 7 pour les trois ensemble
+  state.population[p.n] = [rotu, bourg, noble]
+  invaliderIndexPopulation()
+  const d3 = detailGainsVille(state, p, ville, C)
+  assert.ok(Math.abs(d3.conso['Nourriture'] + 7) < 1e-9,
+    `conso des trois rangs = 7 Nourriture (reçue ${d3.conso['Nourriture']})`)
+  // un MINEUR (prestige 0, sans métier) reste à la consommation de base
+  state.population[p.n].push(perso('e-8', 8, { metier: null }))
+  invaliderIndexPopulation()
+  const d4 = detailGainsVille(state, p, ville, C)
+  assert.ok(Math.abs(d4.conso['Nourriture'] + 7 + C.p.consoNourrParHab) < 1e-9,
+    'un mineur (sans prestige propre) consomme la base, pas le rang de ses parents')
+  assert.ok(Math.abs(d4.metiers['Bois'] - d3.metiers['Bois']) < 1e-9,
+    'un mineur ne produit rien : la production est inchangée')
 })
 
 test('reaffecterMetiers (2026-10-24) : le métier de Marchand RETIRÉ du jeu — ses porteurs perdent le titre, puis reprennent un poste aux places libres', () => {
@@ -522,22 +614,22 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
   const C = cfgOf(state.config)
   C.config.constructions.push(
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 2)',
-      terrain: 'Baleine', cout: '15 Or + 3 Pierre', production: '', description: '',
+      terrain: 'Baleine', couts: [{ ressource: 'Or', valeur: 15 }, { ressource: 'Pierre', valeur: 3 }],
       effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Baleinier',
       emplacements: [{ metier: 'Pêcheur', places: 5 }, { metier: 'Commerçant', places: 5 }] },
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Baleinier (tier 3)',
-      terrain: 'Baleine', cout: '35 Or + 3 Fer', production: '', description: '',
+      terrain: 'Baleine', couts: [{ ressource: 'Or', valeur: 35 }, { ressource: 'Fer', valeur: 3 }],
       effets: [], rangMinHabitation: 3, remplaceAmenagement: 'Baleinier (tier 2)',
       emplacements: [{ metier: 'Pêcheur', places: 7 }, { metier: 'Commerçant', places: 10 }] },
   )
   // Simplification : les defs tiers 2/3 également utiles aux caps.
   C.config.constructions.push(
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Champ (tier 2)',
-      terrain: 'Plaine', cout: '15 Or + 3 Pierre', production: '', description: '',
+      terrain: 'Plaine', couts: [{ ressource: 'Or', valeur: 15 }, { ressource: 'Pierre', valeur: 3 }],
       effets: [], rangMinHabitation: 2, remplaceAmenagement: 'Champ',
       emplacements: [{ metier: 'Fermier', places: 6 }] },
     { categorie: 'Aménagement', groupe: 'Terrain', famille: '', nom: 'Scierie (tier 3)',
-      terrain: 'Forêt', cout: '35 Or + 3 Fer', production: '', description: '',
+      terrain: 'Forêt', couts: [{ ressource: 'Or', valeur: 35 }, { ressource: 'Fer', valeur: 3 }],
       effets: [], rangMinHabitation: 3, remplaceAmenagement: 'Scierie (tier 2)',
       emplacements: [{ metier: 'Bûcheron', places: 6 }, { metier: 'Tisseur', places: 2 }] },
   )
@@ -552,7 +644,7 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
   const scierie3: City = { ...p.villes[0], type: 'Ville', rang: 'Hameau', batiments: [], amenagements: ['Scierie (tier 3)'] }
   assert.equal(capMetierVille('Bûcheron', scierie3, C), 6, 'Scierie (tier 3) : 6 emplacements de Bûcheron')
   assert.equal(capMetierVille('Tisseur', scierie3, C), 2, 'Scierie (tier 3) : 2 emplacements de Tisseur')
-  assert.equal(capMetierVille(C.p.metierChasseur, scierie3, C), 50, 'tier 3 seul : la base du Chasseur du rang Hameau (50), sans les +2 du tier 1 remplacé')
+  assert.equal(capMetierVille(C.p.metierChasseur, scierie3, C), 40, 'tier 3 seul : la base du Chasseur du rang Hameau (40), sans les +2 du tier 1 remplacé')
   // Champ amélioré en tier 2 : +6 Fermier (les 3 du tier 1 ont disparu).
   const champ2: City = { ...p.villes[0], type: 'Ville', rang: 'Hameau', batiments: [], amenagements: ['Champ (tier 2)'] }
   assert.equal(capMetierVille('Fermier', champ2, C), 6, 'Champ (tier 2) : 6 emplacements de Fermier (tier 1 remplacé)')

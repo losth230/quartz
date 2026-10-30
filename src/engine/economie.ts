@@ -8,23 +8,80 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { City, GameState, Player } from './types'
-import { cfgOf, metierDef, type Cfg } from './gameData'
+import type { Character, City, GameState, Player } from './types'
+import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './geographie'
+import { rangDe } from './statutSocial'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
 //  Metiers → Ressource1/Valeur1 + Ressource2/Valeur2, modulés par le niveau
 //  de taxes de la ville (sur TOUTES les ressources), puis consommation de
-//  1 Nourriture par habitant vivant (non taxée).
+//  Nourriture (non taxée).
+//  (Arbitrage Thibaut 2026-10-26, RANG SOCIAL — la réponse à « est-ce
+//  qu'il y a une différence réelle entre roturier et bourgeois ? ») :
+//  la consommation et la production dépendent désormais du RANG SOCIAL
+//  dérivé du prestige (roturier < 100 ≤ bourgeois < 250 ≤ noble) :
+//    · roturier : conso consoNourrParHab (base 1), production ×1 ;
+//    · bourgeois : conso consoNourrBourgeois (2), production ×1,5 ;
+//    · noble : conso consoNourrNoble (4), production ×1 (CORRECTION
+//      du jour même 2026-10-26 : le ×1,5 est retiré des nobles).
+//  Le rang lu est celui du PRESTIGE (pas la qualité du métier) ; les
+//  mineurs, sans prestige propre, restent à la consommation de base.
+//  (RÉSOLU 2026-10-26, retour Thibaut : « un noble de naissance doit
+//  avoir 300 prestige de base » — PRESTIGE_NOBLE_NAISSANCE, posé à
+//  la création) : le rang MÉCANIQUE reste fondé sur le prestige seul
+//  MAIS un noble de naissance part de 300 ≥ 250 → il est noble AUSSI
+//  par le prestige dès le tour 1 : consoNourrNoble (4), prodMultNoble,
+//  hébergement et score de mariage le traitent en noble sans règle
+//  spéciale. L'incohérence « affiché noble, traité roturier » est
+//  close ; seule une CHUTE du prestige sous 250 y rouvrirait l'écart
+//  (affichage rangDe : noble, mécanique : selon le prestige).
 // ══════════════════════════════════════════════════════════════════════
 
-/** Multiplicateur de taxes d'une ville pour la production des habitants
- *  (toutes ressources) : Faible ×taxOrFaibles / Forte ×taxOrHautes. */
-export function facteurTaxes(ville: City, C: Cfg): number {
-  if (ville.taxes === 'Faible') return C.p.taxOrFaibles
-  if (ville.taxes === 'Forte') return C.p.taxOrHautes
+/** Multiplicateur de production d'un habitant selon son rang social
+ *  (arbitrage Thibaut 2026-10-26, corrigé du jour même) : bourgeois
+ *  ×prodMultBourgeois (1,5), noble ×prodMultNoble (1 — ×1,5 retiré),
+ *  roturier ×1. S'applique à TOUTE la production
+ *  de métier du villageois (ressources 1/2 et bonus Ponton), AVANT le
+ *  calcul des taxes (le gain amplifié est taxé comme les autres). */
+export function multProdRang(c: Character, C: Cfg): number {
+  // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
+  //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
+  const r = rangDe(c, C)
+  return r === 'noble' ? C.p.prodMultNoble : r === 'bourgeois' ? C.p.prodMultBourgeois : 1
+}
+
+/** Consommation de Nourriture d'un habitant vivant par tour (arbitrage
+ *  Thibaut 2026-10-26) : roturier consoNourrParHab (base), bourgeois
+ *  consoNourrBourgeois, noble consoNourrNoble. Le rang dérivé du
+ *  PRESTIGE — les mineurs (prestige 0) restent à la base. */
+export function consoNourrHabitant(c: Character, C: Cfg, regime?: string): number {
+  // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
+  //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
+  const r = rangDe(c, C)
+  // (Refonte « 8 lois » des régimes, 2026-10-29, Socialisme
+  //  « Redistribution ») : le régime du joueur PORTEUR remplace le
+  //  défaut moteur pour les bourgeois (1) et les nobles (2) —
+  //  arbitrage Thibaut 2026-10-29.
+  const reg = regimeDef(regime ?? '', C.config)
+  return r === 'noble' ? (reg?.consoNourrNobleRegime ?? C.p.consoNourrNoble)
+    : r === 'bourgeois' ? (reg?.consoNourrBourgeoisRegime ?? C.p.consoNourrBourgeois)
+    : C.p.consoNourrParHab
+}
+
+/** Multiplicateur de taxes d'une ville pour la production des
+ *  habitants, PAR RESSOURCE (arbitrage Thibaut 2026-10-28 « changement
+ *  des taxes ») : la Nourriture part du côté des naissances — Faible :
+ *  Nourriture ×taxNourrFaibles, toutes les AUTRES ressources
+ *  ×taxOrFaibles ; Forte : l'inverse ; Moyenne : ×1. Le nom « taxOr* »
+ *  est historique (avant l'arbitrage 2026-10-28 ces clés couvraient
+ *  toutes les ressources) : elles ne portent plus que les ressources
+ *  hors Nourriture. */
+export function facteurTaxes(ville: City, C: Cfg, ressource: string): number {
+  if (ville.taxes === 'Faible') return ressource === 'Nourriture' ? C.p.taxNourrFaibles : C.p.taxOrFaibles
+  if (ville.taxes === 'Forte') return ressource === 'Nourriture' ? C.p.taxNourrHautes : C.p.taxOrHautes
   return 1
 }
 
@@ -59,14 +116,16 @@ function gainsVilleBruts(state: GameState, p: Player, ville: City, C: Cfg): Reco
 /** Détail des gains d'une ville, canal par canal (affiché en bas de la
  *  carte de la ville : « ce que les taxes rapportent »).
  *    metiers  : production brute des metiers des habitants vivants,
- *    taxeMult: multiplicateur de taxes de la ville (toutes ressources),
+ *    taxeMult: multiplicateur de taxes de la ville PAR RESSOURCE
+ *              (arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr*,
+ *              toutes les autres ressources ×taxOr*),
  *    taxes   : production taxée (= metiers × taxeMult),
- *    conso   : consommation de Nourriture (non taxée),
+ *    conso   : consommation de Nourriture (non taxée, par rang),
  *    net     : taxes − conso (ce qui est crédité au stock). */
 export interface GainsVilleDetail {
   habitants: number
   metiers: Record<string, number>
-  taxeMult: number
+  taxeMult: Record<string, number>
   /** Bonus de taxe ADDITIF par ressource (vague 3a, rework métiers
    *  & emplacements 2026-10-21) : Gouverneur +10 % sur toutes les
    *  ressources, Professeur +10 % Science, Banquier +10 % Or,
@@ -91,22 +150,39 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  chaque Pêcheur de la ville produit +0,5 Bétail par tour, AVANT
   //  le calcul des taxes (taxé comme les autres gains).
   const ponton = villeCotiere(ville) && (ville.batiments ?? []).includes('Ponton')
+  // (Refonte 12 lois, 2026-10-29, Naturalisme « Champs
+  //  nourriciers » : si la VILLE est de culture Naturalisme, chaque
+  //  FERMIER produit +1 Nourriture par tour d'ÉTÉ — le Fermier est
+  //  déjà un métier `ete` du référentiel (sa production de base ne
+  //  vient que l'été) ; le bonus suit la même saison, ×
+  //  multiplicateur de rang, AVANT les taxes, comme le bonus Ponton.)
+  const champsNourriciers = cultureDef(ville.culture, C.config)?.nourrEteParFermier ?? 0
   for (const c of vivants) {
     if (!c.metier) continue
     const td = metierDef(c.metier, C.config)
     if (!td) continue
     if (td.ete && state.saison !== 'Été') continue
+    // (Arbitrage Thibaut 2026-10-26 : la production du villageois est
+    //  multipliée par le multiplicateur de son RANG SOCIAL — bourgeois
+    //  ×1,5, noble ×1,5, AVANT les taxes — le gain amplifié est taxé
+    //  comme les autres.)
+    const mult = multProdRang(c, C)
     if (ponton && c.metier === 'Pêcheur') {
-      metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5
+      metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5 * mult
+    }
+    if (champsNourriciers && state.saison === 'Été' && c.metier === 'Fermier') {
+      metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + champsNourriciers * mult
     }
     if (td.ressource1 && td.valeur1 !== 0) {
-      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1
+      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1 * mult
     }
     if (td.ressource2 && td.valeur2 !== 0) {
-      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2
+      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2 * mult
     }
   }
-  // Taxes : le niveau module TOUTES les ressources produites par les habitants.
+  // Taxes : le niveau module la production PAR RESSOURCE (arbitrage
+  //  Thibaut 2026-10-28 : la Nourriture part du côté des naissances,
+  //  toutes les autres ressources à l'envers).
   // Grand Chambellan (ministère, refonte 2026-10-14) : +10 % sur toutes
   // les taxes reçues — multiplicateur appliqué ici (cumulables).
   // Vague 3a (rework métiers, arbitrage 2026-10-21) : les bonus de taxe
@@ -114,7 +190,8 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  Professeur +10 % Science, Banquier +10 % Or, Troubadour +10 %
   //  Tourisme (présence d'au moins un titulaire vivant dans la ville ;
   //  ex. Gouverneur + Professeur = +20 % sur la Science).
-  const taxeMult = facteurTaxes(ville, C)
+  const taxeMult: Record<string, number> = {}
+  for (const res of Object.keys(metiers)) taxeMult[res] = facteurTaxes(ville, C, res)
   const bonusTaxes: Record<string, number> = {}
   const ajouteBonus = (res: string, part: number) => {
     bonusTaxes[res] = (bonusTaxes[res] ?? 0) + part
@@ -130,12 +207,14 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers['Tourisme'] !== undefined) ajouteBonus('Tourisme', 0.1)
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
-    const tv = v * taxeMult * (1 + (bonusTaxes[res] ?? 0))
+    const tv = v * taxeMult[res] * (1 + (bonusTaxes[res] ?? 0))
     if (tv !== 0) taxes[res] = tv
   }
-  // Consommation (non taxée, appliquée après)
+  // Consommation (non taxée, appliquée après) — PAR RANG SOCIAL
+  //  (arbitrage Thibaut 2026-10-26) : roturier base, bourgeois 2,
+  //  noble 4 Nourriture par vivant et par tour.
   const conso: Record<string, number> = {}
-  const consoNourr = C.p.consoNourrParHab * vivants.length
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C, p.regime), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}
@@ -145,7 +224,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   return { habitants: vivants.length, metiers, taxeMult, bonusTaxes, taxes, conso, net }
 }
 
-/** Facteur de taxes sur la conception (Faible ×taxNaissFaibles / Moyenne ×1 / Forte ×taxNaissHautes — ±25 %, marqueur (z)). */
+/** Facteur de taxes sur la conception (Faible ×taxNaissFaibles / Moyenne ×1 / Forte ×taxNaissHautes — ±25 %, marqueur (z) ; valeurs reconfirmées par l'arbitrage taxes 2026-10-28 : les naissances partent du côté de la Nourriture). */
 export function taxBirthFactor(ville: City | undefined, C: Cfg = cfgOf()): number {
   if (!ville) return 1
   return ville.taxes === 'Faible' ? C.p.taxNaissFaibles : ville.taxes === 'Forte' ? C.p.taxNaissHautes : 1

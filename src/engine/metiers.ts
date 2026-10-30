@@ -10,7 +10,7 @@ import type { Rng } from './rng'
 import { cfgOf, metierDef, cultureDef, traitDef, type Cfg } from './gameData'
 import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
-import { rangSocial, prestigeDe } from './statutSocial'
+import { rangDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
@@ -112,7 +112,7 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
   }
 }
 
-export function formatDynastyPair(d1: string, d2: string): string {
+function formatDynastyPair(d1: string, d2: string): string {
   return d1 <= d2 ? `${d1} & ${d2}` : `${d2} & ${d1}`
 }
 
@@ -137,7 +137,10 @@ export function computeMarriageProbability(f: Character, h: Character, C: Cfg = 
   // MÊME RANG SOCIAL (vague E, arbitrage Thibaut 2026-10-24 : les
   //  mariages restent LIBRES — un bonus favorise les unions de
   //  même condition, aucune interdiction entre conditions).
-  if (rangSocial(prestigeDe(f)) === rangSocial(prestigeDe(h))) score += C.p.mariageMemeRang
+  // (refonte 12 lois, 2026-10-29 : rangDe des deux fiancés — le
+  //  seuil bourgeois peut être ABAISSÉ par la loi d'habitant du
+  //  Communautarisme « Bourgeoisie facile » (80 au lieu de 100))
+  if (rangDe(f, C) === rangDe(h, C)) score += C.p.mariageMemeRang
   // écart d'âge
   score -= Math.abs(f.age - h.age) * C.p.mariageParAnEcart
   // bâtards
@@ -202,7 +205,8 @@ export function assignAdultMetier(
  *  Ville, ainsi que le Professeur (nomination automatique par les
  *  écoles). L'avertissement de places est une aide, jamais bloquant
  *  — la réaffectation de fin de tour règle le surnombre. */
-export function metiersAccessibles(state: GameState, _p: Player, C: Cfg = cfgOf(state.config)): string[] {
+// (AUDIT 2026-10-27 : le paramètre joueur inutilisé `_p` est retiré.)
+export function metiersAccessibles(state: GameState, C: Cfg = cfgOf(state.config)): string[] {
   const out: string[] = [C.p.metierChasseur, C.p.metierGouverneur]
   // Dirigeant / Héritier (retour utilisateur 2026-10-17) : nomination
   //  MANUELLE possible — le picker « Attribuer… » de la page
@@ -286,7 +290,8 @@ export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.confi
 //  Vague 3b (rangs & bâtiments de tier 1, arbitrage 2026-10-22) : les
 //  caps sont CUMULATIVES — cap d'un métier = BASE DU RANG
 //  d'habitation (colonne « Métiers disponibles », ex. Hameau :
-//  50 Chasseurs, 2 Gardes, 1 Commerçant, 1 Gouverneur) + EMPLACEMENTS
+//  40 Chasseurs — fiche habitations 2026-10-26, ex-50 —, 2 Gardes,
+//  1 Commerçant, 1 Gouverneur) + EMPLACEMENTS
 //  des bâtiments ET aménagements présents (Poste de garde : +4 Garde…).
 //  Les paramètres capMetierChasseur* sont supprimés (le cas spécial
 //  Chasseur disparaît). Un capParVille déclaré au référentiel
@@ -300,7 +305,7 @@ export function designerGouverneurs(state: GameState, C: Cfg = cfgOf(state.confi
  *  vague 3b 2026-10-22 : les BÂTIMENTS comptent aussi, ex. Poste de
  *  garde +4 Garde — somme des `emplacements` des constructions de la
  *  ville, format référentiel `emplacements: [{ metier, places }]`). */
-export function emplacementsMetierVille(
+function emplacementsMetierVille(
   metier: string, ville: City, C: Cfg = cfgOf(),
   ctx?: { state: GameState; joueur: number },
 ): number {
@@ -315,7 +320,7 @@ export function emplacementsMetierVille(
     //  geographie.ts) ; hors proximité le bâtiment reste
     //  affiché mais n'ouvre aucun poste.
     if (nom === 'Ponton' && !villeCotiere(ville)) continue
-    for (const e of emplacementsConstructionRef(ref)) {
+    for (const e of emplacementsConstructionRef(ref, C.config)) {
       if (e.metier === metier) total += e.places
     }
   }
@@ -324,6 +329,24 @@ export function emplacementsMetierVille(
   //  emplacementsRoutesVille) — ctx optionnel car les cités libres
   //  sont hors du champ des caps et certains appelants n'ont pas le
   //  state sous la main.
+  // (Refonte 12 lois, 2026-10-29, Déisme « Monuments pieux » : +N
+  //  places de Scientifique par BÂTIMENT DE FACTION de la ville,
+  //  si la VILLE est de culture Déisme. Les « bâtiments de faction »
+  //  du classeur n'existent plus comme donnée depuis le 2026-10-19 :
+  //  l'ancienne loi (crédit de +4 Science à la construction, retirée
+  //  avec la refonte) est REMPLACÉE/HISTORISÉE par cet emplacement.
+  //  REMPLACÉ le 2026-10-29 bis (retour arbitre Thibaut : « les
+  //  bâtiments de faction vont revenir — laisse le Monuments pieux
+  //  sur eux ») : la loi ne compte plus TOUS les bâtiments mais les
+  //  seuls bâtiments de faction — marqueur `batimentDeFaction` du
+  //  référentiel, aucune entrée ne le porte aujourd'hui, la loi
+  //  DORT à 0 emplacement jusqu'à leur retour.)
+  if (metier === 'Scientifique') {
+    const n = cultureDef(ville.culture, C.config)?.scientifiqueParBatiment ?? 0
+    if (n) total += n * (ville.batiments ?? []).filter(
+      (b) => constructionRef(b, C.config)?.batimentDeFaction === true,
+    ).length
+  }
   if (ctx) total += emplacementsRoutesVille(metier, ctx.state, ctx.joueur, ville.nom, C)
   return total
 }
@@ -354,7 +377,7 @@ function emplacementsRoutesVille(
     if (r.joueur === joueur && r.villeOrigine === villeNom) {
       const ref = r.amenagement ? constructionRef(r.amenagement, C.config) : null
       if (ref) {
-        for (const e of emplacementsConstructionRef(ref)) {
+        for (const e of emplacementsConstructionRef(ref, C.config)) {
           if (e.metier === metier) total += e.places
         }
       }
@@ -372,7 +395,7 @@ export function capMetierVille(
   const td = metierDef(metier, C.config)
   if (td?.capParVille !== undefined) return td.capParVille + empl
   // Vague 3b : cap CUMULATIVE = base du RANG d'habitation
-  //  (« Métiers disponibles » du rang — Hameau : 50 Chasseurs,
+  //  (« Métiers disponibles » du rang — Hameau : 40 Chasseurs,
   //  2 Gardes, 1 Commerçant, 1 Gouverneur…) + emplacements des
   //  bâtiments/aménagements.
   const base = metiersDisponiblesRang(ville, C)[metier] ?? 0
@@ -438,14 +461,20 @@ function premierPosteLibre(
   return premier ? premier.metier : null
 }
 
-export interface OccupationMetier {
-  /** Métier concerné — null = ligne « Sans-emploi ». */
+interface OccupationMetier {
+  /** Métier concerné — null = ligne neutre (Sans-emploi, ou
+   *  Enfants quand enfants = true). */
   metier: string | null
   /** Occupants VIVANTS en poste (les Décédés ne comptent pas). */
   enPoste: number
   /** Capacité de la ville pour ce métier (capMetierVille) —
    *  Infinity = illimité (ou cité libre : hors champ des caps). */
   cap: number
+  /** Ligne neutre ENFANTS (retour Thibaut 2026-10-28) : vivants
+   *  d'âge < adultAge sans métier — pas des chômeurs ; ils
+   *  deviennent Sans-emploi à l'âge adulte (assignAdultMetier
+   *  leur attribue alors un poste si une place est libre). */
+  enfants?: boolean
 }
 
 /** Vue « métiers et places par ville » (vague 2 UI, rework habitants
@@ -454,8 +483,12 @@ export interface OccupationMetier {
  *  référentiel ; les métiers personnalisés hors référentiel
  *  (anciennes sauvegardes) sont conservés en fin de liste ; la ligne
  *  « Sans-emploi » (neutre : impôt nul, aucun effet) est TOUJOURS
- *  présente, en dernière position. ville = null (cité libre) →
- *  toutes les caps sont infinies. */
+ *  présente, en dernière position — elle ne compte que les ADULTES
+ *  sans métier (retour Thibaut 2026-10-28 : les ENFANTS d'âge <
+ *  adultAge forment une ligne « Enfants » à part, juste avant,
+ *  uniquement s'il y en a ; un enfant porteur d'un métier affecté
+ *  manuellement reste compté dans sa ligne de métier).
+ *  ville = null (cité libre) → toutes les caps sont infinies. */
 export function occupationsMetierVille(
   habitants: Character[], ville: City | null, C: Cfg = cfgOf(),
   ctx?: { state: GameState; joueur: number },
@@ -463,8 +496,10 @@ export function occupationsMetierVille(
   const vivants = habitants.filter((c) => c.statut !== 'Décédé')
   const par: Record<string, number> = {}
   let sans = 0
+  let enfants = 0
   for (const c of vivants) {
     if (c.metier) par[c.metier] = (par[c.metier] ?? 0) + 1
+    else if (c.age < C.p.adultAge) enfants++
     else sans++
   }
   const lignes: OccupationMetier[] = []
@@ -478,6 +513,12 @@ export function occupationsMetierVille(
   }
   for (const m of Object.keys(par)) {
     if (!C.metiers.some((x) => x.metier === m)) ajoute(m)
+  }
+  // (Retour Thibaut 2026-10-28 : les enfants ne sont pas des
+  //  sans-emplois — ligne « Enfants » à part, AVANT le Sans-emploi
+  //  qui clôt toujours la liste, et uniquement s'il y en a.)
+  if (enfants > 0) {
+    lignes.push({ metier: null, enPoste: enfants, cap: Number.POSITIVE_INFINITY, enfants: true })
   }
   lignes.push({ metier: null, enPoste: sans, cap: Number.POSITIVE_INFINITY })
   return lignes

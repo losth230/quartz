@@ -203,3 +203,43 @@ test('R4 : une section conforme passe toujours (non-régression des tests ci-des
   assert.equal(out.players[0].nom, 'Fusionné', 'une section valide fusionne comme avant')
   assert.ok(!out.log.some((l) => l.texte.includes('Section invalide ignorée')), 'aucun faux rejet')
 })
+
+// ── m2 (audit 2026-10-27, arbitrage Thibaut) : sections de joueurs INCONNUS ──
+
+test("m2 : section d'un joueur INCONNU du setup ignorée + journal visible", () => {
+  const ref = base()
+  ref.routesCommerce = [route('r2', 2)]
+  const pirate = { ...ref.players[0], n: 42 }
+  const sections: Record<string, SectionJoueurFusion> = {
+    '42': {
+      player: pirate, population: [{ id: 'p42' }], routes: [route('r42', 42)],
+      citesLibres: [{ nom: 'CitéPirate', type: 'Militaires - Château' }],
+      log: [{ turn: ref.turn, type: 'Armée', joueur: 42, texte: 'action parasite' }],
+      tour: ref.turn,
+    },
+  }
+  const out = fusionnerSections(ref, sections)
+  // RIEN du joueur 42 ne doit être appliqué :
+  assert.ok(!(out.routesCommerce ?? []).some((r) => r.id === 'r42'), 'la route du joueur inconnu ne doit pas être fusionnée')
+  assert.ok(!(out.citesLibres ?? []).some((c) => c.nom === 'CitéPirate'), 'la cité du joueur inconnu ne doit pas être ajoutée')
+  assert.equal(out.population[42], undefined, 'la population du joueur inconnu ne doit pas être fusionnée')
+  assert.equal((out.routesCommerce ?? []).length, 1, 'la route légitime r2 doit être intacte')
+  assert.ok(!out.players.some((q) => q.n === 42), 'aucun joueur 42 ne doit exister après la fusion')
+  // ...et le journal du tour doit le dire VISIBLEMENT :
+  const msg = out.log.find((e) => e.type === 'Système' && e.texte.includes('Joueur 42 inexistant'))
+  assert.ok(msg, `une entrée de journal doit dire que le joueur 42 est inexistant — log : ${JSON.stringify(out.log.map((l) => l.texte))}`)
+  assert.ok(!out.log.some((e) => e.texte === 'action parasite'), 'le log parasite de la section ignorée ne doit pas être fusionné')
+})
+
+test('m2 : les joueurs du setup passent toujours (non-régression, pas de faux positif)', () => {
+  const ref = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: ref.players[0], routes: [route('r1', 1)], log: [{ turn: ref.turn, type: 'Armée', joueur: 1, texte: 'J1' }], tour: ref.turn },
+    '2': { player: ref.players[1], routes: [route('r2', 2)], log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.ok((out.routesCommerce ?? []).some((r) => r.id === 'r1'), 'J1 doit être fusionné normalement')
+  assert.ok((out.routesCommerce ?? []).some((r) => r.id === 'r2'), 'J2 doit être fusionné normalement')
+  assert.ok(out.log.some((e) => e.texte === 'J1'), 'le log de J1 doit être fusionné')
+  assert.ok(!out.log.some((e) => e.texte.includes('inexistant')), 'aucune entrée « inexistant » pour des joueurs légitimes')
+})
