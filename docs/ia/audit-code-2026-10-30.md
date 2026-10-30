@@ -28,7 +28,7 @@ SUCCESS sur la tête v4 (`e03a6deb`, run #1585).
 | Réf | Problème | Statut |
 |-----|----------|--------|
 | A0 | CI « jeu » ROUGE à la tête depuis `2f253c09` (29/10, refonte 8 lois) : le test de rendu `ArmiesPanel` calculait `prixArmee` SANS le joueur alors que le panneau le passe (loi Conscription du régime Autoritarisme du joueur 1) → 45 Or attendus vs 35 Or rendus | 🔴→✅ **découvert à l'audit, corrigé le jour même** (`a1523107`) |
-| A1 | `normaliserEtat` ne complète pas `p.armees` → crash fin de tour sur un état ingéré dont un joueur manque le champ (sauvegardes antérieures aux armées, 2026-10-17) | 🟠 **reproduit** — correctif d'une ligne proposé, à arbitrer |
+| A1 | `normaliserEtat` ne complète pas `p.armees` → crash fin de tour sur un état ingéré dont un joueur manque le champ (sauvegardes antérieures aux armées, 2026-10-17) | 🔵 **arbitré par Thibaut (30/10) : PAS de correctif** — les vieilles sauvegardes locales antérieures aux armées sont obsolètes, il les supprime ; aucun état créé par `createGame` n'est concerné |
 | A2 | Perf : fin de tour à 16 000 habitants = 3,2-4,3 s (1,7-3,2 s à l'audit du 27/10) ; le nouveau flux migrationBonheur y compte ≈ 0,21 s | 🟡 surveillance — mitigé par le bandeau F4, partie live très en dessous de 16k |
 | a1 | `malusFerveurMartiale` n'applique que la PREMIÈRE culture martiale présente (ordre du référentiel) | 🟡 conforme à l'arbitrage actuel (une seule culture : Zélotisme) — à redécouvrir si une 2e culture martiale arrive |
 | a2 | `recruitForArmies` peut faire dépasser la puissance CIBLE d'un dernier recrutement (soldat indivisible, pas de clamp) | 🟡 mineur, cohérent avec le modèle « stockée fait foi » — à noter, pas d'action proposée |
@@ -102,8 +102,11 @@ if (!Array.isArray(p.armees)) p.armees = []
 ```
 
 + un test de non-régression dans `engine/armees.test.ts` (état sans `armees`
-→ `runTurn` ne crashe pas, armées = []). **À arbitrer par Thibaut** —
-proposition : appliquer.
+→ `runTurn` ne crashe pas, armées = []). **ARBITRAGE Thibaut (30/10) : PAS de
+correctif** — les vieilles sauvegardes locales antérieures aux armées
+(2026-10-17) sont considérées OBSOLÈTES et seront supprimées localement
+(localStorage navigateur) ; les états issus de `createGame` ne sont pas
+concernés. Le constat et la reproduction restent documentés ici pour mémoire.
 
 ## A2 — Fin de tour à 16k habitants : 3,2-4,3 s (surveillance) 🟡
 
@@ -178,7 +181,7 @@ sera le premier réflexe.
 | # | Action | Qui | Statut |
 |---|--------|-----|--------|
 | 0 | A0 : corriger le test de rendu ArmiesPanel (prix calculé comme le panneau) | IA | ✅ corrigé ce jour (`a1523107`) — urgence CI |
-| 1 | A1 : compléter `p.armees` dans `normaliserEtat` + test de non-régression | IA | ⏳ **proposition, à arbitrer par Thibaut** |
+| 1 | A1 : compléter `p.armees` dans `normaliserEtat` + test de non-régression | IA | 🔵 arbitré Thibaut 30/10 : refusé — vieilles sauvegardes obsolètes, supprimées localement |
 | 2 | a3 : compteurs AGENTS.md (254 natifs / 21 rendu) | IA | ✅ corrigé ce jour |
 | 3 | A2 : re-bench 16k à la prochaine grosse vague moteur | IA | ⏳ surveillance |
 | 4 | a1 : rediscuter le malus si une 2e culture martiale arrive | IA/Thibaut | ⏳ différé (conforme à l'arbitrage actuel) |
