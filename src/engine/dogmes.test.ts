@@ -110,7 +110,7 @@ test('tourismeCulture : somme TOUS JOUEURS des villes de la culture, SANS les ci
 })
 
 test('nbPaliersDogmes : un palier tous les palierTourismeDogme, cumul à l infini (arbitrage n°1)', () => {
-  const { state, C } = partie()
+  const { C } = partie()
   const pas = C.p.palierTourismeDogme
   assert.equal(pas, 50, 'défaut verrouillé : palier de 50 Tourisme')
   assert.equal(nbPaliersDogmes(0, C), 0)
@@ -187,7 +187,12 @@ test('choisirDogme : cumul à l infini, jamais remplaçable, palier à franchir,
   const refus = choisirDogme(state, 'Culture Nordique', t, 'Dogme du Travail')
   assert.ok(refus !== null && refus.includes('introuvable dans le référentiel'),
     `référentiel vide : refus explicte (${refus})`)
-  assert.equal(state.dogmes, undefined, 'rien n a été inscrit')
+  //  NB : capture dans une CONST locale — assert.equal (strictEqual)
+  //  est typé « asserts actual is T » et rétrécirait state.dogmes à
+  //  undefined pour tout le reste du test (tsc), cassant les accès
+  //  suivants en `never`.
+  const inscritsAvant = state.dogmes
+  assert.equal(inscritsAvant, undefined, 'rien n a été inscrit')
   // 2. palier NON atteint : refus
   ajouterDogmes(C, 'Dogme A', 'Dogme B', 'Dogme C')
   assert.ok(choisirDogme(state, 'Culture Nordique', 4 * t, 'Dogme A') !== null,
@@ -225,7 +230,7 @@ test('choisirDogme : cumul à l infini, jamais remplaçable, palier à franchir,
 })
 
 test('normaliserEtat : state.dogmes complété pour les vieilles sauvegardes, intact sinon', () => {
-  const { state, C } = partie()
+  const { state } = partie()
   // sauvegarde antérieure au 30/10 : pas de champ dogmes
   delete state.dogmes
   normaliserEtat(state)
