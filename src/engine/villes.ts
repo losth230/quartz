@@ -49,6 +49,14 @@ export function normaliserEtat(state: GameState): void {
   if (!Array.isArray(state.log)) state.log = []
   if (!Array.isArray(state.routesCommerce)) state.routesCommerce = []
   if (!Array.isArray(state.citesLibres)) state.citesLibres = []
+  // (Dogmes de culture, 2026-10-30 : champ optionnel des états,
+  //  complété pour les sauvegardes antérieures au 30/10 — même
+  //  contrat que routesCommerce/citesLibres. NB : l'arbitrage A1
+  //  du 30/10 (PAS de complétion de p.armees) ne concerne que les
+  //  sauvegardes ANTÉRIEURES AUX ARMÉES, déclarées obsolètes ; les
+  //  champs ajoutés à partir de cette date suivent le contrat
+  //  historique « tableaux manquants = crash moteur ET rendu ».)
+  if (!Array.isArray(state.dogmes)) state.dogmes = []
   if (!state.population || typeof state.population !== 'object') state.population = {}
   for (const p of state.players ?? []) {
     for (const v of p.villes ?? []) {
