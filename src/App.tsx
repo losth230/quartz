@@ -31,7 +31,7 @@ const SECTIONS: { key: Section; label: string }[] = [
   { key: 'joueur', label: '👑 Pays' },
   // (5e retour arbitre Thibaut du 30/10 : « il faudrait un onglet
   //  Dogmes, au même titre qu'un onglet royaume et Pays » — vue
-  //  TOUTES CULTURES : paliers, dogmes pris, choix du dominant.)
+  //  TOUTES CULTURES : paliers, dogmes pris, choix du pontife.)
   { key: 'dogmes', label: '🕯 Dogmes' },
   { key: 'population', label: '👥 Population' },
   { key: 'citeslibres', label: '🗼 Cités libres' },

@@ -12,10 +12,10 @@
 //  (2026-10-30, fondations « dogmes de culture » — arbitrages
 //  Thibaut, cf. engine/dogmes.ts) : section DOGMES — Tourisme de la
 //  culture (tous joueurs), palier en cours, dogmes pris et palier
-//  en attente (à choisir par le joueur dominant de la culture).
+//  en attente (à choisir par le pontife de la culture).
 //  (2e séance du 30/10, RETOUR DES DOGMES DÉFINITIFS — table des
 //  12 dogmes retenus par Thibaut) : les dogmes pris s'affichent
-//  avec leur description du référentiel, et le joueur DOMINANT
+//  avec leur description du référentiel, et le PONTIFE
 //  choisit INTERACTIVEMENT un dogme par palier en attente (prop
 //  `choisir`, branchée par PlayerView sur le mutateur du store —
 //  choisirDogme valide et journalise ; les erreurs partent au
@@ -26,7 +26,7 @@ import type { GameState, Player } from '../../engine/types'
 import { cultureDef, type Cfg } from '../../engine/gameData'
 import { detailLoisHabitants } from '../../engine/regimes'
 import {
-  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurDominantCulture,
+  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture,
   dogmesDisponiblesCulture,
 } from '../../engine/dogmes'
 import { Badge, Card, fmt } from '../ui'
@@ -56,7 +56,7 @@ export function CulturePays({
         const pris = dogmesCulture(state, p.culture)
         const enAttente = paliersFranchis - pris.length
         const prochainPalier = (pris.length + 1) * pas
-        const dominant = joueurDominantCulture(state, p.culture, C)
+        const pontife = joueurPontifeCulture(state, p.culture, C)
         const nomJoueur = (n: number) => state.players.find((q) => q.n === n)?.nom ?? `Joueur ${n}`
         // Dogmes du référentiel encore disponibles au choix de cette
         //  culture (génériques '*' inclus, déjà pris exclus).
@@ -111,7 +111,7 @@ export function CulturePays({
             }) : null}
             {enAttente > 0 && (
               <div>
-                {dominant && dominant.joueur.n === p.n ? (
+                {pontife && pontife.joueur.n === p.n ? (
                   <>
                     <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                     <span className="small">
@@ -145,8 +145,8 @@ export function CulturePays({
                     <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                     <span className="small">
                       dogme à choisir par{' '}
-                      {dominant ? <strong>{dominant.joueur.nom}</strong> : '—'}{' '}
-                      (joueur dominant de la culture : le plus de Tourisme).
+                      {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}{' '}
+                      (pontife de la culture : le plus de Tourisme).
                     </span>
                   </>
                 )}
