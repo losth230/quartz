@@ -8,6 +8,7 @@
 import type { GameState } from './types'
 import type { Cfg } from './gameData'
 import { regimeDef } from './gameData'
+import { effetsDogmeCulture } from './dogmes'
 
 //  Chaque vassal reverse une part des revenus de ses habitants (gains
 //  d'Or, après taxes) à son suzerain. Les chaînes A→B→C fonctionnent :
@@ -31,7 +32,14 @@ export function transfererTributVassal(
     //  régime est multiplié (tributVassalMult, défaut ×1,05).
     //  Arbitrage Thibaut : le vassal paie SA part — la différence
     //  est CRÉÉE pour le suzerain.
-    const recu = part * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1)
+    // (Dogme de la Mère Patrie, 2026-10-30 : idem sur la CULTURE du
+    //  suzerain — ×(1+v) (effet tributVassal, défaut +5 %), cumulé
+    //  au multiplicateur du régime. Symétrique du branchement
+    //  d'impotsVassaux (impôt manuel) : les deux chemins du tribut
+    //  portent le dogme.)
+    const recu = part
+      * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1)
+      * (1 + effetsDogmeCulture(state, suzerain.culture, 'tributVassal', C))
     const gainsSuz = gainsParJoueur[suzerain.n] ?? (gainsParJoueur[suzerain.n] = {})
     gainsSuz['Or'] = (gainsSuz['Or'] ?? 0) + recu
     state.log.push({

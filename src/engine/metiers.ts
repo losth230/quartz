@@ -14,6 +14,7 @@ import { rangDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
+import { effetsDogmeCulture } from './dogmes'
 
 // ── Professeurs ─────────────────────────────────────────────────────────
 
@@ -393,7 +394,18 @@ export function capMetierVille(
   if (!metier) return Number.POSITIVE_INFINITY
   const empl = emplacementsMetierVille(metier, ville, C, ctx)
   const td = metierDef(metier, C.config)
-  if (td?.capParVille !== undefined) return td.capParVille + empl
+  // (Dogme de la Patrie, 2026-10-30 : +v métiers de GARDE dans les
+  //  habitations de la culture porteuse (effet gardeParHabitation,
+  //  défaut +2) — loi de VILLE (culture majoritaire de la cité) :
+  //  la cap de Garde d'une ville dont la CULTURE a pris le dogme
+  //  monte, au bénéfice de qui y vit. CUMULÉE aux bases du rang
+  //  et aux emplacements des constructions, même règle additive
+  //  que la vague 3b. Ajoutée aux DEUX branches de cap FINIE ;
+  //  sans ctx (appel sans état) le dogme n'est pas consulté.)
+  const dogmeGarde = metier === C.p.metierGarde && ctx?.state
+    ? effetsDogmeCulture(ctx.state, ville.culture, 'gardeParHabitation', C)
+    : 0
+  if (td?.capParVille !== undefined) return td.capParVille + empl + dogmeGarde
   // Vague 3b : cap CUMULATIVE = base du RANG d'habitation
   //  (« Métiers disponibles » du rang — Hameau : 40 Chasseurs,
   //  2 Gardes, 1 Commerçant, 1 Gouverneur…) + emplacements des
@@ -403,7 +415,7 @@ export function capMetierVille(
   //  au rang — cap = base + emplacements (sans les deux, cap 0 :
   //  arbitrage 3a assumé).
   const productif = !!td && ((td.ressource1 !== '' && td.valeur1 !== 0) || (td.ressource2 !== '' && td.valeur2 !== 0))
-  if (productif || base > 0 || empl > 0) return base + empl
+  if (productif || base > 0 || empl > 0 || dogmeGarde > 0) return base + empl + dogmeGarde
   // Rôles de cour, armée, Banquier, Troubadour, Dirigeant/Héritier
   //  et métiers personnalisés hors référentiel : non plafonnés ici.
   return Number.POSITIVE_INFINITY

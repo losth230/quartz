@@ -13,6 +13,7 @@ import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { villeCotiere } from './geographie'
 import { rangDe } from './statutSocial'
+import { effetsDogmeCulture } from './dogmes'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -56,11 +57,25 @@ export function multProdRang(c: Character, C: Cfg): number {
 /** Consommation de Nourriture d'un habitant vivant par tour (arbitrage
  *  Thibaut 2026-10-26) : roturier consoNourrParHab (base), bourgeois
  *  consoNourrBourgeois, noble consoNourrNoble. Le rang dérivé du
- *  PRESTIGE — les mineurs (prestige 0) restent à la base. */
-export function consoNourrHabitant(c: Character, C: Cfg, regime?: string): number {
+ *  PRESTIGE — les mineurs (prestige 0) restent à la base.
+ *  (Dogme de l'Égalité, 2026-10-30 : les BOURGEOIS d'une culture
+ *  ayant pris le dogme consomment la VALEUR du référentiel
+ *  (effet consoNourrBourgeois, défaut 1) — le dogme FIXE la
+ *  consommation : il l'emporte sur le régime et le défaut moteur.
+ *  Le `state` est OPTIONNEL : sans lui (cités libres, tests) le
+ *  dogme n'est pas consulté — les habitants des cités libres sont
+ *  de toute façon tous roturiers (prestige non calculé).) */
+export function consoNourrHabitant(c: Character, C: Cfg, regime?: string, state?: GameState): number {
   // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
   //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
   const r = rangDe(c, C)
+  // (Dogme de l'Égalité, 2026-10-30 : la culture PROPRE du
+  //  personnage, où qu'il vive — même lecture que la loi
+  //  d'habitant « Lavages de main » du Déisme.)
+  if (state && r === 'bourgeois') {
+    const dogme = effetsDogmeCulture(state, c.culture, 'consoNourrBourgeois', C)
+    if (dogme > 0) return dogme
+  }
   // (Refonte « 8 lois » des régimes, 2026-10-29, Socialisme
   //  « Redistribution ») : le régime du joueur PORTEUR remplace le
   //  défaut moteur pour les bourgeois (1) et les nobles (2) —
@@ -158,7 +173,18 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  multiplicateur de rang, AVANT les taxes, comme le bonus Ponton.)
   const champsNourriciers = cultureDef(ville.culture, C.config)?.nourrEteParFermier ?? 0
   for (const c of vivants) {
-    if (!c.metier) continue
+    // (Dogme du Travail, 2026-10-30 : les SANS-EMPLOIS d'une culture
+    //  ayant pris le dogme produisent +v Nourriture par tour —
+    //  culture PROPRE du personnage, où qu'il vive (loi d'habitant)
+    //  ; production AVANT les taxes comme les métiers, SANS
+    //  multiplicateur de rang (« +1 » littéral). Passé par le même
+    //  canal `metiers` : la production apparaît au tableau de la
+    //  ville et alimente impôts/vassalité comme les autres gains.)
+    if (!c.metier) {
+      const trav = effetsDogmeCulture(state, c.culture, 'travailNourriture', C)
+      if (trav > 0) metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + trav
+      continue
+    }
     const td = metierDef(c.metier, C.config)
     if (!td) continue
     if (td.ete && state.saison !== 'Été') continue
@@ -214,7 +240,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  (arbitrage Thibaut 2026-10-26) : roturier base, bourgeois 2,
   //  noble 4 Nourriture par vivant et par tour.
   const conso: Record<string, number> = {}
-  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C, p.regime), 0)
+  const consoNourr = vivants.reduce((n, c) => n + consoNourrHabitant(c, C, p.regime, state), 0)
   if (consoNourr !== 0) conso['Nourriture'] = -consoNourr
   // Net = taxes − conso
   const net: Record<string, number> = {}
@@ -269,10 +295,18 @@ export interface ImpotVassal {
 
 export function impotsVassaux(state: GameState, p: Player, C: Cfg): ImpotVassal[] {
   const out: ImpotVassal[] = []
+  // (Dogme de la Mère Patrie, 2026-10-30 : le tribut reçu par un
+  //  suzerain de la culture porteuse est ×(1+v) (effet tributVassal,
+  //  défaut +5 %) — le vassal paie SA part, la différence est CRÉÉE
+  //  pour le suzerain (même arbitrage que la loi « Vassaux
+  //  dévoués », appliqué sur la culture du SUZERAIN cette fois).
+  //  Symétrique du branchement de transfererTributVassal (fin de
+  //  tour) : les deux chemins du tribut portent le dogme.)
+  const multDogme = 1 + effetsDogmeCulture(state, p.culture, 'tributVassal', C)
   for (const v of state.players) {
     if (v.vassalDe !== p.n || p.vassalDe === v.n) continue // serment croisé ignoré
     const gains = gainsPopulationJoueur(state, v, C)
-    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement
+    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement * multDogme
     if (part !== 0) out.push({ vassal: v.nom, montant: part })
   }
   return out

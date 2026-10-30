@@ -12,6 +12,7 @@ import type { City, GameState, Player } from './types'
 import { cultureDef, type Cfg } from './gameData'
 import { garnisonBatiment } from './batiments'
 import { rangNiveau } from './rangs'
+import { effetsDogmeCulture } from './dogmes'
 
 /** Garnison des habitations d'une ville : garnisons statiques des
  *  bâtiments, bonus de la loi du régime (ex. Autoritarisme : +
@@ -63,6 +64,14 @@ export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: 
   //  l'habitation — malus MONDIAL appliqué UNE fois par habitation,
   //  sans cumul si plusieurs villes de la culture.)
   if (state) g -= malusFerveurMartiale(state, ville, C)
+  // (Dogme des Guerres Saintes, 2026-10-30 : chaque culture ayant
+  //  pris le dogme (effet garnisonHorsCulture, valeur −40 au
+  //  référentiel) ôte |v| de Garnison aux habitations d'une AUTRE
+  //  culture — les villes de la culture porteuse sont PROTÉGÉES.
+  //  Une fois PAR culture porteuse (deux cultures porteuses = −80
+  //  sur une ville tierce), même famille que la Ferveur martiale
+  //  mais à montant FIXE (pas × rang). Plancher 0 ci-dessous.)
+  if (state) g -= malusGuerresSaintes(state, ville, C)
   // (RETRAIT 2026-10-24 : le plancher « Combler les lacunes » des
   //  technologies n'existe plus — système de progrès supprimé.
   //  NOUVEAU PLANCHER 0 (refonte 12 lois, 2026-10-29) : la Ferveur
@@ -100,6 +109,30 @@ export function malusFerveurMartiale(state: GameState, ville: City, C: Cfg): num
     if (!presente) continue
     if (ville.culture === cult.nom) continue
     malus += n * rangNiveau(ville, C)
+  }
+  return malus
+}
+
+/** Malus des GUERRES SAINTES (dogme, 2026-10-30) : chaque culture
+ *  ayant PRIS le dogme (state.dogmes — un dogme pris implique une
+ *  culture vivante, pas seulement présente) ôte la valeur de
+ *  l'effet garnisonHorsCulture (−40 au référentiel, lu en positif)
+ *  à la garnison des habitations d'une AUTRE culture — une fois
+ *  PAR culture porteuse, cumulable, les villes de la culture
+ *  porteuse étant protégées (même famille que la Ferveur
+ *  martiale, montant FIXE indépendant du rang). Les cités libres
+ *  sont hors champ (garnisonHabitationVille ne court que sur les
+ *  villes des joueurs). Plancher 0 dans garnisonHabitationVille.
+ *  Exporté pour le détail UI (même contrat que
+ *  malusFerveurMartiale). */
+export function malusGuerresSaintes(state: GameState, ville: City, C: Cfg): number {
+  let malus = 0
+  if (!state.dogmes?.length) return 0
+  const culturesPorteuses = new Set(state.dogmes.map((d) => d.culture))
+  for (const cult of culturesPorteuses) {
+    if (ville.culture === cult) continue
+    const effet = effetsDogmeCulture(state, cult, 'garnisonHorsCulture', C)
+    if (effet < 0) malus += -effet
   }
   return malus
 }

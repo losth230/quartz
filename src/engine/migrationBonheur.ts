@@ -200,7 +200,7 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
         joueur: p, ville: v,
         bonheur: bonheurVilleComplete(state, p, v, C),
         emploisLibres: emploisOffertsVille(state, p, v, C) > enPoste,
-        logementsLibres: logementsVille(v, C) > vivants.length,
+        logementsLibres: logementsVille(v, C, state) > vivants.length,
       }
     }),
   )

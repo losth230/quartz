@@ -12,10 +12,14 @@
 //  (2026-10-30, fondations « dogmes de culture » — arbitrages
 //  Thibaut, cf. engine/dogmes.ts) : section DOGMES — Tourisme de la
 //  culture (tous joueurs), palier en cours, dogmes pris et palier
-//  en attente (à choisir par le joueur dominant de la culture). La
-//  carte reste de LECTURE à ce stade : aucun dogme n'existe encore
-//  au référentiel, le CHOIX interactif viendra avec les dogmes
-//  définitifs.
+//  en attente (à choisir par le joueur dominant de la culture).
+//  (2e séance du 30/10, RETOUR DES DOGMES DÉFINITIFS — table des
+//  12 dogmes retenus par Thibaut) : les dogmes pris s'affichent
+//  avec leur description du référentiel, et le joueur DOMINANT
+//  choisit INTERACTIVEMENT un dogme par palier en attente (prop
+//  `choisir`, branchée par PlayerView sur le mutateur du store —
+//  choisirDogme valide et journalise ; les erreurs partent au
+//  journal « Système »). Un dogme est unique par culture.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player } from '../../engine/types'
@@ -23,10 +27,20 @@ import { cultureDef, type Cfg } from '../../engine/gameData'
 import { detailLoisHabitants } from '../../engine/regimes'
 import {
   tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurDominantCulture,
+  dogmesDisponiblesCulture,
 } from '../../engine/dogmes'
 import { Badge, Card, fmt } from '../ui'
 
-export function CulturePays({ state, p, C }: { state: GameState; p: Player; C: Cfg }) {
+export function CulturePays({
+  state, p, C, choisir,
+}: {
+  state: GameState
+  p: Player
+  C: Cfg
+  /** Mutateur du choix de dogme (PlayerView) — absent : carte de
+   *  lecture seule (tests de rendu). */
+  choisir?: (palier: number, nom: string) => void
+}) {
   return (
     <Card title="🛕 Culture du pays — lois des cultures">
       {(() => {
@@ -44,6 +58,9 @@ export function CulturePays({ state, p, C }: { state: GameState; p: Player; C: C
         const prochainPalier = (pris.length + 1) * pas
         const dominant = joueurDominantCulture(state, p.culture, C)
         const nomJoueur = (n: number) => state.players.find((q) => q.n === n)?.nom ?? `Joueur ${n}`
+        // Dogmes du référentiel encore disponibles au choix de cette
+        //  culture (génériques '*' inclus, déjà pris exclus).
+        const disponibles = dogmesDisponiblesCulture(state, p.culture, C)
         return (
           <div className="stack">
             <div>
@@ -77,24 +94,51 @@ export function CulturePays({ state, p, C }: { state: GameState; p: Player; C: C
                 franchi(s) tous les {pas}, {pris.length} dogme(s) choisi(s).
               </div>
             </div>
-            {pris.length > 0 ? pris.map((d) => (
-              <div key={`${d.culture}-${d.palier}`}>
-                <Badge tone="good">Palier {d.palier}</Badge>{' '}
-                <span className="small">
-                  dogme « {d.nom} » — choisi par {nomJoueur(d.choisiPar)} (tour {d.choisiAuTour}),
-                  <span className="muted"> jamais remplaçable.</span>
-                </span>
-              </div>
-            )) : null}
+            {pris.length > 0 ? pris.map((d) => {
+              // Description du référentiel (effets réels branchés moteur
+              //  — la table est la source de vérité des chiffres).
+              const ref = (C.config.dogmes ?? []).find((r) => r.nom === d.nom)
+              return (
+                <div key={`${d.culture}-${d.palier}`}>
+                  <Badge tone="good">Palier {d.palier}</Badge>{' '}
+                  <span className="small">
+                    dogme « {d.nom} » — choisi par {nomJoueur(d.choisiPar)} (tour {d.choisiAuTour})
+                    {ref?.description ? <span className="muted"> — {ref.description}</span> : null}
+                    <span className="muted"> Jamais remplaçable.</span>
+                  </span>
+                </div>
+              )
+            }) : null}
             {enAttente > 0 && (
               <div>
                 {dominant && dominant.joueur.n === p.n ? (
                   <>
                     <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                     <span className="small">
-                      c'est à <strong>toi</strong> de choisir un dogme pour la culture {p.culture}
-                      {enAttente > 1 ? ` (${enAttente} dogmes en attente)` : ''}.
+                      c'est à <strong>toi</strong> de choisir {enAttente > 1 ? `${enAttente} dogmes (un par palier)` : 'un dogme'}
+                      {' '}pour la culture {p.culture}.
                     </span>
+                    {choisir ? (
+                      <div className="stack">
+                        {disponibles.length === 0 ? (
+                          <div className="muted small">
+                            Aucun dogme disponible — la table du référentiel est vide ou tous
+                            les dogmes sont déjà pris par cette culture.
+                          </div>
+                        ) : disponibles.map((d) => (
+                          <div key={d.nom} className="mini">
+                            <strong>{d.nom}</strong>
+                            <div className="small">{d.description}</div>
+                            <button
+                              className="btn btn-small"
+                              onClick={() => choisir(prochainPalier, d.nom)}
+                            >
+                              Choisir « {d.nom} » (palier {prochainPalier})
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
                   </>
                 ) : (
                   <>
@@ -105,12 +149,6 @@ export function CulturePays({ state, p, C }: { state: GameState; p: Player; C: C
                       (joueur dominant de la culture : le plus de Tourisme).
                     </span>
                   </>
-                )}
-                {(C.config.dogmes ?? []).filter((d) => d.culture === p.culture).length === 0 && (
-                  <div className="muted small">
-                    Aucun dogme n'est encore défini dans le référentiel — les dogmes définitifs
-                    viendront (fondations posées le 2026-10-30 : paliers, dominant et suivi en place).
-                  </div>
                 )}
               </div>
             )}
