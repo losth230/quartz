@@ -548,3 +548,37 @@ test('F6 : validerFormeConfig accepte une config saine et refuse les champs au m
   const bonne = { ...cloneDefaultConfig(), metiers: [] }
   assert.equal(validerFormeConfig(bonne).length, 0, 'un tableau vide (même vide → garde-fous) reste de forme valide')
 })
+
+// ── INCIDENT 6e RETOUR (2026-10-30) : « table du référentiel vide » ──
+//  Le chemin réel du bug constaté par Thibaut en jeu : la config
+//  MONDIALE du navigateur date d'avant le retrait du 24/10 et porte
+//  la table dogmes à l'ANCIEN format (affichage, sans champ
+//  culture). L'ancienne purge filtrait la table FUSIONNÉE : la
+//  vieille table (écrasant les 12 défauts par la fusion) était
+//  purgée → [], convergée puis RE-SAUVEGARDÉE — et le [] masquait
+//  les défauts à chaque relecture (l'onglet Dogmes voyait un
+//  référentiel VIDE, aucun dogme à choisir). Verrouillé ici :
+//  une table absente, vide ou tout ancien format retombe sur les
+//  DÉFAUTS, avant ET après convergence + relecture.
+test('config : incident 6e retour — config mondiale d avant le 24/10 (table dogmes ancien format) : les 12 dogmes reviennent, même après convergence + relecture', () => {
+  const vieille = cloneDefaultConfig()
+  ;(vieille as unknown as { dogmes: unknown[] }).dogmes = [
+    { nom: 'Famille', bonus: '+0,1 fécondité (Pontife)', effets: [{ type: 'fecondite', valeur: 0.1 }] },
+    { nom: 'Nationalisme', bonus: 'texte libre', effets: [] },
+  ]
+  // convergence (point d'entrée : chargement de partie / nouvelle
+  //  partie — convergerConfig), puis le résultat est SAUVÉ puis
+  //  RELU comme le fait le navigateur (storage + rechargement)
+  const conv = JSON.parse(JSON.stringify(cfgOf(vieille).config)) as GameConfig
+  assert.equal(conv.dogmes?.length, 12,
+    'la convergence rend les 12 dogmes du défaut (plus d estampillage [])')
+  assert.equal(cfgOf(conv).config.dogmes?.length, 12,
+    'relecture de la config convergée : les 12 sont toujours là (le [] ne masque plus)')
+  assert.ok(conv.dogmes?.every((d) => d.culture === '*'),
+    'ce sont bien les 12 génériques du référentiel')
+  assert.ok(!conv.dogmes?.some((d) => d.nom === 'Nationalisme' && d.description === 'texte libre'),
+    'les entrées d ancien format ne reviennent pas (règle (x))')
+  // idempotence : re-converger la config convergée ne change rien
+  const reconv = JSON.parse(JSON.stringify(cfgOf(conv).config)) as GameConfig
+  assert.equal(reconv.dogmes?.length, 12, 're-convergence idempotente (12)')
+})
