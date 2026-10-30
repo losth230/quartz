@@ -25,11 +25,25 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   //  et taxes de la ville.
   const C = cfgOf(state.config)
   if (c.statut === 'Décédé' || c.age < C.p.adultAge) return 0
-  if (c.sexe !== 'F') return maleAgeFactor(c.age) * orientationFertFactor(c.orientation)
+  // (Dogme de la Famille, CORRECTIF arbitre Thibaut du 30/10 — 4e
+  //  retour : « le multiplicateur est côté homme ET femme » — le
+  //  facteur du personnage ET celui de son époux portent chacun le
+  //  dogme de LEUR culture propre. Cf. le bloc mari ci-dessous.)
+  if (c.sexe !== 'F') {
+    return maleAgeFactor(c.age) * orientationFertFactor(c.orientation)
+      * (1 + effetsDogmeCulture(state, c.culture, 'fecondite', C))
+  }
   const ville = p.villes.find((v) => v.nom === c.ville)
   const mari = c.mariageId ? indexPopulationMonde(state).get(c.mariageId) : undefined
   if (mari && mari.sexe !== 'M') return 0
-  const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) : C.p.fertSingleFactor
+  // (Dogme de la Famille, côté ÉPOUX : un MARI de la culture
+  //  porteuse multiplie SA part du facteur de conception — une
+  //  femme d'une autre culture mariée à un porteur conçoit
+  //  elle aussi ×(1+v). Culture PROPRE de l'époux, où qu'il vive.)
+  const factorMari = mari
+    ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation)
+      * (1 + effetsDogmeCulture(state, mari.culture, 'fecondite', C))
+    : C.p.fertSingleFactor
   let proba = C.p.fertBaseRate
   proba *= femaleAgeFactor(c.age)
   proba *= factorMari
@@ -38,8 +52,10 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   // (Dogme de la Famille, 2026-10-30 : +v de fécondité pour les
   //  personnages de la culture porteuse (effet fecondite, défaut
   //  +0,1), où qu'ils vivent — culture PROPRE du personnage
-  //  (c.culture), additif au facteur : ×(1+v). Cumulé au facteur
-  //  de culture du PORTEUR ci-dessus et aux traits.)
+  //  (c.culture), additif au facteur : ×(1+v). Côté FEMME ici,
+  //  côté homme dans le return masculin ci-dessus et dans le
+  //  facteur de l'époux. Cumulé au facteur de culture du PORTEUR
+  //  ci-dessus et aux traits.)
   proba *= 1 + effetsDogmeCulture(state, c.culture, 'fecondite', C)
   proba *= orientationFertFactor(c.orientation)
   proba *= taxBirthFactor(ville, C)
