@@ -5,6 +5,12 @@
 //  bouton « Marier avec… » n'apparaît que pour la cour (le mariage
 //  manuel unit deux nobles — le reste de la population se marie au
 //  fil des tours).
+//  Colonne Dynastie · Rang (retours Thibaut 2026-10-26 : « il faut
+//  des nobles dès le début — la colonne dynastie doit correspondre
+//  à la colonne rang » PUIS « fusionner la colonne dynastie et la
+//  colonne rang ») : une SEULE cellule — nom de dynastie + badge
+//  rangDe (dynastie noble → noble de NAISSANCE, sinon rang du
+//  prestige 100/250) + prestige en muted.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character } from '../../engine/types'
@@ -13,7 +19,8 @@ import { traitDef } from '../../engine/gameData'
 import { Select, Button, fmt } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { STATUTS } from './logiquePopulation'
-import { rangSocial } from '../../engine/statutSocial'
+import { rangDe } from '../../engine/statutSocial'
+import { isNobleDyn } from '../../engine/shared'
 
 export interface PropsLignePersonnage {
   c: Character
@@ -42,7 +49,20 @@ export function LignePersonnage({
   return (
     <tr key={c.id} className={c.statut === 'Décédé' ? 'dead' : (c.metier === C.p.metierDirigeant || c.metier === C.p.metierHeritierStr) ? 'lead' : ''}>
       <td><strong>{c.prenom} {c.nom}</strong></td>
-      <td>{c.dynastie}</td>
+      <td className="small" title={`Dynastie ${c.dynastie} — prestige ${c.prestige ?? 0} — rang ${rangDe(c, C)}${isNobleDyn(c.dynastie, C) ? ' · NOBLE DE NAISSANCE (dynastie noble — 300 prestige de base)' : ' · dynastie roturière : le rang suit le prestige (roturier sous 100, bourgeois 100-250, anobli 250+)'}`}>
+        {/* Colonnes FUSIONNÉES (retour Thibaut 2026-10-26 : « fusionner
+            la colonne dynastie et la colonne rang ») : la dynastie et
+            son rang côte à côte — le rang suit la dynastie de
+            naissance (nobles : 300 prestige de base), le prestige
+            reste en muted pour le détail. */}
+        <div className="row" style={{ alignItems: 'center', gap: 4, flexWrap: 'wrap' }}>
+          <span>{c.dynastie}</span>
+          <span className={`badge ${rangDe(c, C) === 'noble' ? 'badge-info' : rangDe(c, C) === 'bourgeois' ? 'badge-neutral' : ''}`}>
+            {rangDe(c, C)}
+          </span>
+          <span className="muted">{c.prestige ?? 0}</span>
+        </div>
+      </td>
       <td>{c.sexe}</td>
       <td>{c.age}</td>
       <td>{c.ville}</td>
@@ -82,12 +102,6 @@ export function LignePersonnage({
       </td>
       <td className="small" title={c.domicile ? `Logement : ${c.domicile}` : 'Sans domicile'}>
         {c.domicile ?? '—'}
-      </td>
-      <td className="small" title={`Prestige ${c.prestige ?? 0} — rang ${rangSocial(c.prestige ?? 0)} (roturier < 100 ≤ bourgeois < 250 ≤ noble)`}>
-        <span className={`badge ${rangSocial(c.prestige ?? 0) === 'noble' ? 'badge-info' : rangSocial(c.prestige ?? 0) === 'bourgeois' ? 'badge-neutral' : ''}`}>
-          {rangSocial(c.prestige ?? 0)}
-        </span>{' '}
-        <span className="muted">{c.prestige ?? 0}</span>
       </td>
       <td className="small">
         {(c.traits ?? []).filter(Boolean).map((t) => (

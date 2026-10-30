@@ -5,6 +5,8 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Cfg } from '../../engine/gameData'
+import { coutRang } from '../../engine/habitations'
+import { fmtCout } from '../pays/pays-utils'
 import { Card } from '../ui'
 
 export function OngletPaysRangs({ C }: { C: Cfg }) {
@@ -38,6 +40,7 @@ export function OngletPaysRangs({ C }: { C: Cfg }) {
 export function OngletHabitations({ C }: { C: Cfg }) {
   const cfg = C.config
   return (
+    <>
     <Card title="Wiki — types & rangs d'habitation">
       <div className="table-wrap">
         <table className="tbl small">
@@ -47,7 +50,9 @@ export function OngletHabitations({ C }: { C: Cfg }) {
               <tr key={i}>
                 <td><strong>{h.type}</strong></td>
                 <td>{h.rang}</td>
-                <td>{h.cout || '—'}</td>
+                {/* (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+                    coût CALCULÉ des DONNÉES `couts` — le texte est vidé. */}
+                <td>{fmtCout(coutRang(h))}</td>
                 <td>{h.habitantsRequis}</td>
                 <td>{(h.metiersBase ?? []).map((e) => `${e.places} ${e.metier}`).join(', ') || '—'}</td>
                 <td>{h.domicilesDisponibles || '—'}</td>
@@ -57,5 +62,33 @@ export function OngletHabitations({ C }: { C: Cfg }) {
         </table>
       </div>
     </Card>
+    {/* (retour Thibaut 2026-10-26 : « ajoute les différents types de
+        logement dans les référentiels ») — fiche des TYPES DE
+        LOGEMENT (table domiciles) : la qualité 0-4 d'un logement
+        EST son gain de prestige par tour (habitant logé), et
+        l'attribution sert les habitants par prestige décroissant. */}
+    <Card title="Wiki — types de logement (domiciles)">
+      <p className="muted small">
+        La qualité d'un logement (échelle 0-4) est aussi son <strong>gain de prestige
+        par tour</strong> pour l'habitant logé. Attribution en fin de tour par
+        <strong> prestige décroissant</strong> : le haut rang est servi en premier,
+        un logement = un habitant, sans délogement.
+      </p>
+      <div className="table-wrap">
+        <table className="tbl small">
+          <thead><tr><th>Logement</th><th>Qualité</th><th>Gain de prestige / tour</th></tr></thead>
+          <tbody>
+            {cfg.domiciles.map((d, i) => (
+              <tr key={i}>
+                <td><strong>{d.domicile}</strong></td>
+                <td>{d.qualite}</td>
+                <td>+{d.qualite}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </Card>
+    </>
   )
 }

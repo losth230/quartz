@@ -16,7 +16,7 @@ export function OngletsMetiers({ C }: { C: Cfg }) {
         <div className="table-wrap">
           <table className="tbl small">
             <thead>
-              <tr><th>Métier</th><th>Gain 1 / tour</th><th>Gain 2 / tour</th><th>Noble seul</th><th>Genre</th><th>Attribution</th><th>Description</th></tr>
+              <tr><th>Métier</th><th>Gain 1 / tour</th><th>Gain 2 / tour</th><th>Noble seul</th><th>Genre</th><th>Attribution</th><th>Armée</th><th>Description</th></tr>
             </thead>
             <tbody>
               {cfg.metiers.map((t) => (
@@ -27,6 +27,15 @@ export function OngletsMetiers({ C }: { C: Cfg }) {
                   <td>{t.nobleSeul ? <Badge tone="info">oui</Badge> : 'non'}</td>
                   <td>{t.regleGenre || '—'}</td>
                   <td>{t.attribution || '—'}</td>
+                  {/* (Arbitrage Thibaut 2026-10-28 : « général et soldat sont
+                      des métiers, ils doivent donc vivre dans la banque » —
+                      puissance d'armée et âges de recrutement portés par la
+                      ligne de métier.) */}
+                  <td>
+                    {t.puissanceArmee
+                      ? `${t.puissanceArmee} pts${t.ageMin !== undefined || t.ageMax !== undefined ? ` (${t.ageMin ?? '—'} à ${t.ageMax ?? '—'} ans)` : ''}`
+                      : '—'}
+                  </td>
                   <td className="muted">{t.description}</td>
                 </tr>
               ))}

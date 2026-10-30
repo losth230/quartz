@@ -1,24 +1,59 @@
 // ══════════════════════════════════════════════════════════════════════
-//  UNE VILLE de la page Pays : nom / taxes / proximité, actions
-//  (transfert, suppression, cité libre), cultures présentes, garnison
-//  des habitations, rang & type, consommation, aménagements et
-//  bâtiments (choix à catégories — marqueur (y)), lignes « Autres »,
-//  production de la ville.
+//  UNE VILLE de la page Pays — structure PAR BLOCS (retour arbitre
+//  Thibaut 2026-10-25 « regrouper par blocs ») : (1) TÊTE : nom /
+//  taxes / proximité en 3 colonnes égales PUIS rang d'habitation /
+//  type de ville en 2 colonnes égales sur la rangée 2 + ligne
+//  habitants requis (retour Thibaut 2026-10-26, capture n°3 :
+//  rang & type comblent l'espace vide sous les trois cases) + BLOC
+//  BONHEUR en HAUT DROITE (moyenne + 5 mini-jauges) — ni la culture
+//  NI le compte de vivants ne vivent en tête (retours Thibaut
+//  2026-10-26 : le tableau « Cultures présentes » porte la culture
+//  ET le total des vivants) ; (2) POPULATION, GARNISON, LOGEMENTS
+//  & MÉTIERS en DEUX COLONNES (retour Thibaut 2026-10-28 : damier
+//  2×2 « ils ne rentrent pas » — SUPERSEDÉ le même jour, 3e
+//  retour : colonne gauche culture + logements + garnison
+//  EMPILÉS, colonne droite les métiers)
+//  (retour Thibaut 2026-10-26 : tableau des cultures présentes —
+//  majoritaire en gras avec liseré, part en %, total des vivants
+//  — ET tableau détaillé de la garnison, origine par origine avec
+//  plancher et total — arbitre : le détail reste TOUJOURS visible,
+//  relooké en classes CSS dédiées) ; (2bis) MÉTIERS (retour
+//  Thibaut 2026-10-27 : « un nouveau tableau avec les 3 tableaux
+//  de logement, culture et garnison, qui recense tous les métiers
+//  disponibles et occupés » — même données que le panneau
+//  Population ; retour 2026-10-28 : format N/M « en poste /
+//  capacité » comme les logements, et SEULS les métiers PRÉSENTS
+//  (occupés) de la ville s'affichent ; retour 2026-10-28 bis :
+//  les ENFANTS ne sont pas des sans-emplois — ligne « Enfant »
+//  à part qui devient Sans-emploi à l'âge adulte ; retour
+//  2026-10-28 ter : métiers DISPONIBLES seuls — SUPERSEDÉ par
+//  le 4e retour : métiers PRÉSENTS ET DISPONIBLES sans
+//  distinction (occupés OU offerts cap ≥ 1)) ; (3) CONSTRUCTIONS :
+//  aménagements et bâtiments (choix à catégories — marqueur (y)) —
+//  les COÛTS des aménagements vivent dans le POPUP de fabrication
+//  , plus dans le titre (retour Thibaut 2026-10-26) ; (4) AUTRES ;
+//  (5) PRODUCTION : par défaut SEULEMENT les ressources produites,
+//  toggle « tout afficher » (retour Thibaut 2026-10-26 — supersede
+//  le marqueur (r) « toutes les ressources même à 0 » du
+//  2026-10-15) ; (6) ACTIONS RARES en BAS de carte (transfert,
+//  suppression, cité libre) — elles ne cannibalisent plus la tête.
 //  (RETRAIT 2026-10-19, retour arbitre : la heatmap d'attrait migratoire
 //   a été retirée avec la migration spontanée par Tourisme — à refaire.)
 //  (Extrait de PlayerView.tsx — un fichier par UI.)
 // ══════════════════════════════════════════════════════════════════════
 
+import { useState } from 'react'
 import type { AutreDef, City, GameState, Player } from '../../engine/types'
 import { useGame } from '../../state/store'
 import * as remote from '../../supabase/client'
 import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
-import { constructionsRefs, parseCoutTexte, resumeConstruction } from '../../engine/constructions'
+import { constructionsRefs, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
-import { scoresVille, bonheurVille } from '../../engine/bonheur'
-import { initStockVille } from '../../engine/domiciles'
-import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation } from '../../engine/habitations'
+import { scoresVille, bonheurVille, bonusBonheurRegime } from '../../engine/bonheur'
+import { initStockVille, stockRang, vivantsVille, domicilesApportesVille, domicilesCultureVille } from '../../engine/domiciles'
+import { occupationsMetierVille } from '../../engine/metiers'
+import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
 import { supprimerVille, transfererVille } from '../../engine/villes'
@@ -29,7 +64,7 @@ import { ChoicePicker } from '../Picker'
 import { faireConstruire, faireBatParFamille } from './Constructions'
 import {
   Field, ORIGINE_LABEL, RESSOURCES_FLUX, FAM_BADGES,
-  fmtEffets, fmtCout, fmtNum,
+  fmtEffets, fmtCout, fmtNum, titreAmenagement,
 } from './pays-utils'
 
 export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
@@ -41,6 +76,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   setPlayer: (fn: (p: Player, s: GameState) => void) => void
 }) {
   const { state, update, salon } = useGame()
+  // (Retour Thibaut 2026-10-26 « cache par défaut les ressources
+  //  non produites » : la vue repliée n'affiche que les ressources
+  //  produites ; le toggle déplie le tableau complet. État local à
+  //  la carte — pas persisté, pas poussé.)
+  const [voirToutProd, setVoirToutProd] = useState(false)
   // Garde-fou type : PlayerView ne rend cette carte QUE si une partie
   //  est chargée (state non-null côté App).
   if (!state) return null
@@ -53,7 +93,6 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   //  inférieur, qui doit être présent dans la ville).
   const amRefsBase = refs.filter((r) => r.categorie === 'Aménagement' && !r.remplaceAmenagement)
   const amRefsTier = refs.filter((r) => r.categorie === 'Aménagement' && r.remplaceAmenagement)
-  const coutTier = (tier: number) => amRefsTier.find((a) => (a.rangMinHabitation ?? 0) === tier)?.cout ?? '—'
   // Améliorations proposées : uniquement celles dont le tier inférieur
   //  est présent à la ville (et masquées si le rang d'habitation est
   //  insuffisant — la catégorie vide est de toute façon masquée par
@@ -84,6 +123,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
         {/* Ligne de tête densifiée (retour Thibaut 2026-10-14) :
             nom de la ville EN GRAS + niveau de taxes sur la
             même ligne. */}
+        <div className="ville-tete-wrap">
+        {/* Colonne GAUCHE de la zone de tête (retour Thibaut
+            2026-10-26, capture n°3) : les 5 cases sur 2 rangées +
+            la ligne habitants requis — le bloc bonheur (colonne
+            droite) borde l'ensemble, plus d'espace vide dessous. */}
+        <div>
         <div className="ville-tete">
         <Field label="Nom">
           <TextInput
@@ -120,176 +165,53 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             onChange={(v) => setPlayer((x) => { x.villes[idx].proximite = v })}
           />
         </Field>
-        </div>
-        {/* Actions de ville : transfert à un autre joueur
-            (capture, vente, cadeau — la ville ET ses habitants
-            suivent) et suppression (les habitants restent
-            inscrits dans la population). Retour Thibaut. */}
-        <div className="badges-wrap">
+        {/* Rang d'habitation et type de ville (Ville / Château) sur
+            la RANGÉE 2 de la zone de tête — retour Thibaut 2026-10-26
+            (capture n°3) : ils comblent l'espace vide sous les trois
+            cases (le bloc bonheur est plus haut que la seule rangée
+            de cases). Échelles de rangs différentes : Hameau → Cité
+            → Grande Cité ou Motte → Donjon → Forteresse. */}
+        <Field label="Rang d'habitation">
           <Select
-            value=""
-            options={[
-              { value: '' as const, label: '⇄ Transférer la ville à…' },
-              ...state.players
-                .filter((x) => x.n !== p.n)
-                .map((x) => ({ value: String(x.n), label: `${x.nom} (J${x.n})` })),
-            ]}
-            onChange={(v) => v && update((st) => {
-              const src = st.players.find((x) => x.n === joueur)
-              const dst = st.players.find((x) => x.n === parseInt(v, 10))
-              if (src && dst) {
-                const nomAvant = src.villes[idx]?.nom ?? ''
-                transfererVille(st, src, idx, dst)
-                // PROTOCOLE v2 (bug 2026-10-17 : ville transférée
-                //  perdue en fin de tour) : le transfert est une
-                //  mutation INTER-JOUEURS — la section du
-                //  RECEVEUR, poussée avant, l'écraserait à la
-                //  fusion. Il part donc aussi en ÉVÉNEMENT
-                //  PARTAGÉ (cp_events, type 'transfert_ville'),
-                //  rejoué par la résolution APRÈS la fusion des
-                //  sections (idempotent). best effort : si
-                //  l'insert échoue, le transfert reste visible
-                //  localement chez l'émetteur.
-                void remote.pousserEvenementPartage(
-                  salon, st.turn, joueur, 'transfert_ville',
-                  { ville: nomAvant, src: joueur, dst: parseInt(v, 10) },
-                )
+            value={ville.rang ?? rangsDisponibles(typeVille(ville), C)[0]}
+            options={rangsDisponibles(typeVille(ville), C).map((r) => {
+              const def = (C.config.typesHabitation ?? []).find(
+                (d) => d.type === typeVille(ville) && d.rang === r)
+              // (Retour Thibaut 2026-10-27 « idem bâtiments/aménagements ») :
+              //  le coût du rang vient des DONNÉES `couts` (agrégées par
+              //  coutRang), plus du texte.
+              const parts = Object.entries(coutRang(def)).filter(([, v]) => v > 0)
+              return {
+                value: r,
+                label: parts.length
+                  ? `${r} (${parts.map(([res, v]) => `${fmt(v)} ${res}`).join(' + ')})`
+                  : r,
               }
             })}
+            onChange={(v) => setPlayer((x, s) => {
+              const ville = x.villes[idx]
+              ville.rang = v
+              debiterCoutHabitation(s, x, ville, C)
+              // VAGUE C (2026-10-24) : le rang DÉFINIT l'offre de
+              //  domiciles — le stock suit le changement de rang.
+              initStockVille(ville, C)
+            })}
           />
-          <Button
-            tone="danger"
-            onClick={() => {
-              if (!window.confirm(`Supprimer « ${ville.nom} » ? Sa population classique sera DÉFINITIVEMENT supprimée avec elle (la cour reste inscrite ; l'arbitre la reloge).`)) return
-              update((st) => {
-                const src = st.players.find((x) => x.n === joueur)
-                if (src) supprimerVille(st, src, idx)
-              })
-            }}
-          >
-            🗑 Supprimer
-          </Button>
-          <Button
-            title="La ville quitte le joueur et devient une cité libre — il reçoit 1 émissaire placé dans cette cité"
-            onClick={() => {
-              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité (retour Thibaut).`)) return
-              update((st) => {
-                const src = st.players.find((x) => x.n === joueur)
-                if (src) villeDevientCiteLibre(st, src, idx)
-              })
-            }}
-          >
-            🏼 Devenir cité libre
-          </Button>
-        </div>
-        <div className="muted small">
-          Culture majoritaire : <strong>{ville.culture}</strong> · {nbVivants} habitant(s) vivant(s)
-        </div>
-        {culturesTriees.length > 0 && (
-          <div className="small">
-            {culturesTriees.map(([cult, nb], i) => (
-              <span key={cult}>
-                {i > 0 && ' · '}
-                {cult === ville.culture
-                  ? <strong>{cult} : {nb}</strong>
-                  : <span className="muted">{cult} : {nb}</span>}
-              </span>
-            ))}
-          </div>
-        )}
-        {/* BONHEUR de la ville (vague E, design bonheur 2026-10-24) :
-            moyenne simple des 5 facteurs — jauge compacte avec le
-            détail au survol (info-bulle). */}
-        {(() => {
-          const s = scoresVille(state, p, ville, C)
-          const b = bonheurVille(s)
-          const couleur = b >= 70 ? 'var(--green, green)' : b >= 40 ? 'var(--yellow, #b8860b)' : 'var(--red, #b22222)'
-          return (
-            <div className="small" title={`Bonheur ${b}/100 — emploi ${s.emploi}, logement ${s.logement}, sécurité ${s.securite}, tourisme ${s.tourisme}, santé ${s.sante}`}>
-              Bonheur : <strong style={{ color: couleur }}>{b}</strong>{' '}
-              <span className="muted">/ 100</span>
-            </div>
-          )
-        })()}
-        {/* Garnison des habitations, notée sous la culture —
-            VALEUR D'ÉTAT (pas un flux) : base du rang + bâtiments
-            + loi éventuelle du régime ; ne change pas à chaque tour. */}
-        {(() => {
-          const g = garnisonHabitationVille(p, ville, C, state)
-          const lignes = detailGarnisonVille(p, ville, C, state)
-          const sousTotal = lignes.reduce((n, l) => n + l.valeur, 0)
-          const plancher = g - sousTotal
-          return (
-            <div className="small stack small-gap">
-              <div>
-                Garnison des habitations : <strong>{fmt(g)}</strong>
-                <span className="muted small"> — d'où vient ce chiffre :</span>
-              </div>
-              <table className="small" style={{ borderCollapse: 'collapse', width: '100%' }}>
-                <tbody>
-                  {lignes.map((l, i) => (
-                    <tr key={i}>
-                      <td className="muted small">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
-                      <td>{l.label}</td>
-                      <td className={l.valeur < 0 ? 'neg' : ''}>{l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}</td>
-                    </tr>
-                  ))}
-                  {plancher > 0 && (
-                    <tr>
-                      <td className="muted small">plancher</td>
-                      <td>« Combler les lacunes » : minimum 30</td>
-                      <td>+{fmt(plancher)}</td>
-                    </tr>
-                  )}
-                  <tr>
-                    <td />
-                    <td><strong>Total</strong></td>
-                    <td><strong>{fmt(g)}</strong></td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          )
-        })()}
-        {/* Rang d'habitation et type de ville (Ville / Château)
-            sur la même ligne — échelles de rangs différentes :
-            Hameau → Cité → Grande Cité ou Motte → Donjon → Forteresse. */}
-        <div className="grid-2">
-          <Field label="Rang d'habitation">
-            <Select
-              value={ville.rang ?? rangsDisponibles(typeVille(ville), C)[0]}
-              options={rangsDisponibles(typeVille(ville), C).map((r) => {
-                const def = (C.config.typesHabitation ?? []).find(
-                  (d) => d.type === typeVille(ville) && d.rang === r)
-                return {
-                  value: r,
-                  label: def?.cout ? `${r} (${def.cout})` : r,
-                }
-              })}
-              onChange={(v) => setPlayer((x, s) => {
-                const ville = x.villes[idx]
-                ville.rang = v
-                debiterCoutHabitation(s, x, ville, C)
-                // VAGUE C (2026-10-24) : le rang DÉFINIT l'offre de
-                //  domiciles — le stock suit le changement de rang.
-                initStockVille(ville, C)
-              })}
-            />
-          </Field>
-          <Field label="Type de ville">
-            <Select
-              value={typeVille(ville)}
-              options={[{ value: 'Ville', label: 'Ville (Hameau → Cité → Grande Cité)' }, { value: 'Château', label: 'Château (Motte → Donjon → Forteresse)' }]}
-              onChange={(v) => setPlayer((x, s) => {
-                const ville = x.villes[idx]
-                ville.type = v
-                // le rang doit appartenir à l'échelle du nouveau type
-                const rangs = rangsDisponibles(v, C)
-                if (!rangs.includes(ville.rang ?? '')) ville.rang = rangs[0]
-                debiterCoutHabitation(s, x, ville, C)
-              })}
-            />
-          </Field>
+        </Field>
+        <Field label="Type de ville">
+          <Select
+            value={typeVille(ville)}
+            options={[{ value: 'Ville', label: 'Ville (Hameau → Cité → Grande Cité)' }, { value: 'Château', label: 'Château (Motte → Donjon → Forteresse)' }]}
+            onChange={(v) => setPlayer((x, s) => {
+              const ville = x.villes[idx]
+              ville.type = v
+              // le rang doit appartenir à l'échelle du nouveau type
+              const rangs = rangsDisponibles(v, C)
+              if (!rangs.includes(ville.rang ?? '')) ville.rang = rangs[0]
+              debiterCoutHabitation(s, x, ville, C)
+            })}
+          />
+        </Field>
         </div>
         {/* Habitants requis par le rang courant, en dessous du rang.
             (La consommation par tour des rangs d'habitation est
@@ -306,17 +228,351 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             </div>
           )
         })()}
+        </div>
+        {/* BONHEUR (retour arbitre Thibaut 2026-10-25) : HAUT DROITE
+            de la carte — moyenne + les 5 axes en MINI-JAUGES (label +
+            barre colorée + valeur), plus seulement une info-bulle.
+            Vague E design bonheur 2026-10-24 : moyenne simple des 5
+            facteurs, indicateur PUR à ce jour. */}
+        {(() => {
+          const s = scoresVille(state, p, ville, C)
+          // (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie
+          //  « Le pouvoir du peuple ») : bonus de Bonheur du régime
+          //  du joueur, plafonné à 100 — même calcul que le moteur
+          //  (bonheurVilleComplete).
+          const bonus = bonusBonheurRegime(p, C)
+          const b = Math.min(100, bonheurVille(s) + bonus)
+          const axes: Array<[string, number]> = [
+            ['Emploi', s.emploi],
+            ['Logement', s.logement],
+            ['Sécurité', s.securite],
+            ['Tourisme', s.tourisme],
+            ['Santé', s.sante],
+          ]
+          const coul = (v: number) =>
+            v >= 70 ? 'var(--green, green)' : v >= 40 ? 'var(--yellow, #b8860b)' : 'var(--red, #b22222)'
+          return (
+            <div
+              className="bonheur-bloc"
+              title="Bonheur : moyenne simple des 5 facteurs (emploi, logement, sécurité, tourisme, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré) + la loi du régime (refonte « 8 lois », plafonné à 100)"
+            >
+              <div className="bonheur-moyen">
+                Bonheur <strong style={{ color: coul(b) }}>{b}</strong>
+                <span className="muted">/100</span>
+                {bonus > 0 && <span className="muted small"> ({p.regime} +{bonus})</span>}
+              </div>
+              {axes.map(([label, v]) => (
+                <div key={label} className="bonheur-axe" title={`${label} : ${v}/100`}>
+                  <span className="bonheur-axe-label">{label}</span>
+                  <span className="bonheur-axe-barre"><span style={{ width: `${v}%`, background: coul(v) }} /></span>
+                  <span className="bonheur-axe-val">{v}</span>
+                </div>
+              ))}
+            </div>
+          )
+        })()}
+        </div>
+        {/* (Retours Thibaut 2026-10-26 : « on voit deux fois la
+            culture » puis capture suivante « la mention N habitant(s)
+            vivant(s) est inutile au-dessus de Cultures présentes » —
+            la tête ne rend NI la culture NI le compte de vivants :
+            le tableau « Cultures présentes » du bloc POPULATION &
+            GARNISON est LA place de la culture (majoritaire en gras
+            avec liseré) ET du total des vivants (pied du tableau).) */}
+        {/* (Bonheur déplacé en HAUT DROITE de la tête — retour
+            arbitre 2026-10-25 ; l'ancienne ligne d'info est retirée.) */}
 
+        {/* POPULATION, GARNISON, LOGEMENTS & MÉTIERS en DEUX
+            COLONNES (retour Thibaut 2026-10-28, 3e retour du
+            jour : « deux colonnes, une avec 3 tableaux :
+            culture, logement et garnison, et une deuxième avec
+            les métiers » — SUPERSEDÉ le damier 2×2 du matin) :
+            colonne gauche les 3 tableaux empilés, colonne
+            droite les métiers.
+            La garnison est une VALEUR D'ÉTAT (pas un flux) : base
+            du rang + bâtiments + loi éventuelle du régime ; ne
+            change pas à chaque tour. Arbitre : le tableau détaillé
+            reste TOUJOURS visible — relooké en classes CSS dédiées
+            (.ville-table), plus de styles inline ni de titre
+            verbeux. */}
+        {(() => {
+          const g = garnisonHabitationVille(p, ville, C, state)
+          const lignes = detailGarnisonVille(p, ville, C, state)
+          const sousTotal = lignes.reduce((n, l) => n + l.valeur, 0)
+          const plancher = g - sousTotal
+          const part = (nb: number) =>
+            nbVivants > 0 ? `${Math.round((100 * nb) / nbVivants)} %` : '—'
+          // ── LOGEMENTS (retour Thibaut 2026-10-26 : 3e tableau —
+          //  2026-10-28 : colonne gauche, SOUS les cultures) : parc
+          //  par type de domicile, meilleure qualité
+          //  d'abord — capacité du rang (City.domiciles, repli
+          //  stockRang pour un état non normalisé) + apports des
+          //  constructions (domicilesApportesVille : Poste de garde,
+          //  quartiers…) ; occupés = habitants attribués (retour
+          //  Thibaut 2026-10-26 : 1 logement = 1 HABITANT, plus de
+          //  foyers — les bâtiments les plus qualitatifs servent
+          //  d'abord les personnages de haut rang). Maison de
+          //  notable et Palais RÉSERVÉS aux nobles (retour Thibaut
+          //  2026-10-28, 5e retour du jour).
+          const stockLog = Array.isArray(ville.domiciles)
+            ? ville.domiciles
+            : stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
+          const capLog = new Map<string, number>()
+          for (const e of stockLog) capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          for (const e of domicilesApportesVille(ville, C)) {
+            capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          }
+          // (refonte 12 lois, 2026-10-29 : loi de VILLE de la
+          //  culture — Communautarisme « Logements élargis » +5
+          //  Taudis, Lunisme « Villes Saintes » +2 Palais.
+          //  REMPLACÉ 2026-10-29, 6e retour Thibaut : ces lits
+          //  sont désormais ATTRIBUTABLES — occLog ci-dessous
+          //  reflète leur occupation, les sans-abri chutent.)
+          for (const e of domicilesCultureVille(ville, C)) {
+            capLog.set(e.domicile, (capLog.get(e.domicile) ?? 0) + e.nombre)
+          }
+          const habitantsLog = vivantsVille(state, p.n, ville)
+          const occLog = new Map<string, number>()
+          for (const c of habitantsLog) {
+            if (c.domicile) occLog.set(c.domicile, (occLog.get(c.domicile) ?? 0) + 1)
+          }
+          const sansLogement = habitantsLog.filter((c) => !c.domicile).length
+          const lignesLog = C.config.domiciles
+            .filter((d) => (capLog.get(d.domicile) ?? 0) > 0)
+            .sort((a, z) => z.qualite - a.qualite)
+            .map((d) => {
+              const cap = capLog.get(d.domicile) ?? 0
+              const occ = occLog.get(d.domicile) ?? 0
+              return { nom: d.domicile, cap, occ }
+            })
+          const capTotale = lignesLog.reduce((n, l) => n + l.cap, 0)
+          const habitantsLoges = habitantsLog.length - sansLogement
+          // ── MÉTIERS (retour Thibaut 2026-10-27 : « un nouveau
+          //  tableau […] qui recense tous les métiers disponibles
+          //  et occupés ») : colonne DROITE, à côté des 3
+          //  tableaux empilés (retour 2026-10-28), mêmes données que le
+          //  panneau Population (helper moteur
+          //  occupationsMetierVille, testé). Retour Thibaut
+          //  2026-10-28 « n'affiche que les métiers présents dans
+          //  la ville » (filtre occupés, SUPERSEDÉ ci-dessous) ;
+          //  même retour : les ENFANTS ne sont pas des
+          //  sans-emplois — ligne neutre « Enfant » à part (cap
+          //  illimitée), le Sans-emploi ne compte que les adultes.
+          //  Retour Thibaut 2026-10-28 (2e retour du jour) « les
+          //  métiers disponibles » (SUPERSEDÉ ci-dessous), puis 4e
+          //  retour : PRÉSENTS ET DISPONIBLES SANS DISTINCTION —
+          //  un métier s'affiche s'il est OCCUPÉ (enPoste > 0,
+          //  même non plafonné : Dirigeant, Héritier, Ministre,
+          //  armée, Banquier…, cap illimitée → N/—) OU OFFERT
+          //  (cap finie ≥ 1 : base du rang + emplacements des
+          //  constructions, un poste libre se lit N/M — ex. 0/4).
+          //  Ne restent masqués que les métiers NI occupés NI
+          //  offerts (0/0). Les lignes neutres restent
+          //  (Enfant, Sans-emploi).
+          const lignesMet = occupationsMetierVille(
+            habitantsLog, ville, C, { state, joueur },
+          )
+          const enPosteTotal = lignesMet.reduce(
+            (n, l) => n + (l.metier ? l.enPoste : 0), 0,
+          )
+          const metiersAffiches = lignesMet.filter(
+            (l) => l.metier === null || l.enPoste > 0 || (Number.isFinite(l.cap) && l.cap >= 1),
+          )
+          return (
+            <div className="ville-duo-cols">
+              <div className="ville-col-stack">
+                <div>
+                  <div className="ville-duo-titre">Cultures présentes</div>
+                  {culturesTriees.length === 0 ? (
+                    <div className="muted small">
+                      aucun habitant — culture de la ville : <strong>{ville.culture}</strong>
+                    </div>
+                  ) : (
+                    <table className="ville-table">
+                      <tbody>
+                        {culturesTriees.map(([cult, nb]) => (
+                          <tr key={cult} className={cult === ville.culture ? 'ligne-major' : ''}>
+                            <td>
+                              {cult === ville.culture
+                                ? <strong>{cult}</strong>
+                                : <span className="muted">{cult}</span>}
+                            </td>
+                            <td className="num">{nb}</td>
+                            <td className="num muted">{part(nb)}</td>
+                          </tr>
+                        ))}
+                        <tr className="ligne-total">
+                          <td><strong>Habitants vivants</strong></td>
+                          <td className="num"><strong>{nbVivants}</strong></td>
+                          <td className="num muted">{nbVivants > 0 ? '100 %' : '—'}</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                {/* ── LOGEMENTS (retour Thibaut 2026-10-26 — puis
+                    damier 2×2, retour 2026-10-28 — SUPERSEDÉ le
+                    même jour : 2e tableau de la colonne gauche,
+                    empilé sous les cultures).
+                    Colonnes : type · occupés/capacité (retour Thibaut
+                    2026-10-27 : la colonne « places libres » est
+                    retirée — redondante, cap − occupés se lit déjà
+                    dans occ/cap) ; le total rend habitants logés /
+                    capacité totale. */}
+                <div>
+                  <div
+                    className="ville-duo-titre"
+                    title="Par type de domicile, meilleure qualité d'abord : habitants/capacité. 1 logement = 1 habitant ; capacité = offre du rang + apports des constructions (Poste de garde, quartiers, Tour de sorcier…) ; les bâtiments les plus qualitatifs servent d'abord les personnages de haut rang (prestige décroissant). Maisons de notable et Palais RÉSERVÉS aux nobles (retour 2026-10-28) : un roturier ou un bourgeois ne peut ni les recevoir ni les garder."
+                  >
+                    Logements : <strong>{fmt(capTotale)}</strong>
+                  </div>
+                  {lignesLog.length === 0 ? (
+                    <div className="muted small">aucun logement</div>
+                  ) : (
+                    <table className="ville-table">
+                      <tbody>
+                        {lignesLog.map((l) => (
+                          <tr key={l.nom}>
+                            <td>{l.nom}</td>
+                            <td className="num">{fmt(l.occ)}/{fmt(l.cap)}</td>
+                          </tr>
+                        ))}
+                        {sansLogement > 0 && (
+                          <tr>
+                            <td className="neg">sans logement</td>
+                            <td className="num neg">{fmt(sansLogement)}</td>
+                          </tr>
+                        )}
+                        <tr className="ligne-total">
+                          <td><strong>Habitants logés</strong></td>
+                          <td className="num"><strong>{fmt(habitantsLoges)}/{fmt(capTotale)}</strong></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                <div>
+                  <div className="ville-duo-titre">
+                    Garnison des habitations : <strong>{fmt(g)}</strong>
+                  </div>
+                  <table className="ville-table">
+                    <tbody>
+                      {lignes.map((l, i) => (
+                        <tr key={i}>
+                          <td className="muted">{ORIGINE_LABEL[l.origine] ?? l.origine}</td>
+                          <td>{l.label}</td>
+                          <td className={l.valeur < 0 ? 'num neg' : 'num'}>
+                            {l.valeur > 0 ? '+' : ''}{fmt(l.valeur)}
+                          </td>
+                        </tr>
+                      ))}
+                      {/* (refonte 12 lois, 2026-10-29 : le plancher
+                          réconcilie le total CLAMPÉ (≥ 0) avec les
+                          lignes — Ferveur martiale peut rendre la
+                          somme négative, le total affiche 0 ;
+                          REMPLACÉ l'unique ligne « Combler les
+                          lacunes » minimum 30, plancher historique
+                          des technologies supprimées le 2026-10-24,
+                          conservé pour un total POSITIF non détaillé.) */}
+                      {plancher > 0 && (
+                        <tr>
+                          <td className="muted">plancher</td>
+                          <td>« Combler les lacunes » : minimum 30</td>
+                          <td className="num">+{fmt(plancher)}</td>
+                        </tr>
+                      )}
+                      {plancher < 0 && (
+                        <tr>
+                          <td className="muted">plancher</td>
+                          <td>Ferveur martiale : garnison maintenue à 0</td>
+                          <td className="num">{fmt(plancher)}</td>
+                        </tr>
+                      )}
+                      <tr className="ligne-total">
+                        <td />
+                        <td><strong>Total</strong></td>
+                        <td className="num"><strong>{fmt(g)}</strong></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              {/* ── MÉTIERS (retours Thibaut 2026-10-27, 2026-10-28
+                  « présents » puis « disponibles » — tous deux
+                  SUPERSEDÉS par le 4e retour du jour) : PRÉSENTS
+                  ET DISPONIBLES SANS DISTINCTION — un métier
+                  s'affiche s'il est OCCUPÉ (enPoste > 0, même non
+                  plafonné : Dirigeant, Héritier, Ministre, armée…,
+                  cap illimitée → N/—) OU OFFERT (cap finie ≥ 1 :
+                  base du rang + emplacements des constructions —
+                  un poste libre se lit N/M, ex. 0/4) ; ne restent
+                  masqués que les métiers ni occupés ni offerts
+                  (0/0). Avec les lignes neutres Enfant (les
+                  enfants ne sont pas des sans-emplois — retour
+                  2026-10-28 : ligne à part, ils deviennent
+                  Sans-emploi à l'âge adulte) et Sans-emploi
+                  (adultes, rôle neutre), et le total en poste /
+                  vivants.
+                  Format N/M COMME LES
+                  LOGEMENTS (retour Thibaut 2026-10-28) : en poste /
+                  capacité — « — » en dénominateur pour les métiers
+                  non plafonnés (rôles de cour, armée, Banquier,
+                  Troubadour…). Surnombre en rouge (cap baissée,
+                  aménagement perdu — cf. reaffecterMetiers). */}
+              <div>
+                <div
+                  className="ville-duo-titre"
+                  title="Les métiers PRÉSENTS ET DISPONIBLES dans la ville, sans distinction : un métier s'affiche s'il est occupé (même non plafonné — Dirigeant, Héritier, Ministre… : capacité illimitée notée « — ») ou offert par la ville (cap finie d'au moins 1 place : base du rang d'habitation + emplacements des bâtiments et aménagements — ex. Poste de garde : +4 Garde) ; un poste libre se lit N/M. Ne restent masqués que les métiers ni occupés ni offerts. Ligne Enfant : les enfants ne sont pas des sans-emplois — ils deviennent Sans-emploi à l'âge adulte."
+                >
+                  Métiers : <strong>{fmt(enPosteTotal)}</strong> en poste
+                </div>
+                <table className="ville-table">
+                  <tbody>
+                    {metiersAffiches.map((l) => (
+                      <tr key={l.metier ?? (l.enfants ? 'enfants' : 'sans')}>
+                        <td>
+                          {l.metier
+                            ? l.metier
+                            : l.enfants
+                              ? <span className="muted" title="Enfant : pas un sans-emploi — devient Sans-emploi à l'âge adulte (un métier lui est attribué si un poste est libre)">Enfant</span>
+                              : <span className="muted" title="Sans-emploi : rôle neutre — impôt nul, aucun effet">Sans-emploi</span>}
+                        </td>
+                        <td className={
+                          Number.isFinite(l.cap) && l.enPoste > l.cap
+                            ? 'num neg'
+                            : 'num'
+                        }>
+                          {fmt(l.enPoste)}/{
+                            Number.isFinite(l.cap)
+                              ? fmt(l.cap)
+                              : <span className="muted">—</span>
+                          }
+                        </td>
+                      </tr>
+                    ))}
+                    <tr className="ligne-total">
+                      <td><strong>Habitants en poste</strong></td>
+                      <td className="num"><strong>{fmt(enPosteTotal)}/{fmt(nbVivants)}</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )
+        })()}
         {/* ── Aménagements et bâtiments CÔTE À CÔTE (densification,
             retour Thibaut 2026-10-14) ── */}
         <div className="ville-constr">
           <div>
+        {/* (Retour Thibaut 2026-10-26 : les coûts vivent dans le
+            POPUP de fabrication — chaque option du picker affiche
+            déjà son coût (tier 1 : référentiel ; tiers 2/3 : coût
+            uniforme) — plus de coûts dans le titre.) */}
         <div className="mini-title">
           Aménagements
-          <span className="muted small">
-            {' '}· coût tier 1 : selon le référentiel · tier 2 : {coutTier(2)} (habitation de rang 2) · tier 3 : {coutTier(3)} (rang 3)
-            {reducBatisseurs ? ' (réduit par le Camp de bâtisseurs)' : ''}
-          </span>
+          {reducBatisseurs && (
+            <span className="muted small"> · coûts réduits (Camp de bâtisseurs)</span>
+          )}
         </div>
         {(ville.amenagements ?? []).length === 0 && <div className="muted small">aucun</div>}
         {(ville.amenagements ?? []).map((a, ai) => {
@@ -324,7 +580,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           return (
             <div key={ai} className="ligne-construction">
               <span className="badge badge-good">
-                {a}
+                {/* (Retour Thibaut 2026-10-27 : la case requise vit
+                    entre parenthèses dans le TITRE.) */}
+                {titreAmenagement(a, ref?.terrain)}
                 <button
                   className="badge-x"
                   title="Retirer"
@@ -334,8 +592,8 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   })}
                 >×</button>
               </span>
-              <span className="muted small" title={ref?.description ?? ''}>
-                {ref ? `${resumeConstruction(ref) || ref.production || '—'}${ref.terrain ? ` (${ref.terrain})` : ''}` : '—'}
+              <span className="muted small">
+                {ref ? (resumeConstruction(ref, C.config) || '—') : '—'}
               </span>
             </div>
           )
@@ -355,11 +613,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Aménagements',
                 options: amRefsBase.map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))}${a.terrain ? ` · ${a.terrain}` : ''}`,
+                  // (Retour Thibaut 2026-10-27 : la case requise vit
+                  //  entre parenthèses dans le TITRE — plus besoin du
+                  //  suffixe « · terrain » à droite du coût.)
+                  metier: titreAmenagement(a.nom, a.terrain),
+                  droite: fmtCout(coutConstructionRef(a)),
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                   ].filter(Boolean).join('\n'),
                 })),
               },
@@ -367,11 +627,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Améliorations · tier 2',
                 options: ameliorationsTier(2).map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))} · améliore ${a.remplaceAmenagement}`,
+                  metier: titreAmenagement(a.nom, a.terrain),
+                  droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                     `Remplace un « ${a.remplaceAmenagement} » de ${ville.nom} (habitation de rang 2 minimum).`,
                   ].filter(Boolean).join('\n'),
                 })),
@@ -380,11 +639,10 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 label: 'Améliorations · tier 3',
                 options: ameliorationsTier(3).map((a) => ({
                   value: a.nom,
-                  metier: a.nom,
-                  droite: `${fmtCout(parseCoutTexte(a.cout))} · améliore ${a.remplaceAmenagement}`,
+                  metier: titreAmenagement(a.nom, a.terrain),
+                  droite: `${fmtCout(coutConstructionRef(a))} · améliore ${a.remplaceAmenagement}`,
                   description: [
-                    resumeConstruction(a) || a.production || '',
-                    a.description,
+                    resumeConstruction(a, C.config),
                     `Remplace un « ${a.remplaceAmenagement} » de ${ville.nom} (habitation de rang 3 minimum).`,
                   ].filter(Boolean).join('\n'),
                 })),
@@ -409,7 +667,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           // gris-bleu pour les bâtiments sans famille.
           const clFam = FAM_BADGES[ref?.famille ?? ''] ?? 'badge-info'
           const resume = [
-            resumeConstruction(ref) || ref?.production || '',
+            resumeConstruction(ref, C.config),
             // Garnison déjà incluse dans le résumé structuré ; repli :
             !ref?.effets && garnison > 0 ? `Garnison +${garnison}` : '',
             !ref && Object.keys(effets).length > 0 ? fmtEffets(effets, C) : '',
@@ -424,7 +682,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   onClick={() => setPlayer((x) => { x.villes[idx].batiments.splice(bi, 1) })}
                 >×</button>
               </span>
-              <span className="muted small" title={ref?.description ?? ''}>
+              <span className="muted small">
                 {resume || '—'}
               </span>
             </div>
@@ -434,7 +692,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           {/* Marqueur (y) : un BOUTON PAR TYPE de bâtiment
               (militaire, économique, guilde, capitale —
               arbitrage Thibaut : les 5 familles existantes) +
-              description de chaque bâtiment AVANT le choix. */}
+              résumé des effets de chaque bâtiment AVANT le choix.
+              (Retour Thibaut 2026-10-26 : la description du
+              classeur, périmée, n'est plus affichée — le panneau
+              rend comme celui des aménagements : résumé structuré
+              dérivé du moteur + prérequis éventuel.) */}
           <ChoicePicker
             bouton="+ Construire…"
             categories={batParFamillePour(ville)}
@@ -528,29 +790,45 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             return out
           })()
           const nEteTot = nEteAm + nEteAut
-          // Retour Thibaut (marqueur (r)) : toutes les ressources,
-          // même à production 0 (lignes teintées → lisibles).
+          // (RETRAIT du marqueur (r) — retour Thibaut 2026-10-26 :
+          //  par défaut SEULEMENT les ressources PRODUITES sont
+          //  listées ; le toggle « tout afficher » redonne toutes
+          //  les lignes. « produite » = au moins un canal non nul
+          //  (bâtiments, aménagements, autres, villageois).)
+          const estProduite = (r: string) =>
+            [pv.batiments, pv.amenagements, pv.autres, pv.habitants]
+              .some((d) => (d[r] ?? 0) !== 0)
           const resV = RESSOURCES_FLUX(C)
-          if (resV.length === 0 && nEteTot === 0) {
-            return (
-              <div className="muted small">
-                Cette ville ne produit rien par tour.
-              </div>
-            )
-          }
           // Lignes du tableau : chaque ressource + la ligne
           // « Nourr - été » juste après la Nourriture (ou en
           // première ligne s'il n'y a pas de nourriture générale).
-          // Retour Thibaut 2026-10-15 : la ligne « Nourr - été »
-          //  est TOUJOURS visible (même à 0) juste sous la
-          //  Nourriture, avec un style DISTINCT (badge été).
+          // (Retour Thibaut 2026-10-26 : la ligne été à 0 est
+          //  CACHÉE en vue repliée, comme les autres lignes vides —
+          //  supersede le retour 2026-10-15 « toujours visible ».)
           const lignesV: Array<{ kind: 'res'; r: string } | { kind: 'ete' } | { kind: 'eteAutre'; r: string }> = []
           let eteInsere = false
+          const montreEte = () => voirToutProd || nEteTot !== 0
           for (const r of resV) {
+            if (!voirToutProd && !estProduite(r)) continue
             lignesV.push({ kind: 'res', r })
-            if (r === 'Nourriture') { lignesV.push({ kind: 'ete' }); eteInsere = true }
+            if (r === 'Nourriture') { if (montreEte()) lignesV.push({ kind: 'ete' }); eteInsere = true }
           }
-          if (!eteInsere) lignesV.unshift({ kind: 'ete' })
+          if (!eteInsere && montreEte()) lignesV.unshift({ kind: 'ete' })
+          // Vue repliée d'une ville sans production : message court
+          // + le toggle (le tableau complet reste à un clic).
+          if (lignesV.length === 0) {
+            return (
+              <div>
+                <div className="mini-title">
+                  Production de la ville
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(true)}>tout afficher</button>
+                </div>
+                <div className="muted small">
+                  Cette ville ne produit rien par tour (ressources non produites cachées par défaut).
+                </div>
+              </div>
+            )
+          }
           // ÉTÉ d'autres ressources (revue 2026-10-16) : une ligne
           //  « <Ressource> - été » après la ressource concernée.
           for (const [res, v] of eteAutres) {
@@ -561,9 +839,25 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           }
           return (
             <div>
-              <div className="mini-title">Production de la ville</div>
+              <div className="mini-title">
+                Production de la ville
+                {/* (Retour Thibaut 2026-10-26 : toggle discret à
+                    côté du titre — vue repliée par défaut.) */}
+                {voirToutProd ? (
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(false)}>produites seulement</button>
+                ) : (
+                  <button className="prod-toggle" onClick={() => setVoirToutProd(true)}>tout afficher</button>
+                )}
+              </div>
               <div className="table-wrap">
-                <table className="tbl small">
+                <table className="tbl small ville-prod">
+                  {/* (Retour Thibaut 2026-10-26 « colonnes inégales »
+                      : largeurs FIXES — colonne ressource plus large
+                      , les 5 colonnes de valeurs égales.) */}
+                  <colgroup>
+                    <col style={{ width: '22%' }} />
+                    <col span={5} style={{ width: '15.6%' }} />
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>Ressource</th>
@@ -622,7 +916,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                         (d[r] ?? 0) === 0 ? '—' : fmtNum(d[r] ?? 0)
                       const t = pv.total[r] ?? 0
                       return (
-                        <tr key={r} style={{ background: fondRessource(r, C) }}>
+                        <tr key={r} className="ligne-prod" style={{ background: fondRessource(r, C) }}>
                           <td>
                             <span className="dot-res" style={{ background: couleurRessource(r, C) }} />
                             <strong>{r}</strong>
@@ -641,6 +935,70 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
             </div>
           )
         })()}
+
+        {/* ACTIONS RARES — BAS de carte (retour arbitre Thibaut
+            2026-10-25 « regrouper par blocs » : elles ne
+            cannibalisent plus la tête de lecture) : transfert à un
+            autre joueur (capture, vente, cadeau — la ville ET ses
+            habitants suivent) et suppression (les habitants restent
+            inscrits dans la population). Retour Thibaut. */}
+        <div className="badges-wrap">
+          <Select
+            value=""
+            options={[
+              { value: '' as const, label: '⇄ Transférer la ville à…' },
+              ...state.players
+                .filter((x) => x.n !== p.n)
+                .map((x) => ({ value: String(x.n), label: `${x.nom} (J${x.n})` })),
+            ]}
+            onChange={(v) => v && update((st) => {
+              const src = st.players.find((x) => x.n === joueur)
+              const dst = st.players.find((x) => x.n === parseInt(v, 10))
+              if (src && dst) {
+                const nomAvant = src.villes[idx]?.nom ?? ''
+                transfererVille(st, src, idx, dst)
+                // PROTOCOLE v2 (bug 2026-10-17 : ville transférée
+                //  perdue en fin de tour) : le transfert est une
+                //  mutation INTER-JOUEURS — la section du
+                //  RECEVEUR, poussée avant, l'écraserait à la
+                //  fusion. Il part donc aussi en ÉVÉNEMENT
+                //  PARTAGÉ (cp_events, type 'transfert_ville'),
+                //  rejoué par la résolution APRÈS la fusion des
+                //  sections (idempotent). best effort : si
+                //  l'insert échoue, le transfert reste visible
+                //  localement chez l'émetteur.
+                void remote.pousserEvenementPartage(
+                  salon, st.turn, joueur, 'transfert_ville',
+                  { ville: nomAvant, src: joueur, dst: parseInt(v, 10) },
+                )
+              }
+            })}
+          />
+          <Button
+            tone="danger"
+            onClick={() => {
+              if (!window.confirm(`Supprimer « ${ville.nom} » ? Sa population classique sera DÉFINITIVEMENT supprimée avec elle (la cour reste inscrite ; l'arbitre la reloge).`)) return
+              update((st) => {
+                const src = st.players.find((x) => x.n === joueur)
+                if (src) supprimerVille(st, src, idx)
+              })
+            }}
+          >
+            🗑 Supprimer
+          </Button>
+          <Button
+            title="La ville quitte le joueur et devient une cité libre — il reçoit 1 émissaire placé dans cette cité"
+            onClick={() => {
+              if (!window.confirm(`« ${ville.nom} » devient une CITÉ LIBRE ? ${p.nom} reçoit 1 émissaire placé dans cette cité.`)) return
+              update((st) => {
+                const src = st.players.find((x) => x.n === joueur)
+                if (src) villeDevientCiteLibre(st, src, idx)
+              })
+            }}
+          >
+            🏼 Devenir cité libre
+          </Button>
+        </div>
 
       </div>
   )

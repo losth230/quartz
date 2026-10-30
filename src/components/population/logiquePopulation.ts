@@ -7,7 +7,8 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, CiteLibre, GameState } from '../../engine/types'
-import { isNobleDyn, type Detenteur } from '../../engine/shared'
+import type { Detenteur } from '../../engine/shared'
+import { rangDe } from '../../engine/statutSocial'
 import type { Cfg } from '../../config/defaultConfig'
 
 export type SortKey = 'nom' | 'age' | 'dynastie' | 'ville' | 'metier' | 'statut'
@@ -86,8 +87,11 @@ export function optionsDon(state: GameState, joueur: number, cite: CiteLibre | u
   ]
 }
 
-/** Nobles vivants, majeurs et célibataires (validité au moteur). */
+/** Nobles vivants, majeurs et célibataires (validité au moteur) —
+ *  noble au sens du RANG (arbitrage Thibaut 2026-10-27 : dynastie
+ *  noble de naissance OU anobli à 250+ de prestige — un bourgeois
+ *  devenu noble est mariable manuellement). */
 export function eligibleMariage(x: Character, c: Character, C: Cfg): boolean {
   return x.id !== c.id && x.statut !== 'Décédé' && !x.mariageId
-    && x.age >= C.p.adultAge && isNobleDyn(x.dynastie, C)
+    && x.age >= C.p.adultAge && rangDe(x, C) === 'noble'
 }

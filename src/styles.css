@@ -664,14 +664,118 @@ input[type='range'] {
 /* ═══ Mise en forme (marqueur (p), retour Thibaut 2026-10-14) ═══ */
 
 /* En-tête de carte de ville (page Pays) : nom en gras + taxes sur la même ligne */
-.ville-tete { display: flex; gap: 8px; align-items: flex-end; }
-.ville-tete .field { flex: 1; margin-bottom: 0; }
-.ville-tete .field:first-child { flex: 1.5; }
+/* (Retour Thibaut 2026-10-26 : les trois cases de tête — nom,
+   taxes, proximité — de la MÊME TAILLE : grid 3 colonnes égales,
+   fin du flex 1.5 sur le nom ; repli 1 colonne sous 420px.
+   Retour Thibaut 2026-10-26, capture n°3 : rang d'habitation et
+   type de ville sur une RANGÉE 2 dans la même zone — grille 6
+   colonnes, rangée 1 = 3 cases de span 2, rangée 2 = 2 cases de
+   span 3 ; tout est de largeur régulière, plus d'espace vide.) */
+.ville-tete { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; align-items: end; }
+.ville-tete .field { margin-bottom: 0; }
 .ville-tete .field:first-child .input { font-weight: 700; }
+.ville-tete .field:nth-child(-n+3) { grid-column: span 2; }
+.ville-tete .field:nth-child(n+4) { grid-column: span 3; }
 
-/* Aménagements et bâtiments côte à côte dans une carte de ville */
-.ville-constr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* Tête de carte ville avec BLOC BONHEUR en haut à droite (retour
+   arbitre Thibaut 2026-10-25) : moyenne + 5 axes en mini-jauges.
+   Retour 2026-10-26, capture n°3 : le wrap devient une grille
+   1fr / auto — la colonne gauche (5 cases + habitants requis)
+   borde le bloc bonheur, plus d'espace vide sous les cases.
+   Repli écran étroit : tout en 1 colonne.
+   Retour Thibaut 2026-10-28 (4e retour du jour) : délimitation
+   CLAIRE — filet plein ton sous l'en-tête, avant le bloc des
+   tableaux. */
+.ville-tete-wrap { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: start; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.bonheur-bloc { min-width: 180px; }
+@media (max-width: 560px) {
+  .ville-tete-wrap { grid-template-columns: 1fr; }
+  .ville-tete { grid-template-columns: 1fr; }
+  .ville-tete .field:nth-child(-n+3) { grid-column: auto; }
+  .ville-tete .field:nth-child(n+4) { grid-column: auto; }
+}
+.bonheur-moyen { font-weight: 700; font-size: 15px; margin-bottom: 2px; }
+.bonheur-axe { display: flex; align-items: center; gap: 6px; font-size: 11px; line-height: 1.6; }
+.bonheur-axe-label { flex: 0 0 60px; color: var(--muted); }
+.bonheur-axe-barre { flex: 1; height: 6px; background: rgba(127, 127, 127, 0.25); border-radius: 3px; overflow: hidden; }
+.bonheur-axe-barre > span { display: block; height: 100%; border-radius: 3px; }
+.bonheur-axe-val { flex: 0 0 24px; text-align: right; font-variant-numeric: tabular-nums; }
+
+/* Aménagements et bâtiments côte à côte dans une carte de ville
+   (retour Thibaut 2026-10-28, 4e retour du jour : filet CLAIR
+   au-dessus — le bloc des tableaux se détache du reste de la
+   ville). */
+.ville-constr { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 4px; padding-top: 10px; border-top: 1px solid var(--border); }
 @media (max-width: 560px) { .ville-constr { grid-template-columns: 1fr; } }
+
+/* Population (cultures) & garnison côte à côte — retour Thibaut
+   2026-10-26 : mêmes colonnes que .ville-constr, repli sous 560px.
+   (Retour Thibaut 2026-10-26 « réduit les tableaux pour ajouter les
+   logements » : la ligne passe en 3 colonnes — cultures, garnison,
+   logements — repli 2 colonnes sous 860px puis 1 sous 560px.
+   Retour suivant « petites séparations + réduire le tableau de
+   culture » : filet vertical discret entre les tableaux (même
+   teinte que les filets de .ville-table). Le filet suit la colonne
+   (padding gauche), le repli 1 colonne empile avec un filet
+   horizontal.
+   Retour Thibaut 2026-10-27 « un nouveau tableau qui recense tous
+   les métiers disponibles et occupés » : la ligne passe en
+   4 colonnes — cultures, garnison, logements, métiers.
+   Retour Thibaut 2026-10-28 « ils ne rentrent pas » : DAMIER 2×2 —
+   rangée 1 cultures + logements, rangée 2 garnison + métiers.
+   Retour Thibaut 2026-10-28 (3e retour du jour) « deux colonnes » :
+   colonne gauche culture + logements + garnison EMPILÉS, colonne
+   droite les métiers ; filet vertical entre colonnes, filets
+   horizontaux entre les tableaux empilés.
+   Retour 2026-10-28 (4e retour du jour) : délimitations CLAIRES
+   entre les tableaux — filets plein ton (var(--border)) entre
+   colonnes et entre tableaux empilés.)
+   .ville-table : tableau compact dédié aux cartes de ville —
+   séparateurs discrets, valeurs numériques alignées à droite en
+   tabulaire, ligne total détachée par un filet, majoritaire marquée
+   par un liseré accent (plus de styles inline dans VilleCarte). */
+.ville-duo-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 18px; }
+.ville-duo-cols > div:last-child {
+  border-left: 1px solid var(--border);
+  padding-left: 18px;
+}
+.ville-col-stack > div + div {
+  margin-top: 10px;
+  border-top: 1px solid var(--border);
+  padding-top: 10px;
+}
+@media (max-width: 560px) {
+  .ville-duo-cols { grid-template-columns: 1fr; }
+  .ville-duo-cols > div:last-child {
+    border-left: none; padding-left: 0;
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+  }
+}
+.ville-duo-titre {
+  color: var(--accent); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.4px; margin: 4px 0 2px;
+}
+.ville-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.ville-table td {
+  padding: 3px 0; vertical-align: top;
+  border-bottom: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+.ville-table tr:last-child td { border-bottom: none; }
+.ville-table td:not(.num) { padding-right: 8px; }
+.ville-table td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ville-table tr.ligne-total td { border-top: 1px solid var(--border); border-bottom: none; padding-top: 5px; }
+.ville-table tr.ligne-major td:first-child { box-shadow: inset 2px 0 0 var(--accent); padding-left: 6px; }
+
+/* Toggle discret « tout afficher » / « produites seulement » du bloc
+   production (retour Thibaut 2026-10-26 : ressources non produites
+   cachées par défaut, tableau complet à un clic). */
+.prod-toggle {
+  background: none; border: none; padding: 0 0 0 10px; cursor: pointer;
+  font-size: 11px; font-weight: 400; color: var(--muted);
+  text-decoration: underline dotted;
+}
+.prod-toggle:hover { color: var(--accent); }
 
 /* « Donner à… » et « Marier avec… » sur la même ligne (tableaux de population) ;
    largeur RÉDUITE en fixe (retour Thibaut, marqueur (z)) : les deux menus

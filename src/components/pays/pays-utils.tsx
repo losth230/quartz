@@ -33,7 +33,6 @@ export const FAM_BADGES: Record<string, string> = {
   Economique: 'badge-fam-eco',
   Capitale: 'badge-fam-cap',
   Guilde: 'badge-fam-gui',
-  Merveille: 'badge-fam-merv',
 }
 export function fmtEffets(effets: Record<string, number>, C: Cfg): string {
   const entries = Object.entries(effets).filter(([, v]) => v !== 0)
@@ -55,6 +54,17 @@ export function fmtCout(cout: Record<string, number>): string {
 /** Nombre avec signe explicite pour le récap (0 = —). */
 export function fmtNum(v: number): string {
   return v === 0 ? '—' : `${v > 0 ? '+' : ''}${fmt(v)}`
+}
+
+/** Titre d'affichage d'un aménagement (retour Thibaut 2026-10-27) :
+ *  la CASE REQUISE vit entre parenthèses dans le TITRE —
+ *  « Baleinier (Baleine) », « Champ (Plaine) » — partout où le titre
+ *  est affiché (picker « + Aménager une case… », badge construit de
+ *  la carte, wiki). Un aménagement PERSO sans terrain reste nu.
+ *  L'éditeur des Paramètres continue d'éditer le NOM BRUT : les
+ *  parenthèses ne sont jamais stockées dans l'état ni la config. */
+export function titreAmenagement(nom: string, terrain?: string): string {
+  return terrain ? `${nom} (${terrain})` : nom
 }
 
 export function Field({ label, children }: { label: string; children: React.ReactNode }) {

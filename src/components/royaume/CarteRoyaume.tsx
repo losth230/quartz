@@ -29,9 +29,15 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
     ? (p.rang as string)
     : rangParDefaut(p.regime, C)
   const rangDef = rangs.find((r) => r.nom === rangActuel)
-  // Loi chiffrée du régime (appliquée automatiquement par le moteur) ?
-  const loiChiffree = (regimeDef?.garnisonParRang ?? 0) !== 0
-    || (regimeDef?.nourrEteChampRiziere ?? 0) !== 0
+  // Lois chiffrées du régime (lues automatiquement par le moteur,
+  // refonte « 8 lois » des régimes, 2026-10-29) ?
+  const loiChiffree = (regimeDef?.leveeOrParRangPays ?? 0) !== 0
+    || (regimeDef?.departHabitantsMult ?? 1) !== 1
+    || (regimeDef?.orParMigrant ?? 0) !== 0
+    || (regimeDef?.consoNourrBourgeoisRegime ?? 0) !== 0
+    || (regimeDef?.consoNourrNobleRegime ?? 0) !== 0
+    || (regimeDef?.bonheurParHabitation ?? 0) !== 0
+    || (regimeDef?.tributVassalMult ?? 1) !== 1
 
   return (
     <Card title={`🏰 Royaume de ${p.nom}`}>
@@ -45,14 +51,16 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
                 Hérédité {String(cult.heredite).toLowerCase()} ·
                 mariage homosexuel {cult.homoAutorisee ? 'autorisé' : 'interdit'}
               </div>
-              {cult.reglePays && <div className="small muted">Règle de pays : {cult.reglePays}</div>}
-              {cult.reglePerso && <div className="small muted">Règle de personnage : {cult.reglePerso}</div>}
+              {cult.regleVille && <div className="small muted">Loi de ville : {cult.regleVille}</div>}
+              {cult.regleHabitant && <div className="small muted">Loi d'habitant : {cult.regleHabitant}</div>}
               <div className="muted small">
                 Ce que fait la culture : l'hérédité conditionne l'accès aux métiers
                 héréditaires ; la fécondité influe sur les
                 naissances ; les mariages homosexuels (si autorisés) permettent des
-                unions de même sexe (sans conception) ; la règle de pays et les lois
-                chiffrées sont appliquées automatiquement à chaque fin de tour.
+                unions de même sexe (sans conception) ; les lois de ville (culture
+                majoritaire de la cité) et les lois d'habitant (culture propre de
+                chacun, refonte « 12 lois » 2026-10-29) sont appliquées
+                automatiquement par le moteur à chaque fin de tour.
               </div>
             </>
           )}
@@ -65,9 +73,9 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
               <div className="muted small">Loi : {regimeDef.loi}</div>
               {loiChiffree && (
                 <div className="small">
-                  <Badge tone="good">loi chiffrée appliquée automatiquement</Badge>{' '}
+                  <Badge tone="good">lois chiffrées appliquées automatiquement</Badge>{' '}
                   <span className="muted small">
-                    (canal « régimes & cultures » du récap ressources)
+                    (lues par le moteur là où elles agissent — refonte « 8 lois »)
                   </span>
                 </div>
               )}

@@ -15,17 +15,16 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
     <>
       <Card title={`Wiki — cultures (${cfg.cultures.length})`}>
         <p className="muted small">
-          Lois chiffrées appliquées à chaque fin de tour : +N ressource par habitation de
-          cette culture dans le monde (capitale), +N Science par construction.
+          Refonte « 12 lois » (2026-10-29) : chaque culture porte une LOI DE VILLE (culture
+          majoritaire de la cité — logements, emplacements, fermiers d'été, routes, garnison)
+          et une LOI D'HABITANT (culture propre de chaque personnage, où qu'il vive).
         </p>
         <div className="table-wrap">
           <table className="tbl small">
             <thead>
               <tr>
                 <th>Culture</th><th>Hérédité</th><th>Homo autorisée</th>
-                <th>Fécondité</th><th>Nourr / hab (monde)</th>
-                <th>Tourisme / hab</th><th>Or / hab</th>
-                <th>Science / constr.</th><th>Règle du pays</th><th>Règle des personnages</th>
+                <th>Fécondité</th><th>Loi de ville</th><th>Loi d'habitant</th>
               </tr>
             </thead>
             <tbody>
@@ -35,12 +34,8 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
                   <td>{t.heredite}</td>
                   <td>{t.homoAutorisee ? 'oui' : 'non'}</td>
                   <td>×{t.fertFactor}</td>
-                  <td>{t.capitalNourrParHabMonde || '—'}</td>
-                  <td>{t.capitalTourismeParHabMonde || '—'}</td>
-                  <td>{t.capitalOrParHabMonde || '—'}</td>
-                  <td>{t.scienceParConstruction || '—'}</td>
-                  <td className="muted">{t.reglePays || '—'}</td>
-                  <td className="muted">{t.reglePerso || '—'}</td>
+                  <td className="muted">{t.regleVille || '—'}</td>
+                  <td className="muted">{t.regleHabitant || '—'}</td>
                 </tr>
               ))}
             </tbody>
@@ -48,13 +43,23 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
         </div>
       </Card>
       <Card title={`Wiki — régimes politiques (${cfg.regimes.length})`}>
+        <p className="muted small">
+          (Refonte « 8 lois », 2026-10-29) : chaque régime porte deux lois, lues
+          automatiquement par le moteur là où elles agissent — plus aucune loi de
+          régime ne passe par la banque.
+        </p>
         <div className="table-wrap">
           <table className="tbl small">
             <thead>
               <tr>
                 <th>Régime</th><th>Loi</th>
-                <th>Garnison / rang d'habitation</th>
-                <th>Nourriture été / champ & rizière</th>
+                <th>Conscription (−Or / rang du pays)</th>
+                <th>Frontières closes (× départs)</th>
+                <th>Terre d'accueil (Or / migrant)</th>
+                <th>Redistribution (bourgeois)</th>
+                <th>Redistribution (noble)</th>
+                <th>Pouvoir du peuple (+Bonheur / habitation)</th>
+                <th>Vassaux dévoués (× tribut reçu)</th>
               </tr>
             </thead>
             <tbody>
@@ -62,8 +67,13 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
                 <tr key={i}>
                   <td><strong>{r.nom}</strong></td>
                   <td>{r.loi || '—'}</td>
-                  <td>{r.garnisonParRang || '—'}</td>
-                  <td>{r.nourrEteChampRiziere || '—'}</td>
+                  <td>{r.leveeOrParRangPays ?? '—'}</td>
+                  <td>{r.departHabitantsMult ?? '—'}</td>
+                  <td>{r.orParMigrant ?? '—'}</td>
+                  <td>{r.consoNourrBourgeoisRegime ?? '—'}</td>
+                  <td>{r.consoNourrNobleRegime ?? '—'}</td>
+                  <td>{r.bonheurParHabitation ?? '—'}</td>
+                  <td>{r.tributVassalMult ?? '—'}</td>
                 </tr>
               ))}
             </tbody>
