@@ -903,8 +903,10 @@ export const DEFAULT_CONFIG: GameConfig = {
       nom: 'Dogme de la Famille',
       culture: '*',
       description:
-        '+0,1 de fécondité pour les personnages de cette culture, côté homme et côté femme '
-        + '(dans un couple, chaque époux porteur multiplie sa part : ×1,1).',
+        '+0,1 de fécondité pour les personnages de cette culture, côté homme et côté femme. '
+        + 'Le jet de conception prend en compte la fécondité de chaque époux (un époux de cette '
+        + 'culture multiplie sa part) — mais la fécondité affichée d\'une épouse ne monte jamais '
+        + 'à cause de la culture de son mari.',
       effets: [{ type: 'fecondite', valeur: 0.1 }],
     },
     {
