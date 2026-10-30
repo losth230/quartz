@@ -903,8 +903,8 @@ export const DEFAULT_CONFIG: GameConfig = {
       nom: 'Dogme de la Famille',
       culture: '*',
       description:
-        '+0,1 de fécondité pour tous les personnages de cette culture, où qu\u2019ils vivent '
-        + '(additif au facteur de fécondité : ×1,1).',
+        '+0,1 de fécondité pour les personnages de cette culture, côté homme et côté femme '
+        + '(dans un couple, chaque époux porteur multiplie sa part : ×1,1).',
       effets: [{ type: 'fecondite', valeur: 0.1 }],
     },
     {
@@ -981,7 +981,8 @@ export const DEFAULT_CONFIG: GameConfig = {
       culture: '*',
       description:
         'Les habitants d\u2019autres cultures vivant dans des villes de cette culture ont '
-        + '15 % de chances supplémentaires par tour de se convertir à cette culture.',
+        + '15 % de chances supplémentaires dans le tirage de conversion culturelle '
+        + 'de se convertir à cette culture (pas de jet séparé).',
       effets: [{ type: 'conversionLocale', valeur: 0.15 }],
     },
   ] as DogmeDef[],

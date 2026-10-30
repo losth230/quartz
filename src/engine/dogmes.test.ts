@@ -303,12 +303,20 @@ test('cfgOf garde-fou : clé absente → défaut hérité, table vidée respect�
 //  PRIS injecté directement dans state.dogmes (les validations de
 //  choisirDogme sont couvertes par les tests précédents — ici on
 //  teste les EFFETS, la culture porteuse lit le référentiel par nom).
-//  Interprétations verrouillées (à faire valider par l'arbitre) :
+//  Interprétations verrouillées (arbitre Thibaut, 30/10 2e + 4e retours) :
 //   · Travail/Égalité/Famille/Santé = culture PROPRE du personnage
 //     (loi d'habitant) ; Patrie/Solidarité/Liberté/Guerres
-//     Saintes/Évangile/Nationalisme = culture de la VILLE ;
+//     Saintes/Évangile/Nationalisme = culture de la VILLE — aucun
+//     dogme n'a d'effet sur les personnages des autres cultures ;
+//   · la Famille multiplie CÔTÉ HOMME ET CÔTÉ FEMME (4e retour :
+//     le personnage porteur ET son époux porteur multiplient
+//     chacun leur part du facteur de conception) ;
 //   · l'Égalité FIXE la consommation (l'emporte sur régime et défaut) ;
 //   · la Mère Patrie porte sur la culture du SUZERAIN (tribut reçu) ;
+//   · le Nationalisme n'est PAS un jet séparé (4e retour : « pris en
+//     compte dans le test de conversion culturelle déjà présent ») —
+//     la culture d'accueil gagne +v × le poids des autres cultures
+//     dans le tirage pondéré ;
 //   · la Fraternité n'a AUCUN effet moteur (révoltes non implémentées).
 // ═══════════════════════════════════════════════════════════════════════════
 
@@ -451,19 +459,39 @@ test('Dogme de l\u2019Égalité : un bourgeois de la culture consomme 1 Nourritu
     'le dogme ne touche que les bourgeois')
 })
 
-test('Dogme de la Famille : fécondité ×1,1 pour les personnages de la culture', () => {
+test('Dogme de la Famille : fécondité ×1,1 — côté femme, côté homme ET via l époux (correctif arbitre)', () => {
   const { state } = partie()
   const p = state.players[0]
-  const femme = persoDogme('F1', 22, { ville: 'Bergen' }) // adulte, non mariée
-  state.population[p.n] = [femme]
-  const sans = computeFecondite(state, p, femme)
+  const femme = persoDogme('F1', 22, { ville: 'Bergen' })
+  const homme = persoDogme('H1', 25, { ville: 'Bergen' })
+  homme.sexe = 'M'
+  // une femme d une AUTRE culture mariée à un homme porteur
+  const mariee = persoDogme('F2', 22, { ville: 'Bergen' })
+  mariee.culture = 'Déisme'
+  mariee.mariageId = 'H1'
+  homme.mariageId = 'F2'
+  state.population[p.n] = [femme, homme, mariee]
+  // relevés SANS dogme (avant de le prendre)
+  const femmeSans = computeFecondite(state, p, femme)
+  const hommeSans = computeFecondite(state, p, homme)
+  const marieeSans = computeFecondite(state, p, mariee)
   prendre(state, 'Culture Nordique', 'Dogme de la Famille')
-  const avec = computeFecondite(state, p, femme)
-  assert.ok(sans > 0, 'pré-condition : proba de conception positive')
-  assert.ok(Math.abs(avec / sans - 1.1) < 1e-9, '×(1+0,1) exactement')
-  // une AUTRE culture n est pas touchée
+  const femmeAvec = computeFecondite(state, p, femme)
+  const hommeAvec = computeFecondite(state, p, homme)
+  const marieeAvec = computeFecondite(state, p, mariee)
+  assert.ok(femmeSans > 0 && hommeSans > 0 && marieeSans > 0,
+    'pré-conditions : probas positives (femme seule, homme, femme mariée)')
+  assert.ok(Math.abs(femmeAvec / femmeSans - 1.1) < 1e-9,
+    'côté FEMME : ×(1+0,1) exactement')
+  // (correctif arbitre Thibaut 30/10 : « le multiplicateur est
+  //  côté homme et femme »)
+  assert.ok(Math.abs(hommeAvec / hommeSans - 1.1) < 1e-9,
+    'côté HOMME : ×(1+0,1) exactement')
+  assert.ok(Math.abs(marieeAvec / marieeSans - 1.1) < 1e-9,
+    'via l ÉPOUX porteur : un mari de la culture multiplie SA part — la conception ×1,1 même pour une épouse d une autre culture')
+  // un personnage d une AUTRE culture (non marié à un porteur) n est pas touché
   femme.culture = 'Déisme'
-  assert.ok(Math.abs(computeFecondite(state, p, femme) / sans - 1) < 1e-9,
+  assert.ok(Math.abs(computeFecondite(state, p, femme) / femmeSans - 1) < 1e-9,
     'la fécondité d un personnage d une autre culture est inchangée')
 })
 
@@ -577,7 +605,7 @@ test('Dogme des Guerres Saintes : −40 garnison hors culture porteuse, une fois
   assert.equal(gApres, Math.max(0, gAvant - 80), 'le malus passe à la garnison réelle, plancher 0')
 })
 
-test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et jet dédié +0,15 (applyCultureInfluence)', () => {
+test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et +0,15 de part DANS le tirage (applyCultureInfluence)', () => {
   // (a) Évangile : le poids FINAL de la culture porteuse ×1,1 dans le tirage
   const pa = partie()
   const pA = pa.state.players[0]
@@ -609,31 +637,56 @@ test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et jet dédié
   assert.ok(poidsSans > 0, 'pré-condition : la culture porteuse a un poids')
   assert.ok(Math.abs(poidsNordique / poidsSans - 1.1) < 1e-9,
     'Évangile : le poids de la culture porteuse ×1,1')
-  // (b) Nationalisme : jet SUPPLÉMENTAIRE dédié vers la culture d accueil
+  // (b) Nationalisme : PAS de jet séparé (correctif arbitre Thibaut
+  //  30/10 — « pris en compte dans le test de conversion culturelle
+  //  déjà présent ») : la culture d accueil gagne +0,15 × le poids
+  //  total des autres cultures DANS le tirage pondéré
   const pb = partie()
   const pB = pb.state.players[0]
   if (!pB) throw new Error('joueur absent')
   const habitantB = persoDogme('N2', 30, { ville: 'Bergen' })
   habitantB.culture = 'Déisme'
   pb.state.population[pB.n] = [habitantB]
-  // sans dogme : une seule tentative (normale), rien ne se passe
-  let appels = 0
-  applyCultureInfluence(pb.state, pB, fakeRng({
-    chance: () => { appels++; return false },
-  }), recapTest())
-  assert.equal(appels, 1, 'sans dogme : un seul tirage par personnage')
-  assert.equal(habitantB.culture, 'Déisme')
-  // avec dogme : le tirage normal échoue, le jet dédié réussit
+  pB.resources['Tourisme'] = { stock: 10, prod: 0 }
+  let poidsB: Record<string, number> = {}
+  const runB = (retour: boolean) => {
+    habitantB.culture = 'Déisme' // reset : le tirage précédent a pu convertir
+    let tirages = 0
+    applyCultureInfluence(pb.state, pB, fakeRng({
+      chance: () => { tirages++; return true }, // une SEULE tentative de conversion
+      pickWeighted: <T,>(items: T[], weight: (t: T) => number): T => {
+        poidsB = {}
+        for (const it of items as Array<[string, number]>) poidsB[it[0]] = weight(it as never)
+        const hote = (items as Array<[string, number]>).find((it) => it[0] === 'Culture Nordique')
+        if (retour && hote) return hote as unknown as T
+        return (items as Array<[string, number]>)[0] as unknown as T
+      },
+    }), recapTest())
+    return tirages
+  }
+  const tiragesSans = runB(false)
+  const poidsSansB = { ...poidsB }
   prendre(pb.state, 'Culture Nordique', 'Dogme du Nationalisme')
-  appels = 0
-  applyCultureInfluence(pb.state, pB, fakeRng({
-    chance: () => { appels++; return appels > 1 }, // normal : non ; dédié : oui
-  }), recapTest())
-  assert.equal(appels, 2, 'deux tirages : normal puis dédié au dogme')
+  const tiragesAvec = runB(true)
+  assert.equal(tiragesSans, 1, 'sans dogme : un seul tirage de conversion par personnage')
+  assert.equal(tiragesAvec, 1, 'avec dogme : TOUJOURS un seul tirage — le bonus est DANS le tirage, pas un jet séparé')
+  // le poids d accueil = poids sans dogme + 0,15 × le poids des autres
+  const autres = Object.entries(poidsB).filter(([cult]) => cult !== 'Culture Nordique')
+    .reduce((acc, [, w]) => acc + w, 0)
+  const attendu = (poidsSansB['Culture Nordique'] ?? 0) + 0.15 * autres
+  assert.ok(Math.abs((poidsB['Culture Nordique'] ?? 0) - attendu) < 1e-9,
+    'Nationalisme : la culture d accueil gagne +0,15 × le poids total des autres cultures')
+  // les autres poids ne bougent pas
+  for (const [cult, w] of Object.entries(poidsSansB)) {
+    if (cult !== 'Culture Nordique') {
+      assert.ok(Math.abs((poidsB[cult] ?? 0) - w) < 1e-9, `le poids de ${cult} est inchangé`)
+    }
+  }
+  // la conversion mène à la culture d accueil par le log NORMAL (pas de mention dédiée)
   assert.equal(habitantB.culture, 'Culture Nordique',
-    'converti vers la culture d accueil par le jet dédié')
-  assert.ok(pb.state.log.some((l) => l.texte.includes('(dogme du Nationalisme)')),
-    'le log du Nationalisme est dédié')
+    'converti vers la culture d accueil par le tirage normal dopé')
+  assert.ok(!pb.state.log.some((l) => l.texte.includes('(dogme du Nationalisme)')),
+    'plus de log dédié — l entrée de conversion normale suffit')
 })
 
 test('Dogme de la Mère Patrie : tribut reçu ×1,05 (les DEUX chemins : fin de tour et impôt manuel)', () => {
