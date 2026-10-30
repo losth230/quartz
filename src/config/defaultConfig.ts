@@ -396,12 +396,37 @@ export interface DomicileDefConfig {
   qualite: number
 }
 
+/** Dogme de culture (fondations « mise en forme » 2026-10-30,
+ *  arbitrages Thibaut du 30/10 — cf. engine/dogmes.ts) : un dogme
+ *  est choisi par le joueur dominant d'une culture à chaque palier
+ *  de Tourisme franchi et affecte les habitants ou les villes de
+ *  cette culture. À CE STADE AUCUN DOGME N'EST ENCORE DÉFINI (la
+ *  table est vide) — les effets chiffrés des dogmes définitifs
+ *  viendront avec eux sur le champ `effets`, cumulables avec les
+ *  lois et effets de culture (arbitrage n°4). */
+export interface DogmeDef {
+  nom: string
+  /** Culture porteuse : le dogme n'est proposé que pour cette
+   *  culture. */
+  culture: string
+  description: string
+  /** Effets chiffrés du dogme — aucun moteur ne les lit encore
+   *  (mise en forme seule, 2026-10-30) ; le branchement viendra
+   *  avec les dogmes définitifs. */
+  effets?: Array<{ type: string; valeur: number }>
+}
+
 export interface GameConfig {
   ressources: string[]
   params: GameParams & GameParamStrings
   metiers: MetierDef[]
   traits: TraitDef[]
   cultures: CultureDef[]
+  /** Dogmes de culture (fondations 2026-10-30) : table ENCORE
+   *  VIDE — champ optionnel des configs existantes, complété en
+   *  liste vide par gardeFous (défaut vide : une table vidée par
+   *  l'arbitre doit le rester). */
+  dogmes?: DogmeDef[]
   regimes: RegimeDef[]
   // (events / dynasties / eventEffets / dynastieEffets retirés le
   //  2026-10-24, retour arbitre — cf. docblocks ci-dessus ; purge
@@ -445,10 +470,14 @@ export interface GameConfig {
    *  Thibaut « on supprime tous les dogmes pour l'instant ») :
    *  table du classeur à effets d'AFFICHAGE uniquement (bonus Pontife /
    *  Fidèles en texte libre — jamais branchée sur le moteur). La clé
-   *  encore portée par les configs sauvegardées est purgée par un
-   *  delete ciblé dans cfgOf (patron taxes25, sans bump de
-   *  SCHEMA_VERSION_CONFIG). L'ancien contenu reste dans l'historique
-   *  git ; un éventuel retour des dogmes repartira de zéro. */
+   *  encore portée par les configs sauvegardées est purgée dans cfgOf
+   *  (seules les entrées SANS champ `culture` — ancien format — sont
+   *  retirées, patron taxes25, sans bump de SCHEMA_VERSION_CONFIG).
+   *  L'ancien contenu reste dans l'historique git.
+   *  (RETOUR 2026-10-30 : la table « dogmes » est réintroduite sous un
+   *  NOUVEAU format — cf. DogmeDef et GameConfig.dogmes, dogmes de
+   *  CULTURE liés aux paliers de Tourisme, engine/dogmes.ts. Le retour
+   *  repart bien de zéro : l'ancienne table d'affichage reste purgée.) */
   citesLibres: { type: string; effet: string }[]
   regleCitesLibres: string
   victoires: {
@@ -819,7 +848,11 @@ export const DEFAULT_CONFIG: GameConfig = {
   })),
   paysRangs: [], // rempli depuis la feuille Pays (voir normalisation ci-dessous)
   tourismeSeuils: ref.tourismeSeuils,
-  // (dogmes retirés du référentiel le 2026-10-24, retour arbitre)
+  // (dogmes de l'ANCIEN système retirés du référentiel le 2026-10-24,
+  //  retour arbitre — RETOUR 2026-10-30 sous un nouveau format, table
+  //  volontairement VIDE : « code la mise en forme sans dogme
+  //  réellement créé », les dogmes définitifs viendront plus tard.)
+  dogmes: [] as DogmeDef[],
   citesLibres: ref.citesLibres,
   regleCitesLibres: ref.regleCitesLibres,
   victoires: ref.victoires,
@@ -1215,6 +1248,12 @@ function gardeFous(m: GameConfig): void {
     Array.isArray(list) && list.length > 0 ? list : defauts
   m.traits = ouDefauts(m.traits, DEFAULT_CONFIG.traits)
   m.cultures = ouDefauts(m.cultures, DEFAULT_CONFIG.cultures)
+  // Dogmes de culture (fondations 2026-10-30) : PAS via ouDefauts —
+  //  le défaut est VIDE, indiscernable d'une table vidée par
+  //  l'arbitre ; on ne fait que POSER la table absente (les
+  //  configs existantes n'en ont pas), une table explicitement
+  //  vide reste vide.
+  if (!Array.isArray(m.dogmes)) m.dogmes = []
   m.regimes = ouDefauts(m.regimes, DEFAULT_CONFIG.regimes)
   m.typesHabitation = ouDefauts(m.typesHabitation, DEFAULT_CONFIG.typesHabitation)
   // (RETRAIT 2026-10-24 : le garde-fou des arbres de progrès et la
@@ -1345,17 +1384,32 @@ export function cfgOf(config?: GameConfig): Cfg {
     ...c,
     params: mergeParams(c.params as unknown as Record<string, unknown>),
   }
-  // RETRAIT DES DOGMES (retour arbitre Thibaut 2026-10-24) : la table
-  //  « dogmes » n'existe plus dans le type ni le référentiel, mais les
-  //  configs sauvegardées AVANT la portent encore (la fusion
-  //  {...DEFAULT_CONFIG, ...c} la fait réapparaître). Migration ciblée
-  //  (patron taxes25), SANS bump de SCHEMA_VERSION_CONFIG : un bump
-  //  renverrait les configs v4 convergées dans la branche de migration
-  //  complète, qui ré-ajoute les entrées du référentiel supprimées
-  //  (règle (x) : les suppressions persistent). Le delete est
-  //  idempotent — une fois purgée au point de sauvegarde, la clé ne
-  //  revient jamais (rien ne la ré-écrit).
-  delete (merged as { dogmes?: unknown }).dogmes
+  // RETRAIT DES ANCIENS DOGMES (retour arbitre Thibaut 2026-10-24)
+  //  + AMENDEMENT DU RETOUR 2026-10-30 : la table « dogmes » du
+  //  classeur (effets d'AFFICHAGE uniquement — bonus Pontife /
+  //  Fidèles en texte libre, jamais branchée sur le moteur) a été
+  //  retirée le 2026-10-24 et « un éventuel retour des dogmes
+  //  repartira de zéro » (docblock ci-dessus). Le RETOUR EST LÀ
+  //  (2026-10-30, arbitrages Thibaut du 30/10) : NOUVEAU format
+  //  DogmeDef (champ `culture` obligatoire — dogmes de culture liés
+  //  aux paliers de Tourisme, engine/dogmes.ts). La purge ne
+  //  supprime donc PLUS la table entière : elle ne retire que les
+  //  entrées de l'ANCIEN format (sans champ `culture`), ce qui
+  //  purge idempotemment les configs antérieures au 24/10 tout en
+  //  laissant passer les entrées du nouveau format. Sans bump de
+  //  SCHEMA_VERSION_CONFIG (patron taxes25).
+  const dogmesFusionnes = (merged as { dogmes?: Array<{ culture?: unknown }> }).dogmes
+  //  On POSE toujours la table (clé absente des configs d'avant le
+  //  30/10 → liste vide) : gardeFous n'est appelé que dans la branche
+  //  « déjà convergée » de cfgOf, la clé doit donc être posée ICI
+  //  pour être bien typée dans les DEUX branches (nouvelles ET
+  //  anciennes configs). Une table explicitement vidée par l'arbitre
+  //  reste vide (défiltra → []), une table d'ancien format est purgée
+  //  de la même façon qu'avec un delete — sans jamais faire revenir
+  //  les entrées supprimées (règle (x)).
+  ;(merged as { dogmes?: unknown }).dogmes =
+    (Array.isArray(dogmesFusionnes) ? dogmesFusionnes : [])
+      .filter((d) => typeof d?.culture === 'string' && d.culture !== '')
   // RETRAIT DES ÉVÉNEMENTS DE SAISON ET DES CARTES DYNASTIE (retour
   //  arbitre Thibaut 2026-10-24) : les tables `events`, `dynasties`,
   //  `eventEffets` et `dynastieEffets` n'existent plus dans le type
