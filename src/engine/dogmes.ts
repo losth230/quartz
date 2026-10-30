@@ -5,6 +5,12 @@
 //  de Tourisme dans cette culture choisit un DOGME qui affecte les
 //  habitants ou les villes de cette culture.
 //
+//  (6e RETOUR, 2026-10-30 — arbitrage Thibaut « remplace dominant
+//  par pontife » : le rôle « joueur ayant le plus de Tourisme
+//  dans la culture » s'appelle désormais le PONTIFE — renommé
+//  partout, identifiants compris, joueurPontifeCulture. La
+//  logique est inchangée, seul le vocabulaire change.)
+//
 //  ARBITRAGES THIBAUT (2026-10-30) :
 //   1. Un dogme à CHAQUE palier ; les dogmes se CUMULENT à
 //      l'infini — jamais retirés, jamais remplacés.
@@ -12,14 +18,14 @@
 //      ses villes, TOUS JOUEURS confondus, SANS les cités libres
 //      (même lecture que le tableau de production de chaque ville,
 //      productionVille).
-//   3. Le joueur dominant peut CHANGER d'un palier à l'autre : le
-//      choix d'un palier revient au dominant au moment du choix ;
+//   3. Le pontife peut CHANGER d'un palier à l'autre : le
+//      choix d'un palier revient au pontife au moment du choix ;
 //      un dogme déjà posé n'est PAS remplaçable.
 //   4. Dogmes, lois de culture et effets de culture se CUMULENT.
 //
 //  ÉTAT DE LA MISE EN FORME (retour Thibaut « code la mise en
 //  forme sans dogme réellement créé, les dogmes définitifs
-//  viendront plus tard ») : la détection des paliers, le dominant,
+//  viendront plus tard ») : la détection des paliers, le pontife,
 //  le suivi des dogmes pris, le CHOIX (validé contre la table
 //  `dogmes` du référentiel — encore VIDE, DogmeDef) et
 //  l'affichage (carte « Culture du pays ») sont en place. AUCUN
@@ -75,14 +81,14 @@ export function dogmesCulture(state: GameState, culture: string): Dogme[] {
     .sort((a, b) => a.palier - b.palier)
 }
 
-/** Joueur DOMINANT d'une culture (arbitrage 30/10 n°3) : celui dont
+/** PONTIFE d'une culture (arbitrage 30/10 n°3) : celui dont
  *  les villes de cette culture totalisent le plus de Tourisme — le
  *  choix du dogme d'un palier lui revient au moment du choix.
  *  Égalité : le plus PETIT n° de joueur l'emporte (l'itération
  *  dans l'ordre des joueurs avec un strict supérieur le garantit,
  *  déterminisme documenté). Retourne undefined si aucun joueur
  *  n'a de Tourisme (> 0) dans cette culture. */
-export function joueurDominantCulture(
+export function joueurPontifeCulture(
   state: GameState, culture: string, C: Cfg,
 ): { joueur: Player; tourisme: number } | undefined {
   let meilleur: { joueur: Player; tourisme: number } | undefined
@@ -98,22 +104,22 @@ export function joueurDominantCulture(
 }
 
 /** Palier de dogme en attente : franchi mais pas encore consommé
- *  par un choix (le dominant est évalué au moment de la lecture —
+ *  par un choix (le pontife est évalué au moment de la lecture —
  *  arbitrage 30/10 n°3 : il peut changer d'un palier à l'autre). */
 export interface PalierDogmeEnAttente {
   culture: string
   /** Montant du palier (palierTourismeDogme × N : 50, 100, 150…). */
   palier: number
-  /** Dominant actuel de la culture — à lui le choix. undefined si
+  /** Pontife actuel de la culture — à lui le choix. undefined si
    *  aucun joueur ne porte de Tourisme dans la culture (cas
    *  théorique : tourisme nul → aucun palier franchi). */
-  dominant: { joueur: Player; tourisme: number } | undefined
+  pontife: { joueur: Player; tourisme: number } | undefined
 }
 
 /** Tous les paliers de dogmes EN ATTENTE, toutes cultures
  *  confondues (les cultures présentes chez les joueurs seulement).
  *  C'est la surface de lecture de l'UI : chaque entrée affiche
- *  « palier franchi — dogme à choisir par le dominant ». */
+ *  « palier franchi — dogme à choisir par le pontife ». */
 export function paliersDogmesEnAttente(
   state: GameState, C: Cfg = cfgOf(state.config),
 ): PalierDogmeEnAttente[] {
@@ -127,7 +133,7 @@ export function paliersDogmesEnAttente(
       out.push({
         culture,
         palier: i * Math.max(1, C.p.palierTourismeDogme),
-        dominant: joueurDominantCulture(state, culture, C),
+        pontife: joueurPontifeCulture(state, culture, C),
       })
     }
   }
@@ -176,12 +182,12 @@ export function dogmesDisponiblesCulture(
 }
 
 /** CHOISIR un dogme (mutateur, appelé par le client du joueur
- *  dominant via l'UI de la carte culture) : valide que le palier
+ *  pontife via l'UI de la carte culture) : valide que le palier
  *  est franchi, pas encore consommé, et que le dogme existe dans
  *  la table `dogmes` du référentiel POUR CETTE CULTURE (table
  *  encore vide à ce stade — le choix deviendra possible sans
  *  toucher au code quand les dogmes définitifs entreront au
- *  référentiel). Le dogme est enregistré au nom du joueur DOMINANT
+ *  référentiel). Le dogme est enregistré au nom du PONTIFE
  *  de la culture au moment du choix et n'est plus remplaçable
  *  (arbitrages 30/10 n°1 et n°3). Retourne null si succès, sinon
  *  le message d'erreur. */
@@ -218,19 +224,19 @@ export function choisirDogme(
   if (!ref) {
     return `Dogme « ${nom} » introuvable dans le référentiel pour la culture ${culture}.`
   }
-  const dominant = joueurDominantCulture(state, culture, C)
-  if (!dominant) {
+  const pontife = joueurPontifeCulture(state, culture, C)
+  if (!pontife) {
     return `Aucun joueur ne porte de Tourisme dans la culture ${culture} — personne ne peut choisir.`
   }
   state.dogmes = [
     ...(state.dogmes ?? []),
-    { culture, palier, nom, choisiPar: dominant.joueur.n, choisiAuTour: state.turn },
+    { culture, palier, nom, choisiPar: pontife.joueur.n, choisiAuTour: state.turn },
   ]
   state.log.push({
     turn: state.turn,
     type: 'Culture',
-    joueur: dominant.joueur.n,
-    texte: `${dominant.joueur.nom} choisit le dogme « ${nom} » pour la culture ${culture} (palier ${palier} de Tourisme).`,
+    joueur: pontife.joueur.n,
+    texte: `${pontife.joueur.nom} choisit le dogme « ${nom} » pour la culture ${culture} (palier ${palier} de Tourisme).`,
   })
   return null
 }
