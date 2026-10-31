@@ -10,6 +10,16 @@
 //  tout seul — palier franchi, non consommé, dogme au référentiel,
 //  pontife — et journalise en « Culture » ; un refus part au
 //  journal « Système »)
+//  (7e RETOUR, 2026-10-31 — arbitrage Thibaut « il faudrait que les
+//  dogmes à choisir soient dans l'onglet Dogmes et plusieurs dogmes
+//  par ligne. En fait, il faudrait qu'il y ait les dogmes dans
+//  chaque culture de la page Dogmes » : chaque carte culture liste
+//  TOUS les dogmes du référentiel pour elle — pris (palier, par
+//  qui) ou disponibles — TOUJOURS visibles, en GRILLE grid-3
+//  (plusieurs par ligne) ; le bouton « Choisir » n'apparaît que
+//  pour le pontife avec un palier en attente. Remplace l'ancien
+//  bloc conditionnel « pris listés + choix seulement si pontife
+//  sélectionné ».)
 //  + table complète du référentiel (les 12 dogmes et leurs effets
 //  moteur, avec les cultures qui les ont pris).
 // ══════════════════════════════════════════════════════════════════════
@@ -18,8 +28,7 @@ import { useGame } from '../state/store'
 import type { GameState } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import {
-  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture,
-  dogmesDisponiblesCulture, choisirDogme,
+  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture, choisirDogme,
 } from '../engine/dogmes'
 import { Badge, Card, fmt } from './ui'
 
@@ -69,8 +78,10 @@ export function DogmesView({ joueur }: { joueur: number }) {
             villes de la culture sont touchés.
           </div>
           <div className="muted small">
-            Sélectionne un joueur dans la barre ci-dessus : s'il est pontife d'une culture avec un
-            palier en attente, le choix interactif apparaît dans la carte de cette culture.
+            Chaque culture ci-dessous liste TOUS ses dogmes, plusieurs par ligne : pris (palier,
+            choisi par qui) ou disponibles. Sélectionne un joueur dans la barre ci-dessus : s'il
+            est le pontife d'une culture avec un palier en attente, les boutons « Choisir »
+            apparaissent dans la carte de cette culture.
           </div>
         </div>
       </Card>
@@ -82,7 +93,15 @@ export function DogmesView({ joueur }: { joueur: number }) {
         const enAttente = paliersFranchis - pris.length
         const prochainPalier = (pris.length + 1) * pas
         const pontife = joueurPontifeCulture(state, culture, C)
-        const disponibles = dogmesDisponiblesCulture(state, culture, C)
+        // (7e retour) TOUS les dogmes du référentiel pour cette
+        //  culture (entrées génériques '*' ou propres à elle) +
+        //  les éventuels pris qui n'y sont plus (config modifiée —
+        //  un dogme pris reste affiché même retiré du référentiel).
+        const duReferentiel = (C.config.dogmes ?? []).filter(
+          (d) => d.culture === '*' || d.culture === culture,
+        )
+        const orphelins = pris.filter((x) => !duReferentiel.some((d) => d.nom === x.nom))
+        const jeChoisis = enAttente > 0 && !!pontife && pontife.joueur.n === joueur
         return (
           <Card key={culture} title={`🛕 ${culture}`}>
             <div className="stack">
@@ -101,60 +120,79 @@ export function DogmesView({ joueur }: { joueur: number }) {
                 {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}
                 {pontife ? ` (${fmt(pontife.tourisme)} Tourisme)` : ''}.
               </div>
-              {pris.length > 0 ? pris.map((d) => {
-                const ref = (C.config.dogmes ?? []).find((r) => r.nom === d.nom)
-                return (
-                  <div key={`${d.culture}-${d.palier}`}>
-                    <Badge tone="good">Palier {d.palier}</Badge>{' '}
+              {enAttente > 0 && (
+                jeChoisis ? (
+                  <div>
+                    <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
                     <span className="small">
-                      dogme « {d.nom} » — choisi par {nomJoueur(d.choisiPar)} (tour {d.choisiAuTour})
-                      {ref?.description ? <span className="muted"> — {ref.description}</span> : null}
-                      <span className="muted"> Jamais remplaçable.</span>
+                      c'est à <strong>toi</strong> de choisir {enAttente > 1 ? `${enAttente} dogmes (un par palier)` : 'un dogme'}
+                      {' '}pour la culture {culture}.
+                    </span>
+                  </div>
+                ) : (
+                  <div>
+                    <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
+                    <span className="small">
+                      dogme à choisir par{' '}
+                      {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}{' '}
+                      (pontife de la culture : le plus de Tourisme).
                     </span>
                   </div>
                 )
-              }) : <div className="muted small">Aucun dogme choisi pour cette culture.</div>}
-              {enAttente > 0 && (
-                <div>
-                  {pontife && pontife.joueur.n === joueur ? (
-                    <>
-                      <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
-                      <span className="small">
-                        c'est à <strong>toi</strong> de choisir {enAttente > 1 ? `${enAttente} dogmes (un par palier)` : 'un dogme'}
-                        {' '}pour la culture {culture}.
-                      </span>
-                      {disponibles.length === 0 ? (
-                        <div className="muted small">
-                          Aucun dogme disponible — la table du référentiel est vide ou tous les
-                          dogmes sont déjà pris par cette culture.
-                        </div>
-                      ) : (
-                        <div className="stack">
-                          {disponibles.map((d) => (
-                            <div key={d.nom} className="mini">
-                              <strong>{d.nom}</strong>
-                              <div className="small">{d.description}</div>
-                              <button
-                                className="btn btn-small"
-                                onClick={() => choisirDogmeJoueur(culture, prochainPalier, d.nom)}
-                              >
-                                Choisir « {d.nom} » (palier {prochainPalier})
-                              </button>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <>
-                      <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
-                      <span className="small">
-                        dogme à choisir par{' '}
-                        {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}{' '}
-                        (pontife de la culture : le plus de Tourisme).
-                      </span>
-                    </>
-                  )}
+              )}
+              {/* (7e retour) TOUS les dogmes de la culture, TOUJOURS
+                  visibles, plusieurs par ligne (grille grid-3) :
+                  pris (palier + par qui) ou disponibles ; le bouton
+                  « Choisir » ne propose que des choix valides et
+                  n'apparaît que pour le pontife avec un palier en
+                  attente (choisirDogme revalide côté mutateur). */}
+              {duReferentiel.length + orphelins.length === 0 ? (
+                <div className="muted small">
+                  Aucun dogme au référentiel pour cette culture.
+                </div>
+              ) : (
+                <div className="grid-3">
+                  {duReferentiel.map((d) => {
+                    const p = pris.find((x) => x.nom === d.nom)
+                    return (
+                      <div key={d.nom} className="mini">
+                        <div className="mini-title">{d.nom}</div>
+                        <div className="small">{d.description}</div>
+                        {p ? (
+                          <div>
+                            <Badge tone="good">Pris — palier {p.palier}</Badge>{' '}
+                            <span className="muted small">
+                              choisi par {nomJoueur(p.choisiPar)} (tour {p.choisiAuTour}).
+                              Jamais remplaçable.
+                            </span>
+                          </div>
+                        ) : jeChoisis ? (
+                          <button
+                            className="btn btn-small"
+                            onClick={() => choisirDogmeJoueur(culture, prochainPalier, d.nom)}
+                          >
+                            Choisir « {d.nom} » (palier {prochainPalier})
+                          </button>
+                        ) : (
+                          <div className="muted small">
+                            Disponible{enAttente > 0 ? ' — choix du pontife.' : '.'}
+                          </div>
+                        )}
+                      </div>
+                    )
+                  })}
+                  {orphelins.map((d) => (
+                    <div key={`orphelin-${d.palier}`} className="mini">
+                      <div className="mini-title">{d.nom}</div>
+                      <div>
+                        <Badge tone="good">Pris — palier {d.palier}</Badge>{' '}
+                        <span className="muted small">
+                          choisi par {nomJoueur(d.choisiPar)} (tour {d.choisiAuTour}) — plus au
+                          référentiel. Jamais remplaçable.
+                        </span>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>
