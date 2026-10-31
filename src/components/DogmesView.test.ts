@@ -1,7 +1,9 @@
 // ══════════════════════════════════════════════════════════════════════
 //  TEST DE RENDU — page « Dogmes » (DogmesView, onglet de premier
 //  niveau — 5e retour arbitre Thibaut du 30/10) : vue TOUTES
-//  CULTURES des dogmes.
+//  CULTURES des dogmes. 7e retour (31/10) : chaque carte culture
+//  liste TOUS ses dogmes en grille grid-3 (plusieurs par ligne),
+//  toujours visibles — pris ou disponibles.
 //  R3 : les valeurs affichées sont vérifiées CONTRE LE MOTEUR — le
 //  Tourisme de chaque culture (tourismeCulture) et le nombre de
 //  dogmes du référentiel (config.dogmes) sont recalculés depuis
@@ -60,4 +62,32 @@ test('rendu DogmesView : la page Dogmes affiche toutes les cultures et le réfé
   for (const d of C.config.dogmes ?? []) {
     assert.ok(h.includes(esc(d.nom)), `dogme « ${d.nom} » absent de la table du référentiel`)
   }
+
+  // ── 7e retour (2026-10-31, « les dogmes dans chaque culture de la
+  //    page, plusieurs par ligne ») : chaque carte culture liste TOUS
+  //    les dogmes du référentiel pour elle, en grille — R3 contre le
+  //    moteur : duReferentiel est recalculé depuis la config, pas codé
+  //    en dur, et le nombre de tuiles mini-title doit couvrir toutes
+  //    les cultures × leurs dogmes référentiels. ──
+  assert.ok(html.includes('grid-3'), 'grille grid-3 (plusieurs dogmes par ligne) absente')
+  const tuiles = (html.match(/mini-title/g) ?? []).length
+  let attendues = 0
+  for (const culture of cultures) {
+    attendues += (C.config.dogmes ?? [])
+      .filter((d) => d.culture === '*' || d.culture === culture).length
+  }
+  assert.ok(
+    tuiles >= attendues,
+    `tuiles de dogmes insuffisantes : ${tuiles} rendues, ${attendues} attendues (toutes cultures × référentiel)`,
+  )
+  // Chaque dogme du référentiel apparaît AU MOINS une fois par carte
+  // culture + une fois dans la table du référentiel.
+  for (const d of C.config.dogmes ?? []) {
+    const occurrences = h.split(esc(d.nom)).length - 1
+    assert.ok(
+      occurrences >= cultures.length + 1,
+      `dogme « ${d.nom} » : ${occurrences} occurrences, attendu ≥ ${cultures.length + 1} (une par carte culture + la table)`,
+    )
+  }
+  assert.ok(h.includes('Disponible'), 'statut « Disponible » absent des tuiles')
 })
