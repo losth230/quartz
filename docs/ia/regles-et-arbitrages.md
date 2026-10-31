@@ -1950,3 +1950,25 @@ dogmes.test.ts : garde-fou réécrit). Amendement documenté : la
 propriété « une table explicitement vidée par l'arbitre reste
 vide » est retirée — pour vider le référentiel, on retire les
 entrées du défaut, pas via une config vide.
+
+**7e retour (2026-10-31) — les dogmes dans chaque culture de la
+page Dogmes, plusieurs par ligne** : arbitrage Thibaut « il
+faudrait que les dogmes à choisir soient dans l'onglet Dogmes et
+plusieurs dogmes par ligne. En fait, il faudrait qu'il y ait les
+dogmes dans chaque culture de la page Dogmes ». La carte de chaque
+culture de l'onglet 🕯 Dogmes liste désormais TOUS les dogmes du
+référentiel pour elle (entrées génériques « toutes cultures » ou
+propres à la culture), TOUJOURS visibles, en GRILLE plusieurs par
+ligne : chaque tuile porte le nom du dogme, sa description du
+référentiel, et son état — PRIS (palier, choisi par qui, jamais
+remplaçable) ou DISPONIBLE ; le bouton « Choisir » n'apparaît que
+si le joueur sélectionné est le pontife avec un palier en attente
+(les tuiles restent affichées, sans bouton, pour les autres — on
+voit les dogmes de CHAQUE culture sans changer de joueur). Un
+dogme pris retiré du référentiel entre-temps reste affiché
+(« plus au référentiel. Jamais remplaçable »). La table complète
+du référentiel (12 dogmes, effets moteur, « Pris par ») reste en
+bas de page. Remplace l'ancien bloc conditionnel « pris listés +
+choix uniquement si pontife sélectionné ». Verrouillé au test de
+rendu DogmesView (grille présente, une tuile par dogme × culture,
+« Disponible » rendu).
