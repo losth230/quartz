@@ -19,6 +19,7 @@
 //    amenagements.ts aménagements de terrain — production exacte du référentiel
 //    autres.ts      lignes « Autres » des villes (production additionnelle)
 //    vassalite.ts   tribut des vassaux vers leur suzerain
+//    pelerinage.ts dîme du pontife — bonus des dogmes (2026-11-01)
 //    population.ts  orchestration démographique du tour, migration
 //    metiers.ts      professeurs, mariages, éducation, metiers
 //    sante.ts       maladie, décès, succession du Dirigeant
@@ -48,6 +49,7 @@ import { nbVassaux } from './factions'
 import { appliquerEffetsCommerce, nettoyerRoutesCommerce } from './commerce'
 import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
+import { preleverPelerinage } from './pelerinage'
 import { appliquerBonusProximite } from './villes'
 import { populationTurn } from './population'
 import { migrationBonheur } from './migrationBonheur'
@@ -69,6 +71,134 @@ export function sermentsPossedes(state: GameState, p: Player): number {
   const bonusMonarchie = p.regime === 'Monarchie' ? 1 : 0
   return nbVassaux(state, p) + citesSuzerainesDe(state, p).length + bonusMonarchie
 }
+
+// ══════════════════════════════════════════════════════════════════════
+//  ORDRE DES EFFETS DE FIN DE TOUR — REGISTRE PUBLIC (R3)
+//  Source du wiki « Ordre du tour » (onglet Référentiels —
+//  components/reference/OngletOrdreTour.tsx) : la table affichée
+//  est LUE ICI, pas recopiée. CONTRAT : ce registre suit runTurn
+//  PAS À PAS — toute évolution de la séquence (étape ajoutée,
+//  retirée, déplacée) DOIT se refléter ici, et le contenu est
+//  VERROUILLÉ par engine/tour.test.ts (numéros + noms exacts).
+//  Les étapes RETIRÉES (événements de saison et cartes dynastie le
+//  2026-10-24, consommation d'habitations le 2026-10-22, bonus de
+//  faction le 2026-10-19, progrès le 2026-10-24) n'apparaissent
+//  plus : l'historique vit dans git, le journal technique et les
+//  docblocks.
+// ══════════════════════════════════════════════════════════════════════
+
+export interface EtapeTour {
+  /** numéro historique de l'étape (1, 2bis, 3, 3bis… — les trous sont
+   *  des étapes retirées, l'historique vit dans git) */
+  numero: string
+  /** nom court de l'étape */
+  nom: string
+  /** ce qui se calcule, pour qui, dans quel ordre */
+  description: string
+}
+
+export const ETAPES_TOUR: EtapeTour[] = [
+  {
+    numero: '1',
+    nom: 'Changement de saison',
+    description: 'La saison bascule (Été/Hiver, une saison toutes les saisonLongueur tours). À sec : plus de tirage d\u2019événement de saison ni de carte dynastie (retirés le 2026-10-24).',
+  },
+  {
+    numero: '2bis',
+    nom: 'Gouverneurs automatiques',
+    description: 'Une ville sans gouverneur qui abrite un noble prend pour gouverneur son noble le plus âgé (hors Dirigeant/Héritier) — AVANT le calcul des gains : son bonus +10 % d\u2019impôts s\u2019applique dès ce tour.',
+  },
+  {
+    numero: '2ter',
+    nom: 'Réaffectation des métiers plafonnés',
+    description: 'Les caps de métiers par ville (Chasseurs…, paramétrables) sont réappliqués — AVANT le calcul des gains : les caps comptent pour les impôts du même tour.',
+  },
+  {
+    numero: '3',
+    nom: 'Gains d\u2019habitants + production de base',
+    description: 'Gains de population de chaque joueur (métiers × taxes − consommation), puis production de base du pays : chaque stock += sa production. La nourriture générale n\u2019est JAMAIS doublée : la production d\u2019été est un canal séparé (3quinquies-bis).',
+  },
+  {
+    numero: '3bis',
+    nom: 'Vassalité — tribut',
+    description: 'Chaque vassal reverse vassalPrelevement (défaut 50 %) des gains d\u2019Or de ses habitants à son suzerain. Prélèvement réel, sur les gains AVANT crédit au stock ; les effets du régime et du dogme Mère Patrie du suzerain s\u2019appliquent au montant reçu.',
+  },
+  {
+    numero: '3ter',
+    nom: 'Crédit des gains au stock',
+    description: 'Les gains d\u2019habitants (nets du tribut) sont crédités au stock × gainsCrediteStock.',
+  },
+  {
+    numero: '3quater',
+    nom: 'Bâtiments',
+    description: 'Effets automatiques des bâtiments des villes (production exacte du référentiel), crédités au stock. HORS vassalité : le tribut ne prélève que sur les revenus des habitants.',
+  },
+  {
+    numero: '3quinquies',
+    nom: 'Aménagements (hors été)',
+    description: 'Production des aménagements de terrain (table constructions), HORS production d\u2019été (Champ, Rizière — étape suivante).',
+  },
+  {
+    numero: '3quinquies-bis',
+    nom: 'Nourr — été',
+    description: 'En ÉTÉ seulement : production de nourriture d\u2019été (aménagements Champ/Rizière + lignes « Autres » « Nourr - été »), créditée au stock de Nourriture EN PLUS de la nourriture générale.',
+  },
+  {
+    numero: '3sexies',
+    nom: 'Autres',
+    description: 'Lignes « Autres » des villes : ressource × nombre × bonus, créditées au stock.',
+  },
+  {
+    numero: '3septies',
+    nom: 'Lois des cultures + Tourisme',
+    description: 'Lois d\u2019HABITANT des cultures (canal « Lois des cultures »), puis 1re re-synchronisation du Tourisme : le stock de Tourisme égale toujours sa production (jamais cumulé).',
+  },
+  {
+    numero: '3decies',
+    nom: 'Cités libres',
+    description: 'Chaque cité libre ayant un suzerain lui verse ses taxes (production nette de ses habitants, Chasseurs ×1,1 Nourriture).',
+  },
+  {
+    numero: '3quaterdecies',
+    nom: 'Proximité des villes',
+    description: 'Bonus de Nourriture automatique de chaque ville au bord d\u2019une rivière (+12) ou de la mer (+7) — montants paramétrables, canal « Proximité ».',
+  },
+  {
+    numero: '3terdecies',
+    nom: 'Commerce + Tourisme',
+    description: 'Les routes commerciales copient la production de l\u2019aménagement visé dans la ville d\u2019origine (saisonnier ; plus d\u2019Or passif) ; les routes mortes sont fermées. Puis 2e re-synchronisation du Tourisme (les apports directs ont pu toucher le stock).',
+  },
+  {
+    numero: '3quindecies',
+    nom: 'Pèlerinage — dîme du pontife',
+    description: 'Chaque culture ayant AU MOINS un dogme prélève pelerinageTaux (défaut 5 %) de la production (Or, Nourriture, Science) de TOUTES ses habitations, tous joueurs confondus — y compris celles du pontife — pour la verser au pontife (le plus de Tourisme de la culture, évalué maintenant). Prélèvement réel sur les stocks, un log par versement, canal « Pèlerinage ». Pas de culte établi (aucun dogme) : pas de dîme.',
+  },
+  {
+    numero: '4',
+    nom: 'Moteur de population',
+    description: 'Pour chaque joueur : vieillissement, métiers, mariages, santé, fécondité et naissances, conversions culturelles, culture des villes (modules population, metiers, sante, naissances, culture).',
+  },
+  {
+    numero: '4bis',
+    nom: 'Migration par bonheur',
+    description: 'Chaque habitant vivant peut quitter sa ville (proba croissante à mesure que le bonheur baisse) pour une ville du monde tirée au hasard pondéré (culture, même joueur, emploi, logement, bonheur). APRÈS les moteurs de population : un migrant n\u2019est pas retraité deux fois.',
+  },
+  {
+    numero: '5',
+    nom: 'Armées — recrutement',
+    description: 'Chaque armée recrute ses soldats (métiers Soldat/Commandant, âges et puissances des lignes de métier du référentiel).',
+  },
+  {
+    numero: '6',
+    nom: 'Snapshot + apports du tour',
+    description: 'Un snapshot des stocks par joueur entre à l\u2019historique, avec le détail des apports canal par canal (le récap « dernier tour » des pages Pays).',
+  },
+  {
+    numero: '7',
+    nom: 'Tour suivant',
+    description: 'Le compteur de tour avance, le journal est plafonné à maxLog entrées, l\u2019état du rng est sauvegardé.',
+  },
+]
 
 // ══════════════════════════════════════════════════════════════════════
 //  FIN DE TOUR — point d'entrée principal
@@ -264,6 +394,37 @@ export function runTurn(state: GameState): GameState {
   for (const p of state.players) {
     resynchroniserTourisme(state, p, 'fin de tour')
   }
+
+  // 3quindecies. Pèlerinage (bonus du pontife, arbitrage Thibaut
+  //  2026-11-01) : les habitations de chaque culture ayant AU MOINS un
+  //  dogme versent pelerinageTaux (défaut 5 %) de leur production
+  //  (Or, Nourriture, Science) au PONTIFE de la culture (le plus de
+  //  Tourisme — évalué au moment du prélèvement, le flux suit le
+  //  siège). PRÉLÈVEMENT RÉEL : les parts sortent des stocks des
+  //  payeurs et entrent au stock du pontife, y compris les
+  //  habitations du pontife lui-même (net nul chez lui, mais
+  //  comptées). APRÈS le calcul des productions (la dîme porte sur la
+  //  production réellement créditée ce tour-ci, lecture
+  //  productionVille — les stocks peuvent passer négatifs), AVANT le
+  //  moteur de population. Un log par versement + canal
+  //  « Pèlerinage » du récap. C'est une DÎME, pas une taxe : aucun
+  //  multiplicateur de taxes ne s'y applique (cf. docblock
+  //  engine/pelerinage.ts).
+  const pelerinageDimes = preleverPelerinage(state, C)
+  const pelerinageParJoueur: Record<number, Record<string, number>> = {}
+  for (const dime of pelerinageDimes) {
+    for (const v of dime.versements) {
+      const solde = pelerinageParJoueur[v.payeur.n] ?? (pelerinageParJoueur[v.payeur.n] = {})
+      for (const [res, montant] of Object.entries(v.montants)) {
+        solde[res] = (solde[res] ?? 0) - montant
+      }
+      const soldePontife = pelerinageParJoueur[dime.pontife.n] ?? (pelerinageParJoueur[dime.pontife.n] = {})
+      for (const [res, montant] of Object.entries(v.montants)) {
+        soldePontife[res] = (soldePontife[res] ?? 0) + montant
+      }
+    }
+  }
+
   // 4. Moteur de population (PersonnagesPourJoueur) pour chaque joueur
   for (const p of state.players) {
     populationTurn(state, p, rng)
@@ -308,6 +469,10 @@ export function runTurn(state: GameState): GameState {
       proximite: proximiteParJoueur[p.n] ?? {},
       population,
       vassalite,
+      // (Pèlerinage, arbitrage 2026-11-01 — étape 3quindecies :
+      //  solde net de la dîme du pontife, négatif = payée, positif
+      //  = reçue. Le pontife payeur porte les DEUX dans son solde.)
+      pelerinage: pelerinageParJoueur[p.n] ?? {},
     }
   }
   snapshotRessources(state, turnBefore + 1, apportsParJoueur)

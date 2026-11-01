@@ -145,6 +145,12 @@ export interface GameParams {
   conversionMemeCulture: number
   // ── Dogmes de culture (fondations 2026-10-30) ──
   palierTourismeDogme: number
+  /** (Bonus du pontife, arbitrage Thibaut 2026-11-01) Taux de la dîme
+   *  du PÈLERINAGE : part de la production (Or, Nourriture, Science)
+   *  de chaque habitation d'une culture ayant un dogme, versée au
+   *  pontife à chaque fin de tour (étape 3quindecies,
+   *  engine/pelerinage.ts). */
+  pelerinageTaux: number
   // ── Taxes ──
   taxOrFaibles: number
   taxOrHautes: number
@@ -279,6 +285,12 @@ export const DEFAULT_PARAMS: GameParams = {
   //  de culture = somme des villes de la culture, tous joueurs,
   //  sans les cités libres).
   palierTourismeDogme: 50,
+  // Dîme du pèlerinage (bonus du pontife, arbitrage Thibaut
+  //  2026-11-01) : 5 % de la production (Or, Nourriture, Science)
+  //  de chaque habitation des cultures ayant un dogme, versés au
+  //  pontife — prélèvement réel, un log par versement, canal
+  //  « Pèlerinage » du récap. Une culture sans dogme ne paie rien.
+  pelerinageTaux: 0.05,
   // Effet des taxes Faibles/Fortes — ±25 % (retour Thibaut, marqueur
   //  (z) — avant ±50 % ; les configs existantes encore aux anciens
   //  défauts sont migrées ciblément par cfgOf, champ taxes25).
@@ -398,6 +410,7 @@ export const PARAM_META: {
   { key: 'conversionProba', label: 'Proba de tentative de conversion culturelle', groupe: 'Culture', unite: 'proba' },
   { key: 'palierTourismeDogme', label: 'Dogmes — palier de Tourisme d\'une culture', groupe: 'Culture', unite: 'Tourisme', aide: 'Quand le Tourisme d\'une culture (somme des valeurs de Tourisme de ses villes, tous joueurs, SANS les cités libres) franchit un palier, le joueur ayant le plus de Tourisme dans cette culture choisit un dogme. Un dogme à chaque palier, cumul à l\'infini, jamais remplaçable ; dogmes, lois et effets de culture se cumulent. (Fondations 2026-10-30 : aucun dogme n\'est encore défini au référentiel.)' },
   { key: 'conversionPoidsLocal', label: 'Poids des voisins de même culture', groupe: 'Culture' },
+  { key: 'pelerinageTaux', label: 'Pèlerinage — taux de la dîme du pontife', groupe: 'Culture', unite: 'proportion', aide: 'Bonus du pontife (arbitrage 2026-11-01) : à chaque fin de tour, chaque habitation d\'une culture ayant AU MOINS un dogme verse cette part de sa production (Or, Nourriture, Science) au pontife de la culture (le joueur y ayant le plus de Tourisme, évalué au moment du prélèvement). Prélèvement réel sur les stocks — les habitations du pontife paient aussi (net nul chez lui). Pas de culte établi (aucun dogme) : pas de dîme. C\'est une dîme, pas une taxe : aucun bonus de taxes reçues ne s\'y applique.' },
   { key: 'conversionMemeCulture', label: 'Poids de sa propre culture', groupe: 'Culture' },
   { key: 'taxNourrFaibles', label: 'Taxes faibles — multiplicateur Nourriture', groupe: 'Taxes' },
   { key: 'taxNourrHautes', label: 'Taxes fortes — multiplicateur Nourriture', groupe: 'Taxes' },

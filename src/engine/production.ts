@@ -27,6 +27,7 @@ import { loisHabitants, detailLoisHabitants } from './regimes'
 import { citesLibresDe, detailCiteLibre } from './citesLibres'
 import { bonusProximite } from './villes'
 import { effetsCommerceJoueur, detailCommerceJoueur } from './commerce'
+import { pelerinageJoueur, culturesDimieres, dimeCulture } from './pelerinage'
 
 export interface ProductionDetail {
   /** production de base du pays (stockée dans resources[r].prod) — la
@@ -67,6 +68,13 @@ export interface ProductionDetail {
   /** bonus de proximité des villes (marqueur (y) : Rivière +12, Mer
    *  +7 Nourriture/tour par défaut — engine/villes.ts bonusProximite) */
   proximite: Record<string, number>
+  /** dîme du pèlerinage (bonus du pontife, arbitrage Thibaut
+   *  2026-11-01 — étape 3quindecies du moteur, engine/pelerinage.ts) :
+   *  SOLDE NET par ressource, négatif = dîme payée (ses habitations
+   *  des cultures ayant un dogme), positif = dîme reçue en tant que
+   *  pontife. Comptée dans le total : la production affichée égale
+   *  ce qui est réellement crédité au prochain tour. */
+  pelerinage: Record<string, number>
   /** (RETRAIT 2026-10-24, suppression du système de progrès : le canal
    *  « Progrès » n'est plus calculé. La clé orpheline `progres` des
    *  vieux historiques est simplement ignorée.) */
@@ -199,20 +207,29 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
     if (b !== 0) proximite['Nourriture'] = (proximite['Nourriture'] ?? 0) + b
   }
 
+  // Pèlerinage (étape 3quindecies, arbitrage Thibaut 2026-11-01) :
+  //  solde net de la dîme du pontife — payée sur les habitations
+  //  des cultures ayant un dogme, reçue en tant que pontife
+  //  (engine/pelerinage.ts, vue pelerinageJoueur : même lecture que
+  //  l'étape du moteur, sans mutation).
+  const pelerinage = pelerinageJoueur(state, p, C)
+
   // (RETRAIT 2026-10-24, suppression du système de progrès : le canal
   //  « Progrès » — flux par tour des technologies débloquées — n'est
   //  plus calculé.)
   // Armées : entretien déjà payé à la LEVÉE (règle du classeur,
   //  retour Thibaut : pas d'entretien par tour) — canal vide ici.
   const armees: Record<string, number> = {}
-  // Total
+  // Total (le canal « Pèlerinage » est compté : la production
+  //  affichée égale ce qui est réellement crédité au prochain tour,
+  //  la dîme comprise)
   const total: Record<string, number> = {}
-  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, armees]) {
+  for (const canal of [base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, pelerinage, armees]) {
     for (const [res, v] of Object.entries(canal)) {
       total[res] = (total[res] ?? 0) + v
     }
   }
-  return { base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, armees, total }
+  return { base, habitants, batiments, amenagements, nourrEte, autres, loisCultures, citesLibres, commerce, proximite, vassalite, pelerinage, armees, total }
 }
 
 // ══════════════════════════════════════════════════════════════════════
@@ -293,6 +310,7 @@ export function productionVille(
 export type CanalApport =
   | 'Base' | 'Habitants' | 'Bâtiments' | 'Aménagements' | 'Nourr - été' | 'Autres'
   | 'Lois des cultures' | 'Cités libres' | 'Commerce' | 'Proximité' | 'Vassalité'
+  | 'Pèlerinage'
 
 export interface ProvenanceApport {
   /** canal de l'apport (colonne du récap) */
@@ -432,6 +450,29 @@ export function provenancesApports(
     if (q.vassalDe !== p.n) continue
     const part = (gainsBruts(state, q)['Or'] ?? 0) * prelevement * coef
     push('Or', 'Vassalité', `tribut reçu de ${q.nom}`, part)
+  }
+
+  // Pèlerinage (étape 3quindecies, arbitrage Thibaut 2026-11-01) :
+  //  dîme payée sur les habitations des cultures ayant un dogme,
+  //  dîme reçue en tant que pontife — lignes séparées payé / reçu
+  //  (le solde du canal « Pèlerinage » du récap en est la somme).
+  for (const culture of culturesDimieres(state)) {
+    const dime = dimeCulture(state, culture, C)
+    if (!dime) continue
+    for (const v of dime.versements) {
+      if (v.payeur.n === p.n) {
+        for (const [res, montant] of Object.entries(v.montants)) {
+          push(res, 'Pèlerinage',
+            `dîme versée à ${dime.pontife.nom} (${v.payeur.villes.filter((x) => x.culture === culture).length} habitation(s) de la culture ${culture})`, -montant)
+        }
+      }
+      if (dime.pontife.n === p.n) {
+        for (const [res, montant] of Object.entries(v.montants)) {
+          push(res, 'Pèlerinage',
+            `dîme reçue de ${v.payeur.nom} (culture ${culture})`, montant)
+        }
+      }
+    }
   }
 
   return out

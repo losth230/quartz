@@ -508,6 +508,13 @@ export interface ApportsTour {
    *  engine/villes.ts). Champ optionnel : absent des historiques
    *  d'avant le canal. */
   proximite?: Record<string, number>
+  /** dîme du pèlerinage (bonus du pontife, arbitrage Thibaut
+   *  2026-11-01 — étape 3quindecies, engine/pelerinage.ts) : SOLDE
+   *  NET par ressource, négatif = dîme payée (habitations des
+   *  cultures ayant un dogme), positif = dîme reçue en tant que
+   *  pontife. Champ optionnel : absent des historiques d'avant le
+   *  canal. */
+  pelerinage?: Record<string, number>
 }
 
 export interface HistoryRow {
