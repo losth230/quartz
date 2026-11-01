@@ -151,19 +151,19 @@ test('detailCiteLibre (arbitrage Thibaut 2026-11-01) : le Fermier (métier ete) 
   const cite: CiteLibre = { nom: 'Cité', type: 'Industrielles - Ville', population }
   const fermierDef = metierDef('Fermier', C.config)
   assert.ok(fermierDef?.ete, 'fixture : le Fermier du référentiel porte bien ete')
-  // Été : Fermier +5, Chasseur +1,5 ×1,1 (règle cité) = 6,65
+  // Été : Fermier +15, Chasseur +2 ×1,1 (règle cité) = 17,2
   state.saison = 'Été'
   const dete = detailCiteLibre(cite, C, state)
-  assert.ok(Math.abs(dete.metiers['Nourriture'] - (5 + 1.5 * 1.1)) < 1e-9,
-    'été : le Fermier de la cité produit ses 5 Nourriture')
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (15 + 2 * 1.1)) < 1e-9,
+    'été : le Fermier de la cité produit ses 15 Nourriture')
   // Hiver : le Fermier ne produit RIEN, le Chasseur reste (×1,1)
   state.saison = 'Hiver'
   const dhiver = detailCiteLibre(cite, C, state)
-  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 1.5 * 1.1) < 1e-9,
+  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2 * 1.1) < 1e-9,
     'hors été : le Fermier de la cité ne produit rien (le Chasseur reste)')
   // sans état (affichage statique) : production créditée comme avant
   const sansEtat = detailCiteLibre(cite, C)
-  assert.ok(Math.abs(sansEtat.metiers['Nourriture'] - (5 + 1.5 * 1.1)) < 1e-9,
+  assert.ok(Math.abs(sansEtat.metiers['Nourriture'] - (15 + 2 * 1.1)) < 1e-9,
     'sans état passé : comportement inchangé (tous les appelants moteur/UI passent l\'état)')
 })
 

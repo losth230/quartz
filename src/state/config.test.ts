@@ -530,6 +530,38 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
 })
 
+// ── Gains Fermier & Chasseur (arbitrage 2026-11-01) : migration ciblée ──
+test('config : gains Fermier +15 été / Chasseur +2 actualisés dans une config sauvegardée à l ancien défaut (arbitrage 2026-11-01)', () => {
+  // les défauts du référentiel portent les nouveaux gains
+  const refF = cfgOf(undefined).metiers.find((t) => t.metier === 'Fermier')!
+  const refC = cfgOf(undefined).metiers.find((t) => t.metier === 'Chasseur')!
+  assert.equal(refF.valeur1, 15, 'référentiel : Fermier +15 Nourriture')
+  assert.equal(refF.ete, true, 'référentiel : le Fermier reste ete (été seulement)')
+  assert.equal(refC.valeur1, 2, 'référentiel : Chasseur +2 Nourriture')
+  // une config SAUVEGARDÉE AVANT (p. ex. la config mondiale du salon en
+  //  cours) porte encore les ANCIENS défauts : actualisés par cfgOf
+  const c = cloneDefaultConfig()
+  c.schemaVersion = 5 // déjà convergée : le garde-fou joue quand même
+  const f = c.metiers.find((t) => t.metier === 'Fermier')!
+  f.valeur1 = 5
+  const ch = c.metiers.find((t) => t.metier === 'Chasseur')!
+  ch.valeur1 = 1.5
+  // une entrée PERSONNALISÉE par l'arbitre est conservée
+  const pe = c.metiers.find((t) => t.metier === 'Pêcheur')!
+  pe.valeur1 = 99
+  const C = cfgOf(c)
+  assert.equal(C.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
+    'config sauvegardée : le Fermier à l ancien défaut exact passe à +15')
+  assert.equal(C.metiers.find((t) => t.metier === 'Chasseur')!.valeur1, 2,
+    'config sauvegardée : le Chasseur à l ancien défaut exact passe à +2')
+  assert.equal(C.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1, 99,
+    'une valeur personnalisée par l arbitre est conservée')
+  // idempotence : la re-lecture d une config déjà actualisée est stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
+    're-lecture : le garde-fou ne change rien de plus (idempotent)')
+})
+
 // ── F6 (audit 2026-10-27) : validation de forme d'une config importée ──
 test('F6 : validerFormeConfig accepte une config saine et refuse les champs au mauvais type', () => {
   // config saine : aucun problème
