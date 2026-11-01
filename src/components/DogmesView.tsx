@@ -78,6 +78,15 @@ export function DogmesView({ joueur }: { joueur: number }) {
             villes de la culture sont touchés.
           </div>
           <div className="muted small">
+            <strong>Pèlerinage (bonus du pontife) :</strong> dès qu'une culture a pris son
+            premier dogme, le culte est établi — toutes ses habitations (tous joueurs, y compris
+            celles du pontife) lui versent chaque fin de tour une dîme de{' '}
+            {Math.round(C.p.pelerinageTaux * 100)} % de leur production (Or, Nourriture,
+            Science), réellement prélevée sur les stocks des propriétaires et créditée au
+            pontife de la culture (évalué à chaque prélèvement — le flux suit le siège).
+            Pas de culte établi : pas de dîme.
+          </div>
+          <div className="muted small">
             Chaque culture ci-dessous liste TOUS ses dogmes, plusieurs par ligne : pris (palier,
             choisi par qui) ou disponibles. Sélectionne un joueur dans la barre ci-dessus : s'il
             est le pontife d'une culture avec un palier en attente, les boutons « Choisir »

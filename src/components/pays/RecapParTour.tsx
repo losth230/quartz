@@ -45,6 +45,10 @@ export function RecapParTour({ joueur, p, C, prodDetail, impotPopPrev, impotsVas
           ['Commerce', prodDetail.commerce],
           ['Proximité', prodDetail.proximite],
           ['Vassalité', prodDetail.vassalite],
+          // (Pèlerinage, arbitrage Thibaut 2026-11-01 — étape
+          //  3quindecies : solde net de la dîme du pontife, négatif =
+          //  payée, positif = reçue.)
+          ['Pèlerinage', prodDetail.pelerinage],
           // (RETRAIT 2026-10-24 : canal « Progrès » supprimé avec le
           //  système de progrès — les vieilles sauvegardes gardent la
           //  clé orpheline, ignorée à l'affichage.)

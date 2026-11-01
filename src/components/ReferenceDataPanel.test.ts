@@ -49,4 +49,42 @@ test('rendu ReferenceDataPanel : le wiki de règles s’affiche sans crash', asy
   // Les onglets du wiki sont ceux du registre de la vue.
   assert.ok(html.includes('Aménagements'), 'onglet « Aménagements » absent')
   assert.ok(html.includes('Aide-mémoire'), 'onglet « Aide-mémoire » absent')
+  // (2026-11-01, demande Thibaut : onglet « Ordre du tour » — table
+  //  de l'ordre de calcul des effets de fin de tour.)
+  assert.ok(html.includes('Ordre du tour'), 'onglet « Ordre du tour » absent')
+})
+
+test('rendu OngletOrdreTour : la table de l ordre des effets de tour est vérifiée CONTRE LE MOTEUR (R3)', async () => {
+  const etat = await partieRendu()
+  const React = await import('react')
+  const { renderToString } = await import('react-dom/server')
+  const { OngletOrdreTour } = await import('./reference/OngletOrdreTour')
+  const { cfgOf } = await import('../engine/gameData')
+  const { ETAPES_TOUR } = await import('../engine/tour')
+
+  const C = cfgOf(etat.config)
+  const html = renderToString(React.createElement(OngletOrdreTour, { C }))
+
+  // R3 : CHAQUE étape du registre du MOTEUR (engine/tour.ts) est
+  //  rendue avec son numéro et son nom — une table tronquée ou
+  //  désynchronisée du moteur ne passe plus.
+  assert.ok(
+    html.includes(`Ordre du tour — calcul des effets (${String(ETAPES_TOUR.length)} étapes)`),
+    'titre avec le compte exact des étapes absent',
+  )
+  for (const e of ETAPES_TOUR) {
+    assert.ok(html.includes(esc(e.numero)), `étape ${e.numero} absente du wiki`)
+    assert.ok(
+      html.includes(`<strong>${esc(e.nom)}</strong>`),
+      `nom de l étape ${e.numero} (« ${e.nom} ») absent du wiki`,
+    )
+  }
+  // Valeurs LIVE des prélèvements (paramètres actuels, pas du texte
+  //  figé) : tribut vassal + dîme du pèlerinage.
+  const pct = (v: number) => `${String(Math.round(v * 100))} %`
+  assert.ok(html.includes(pct(C.p.vassalPrelevement)), 'taux du tribut de vassalité non rendu en valeur live')
+  assert.ok(html.includes(pct(C.p.pelerinageTaux)), 'taux de la dîme du pèlerinage non rendu en valeur live')
+  // l étape du pèlerinage (3quindecies, ajout 2026-11-01) figure
+  //  dans la table avec son numéro historique
+  assert.ok(html.includes('3quindecies'), 'numéro 3quindecies (pèlerinage) absent')
 })

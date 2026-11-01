@@ -6,6 +6,10 @@
 //  (RETRAIT 2026-10-24, retour arbitre : le résumé affichable d'un
 //  effet de technologie, fmtEffetTech, est supprimé avec le système
 //  de progrès ; l'onglet « Progrès » disparaît de la liste.)
+//  (AJOUT 2026-11-01, demande Thibaut : onglet « Ordre du tour » —
+//  table de l'ordre de calcul des effets de fin de tour, lue depuis
+//  le registre du moteur ETAPES_TOUR, entre « Cités libres » et
+//  « Victoires ».)
 // ══════════════════════════════════════════════════════════════════════
 
 // Ordre strict des onglets du wiki (public : l'orchestrateur s'en sert
@@ -13,7 +17,7 @@
 export const ONGLETS = [
   'Métiers', 'Traits gén.', 'Peuples', 'Bâtiments', 'Aménagements',
   'Pays & rangs', 'Habitations', 'Cultures & régimes', 'Tourisme', 'Cités libres',
-  'Victoires', 'Crises', 'Rappels règles', 'Offrandes',
+  'Ordre du tour', 'Victoires', 'Crises', 'Rappels règles', 'Offrandes',
   'Couleurs', 'Aide-mémoire',
 ] as const
 
