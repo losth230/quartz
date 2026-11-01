@@ -94,6 +94,10 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     const parts: string[] = []
     if (td.ressource1 && td.valeur1) parts.push(`+${fmt(td.valeur1)} ${td.ressource1}`)
     if (td.ressource2 && td.valeur2) parts.push(`+${fmt(td.valeur2)} ${td.ressource2}`)
+    // (Arbitrage Thibaut 2026-11-01, relance « les fermiers ne
+    //  produisent qu'en été » : le badge du métier d'été porte la
+    //  mention, comme la table des métiers du wiki.)
+    if (td.ete && parts.length) parts.push('(été)')
     return parts.join(' + ')
   }
   const nomPorteur = p?.nom ?? cite?.nom ?? ''

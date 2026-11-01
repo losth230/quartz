@@ -185,7 +185,7 @@ export function productionDetaillee(state: GameState, p: Player, C: Cfg): Produc
   const citesLibres: Record<string, number> = {}
   for (const cite of citesLibresDe(state)) {
     if (cite.suzerain !== p.n) continue
-    for (const [res, v] of Object.entries(detailCiteLibre(cite, C).transfert)) {
+    for (const [res, v] of Object.entries(detailCiteLibre(cite, C, state).transfert)) {
       if (v !== 0) citesLibres[res] = (citesLibres[res] ?? 0) + v
     }
   }
@@ -415,7 +415,7 @@ export function provenancesApports(
   // Cités libres : taxes des cités sous suzeraineté du joueur
   for (const cite of citesLibresDe(state)) {
     if (cite.suzerain !== p.n) continue
-    const d = detailCiteLibre(cite, C)
+    const d = detailCiteLibre(cite, C, state)
     for (const [res, v] of Object.entries(d.transfert)) {
       push(res, 'Cités libres',
         `taxes de ${cite.nom} (${d.habitants} hab. dont ${d.adultes} adulte(s) / ${d.enfants} enfant(s), ${d.chasseurs} chasseur(s) : Nourriture ×1,1)`, v)

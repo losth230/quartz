@@ -22,7 +22,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createGame, type SetupLine } from './setup'
 import type { Character, City, CiteLibre, GameState } from './types'
-import { cfgOf, type Cfg } from './gameData'
+import { cfgOf, metierDef, type Cfg } from './gameData'
 import { facteurTaxes, taxBirthFactor, detailGainsVille } from './economie'
 import { facteurTaxesCite, detailCiteLibre } from './citesLibres'
 
@@ -139,6 +139,32 @@ test('detailCiteLibre : le transfert au suzerain suit les mêmes facteurs PAR RE
   // taxeMult PAR RESSOURCE dans le détail des cités
   assert.equal(dF.taxeMult['Nourriture'], C.p.taxNourrFaibles)
   assert.equal(dF.taxeMult['Or'], C.p.taxOrFaibles)
+})
+
+test('detailCiteLibre (arbitrage Thibaut 2026-11-01) : le Fermier (métier ete) ne produit qu en ÉTÉ — même règle que les villes', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const population: Character[] = [
+    perso('f-30', 30, { metier: 'Fermier' }),
+    perso('c-20', 20, { metier: C.p.metierChasseur }),
+  ]
+  const cite: CiteLibre = { nom: 'Cité', type: 'Industrielles - Ville', population }
+  const fermierDef = metierDef('Fermier', C.config)
+  assert.ok(fermierDef?.ete, 'fixture : le Fermier du référentiel porte bien ete')
+  // Été : Fermier +5, Chasseur +1,5 ×1,1 (règle cité) = 6,65
+  state.saison = 'Été'
+  const dete = detailCiteLibre(cite, C, state)
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (5 + 1.5 * 1.1)) < 1e-9,
+    'été : le Fermier de la cité produit ses 5 Nourriture')
+  // Hiver : le Fermier ne produit RIEN, le Chasseur reste (×1,1)
+  state.saison = 'Hiver'
+  const dhiver = detailCiteLibre(cite, C, state)
+  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 1.5 * 1.1) < 1e-9,
+    'hors été : le Fermier de la cité ne produit rien (le Chasseur reste)')
+  // sans état (affichage statique) : production créditée comme avant
+  const sansEtat = detailCiteLibre(cite, C)
+  assert.ok(Math.abs(sansEtat.metiers['Nourriture'] - (5 + 1.5 * 1.1)) < 1e-9,
+    'sans état passé : comportement inchangé (tous les appelants moteur/UI passent l\'état)')
 })
 
 test('taxBirthFactor : inchangé — naissances du côté de la Nourriture (marqueur (z), reconfirmé 2026-10-28)', () => {

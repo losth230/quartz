@@ -43,7 +43,7 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
   changerSuzerain: (nom: string, v: string) => void
   update: (fn: (s: GameState) => void) => void
 }) {
-  const d = detailCiteLibre(cite, C)
+  const d = detailCiteLibre(cite, C, state)
   const suz = cite.suzerain != null ? state.players.find((p) => p.n === cite.suzerain) : undefined
   const routesEntrantes = routesCommerceVersCite(state, cite.nom)
   const pop = cite.population ?? []

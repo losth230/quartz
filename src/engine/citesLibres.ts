@@ -127,8 +127,16 @@ export interface DetailCiteLibre {
 
 /** Production brute des métiers des habitants vivants d'une cité libre.
  *  Règle propre aux cités libres : les Chasseurs produisent 1,1 × la
- *  Nourriture (les autres ressources du metier sont inchangées). */
-export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
+ *  Nourriture (les autres ressources du metier sont inchangées).
+ *  (Arbitrage Thibaut 2026-11-01, relance « les fermiers ne produisent
+ *  qu'en été » : le champ `ete` du référentiel (vague 3a — ex. Fermier
+ *  « +5 Nourriture par tour en été ») s'applique AUSSI aux cités
+ *  libres — jusqu'ici seul le calcul des VILLES (detailGainsVille)
+ *  respectait la saison, les fermiers des cités libres produisaient
+ *  toute l'année. La saison se lit dans `state.saison` ; sans état
+ *  (appels statiques hors partie), la production d'été est créditée
+ *  comme avant — tous les appelants moteur et UI passent l'état.) */
+export function detailCiteLibre(cite: CiteLibre, C: Cfg, state?: GameState): DetailCiteLibre {
   const vivants = (cite.population ?? []).filter((c) => c.statut !== 'Décédé')
   const adultes = vivants.filter((c) => c.age >= C.p.adultAge).length
   const enfants = vivants.length - adultes
@@ -138,6 +146,9 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
     if (!c.metier) continue
     const td = metierDef(c.metier, C.config)
     if (!td) continue
+    // (Arbitrage 2026-11-01 : métier d'ÉTÉ — Fermier — hors saison
+    //  d'Été, pas de production, même règle que les villes.)
+    if (td.ete && state && state.saison !== 'Été') continue
     const chass = c.metier === C.p.metierChasseur
     if (chass) chasseurs++
     if (td.ressource1 && td.valeur1 !== 0) {
@@ -190,7 +201,7 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg): DetailCiteLibre {
 export function taxesCitesLibresRecues(state: GameState, p: Player, C: Cfg): Record<string, number> {
   const out: Record<string, number> = {}
   for (const cite of citesSuzerainesDe(state, p)) {
-    for (const [res, v] of Object.entries(detailCiteLibre(cite, C).transfert)) {
+    for (const [res, v] of Object.entries(detailCiteLibre(cite, C, state).transfert)) {
       out[res] = (out[res] ?? 0) + v
     }
   }
@@ -212,7 +223,7 @@ export function appliquerTaxesCitesLibres(
     if (n == null) continue
     const suz = state.players.find((q) => q.n === n)
     if (!suz) continue // suzerain disparu (joueur absent de la partie)
-    const d = detailCiteLibre(cite, C)
+    const d = detailCiteLibre(cite, C, state)
     const gains = out[suz.n] ?? (out[suz.n] = {})
     const parts: string[] = []
     for (const [res, v] of Object.entries(d.transfert)) {
