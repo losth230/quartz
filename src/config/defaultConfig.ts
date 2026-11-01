@@ -34,7 +34,8 @@ export interface MetierDef {
    *  3b) : absent = illimité — la cap de base vient du rang
    *  d'habitation, les paramètres capMetierChasseur* sont supprimés. */
   /** Production UNIQUEMENT pendant l'été (vague 3a — ex. Fermier
-   *  « +5 Nourriture par tour en été ») : les gains valeur1/ressource1 et
+   *  « +5 Nourriture par tour en été », montant porté à +15 par
+   *  l'arbitrage du 2026-11-01) : les gains valeur1/ressource1 et
    *  valeur2/ressource2 ne sont crédités qu'en saison d'Été. */
   ete?: boolean
   capParVille?: number
@@ -1762,6 +1763,35 @@ export function cfgOf(config?: GameConfig): Cfg {
       if (t.metier === 'Ministre' && defMinEff && (t.effet !== defMinEff.effet || t.revocation !== defMinEff.revocation)) {
         t.effet = defMinEff.effet
         t.revocation = defMinEff.revocation
+      }
+    }
+  }
+  // GAINS FERMIER & CHASSEUR (arbitrage Thibaut 2026-11-01 : « change
+  //  maintenant les fermiers à +15 nourriture en été, et les chasseurs
+  //  à +2 nourriture toute l'année ») : les deux valeurs changent dans
+  //  le RÉFÉRENTIEL, mais les configs SAUVEGARDÉES (la config MONDIALE
+  //  du salon en cours, les configs locales) embarquent la table
+  //  métiers ENTIÈRE (convergerConfig sauve la structure fusionnée ;
+  //  la fusion {...DEFAULT_CONFIG, ...c} remplace la table par la
+  //  table sauvegardée). Même patron que le vidage des textes
+  //  « Ministre » : une entrée qui vaut ENCORE l'ANCIEN défaut exact
+  //  (Chasseur 1,5 Nourriture ; Fermier 5 Nourriture + ete) est
+  //  actualisée vers le défaut courant ; une entrée PERSONNALISÉE par
+  //  l'arbitre est conservée telle quelle. Appliqué à CHAQUE cfgOf,
+  //  idempotent, SANS bump de SCHEMA_VERSION_CONFIG (règle (x)) —
+  //  ainsi la partie EN COURS reçoit bien les nouveaux gains sans
+  //  que l'arbitre ait à republier sa config.
+  if (Array.isArray(merged.metiers)) {
+    const defChasseur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Chasseur')
+    const defFermier = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Fermier')
+    for (const t of merged.metiers) {
+      if (t.metier === 'Chasseur' && defChasseur
+        && t.valeur1 === 1.5 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        t.valeur1 = defChasseur.valeur1
+      }
+      if (t.metier === 'Fermier' && defFermier && t.ete === true
+        && t.valeur1 === 5 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        t.valeur1 = defFermier.valeur1
       }
     }
   }

@@ -4991,7 +4991,7 @@
   ],
   "metiers": [
     {
-      "valeur1": 1.5,
+      "valeur1": 2,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",
@@ -5099,7 +5099,7 @@
       "qualite": "roturier"
     },
     {
-      "valeur1": 5,
+      "valeur1": 15,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",
