@@ -1972,3 +1972,17 @@ bas de page. Remplace l'ancien bloc conditionnel « pris listés +
 choix uniquement si pontife sélectionné ». Verrouillé au test de
 rendu DogmesView (grille présente, une tuile par dogme × culture,
 « Disponible » rendu).
+
+**8e retour (2026-11-01) — le choix des dogmes retiré de l'onglet
+Pays** : arbitrage Thibaut « retire le choix des dogmes de
+l'onglet pays ». Le CHOIX interactif vit désormais UNIQUEMENT dans
+l'onglet 🕯 Dogmes (dogmes en grille par culture, 7e retour). La
+carte « 🛕 Culture du pays » de la page Pays redevient LECTURE
+SEULE : Tourisme de la culture, paliers franchis, dogmes pris avec
+descriptions — la prop `choisir` de CulturePays, le mutateur
+choisirDogmeJoueur de PlayerView, les boutons « Choisir » et les
+mentions interactives (« c'est à toi de choisir », « à choisir
+par X ») sont retirés ; un simple pointeur « le choix du dogme se
+fait dans l'onglet 🕯 Dogmes » s'affiche quand un palier attend.
+Le mutateur moteur choisirDogme est INCHANGÉ (utilisé par
+DogmesView) — aucune règle de fond ne change.
