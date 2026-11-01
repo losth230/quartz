@@ -20,26 +20,30 @@
 //  `choisir`, branchée par PlayerView sur le mutateur du store —
 //  choisirDogme valide et journalise ; les erreurs partent au
 //  journal « Système »). Un dogme est unique par culture.
+//  (8e RETOUR, 2026-11-01 — arbitrage Thibaut « retire le choix
+//  des dogmes de l'onglet pays » : le CHOIX interactif vit
+//  désormais UNIQUEMENT dans l'onglet 🕯 Dogmes (DogmesView,
+//  5e/7e retours) — la prop `choisir`, les boutons « Choisir »
+//  et la mention interactive sont RETIRÉS : cette carte est
+//  LECTURE SEULE (Tourisme, paliers, dogmes pris) et renvoie à
+//  l'onglet 🕯 Dogmes quand un palier attend un choix. Le
+//  mutateur choisirDogme du moteur reste inchangé.)
 // ══════════════════════════════════════════════════════════════════════
 
 import type { GameState, Player } from '../../engine/types'
 import { cultureDef, type Cfg } from '../../engine/gameData'
 import { detailLoisHabitants } from '../../engine/regimes'
 import {
-  tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture,
-  dogmesDisponiblesCulture,
+  tourismeCulture, nbPaliersDogmes, dogmesCulture,
 } from '../../engine/dogmes'
 import { Badge, Card, fmt } from '../ui'
 
 export function CulturePays({
-  state, p, C, choisir,
+  state, p, C,
 }: {
   state: GameState
   p: Player
   C: Cfg
-  /** Mutateur du choix de dogme (PlayerView) — absent : carte de
-   *  lecture seule (tests de rendu). */
-  choisir?: (palier: number, nom: string) => void
 }) {
   return (
     <Card title="🛕 Culture du pays — lois des cultures">
@@ -56,11 +60,7 @@ export function CulturePays({
         const pris = dogmesCulture(state, p.culture)
         const enAttente = paliersFranchis - pris.length
         const prochainPalier = (pris.length + 1) * pas
-        const pontife = joueurPontifeCulture(state, p.culture, C)
         const nomJoueur = (n: number) => state.players.find((q) => q.n === n)?.nom ?? `Joueur ${n}`
-        // Dogmes du référentiel encore disponibles au choix de cette
-        //  culture (génériques '*' inclus, déjà pris exclus).
-        const disponibles = dogmesDisponiblesCulture(state, p.culture, C)
         return (
           <div className="stack">
             <div>
@@ -109,47 +109,12 @@ export function CulturePays({
                 </div>
               )
             }) : null}
+            {/* (8e retour) Plus de choix ici : un simple pointeur vers
+                l'onglet 🕯 Dogmes quand un palier attend. */}
             {enAttente > 0 && (
-              <div>
-                {pontife && pontife.joueur.n === p.n ? (
-                  <>
-                    <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
-                    <span className="small">
-                      c'est à <strong>toi</strong> de choisir {enAttente > 1 ? `${enAttente} dogmes (un par palier)` : 'un dogme'}
-                      {' '}pour la culture {p.culture}.
-                    </span>
-                    {choisir ? (
-                      <div className="stack">
-                        {disponibles.length === 0 ? (
-                          <div className="muted small">
-                            Aucun dogme disponible — la table du référentiel est vide ou tous
-                            les dogmes sont déjà pris par cette culture.
-                          </div>
-                        ) : disponibles.map((d) => (
-                          <div key={d.nom} className="mini">
-                            <strong>{d.nom}</strong>
-                            <div className="small">{d.description}</div>
-                            <button
-                              className="btn btn-small"
-                              onClick={() => choisir(prochainPalier, d.nom)}
-                            >
-                              Choisir « {d.nom} » (palier {prochainPalier})
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    ) : null}
-                  </>
-                ) : (
-                  <>
-                    <Badge tone="warn">Palier {prochainPalier} franchi</Badge>{' '}
-                    <span className="small">
-                      dogme à choisir par{' '}
-                      {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}{' '}
-                      (pontife de la culture : le plus de Tourisme).
-                    </span>
-                  </>
-                )}
+              <div className="muted small">
+                {enAttente > 1 ? `${enAttente} paliers franchis` : 'Palier franchi'} — le choix
+                du dogme se fait dans l'onglet <strong>🕯 Dogmes</strong>.
               </div>
             )}
             <div className="muted small">

@@ -45,7 +45,6 @@ import { Card } from './ui'
 import { RessourcesBar } from './pays/RessourcesBar'
 import { AideAuto } from './pays/AideAuto'
 import { CulturePays } from './pays/CulturePays'
-import { choisirDogme } from '../engine/dogmes'
 import { VillesCarte } from './pays/VillesCarte'
 import { CommerceRoutes } from './pays/CommerceRoutes'
 import { RecapParTour } from './pays/RecapParTour'
@@ -80,18 +79,14 @@ export function PlayerView({ joueur }: { joueur: number }) {
   //    référentiel, pontife) et journalise en « Culture » ; un refus
   //    part au journal « Système » (la vue ne propose que des choix
   //    valides, ce garde-fou couvre les courses entre vues/joueurs).
-  const choisirDogmeJoueur = (palier: number, nom: string) =>
-    update((s) => {
-      const t = s.players.find((x) => x.n === joueur)
-      if (!t) return
-      const err = choisirDogme(s, t.culture, palier, nom)
-      if (err) {
-        s.log.push({
-          turn: s.turn, type: 'Système', joueur: t.n,
-          texte: `⚠ ${err}`,
-        })
-      }
-    })
+  //    (8e RETOUR, 2026-11-01 — arbitrage Thibaut « retire le choix
+  //    des dogmes de l'onglet pays » : le CHOIX interactif vit
+  //    désormais UNIQUEMENT dans l'onglet 🕯 Dogmes (DogmesView) —
+  //    le mutateur choisirDogmeJoueur et la prop `choisir` de
+  //    CulturePays sont RETIRÉS d'ici ; la carte « Culture du pays »
+  //    redevient LECTURE SEULE avec un pointeur vers l'onglet. Le
+  //    mutateur choisirDogme du moteur reste inchangé, utilisé par
+  //    DogmesView.) ──
 
   // ── Production / tour détaillée (calculée, non modifiable) ────────────
   // OPTIMISATION RENDU 2026-10-16 : ces calculs parcourent les
@@ -118,9 +113,9 @@ export function PlayerView({ joueur }: { joueur: number }) {
           (a)) — bloc repliable en tête de page Pays. */}
       <AideAuto />
 
-      {/* Culture du pays : règles de ville/habitant + dogmes (le pontife
-          choisit — mutateur choisirDogmeJoueur ci-dessus). */}
-      <CulturePays state={state} p={p} C={C} choisir={choisirDogmeJoueur} />
+      {/* Culture du pays : règles de ville/habitant + dogmes en LECTURE
+          SEULE (8e retour : le choix vit dans l'onglet 🕯 Dogmes). */}
+      <CulturePays state={state} p={p} C={C} />
 
       {/* Villes : aménagements, bâtiments, autres, cultures, taxes. */}
       <VillesCarte
