@@ -1,5 +1,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  BONHEUR DES VILLES — 5 FACTEURS (design domiciles/bonheur 2026-10-24)
+//  BONHEUR DES VILLES — 4 FACTEURS (design domiciles/bonheur
+//  2026-10-24 ; tourisme retiré du bonheur 2026-11-01)
 //
 //  ARBITRAGES Thibaut FINAUX (2026-10-24, v3 — simulation scripts/sim-bonheur.ts) :
 //   · EMPLOI, LOGEMENT, SÉCURITÉ : formule OPTIMUM symétrique —
@@ -10,9 +11,14 @@
 //   · SÉCURITÉ : cible = 100 × rang d'habitation (0 si nulle,
 //       0 aussi à 2× la cible — optimum symétrique) ;
 //   · SANTÉ : 100 − pourcentage de malades (linéaire) ;
-//   · TOURISME : part du joueur dans le tourisme MONDIAL (plafonnée
-//       à 100) — une course entre joueurs, pas une gestion seule ;
-//   · BONHEUR DE LA VILLE : MOYENNE SIMPLE des 5 facteurs.
+//   · RETRAIT TOURISME (retour Thibaut 2026-11-01 : « retire le
+//       tourisme du bonheur ») : l'axe TOURISME (v3 : part du
+//       joueur dans le tourisme MONDIAL, plafonnée à 100 — une
+//       course entre joueurs) est RETIRÉ de la moyenne. Le
+//       Tourisme reste une ressource et une course (dogmes de
+//       culture, paliers, pèlerinage du pontife) mais n'entre
+//       PLUS dans le bonheur des villes ;
+//   · BONHEUR DE LA VILLE : MOYENNE SIMPLE des 4 facteurs.
 //
 //  Le bonheur est CALCULÉ (fonction pure, aucun état stocké) : il se
 //  lit à la demande de l'UI et des futures mécaniques (ascension
@@ -32,7 +38,6 @@ import { capMetierVille } from './metiers'
 import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
 import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
-import { tourismeCourant } from './regimes'
 import { effetsDogmeCulture } from './dogmes'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
@@ -55,27 +60,21 @@ export function scoreSante(malades: number, habitants: number): number {
   return Math.max(0, Math.min(100, Math.round(100 - (100 * malades) / habitants)))
 }
 
-/** TOURISME : part du joueur dans le tourisme MONDIAL (arbitrage v3)
- *  — plafonnée à 100. Mondial nul (personne ne produit) → 0 : sans
- *  course, pas de score. */
-export function scoreTourisme(tourismeJoueur: number, tourismeMondial: number): number {
-  if (tourismeMondial <= 0) return 0
-  return Math.max(0, Math.min(100, Math.round((100 * tourismeJoueur) / tourismeMondial)))
-}
-
-/** Les 5 scores d'une ville (tous bornés [0, 100]). */
+/** Les 4 scores d'une ville (tous bornés [0, 100]). */
 export interface ScoresVille {
   emploi: number
   logement: number
   securite: number
-  tourisme: number
   sante: number
 }
 
-/** Bonheur de la ville : MOYENNE SIMPLE des 5 facteurs
- *  (arbitrage v3 — pas de pondération). */
+/** Bonheur de la ville : MOYENNE SIMPLE des 4 facteurs
+ *  (arbitrage v3 — pas de pondération ; tourisme RETIRÉ du
+ *  bonheur, retour Thibaut 2026-11-01 : la v3 du 2026-10-24
+ *  comptait 5 facteurs, l'axe Tourisme — part du joueur dans
+ *  le tourisme mondial — n'entre plus dans la moyenne). */
 export function bonheurVille(s: ScoresVille): number {
-  const v = [s.emploi, s.logement, s.securite, s.tourisme, s.sante]
+  const v = [s.emploi, s.logement, s.securite, s.sante]
   return Math.round(v.reduce((a, b) => a + b, 0) / v.length)
 }
 
@@ -177,30 +176,30 @@ export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): S
   // SÉCURITÉ : cible 100 × rang (arbitrage v3)
   const securite = scoreOptimum(garnisonHabitationVille(p, ville, C, state), 100 * rangNiveau(ville, C))
 
-  // TOURISME : part du joueur dans le mondial (arbitrage v3) — le
-  //  Tourisme est une course entre joueurs, calculée par ville sur
-  //  la production du joueur (mêmes canaux que le récap).
-  const tJoueur = tourismeCourant(state, p, C)
-  const tMondial = state.players.reduce((acc, q) => acc + tourismeCourant(state, q, C), 0)
-  const tourisme = scoreTourisme(tJoueur, tMondial)
+  // (Tourisme RETIRÉ du bonheur, retour Thibaut 2026-11-01 : la
+  //  part du joueur dans le tourisme mondial n'entre plus dans
+  //  la moyenne — le Tourisme reste une course entre joueurs
+  //  (dogmes, paliers) hors du bonheur.)
 
   // SANTÉ : 100 − % malades
   const sante = scoreSante(malades, habitants)
 
-  return { emploi, logement, securite, tourisme, sante }
+  return { emploi, logement, securite, sante }
 }
 
-/** Bonheur complet d'une ville (moyenne simple des 5 scores). */
+/** Bonheur complet d'une ville (moyenne simple des 4 scores —
+ *  tourisme retiré du bonheur 2026-11-01). */
 /** (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie « Le
  *  pouvoir du peuple ») : Bonheur ajouté dans CHACUNE des
  *  habitations du joueur (bonheurParHabitation, défaut 5). Les
- *  scores purs des 5 axes sont inchangés — le bonus est un
+ *  scores purs des 4 axes sont inchangés — le bonus est un
  *  rehaussement du TOTAL, plafonné à 100. Pure. */
 export function bonusBonheurRegime(p: Player, C: Cfg): number {
   return regimeDef(p.regime, C.config)?.bonheurParHabitation ?? 0
 }
 
-/** Bonheur complet d'une ville : formule des 5 axes + la loi du
+/** Bonheur complet d'une ville : formule des 4 axes (tourisme
+ *  retiré du bonheur 2026-11-01) + la loi du
  *  régime « Le pouvoir du peuple » (Démocratie, +5 par habitation
  *  — refonte « 8 lois », 2026-10-29), plafonné à 100.
  *  (Dogme de la Liberté, 2026-10-30 : +v bonheur dans les villes

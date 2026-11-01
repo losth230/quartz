@@ -66,7 +66,7 @@ test('rendu PlayerView : la page Pays s’assemble sans crash (cartes de compone
 })
 
 
-test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jauges (retour arbitre 2026-10-25)', async () => {
+test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 4 mini-jauges (retour arbitre 2026-10-25 ; tourisme retiré du bonheur 2026-11-01)', async () => {
   const etat = await partieRendu()
   const React = await import('react')
   const { renderToString } = await import('react-dom/server')
@@ -94,7 +94,9 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
   //  rend « Bonheur <strong> » sans deux-points ; l'info-bulle du bloc
   //  contient « Bonheur : moyenne… », d'où le motif distinctif)
   assert.ok(!h.includes('Bonheur : <strong'), 'ancienne ligne bonheur encore rendue')
-  // Moyenne + les 5 axes, valeurs dérivées de l'état (patron R3).
+  // Moyenne + les 4 axes, valeurs dérivées de l'état (patron R3).
+  //  (Tourisme RETIRÉ du bonheur, retour Thibaut 2026-11-01 — le
+  //  bloc n'a plus que 4 mini-jauges.)
   const C = cfgOf(etat.config)
   const p1 = etat.players.find((p) => p.n === 1)
   assert.ok(p1, 'joueur 1 introuvable')
@@ -104,12 +106,16 @@ test('rendu VilleCarte : bloc bonheur en haut à droite — moyenne + 5 mini-jau
     assert.ok(h.includes(`>${b}</strong>`), `moyenne bonheur ${b} de « ${v.nom} » absente`)
     const axes: Array<[string, number]> = [
       ['Emploi', s.emploi], ['Logement', s.logement], ['Sécurité', s.securite],
-      ['Tourisme', s.tourisme], ['Santé', s.sante],
+      ['Santé', s.sante],
     ]
     for (const [label, val] of axes) {
       assert.ok(h.includes(esc(label)), `axe « ${label} » absent du bloc bonheur`)
       assert.ok(h.includes(`>${val}</span>`), `valeur ${val} de l'axe « ${label} » (« ${v.nom} ») absente`)
     }
+    // l'axe Tourisme ne doit PLUS être rendu dans le bloc bonheur
+    //  (motif : le LIBELLÉ de mini-jauge, pas le mot Tourisme qui
+    //  reste légitime ailleurs — carte Culture du pays, etc.)
+    assert.ok(!h.includes('bonheur-axe-label">Tourisme<'), 'l\'axe Tourisme ne doit plus apparaître dans le bloc bonheur (retrait 2026-11-01)')
   }
 })
 
@@ -131,7 +137,7 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
   //  retour du jour : colonne gauche cultures + logements +
   //  garnison EMPILÉS, colonne droite les métiers — SUPERSEDÉ
   //  le damier 2×2 du matin) est rendu dans la carte ville.
-  assert.ok(h.includes('ville-duo-cols'), 'les deux colonnes (3 tableaux empilés + métiers) absentes de la carte ville')
+  assert.ok(h.includes('ville-duo-cols'), 'les deux colonnes (3 tableaux empilés + métiers + classes sociales) absentes de la carte ville')
   assert.ok(h.includes('ville-col-stack'), 'la colonne des 3 tableaux empilés absente de la carte ville')
   assert.ok(
     h.indexOf('Cultures présentes') < h.indexOf('Logements : <strong>') &&
@@ -293,6 +299,42 @@ test('rendu VilleCarte : population, garnison, logements & métiers en DEUX COLO
     h.includes(`<strong>${esc(fmt(enPosteTotal))}/${esc(fmt(nbVivants))}</strong>`),
     `total « ${fmt(enPosteTotal)}/${fmt(nbVivants)} » (en poste/vivants) absent du tableau métiers`,
   )
+  // ── CLASSES SOCIALES (retour Thibaut 2026-10-28, 6e retour :
+  //  « sous le tableau des métiers, un tableau avec les classes
+  //  sociales présentes dans la ville ») : même colonne droite
+  //  empilée, APRÈS le tableau des métiers — classes PRÉSENTES
+  //  seulement, ordre hiérarchique noble → bourgeois → roturier,
+  //  mêmes colonnes que les cultures (label · nombre · part des
+  //  vivants), dérivées du MÊME helper moteur que la carte.
+  const { compterClassesSociales } = await import('../engine/statutSocial')
+  const classes = compterClassesSociales(habitantsCap, C)
+  assert.ok(h.includes('Classes sociales'), 'titre « Classes sociales » absent de la carte ville')
+  assert.ok(
+    h.indexOf('Métiers : <strong>') < h.indexOf('Classes sociales'),
+    'le tableau des classes sociales doit suivre le tableau des métiers (colonne droite empilée)',
+  )
+  for (const cl of classes) {
+    const label = cl.rang[0].toUpperCase() + cl.rang.slice(1)
+    const partCl = nbVivants > 0 ? `${Math.round((100 * cl.nombre) / nbVivants)} %` : '—'
+    const cellule = cl.rang === 'noble'
+      ? `<strong>${label}</strong></td><td class="num">${esc(fmt(cl.nombre))}</td><td class="num muted">${partCl}</td>`
+      : `<span class="muted">${label}</span></td><td class="num">${esc(fmt(cl.nombre))}</td><td class="num muted">${partCl}</td>`
+    assert.ok(
+      h.includes(cellule),
+      `ligne classes sociales « ${label} » (${fmt(cl.nombre)}, ${partCl}) absente de la carte ville`,
+    )
+  }
+  // Les classes ABSENTES de la ville ne s'affichent pas — la
+  //  fixture compte des nobles et des roturiers (cf. rangDe :
+  //  dynasties nobles au setup), pas forcément de bourgeois.
+  for (const rang of ['noble', 'bourgeois', 'roturier'] as const) {
+    if (classes.some((cl) => cl.rang === rang)) continue
+    const label = rang[0].toUpperCase() + rang.slice(1)
+    assert.ok(
+      !h.includes(`>${label}</strong></td>`) && !h.includes(`>${label}</span></td>`),
+      `classe absente « ${label} » ne doit pas s'afficher dans le tableau des classes sociales`,
+    )
+  }
 })
 
 test('rendu VilleCarte : production épurée par défaut — non produites cachées, toggle « tout afficher » (retour Thibaut 2026-10-26)', async () => {

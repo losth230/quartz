@@ -3,8 +3,9 @@
 //   · optimum symétrique : 100 si offre = demande, malus identique
 //     manque/excès (±25 % → 75, ×2 → 0) ;
 //   · logement par habitant ; sécurité cible 100×rang ;
-//   · santé 100 − % malades ; tourisme part du mondial ;
-//   · moyenne simple.
+//   · santé 100 − % malades ;
+//   · tourisme RETIRÉ du bonheur (retour Thibaut 2026-11-01) ;
+//   · moyenne simple des 4 facteurs.
 //  Scénarios ville : partie réelle (createGame), variations ciblées
 //  — même patron que scripts/sim-bonheur.ts (sorties simulées).
 // ═══════════════════════════════════════════════════════════════════════════
@@ -14,7 +15,7 @@ import assert from 'node:assert/strict'
 import { createGame, defaultSetups } from './setup'
 import { cfgOf, type Cfg } from './gameData'
 import {
-  scoreOptimum, scoreSante, scoreTourisme, bonheurVille,
+  scoreOptimum, scoreSante, bonheurVille,
   scoresVille, bonheurVilleComplete, bonheurJoueur, logementsVille,
 } from './bonheur'
 import type { GameState, Player, City } from './types'
@@ -52,19 +53,28 @@ test('santé : 100 − pourcentage de malades (linéaire)', () => {
   assert.equal(scoreSante(0, 0), 100)          // ville vide : pas de malades
 })
 
-test('tourisme : part du joueur dans le mondial, plafonnée', () => {
-  assert.equal(scoreTourisme(0, 0), 0)         // personne ne produit → 0
-  assert.equal(scoreTourisme(80, 80), 100)     // seul au monde
-  assert.equal(scoreTourisme(10, 80), 13)      // part relative
-  assert.equal(scoreTourisme(160, 80), 100)    // plafonné (cas anormal)
+test('tourisme : RETIRÉ du bonheur (retour Thibaut 2026-11-01)', () => {
+  // « retire le tourisme du bonheur » : l'axe Tourisme (v3 : part
+  //  du joueur dans le tourisme mondial, plafonnée à 100) n'existe
+  //  plus dans les scores ni dans la moyenne — le Tourisme reste
+  //  une course entre joueurs (dogmes, paliers, pèlerinage) sans
+  //  entrer dans le bonheur des villes.
+  const { state, p, ville, C } = partieTemoin()
+  const s = scoresVille(state, p, ville, C)
+  assert.ok(!('tourisme' in s), "plus d'axe tourisme dans ScoresVille")
+  assert.deepEqual(
+    Object.keys(s).sort(),
+    ['emploi', 'logement', 'sante', 'securite'],
+    'les 4 facteurs du bonheur, et rien d\'autre',
+  )
 })
 
-test('bonheur : moyenne simple des 5 facteurs', () => {
-  assert.equal(bonheurVille({ emploi: 100, logement: 100, securite: 100, tourisme: 100, sante: 100 }), 100)
-  assert.equal(bonheurVille({ emploi: 0, logement: 0, securite: 0, tourisme: 0, sante: 0 }), 0)
-  assert.equal(bonheurVille({ emploi: 50, logement: 50, securite: 50, tourisme: 50, sante: 50 }), 50)
+test('bonheur : moyenne simple des 4 facteurs', () => {
+  assert.equal(bonheurVille({ emploi: 100, logement: 100, securite: 100, sante: 100 }), 100)
+  assert.equal(bonheurVille({ emploi: 0, logement: 0, securite: 0, sante: 0 }), 0)
+  assert.equal(bonheurVille({ emploi: 50, logement: 50, securite: 50, sante: 50 }), 50)
   // moyenne non arrondie → arrondi au plus proche
-  assert.equal(bonheurVille({ emploi: 60, logement: 60, securite: 60, tourisme: 60, sante: 61 }), 60)
+  assert.equal(bonheurVille({ emploi: 60, logement: 60, securite: 60, sante: 61 }), 60)
 })
 
 // ── Ville réelle : données et scores ─────────────────────────────────
@@ -87,7 +97,7 @@ test('scoresVille : partie témoin tour 1 — tous les scores dans [0, 100]', ()
   //  — on vérifie les ordres de grandeur stables, pas l'égalité stricte
   //  (le référentiel peut évoluer).
   assert.ok(s.sante === 100, 'aucun malade au tour 1')
-  assert.ok(s.tourisme === 0, 'tourisme nul au tour 1 (4 mondial, part < 1 %)')
+  assert.ok(!('tourisme' in s), "plus d'axe tourisme (retrait du bonheur 2026-11-01)")
 })
 
 test('scoresVille : variations ciblées reprennent les scénarios simulés', () => {

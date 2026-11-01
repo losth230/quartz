@@ -172,7 +172,7 @@ test('Pouvoir du peuple : chemin moteur — bonheurVilleComplete plafonné à 10
   p.regime = 'Démocratie'
   for (const ville of p.villes) {
     const attendu = Math.min(100, bonheurVille(scoresVille(state, p, ville, C)) + 5)
-    assert.equal(bonheurVilleComplete(state, p, ville, C), attendu, 'formule des 5 axes + 5, plafonnée à 100')
+    assert.equal(bonheurVilleComplete(state, p, ville, C), attendu, 'formule des 4 axes (tourisme retiré du bonheur 2026-11-01) + 5, plafonnée à 100')
     assert.ok(bonheurVilleComplete(state, p, ville, C) <= 100, 'jamais au-dessus de 100')
   }
   // Hors Démocratie : le bonheur complet EGALE la formule pure.
