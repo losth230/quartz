@@ -437,8 +437,9 @@ sous-vagues 3a (métiers & emplacements) puis 3b (routes dissociées).
   Artiste +5 Tourisme · Commerçant +1 Or · Bûcheron +0,5 Bois ·
   Mineur +0,5 Pierre · Forgeron +0,5 Fer · Tisseur +0,5 Soie ·
   Éleveur +0,5 Bétail +2 Nourriture · Charbonnier +0,5 Charbon ·
-  Fermier +15 Nourriture (ÉTÉ uniquement — porté de +5 à +15 par
-  l'arbitrage du 2026-11-01) · Archéologue +4 Tourisme ·
+  Fermier +10 Nourriture (ÉTÉ uniquement — historique du même jour
+  2026-11-01 : +5 → +15 → +10, arbitrages successifs de Thibaut) ·
+  Archéologue +4 Tourisme ·
   Pêcheur +4 Nourriture · Scientifique +0,5 Science · Marchand +2 Or.
 - **Le marqueur `ete` s'applique PARTOUT** (correctif arbitré
   2026-11-01, relance Thibaut « les fermiers ne produisent qu'en
