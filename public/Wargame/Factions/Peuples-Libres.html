@@ -1,0 +1,2308 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr"><head><title>Peuples Libres</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Chasse et Pêche"/><meta property="og:title" content="Peuples Libres"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Peuples Libres"/><meta name="twitter:description" content="Version : A3.5.0 Règles de Faction Féodalité Les Peuples Libres n’ont pas de limite maximale de commandants."/><meta property="og:description" content="Version : A3.5.0 Règles de Faction Féodalité Les Peuples Libres n’ont pas de limite maximale de commandants."/><meta property="og:image:alt" content="Version : A3.5.0 Règles de Faction Féodalité Les Peuples Libres n’ont pas de limite maximale de commandants."/><meta property="twitter:domain" content="losth230.github.io/quartz"/><meta property="og:url" content="https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres"/><meta property="twitter:url" content="https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Version : A3.5.0 Règles de Faction Féodalité Les Peuples Libres n’ont pas de limite maximale de commandants."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" data-persist="true"/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9jcHcvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../prescript.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://losth230.github.io/quartz/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres-og-image.webp"/><meta property="og:image:url" content="https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres-og-image.webp"/><meta name="twitter:image" content="https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres-og-image.webp"/><meta property="og:image:type" content="image/.webp"/><link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve/><script src="/quartz/static/marked.min.js" spa-preserve></script><script src="/quartz/static/cp-markdown.js" spa-preserve></script><script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve></script><script type="module" src="/quartz/static/cp-army-lists.js" spa-preserve></script><script type="module" src="/quartz/static/cp-bug-tracker.js" spa-preserve></script><script type="module" src="/quartz/static/cp-stats.js" spa-preserve></script><script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve></script><script type="module" src="/quartz/static/cp-actus.js" spa-preserve></script><script type="module" src="/quartz/static/cp-army-builder.js?v=3" spa-preserve></script><script type="module" src="/quartz/static/jdr-fiches.js" spa-preserve></script><script type="module" src="/quartz/static/cp-auth.js?v=1" spa-preserve></script><link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-bug-report.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-army-builder.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-wargame-index.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/jdr-fiches.css" spa-preserve/></head><body data-slug="Wargame/Factions/Peuples-Libres"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Chasse et Pêche</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Recherche</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Rechercher quelque chose" placeholder="Rechercher quelque chose"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Mode sombre"><title>Mode sombre</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Mode clair"><title>Mode clair</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Mode lecture"><title>Mode lecture</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-154"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorateur</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-154" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Wargame/">Wargame</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Wargame/Factions/">Factions</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Peuples Libres</a></div></nav><h1 class="article-title">Peuples Libres</h1><p show-comma="true" class="content-meta"><time datetime="2026-10-22T07:13:37.000Z">22 oct. 2026</time><span>21 min de lecture</span></p></div></div><article class="popover-hint"><h5 id="version--a350">Version : A3.5.0<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version--a350" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<center><h2 id="règles-de-faction">Règles de Faction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-de-faction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></center>
+<div class="cp-encadre">
+<h4 id="féodalité">Féodalité<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#féodalité" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Les Peuples Libres n’ont pas de limite maximale de commandants. Les Peuples libres peuvent considérer leurs commandants comme des unités de base pour les règles de création de bande.</p>
+<h4 id="fer-de-lance">Fer de Lance<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fer-de-lance" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Les unités Chevalier peuvent dépenser 2 fois leur masse par obtenir la monture Cheval ci-dessous ou peuvent dépenser 4 fois leur masse pour obtenir la monture Pégase ci-dessous et obtenir la règle spéciale <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>. S’ils ont ainsi acheté une monture, ils peuvent également acheter l’équipement de la lance médiéval :</p>
+<ul>
+<li>Lance de cavalerie (+1 pts) : cette unité bénéficie de +1d6 en mêlée si elle réussit une charge.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Cheval</td><td><strong>7</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>+1</strong></td><td><strong>-</strong></td><td></td></tr><tr><td><strong>Mêlée:</strong></td><td>0d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Pégase</td><td><strong>7</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>+1</strong></td><td><strong>+1</strong></td><td><strong>+1</strong></td><td>Bête</td></tr><tr><td><strong>Mêlée:</strong></td><td>1d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Vol" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Vol">Vol</a>.</em></p>
+<h5 id="règles-spéciales-">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a>.</li>
+</ul>
+</div>
+<hr/>
+<center><h2 id="grandes-bannières">Grandes Bannières<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grandes-bannières" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></center>
+<p>Les différents royaumes libres se regroupent souvent autour d’un étendard commun. N’importe quel Chevalier peut posséder une bannière, Voici leurs différents effets :</p>
+<div class="cp-encadre">
+<ul>
+<li><strong>Etendard de Til Armen (20 pts) :</strong> Au début de chaque tour, octroyez <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a> aux modèles amis à 15” ou  moins.</li>
+<li><strong>Bannière de la Quête (15 pts) :</strong> Si vous possédez plus de points de victoire que votre adversaire, vos modèles chevaliers à  9” ou moins peuvent faire exploser leurs 5 naturels comme si c’étaient des 6.</li>
+<li><strong>Bannière de Skoïda (5 pts) :</strong> Au début de chaque tour, désignez un modèle ami à 9” ou moins et octroyez-lui <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>.</li>
+<li><strong>Etendard de Lun (5 pts) :</strong> Le porteur de cette bannière génère un dé de Manœuvre blanc supplémentaire.</li>
+<li><strong>Bannière des Légendes (10 pts) :</strong> Les modèles amis à 9” ou moins bénéficie de <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</li>
+<li><strong>Bannière de l’Inquisition (5 pts) :</strong> Tant que le porteur de cette bannière est en vie, vous pouvez relancer un dé de Manœuvre au début de chaque phase d’initiative.</li>
+<li><strong>Etendard de Seth (15 pts)</strong> : Les modèles amis à 15’ ou moins bénéficient de <a href="../../Wargame/_Visualisation/Règles-spéciales/Indomptable" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Indomptable">Indomptables</a>.</li>
+<li><strong>Bannière d’Hydrac (10 pts)</strong> : Un modèle avec cette bannière commence la partie avec la Volonté de Fer (cf Seth).</li>
+<li><strong>Bannière du Notan (15 pts)</strong> : Lorsqu’un modèle ami rate un test de Panique à 9” ou moins, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.</li>
+<li><strong>Etendard de Thoriath (10 pts)</strong> : Lorsqu’un modèle à 15” ou moins  doit effectuer un test de Panique, il peut utiliser le moral de ce modèle à la place.</li>
+<li><strong>Bannière de Boïtal (10 pts)</strong> : Les modèles amis avec la règle spéciale <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a> à 9” ou  moins bénéficient de +1 Vitesse.</li>
+<li><strong>Bannière de Fessac (10 pts)</strong> : Les modèles amis à 9” ou moins bénéficient de +1 Moral.</li>
+<li><strong>Etendard d’Ishtar (15 pts)</strong> : Lorsqu’un modèle ami à 15” ou moins attaque, il peut ajouter 1 dé à son total de dés.</li>
+<li><strong>Bannière de la Busquette (20 pts) :</strong> Au début de chaque tour, désignez un modèle à  9” ou moins et octroyez-lui une marche gratuite.</li>
+<li><strong>Bannière d’Hazard (10 pts) :</strong> Au début  de chaque tour, désignez un modèle à 9” ou moins et octroyez-lui <a href="../../Wargame/_Visualisation/Règles-spéciales/Sauvagerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Sauvagerie">Sauvagerie</a></li>
+</ul>
+</div>
+<hr/>
+<div class="cp-domaine">
+<h2 id="domaine-de-la-pureté">Domaine de la Pureté<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domaine-de-la-pureté" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-attribut">
+<p><strong>Attribut : purification :</strong> Lorsqu’un sort de ce domaine est lancé, désignez un modèle à 9” ou moins du lanceur et retirez-lui le marqueur de votre choix, autre qu’un marqueur activation.</p>
+</div>
+<div class="cp-niveau">
+<h3 id="niveau-1">Niveau 1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<div class="cp-sorts">
+<div class="cp-sort">
+<h5 id="bouclier-saint-court-2-amélioration">Bouclier saint <em>(court, 2+, amélioration)</em><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#bouclier-saint-court-2-amélioration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<p>Portée 12”, confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (2)</a>.</p>
+</div>
+<div class="cp-sort">
+<h5 id="mot-de-silence-court-6-malédiction">Mot de silence <em>(court, 6+, malédiction)</em><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mot-de-silence-court-6-malédiction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<p>Portée 15”, cible un lanceur de sort ennemi, il ne peut plus lancer ou dissiper de sorts pour le reste du tour. Ce sort peut être lancé par un modèle engagé en mêlée.</p>
+</div>
+</div>
+</div>
+<div class="cp-niveau">
+<h3 id="niveau-2">Niveau 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<div class="cp-sorts">
+<div class="cp-sort">
+<h5 id="lumière-bénie-long-7-amélioration">Lumière bénie <em>(long, 7+, amélioration)</em><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#lumière-bénie-long-7-amélioration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<p>Portée 12”. La prochaine fois que la cible de ce sort subit des touches d’une attaque en mêlée ou à distance, l’attaquant doit relancer tous ses jets ayant obtenu une touche.</p>
+</div>
+<div class="cp-sort">
+<h5 id="courroux-divin-court-8-amélioration">Courroux divin <em>(court, 8+, amélioration)</em><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#courroux-divin-court-8-amélioration" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<p>Ce sort cible le lanceur et est utilisable en mêlée. Jusqu’à la fin du tour, le lanceur bénéficie de <em><a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a></em> ainsi qu’un bonus de +1 sur ses jets d’attaque en mêlée.<br/>
+→ <strong>Version renforcée (1) :</strong> ce sort peut être lancé sans dépenser d’action.</p>
+</div>
+</div>
+</div>
+<div class="cp-niveau">
+<h3 id="niveau-3">Niveau 3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<div class="cp-sorts">
+<div class="cp-sort">
+<h4 id="mot-sacré--sanctification-long-18-projectile">Mot sacré : Sanctification <em>(long, 18+, Projectile)</em><a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#mot-sacré--sanctification-long-18-projectile" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Bénie toutes les unités amies à 15” ou moins du lanceur. Jusqu’à la fin du tour, elles bénéficient de Vitesse +1, +1d6 en mêlée et <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a>.</p>
+</div>
+</div>
+</div>
+</div>
+<center><h2 id="royaumes-et-ordres">Royaumes et Ordres<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#royaumes-et-ordres" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></center>
+<p>Lors de la création d’une bande des Peuples Libres, choisissez un Royaume auquel vous appartenez et un Ordre parmi ceux disponibles au sein du Royaume.</p>
+<div class="cp-royaume">
+<h2 id="royaume-de-til-armen">Royaume de Til Armen<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#royaume-de-til-armen" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-roy-bonus">
+<ul>
+<li><strong>La Tour Blanche :</strong> Au début de chaque tour, octroyez <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a> à chacun de vos modèles chevalier.</li>
+<li><strong>Mythes et légendes :</strong> Les unités chevalier bénéficient de +1d6 en mêlée.</li>
+</ul>
+</div>
+<div class="cp-roy-ordres">
+<div class="cp-ordre">
+<h4 id="ordre-des-chevaliers">Ordre des Chevaliers<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ordre-des-chevaliers" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Serment de la Quête :</strong> Au début de chaque tour, si vous possédez plus de points de victoire que votre adversaire, vos modèles chevaliers peuvent faire exploser leurs 5 naturels comme si c’étaient des 6.</li>
+<li><strong>Offrande rituelle (4) :</strong> Action courte utilisable par n’importe quel modèle chevalier non engagé en mêlée pour générer 1 point de victoire. Utilisable une seule fois par tour.</li>
+</ul>
+</div>
+<div class="cp-ordre">
+<h4 id="duché-de-skoïda">Duché de Skoïda<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duché-de-skoïda" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Académie de magie :</strong> Vos lanceurs de sorts ont un bonus de +1 au lancements de leurs sorts par <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a> présents sur vos modèles.</li>
+<li><strong>Bouclier saint (1) :</strong> A utiliser en début de tour pour octroyer <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a> à un modèle (utilisable au maximum une fois par modèle).</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cp-royaume">
+<h2 id="royaume-de-lun">Royaume de Lun<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#royaume-de-lun" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-roy-bonus">
+<ul>
+<li><strong>Faveur divine (1) :</strong> Lorsque qu’un modèle effectue un jet d’attaque en mêlée, à distance, ou encore un jet d’armure. Il peut transformer un échec en un 6 (explosif). Cette compétence est utilisable une seule fois par jet.</li>
+<li><strong>L’art de la guerre :</strong> Votre général génère 1 dé de Manœuvre blanc supplémentaire.</li>
+</ul>
+</div>
+<div class="cp-roy-ordres">
+<div class="cp-ordre">
+<h4 id="palais-des-légendes">Palais des Légendes<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#palais-des-légendes" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Miracle (1) :</strong> A utiliser en plus de Faveur divine pour transformer un échecs en un 6 (explosifs).</li>
+<li><strong>Main Divine :</strong> Les comandants bénéficie de <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</li>
+</ul>
+</div>
+<div class="cp-ordre">
+<h4 id="inquisition">Inquisition<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#inquisition" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Personne n’attend l’Inquisition :</strong> Une fois le déploiement terminé, retirez 2 modèles de votre table et redéployez-les avec la règle <a href="../../Wargame/_Visualisation/Règles-spéciales/Avant-Garde" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Avant-Garde">Avant-Garde</a>.</li>
+<li><strong>Strategos :</strong> Tant que votre général est en vie, vous pouvez relancer 3 dés de Manœuvre par phase d’initiative.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cp-royaume">
+<h2 id="empire-de-seth">Empire de Seth<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#empire-de-seth" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-roy-bonus">
+<ul>
+<li><strong>Volonté de fer :</strong> Lorsque qu’un modèle ami perd au moins 1 PV, il gagne la Volonté de Fer. Un modèle possédant la Volonté de Fer peut relancer ses jets d’armure de 1 et perd la Volonté de Fer dès qu’il rate un test de moral.</li>
+<li><strong>Désert des lames :</strong> Les modèles Chevalier bénéficient de la règle spéciale <a href="../../Wargame/_Visualisation/Règles-spéciales/Indomptable" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Indomptable">Indomptable</a>.</li>
+</ul>
+</div>
+<div class="cp-roy-ordres">
+<div class="cp-ordre">
+<h4 id="duché-dhydrac">Duché d’Hydrac<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duché-dhydrac" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Divine Onction :</strong> Au début de chaque tour, désignez un modèle et octroyez-lui Volonté de Fer.</li>
+<li><strong>Dernier rempart :</strong> Les modèles peuvent cumuler la volonté de fer. Ainsi, un modèle avec 2 volontés de fer pourra relancer les jets d’armure ayant obtenu 1 et 2. Un modèle ne peut gagner plus de 1 volonté de fer par tour.</li>
+</ul>
+</div>
+<div class="cp-ordre">
+<h4 id="ordre-des-chevaliers-du-notan">Ordre des Chevaliers du Notan<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#ordre-des-chevaliers-du-notan" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Œil pour œil :</strong> Les modèles avec Volonté de Fer bénéficient de +1 pour toucher sur leurs attaques en mêlée.</li>
+<li><strong>Loi du Talion :</strong> lorsqu’un modèle doit effectuer un test de Panique, il peut annuler son test de Panique en réussissant une charge sur un modèle ennemi à portée.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cp-royaume">
+<h2 id="royaume-de-thoriath">Royaume de Thoriath<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#royaume-de-thoriath" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-roy-bonus">
+<ul>
+<li><strong>Conscription :</strong> Les unités coûtent 1 pts de moins lors de la création d’un bande (pour un minimum de 6 pts).</li>
+<li><strong>Serf et Chevaliers :</strong> Lorsqu’un modèle Paysan doit effectuer un test de moral, il peut utiliser la caractéristique de moral d’un modèle Chevalier à 6” ou moins au lieu de la sienne.</li>
+</ul>
+</div>
+<div class="cp-roy-ordres">
+<div class="cp-ordre">
+<h4 id="duché-de-boïtal">Duché de Boïtal<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duché-de-boïtal" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Chanson de Geste :</strong> Les unités Chevalier de type Commandant peut être assemblées en tant que modèle comme s’ils s’agissaient de modèles de Base. Les modèles ainsi assemblés sont considérés comme des modèles de base en ce qui concerne les règles de formation de bande.</li>
+<li><strong>Grande chevauchée :</strong> Les modèles ayant la règle spéciale <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a> bénéficient de +1 Vitesse.</li>
+</ul>
+</div>
+<div class="cp-ordre">
+<h4 id="duché-de-fessac">Duché de Fessac<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#duché-de-fessac" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Le devoir du paysan :</strong> Les unités Paysans coûtent 1 pts de moins lors de la création d’un bande (pour un minimum de 5 pts).</li>
+<li><strong>En rangs serrés :</strong> Un modèle à 4” ou moins d’un autre modèle ami gagne +1 en Moral et bénéficie d’un bonus de +1 sur ses jets d’armure.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="cp-royaume">
+<h2 id="temple-dishtar">Temple d’Ishtar<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#temple-dishtar" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="cp-roy-bonus">
+<ul>
+<li><strong>Ferveur martiale :</strong> Lorsqu’un modèle Sœur dépense une Manœuvre pour s’octroyer un dé lors d’une attaque en mêlée ou à distance, il bénéficie de <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a> et <a href="../../Wargame/_Visualisation/Règles-spéciales/Tireur-d'Elite" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Tireur-d'Elite">Tireur d’Elite</a> pour le reste de l’attaque.</li>
+<li><strong>Vœu de Silence :</strong> lorsqu’un lanceur de sorts tente de lancer un sort, il souffre d’un malus de 1 par unité Sœurà 24” ou moins de lui.</li>
+</ul>
+</div>
+<div class="cp-roy-ordres">
+<div class="cp-ordre">
+<h4 id="monastère-de-la-busquette">Monastère de la Busquette<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#monastère-de-la-busquette" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Croisade (4) :</strong> Utilisable une seule fois par partie pour octroyer +1d6 en mêlée et à distance à toutes vos unités Sœur pour le reste du tour.</li>
+<li><strong>Assomption :</strong> Lorsqu’une unité Sœur meurt, générez 1 Manœuvre.</li>
+</ul>
+</div>
+<div class="cp-ordre">
+<h4 id="abatiale-dhazard">Abatiale d’Hazard<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#abatiale-dhazard" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Epiphanie (2) :</strong> Retirez le marqueur <em>Activé</em> d’un modèle Sœur après avoir résolu son activation.</li>
+<li><strong>Ferveur de Bataille :</strong> lorsqu’un modèle Sœur est pris pour cible par une attaque à distance, vous pouvez lui faire effectuer une marche gratuite et lui octroyer <a href="../../Wargame/_Visualisation/Règles-spéciales/Sauvagerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Sauvagerie">Sauvagerie</a> (ce qui peut donc rendre le tir impossible, ou déclenche automatiquement une charge si le modèle Sœur arrive ainsi en mêlée). Chaque modèle Sœur ne peut utiliser cette aptitude qu’une seule fois par tour.</li>
+</ul>
+</div>
+</div>
+</div>
+<hr/>
+<h2 id="commandants">Commandants<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commandants" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="legendary">
+<h3 id="arkadia--42-pts">Arkadia — 42 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#arkadia--42-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Arkadia</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>6+</strong></td><td><strong>8</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>5d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="règles-spéciales--1">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Parade : les modèles adverses à  1” ou moins subissent un malus de -1  pour toucher en mêlée.</li>
+<li>Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6” ou moins.</li>
+</ul>
+<hr/>
+<h3 id="abbesse--44-pts">Abbesse — 44 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#abbesse--44-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Abbesse</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>9</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="règles-spéciales--2">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Appel divin (3) : utilisable une seule fois par partie lorsque vous avez terminé l’activation de l’Abbesse. Désignez jusqu’à 3 modèles amis à 6’’ ou et retirez leurs marqueurs Activés.</li>
+<li>Regard silencieux : la règle Vœu de silence de cette unité peut affecter un modèle déjà affecté par la règle Vœu de silence.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="allie--49-pts">Allie — 49 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#allie--49-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Allie</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>9</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>5</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>6d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Embuscade" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Embuscade">Embuscade</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="équipement-">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Kama : les attaques de ce modèle obtenant un résultat pair infligent une blessure sans possibilité d’armure, même si elles ne devaient pas normalement toucher.</li>
+<li>Kunai : vous pouvez annuler les attaques de ce modèle obtenant un résultat impair considéré comme touche pour octroyer une <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a> par attaque ainsi annulée.</li>
+</ul>
+<h5 id="règles-spéciales--3">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Nappe de brouillard (1) : une fois par partie, Allie se téléporte sur 6’’ et gagne 2 Egides. Elle est inciblable pour les attaques à distances et sorts pour le reste du tour.</li>
+<li>Projection (1) : une fois par partie, après un mouvement de course, Allie se téléporte dans le dos d’un modèle ennemi qu’elle peut voir à 6’’ ou moins, cela compte comme une charge.</li>
+</ul>
+<hr/>
+<h3 id="baron--16-pts">Baron — 16 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#baron--16-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Baron</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>1d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--1">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Compte : le Baron génère un dé de Manœuvre blanc plutôt qu’un dé rouge.</li>
+</ul>
+<h5 id="règles-spéciales--4">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Organisateur de tournoi  : le Baron bénéficie d’un bonus de +1d6 en mêlée par unité Chevalier ami en vie.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="grand-paladin--48-pts">Grand Paladin — 48 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grand-paladin--48-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Grand Paladin</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>9</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--2">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lame de cérémonie du Royaume de Lun : cette arme confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a>, lors du déploiement et à la fin de chaque tour, l’épée peut être affectée à une unité amie à 9’’ ou moins de celui la possédant. Chaque fois que le Grand Paladin lance un sort, l’épée gagne +1d6 en mêlée pour le reste de la partie (qu’elle octroie à son porteur).</li>
+</ul>
+<h5 id="magie-">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Le Grand Paladin est un lanceur de sorts de niveau 4 ayant accès au Domaine de la Pureté et au Domaine de la Lumière.</li>
+</ul>
+<h5 id="règles-spéciales--5">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Préparer le rituel : Au début de chaque tour, désignez un modèle Paysan ou Sœur à 6” ou moins et octroyez-lui une marche gratuite.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="hans-lightmealow--52-pts">Hans Lightmealow — 52 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hans-lightmealow--52-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Hans</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>5</strong></td><td><strong>2</strong></td><td><strong>5</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>6d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</em></p>
+<h5 id="règles-spéciales--6">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Entrainement : Au début de chaque tour, désignez un modèle ami à 9” ou moins et octroyez à chacune de ses unités +1d6 en mêlée.</li>
+<li>Compagnon de quête : Une fois le déploiement terminé, générez un Point de Victoire. Si Hans est retiré du plateau de jeu, perdez 1 Point de Victoire.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="jeanne--48-pts">Jeanne — 48 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jeanne--48-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Jeanne</td><td><strong>-</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>10</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td><strong>8</strong></td><td>Chevalier</td></tr><tr><td>Aurore</td><td><strong>7</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td>Bête</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6 / 0d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a> / <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>,<a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--3">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Oriflamme : Si Jeanne possède une grande bannière, l’<a href="../../Wargame/_Visualisation/Règles-spéciales/Aura" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Aura">Aura</a> de cette grande bannière est augmentée de 3’’.</li>
+</ul>
+<h5 id="règles-spéciales--7">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li><a href="../../Wargame/_Visualisation/Règles-spéciales/Aura" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Aura">Aura</a> de pureté : les modèles adverses à 1’’ ou moins bénéficie d’un malus de -1 sur leurs jets d’attaque en mêlée.</li>
+<li>Bouter l’ennemi (2) : à utiliser en début de tour, une seule fois par partie. Pour le reste du tour, les modèles Paysan bénéficie de +1d6 en mêlée et à distance, et peuvent immédiatement effectuer une action courte.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="kalane--110-pts">Kalane — 110 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#kalane--110-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Kalane</td><td><strong>6</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>10</strong></td><td><strong>7</strong></td><td><strong>3</strong></td><td><strong>8</strong></td><td>Sœur Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>10d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Régénération" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Régénération">Régénération (2)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Vol" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Vol">Vol</a>.</em></p>
+<h5 id="équipement--4">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Chaînes en Vrai-Argent : lorsque ce modèle utilise Faveur Divine lors d’une attaque en mêlée, il peut transformer deux résultats de 6 explosifs au lieu d’un seul.</li>
+</ul>
+<h5 id="règles-spéciales--8">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Tempête de lames (1) : utilisable une seule fois par tour, ce modèle peut Riposter sans s’activer ou se fatiguer.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="loneline--36-pts">Loneline — 36 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#loneline--36-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Loneline</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>9</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Sœur - Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</em></p>
+<h5 id="règles-spéciales--9">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Ardent défenseur : Loneline commence avec la partie avec la Volonté de Fer.</li>
+<li>Chevalière du Notan : Loneline est considérée comme un Chevalier du Notan (voir Losette).</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="losette--46-pts">Losette — 46 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#losette--46-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Losette</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>10</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>5</strong></td><td>Sœur - Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</em></p>
+<h5 id="règles-spéciales--10">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Ardent défenseur : Losette commence avec la partie avec la Volonté de Fer. Si Losette est déployée au sein d’un modèle, celui-ci bénéficie également de la Volonté de Fer.</li>
+<li>Chevalière du Notan : Losette est considérée comme un Chevalier du Notan. Les Chevaliers du Notan bénéficient de +1d6 en mêlée tant qu’ils bénéficient de la Volonté de Fer.</li>
+<li>Dernière Lo : lorsque vous construisez une armée et que Losette est votre Générale, vous pouvez désigner un modèle ami et payer sa masse en points pour qu’ils soient considérés comme des Chevaliers du Notan.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="luxana--36-pts">Luxana — 36 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#luxana--36-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Luxana</td><td><strong>5</strong></td><td><strong>5+</strong></td><td><strong>3+</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>5</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--5">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Talisman de la ligné de Domblaʄ : lorsque Luxana tente de lancer un sort bénéfique, elle bénéficie d’un bonus de +2 à ses jets de lancement.</li>
+</ul>
+<h5 id="magie--1">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Luxana est un lanceur de sorts de niveau 3 ayant accès au Domaine de la Pureté et au Domaine de la Lumière.</li>
+<li>Cage de lumière (court, 12+, projectile) : Portée 12’’, 3d6. Si la moindre touche est obtenue, la valeur de mouvement de la cible est réduite à 0 pour le reste du tour.</li>
+</ul>
+<h5 id="règles-spéciales--11">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Dualité : Lorsque Luxana lance un sort avec succès, elle déclenche à la fois l’attribut du Domaine de la Pureté et celui du domaine de la Lumière.</li>
+</ul>
+<hr/>
+<h3 id="matriarche--29-pts">Matriarche — 29 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#matriarche--29-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥🟥🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Matriarche</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>6+</strong></td><td><strong>8</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Attaques-Enflammées" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Attaques-Enflammées">Attaques Enflammées</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="règles-spéciales--12">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Tison enflammé : au début de chaque tour, octroyez <a href="../../Wargame/_Visualisation/Règles-spéciales/Attaques-Enflammées" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Attaques-Enflammées">Attaques Enflammées</a> à un modèle ami à  9” ou moins.</li>
+</ul>
+<hr/>
+<h3 id="sergent--12-pts">Sergent — 12 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sergent--12-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Sergent</td><td><strong>5</strong></td><td><strong>5+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--6">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Etendard : le Sergent peut porter une grande bannière.</li>
+</ul>
+<h5 id="règles-spéciales--13">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Formation défensive : au début de chaque tour, désignez un modèle ami à 9’’ ou moins et octroyez-lui <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="sir-hugues-le-preux--22-pts">Sir Hugues le Preux — 22 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sir-hugues-le-preux--22-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Hugues</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em>- /<a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--7">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--7" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lance médiévale (+2 pts) : cette unité bénéficie de [[Wargame/_Visualisation/Règles spéciales/Force Dévastatrice|Force Dévastatrice (1)] en mêlée si elle réussit une charge.</li>
+</ul>
+<h5 id="règles-spéciales--14">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Maître Palefrenier : l’attribution de monture à une unité via la règle Fer de Lance coûte 2 pts de moins lors de la création d’un bande.</li>
+<li>Maitre cavalier : tout modèle rejoint par Hugues gagne la Règle Cavalier Expert <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalier-Expérimenté" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalier-Expérimenté">Cavalier Expérimenté</a>.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="tristan-le-rayonnant--28-pts">Tristan le Rayonnant — 28 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#tristan-le-rayonnant--28-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Tristan</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a>.</em></p>
+<h5 id="règles-spéciales--15">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--15" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Imposition des mains : Lorsque vous activez cette unité, désignez un modèle ami à 9’’ ou moins qui récupèrent 1 PV.</li>
+</ul>
+<hr/>
+<h2 id="modèles-de-base">Modèles de base<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-de-base" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="assassine--21-pts">Assassine — 21 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#assassine--21-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Assassine</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>6+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Embuscade" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Embuscade">Embuscade</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="équipement--8">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--8" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lame d’assassin : les attaques de ce modèle obtenant un résultat impair considéré comme touche infligent des dégâts bruts.</li>
+</ul>
+<h5 id="règles-spéciales--16">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--16" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Assassinat : si cette unité attaque une cible de dos et après avoir résolu les touches, vous pouvez transformer une de ses touches impaires en touche pair.</li>
+<li>Nappe de brouillard (1) : une fois par partie, ce modèle devient inciblable pour les attaques à distances et sorts pour le reste du tour.</li>
+</ul>
+<hr/>
+<h3 id="basiléen--46-pts">Basiléen — 46 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#basiléen--46-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Basiléen</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>9</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>6d6</td><td></td><td><strong>Tir:</strong></td><td>2d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a></em></p>
+<h5 id="équipement--9">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--9" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Armure en Forgelumière : l’armure de ce modèle ne peut être réduit d’aucune raison que ce soit. De plus, cette unité peut effectuer des jets d’armures normaux contres les dégâts bruts.</li>
+</ul>
+<h5 id="règles-spéciales--17">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--17" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Garde du Palais : la <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice</a> de ce modèle est égale au nombre de points de Manœuvre qu’il a dépensé durant ce tour (max <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (3)</a>).</li>
+</ul>
+<hr/>
+<h3 id="chevaucheur-de-pégase--26-pts">Chevaucheur de Pégase — 26 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chevaucheur-de-pégase--26-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Chevaucheur</td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>7</strong></td><td><strong>3</strong></td><td><strong>3</strong></td><td><strong>3</strong></td><td>Chevalier</td></tr><tr><td>Pégase</td><td><strong>7</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td></td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6 / 1d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>. / <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Vol" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Vol">Vol</a>.</em></p>
+<h5 id="équipement--10">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--10" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Chevalier du roi (+4 pts) : confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Large" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Large">Anti-Large</a> au chevaucheur, sa valeur d’attaque en mêlée devient 3+.</li>
+</ul>
+<h5 id="règles-spéciales--18">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--18" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Attaque en piquée (1) : à utiliser lorsque ce modèle a réussi une charge pour lui octroyer <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a>.</li>
+</ul>
+<hr/>
+<h3 id="chantelame--22-pts">Chantelame — 22 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#chantelame--22-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Chantelame</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>6+</strong></td><td><strong>8</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="règles-spéciales--19">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--19" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Chantelame : ce modèle peut dépenser une action courte pour effectuer une attaque en mêlée contre un modèle à 6” ou moins.</li>
+</ul>
+<hr/>
+<h3 id="eclaireuse--16-pts">Eclaireuse — 16 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#eclaireuse--16-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Eclaireuse</td><td><strong>5</strong></td><td><strong>6+</strong></td><td><strong>3+</strong></td><td><strong>5+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>2d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Eclaireur" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Eclaireur">Eclaireur</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Guide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Guide">Guide</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="équipement--11">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--11" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Arc long : Portée (C : 9’’, L : 15’’)</li>
+</ul>
+<h5 id="règles-spéciales--20">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--20" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Flèches en vrai-argent (1) : à utiliser avant une attaque de tir pour conférer <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant (1)</a>.</li>
+</ul>
+<hr/>
+<h3 id="fanatique--14-pts">Fanatique — 14 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fanatique--14-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Fanatique</td><td><strong>5</strong></td><td><strong>6+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>6</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--12">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--12" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Fléau (+2 pts) : confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a>.</li>
+</ul>
+<h5 id="règles-spéciales--21">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--21" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Convergence sacrée : lorsque ce modèle attaque en mêlée, il réduit de 1 sa valeur pour toucher (un 6+ devient donc 5+) pour chaque résultat de 6 qu’il obtient.</li>
+</ul>
+<hr/>
+<h3 id="gendarme--18-pts">Gendarme — 18 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gendarme--18-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Gendarme</td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>6</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td>Paysan</td></tr><tr><td>Cheval</td><td><strong>7</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td>Bête</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6 / 2d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>. / <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--13">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--13" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lance de cavalerie (+1 pts) : cette unité bénéficie de +1d6 en mêlée si elle réussit une charge.</li>
+</ul>
+<h5 id="règles-spéciales--22">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--22" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Approche sécurisée : lorsque cette unité réussit une charge, elle gagne <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>.</li>
+</ul>
+<hr/>
+<h3 id="inquisiteur--26-pts">Inquisiteur — 26 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#inquisiteur--26-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Inquisiteur</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--14">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--14" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Chasseur de Dragon (+3 pts) : confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Large" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Large">Anti-Large</a>.</li>
+</ul>
+<h5 id="règles-spéciales--23">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--23" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Protection sacrée : Au début de chaque tour, cette unité bénéficie de <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>.</li>
+<li>Vengeance : lors d’une attaque en mêlée, ce modèle peut dépenser une à plusieurs <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a> et déclencher la règle Faveur Divine pour chaque <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a> ainsi dépensée.</li>
+</ul>
+<hr/>
+<h3 id="levée--6-pts">Levée — 6 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#levée--6-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Paysan</td><td><strong>5</strong></td><td><strong>5+</strong></td><td><strong>5+</strong></td><td><strong>6+</strong></td><td><strong>4</strong></td><td><strong>1</strong></td><td><strong>2</strong></td><td><strong>1</strong></td><td>Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>2d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--15">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--15" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lance (+1 pts) : confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Large" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Large">Anti-Large</a>.</li>
+<li>Arc court (+2 pts) : Portée (C : 9’’, L : 15’’).</li>
+<li>Bouclier (+1 pts) : l’armure de cette unité devient 5+.</li>
+</ul>
+<hr/>
+<h3 id="milice-civile--9-pts">Milice civile — 9 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#milice-civile--9-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Milicien</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>4+</strong></td><td><strong>5+</strong></td><td><strong>5</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>2d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--16">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--16" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Vouge (+2 pts) : confère <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (+1)</a> et +1d6 contre les modèles de Taille 3 ou plus.</li>
+<li>Arbalète (+2 pts) : Portée (C : 12’’, L : 18’’). <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Tir-Long" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Tir-Long">Tir Long</a>.</li>
+</ul>
+<hr/>
+<h3 id="paladin--23-pts">Paladin — 23 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#paladin--23-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Paladin</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>5d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>.</em></p>
+<h5 id="magie--2">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie--2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Les Paladins ont accès au Domaine de la Pureté et au domaine de la Lumière, leur niveau est égal au nombre d’unités au sein du modèle (max. niveau 4).</li>
+</ul>
+<hr/>
+<h3 id="protecteur--19-pts">Protecteur — 19 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#protecteur--19-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Paladin</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Chevalier</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="règles-spéciales--24">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--24" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Ardent défenseur : ce modèle commence avec la volonté de fer.</li>
+</ul>
+<hr/>
+<h3 id="séraphine--25-pts">Séraphine — 25 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#séraphine--25-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Séraphine</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>8</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>4d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="equipement-">Equipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#equipement-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Armure en Vrai-Argent : les règles spéciales [[Wargame/_Visualisation/Règles spéciales/ForceDévastatrice|ForceDévastatrice] et <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant</a> sont réduites de 1 contre ce modèle.</li>
+</ul>
+<h5 id="règles-spéciales--25">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--25" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Soif de sang : si ce modèle subit ou inflige une blessure, il gagne <a href="../../Wargame/_Visualisation/Règles-spéciales/Sauvagerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Sauvagerie">Sauvagerie</a>.</li>
+</ul>
+<hr/>
+<h3 id="sœur-du-martyr--14-pts">Sœur du Martyr — 14 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#sœur-du-martyr--14-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Sœur</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>6+</strong></td><td><strong>6</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Avant-Garde" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Avant-Garde">Avant-Garde</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="règles-spéciales--26">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--26" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Martyr : si cette unité meurt, elle peut effectuer immédiatement une attaque de mêlée contre une unité à 3’’ ou moins avant d’être retirée du jeu.</li>
+</ul>
+<hr/>
+<h2 id="modèles-de-soutient">Modèles de soutient<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-de-soutient" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="clerc--15-pts">Clerc — 15 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#clerc--15-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Clerc</td><td><strong>3</strong></td><td><strong>6+</strong></td><td><strong>5+</strong></td><td><strong>5+</strong></td><td><strong>6</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td>Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>1d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--17">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--17" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Diacre (par défaut) : lanceur de sorts de niveau 1</li>
+<li>Prêtre (+5 pts) : lanceur de sorts de niveau 2.</li>
+<li>Doyen (+11 pts) : lanceur de sorts de niveau 3.</li>
+</ul>
+<h5 id="magie--3">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie--3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Les Clercs ont accès au Domaine de la Pureté et au domaine de la Lumière.</li>
+</ul>
+<h5 id="règles-spéciales--27">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--27" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Imposition des mains : au début de chaque tour, octroyez une <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide</a> à un modèle ami à 9’’ ou moins.</li>
+</ul>
+<hr/>
+<h3 id="religieuse--15-pts">Religieuse — 15 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#religieuse--15-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Religieuse</td><td><strong>3</strong></td><td><strong>6+</strong></td><td><strong>5+</strong></td><td><strong>5+</strong></td><td><strong>6</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td>Sœur</td></tr><tr><td><strong>Mêlée:</strong></td><td>1d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="équipement--18">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--18" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Novice (par défaut) : lanceur de sorts de niveau 1</li>
+<li>Nonne (+5 pts) : lanceur de sorts de niveau 2.</li>
+<li>Mère (+11 pts) : lanceur de sorts de niveau 3.</li>
+</ul>
+<h5 id="magie--4">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie--4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Les Religieuses ont accès au Domaine de la Pureté et au domaine de la Lumière.</li>
+</ul>
+<hr/>
+<h2 id="modèles-spéciaux">Modèles Spéciaux<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-spéciaux" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="trébuchet--36-pts">Trébuchet — 36 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#trébuchet--36-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Trébuchet</td><td><strong>3</strong></td><td><strong>6+</strong></td><td><strong>5+</strong></td><td><strong>5+</strong></td><td><strong>6</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td><strong>4</strong></td><td>Machine/Paysan</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>3d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--19">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--19" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Trébuchet : Portée 8’’ - 28’’, <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant (2)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Tir-Indirect" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Tir-Indirect">Tir Indirect</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Tir-Long" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Tir-Long">Tir Long</a>.</li>
+<li>Artilleurs du roi (+6 pts) : la capacité de Tir de ce modèle devient 4+.</li>
+</ul>
+<h5 id="règles-spéciales--28">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--28" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Rocher lourd : la règle <a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a> de cette unité génère 1d6 supplémentaire.</li>
+</ul>
+<hr/>
+<style>
+/* ============================================================
+   Royaumes &amp; Ordres — mise en page
+   Royaume sur une ligne, ses bonus dessous, puis les deux
+   Ordres/Duchés côte à côte en colonnes distinctes.
+   ============================================================ */
+.cp-royaume {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+/* --- Bandeau : nom du royaume, sur une seule ligne --- */
+.cp-royaume > h2,
+.cp-roy-nom {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  white-space: nowrap;        /* le royaume tient sur une ligne */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* --- Bonus du royaume, juste en dessous, pleine largeur --- */
+.cp-roy-bonus { margin: 0 0 1rem; }
+.cp-roy-bonus ul { margin: 0; padding-left: 1.1rem; }
+.cp-roy-bonus li { margin: 0.25rem 0; }
+/* --- Les deux Ordres / Duchés, en colonnes distinctes --- */
+.cp-roy-ordres {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+.cp-ordre {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.7rem 0.9rem 0.8rem;
+  background: var(--light);
+  min-width: 0;               /* évite le débordement du contenu long */
+}
+/* Titre de l'ordre (le #### de ton Markdown) */
+.cp-ordre h4 {
+  margin: 0 0 0.5rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+.cp-ordre ul { margin: 0; padding-left: 1.1rem; }
+.cp-ordre li { margin: 0.3rem 0; line-height: 1.45; }
+/* --- Mobile : les colonnes s'empilent --- */
+@media (max-width: 700px) {
+  .cp-roy-ordres { grid-template-columns: 1fr; }
+  .cp-royaume > h2, .cp-roy-nom { white-space: normal; }
+}
+
+/* ============================================================
+   Bannières &amp; Domaines de magie — mise en page
+   ============================================================ */
+
+/* ---- Encadré simple (bannières) : une seule colonne ---- */
+.cp-encadre {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin: 1.2rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-encadre ul { margin: 0; padding-left: 1.1rem; }
+.cp-encadre li { margin: 0.4rem 0; line-height: 1.5; }
+
+/* ---- Domaine de magie ---- */
+.cp-domaine {
+  border: 1px solid var(--lightgray);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem 1.1rem;
+  margin: 1.4rem 0;
+  background: color-mix(in srgb, var(--light) 92%, var(--gray));
+}
+.cp-domaine > h3 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid var(--secondary);
+  font-variant: small-caps;
+  letter-spacing: 0.03em;
+  color: var(--secondary);
+  text-align: center;
+}
+
+/* Attribut du domaine, pleine largeur sous le titre */
+.cp-attribut {
+  margin: 0 0 1rem;
+  padding: 0.5rem 0.8rem;
+  border-left: 3px solid var(--tertiary);
+  background: var(--light);
+  border-radius: 0 4px 4px 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+.cp-attribut p { margin: 0; }
+
+/* ---- Boîte de niveau : une par niveau, empilées ---- */
+.cp-niveau {
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  padding: 0.6rem 0.8rem 0.8rem;
+  margin-bottom: 0.8rem;
+  background: var(--light);
+}
+.cp-niveau:last-child { margin-bottom: 0; }
+.cp-niveau > h4 {
+  margin: 0 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--lightgray);
+  font-size: 0.95rem;
+  color: var(--tertiary);
+  font-variant: small-caps;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* ---- Sorts : autant de colonnes que de sorts ---- */
+.cp-sorts {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+.cp-sort {
+  min-width: 0;
+  padding: 0 0.2rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+/* Séparateur vertical entre les sorts d'un même niveau */
+.cp-sort + .cp-sort {
+  border-left: 1px solid var(--lightgray);
+  padding-left: 0.9rem;
+}
+.cp-sort p { margin: 0 0 0.35rem; }
+.cp-sort p:last-child { margin-bottom: 0; }
+
+/* ---- Mobile : tout s'empile ---- */
+@media (max-width: 700px) {
+  .cp-sorts { grid-auto-flow: row; }
+  .cp-sort + .cp-sort {
+    border-left: none;
+    border-top: 1px solid var(--lightgray);
+    padding-left: 0.2rem;
+    padding-top: 0.7rem;
+  }
+}
+</style></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-46" aria-expanded="true"><h3>Table des Matières</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#domaine-de-la-pureté" data-for="domaine-de-la-pureté">Domaine de la Pureté</a></li><li class="depth-1"><a href="#niveau-1" data-for="niveau-1">Niveau 1</a></li><li class="depth-1"><a href="#niveau-2" data-for="niveau-2">Niveau 2</a></li><li class="depth-1"><a href="#niveau-3" data-for="niveau-3">Niveau 3</a></li><li class="depth-0"><a href="#royaume-de-til-armen" data-for="royaume-de-til-armen">Royaume de Til Armen</a></li><li class="depth-0"><a href="#royaume-de-lun" data-for="royaume-de-lun">Royaume de Lun</a></li><li class="depth-0"><a href="#empire-de-seth" data-for="empire-de-seth">Empire de Seth</a></li><li class="depth-0"><a href="#royaume-de-thoriath" data-for="royaume-de-thoriath">Royaume de Thoriath</a></li><li class="depth-0"><a href="#temple-dishtar" data-for="temple-dishtar">Temple d’Ishtar</a></li><li class="depth-0"><a href="#commandants" data-for="commandants">Commandants</a></li><li class="depth-1"><a href="#arkadia--42-pts" data-for="arkadia--42-pts">Arkadia — 42 pts</a></li><li class="depth-1"><a href="#abbesse--44-pts" data-for="abbesse--44-pts">Abbesse — 44 pts</a></li><li class="depth-1"><a href="#allie--49-pts" data-for="allie--49-pts">Allie — 49 pts</a></li><li class="depth-1"><a href="#baron--16-pts" data-for="baron--16-pts">Baron — 16 pts</a></li><li class="depth-1"><a href="#grand-paladin--48-pts" data-for="grand-paladin--48-pts">Grand Paladin — 48 pts</a></li><li class="depth-1"><a href="#hans-lightmealow--52-pts" data-for="hans-lightmealow--52-pts">Hans Lightmealow — 52 pts</a></li><li class="depth-1"><a href="#jeanne--48-pts" data-for="jeanne--48-pts">Jeanne — 48 pts</a></li><li class="depth-1"><a href="#kalane--110-pts" data-for="kalane--110-pts">Kalane — 110 pts</a></li><li class="depth-1"><a href="#loneline--36-pts" data-for="loneline--36-pts">Loneline — 36 pts</a></li><li class="depth-1"><a href="#losette--46-pts" data-for="losette--46-pts">Losette — 46 pts</a></li><li class="depth-1"><a href="#luxana--36-pts" data-for="luxana--36-pts">Luxana — 36 pts</a></li><li class="depth-1"><a href="#matriarche--29-pts" data-for="matriarche--29-pts">Matriarche — 29 pts</a></li><li class="depth-1"><a href="#sergent--12-pts" data-for="sergent--12-pts">Sergent — 12 pts</a></li><li class="depth-1"><a href="#sir-hugues-le-preux--22-pts" data-for="sir-hugues-le-preux--22-pts">Sir Hugues le Preux — 22 pts</a></li><li class="depth-1"><a href="#tristan-le-rayonnant--28-pts" data-for="tristan-le-rayonnant--28-pts">Tristan le Rayonnant — 28 pts</a></li><li class="depth-0"><a href="#modèles-de-base" data-for="modèles-de-base">Modèles de base</a></li><li class="depth-1"><a href="#assassine--21-pts" data-for="assassine--21-pts">Assassine — 21 pts</a></li><li class="depth-1"><a href="#basiléen--46-pts" data-for="basiléen--46-pts">Basiléen — 46 pts</a></li><li class="depth-1"><a href="#chevaucheur-de-pégase--26-pts" data-for="chevaucheur-de-pégase--26-pts">Chevaucheur de Pégase — 26 pts</a></li><li class="depth-1"><a href="#chantelame--22-pts" data-for="chantelame--22-pts">Chantelame — 22 pts</a></li><li class="depth-1"><a href="#eclaireuse--16-pts" data-for="eclaireuse--16-pts">Eclaireuse — 16 pts</a></li><li class="depth-1"><a href="#fanatique--14-pts" data-for="fanatique--14-pts">Fanatique — 14 pts</a></li><li class="depth-1"><a href="#gendarme--18-pts" data-for="gendarme--18-pts">Gendarme — 18 pts</a></li><li class="depth-1"><a href="#inquisiteur--26-pts" data-for="inquisiteur--26-pts">Inquisiteur — 26 pts</a></li><li class="depth-1"><a href="#levée--6-pts" data-for="levée--6-pts">Levée — 6 pts</a></li><li class="depth-1"><a href="#milice-civile--9-pts" data-for="milice-civile--9-pts">Milice civile — 9 pts</a></li><li class="depth-1"><a href="#paladin--23-pts" data-for="paladin--23-pts">Paladin — 23 pts</a></li><li class="depth-1"><a href="#protecteur--19-pts" data-for="protecteur--19-pts">Protecteur — 19 pts</a></li><li class="depth-1"><a href="#séraphine--25-pts" data-for="séraphine--25-pts">Séraphine — 25 pts</a></li><li class="depth-1"><a href="#sœur-du-martyr--14-pts" data-for="sœur-du-martyr--14-pts">Sœur du Martyr — 14 pts</a></li><li class="depth-0"><a href="#modèles-de-soutient" data-for="modèles-de-soutient">Modèles de soutient</a></li><li class="depth-1"><a href="#clerc--15-pts" data-for="clerc--15-pts">Clerc — 15 pts</a></li><li class="depth-1"><a href="#religieuse--15-pts" data-for="religieuse--15-pts">Religieuse — 15 pts</a></li><li class="depth-0"><a href="#modèles-spéciaux" data-for="modèles-spéciaux">Modèles Spéciaux</a></li><li class="depth-1"><a href="#trébuchet--36-pts" data-for="trébuchet--36-pts">Trébuchet — 36 pts</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liens retour</h3><ul id="list-2" class="overflow"><li><a href="../../Wargame/Factions/" class="internal">index</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Créé avec <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript" data-persist="true">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module" data-persist="true">function E(a,e){if(!a)return;function t(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function n(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}a?.addEventListener("click",t),window.addCleanup(()=>a?.removeEventListener("click",t)),document.addEventListener("keydown",n),window.addCleanup(()=>document.removeEventListener("keydown",n))}function f(a){for(;a.firstChild;)a.removeChild(a.firstChild)}var m=class{constructor(e,t){this.container=e;this.content=t;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),t=this.onMouseMove.bind(this),n=this.onMouseUp.bind(this),o=this.onTouchStart.bind(this),r=this.onTouchMove.bind(this),i=this.onTouchEnd.bind(this),s=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",t),document.addEventListener("mouseup",n),this.container.addEventListener("touchstart",o,{passive:!1}),document.addEventListener("touchmove",r,{passive:!1}),document.addEventListener("touchend",i),window.addEventListener("resize",s),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",t),()=>document.removeEventListener("mouseup",n),()=>this.container.removeEventListener("touchstart",o),()=>document.removeEventListener("touchmove",r),()=>document.removeEventListener("touchend",i),()=>window.removeEventListener("resize",s))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let t=this.createButton("+",()=>this.zoom(.1)),n=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(n),e.appendChild(o),e.appendChild(t),this.container.appendChild(e)}createButton(e,t){let n=document.createElement("button");return n.textContent=e,n.className="mermaid-control-button",n.addEventListener("click",t),window.addCleanup(()=>n.removeEventListener("click",t)),n}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}onTouchStart(e){if(e.touches.length!==1)return;this.isDragging=!0;let t=e.touches[0];this.startPan={x:t.clientX-this.currentPan.x,y:t.clientY-this.currentPan.y}}onTouchMove(e){if(!this.isDragging||e.touches.length!==1)return;e.preventDefault();let t=e.touches[0];this.currentPan={x:t.clientX-this.startPan.x,y:t.clientY-this.startPan.y},this.updateTransform()}onTouchEnd(){this.isDragging=!1}zoom(e){let t=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),n=this.content.getBoundingClientRect(),o=n.width/2,r=n.height/2,i=t-this.scale;this.currentPan.x-=o*i,this.currentPan.y-=r*i,this.scale=t,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){let t=this.content.querySelector("svg").getBoundingClientRect(),n=t.width/this.scale,o=t.height/this.scale;this.scale=1,this.currentPan={x:(this.container.clientWidth-n)/2,y:(this.container.clientHeight-o)/2},this.updateTransform()}},T=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],y;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;y||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let t=y.default,n=new WeakMap;for(let r of e)n.set(r,r.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let c=n.get(s);c&&(s.innerHTML=c)}let r=T.reduce((s,c)=>(s[c]=window.getComputedStyle(document.documentElement).getPropertyValue(c),s),{}),i=document.documentElement.getAttribute("saved-theme")==="dark";t.initialize({startOnLoad:!1,securityLevel:"loose",theme:i?"dark":"base",themeVariables:{fontFamily:r["--codeFont"],primaryColor:r["--light"],primaryTextColor:r["--darkgray"],primaryBorderColor:r["--tertiary"],lineColor:r["--darkgray"],secondaryColor:r["--secondary"],tertiaryColor:r["--tertiary"],clusterBkg:r["--light"],edgeLabelBackground:r["--highlight"]}}),await t.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let r=0;r<e.length;r++){let v=function(){let g=l.querySelector("#mermaid-space"),h=l.querySelector(".mermaid-content");if(!h)return;f(h);let w=i.querySelector("svg").cloneNode(!0);h.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new m(g,h)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},i=e[r],s=i.parentElement,c=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(c),L=c.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),E(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../postscript.js" type="module" data-persist="true"></script></html>

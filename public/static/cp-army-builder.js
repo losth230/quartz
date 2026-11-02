@@ -1,0 +1,749 @@
+// ============================================================
+//  C&P — Builder d'armée structuré, DATA-DRIVEN (Supabase)
+//  À placer dans : quartz/static/cp-army-builder.js
+//  + cp-army-builder.css et <script type="module"> dans Head.tsx
+//
+//  Module AUTONOME : se greffe sur le formulaire de « Listes d'armées »
+//  (#cp-faction, #cp-body, #cp-points). Aucune modif de cp-army-lists.js.
+//
+//  Le roster est chargé depuis Supabase (tables ref_unites +
+//  ref_unite_equipements). Le builder est AGNOSTIQUE à la faction :
+//  il s'active pour toute faction ayant des unités en base, sinon il
+//  laisse la saisie en texte libre. Ajouter une faction = insérer des
+//  lignes (voir cp-roster-schema.sql / cp-roster-vermines.sql), zéro code.
+//
+//  Validation NON BLOQUANTE : un message rouge explique pourquoi une
+//  liste est invalide, sans empêcher sa publication.
+// ============================================================
+import { sb } from "/quartz/static/cp-supabase.js";
+
+// ---- Catégories (ordre + libellés) ----
+const CATS = [
+  { id: "commandant", label: "Commandants" },
+  { id: "base", label: "Modèles de base" },
+  { id: "soutien", label: "Modèles de soutien" },
+  { id: "special", label: "Modèles spéciaux" },
+];
+
+// ---- Règles de composition (communes à presque toutes les factions) ----
+const REGLES = {
+  minCommandant: 1,
+  minBase: 5,
+  ptsParCommandant: 100, // 1 commandant autorisé par tranche
+  ptsParSoutien: 50,
+  ptsParSpecial: 150,
+};
+
+// Exceptions de composition propres à certaines factions (dérogent aux règles communes).
+// Peuples Libres / Fer de Lance : pas de limite maximale de commandants.
+const REGLES_FACTION = {
+  "Peuples Libres": { cmdIllimite: true },
+};
+function reglesActives() {
+  return Object.assign({}, REGLES, REGLES_FACTION[R.faction] || {});
+}
+
+// ---- Roster courant + cache par faction ----
+let R = { faction: null, unites: [], byId: {}, sf: [] };
+const cacheRoster = {};
+
+// Choix d'armée hiérarchique générique (Royaume→Ordre, Clan→…). Libellés pilotés par les données.
+function sfLabel1() { return (R.sf && R.sf[0] && R.sf[0].niveau1_label) || ""; }
+function sfLabel2() { return (R.sf && R.sf[0] && R.sf[0].niveau2_label) || ""; }
+function niv1Liste() {
+  const seen = [];
+  (R.sf || []).forEach((r) => { if (!seen.includes(r.niveau1)) seen.push(r.niveau1); });
+  return seen;
+}
+function niv2De(n1) {
+  return (R.sf || []).filter((r) => r.niveau1 === n1 && r.niveau2).map((r) => r.niveau2);
+}
+
+async function chargerRoster(faction) {
+  if (cacheRoster[faction]) return cacheRoster[faction];
+  const { data: unites } = await sb.from("ref_unites").select("*").eq("faction", faction).order("ordre");
+  let roster;
+  if (!unites || !unites.length) {
+    roster = { faction, unites: [], byId: {} };
+  } else {
+    const ids = unites.map((u) => u.id);
+    const { data: equips } = await sb.from("ref_unite_equipements").select("*").in("unite_id", ids).order("ordre");
+    const byId = {};
+    unites.forEach((u) => { u.options = []; u._grp = {}; byId[u.id] = u; });
+    (equips || []).forEach((eq) => {
+      const u = byId[eq.unite_id];
+      if (!u) return;
+      if (eq.groupe) { (u._grp[eq.groupe] = u._grp[eq.groupe] || []).push(eq); }
+      else { u.options.push({ t: "opt", nom: eq.nom, cout: eq.cout, coutMasse: eq.cout_masse || 0, parUnite: !!eq.par_unite, requiertUnite: eq.requiert_unite || null, uniqueArmee: !!eq.unique_armee, affiniteType: eq.affinite_type || null, affiniteValeur: eq.affinite_valeur || 0 }); }
+    });
+    unites.forEach((u) => {
+      Object.keys(u._grp).forEach((gn) => {
+        const list = u._grp[gn];
+        let def = list.findIndex((x) => x.defaut); if (def < 0) def = 0;
+        u.options.push({ t: "choix", nom: gn, choix: list.map((x) => ({ nom: x.nom, cout: x.cout, coutMasse: x.cout_masse || 0, affiniteType: x.affinite_type || null, affiniteValeur: x.affinite_valeur || 0 })), defaut: def, parUnite: !!list[0].par_unite });
+      });
+      delete u._grp;
+    });
+    roster = { faction, unites, byId };
+  }
+  // Choix d'armée (Royaume→Ordre, Clan→…). Table optionnelle : si absente, liste vide.
+  const { data: sf } = await sb.from("ref_sous_factions").select("*").eq("faction", faction).order("tri");
+  roster.sf = sf || [];
+  // Règles de coût fines (Royaume/Ordre/type de modèle). Table optionnelle.
+  let couts = [];
+  try {
+    const { data } = await sb.from("ref_sf_couts").select("*").eq("faction", faction).order("ordre");
+    couts = data || [];
+  } catch (e) { couts = []; }
+  roster.couts = couts;
+  cacheRoster[faction] = roster;
+  return roster;
+}
+
+// ============================================================
+//  Logique pure (utilise le roster courant R)
+// ============================================================
+function uOf(entry) { return R.byId[entry.unitId]; }
+// Une unité de ce nom est-elle présente (quantité > 0) dans l'armée ?
+function unitePresente(nom) {
+  return state.entries.some((e) => { const u = uOf(e); return u && u.nom === nom && (Number(e.qty) || 0) > 0; });
+}
+// Réductions de coût conditionnelles : { groupe: montant } selon les unités présentes
+// (ex. Sir Hugues le Preux présent -> groupe "Monture" -2). Présence binaire, pas de cumul.
+function reductionsGroupe() {
+  const red = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.reduit_groupe && (Number(e.qty) || 0) > 0) {
+      red[u.reduit_groupe] = Math.max(red[u.reduit_groupe] || 0, u.reduit_montant || 0);
+    }
+  });
+  return red;
+}
+// Coût effectif d'une option : base + multiplicateur × Masse de l'unité
+function valOpt(u, cout, coutMasse) { return (cout || 0) + (coutMasse || 0) * (u.masse || 0); }
+function coutOptions(u, entry) {
+  // Retourne { modele, unite } : options par modèle (× quantité) vs par unité (une fois, ex. bannière)
+  const red = reductionsGroupe();
+  let modele = 0, unite = 0;
+  (u.options || []).forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return; // option inactive sans son unité requise
+    let c = 0;
+    if (o.t === "opt") { if ((entry.opts || []).includes(i)) c = valOpt(u, o.cout, o.coutMasse); }
+    else if (o.t === "choix") {
+      const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
+      const ch = o.choix[ci];
+      c = valOpt(u, ch.cout, ch.coutMasse);
+      if (red[o.nom]) c = Math.max(0, c - red[o.nom]); // réduction conditionnelle sur ce groupe
+    }
+    if (o.parUnite) unite += c; else modele += c;
+  });
+  return { modele, unite };
+}
+// Modificateur de coût par modèle apporté par le niveau1 choisi (ex. Thoriath : -1, plancher 6)
+// Le modèle possède-t-il ce type de jeu ? (type_modele : 'Sœur|Chevalier', 'Machine|Paysan'…)
+function estDuType(u, type) {
+  if (!type) return true;
+  return String(u.type_modele || "").split("|").map((s) => s.trim()).includes(type);
+}
+// Règles de réduction de coût applicables au choix d'armée courant, dans l'ordre.
+// Deux sources cumulables :
+//  - ref_sous_factions.cout_modele_delta (héritage : tout le Royaume, tous les types)
+//  - ref_sf_couts (fin : Royaume + Ordre éventuel + type éventuel)
+function reglesCout() {
+  const out = [];
+  const row = (R.sf || []).find((r) => r.niveau1 === state.niv1);
+  if (row && row.cout_modele_delta) {
+    out.push({ type: null, delta: row.cout_modele_delta, min: row.cout_modele_min || 0 });
+  }
+  (R.couts || []).forEach((c) => {
+    if (c.niveau1 !== state.niv1) return;
+    if (c.niveau2 && c.niveau2 !== state.niv2) return; // règle propre à un Ordre
+    if (c.delta) out.push({ type: c.type_modele || null, delta: c.delta, min: c.cout_min || 0 });
+  });
+  return out;
+}
+// Coût d'un seul modèle (base + options par modèle), réductions du choix d'armée appliquées ensuite
+function coutUnitaire(entry) {
+  const u = uOf(entry); if (!u) return 0;
+  const base = (u.points == null) ? (Number(entry.manuel) || 0) : u.points;
+  let perModel = base + coutOptions(u, entry).modele;
+  reglesCout().forEach((r) => {
+    if (!estDuType(u, r.type)) return;
+    perModel = Math.max(r.min, perModel - r.delta);
+  });
+  return perModel;
+}
+// Coût total d'une entrée : coût par modèle × quantité + options par unité (comptées une fois)
+function coutEntry(entry) {
+  const u = uOf(entry); if (!u) return 0;
+  return coutUnitaire(entry) * (Number(entry.qty) || 0) + coutOptions(u, entry).unite;
+}
+
+function totaux(state) {
+  let total = 0;
+  const parCat = { commandant: 0, base: 0, soutien: 0, special: 0 };
+  state.entries.forEach((e) => {
+    const u = uOf(e); if (!u) return;
+    total += coutEntry(e);
+    parCat[u.categorie] += (Number(e.qty) || 0);
+  });
+  return { total, parCat };
+}
+
+function validation(state) {
+  const r = reglesActives();
+  const { total, parCat } = totaux(state);
+  // Les créneaux (commandant/soutien/spécial) dépendent de la TAILLE de l'armée
+  // (cible si renseignée, sinon total courant), à raison d'un créneau par tranche ENTAMÉE.
+  // Ex. spécial (1/150) : 1 entre 1 et 150, 2 entre 151 et 300, 3 entre 301 et 450…
+  const taille = (state.target && state.target > 0) ? state.target : total;
+  const maxCmd = Math.ceil(taille / r.ptsParCommandant);
+  const maxSout = Math.ceil(taille / r.ptsParSoutien);
+  const maxSpe = Math.ceil(taille / r.ptsParSpecial);
+  const items = [];
+  if (parCat.commandant < r.minCommandant) items.push("Au moins " + r.minCommandant + " Commandant requis.");
+  if (parCat.base < r.minBase) items.push("Au moins " + r.minBase + " unités de Base requises (actuel : " + parCat.base + ").");
+  if (!r.cmdIllimite && parCat.commandant > maxCmd) items.push("Trop de Commandants : " + parCat.commandant + " pour " + maxCmd + " autorisé(s) (1 / " + r.ptsParCommandant + " pts).");
+  if (parCat.soutien > maxSout) items.push("Trop de Soutiens : " + parCat.soutien + " pour " + maxSout + " autorisé(s) (1 / " + r.ptsParSoutien + " pts).");
+  if (parCat.special > maxSpe) items.push("Trop de Spéciaux : " + parCat.special + " pour " + maxSpe + " autorisé(s) (1 / " + r.ptsParSpecial + " pts).");
+  if (state.target && total > state.target) items.push("Dépassement : " + total + " pts > cible " + state.target + " pts.");
+  // Personnages légendaires : 1 seul exemplaire par liste
+  const legCount = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.legendaire) legCount[u.id] = (legCount[u.id] || 0) + (Number(e.qty) || 0);
+  });
+  Object.keys(legCount).forEach((id) => {
+    if (legCount[id] > 1) {
+      const u = R.byId[id];
+      items.push("« " + u.nom + " » est légendaire : 1 seul par liste (actuel : " + legCount[id] + ").");
+    }
+  });
+  // Options « unique par armée » (ex. Chevalier du Clair-Obscur) : un seul modèle peut la prendre
+  const uniq = {};
+  state.entries.forEach((e) => {
+    const u = uOf(e); if (!u) return;
+    (u.options || []).forEach((o, i) => {
+      if (o.t === "opt" && o.uniqueArmee && !(o.requiertUnite && !unitePresente(o.requiertUnite)) && (e.opts || []).includes(i)) {
+        uniq[o.nom] = (uniq[o.nom] || 0) + 1;
+      }
+    });
+  });
+  Object.keys(uniq).forEach((nom) => {
+    if (uniq[nom] > 1) items.push("« " + nom + " » : un seul modèle de l'armée peut le prendre (actuel : " + uniq[nom] + ").");
+  });
+  return { total, parCat, maxCmd, maxSout, maxSpe, items, valide: items.length === 0 };
+}
+
+function libelleOptions(entry) {
+  const u = uOf(entry); if (!u || !u.options) return "";
+  const parts = [];
+  u.options.forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return;
+    if (o.t === "opt") { if ((entry.opts || []).includes(i)) parts.push(o.nom); }
+    else if (o.t === "choix") {
+      const ci = (entry.choix && entry.choix[i] != null) ? entry.choix[i] : o.defaut;
+      const nom = o.choix[ci].nom;
+      if (nom !== "Aucune") parts.push(nom); // « Aucune » = pas de sélection -> rien dans le texte
+    }
+  });
+  if (entry.lien) parts.push("lié à " + entry.lien);
+  return parts.join(", ");
+}
+
+function genererTexte(state) {
+  const v = validation(state);
+  const lignes = [];
+  lignes.push(R.faction + " — " + v.total + " pts" + (state.target ? " / " + state.target : ""));
+  if (state.niv1) lignes.push(sfLabel1() + " : " + state.niv1 + (state.niv2 ? " — " + state.niv2 : ""));
+  if (factionAAffinite()) {
+    const a = affinites();
+    const va = affiniteVerdict(a.occulte, a.chamanique);
+    lignes.push("Affinité : Occultisme " + a.occulte + " / Chamanisme " + a.chamanique + " — " + va.texte);
+  }
+  lignes.push("");
+  CATS.forEach((cat) => {
+    const es = state.entries.filter((e) => { const u = uOf(e); return u && u.categorie === cat.id; });
+    if (!es.length) return;
+    lignes.push(cat.label);
+    es.forEach((e) => {
+      const u = uOf(e);
+      const q = (Number(e.qty) || 1);
+      const opt = libelleOptions(e);
+      lignes.push("- " + (q > 1 ? q + "× " : "") + u.nom + (opt ? " + " + opt : "") + " — " + coutEntry(e) + " pts");
+    });
+    lignes.push("");
+  });
+  lignes.push("Total : " + v.total + " pts");
+  if (!v.valide) { lignes.push("", "⚠ Composition incomplète :"); v.items.forEach((m) => lignes.push("  - " + m)); }
+  return lignes.join("\n");
+}
+
+// ============================================================
+//  Intégration DOM
+// ============================================================
+const state = { actif: false, factionActive: null, target: 0, entries: [], seq: 1, pris: false, freeText: "", niv1: "", niv2: "" };
+
+// Séparateur entre la liste générée par le builder et le texte libre de l'utilisateur,
+// écrit dans le MÊME champ #cp-body (celui utilisé par les factions sans données).
+const SEP = "\n\n———— Texte libre (modifiable) ————\n";
+
+function $(id) { return document.getElementById(id); }
+function esc(s) {
+  return (s || "").toString().replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+// Corps complet écrit dans #cp-body : liste structurée + repère + texte libre.
+function genererCorps() {
+  return genererTexte(state) + SEP + (state.freeText || "");
+}
+// Coupe le corps en { struct, free } de façon ROBUSTE :
+//  - repère exact si présent ;
+//  - sinon première ligne « Texte libre » (variantes de tirets / anciennes versions) ;
+//  - sinon, si le corps contient « Total : » (signature d'une liste générée), tout le
+//    corps est la partie structurée (le parseur s'arrête de toute façon à « Total : ») ;
+//  - sinon, texte libre manuel (préservé, aucun import).
+function couperCorps(v) {
+  v = v || "";
+  const i = v.indexOf(SEP);
+  if (i >= 0) return { struct: v.slice(0, i), free: v.slice(i + SEP.length) };
+  const lignes = v.split("\n");
+  for (let k = 0; k < lignes.length; k++) {
+    if (/Texte libre/.test(lignes[k])) {
+      return { struct: lignes.slice(0, k).join("\n"), free: lignes.slice(k + 1).join("\n") };
+    }
+  }
+  if (/^\s*Total\s*:/m.test(v)) return { struct: v, free: "" };
+  return { struct: "", free: v };
+}
+// Normalise un nom d'unité pour la correspondance (accents composés, espaces multiples).
+function normNom(s) { return (s || "").toString().normalize("NFC").trim().replace(/\s+/g, " "); }
+
+// Récupère le texte libre saisi par l'utilisateur sous le repère.
+function capturerFreeText() {
+  const body = $("cp-body");
+  if (!body) return;
+  state.freeText = couperCorps(body.value || "").free;
+}
+
+function sync() {
+  if (!state.pris) return; // ne pas écraser le champ tant que rien n'est construit
+  const body = $("cp-body"), points = $("cp-points");
+  const v = validation(state);
+  if (body) { body.value = genererCorps(); body.dispatchEvent(new Event("input", { bubbles: true })); }
+  if (points) { points.value = v.total; points.dispatchEvent(new Event("input", { bubbles: true })); }
+}
+
+function optionSelect() {
+  let html = '<select id="cp-ab-pick"><option value="">— ajouter une unité —</option>';
+  CATS.forEach((cat) => {
+    const us = R.unites.filter((u) => u.categorie === cat.id);
+    if (!us.length) return;
+    html += '<optgroup label="' + esc(cat.label) + '">';
+    us.forEach((u) => {
+      const p = (u.points == null) ? "spé" : u.points + " pts";
+      html += '<option value="' + u.id + '">' + esc(u.nom) + " (" + p + ")</option>";
+    });
+    html += "</optgroup>";
+  });
+  return html + "</select>";
+}
+
+function ligneEntree(e) {
+  const u = uOf(e); if (!u) return "";
+  const cat = CATS.find((c) => c.id === u.categorie);
+  const chips = [], choix = [];
+  (u.options || []).forEach((o, i) => {
+    if (o.requiertUnite && !unitePresente(o.requiertUnite)) return; // option masquée sans son unité requise
+    if (o.t === "opt") {
+      const on = (e.opts || []).includes(i);
+      const sufx = o.uniqueArmee ? ' <span class="cp-ab-chipuniq">(1/armée)</span>' : "";
+      chips.push('<label class="cp-ab-chip' + (on ? " on" : "") + '">' +
+        '<input type="checkbox" data-opt="' + i + '"' + (on ? " checked" : "") + ">" +
+        '<span class="cp-ab-chipnom">' + esc(o.nom) + sufx + "</span>" +
+        '<span class="cp-ab-chipcout">+' + valOpt(u, o.cout, o.coutMasse) + "</span></label>");
+    } else if (o.t === "choix") {
+      const sel = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
+      choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">' + esc(o.nom) + "</span>" +
+        '<select data-choix="' + i + '">' +
+        o.choix.map((ch, ci) => { const cv = valOpt(u, ch.cout, ch.coutMasse); return '<option value="' + ci + '"' + (ci === sel ? " selected" : "") + ">" +
+          esc(ch.nom) + (cv ? " (+" + cv + ")" : "") + "</option>"; }).join("") +
+        "</select></div>");
+    }
+  });
+  if (u.points == null) {
+    choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">Coût unitaire</span>' +
+      '<input type="number" min="0" step="1" class="cp-ab-manuel" value="' + (e.manuel || 0) + '" title="' + esc(u.special_note || "") + '"></div>');
+  }
+  // Lien vers un Ancien Suzerain (Légions d'Outre-Tombe) : seulement pour les modèles
+  // qui ne sont pas eux-mêmes Suzerains, et seulement s'il y a un Suzerain dans la liste.
+  if (!u.suzerain && factionASuzerains()) {
+    const suz = suzerainsEnListe();
+    if (suz.length) {
+      choix.push('<div class="cp-ab-choixrow"><span class="cp-ab-choixlbl">Lié à</span>' +
+        '<select data-lien="1">' +
+        '<option value="">— aucun —</option>' +
+        suz.map((n) => '<option value="' + esc(n) + '"' + (e.lien === n ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
+        "</select></div>");
+    }
+  }
+  let opts = "";
+  if (chips.length) opts += '<div class="cp-ab-additifs">' + chips.join("") + "</div>";
+  if (choix.length) opts += '<div class="cp-ab-choixs">' + choix.join("") + "</div>";
+  const collapsed = !!e.collapsed;
+  const resume = collapsed ? esc(libelleOptions(e)) : "";
+  return '<div class="cp-ab-entry' + (collapsed ? " cp-ab-collapsed" : "") + '" data-uid="' + e.uid + '">' +
+    '<div class="cp-ab-entry-head">' +
+      '<span class="cp-ab-chevron">' + (opts ? (collapsed ? "\u25B8" : "\u25BE") : "") + "</span>" +
+      '<span class="cp-ab-cat cp-ab-cat-' + u.categorie + '">' + esc(cat ? cat.label : "") + "</span>" +
+      '<span class="cp-ab-nom">' + esc(u.nom) + "</span>" +
+      '<span class="cp-ab-resume">' + resume + "</span>" +
+      '<span class="cp-ab-qty"><input type="number" min="1" step="1" class="cp-ab-qtyn" value="' + (e.qty || 1) + '"></span>' +
+      '<span class="cp-ab-sub">' + coutEntry(e) + " pts</span>" +
+      '<button class="cp-ab-del" title="Retirer">\u2715</button>' +
+    "</div>" +
+    (opts ? '<div class="cp-ab-opts">' + opts + "</div>" : "") +
+  "</div>";
+}
+
+// ---- Affinité Occultisme / Chamanisme (Peaux-Vertes) : panneau d'information ----
+function factionAAffinite() {
+  return (R.unites || []).some((u) => u.affinite_type) || (R.sf || []).some((r) => r.affinite_type);
+}
+function affinites() {
+  let occulte = 0, chamanique = 0;
+  const add = (type, val) => { if (type === "occulte") occulte += val; else if (type === "chamanique") chamanique += val; };
+  state.entries.forEach((e) => {
+    const u = uOf(e); if (!u) return;
+    const qty = Number(e.qty) || 0;
+    if (u.affinite_type) add(u.affinite_type, (u.affinite_valeur || 0) * qty);
+    (u.options || []).forEach((o, i) => {
+      if (o.requiertUnite && !unitePresente(o.requiertUnite)) return;
+      if (o.t === "opt") {
+        if ((e.opts || []).includes(i) && o.affiniteType) add(o.affiniteType, (o.affiniteValeur || 0) * qty);
+      } else if (o.t === "choix") {
+        const ci = (e.choix && e.choix[i] != null) ? e.choix[i] : o.defaut;
+        const ch = o.choix[ci];
+        if (ch.affiniteType) add(ch.affiniteType, (ch.affiniteValeur || 0) * qty);
+      }
+    });
+  });
+  const clan = (R.sf || []).find((r) => r.niveau1 === state.niv1);
+  if (clan && clan.affinite_type) add(clan.affinite_type, clan.affinite_valeur || 0);
+  return { occulte, chamanique };
+}
+// Occultisme et Chamanisme sont suivis INDÉPENDAMMENT (chacun son propre total).
+//  Le camp dominant (total le plus haut) donne l'affinité de la bande.
+//  Égalité, ou aucun des deux camps n'atteint le seuil minimum (2) => Équilibre.
+//  Paliers du camp dominant : Affinité (2+), Rang I (4+), II (8+), III (12+), IV (16+), V (20+).
+function affiniteVerdict(occ, cha) {
+  if (occ === 0 && cha === 0) return { texte: "Aucune affinité pour l'instant", classe: "" };
+  if (occ === cha || (occ < 2 && cha < 2)) {
+    return { texte: "Équilibre (Occ " + occ + " / Cha " + cha + ") — relance des 1 en attaque et armure", classe: "eq" };
+  }
+  const type = occ > cha ? "Occulte" : "Chamanique";
+  const classe = occ > cha ? "occ" : "cha";
+  const total = Math.max(occ, cha);
+  const seuils = [2, 4, 8, 12, 16, 20];
+  const roman = ["", "I", "II", "III", "IV", "V"];
+  let rang = 0; seuils.forEach((s, i) => { if (total >= s) rang = i; });
+  const label = rang > 0 ? " — Rang " + roman[rang] : "";
+  const suite = rang < 5 ? " · Rang " + roman[rang + 1] + " à " + seuils[rang + 1] : " · max";
+  return { texte: "Affinité " + type + label + suite, classe };
+}
+function affinitePanel() {
+  if (!factionAAffinite()) return "";
+  const { occulte, chamanique } = affinites();
+  const v = affiniteVerdict(occulte, chamanique);
+  return '<div class="cp-ab-affinite ' + v.classe + '">' +
+    '<div class="cp-ab-aff-totaux">' +
+      '<span class="cp-ab-aff-occ">Occultisme <b>' + occulte + "</b></span>" +
+      '<span class="cp-ab-aff-cha">Chamanisme <b>' + chamanique + "</b></span>" +
+    "</div>" +
+    '<div class="cp-ab-aff-verdict">' + esc(v.texte) + "</div>" +
+  "</div>";
+}
+
+// ---- Anciens Suzerains / Lien (Légions d'Outre-Tombe) ----
+// Une unité avec ref_unites.suzerain = true peut être rejointe par les autres modèles
+// de la liste. Le lien se stocke par NOM (comme niv1/niv2), pour un round-trip texte simple.
+function factionASuzerains() {
+  return (R.unites || []).some((u) => u.suzerain);
+}
+// Suzerains réellement présents dans la liste en cours (qty > 0) : seuls eux sont
+// proposés comme cible de lien, pas tous les Suzerains du roster.
+function suzerainsEnListe() {
+  const noms = [];
+  state.entries.forEach((e) => {
+    const u = uOf(e);
+    if (u && u.suzerain && (Number(e.qty) || 0) > 0 && !noms.includes(u.nom)) noms.push(u.nom);
+  });
+  return noms;
+}
+// Un modèle lié à un Suzerain qui a quitté la liste (retiré ou qty à 0) perd son lien.
+function purgerLiensInvalides() {
+  const suz = suzerainsEnListe();
+  state.entries.forEach((e) => { if (e.lien && !suz.includes(e.lien)) e.lien = ""; });
+}
+
+function render() {
+  const host = $("cp-ab-host");
+  if (!host) return;
+  purgerLiensInvalides();
+  const v = validation(state);
+  const entries = state.entries.length ? state.entries.map(ligneEntree).join("") : '<p class="cp-ab-empty">Aucune unité. Ajoute-en avec le menu ci-dessus.</p>';
+  const warns = v.items.length
+    ? '<div class="cp-ab-warns"><strong>Liste invalide :</strong><ul>' + v.items.map((m) => "<li>" + esc(m) + "</li>").join("") + "</ul></div>"
+    : '<p class="cp-ab-ok">✓ Composition valide.</p>';
+  const sfBloc = (R.sf || []).length
+    ? '<div class="cp-ab-roy">' +
+        '<label class="cp-ab-roylbl">' + esc(sfLabel1()) + ' <select id="cp-ab-niv1">' +
+          niv1Liste().map((n) => '<option value="' + esc(n) + '"' + (n === state.niv1 ? " selected" : "") + ">" + esc(n) + "</option>").join("") +
+        "</select></label>" +
+        (sfLabel2()
+          ? '<label class="cp-ab-roylbl">' + esc(sfLabel2()) + ' <select id="cp-ab-niv2">' +
+              niv2De(state.niv1).map((o) => '<option value="' + esc(o) + '"' + (o === state.niv2 ? " selected" : "") + ">" + esc(o) + "</option>").join("") +
+            "</select></label>"
+          : "") +
+      "</div>"
+    : "";
+  host.innerHTML =
+    '<div class="cp-ab-bar">' +
+      '<div class="cp-ab-add">' + optionSelect() + '<button class="cp-ab-addbtn" id="cp-ab-add">+ Ajouter</button></div>' +
+      '<div class="cp-ab-total">' +
+        '<label class="cp-ab-targetlbl">Cible <input type="number" min="0" step="50" id="cp-ab-target" value="' + (state.target || "") + '" placeholder="ex. 1000"></label>' +
+        '<span class="cp-ab-totalnum' + (v.valide ? "" : " cp-ab-bad") + '">' + v.total + (state.target ? " / " + state.target : "") + " pts</span>" +
+      "</div>" +
+    "</div>" +
+    sfBloc +
+    affinitePanel() +
+    '<div class="cp-ab-entries">' + entries + "</div>" + warns;
+  sync();
+}
+
+function ajouter(unitId) {
+  if (!R.byId[unitId]) return;
+  state.pris = true;
+  state.entries.push({ uid: state.seq++, unitId, qty: 1, opts: [], choix: {}, manuel: 0, lien: "" });
+  render();
+}
+function entryByUid(uid) { return state.entries.find((e) => String(e.uid) === String(uid)); }
+
+// Reconstruit state.entries + niv1/niv2 depuis le bloc structuré d'une liste générée
+// (round-trip pour l'édition). Nécessite que le roster (R) soit déjà chargé.
+function importerTexte(bloc) {
+  state.entries = [];
+  const parNom = {};
+  (R.unites || []).forEach((u) => { parNom[normNom(u.nom)] = u; });
+  const label1 = (R.sf || []).length ? sfLabel1() : null;
+  const lignes = (bloc || "").split("\n");
+  for (let k = 0; k < lignes.length; k++) {
+    const l = lignes[k].trim();
+    if (!l) continue;
+    if (l.indexOf("Total :") === 0) break; // fin de la liste structurée
+    // Ligne de sous-faction : « Clan : X » ou « Royaume : X — Y »
+    if (label1 && l.indexOf(label1 + " :") === 0) {
+      const reste = l.slice((label1 + " :").length).trim();
+      const sep = reste.indexOf(" — ");
+      state.niv1 = (sep < 0 ? reste : reste.slice(0, sep)).trim();
+      state.niv2 = (sep < 0 ? "" : reste.slice(sep + 3)).trim();
+      continue;
+    }
+    // Ligne d'unité : « - [N×] Nom [+ opt, opt] — P pts »
+    const m = l.match(/^-\s+(?:(\d+)×\s+)?(.+?)(?:\s+\+\s+(.+?))?\s+—\s+\d+\s*pts$/);
+    if (!m) continue;
+    const u = parNom[normNom(m[2])];
+    if (!u) continue;
+    const optNoms = (m[3] || "").split(",").map((s) => s.trim()).filter(Boolean);
+    const entry = { uid: state.seq++, unitId: u.id, qty: Math.max(1, parseInt(m[1], 10) || 1), opts: [], choix: {}, manuel: 0, lien: "", collapsed: true };
+    const lienIdx = optNoms.findIndex((n) => n.indexOf("lié à ") === 0);
+    if (lienIdx >= 0) { entry.lien = optNoms[lienIdx].slice("lié à ".length).trim(); optNoms.splice(lienIdx, 1); }
+    (u.options || []).forEach((o, i) => {
+      if (o.t === "opt") { if (optNoms.includes(o.nom)) entry.opts.push(i); }
+      else if (o.t === "choix") {
+        const ci = o.choix.findIndex((c) => c.nom !== "Aucune" && optNoms.includes(c.nom));
+        if (ci >= 0) entry.choix[i] = ci;
+      }
+    });
+    state.entries.push(entry);
+  }
+  if (state.entries.length) state.pris = true;
+}
+
+function activer(faction) {
+  state.actif = true;
+  state.factionActive = faction;
+  state.entries = [];
+  state.pris = false;
+  // Choix d'armée par défaut (premier de chaque niveau) si la faction en propose
+  if ((R.sf || []).length) {
+    state.niv1 = niv1Liste()[0] || "";
+    state.niv2 = niv2De(state.niv1)[0] || "";
+  } else { state.niv1 = ""; state.niv2 = ""; }
+  const body = $("cp-body");
+  // Récupère le texte libre éventuel + reconstruit les unités d'une liste éditée,
+  // en repérant le séparateur de façon tolérante (couperCorps).
+  if (body) {
+    const { struct, free } = couperCorps(body.value || "");
+    state.freeText = free;
+    if (struct.trim()) importerTexte(struct);
+  } else {
+    state.freeText = "";
+  }
+  // Injecte le constructeur AU-DESSUS du textarea existant, qui reste visible et éditable.
+  if (body && !$("cp-ab-host")) {
+    const host = document.createElement("div");
+    host.id = "cp-ab-host";
+    host.className = "cp-ab";
+    const ancre = document.querySelector('label[for="cp-body"]') || body;
+    ancre.parentNode.insertBefore(host, ancre);
+  } else if ($("cp-ab-host")) {
+    $("cp-ab-host").style.display = "";
+  }
+  render();
+}
+
+function desactiver() {
+  if (!state.actif) return;
+  state.actif = false;
+  state.factionActive = null;
+  const host = $("cp-ab-host"); if (host) host.style.display = "none";
+  // #cp-body n'est jamais masqué : il redevient un simple champ de texte libre.
+}
+
+async function appliquerVisibilite() {
+  const fac = $("cp-faction"), body = $("cp-body");
+  if (!fac || !body) return;
+  const faction = fac.value;
+  if (!faction) { desactiver(); return; }
+  let roster;
+  try { roster = await chargerRoster(faction); } catch (e) { console.error("[cp-builder] chargement roster:", e); return; }
+  if (fac.value !== faction) return; // la faction a changé pendant le chargement
+  if (roster.unites.length) {
+    if (state.actif && state.factionActive === faction) { R = roster; return; } // déjà actif sur cette faction
+    R = roster;
+    activer(faction);
+  } else {
+    desactiver();
+  }
+}
+
+// ---------- Câblage ----------
+let lastFaction = null, wired = false;
+function wireOnce() {
+  if (wired) return; wired = true;
+
+  document.addEventListener("click", (e) => {
+    if (!state.actif) return;
+    if (e.target.id === "cp-ab-add") {
+      const sel = $("cp-ab-pick");
+      if (sel && sel.value) { ajouter(sel.value); sel.value = ""; }
+      return;
+    }
+    const del = e.target.closest(".cp-ab-del");
+    if (del) {
+      const card = del.closest(".cp-ab-entry");
+      if (card) { state.entries = state.entries.filter((x) => String(x.uid) !== card.dataset.uid); render(); }
+      return;
+    }
+    // Repli/dépli : clic sur l'entête, sauf sur la quantité ou le bouton ✕
+    const head = e.target.closest(".cp-ab-entry-head");
+    if (head && !e.target.closest(".cp-ab-qty")) {
+      const card = head.closest(".cp-ab-entry");
+      const en = card && entryByUid(card.dataset.uid);
+      if (en) { en.collapsed = !en.collapsed; render(); }
+    }
+  });
+
+  document.addEventListener("change", (e) => {
+    if (e.target.id === "cp-faction") { lastFaction = e.target.value; appliquerVisibilite(); return; }
+    if (!state.actif) return;
+    if (e.target.id === "cp-ab-target") { state.target = Math.max(0, parseInt(e.target.value, 10) || 0); render(); return; }
+    if (e.target.id === "cp-ab-niv1") { state.niv1 = e.target.value; state.niv2 = niv2De(state.niv1)[0] || ""; render(); return; }
+    if (e.target.id === "cp-ab-niv2") { state.niv2 = e.target.value; render(); return; }
+    const card = e.target.closest(".cp-ab-entry");
+    if (!card) return;
+    const en = entryByUid(card.dataset.uid); if (!en) return;
+    if (e.target.classList.contains("cp-ab-qtyn")) { en.qty = Math.max(1, parseInt(e.target.value, 10) || 1); render(); return; }
+    if (e.target.classList.contains("cp-ab-manuel")) { en.manuel = Math.max(0, parseInt(e.target.value, 10) || 0); render(); return; }
+    if (e.target.dataset.opt != null) {
+      const i = parseInt(e.target.dataset.opt, 10); en.opts = en.opts || [];
+      if (e.target.checked) { if (!en.opts.includes(i)) en.opts.push(i); } else { en.opts = en.opts.filter((x) => x !== i); }
+      render(); return;
+    }
+    if (e.target.dataset.choix != null) {
+      const i = parseInt(e.target.dataset.choix, 10); en.choix = en.choix || {}; en.choix[i] = parseInt(e.target.value, 10) || 0; render();
+      return;
+    }
+    if (e.target.dataset.lien != null) {
+      en.lien = e.target.value || "";
+      render();
+    }
+  });
+
+  // Texte libre saisi directement dans #cp-body (sous le repère) : on le mémorise
+  // pour le préserver lors des régénérations du builder.
+  document.addEventListener("input", (e) => {
+    if (!state.actif) return;
+    if (e.target.id === "cp-body") capturerFreeText();
+  });
+
+  // Édition d'une liste : cp-army-lists.js déclenche cet événement après avoir rempli
+  // le formulaire. On (re)charge le roster puis on réimporte, même si la faction est
+  // déjà active (ce que le poll ne referait pas).
+  document.addEventListener("cp-list-edit", async (e) => {
+    const fac = $("cp-faction");
+    const faction = (e.detail && e.detail.faction) || (fac && fac.value) || "";
+    lastFaction = faction;
+    if (!faction) { desactiver(); return; }
+    let roster;
+    try { roster = await chargerRoster(faction); } catch (err) { console.error("[cp-builder] édition:", err); return; }
+    if (fac && fac.value !== faction) return;
+    R = roster;
+    if (roster.unites.length) activer(faction); else desactiver();
+  });
+}
+
+function bootstrap() {
+  wireOnce();
+  const fac = $("cp-faction");
+  if (fac && fac.value !== lastFaction) { lastFaction = fac.value; }
+  appliquerVisibilite();
+}
+
+let pollTimer = null;
+// Détecte qu'une liste structurée externe a remplacé le corps (cas de l'édition)
+// et reconstruit le constructeur en conséquence. Sûr : après réimport, sync() réécrit
+// le corps à l'identique, donc la comparaison se stabilise (pas de boucle).
+function reimporterSiCorpsRemplace() {
+  if (!state.actif) return;
+  const body = $("cp-body"); if (!body) return;
+  const { struct, free } = couperCorps(body.value || "");
+  if (!struct.trim()) return;
+  if (struct.trim() === genererTexte(state).trim()) return; // déjà synchronisé
+  state.entries = [];
+  if ((R.sf || []).length) { state.niv1 = niv1Liste()[0] || ""; state.niv2 = niv2De(state.niv1)[0] || ""; }
+  else { state.niv1 = ""; state.niv2 = ""; }
+  state.freeText = free;
+  importerTexte(struct);
+  render();
+}
+
+function startPoll() {
+  if (pollTimer) clearInterval(pollTimer);
+  pollTimer = setInterval(() => {
+    const fac = $("cp-faction");
+    if (!fac) return;
+    if (fac.value !== lastFaction) { lastFaction = fac.value; appliquerVisibilite(); return; }
+    reimporterSiCorpsRemplace();
+  }, 400);
+}
+
+if (document.readyState !== "loading") bootstrap();
+else document.addEventListener("DOMContentLoaded", bootstrap);
+document.addEventListener("nav", () => { desactiver(); lastFaction = null; bootstrap(); startPoll(); });
+window.addEventListener("pageshow", bootstrap);
+startPoll();
+
+export { coutEntry, totaux, validation, genererTexte, R, state };

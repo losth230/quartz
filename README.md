@@ -4,9 +4,12 @@ Portage **React + TypeScript + Supabase** du jeu de grande stratégie **Chasse &
 (classeur Excel « Chasse ^LLL0 Peche Legendes 7.19 » + macros VBA + livret de règles).
 8 joueurs, un tour = 2 ans de temps de jeu, comme dans le classeur d'origine.
 
-> 📌 Ce dossier est publié sur la branche **`chasse-et-peche-web`** du repo
-> `losth230/quartz` (la branche `v4` du générateur de site Quartz n'est pas touchée),
-> et également sur `losth230/Chasse-et-Peche` (main).
+> 📌 **UNIFICATION 2026-11-02 (option A)** : le jeu vit désormais dans le dossier
+> **`jeu/`** de la branche **`v4`** du repo `losth230/quartz` — une seule branche,
+> une seule source de vérité (site Quartz à la racine + jeu dans `jeu/`).
+> L'ancienne branche miroir `chasse-et-peche-web` (et le flux « toute modif vit sur
+> les DEUX branches ») est ABANDONNÉE — cf. `docs/ia/journal-technique.md` pour
+> l'historique du double flux et ses incidents (Armes.md, resync en bloc…).
 
 ---
 
@@ -28,6 +31,9 @@ Le jeu est publié automatiquement sur **GitHub Pages** à chaque push :
   `parties_chasse_peche` du jeu (sans toucher à la table `parties` du wargame).
   Un joueur crée la partie avec un code de
   salon, les 7 autres cliquent « 🔗 Rejoindre ce salon » — tout se synchronise en temps réel.
+  Préférez un code **généré** (bouton 🎲 de l'onglet ⚙ Nouvelle partie) : le code
+  du salon est le seul secret de la partie (aucun compte joueur), un code court
+  est devinable.
 
 Le déploiement est assuré par `.github/workflows/deploy.yaml` du dépôt `quartz` :
 à chaque push sur `v4` ou sur `chasse-et-peche-web`, le workflow reconstruit le site
@@ -37,6 +43,7 @@ site existant, sans l'écraser.
 ## 2. Lancer le jeu (mode développeur, optionnel)
 
 ```bash
+cd jeu
 npm install
 npm run dev        # http://localhost:5173
 ```
@@ -74,8 +81,8 @@ tous les joueurs accèdent à la même partie par le code du salon (RLS anon ouv
 
 | Classeur Excel / VBA | Portage TypeScript |
 |---|---|
-| Macro `FinDeTour` (ressources, saisons, événements, cartes dynastie) | `src/engine/engine.ts` → `runTurn()` |
-| Macro `PersonnagesPourJoueur` (population complète) | `src/engine/engine.ts` → `populationTurn()` |
+| Macro `FinDeTour` (ressources, saisons, événements, cartes dynastie) | `jeu/src/engine/engine.ts` → `runTurn()` |
+| Macro `PersonnagesPourJoueur` (population complète) | `jeu/src/engine/engine.ts` → `populationTurn()` |
 | Mariages (`ComputeMarriageProbability`), toutes les pondérations | `computeMarriageProbability()` — formules identiques |
 | Grossesses/naissances (jumeaux 5 %, triplés 0,1 %, adultère 3 %, consanguinité, traits) | `conceptionEtNaissances()`, `inheritTraits()`, `computeBabyDynasty()` |
 | Maladies (proba, guérison, bâtiments de santé, grossesse perdue) | `maladieStep()` — constantes VBA exactes |
@@ -85,12 +92,12 @@ tous les joueurs accèdent à la même partie par le code du salon (RLS anon ouv
 | Migration des enfants sans éducation (10 %/tour) | `migrerEnfants()` |
 | Taxes par ville (`TAX_OR_FAIBLES`… `TAX_NAISS_HAUTES`) | `calculerGainsPopulation()`, `taxBirthFactor()` |
 | `RecruitForArmies`, `LeverArmee`, `RetirerArmee` (Général 45, Soldat 15) | `recruitForArmies()` + onglet Armées |
-| `ValidateTitleAssignment` (frmAttribuerTitre) | `src/engine/validation.ts` |
-| `GenererPopulationInitiale` (frmInitPop, couple royal) | `src/engine/setup.ts` |
+| `ValidateTitleAssignment` (frmAttribuerTitre) | `jeu/src/engine/validation.ts` |
+| `GenererPopulationInitiale` (frmInitPop, couple royal) | `jeu/src/engine/setup.ts` |
 | `SnapshotRessources` (_Historique) + graphiques | `snapshotRessources()` + onglet Historique (SVG) |
 | `WriteRecapA3` (J{n}!A35) | `writeRecap()` + récap par joueur |
-| **27 feuilles du classeur** (Titres, traits_genetiques, params_culture, BDD_pop, JSON événements, bâtiments, aménagements, maladies, offrandes, dogmes, ministères, crises, victoires…) | **données réelles intégrées** dans `src/config/referentiels.json` (≈126 Ko), normalisées par `src/config/defaultConfig.ts` |
-| Constantes et formules VBA (taux, seuils, pondérations) | `src/config/params.ts` (~63 paramètres nommés, valeurs VBA exactes) |
+| **27 feuilles du classeur** (Titres, traits_genetiques, params_culture, BDD_pop, JSON événements, bâtiments, aménagements, maladies, offrandes, dogmes, ministères, crises, victoires…) | **données réelles intégrées** dans `jeu/src/config/referentiels.json` (≈126 Ko), normalisées par `jeu/src/config/defaultConfig.ts` |
+| Constantes et formules VBA (taux, seuils, pondérations) | `jeu/src/config/params.ts` (~63 paramètres nommés, valeurs VBA exactes) |
 | `Rnd()` (non déterministe) | RNG mulberry32 **déterministe** (graine rejouable) |
 
 ---
@@ -122,9 +129,9 @@ moment, aucune contrainte bloquante.**
   toujours appliqué si vous confirmez. Chaque joueur peut modifier **à tout moment**
   ses stocks, ses productions, ses impôts et ses bâtiments dans l'onglet **Pays**.
 - **Chaud** : les modifications prennent effet au tour suivant, sans recharger la partie.
-  Les données de référence sont éditables directement dans `src/config/referentiels.json`
-  (JSON lisible), les formules dans `src/config/params.ts`, la normalisation dans
-  `src/config/defaultConfig.ts`.
+  Les données de référence sont éditables directement dans `jeu/src/config/referentiels.json`
+  (JSON lisible), les formules dans `jeu/src/config/params.ts`, la normalisation dans
+  `jeu/src/config/defaultConfig.ts`.
 
 ---
 
