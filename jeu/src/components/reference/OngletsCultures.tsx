@@ -27,7 +27,7 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
           <table className="tbl small">
             <thead>
               <tr>
-                <th>Culture</th><th>Hérédité</th><th>Homo autorisée</th>
+                <th>Culture</th><th>Hérédité</th>
                 <th>Fécondité</th><th>Loi de ville</th><th>Loi d'habitant</th>
               </tr>
             </thead>
@@ -36,7 +36,6 @@ export function OngletsCulturesRegimes({ C }: { C: Cfg }) {
                 <tr key={i}>
                   <td><strong>{t.nom}</strong></td>
                   <td>{t.heredite}</td>
-                  <td>{t.homoAutorisee ? 'oui' : 'non'}</td>
                   <td>×{t.fertFactor}</td>
                   <td className="muted">{t.regleVille || '—'}</td>
                   <td className="muted">{t.regleHabitant || '—'}</td>

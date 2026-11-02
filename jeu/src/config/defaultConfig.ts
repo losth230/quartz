@@ -77,7 +77,6 @@ export interface TraitDef {
 export interface CultureDef {
   nom: string
   heredite: string
-  homoAutorisee: boolean
   fertFactor: number
   /** (RENOMMÉS 2026-10-29, refonte « 12 lois » — anciens reglePays /
    *  reglePerso : une culture porte une loi de VILLE (culture
@@ -230,6 +229,17 @@ export interface FicheLigne { label: string; texte: string }
 //  pré-canonicalisation (batimentsVille, batimentsChateau,
 //  batimentsCouts, amenagements) — supprimées avec elles (la table
 //  canonique `constructions` les remplace).
+/** (NORMALISATION remplaceBatiment, 2026-11-02) : convertit le champ
+ *  d'une construction au format TABLEAU — une config sauvegardée
+ *  d'avant peut porter un string (l'ancien champ était singulier).
+ *  Idempotent : un tableau (ou l'absence du champ) passe tel quel. */
+function normaliserConstruction(c: ConstructionRef): ConstructionRef {
+  const rb = (c as { remplaceBatiment?: string | string[] }).remplaceBatiment
+  if (typeof rb !== 'string') return c
+  const out = { ...c, remplaceBatiment: [rb] } as ConstructionRef
+  return out
+}
+
 /** Table canonique des constructions (feuille « Ville » du classeur 7.19) :
  *  coût EXACT, production EXACTE (analysable par le moteur) et description
  *  EXACTE du classeur — parfois similaires. */
@@ -266,6 +276,13 @@ export interface ConstructionRef {
    *  MINIMUM requis pour construire/améliorer (1 = Hameau/Motte…,
    *  2 = Cité/Donjon, 3 = Grande Cité/Forteresse). Champ optionnel. */
   rangMinHabitation?: number
+  /** Bâtiment CÔTIER (2026-11-02, arbitrage Thibaut « un paramètre
+   *  cotier aux bâtiments ») : ses emplacements et effets moteurs ne
+   *  s'appliquent que dans une ville à proximité (Rivière ou Mer —
+   *  villeCotiere) ; hors proximité le bâtiment reste affiché mais
+   *  n'a aucun effet. Ex. Ponton. Champ optionnel : absent = pas de
+   *  contrainte de proximitié. */
+  cotier?: boolean
   terrain?: string     // aménagements uniquement
   /** Aménagements tiers 2/3 (vague 3c, arbitrage Thibaut
    *  2026-10-22) : nom de l'aménagement de TIER INFÉRIEUR que cette
@@ -339,10 +356,14 @@ export interface ConstructionRef {
   /** Bâtiment remplacé par cette construction (fiche bâtiments rang 2,
    *  2026-10-26 : Silo à grain → Grange, Moulin à vent ← Silo à grain,
    *  Ecole intermédiaire → Ecole élémentaire, Guilde des artisans de
-   *  la terre → Moulin à vent). Champ de DONNÉE pour la mécanique
-   *  d'amélioration des bâtiments (à venir) — la description fait foi
-   *  en attendant. */
-  remplaceBatiment?: string
+   *  la terre → Moulin à vent).
+   *  NORMALISATION 2026-11-02 : le champ devient un TABLEAU (un
+   *  remplaçant peut neutraliser PLUSIEURS bâtiments — Camp de
+   *  travailleurs → Camp de bûcheron ET Camp de mineur, Moulin à
+   *  vent → Silo à grain ET Grange) et la mécanique est BRANCHÉE :
+   *  batiments.ts lit les données (batimentsRemplaces), plus de
+   *  table REMPLACE codée en dur — « rien ne vit dans le code ». */
+  remplaceBatiment?: string[]
   /** Effets STRUCTURÉS (marqueur (s)) — source du moteur quand présents ;
    *  sinon repli sur l'analyse du texte exact (anciennes configs). */
   effets?: EffetConstruction[]
@@ -766,7 +787,6 @@ function normaliserCultures(): CultureDef[] {
   return ref.cultures.map((c: any) => ({
     nom: c.nom,
     heredite: c.heredite,
-    homoAutorisee: c.homoAutorisee === true || c.homoAutorisee === 'true',
     // (audit express 2026-10-26 : piège falsy-zéro — un futur
     //  fertFactor 0 légal serait écrasé en 1 par `|| 1` (même
     //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
@@ -877,7 +897,10 @@ export const DEFAULT_CONFIG: GameConfig = {
   metiersEffets: ref.metiersEffets,
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  constructions: ref.constructions,
+  // (NORMALISATION remplaceBatiment 2026-11-02 : le champ devient un
+  //  TABLEAU ; une config sauvegardée d'avant peut porter un string —
+  //  conversion à la lecture, patron idempotent.)
+  constructions: ref.constructions.map(normaliserConstruction),
   typesHabitation: ref.typesHabitation,
   domiciles: (ref.domiciles ?? []).map((d: { domicile?: string; qualite?: number | string }) => ({
     domicile: String(d.domicile ?? ''),
@@ -1076,7 +1099,7 @@ export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
     const d = defs.find((x) => x.nom === c?.nom)
     if (!d) return c
     const out: CultureDef = {
-      nom: c.nom, heredite: c.heredite, homoAutorisee: c.homoAutorisee,
+      nom: c.nom, heredite: c.heredite,
       regleVille: c.regleVille ?? d.regleVille,
       regleHabitant: c.regleHabitant ?? d.regleHabitant,
       fertFactor: c.fertFactor === 1 && d.fertFactor !== 1 ? d.fertFactor : (c.fertFactor ?? d.fertFactor),

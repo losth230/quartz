@@ -11,7 +11,7 @@ import { cfgOf, metierDef, cultureDef, traitDef, type Cfg } from './gameData'
 import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
 import { rangDe } from './statutSocial'
-import { constructionRef, emplacementsConstructionRef } from './constructions'
+import { constructionRef, emplacementsConstructionRef, estCotiereRef } from './constructions'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
 import { effetsDogmeCulture } from './dogmes'
@@ -97,20 +97,11 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
     if (f.mariageId) continue
     if (!tenter(f, hommes)) break
   }
-  // Passes homosexuelles — si la culture du pays les autorise (champ
-  // paramétrable du référentiel, onglet « Cultures & régimes »). Pas de
-  // conception entre époux de même sexe (conceptionEtNaissances,
-  // naissances.ts).
-  if (cultureDef(p.culture, C.config)?.homoAutorisee) {
-    for (const [sexeA, sexeB] of [['F', 'F'], ['M', 'M']] as const) {
-      const premiers = rng.shuffle(celib.filter((c) => c.sexe === sexeA))
-      const seconds = celib.filter((c) => c.sexe === sexeB)
-      for (const a of premiers) {
-        if (a.mariageId) continue
-        if (!tenter(a, seconds)) break
-      }
-    }
-  }
+  // (RETRAIT 2026-11-02, arbitrage Thibaut : les passes de mariages
+  //  homosexuels et le champ homoAutorisee disparaissent — « l'homosexualité
+  //  n'influence que les naissances » (orientationFertFactor, naissances.ts).
+  //  Le champ cultureDef.homoAutorisee est retiré du référentiel avec ;
+  //  l'ancien contenu reste dans l'historique git, règle 9.)
 }
 
 function formatDynastyPair(d1: string, d2: string): string {
@@ -314,13 +305,13 @@ function emplacementsMetierVille(
   for (const nom of [...(ville.batiments ?? []), ...(ville.amenagements ?? [])]) {
     const ref = constructionRef(nom, C.config)
     if (!ref) continue
-    // Ponton (vague 3b, arbitrage Thibaut 2026-10-22 ; vague 2
-    //  Ponton→proximité 2026-10-23) : bâtiment CÔTIER — ses
+    // (2026-11-02, paramètre `cotier` : bâtiment CÔTIER — ses
     //  emplacements ne comptent que si la ville a une proximité
     //  (toute proximité autre que « Plaine » — villeCotiere,
-    //  geographie.ts) ; hors proximité le bâtiment reste
-    //  affiché mais n'ouvre aucun poste.
-    if (nom === 'Ponton' && !villeCotiere(ville)) continue
+    //  geographie.ts) ; hors proximité le bâtiment reste affiché
+    //  mais n'ouvre aucun poste. Donnée du référentiel (Ponton),
+    //  plus de nom codé en dur.)
+    if (estCotiereRef(ref) && !villeCotiere(ville)) continue
     for (const e of emplacementsConstructionRef(ref, C.config)) {
       if (e.metier === metier) total += e.places
     }

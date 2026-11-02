@@ -487,7 +487,6 @@
   "cultures": [
     {
       "nom": "Communautarisme",
-      "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Parité",
       "regleVille": "Logements élargis : les habitations ont +5 Taudis.",
@@ -497,7 +496,6 @@
     },
     {
       "nom": "Déisme",
-      "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
       "regleVille": "Monuments pieux : les bâtiments de faction offrent +1 emplacement de Scientifique.",
@@ -507,7 +505,6 @@
     },
     {
       "nom": "Lunisme",
-      "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Masculine",
       "regleVille": "Villes Saintes : les habitations ont +2 emplacements de Palais.",
@@ -517,7 +514,6 @@
     },
     {
       "nom": "Naturalisme",
-      "homoAutorisee": false,
       "fertFactor": 1.1,
       "heredite": "Parité",
       "regleVille": "Champs nourriciers : les fermiers rapportent +1 Nourriture par tour en été.",
@@ -526,7 +522,6 @@
     },
     {
       "nom": "Sethisme",
-      "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
       "regleVille": "Caravanes : une fois 3 aménagements atteints, +1 route commerciale disponible.",
@@ -537,7 +532,6 @@
     },
     {
       "nom": "Zélotisme",
-      "homoAutorisee": false,
       "fertFactor": 1,
       "heredite": "Féminine",
       "regleVille": "Ferveur martiale : les garnisons des habitations qui ne sont pas de cette culture sont réduites de 20 points par rang de l'habitation.",
@@ -2271,6 +2265,7 @@
       "production": "",
       "description": "",
       "rangMinHabitation": 1,
+      "cotier": true,
       "effets": [],
       "emplacements": [
         {
@@ -2461,7 +2456,11 @@
           "valeur": 4
         }
       ],
-      "requis": "Camp de bûcheron"
+      "requis": "Camp de bûcheron",
+      "remplaceBatiment": [
+        "Camp de bûcheron",
+        "Camp de mineur"
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -2483,7 +2482,9 @@
           "places": 7
         }
       ],
-      "remplaceBatiment": "Grange",
+      "remplaceBatiment": [
+        "Grange"
+      ],
       "couts": [
         {
           "ressource": "Or",
@@ -2534,7 +2535,11 @@
           "valeur": 4
         }
       ],
-      "requis": "Silo à grain"
+      "requis": "Silo à grain",
+      "remplaceBatiment": [
+        "Silo à grain",
+        "Grange"
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -2682,7 +2687,9 @@
           "places": 30
         }
       ],
-      "remplaceBatiment": "Moulin à vent",
+      "remplaceBatiment": [
+        "Moulin à vent"
+      ],
       "couts": [
         {
           "ressource": "Or",
@@ -3278,7 +3285,9 @@
           "places": 1
         }
       ],
-      "remplaceBatiment": "Ecole élémentaire",
+      "remplaceBatiment": [
+        "Ecole élémentaire"
+      ],
       "couts": [
         {
           "ressource": "Or",

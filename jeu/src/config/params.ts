@@ -243,7 +243,13 @@ export const DEFAULT_PARAMS: GameParams = {
   prodMultBourgeois: 1.5,
   prodMultNoble: 1,
   gainsCrediteStock: 1,
-  fertBaseRate: 1.5,
+  // (2026-11-02, arbitrage Thibaut « la fertilité de base doit être
+  //  à 1 » : AVANT 1,5 — une proba > 1 était cappée par le rng.chance,
+  //  une femme mariée jeune sans malus concevait à CHAQUE tour. À 1,
+  //  la proba de base ne dépasse jamais 100 % : les facteurs
+  //  (âges, mari, traits, culture, dogmes, taxes) la font monter
+  //  JUSQU'À 1 au maximum.)
+  fertBaseRate: 1,
   fertSingleFactor: 0.1,
   fertTwinsRate: 0.05,
   fertTripletsRate: 0.001,

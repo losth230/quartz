@@ -53,7 +53,6 @@ export interface MetierDef {
 export interface CultureDef {
   nom: string
   heredite: Heredite
-  homoAutorisee: boolean
   fertFactor: number
 }
 

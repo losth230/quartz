@@ -390,7 +390,9 @@ test('fiche bâtiments : prérequis rang 2 lus depuis le champ coût (« X requi
   // le remplacement n'est PAS un prérequis : Silo à grain remplace la
   //  Grange via le champ dédié (pas de « requis » dans le coût)
   assert.equal(prerequisConstruction(constructionRef('Silo à grain', C.config)), null)
-  assert.equal(constructionRef('Silo à grain', C.config)?.remplaceBatiment, 'Grange')
+  // (NORMALISATION 2026-11-02 : remplaceBatiment est un TABLEAU — le
+  //  remplacement vit dans les données, lu par remplaceBatimentRef.)
+  assert.deepEqual(constructionRef('Silo à grain', C.config)?.remplaceBatiment, ['Grange'])
 })
 
 test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudis', () => {

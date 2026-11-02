@@ -337,3 +337,12 @@ export function reductionCampDeBatisseurs(cfg?: GameConfig): Record<string, numb
   for (const r of paires) out[r.ressource] = (out[r.ressource] ?? 0) + r.valeur
   return out
 }
+
+/** (2026-11-02, paramètre `cotier`, arbitrage Thibaut) : une
+ *  construction côtière exige une ville à proximité (Rivière/Mer —
+ *  villeCotiere) pour que ses emplacements et effets moteurs
+ *  s'appliquent. Donnée du RÉFÉRENTIEL — plus de nom « Ponton »
+ *  codé en dur dans le moteur. */
+export function estCotiereRef(ref: ConstructionRef | undefined): boolean {
+  return ref?.cotier === true
+}
