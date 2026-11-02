@@ -10,7 +10,6 @@ import type { Rng } from './rng'
 import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
 import { bump, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
-import { killCharacter } from './sante'
 import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
 import { effetsDogmeCulture } from './dogmes'
@@ -144,12 +143,11 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     mere.statut = 'Sain'
     mere.pereBio = null
     mere.pereBioId = null
-    // Règle simplifiée : une femme tombée malade pendant sa grossesse
-    // accouche, puis meurt de la maladie.
-    if (mere.enceinteMalade) {
-      mere.enceinteMalade = false
-      killCharacter(state, p, mere, 'maladie', recap)
-    }
+    // (RETRAIT 2026-11-02, arbitrage Thibaut : le cas « tombée malade
+    //  pendant sa grossesse » ne peut plus se produire — une enceinte
+    //  qui contracte fait une fausse couche (sante.ts) et n'est plus
+    //  Enceinte à l'accouchement. Le flag enceinteMalade et le
+    //  killCharacter associé disparaissent.)
   }
 
   // 2. Tentatives de conception (femmes adultes saines — ou malades :

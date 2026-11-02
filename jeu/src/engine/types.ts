@@ -113,7 +113,8 @@ export interface Character {
   enfantBatard: boolean
   /** femme enceinte ayant contracté la maladie : elle accouchera,
    *  puis mourra de la maladie (règle simplifiée « malade ou sain »). */
-  enceinteMalade?: boolean
+  // (RETRAIT 2026-11-02 : enceinteMalade — fausse couche arbitée, le flag
+  //  ne sert plus ; cf. sante.ts)
   /** Métier du personnage (rework habitants 2026-10-20) : l'ancien champ
    *  `titre` devient `metier` — les rôles de cour (Dirigeant, Héritier,
    *  Gouverneur…) vivent DANS le champ métier. null = Sans-

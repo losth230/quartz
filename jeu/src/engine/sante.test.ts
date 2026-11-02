@@ -17,7 +17,9 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { makeRng } from './rng'
-import { probaContracterMaladie } from './sante'
+import { probaContracterMaladie, maladieStep } from './sante'
+import { emptyRecap } from './shared'
+import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import type { Character } from './types'
 import { createGame, defaultSetups } from './setup'
@@ -115,4 +117,31 @@ test('Guérisseur : effet moteur — la maladie d\'un habitant de la ville est m
   const avecGuerisseurs = Math.max(0, probaPure - 2 * C.p.guerisseurContraction)
   assert.ok(avecGuerisseurs < probaPure,
     'la contraction baisse avec des Guérisseurs en poste')
+})
+
+// ── Fausse couche (arbitrage Thibaut 2026-11-02) ───────────────────────
+
+test('enceinte qui contracte : fausse couche — ni enceinte ni malade (2026-11-02)', () => {
+  const state = createGame(defaultSetups(), 20261102, 'local')
+  const p = state.players[0]
+  const femme = perso(20)
+  femme.sexe = 'F'
+  femme.statut = 'Enceinte'
+  femme.pereBio = 'Époux'
+  femme.pereBioId = 'm-1'
+  ;(state.population[p.n] as Character[]).push(femme)
+  // rng : le jet de contraction RÉUSSIT (chance → true à chaque appel)
+  const rng = {
+    next: () => 0, int: () => 1, die: () => 6,
+    chance: () => true,
+    pick: <T,>(a: T[]) => a[0]!,
+    pickWeighted: <T,>(i: T[]) => i[0]!,
+    shuffle: <T,>(a: T[]) => a,
+  } as unknown as Rng
+  maladieStep(state, p, femme, rng, emptyRecap())
+  assert.equal(femme.statut, 'Sain', 'fausse couche : elle n’est NI enceinte NI malade — Sain')
+  assert.equal(femme.pereBio, null, 'la grossesse est perdue')
+  assert.equal(femme.pereBioId, null, 'le père biologique est oublié')
+  const log = state.log.filter((l) => l.texte.includes('perd le bébé'))
+  assert.ok(log.length > 0, 'journal : fausse couche consignée')
 })
