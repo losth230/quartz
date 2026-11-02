@@ -90,15 +90,23 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
     if (rng.chance(computeMarriageProbability(a, b, C))) marier(a, b)
     return true
   }
-  // (2026-11-02, arbitrage Thibaut : le fonctionnement des mariages
-  //  automatiques RESTE par joueur (toutes villes confondues) — seuls
-  //  les AMANTS de la conception sont restreints à la ville de la
-  //  mère, cf. naissances.ts.)
-  const femmes = rng.shuffle(celib.filter((c) => c.sexe === 'F'))
-  const hommes = celib.filter((c) => c.sexe === 'M')
-  for (const f of femmes) {
-    if (f.mariageId) continue
-    if (!tenter(f, hommes)) break
+  // (ARBITRAGE Thibaut 2026-11-02 : les mariages automatiques n'ont
+  //  lieu qu'entre habitants d'une MÊME VILLE — chaque célibataire
+  //  ne rencontre que les célibataires du sexe opposé de SA ville.
+  //  AVANT : toute la population du joueur, toutes villes confondues.)
+  const celibParVille = new Map<string, Character[]>()
+  for (const c of celib) {
+    const l = celibParVille.get(c.ville)
+    if (l) l.push(c)
+    else celibParVille.set(c.ville, [c])
+  }
+  for (const celibVille of celibParVille.values()) {
+    const femmes = rng.shuffle(celibVille.filter((c) => c.sexe === 'F'))
+    const hommes = celibVille.filter((c) => c.sexe === 'M')
+    for (const f of femmes) {
+      if (f.mariageId) continue
+      if (!tenter(f, hommes)) break
+    }
   }
   // (RETRAIT 2026-11-02, arbitrage Thibaut : les passes de mariages
   //  homosexuels et le champ homoAutorisee disparaissent — « l'homosexualité
