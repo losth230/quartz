@@ -55,6 +55,10 @@ jobs:
         uses: supabase/setup-cli@v1
         with:
           version: latest
-      - run: supabase functions deploy resoudre-tour --project-ref kucgmmefluwmlobujanc
+      # (--yes, 2026-11-02 : la CLI (latest) demande une confirmation interactive
+      #  en CI depuis le 02/11 — "Re-run with --yes to confirm". Elle deployait
+      #  encore sans confirmation hier (v plus ancienne) ; --yes la rend
+      #  non-interactive de façon stable.)
+      - run: supabase functions deploy resoudre-tour --project-ref kucgmmefluwmlobujanc --yes
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
