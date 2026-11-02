@@ -8,6 +8,25 @@ Portage **React + TypeScript + Supabase** du jeu de grande stratégie **Chasse &
 > `losth230/quartz` (la branche `v4` du générateur de site Quartz n'est pas touchée),
 > et également sur `losth230/Chasse-et-Peche` (main).
 
+> ⚠️ **Les DEUX branches portent le jeu — flux miroir (2026-10-21 →)**. Le dépôt
+> `losth230/quartz` maintient le jeu en **double exemplaire** :
+>
+> | | `v4` | `chasse-et-peche-web` |
+> |---|---|---|
+> | Rôle | **site Quartz** (`content/`, construit par Pages) **+ miroir complet du jeu** | **jeu** — source de déploiement du jeu (`public/jeu/`, checkout par `deploy.yaml`) |
+> | CI | `ci-jeu.yaml` : `tsc --noEmit` + `npm test` + bundle Edge | idem |
+>
+> - Le workflow `deploy.yaml` checkoute **`v4` pour le site** puis **`chasse-et-peche-web`
+> UNIQUEMENT pour le jeu** (build vite → `public/jeu/`).
+> - Les évolutions du jeu sont **poussées sur les DEUX branches** (commits jumeaux,
+> suffixe « miroir… », arbres `src/` byte-identiques — cf. `docs/ia/journal-technique.md`).
+> - **Règle** : toute modif du jeu ou du contenu doit vivre sur les **DEUX branches**,
+> sinon la sync d'une branche vers l'autre écrase les édits de la seconde (incident
+> Armes.md 260f/200f, 2026-10-21).
+> - Ne pas « resynchroniser » une branche depuis l'autre en bloc : les deux avancent
+> en parallèle, chacune reçoit des commits que l'autre n'a pas encore (miroir manuel,
+> par lots).
+
 ---
 
 ## 1. Jouer en ligne — rien à installer, aucune ligne de commande
