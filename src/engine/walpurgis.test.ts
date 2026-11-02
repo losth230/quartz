@@ -63,6 +63,49 @@ function populationTest(cultureFemme: string): Character[] {
   return [mari, femme]
 }
 
+test('Walpurgis : SYMÉTRIE — un MARI Naturalisme augmente aussi les chances du couple', () => {
+  const state = partie()
+  const p = state.players[0]
+  // Couple inversé : homme Naturalisme, femme Déiste (joueur Déiste)
+  const pop = populationTest('Déisme')
+  pop[0].culture = 'Naturalisme' // le MARI
+  state.population[p.n] = pop
+  const hommeNaturaliste = computeFecondite(state, p, pop[0])
+
+  const popRef = populationTest('Déisme')
+  state.population[p.n] = popRef
+  const hommeDeiste = computeFecondite(state, p, popRef[0])
+
+  assert.ok(hommeNaturaliste > hommeDeiste,
+    `la fécondité affichée d'un homme Naturalisme porte le ×1,1 : ${hommeNaturaliste} > ${hommeDeiste}`)
+  assert.ok(Math.abs(hommeNaturaliste - hommeDeiste * 1.1) < 1e-9,
+    'facteur exact ×1,1 sur le return masculin (culture propre de l\u2019homme)')
+
+  // ET le jet de conception du couple : femme Déiste + mari Naturalisme = ×1,1
+  let proba = -1
+  const rngSpy = {
+    next: () => 0.99, int: () => 1, die: () => 1,
+    chance: (q: number) => { if (proba < 0) proba = q; return false },
+    pick: <T,>(a: T[]) => a[0], pickWeighted: <T,>(i: T[]) => i[0], shuffle: <T,>(a: T[]) => a,
+  } as unknown as Rng
+  const run = (cultureMari: string) => {
+    const st = partie()
+    const pj = st.players[0]
+    const couple = populationTest('Déisme')
+    couple[0].culture = cultureMari
+    st.population[pj.n] = couple
+    proba = -1
+    conceptionEtNaissances(st, pj, rngSpy as unknown as Rng, emptyRecap())
+    return proba
+  }
+  const avec = run('Naturalisme')
+  const sans = run('Déisme')
+  assert.ok(avec > sans,
+    'le jet de conception du couple porte le ×1,1 quand le MARI (seul) est Naturalisme')
+  assert.ok(Math.abs(avec - sans * 1.1) < 1e-9,
+    `ratio exact ×1,1 sur la part du mari dans le jet (${avec} = ${sans}×1,1)`)
+})
+
 test('Walpurgis : computeFecondite lit la culture PROPRE de la femme, pas celle du joueur', () => {
   const state = partie()
   const p = state.players[0]

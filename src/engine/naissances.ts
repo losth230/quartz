@@ -40,6 +40,11 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   //  — la part de l'époux vit dans le jet, cf. conceptionEtNaissances).)
   if (c.sexe !== 'F') {
     return maleAgeFactor(c.age) * orientationFertFactor(c.orientation)
+      // (Walpurgis, correctif 2026-11-02 suite : la loi fertFactor est
+      //  une règle d'habitant SYMÉTRIQUE (comme le dogme de la
+      //  Famille ci-dessous, « côté homme ET femme ») — le return
+      //  masculin porte AUSSI le fertFactor de SA culture propre.)
+      * cultureFertFactor(c.culture, C)
       * (1 + effetsDogmeCulture(state, c.culture, 'fecondite', C))
   }
   const ville = p.villes.find((v) => v.nom === c.ville)
@@ -176,6 +181,12 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     //  son mari est d'une culture féconde.)
     const factorMari = mari
       ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation)
+        // (Walpurgis, correctif 2026-11-02 suite — SYMÉTRIE avec la
+        //  part de la mère (mere.culture ci-dessous) et le dogme de
+        //  la Famille porté par chaque époux : la part de fÉcondité
+        //  du MARI porte le fertFactor de SA culture propre. Un
+        //  couple dont seul le mari est Naturaliste conçoit ×1,1.)
+        * cultureFertFactor(mari.culture, C)
         * (1 + effetsDogmeCulture(state, mari.culture, 'fecondite', C))
       : C.p.fertSingleFactor
     let proba = C.p.fertBaseRate
