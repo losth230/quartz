@@ -61,7 +61,14 @@ export function computeFecondite(state: GameState, p: Player, c: Character): num
   proba *= femaleAgeFactor(c.age)
   proba *= factorMari
   proba *= traitsFertFactor(c, mari ?? null, C)
-  proba *= cultureFertFactor(p.culture, C)
+  // (Walpurgis, correctif 2026-11-02 : la loi « fertFactor » est une
+  //  REGLE D'HABITANT (cf. regleHabitant du référentiel) — elle lit la
+  //  culture PROPRE du personnage (c.culture), comme le dogme de la
+  //  Famille ci-dessous : un habitant converti au Naturalisme
+  //  bénéficie du ×1,1 même si son joueur est d'une autre culture.
+  //  AVANT : culture du JOUEUR (p.culture) — un converti n'était
+  //  jamais plus fécond.)
+  proba *= cultureFertFactor(c.culture, C)
   // (Dogme de la Famille, 2026-10-30 : +v de fécondité pour les
   //  personnages de la culture porteuse (effet fecondite, défaut
   //  +0,1), où qu'ils vivent — culture PROPRE du personnage
@@ -175,7 +182,11 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     proba *= femaleAgeFactor(mere.age)
     proba *= factorMari
     proba *= traitsFertFactor(mere, mari ?? null, C)
-    proba *= cultureFertFactor(p.culture, C)
+    // (Walpurgis, correctif 2026-11-02 — même fix que computeFecondite :
+    //  culture PROPRE de la mère (loi d'habitant), pas celle du joueur.
+    //  Les DEUX formules doivent rester en phase — l'affiché = le réel,
+    //  cf. amendement 5e retour arbitre Thibaut du 30/10.)
+    proba *= cultureFertFactor(mere.culture, C)
     // (Dogme de la Famille — part de la MÈRE : culture PROPRE de la
     //  mère (loi d'habitant), où qu'elle vive ; même multiplicateur
     //  que la fécondité affichée de computeFecondite, côté femme.)
@@ -232,7 +243,7 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
     //  prestige de base — posé dès la naissance quand la dynastie
     //  du bébé est noble ; à l'âge adulte l'héritage ne peut pas
     //  le faire descendre sous ce plancher)
-    const dyn = computeBabyDynasty(state, p, mere, pere, batard, rng)
+    const dyn = computeBabyDynasty(state, mere, pere, batard, rng)
     const enfant: Character = {
       id: newId(rng),
       nom: mere.nom,
@@ -300,7 +311,7 @@ export function isConsanguineous(mere: Character, pere: Character | undefined): 
 
 /** Dynastie du bébé selon l'Hérédité de la culture (Masculine/Féminine/Parité). */
 function computeBabyDynasty(
-  state: GameState, p: Player, mere: Character, pere: Character | undefined,
+  state: GameState, mere: Character, pere: Character | undefined,
   batard: boolean, rng: Rng,
 ): string {
   const C = cfgOf(state.config)
@@ -310,7 +321,13 @@ function computeBabyDynasty(
     if (isNobleDyn(mere.dynastie, C)) return mere.dynastie
     return C.p.dynastieRoturier
   }
-  const cult = cultureDef(p.culture, C.config)
+  // (Correctif 2026-11-02, même périmètre que Walpurgis : l'hérédité
+  //  de dynastie est une règle vécue par les PARENTS — elle lit la
+  //  culture PROPRE de la mère (mere.culture), cohérent avec la
+  //  culture du nouveau-né (mere.culture, cf. accoucher). AVANT :
+  //  culture du JOUEUR (p.culture) — les conversions n'étaient jamais
+  //  prises en compte.)
+  const cult = cultureDef(mere.culture, C.config)
   const hered = cult ? cult.heredite : 'Masculine'
   if (hered === 'Masculine') return pere ? pere.dynastie : mere.dynastie
   if (hered === 'Féminine') return mere.dynastie
