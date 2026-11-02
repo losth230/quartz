@@ -90,7 +90,10 @@ export function gestionMariages(state: GameState, p: Player, rng: Rng, recap: Pl
     if (rng.chance(computeMarriageProbability(a, b, C))) marier(a, b)
     return true
   }
-  // Passe hétérosexuelle : chaque femme célibataire avec un homme libre.
+  // (2026-11-02, arbitrage Thibaut : le fonctionnement des mariages
+  //  automatiques RESTE par joueur (toutes villes confondues) — seuls
+  //  les AMANTS de la conception sont restreints à la ville de la
+  //  mère, cf. naissances.ts.)
   const femmes = rng.shuffle(celib.filter((c) => c.sexe === 'F'))
   const hommes = celib.filter((c) => c.sexe === 'M')
   for (const f of femmes) {
