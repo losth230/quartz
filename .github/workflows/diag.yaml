@@ -1,0 +1,45 @@
+# ══════════════════════════════════════════════════════════════════════
+#  Diagnostic moteur : exécute scripts/diag.ts (bundle du moteur + tests)
+#  et commite le résultat dans diag-out.txt (les issues sont désactivées
+#  sur ce fork). Temporaire — à supprimer une fois le bug corrigé.
+# ══════════════════════════════════════════════════════════════════════
+name: Diagnostic moteur (diag.ts)
+on:
+  push:
+    branches:
+      - v4
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  diag:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: jeu
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run diag.ts
+        # (R2, 2026-10-24 : diag.ts importe le VRAI moteur (src/engine/*)
+        #  — le loader résout les imports sans extension et sert les
+        #  .json en modules ES, comme tsx pour les tests.)
+        run: node --experimental-strip-types --import ./scripts/diag-loader.mjs scripts/diag.ts > ../diag-out.txt 2>&1 || true
+      - name: Commit du résultat
+        working-directory: .
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ../diag-out.txt
+          if git diff --cached --quiet; then
+            echo "diag-out.txt inchangé — rien à committer."
+          else
+            git commit -m "diag : résultats du diagnostic moteur"
+            git push
+          fi

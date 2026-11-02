@@ -1,0 +1,138 @@
+/* ============================================================
+   C&P — Modale de saisie partagée (cp-saisie)
+   À placer dans : quartz/static/cp-saisie.css
+   Chargé via Head.tsx : <link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve />
+   ============================================================ */
+
+/* Overlay sombre plein écran */
+#cp-saisie-overlay {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0, 0, 0, 0.55);
+  display: none; align-items: flex-start; justify-content: center;
+  padding: 4vh 1rem; overflow-y: auto;
+}
+#cp-saisie-overlay.open { display: flex; }
+body.cp-saisie-lock { overflow: hidden; }
+
+/* Panneau central : colonne flex (header / corps défilant / footer collant) */
+#cp-saisie-overlay .cp-saisie-panel {
+  background: var(--light); color: var(--dark);
+  border: 1px solid var(--gray); border-radius: 6px;
+  width: 100%; max-width: 780px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  display: flex; flex-direction: column; max-height: 92vh;
+  animation: cp-saisie-in 1s ease;
+}
+@keyframes cp-saisie-in { from { opacity: 0; transform: translateY(-12px); } to { opacity: 1; transform: translateY(0); } }
+@media (prefers-reduced-motion: reduce) {
+  #cp-saisie-overlay .cp-saisie-panel { animation: none; }
+}
+
+#cp-saisie-overlay .cp-saisie-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9em 1.2em; border-bottom: 1px solid var(--lightgray); flex-shrink: 0;
+}
+#cp-saisie-overlay .cp-saisie-title {
+  font-variant: small-caps; letter-spacing: 0.05em; font-weight: bold;
+  color: var(--secondary); font-size: 1.1em;
+}
+#cp-saisie-overlay .cp-saisie-close {
+  background: transparent; border: none; cursor: pointer;
+  font-size: 1.2em; color: var(--gray); padding: 0.2em 0.4em;
+}
+#cp-saisie-overlay .cp-saisie-close:hover { color: #c0563f; }
+/* Corps : seule zone qui défile */
+#cp-saisie-overlay .cp-saisie-body { padding: 1.2em; overflow-y: auto; flex: 1 1 auto; }
+/* Footer collant : toujours visible en bas */
+#cp-saisie-overlay .cp-saisie-footer {
+  flex-shrink: 0; padding: 0.9em 1.2em;
+  border-top: 1px solid var(--lightgray); background: var(--lightgray);
+  border-radius: 0 0 6px 6px;
+}
+
+/* ---- Formulaire (repris de l'onglet Saisie, scopé à la modale) ---- */
+#cp-saisie-overlay .cp-form-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.8em; margin-bottom: 1em;
+}
+#cp-saisie-overlay label { display: block; font-size: 0.78em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--secondary); margin-bottom: 0.2em; }
+#cp-saisie-overlay input, #cp-saisie-overlay select, #cp-saisie-overlay textarea {
+  background: var(--light); border: 1px solid var(--gray); border-radius: 3px;
+  padding: 0.45em 0.6em; font-family: inherit; font-size: 0.9em; color: var(--dark);
+  width: 100%; box-sizing: border-box;
+}
+#cp-saisie-overlay .cp-section-label {
+  display: block; font-variant: small-caps; letter-spacing: 0.05em;
+  font-size: 0.82em; color: var(--secondary); margin: 1.1em 0 0.4em; font-weight: bold;
+}
+/* Carte par participant : bloc distinct et aéré, champs en grille nette */
+#cp-saisie-overlay .cp-part-row {
+  display: grid;
+  grid-template-columns: auto 1fr 1fr;
+  gap: 0.6em 0.7em; align-items: center;
+  padding: 0.9em 1em; margin-bottom: 0.8em;
+  border: 1px solid var(--gray); border-radius: 5px; background: var(--light);
+}
+#cp-saisie-overlay .cp-part-num {
+  grid-column: 1 / -1;
+  font-variant: small-caps; letter-spacing: 0.05em; font-size: 0.8em;
+  font-weight: bold; color: var(--secondary);
+}
+#cp-saisie-overlay .cp-p-joueur { grid-column: 1 / 2; }
+#cp-saisie-overlay .cp-p-peuple { grid-column: 2 / 3; }
+#cp-saisie-overlay .cp-p-liste { grid-column: 3 / 4; }
+#cp-saisie-overlay .cp-p-archetype { grid-column: 1 / 2; }
+#cp-saisie-overlay .cp-p-pertes { grid-column: 2 / 3; }
+#cp-saisie-overlay .cp-p-resultat { grid-column: 3 / 4; }
+/* le bouton supprimer se place en haut à droite de la carte */
+#cp-saisie-overlay .cp-part-row { position: relative; }
+#cp-saisie-overlay .cp-part-del {
+  position: absolute; top: 0.6em; right: 0.7em;
+  background: transparent; border: none; color: var(--gray); cursor: pointer; font-size: 0.95em;
+}
+#cp-saisie-overlay .cp-part-del:hover { color: #c0563f; }
+
+/* Notation par étoiles : sur sa propre ligne, pleine largeur */
+#cp-saisie-overlay .cp-part-notes {
+  grid-column: 1 / -1;
+  display: flex; flex-wrap: wrap; gap: 1.4em;
+  margin-top: 0.2em; padding-top: 0.7em; border-top: 1px dashed var(--lightgray);
+}
+#cp-saisie-overlay .cp-rating { display: flex; align-items: center; gap: 0.4em; }
+#cp-saisie-overlay .cp-rating-lbl { font-size: 0.8em; font-variant: small-caps; letter-spacing: 0.04em; color: var(--secondary); }
+#cp-saisie-overlay .cp-stars { display: inline-flex; }
+#cp-saisie-overlay .cp-star { cursor: pointer; font-size: 1.2em; color: var(--gray); transition: color 0.1s; line-height: 1; }
+#cp-saisie-overlay .cp-star:hover { color: #d4a017; }
+#cp-saisie-overlay .cp-star.on { color: #e0a82e; }
+#cp-saisie-overlay .cp-star-clear { cursor: pointer; font-size: 0.75em; color: var(--gray); margin-left: 0.2em; opacity: 0.6; }
+#cp-saisie-overlay .cp-star-clear:hover { opacity: 1; color: #c0563f; }
+
+#cp-saisie-overlay .cp-textarea { min-height: 70px; resize: vertical; line-height: 1.5; }
+#cp-saisie-overlay .cp-btn-ghost {
+  background: transparent; border: 1px dashed var(--gray); border-radius: 3px;
+  padding: 0.35em 0.8em; font-family: inherit; font-size: 0.85em; color: var(--secondary);
+  cursor: pointer; margin-top: 0.2em;
+}
+#cp-saisie-overlay .cp-form-actions { display: flex; gap: 0.6em; }
+#cp-saisie-overlay .cp-btn {
+  background: var(--secondary); color: var(--light); border: 1px solid var(--secondary);
+  border-radius: 3px; padding: 0.5em 1.2em; font-family: inherit; font-variant: small-caps;
+  letter-spacing: 0.05em; cursor: pointer; font-size: 0.95em;
+}
+#cp-saisie-overlay .cp-btn:hover { opacity: 0.9; }
+#cp-saisie-overlay .cp-btn:disabled { opacity: 0.5; cursor: wait; }
+#cp-saisie-overlay .cp-btn.ghost { background: transparent; color: var(--secondary); }
+#cp-saisie-overlay .cp-msg { margin: 0 0 0.5em; font-size: 0.88em; min-height: 0; }
+#cp-saisie-overlay .cp-msg:empty { display: none; }
+#cp-saisie-overlay .cp-msg.err { color: #c0563f; }
+
+/* Responsive : sur écran étroit, les champs du participant passent en pleine largeur */
+@media (max-width: 560px) {
+  #cp-saisie-overlay .cp-part-row { grid-template-columns: 1fr; }
+  #cp-saisie-overlay .cp-p-joueur,
+  #cp-saisie-overlay .cp-p-peuple,
+  #cp-saisie-overlay .cp-p-liste,
+  #cp-saisie-overlay .cp-p-archetype,
+  #cp-saisie-overlay .cp-p-pertes,
+  #cp-saisie-overlay .cp-p-resultat { grid-column: 1 / -1; }
+  #cp-saisie-overlay .cp-form-grid { grid-template-columns: 1fr 1fr; }
+}

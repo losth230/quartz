@@ -1,0 +1,157 @@
+/* ============================================================
+   C&P — Builder d'armée (Vermines de Kaoss)
+   À placer dans : quartz/static/cp-army-builder.css
+   + <link rel="stylesheet" href="/quartz/static/cp-army-builder.css" spa-preserve /> dans Head.tsx
+   ============================================================ */
+
+#cp-army-app #cp-ab-label { display: block; font-variant: small-caps; font-size: 0.8em;
+  letter-spacing: 0.05em; color: var(--secondary); margin: 0 0 0.25em; }
+
+#cp-army-app .cp-ab {
+  border: 1px solid var(--gray); border-radius: 4px; background: var(--light);
+  padding: 0.9em 1em; margin-bottom: 0.6em;
+}
+
+/* Barre du haut : ajout + total/cible */
+#cp-army-app .cp-ab-bar {
+  display: flex; flex-wrap: wrap; gap: 0.8em; align-items: center;
+  justify-content: space-between; margin-bottom: 0.9em;
+  padding-bottom: 0.8em; border-bottom: 1px solid var(--lightgray);
+}
+#cp-army-app .cp-ab-add { display: flex; gap: 0.4em; align-items: center; flex: 1 1 320px; }
+#cp-army-app .cp-ab-add select { flex: 1 1 auto; min-width: 180px; }
+#cp-army-app .cp-ab-addbtn {
+  background: var(--secondary); color: var(--light); border: none; border-radius: 3px;
+  padding: 0.45em 0.9em; font-family: inherit; font-size: 0.85em; cursor: pointer; white-space: nowrap;
+}
+#cp-army-app .cp-ab-addbtn:hover { background: var(--tertiary); }
+#cp-army-app .cp-ab-total { display: flex; gap: 0.8em; align-items: center; }
+#cp-army-app .cp-ab-targetlbl { font-size: 0.8em; color: var(--gray); display: inline-flex; align-items: center; gap: 0.3em; margin: 0; }
+#cp-army-app .cp-ab-targetlbl input { width: 6em; }
+#cp-army-app .cp-ab-totalnum {
+  font-weight: bold; font-variant-numeric: tabular-nums; color: var(--secondary);
+  background: var(--lightgray); border: 1px solid var(--gray); border-radius: 999px;
+  padding: 0.2em 0.7em; white-space: nowrap;
+}
+#cp-army-app .cp-ab-totalnum.cp-ab-bad { color: #b5524a; border-color: #b5824a; }
+
+/* Entrées */
+#cp-army-app .cp-ab-entries { display: flex; flex-direction: column; gap: 0.5em; margin-bottom: 0.8em; }
+#cp-army-app .cp-ab-empty { color: var(--gray); font-style: italic; margin: 0.4em 0; }
+#cp-army-app .cp-ab-entry { border: 1px solid var(--gray); border-radius: 6px; background: var(--light); overflow: hidden; }
+#cp-army-app .cp-ab-entry-head {
+  display: flex; flex-wrap: wrap; gap: 0.5em; align-items: center; padding: 0.5em 0.7em;
+  cursor: pointer; user-select: none;
+}
+#cp-army-app .cp-ab-chevron { flex: 0 0 auto; width: 0.9em; text-align: center; color: var(--gray); font-size: 0.8em; }
+#cp-army-app .cp-ab-resume {
+  flex: 1 1 auto; min-width: 0; color: var(--gray); font-size: 0.82em; font-style: italic;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+#cp-army-app .cp-ab-collapsed .cp-ab-opts { display: none; }
+#cp-army-app .cp-ab-cat {
+  font-variant: small-caps; font-size: 0.7em; letter-spacing: 0.04em; color: var(--light);
+  border-radius: 3px; padding: 0.1em 0.5em; white-space: nowrap;
+}
+#cp-army-app .cp-ab-cat-commandant { background: #7c5e9c; }
+#cp-army-app .cp-ab-cat-base { background: #5e7c9c; }
+#cp-army-app .cp-ab-cat-soutien { background: #5e9c7c; }
+#cp-army-app .cp-ab-cat-special { background: #9c7c5e; }
+#cp-army-app .cp-ab-nom { font-weight: bold; color: var(--dark); flex: 0 0 auto; }
+#cp-army-app .cp-ab-qty input { width: 3.6em; }
+#cp-army-app .cp-ab-sub {
+  font-variant-numeric: tabular-nums; color: var(--secondary); font-size: 0.9em; min-width: 4em; text-align: right;
+}
+#cp-army-app .cp-ab-del {
+  background: none; border: 1px solid transparent; color: #b5524a; cursor: pointer;
+  border-radius: 3px; padding: 0.1em 0.4em; font-size: 0.95em;
+}
+#cp-army-app .cp-ab-del:hover { background: #b5524a; color: var(--light); }
+
+/* Zone d'options d'une entrée */
+#cp-army-app .cp-ab-opts {
+  padding: 0.6em 0.7em; border-top: 1px solid var(--lightgray);
+  background: color-mix(in srgb, var(--lightgray) 45%, var(--light));
+  display: flex; flex-direction: column; gap: 0.6em;
+}
+
+/* Options additives : pastilles cliquables */
+#cp-army-app .cp-ab-additifs { display: flex; flex-wrap: wrap; gap: 0.4em; }
+#cp-army-app .cp-ab-chip {
+  display: inline-flex; align-items: center; gap: 0.4em; cursor: pointer;
+  border: 1px solid var(--gray); border-radius: 999px; padding: 0.22em 0.7em;
+  font-size: 0.82em; color: var(--dark); background: var(--light);
+  text-transform: none; font-variant: normal; letter-spacing: 0; line-height: 1.4;
+  transition: background .12s, border-color .12s, color .12s;
+}
+#cp-army-app .cp-ab-chip:hover { border-color: var(--secondary); }
+#cp-army-app .cp-ab-chip input { position: absolute; opacity: 0; width: 0; height: 0; margin: 0; }
+#cp-army-app .cp-ab-chip.on {
+  background: color-mix(in srgb, var(--secondary) 14%, var(--light));
+  border-color: var(--secondary); color: var(--secondary); font-weight: 600;
+}
+#cp-army-app .cp-ab-chip.on .cp-ab-chipnom::before { content: "✓ "; }
+#cp-army-app .cp-ab-chipcout { font-variant-numeric: tabular-nums; opacity: 0.65; }
+
+/* Choix exclusifs (Bannière, Rune…) + coût manuel : lignes étiquetées */
+#cp-army-app .cp-ab-choixs { display: flex; flex-direction: column; gap: 0.4em; }
+#cp-army-app .cp-ab-choixrow { display: flex; align-items: center; gap: 0.6em; }
+#cp-army-app .cp-ab-choixlbl {
+  font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.78em;
+  color: var(--secondary); min-width: 6em; flex: 0 0 auto;
+}
+#cp-army-app .cp-ab-choixrow select { flex: 1 1 auto; max-width: 22em; }
+#cp-army-app .cp-ab-choixrow input[type="number"] { width: 6em; flex: 0 0 auto; }
+
+/* Alertes de composition */
+#cp-army-app .cp-ab-warns {
+  list-style: none; margin: 0; padding: 0.6em 0.8em; border-radius: 4px;
+  border-left: 4px solid #b5824a; background: color-mix(in srgb, #b5824a 10%, var(--light));
+}
+#cp-army-app .cp-ab-warns li { font-size: 0.88em; color: #8a5a2a; margin: 0.15em 0; }
+#cp-army-app .cp-ab-ok {
+  margin: 0; padding: 0.5em 0.8em; border-radius: 4px; font-size: 0.9em;
+  color: #3a8a4a; border-left: 4px solid #3a8a4a; background: color-mix(in srgb, #3a8a4a 8%, var(--light));
+}
+
+/* Choix d'armée : Royaume → Ordre */
+#cp-army-app .cp-ab-roy {
+  display: flex; flex-wrap: wrap; gap: 0.5em 1.2em; align-items: center;
+  padding: 0.5em 0.2em 0.7em; margin-bottom: 0.3em;
+  border-bottom: 1px solid var(--lightgray);
+}
+#cp-army-app .cp-ab-roylbl {
+  display: inline-flex; align-items: center; gap: 0.5em;
+  font-variant: small-caps; letter-spacing: 0.04em; font-size: 0.82em; color: var(--secondary);
+}
+#cp-army-app .cp-ab-roylbl select { font-variant: normal; letter-spacing: 0; min-width: 12em; }
+
+/* Marqueur d'option unique par armée (ex. Chevalier du Clair-Obscur) */
+.cp-ab-chipuniq { font-size: 0.78em; opacity: 0.6; font-weight: normal; }
+
+/* Panneau d'affinité Occultisme / Chamanisme (Peaux-Vertes) */
+.cp-ab-affinite {
+  margin: 0.6rem 0;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid var(--lightgray);
+  border-left: 4px solid var(--gray);
+  border-radius: 6px;
+  background: var(--light);
+}
+.cp-ab-affinite.occ { border-left-color: var(--secondary); }
+.cp-ab-affinite.cha { border-left-color: #2f7d52; }
+.cp-ab-affinite.eq  { border-left-color: var(--tertiary); }
+.cp-ab-aff-totaux {
+  display: flex;
+  gap: 1.2rem;
+  font-size: 0.9em;
+}
+.cp-ab-aff-occ b, .cp-ab-aff-cha b { font-size: 1.15em; }
+.cp-ab-aff-occ b { color: var(--secondary); }
+.cp-ab-aff-cha b { color: #2f7d52; }
+.cp-ab-aff-verdict {
+  margin-top: 0.3rem;
+  font-size: 0.85em;
+  color: var(--darkgray);
+  font-style: italic;
+}

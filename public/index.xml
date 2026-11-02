@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Chasse et Pêche</title>
+      <link>https://losth230.github.io/quartz</link>
+      <description>Les dernières 10 notes on Chasse et Pêche</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>Vermines de Kaoss</title>
+    <link>https://losth230.github.io/quartz/Wargame/Factions/Vermines-de-Kaoss</link>
+    <guid>https://losth230.github.io/quartz/Wargame/Factions/Vermines-de-Kaoss</guid>
+    <description><![CDATA[ Version : A3.2 Règles de Faction Amasser des Scories Même sur les champs de batailles, les Rats sont à la recherche des Scories qu’ils pourraient y trouver. ]]></description>
+    <pubDate>Thu, 22 Oct 2026 08:47:24 GMT</pubDate>
+  </item><item>
+    <title>Peuples Libres</title>
+    <link>https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres</link>
+    <guid>https://losth230.github.io/quartz/Wargame/Factions/Peuples-Libres</guid>
+    <description><![CDATA[ Version : A3.5.0 Règles de Faction Féodalité Les Peuples Libres n’ont pas de limite maximale de commandants. ]]></description>
+    <pubDate>Thu, 22 Oct 2026 07:13:37 GMT</pubDate>
+  </item><item>
+    <title>Troll</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/B%C3%AAtes/Troll</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/B%C3%AAtes/Troll</guid>
+    <description><![CDATA[ Niveau : 5 Type : bête VitMeTirArPVTa65+–6+/-113 Régénération (2) Gardien des esprits : Lorsqu’un sort est lancé à 9m ou moins du Troll, il devient enragé et gagne +3d6 sur sa prochaine attaque. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Pleureuse</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/Pleureuse</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/Pleureuse</guid>
+    <description><![CDATA[ Type : Cadavérique. Niveau : 2. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Transporteur de Cadavres</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/Transporteur-de-Cadavres</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/Transporteur-de-Cadavres</guid>
+    <description><![CDATA[ Type : Cadavérique. Niveau : 3. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>ẞterblich</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/%E1%BA%9Eterblich</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cadav%C3%A9rique/%E1%BA%9Eterblich</guid>
+    <description><![CDATA[ Type : Cadavérique. Niveau : 8. VitMeTirArPVTa53+-4+6TG Règles spéciales Bouclier d’os : au début de chaque tour, le ẞterblich reçoit Egide (2). ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Compagnon du néant</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cr%C3%A9atures-du-n%C3%A9ant/Compagnon-du-n%C3%A9ant</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Cr%C3%A9atures-du-n%C3%A9ant/Compagnon-du-n%C3%A9ant</guid>
+    <description><![CDATA[ Type : Néant Niveau : 1 VitMeTirAr/RMPVTaPhysiqueMentalSocial4-5+5+/5+NP---Furtif. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Esprit de la chèvre</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Esprits/Esprit-de-la-ch%C3%A8vre</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Esprits/Esprit-de-la-ch%C3%A8vre</guid>
+    <description><![CDATA[ Type : Esprit VitMeTirArPVTa55+–5+XM Compagnon esprit : les caractéristiques remplies par un X dans ce profil correspondent au nombre de dé de magie dépensés pour invoquer l’esprit. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Esprit du ragondin 1</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Esprits/Esprit-du-ragondin-1</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Esprits/Esprit-du-ragondin-1</guid>
+    <description><![CDATA[ Type : Esprit VitMeTirArPVTa55+–5+XM Compagnon esprit : les caractéristiques remplies par un X dans ce profil correspondent au nombre de dé de magie dépensés pour invoquer l’esprit. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item><item>
+    <title>Brigant</title>
+    <link>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Humano%C3%AFdes/Brigant</link>
+    <guid>https://losth230.github.io/quartz/JdR/MJ/Bestiaire/Humano%C3%AFdes/Brigant</guid>
+    <description><![CDATA[ Niveau : Type : Humanoïde VitMeTirArPVTa55+5+3+2M Bouclier rond : permet de relancer les jets d’armure de 1 venant de l’arc avant. ]]></description>
+    <pubDate>Wed, 21 Oct 2026 17:09:48 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>

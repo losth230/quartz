@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="fr" dir="ltr"><head><title>Norls</title><meta charset="utf-8"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="Chasse et Pêche"/><meta property="og:title" content="Norls"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Norls"/><meta name="twitter:description" content="Version : A3.2 Règles de Faction Gel Les modèles gelés souffrent d’un malus de -1 à leurs jets d’armure. Cumulable."/><meta property="og:description" content="Version : A3.2 Règles de Faction Gel Les modèles gelés souffrent d’un malus de -1 à leurs jets d’armure. Cumulable."/><meta property="og:image:alt" content="Version : A3.2 Règles de Faction Gel Les modèles gelés souffrent d’un malus de -1 à leurs jets d’armure. Cumulable."/><meta property="twitter:domain" content="losth230.github.io/quartz"/><meta property="og:url" content="https://losth230.github.io/quartz/Wargame/Factions/Norls"/><meta property="twitter:url" content="https://losth230.github.io/quartz/Wargame/Factions/Norls"/><link rel="icon" href="../../static/icon.png"/><meta name="description" content="Version : A3.2 Règles de Faction Gel Les modèles gelés souffrent d’un malus de -1 à leurs jets d’armure. Cumulable."/><meta name="generator" content="Quartz"/><link href="../../index.css" rel="stylesheet" type="text/css" data-persist="true"/><style>.expand-button {
+  position: absolute;
+  display: flex;
+  float: right;
+  padding: 0.4rem;
+  margin: 0.3rem;
+  right: 0;
+  color: var(--gray);
+  border-color: var(--dark);
+  background-color: var(--light);
+  border: 1px solid;
+  border-radius: 5px;
+  opacity: 0;
+  transition: 0.2s;
+}
+.expand-button > svg {
+  fill: var(--light);
+  filter: contrast(0.3);
+}
+.expand-button:hover {
+  cursor: pointer;
+  border-color: var(--secondary);
+}
+.expand-button:focus {
+  outline: 0;
+}
+
+pre:hover > .expand-button {
+  opacity: 1;
+  transition: 0.2s;
+}
+
+#mermaid-container {
+  position: fixed;
+  contain: layout;
+  z-index: 999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  display: none;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
+}
+#mermaid-container.active {
+  display: inline-block;
+}
+#mermaid-container > #mermaid-space {
+  border: 1px solid var(--lightgray);
+  background-color: var(--light);
+  border-radius: 5px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  height: 80vh;
+  width: 80vw;
+  overflow: hidden;
+}
+#mermaid-container > #mermaid-space > .mermaid-content {
+  position: relative;
+  transform-origin: 0 0;
+  transition: transform 0.1s ease;
+  overflow: visible;
+  min-height: 200px;
+  min-width: 200px;
+}
+#mermaid-container > #mermaid-space > .mermaid-content pre {
+  margin: 0;
+  border: none;
+}
+#mermaid-container > #mermaid-space > .mermaid-content svg {
+  max-width: none;
+  height: auto;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  display: flex;
+  gap: 8px;
+  padding: 8px;
+  background: var(--light);
+  border: 1px solid var(--lightgray);
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 2;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--lightgray);
+  background: var(--light);
+  color: var(--dark);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-family: var(--bodyFont);
+  transition: all 0.2s ease;
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:hover {
+  background: var(--lightgray);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:active {
+  transform: translateY(1px);
+}
+#mermaid-container > #mermaid-space > .mermaid-controls .mermaid-control-button:nth-child(2) {
+  width: auto;
+  padding: 0 12px;
+  font-size: 14px;
+}
+/*# sourceMappingURL=data:application/json;charset=utf-8;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VSb290IjoiL3RtcC9jcHcvcXVhcnR6L2NvbXBvbmVudHMvc3R5bGVzIiwic291cmNlcyI6WyJtZXJtYWlkLmlubGluZS5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFHRjtFQUNFOzs7QUFLRjtFQUNFO0VBQ0E7OztBQUlKO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTs7QUFFQTtFQUNFOztBQUdGO0VBQ0U7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBOztBQUdGO0VBQ0U7RUFDQTs7QUFJSjtFQUNFO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7O0FBRUE7RUFDRTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBO0VBQ0E7RUFDQTtFQUNBOztBQUVBO0VBQ0U7O0FBR0Y7RUFDRTs7QUFJRjtFQUNFO0VBQ0E7RUFDQSIsInNvdXJjZXNDb250ZW50IjpbIi5leHBhbmQtYnV0dG9uIHtcbiAgcG9zaXRpb246IGFic29sdXRlO1xuICBkaXNwbGF5OiBmbGV4O1xuICBmbG9hdDogcmlnaHQ7XG4gIHBhZGRpbmc6IDAuNHJlbTtcbiAgbWFyZ2luOiAwLjNyZW07XG4gIHJpZ2h0OiAwOyAvLyBOT1RFOiByaWdodCB3aWxsIGJlIHNldCBpbiBtZXJtYWlkLmlubGluZS50c1xuICBjb2xvcjogdmFyKC0tZ3JheSk7XG4gIGJvcmRlci1jb2xvcjogdmFyKC0tZGFyayk7XG4gIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWxpZ2h0KTtcbiAgYm9yZGVyOiAxcHggc29saWQ7XG4gIGJvcmRlci1yYWRpdXM6IDVweDtcbiAgb3BhY2l0eTogMDtcbiAgdHJhbnNpdGlvbjogMC4ycztcblxuICAmID4gc3ZnIHtcbiAgICBmaWxsOiB2YXIoLS1saWdodCk7XG4gICAgZmlsdGVyOiBjb250cmFzdCgwLjMpO1xuICB9XG5cbiAgJjpob3ZlciB7XG4gICAgY3Vyc29yOiBwb2ludGVyO1xuICAgIGJvcmRlci1jb2xvcjogdmFyKC0tc2Vjb25kYXJ5KTtcbiAgfVxuXG4gICY6Zm9jdXMge1xuICAgIG91dGxpbmU6IDA7XG4gIH1cbn1cblxucHJlIHtcbiAgJjpob3ZlciA+IC5leHBhbmQtYnV0dG9uIHtcbiAgICBvcGFjaXR5OiAxO1xuICAgIHRyYW5zaXRpb246IDAuMnM7XG4gIH1cbn1cblxuI21lcm1haWQtY29udGFpbmVyIHtcbiAgcG9zaXRpb246IGZpeGVkO1xuICBjb250YWluOiBsYXlvdXQ7XG4gIHotaW5kZXg6IDk5OTtcbiAgbGVmdDogMDtcbiAgdG9wOiAwO1xuICB3aWR0aDogMTAwdnc7XG4gIGhlaWdodDogMTAwdmg7XG4gIG92ZXJmbG93OiBoaWRkZW47XG4gIGRpc3BsYXk6IG5vbmU7XG4gIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpO1xuICBiYWNrZ3JvdW5kOiByZ2JhKDAsIDAsIDAsIDAuNSk7XG5cbiAgJi5hY3RpdmUge1xuICAgIGRpc3BsYXk6IGlubGluZS1ibG9jaztcbiAgfVxuXG4gICYgPiAjbWVybWFpZC1zcGFjZSB7XG4gICAgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tbGlnaHRncmF5KTtcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1saWdodCk7XG4gICAgYm9yZGVyLXJhZGl1czogNXB4O1xuICAgIHBvc2l0aW9uOiBmaXhlZDtcbiAgICB0b3A6IDUwJTtcbiAgICBsZWZ0OiA1MCU7XG4gICAgdHJhbnNmb3JtOiB0cmFuc2xhdGUoLTUwJSwgLTUwJSk7XG4gICAgaGVpZ2h0OiA4MHZoO1xuICAgIHdpZHRoOiA4MHZ3O1xuICAgIG92ZXJmbG93OiBoaWRkZW47XG5cbiAgICAmID4gLm1lcm1haWQtY29udGVudCB7XG4gICAgICBwb3NpdGlvbjogcmVsYXRpdmU7XG4gICAgICB0cmFuc2Zvcm0tb3JpZ2luOiAwIDA7XG4gICAgICB0cmFuc2l0aW9uOiB0cmFuc2Zvcm0gMC4xcyBlYXNlO1xuICAgICAgb3ZlcmZsb3c6IHZpc2libGU7XG4gICAgICBtaW4taGVpZ2h0OiAyMDBweDtcbiAgICAgIG1pbi13aWR0aDogMjAwcHg7XG5cbiAgICAgIHByZSB7XG4gICAgICAgIG1hcmdpbjogMDtcbiAgICAgICAgYm9yZGVyOiBub25lO1xuICAgICAgfVxuXG4gICAgICBzdmcge1xuICAgICAgICBtYXgtd2lkdGg6IG5vbmU7XG4gICAgICAgIGhlaWdodDogYXV0bztcbiAgICAgIH1cbiAgICB9XG5cbiAgICAmID4gLm1lcm1haWQtY29udHJvbHMge1xuICAgICAgcG9zaXRpb246IGFic29sdXRlO1xuICAgICAgYm90dG9tOiAyMHB4O1xuICAgICAgcmlnaHQ6IDIwcHg7XG4gICAgICBkaXNwbGF5OiBmbGV4O1xuICAgICAgZ2FwOiA4cHg7XG4gICAgICBwYWRkaW5nOiA4cHg7XG4gICAgICBiYWNrZ3JvdW5kOiB2YXIoLS1saWdodCk7XG4gICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1saWdodGdyYXkpO1xuICAgICAgYm9yZGVyLXJhZGl1czogNnB4O1xuICAgICAgYm94LXNoYWRvdzogMCAycHggNHB4IHJnYmEoMCwgMCwgMCwgMC4xKTtcbiAgICAgIHotaW5kZXg6IDI7XG5cbiAgICAgIC5tZXJtYWlkLWNvbnRyb2wtYnV0dG9uIHtcbiAgICAgICAgZGlzcGxheTogZmxleDtcbiAgICAgICAgYWxpZ24taXRlbXM6IGNlbnRlcjtcbiAgICAgICAganVzdGlmeS1jb250ZW50OiBjZW50ZXI7XG4gICAgICAgIHdpZHRoOiAzMnB4O1xuICAgICAgICBoZWlnaHQ6IDMycHg7XG4gICAgICAgIHBhZGRpbmc6IDA7XG4gICAgICAgIGJvcmRlcjogMXB4IHNvbGlkIHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0KTtcbiAgICAgICAgY29sb3I6IHZhcigtLWRhcmspO1xuICAgICAgICBib3JkZXItcmFkaXVzOiA0cHg7XG4gICAgICAgIGN1cnNvcjogcG9pbnRlcjtcbiAgICAgICAgZm9udC1zaXplOiAxNnB4O1xuICAgICAgICBmb250LWZhbWlseTogdmFyKC0tYm9keUZvbnQpO1xuICAgICAgICB0cmFuc2l0aW9uOiBhbGwgMC4ycyBlYXNlO1xuXG4gICAgICAgICY6aG92ZXIge1xuICAgICAgICAgIGJhY2tncm91bmQ6IHZhcigtLWxpZ2h0Z3JheSk7XG4gICAgICAgIH1cblxuICAgICAgICAmOmFjdGl2ZSB7XG4gICAgICAgICAgdHJhbnNmb3JtOiB0cmFuc2xhdGVZKDFweCk7XG4gICAgICAgIH1cblxuICAgICAgICAvLyBTdHlsZSB0aGUgcmVzZXQgYnV0dG9uIGRpZmZlcmVudGx5XG4gICAgICAgICY6bnRoLWNoaWxkKDIpIHtcbiAgICAgICAgICB3aWR0aDogYXV0bztcbiAgICAgICAgICBwYWRkaW5nOiAwIDEycHg7XG4gICAgICAgICAgZm9udC1zaXplOiAxNHB4O1xuICAgICAgICB9XG4gICAgICB9XG4gICAgfVxuICB9XG59XG4iXX0= */</style><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../prescript.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../static/contentIndex.json").then(data => data.json())</script><link rel="alternate" type="application/rss+xml" title="RSS Feed" href="https://losth230.github.io/quartz/index.xml"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://losth230.github.io/quartz/Wargame/Factions/Norls-og-image.webp"/><meta property="og:image:url" content="https://losth230.github.io/quartz/Wargame/Factions/Norls-og-image.webp"/><meta name="twitter:image" content="https://losth230.github.io/quartz/Wargame/Factions/Norls-og-image.webp"/><meta property="og:image:type" content="image/.webp"/><link rel="stylesheet" href="/quartz/static/cp-common.css" spa-preserve/><script src="/quartz/static/marked.min.js" spa-preserve></script><script src="/quartz/static/cp-markdown.js" spa-preserve></script><script type="module" src="/quartz/static/cp-bug-report.js" spa-preserve></script><script type="module" src="/quartz/static/cp-army-lists.js" spa-preserve></script><script type="module" src="/quartz/static/cp-bug-tracker.js" spa-preserve></script><script type="module" src="/quartz/static/cp-stats.js" spa-preserve></script><script type="module" src="/quartz/static/cp-intro-gen.js" spa-preserve></script><script type="module" src="/quartz/static/cp-actus.js" spa-preserve></script><script type="module" src="/quartz/static/cp-army-builder.js?v=3" spa-preserve></script><script type="module" src="/quartz/static/jdr-fiches.js" spa-preserve></script><script type="module" src="/quartz/static/cp-auth.js?v=1" spa-preserve></script><link rel="stylesheet" href="/quartz/static/cp-terrain.js" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-bug-report.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-intro-gen.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-saisie.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-army-builder.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/cp-wargame-index.css" spa-preserve/><link rel="stylesheet" href="/quartz/static/jdr-fiches.css" spa-preserve/></head><body data-slug="Wargame/Factions/Norls"><div id="quartz-root" class="page"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../..">Chasse et Pêche</a></h2><div class="spacer mobile-only"></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 1rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>Recherche</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="Rechercher quelque chose" placeholder="Rechercher quelque chose"/><div class="search-layout" data-preview="true"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="Mode sombre"><title>Mode sombre</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="Mode clair"><title>Mode clair</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="Mode lecture"><title>Mode lecture</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a,b)=>!a.isFolder&amp;&amp;!b.isFolder||a.isFolder&amp;&amp;b.isFolder?a.displayName.localeCompare(b.displayName,void 0,{numeric:!0,sensitivity:\&quot;base\&quot;}):!a.isFolder&amp;&amp;b.isFolder?1:-1&quot;,&quot;filterFn&quot;:&quot;node=>node.slugSegment!==\&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;node=>node&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-152"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>Explorateur</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-152" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#"></a></li></template><template id="template-folder"><li><div class="folder-container"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Wargame/">Wargame</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../Wargame/Factions/">Factions</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Norls</a></div></nav><h1 class="article-title">Norls</h1><p show-comma="true" class="content-meta"><time datetime="2026-10-03T09:06:47.000Z">03 oct. 2026</time><span>5 min de lecture</span></p></div></div><article class="popover-hint"><h5 id="version--a32">Version : A3.2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#version--a32" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<center><h2 id="règles-de-faction">Règles de Faction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-de-faction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></center>
+<h4 id="gel">Gel<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gel" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Les modèles gelés souffrent d’un malus de -1 à leurs jets d’armure. Cumulable.</p>
+<h4 id="robustesse-glaciale-1">Robustesse glaciale (1)<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#robustesse-glaciale-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>À utiliser lorsque vous activez un modèle <em>Fatigué</em>, il perd sa fatigue et reçoit <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egide (2)</a>.</p>
+<h4 id="transit">Transit<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#transit" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<p>Chaque fois qu’un joueur active un modèle, celui-ci doit jeter un dé, si la valeur est supérieure à sa vitesse, le modèle est marqué Fatigué.</p>
+<hr/>
+<center><h2 id="domaines-de-faction">Domaines de Faction<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domaines-de-faction" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2></center>
+<center><h3 id="domaine-du-givre">Domaine du Givre<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#domaine-du-givre" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3></center>
+<h4 id="niveau-1">Niveau 1<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Morsure de l’hiver (long, 7+, projectile) :</strong> Portée 12’’ 5d6. Si la moindre blessure est obtenue, la cible est <em>Fatiguée</em>.</li>
+<li><strong>Tenir bon ! (court, 3+, amélioration) :</strong> Portée 9’’, cible un modèle ami, même si celui-ci est engagé en mêlée. Il bénéficie d’un bonus de +1 à ses jets de moral et d’armure pour le reste du tour.
+→ Version renforcée : au prix d’une action longue, le bonus aux jets passe de +1 à +2.</li>
+</ul>
+<h4 id="niveau-2">Niveau 2<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong>Blizzard (long, 8+, météo) :</strong> La vitesse de tous les modèles est réduite de 1, et leur vitesse ne peut pas dépasser 5.</li>
+<li><strong>Mur de glace (long, 8+, projectile) :</strong> Placez un mur de glace entièrement à 18’’ du lanceur. Il fait Taille 4 et est indestructible. Il disparait à la fin du tour.</li>
+</ul>
+<h4 id="niveau-3">Niveau 3<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#niveau-3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h4>
+<ul>
+<li><strong><a href="../../Wargame/_Visualisation/Règles-spéciales/Souffle" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Souffle">Souffle</a> du grand dragon blanc (court, 13+, projectile) :</strong> Portée 12’’, 3d6, Gel, <a href="../../Wargame/_Visualisation/Règles-spéciales/Souffle" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Souffle">Souffle</a>. Ce sort se lance deux fois.
+→ Version renforcée (2) : augmente la portée du sort de 3’’ et lance un trait supplémentaire.</li>
+</ul>
+<hr/>
+<h2 id="commandants">Commandants<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#commandants" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<div class="legendary">
+<h3 id="daïne-cœur-de-glace--49-pts">Daïne Cœur-de-Glace — 49 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#daïne-cœur-de-glace--49-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Daïne</td><td><strong>4</strong></td><td><strong>6+</strong></td><td><strong>3+</strong></td><td><strong>5+</strong></td><td><strong>10</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="magie-">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Daïne est un lanceur de sorts de niveau 4 à accès au Domaine des Cieux et au Domaine du Givre.</li>
+<li>Invocation élémentaire (long, 10+, amélioration) : Daïne peut invoquer une tempête de glace sous ses pieds. Elle ne peut alors plus se déplacer mais possède Ta 6 et la portée de toutes ses sorts, ses aptitudes et leurs effets est augmentée de 4’’.</li>
+<li>Transfert (court, 3+, amélioration) : Daïne se téléporte sur 3’’.</li>
+</ul>
+<h5 id="règles-spéciales-">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Cœur-de-Glace : Daïne ne peut perdre plus de 1 PV par tour.</li>
+<li>Hiver sans fin : au début de chaque tour, ajoutez autant de marqueurs Gelé que le numéro du tour, répartis comme vous le souhaitez parmi les modèles à 12’’ ou moins.</li>
+</ul>
+<hr/>
+<h3 id="fine-lame--36-pts">Fine-lame — 36 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#fine-lame--36-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Fine-lame</td><td><strong>6</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>9</strong></td><td><strong>4</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>5d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement-">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lame de glace : si cette unité réussit une blessure en mêlée, sa cible est marquée Gelée.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="jörgen--45-pts">Jörgen — 45 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#jörgen--45-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Sabaoth</td><td><strong>6</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>10</strong></td><td><strong>4</strong></td><td><strong>3</strong></td><td><strong>4</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>6d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Furtif" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Furtif">Furtif</a>.</em></p>
+<h5 id="équipement--1">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Hache de Fordinson : si cette unité réussit une blessure en mêlée, ajoutez des marqueurs fatigue ou gel à la cible de manière qu’elle ait autant de fatigues que de gel.</li>
+</ul>
+<hr/>
+<div class="legendary">
+<h3 id="thorn--63-pts">Thorn — 63 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#thorn--63-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>⬜⬜</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Thron</td><td><strong>5</strong></td><td><strong>3+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>10</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>6</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>6d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="équipement--2">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Trancheuse des Racines : si ce modèle obtient au moins une touche en mêlée, il transforme les <a href="../../Wargame/_Visualisation/Règles-spéciales/Egide" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Egide">Egides</a> en marqueur Gel.</li>
+</ul>
+<h5 id="règles-spéciales--1">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Parade : les modèles adverses à  1” ou moins subissent un malus de -1  pour toucher en mêlée.</li>
+</ul>
+<hr/>
+<h2 id="modèles-de-base">Modèles de base<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-de-base" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="berserker--17-pts">Berserker — 17 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#berserker--17-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Berserker</td><td><strong>5</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>8</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>3d6</td><td></td><td><strong>Tir:</strong></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Maitre-Lame" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Maitre-Lame">Maitre-Lame</a>.</em></p>
+<h5 id="équipement--3">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Paire de haches (+3 pts) : confère +1d6 en mêlée.</li>
+</ul>
+<h5 id="règles-spéciales--2">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--2" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Briser la glace : les attaques de ce modèle sont explosives sur 5+ si la cible est Gelée.</li>
+</ul>
+<hr/>
+<h3 id="guerrier-des-steppes--6-pts">Guerrier des steppes — 6 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#guerrier-des-steppes--6-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Guerrier</td><td><strong>5</strong></td><td><strong>5+</strong></td><td><strong>5+</strong></td><td><strong>6+</strong></td><td><strong>6</strong></td><td><strong>1</strong></td><td><strong>2</strong></td><td><strong>1</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>2d6</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="équipement--4">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Bouclier (+1 pts) : permet de relancer les jets d’armure de 1 venant de l’arc frontal.</li>
+<li>Arc court (+2 pts) : Portée (C : 9’’, L : 15’’).</li>
+</ul>
+<hr/>
+<h3 id="porteur-de-givre--21-pts">Porteur-de-Givre — 21 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#porteur-de-givre--21-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Cavalier</td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>-</strong></td><td><strong>5+</strong></td><td><strong>8+</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td><strong>2</strong></td><td>Norls</td></tr><tr><td>Cheval</td><td><strong>6</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td><strong>-</strong></td><td>Bête</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6 / 2d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em>/ <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (1)</a>.</em></p>
+<h5 id="equipement-">Equipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#equipement-" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Lance de cavalerie (+1 pts) : le cavalier bénéficie de +1d6 en mêlée si elle réussit une charge.</li>
+</ul>
+<h5 id="règles-spéciales--3">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--3" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Ruée de l’hiver : cette unité commence la partie Gelé. Si elle obtient la moindre touche lors d’une charge, sa cible est marquée fatiguée.</li>
+<li>Râle tétanisant : lorsque ce modèle meurt, désignez un modèle à 4’’ ou moins à qui transférer les marqueurs Gelés.</li>
+</ul>
+<hr/>
+<h2 id="modèles-de-soutient">Modèles de soutient<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-de-soutient" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="evocateur--36-pts">Evocateur — 36 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#evocateur--36-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>🟥</th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Evocateur</td><td><strong>5</strong></td><td><strong>6+</strong></td><td><strong>4+</strong></td><td><strong>5+</strong></td><td><strong>7</strong></td><td><strong>2</strong></td><td><strong>2</strong></td><td><strong>4</strong></td><td>Norls</td></tr><tr><td><strong>Mêlée:</strong></td><td>2d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<h5 id="magie--1">Magie :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#magie--1" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>L’Evocateur est un lanceur de sorts de niveau 3 à accès au Domaine des Cieux et au Domaine du Givre.</li>
+</ul>
+<h5 id="règles-spéciales--4">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--4" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Surcharge élémentaire (1/3 par unité au sein d’un modèle) : au prix d’une action courte, vous pouvez renforcer un modèle ami à 6’’ ou moins avec l’une des améliorations suivantes :
+<ul>
+<li>Froid mordant : jusqu’à la fin de la partie, les modèles attaquées par le modèle sont marqués Fatigués, ou Activés s’ils l’étaient déjà.</li>
+<li>Passage de l’hiver : jusqu’à la fin de la partie, ce modèle peut effectuer une marche gratuite au début de chaque tour.</li>
+</ul>
+</li>
+</ul>
+<hr/>
+<h2 id="modèles-spéciaux">Modèles Spéciaux<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#modèles-spéciaux" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<hr/>
+<h3 id="elémentaire-de-givre--60-pts">Elémentaire de givre — 60 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#elémentaire-de-givre--60-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Elémentaire</td><td><strong>4</strong></td><td><strong>4+</strong></td><td><strong>-</strong></td><td><strong>4+</strong></td><td><strong>9</strong></td><td><strong>8</strong></td><td><strong>4</strong></td><td><strong>5</strong></td><td>Elémentaire</td></tr><tr><td><strong>Mêlée:</strong></td><td>spé</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (3)</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Régénération" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Régénération">Régénération (1)</a>.</em></p>
+<h5 id="règles-spéciales--5">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Elémentaire de glace : cette unité ne peut être blessée que par des attaques ayant Force Dévastatrice ou <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant</a>. De plus, cette unité est immunisée au <em>Gel</em>.</li>
+<li>Frappe de glace : la compétence en mêlée de cette unité est égale au nombre de marqueur Gel qu’elle possède.</li>
+<li>Cœur gelé : ce modèle commence avec 2 marqueurs Gel.</li>
+</ul>
+<hr/>
+<h3 id="grand-dragon-blanc--122-pts">Grand dragon blanc — 122 pts<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#grand-dragon-blanc--122-pts" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th></th><th><strong>Vit</strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-en-mêlée">Me</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-une-attaque-à-distance">Tir</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-jet-d'armure">Ar</a></strong></th><th><strong><a href="../../Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral" class="internal alias" data-slug="Wargame/_Visualisation/Règles-de-bataille/Effectuer-un-test-de-moral">Mo</a></strong></th><th><strong>PV</strong></th><th><strong>Ta</strong></th><th><strong>Ma</strong></th><th><strong>Type</strong></th></tr></thead><tbody><tr><td>Dragon</td><td><strong>6</strong></td><td><strong>3+</strong></td><td><strong>4+</strong></td><td><strong>3+</strong></td><td><strong>10</strong></td><td><strong>12</strong></td><td><strong>5</strong></td><td><strong>8</strong></td><td>Bête</td></tr><tr><td><strong>Mêlée:</strong></td><td>10d6</td><td></td><td><strong>Tir:</strong></td><td>-</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table></div>
+<p><em><a href="../../Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Anti-Infanterie">Anti-Infanterie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Cavalerie" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Cavalerie">Cavalerie</a>, <a href="../../Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Force-Dévastatrice">Force Dévastatrice (2)</a>.</em></p>
+<h5 id="équipement--5">Équipement :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#équipement--5" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li><a href="../../Wargame/_Visualisation/Règles-spéciales/Souffle" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Souffle">Souffle</a> de grand dragon blanc : Portée 12’’, 3d6, <a href="../../Wargame/_Visualisation/Règles-spéciales/Souffle" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Souffle">Souffle</a>. Ceci est une attaque à distance utilisable même en mêlée, qui se lance deux fois (vous pouvez pivoter entre chaque attaque).</li>
+</ul>
+<h5 id="règles-spéciales--6">Règles spéciales :<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#règles-spéciales--6" class="internal"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h5>
+<ul>
+<li>Ecailles de dragon : cette unité ne peut être blessée que par des attaques ayant Force Dévastatrice ou <a href="../../Wargame/_Visualisation/Règles-spéciales/Perforant" class="internal alias" data-slug="Wargame/_Visualisation/Règles-spéciales/Perforant">Perforant</a>.</li>
+</ul>
+<hr/></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="toc desktop-only"><button type="button" class="toc-header" aria-controls="toc-44" aria-expanded="true"><h3>Table des Matières</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-1" class="toc-content overflow"><li class="depth-0"><a href="#commandants" data-for="commandants">Commandants</a></li><li class="depth-1"><a href="#daïne-cœur-de-glace--49-pts" data-for="daïne-cœur-de-glace--49-pts">Daïne Cœur-de-Glace — 49 pts</a></li><li class="depth-1"><a href="#fine-lame--36-pts" data-for="fine-lame--36-pts">Fine-lame — 36 pts</a></li><li class="depth-1"><a href="#jörgen--45-pts" data-for="jörgen--45-pts">Jörgen — 45 pts</a></li><li class="depth-1"><a href="#thorn--63-pts" data-for="thorn--63-pts">Thorn — 63 pts</a></li><li class="depth-0"><a href="#modèles-de-base" data-for="modèles-de-base">Modèles de base</a></li><li class="depth-1"><a href="#berserker--17-pts" data-for="berserker--17-pts">Berserker — 17 pts</a></li><li class="depth-1"><a href="#guerrier-des-steppes--6-pts" data-for="guerrier-des-steppes--6-pts">Guerrier des steppes — 6 pts</a></li><li class="depth-1"><a href="#porteur-de-givre--21-pts" data-for="porteur-de-givre--21-pts">Porteur-de-Givre — 21 pts</a></li><li class="depth-0"><a href="#modèles-de-soutient" data-for="modèles-de-soutient">Modèles de soutient</a></li><li class="depth-1"><a href="#evocateur--36-pts" data-for="evocateur--36-pts">Evocateur — 36 pts</a></li><li class="depth-0"><a href="#modèles-spéciaux" data-for="modèles-spéciaux">Modèles Spéciaux</a></li><li class="depth-1"><a href="#elémentaire-de-givre--60-pts" data-for="elémentaire-de-givre--60-pts">Elémentaire de givre — 60 pts</a></li><li class="depth-1"><a href="#grand-dragon-blanc--122-pts" data-for="grand-dragon-blanc--122-pts">Grand dragon blanc — 122 pts</a></li><li class="overflow-end"></li></ul></div><div class="backlinks"><h3>Liens retour</h3><ul id="list-2" class="overflow"><li><a href="../../Wargame/Factions/" class="internal">index</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Créé avec <a href="https://quartz.jzhao.xyz/">Quartz v4.5.2</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script type="application/javascript" data-persist="true">function n(){let t=this.parentElement;t.classList.toggle("is-collapsed");let e=t.getElementsByClassName("callout-content")[0];if(!e)return;let l=t.classList.contains("is-collapsed");e.style.gridTemplateRows=l?"0fr":"1fr"}function c(){let t=document.getElementsByClassName("callout is-collapsible");for(let e of t){let l=e.getElementsByClassName("callout-title")[0],s=e.getElementsByClassName("callout-content")[0];if(!l||!s)continue;l.addEventListener("click",n),window.addCleanup(()=>l.removeEventListener("click",n));let o=e.classList.contains("is-collapsed");s.style.gridTemplateRows=o?"0fr":"1fr"}}document.addEventListener("nav",c);
+</script><script type="module" data-persist="true">function E(a,e){if(!a)return;function t(o){o.target===this&&(o.preventDefault(),o.stopPropagation(),e())}function n(o){o.key.startsWith("Esc")&&(o.preventDefault(),e())}a?.addEventListener("click",t),window.addCleanup(()=>a?.removeEventListener("click",t)),document.addEventListener("keydown",n),window.addCleanup(()=>document.removeEventListener("keydown",n))}function f(a){for(;a.firstChild;)a.removeChild(a.firstChild)}var m=class{constructor(e,t){this.container=e;this.content=t;this.setupEventListeners(),this.setupNavigationControls(),this.resetTransform()}isDragging=!1;startPan={x:0,y:0};currentPan={x:0,y:0};scale=1;MIN_SCALE=.5;MAX_SCALE=3;cleanups=[];setupEventListeners(){let e=this.onMouseDown.bind(this),t=this.onMouseMove.bind(this),n=this.onMouseUp.bind(this),o=this.onTouchStart.bind(this),r=this.onTouchMove.bind(this),i=this.onTouchEnd.bind(this),s=this.resetTransform.bind(this);this.container.addEventListener("mousedown",e),document.addEventListener("mousemove",t),document.addEventListener("mouseup",n),this.container.addEventListener("touchstart",o,{passive:!1}),document.addEventListener("touchmove",r,{passive:!1}),document.addEventListener("touchend",i),window.addEventListener("resize",s),this.cleanups.push(()=>this.container.removeEventListener("mousedown",e),()=>document.removeEventListener("mousemove",t),()=>document.removeEventListener("mouseup",n),()=>this.container.removeEventListener("touchstart",o),()=>document.removeEventListener("touchmove",r),()=>document.removeEventListener("touchend",i),()=>window.removeEventListener("resize",s))}cleanup(){for(let e of this.cleanups)e()}setupNavigationControls(){let e=document.createElement("div");e.className="mermaid-controls";let t=this.createButton("+",()=>this.zoom(.1)),n=this.createButton("-",()=>this.zoom(-.1)),o=this.createButton("Reset",()=>this.resetTransform());e.appendChild(n),e.appendChild(o),e.appendChild(t),this.container.appendChild(e)}createButton(e,t){let n=document.createElement("button");return n.textContent=e,n.className="mermaid-control-button",n.addEventListener("click",t),window.addCleanup(()=>n.removeEventListener("click",t)),n}onMouseDown(e){e.button===0&&(this.isDragging=!0,this.startPan={x:e.clientX-this.currentPan.x,y:e.clientY-this.currentPan.y},this.container.style.cursor="grabbing")}onMouseMove(e){this.isDragging&&(e.preventDefault(),this.currentPan={x:e.clientX-this.startPan.x,y:e.clientY-this.startPan.y},this.updateTransform())}onMouseUp(){this.isDragging=!1,this.container.style.cursor="grab"}onTouchStart(e){if(e.touches.length!==1)return;this.isDragging=!0;let t=e.touches[0];this.startPan={x:t.clientX-this.currentPan.x,y:t.clientY-this.currentPan.y}}onTouchMove(e){if(!this.isDragging||e.touches.length!==1)return;e.preventDefault();let t=e.touches[0];this.currentPan={x:t.clientX-this.startPan.x,y:t.clientY-this.startPan.y},this.updateTransform()}onTouchEnd(){this.isDragging=!1}zoom(e){let t=Math.min(Math.max(this.scale+e,this.MIN_SCALE),this.MAX_SCALE),n=this.content.getBoundingClientRect(),o=n.width/2,r=n.height/2,i=t-this.scale;this.currentPan.x-=o*i,this.currentPan.y-=r*i,this.scale=t,this.updateTransform()}updateTransform(){this.content.style.transform=`translate(${this.currentPan.x}px, ${this.currentPan.y}px) scale(${this.scale})`}resetTransform(){let t=this.content.querySelector("svg").getBoundingClientRect(),n=t.width/this.scale,o=t.height/this.scale;this.scale=1,this.currentPan={x:(this.container.clientWidth-n)/2,y:(this.container.clientHeight-o)/2},this.updateTransform()}},T=["--secondary","--tertiary","--gray","--light","--lightgray","--highlight","--dark","--darkgray","--codeFont"],y;document.addEventListener("nav",async()=>{let e=document.querySelector(".center").querySelectorAll("code.mermaid");if(e.length===0)return;y||=await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.4.0/mermaid.esm.min.mjs");let t=y.default,n=new WeakMap;for(let r of e)n.set(r,r.innerText);async function o(){for(let s of e){s.removeAttribute("data-processed");let c=n.get(s);c&&(s.innerHTML=c)}let r=T.reduce((s,c)=>(s[c]=window.getComputedStyle(document.documentElement).getPropertyValue(c),s),{}),i=document.documentElement.getAttribute("saved-theme")==="dark";t.initialize({startOnLoad:!1,securityLevel:"loose",theme:i?"dark":"base",themeVariables:{fontFamily:r["--codeFont"],primaryColor:r["--light"],primaryTextColor:r["--darkgray"],primaryBorderColor:r["--tertiary"],lineColor:r["--darkgray"],secondaryColor:r["--secondary"],tertiaryColor:r["--tertiary"],clusterBkg:r["--light"],edgeLabelBackground:r["--highlight"]}}),await t.run({nodes:e})}await o(),document.addEventListener("themechange",o),window.addCleanup(()=>document.removeEventListener("themechange",o));for(let r=0;r<e.length;r++){let v=function(){let g=l.querySelector("#mermaid-space"),h=l.querySelector(".mermaid-content");if(!h)return;f(h);let w=i.querySelector("svg").cloneNode(!0);h.appendChild(w),l.classList.add("active"),g.style.cursor="grab",u=new m(g,h)},M=function(){l.classList.remove("active"),u?.cleanup(),u=null},i=e[r],s=i.parentElement,c=s.querySelector(".clipboard-button"),d=s.querySelector(".expand-button"),p=window.getComputedStyle(c),L=c.offsetWidth+parseFloat(p.marginLeft||"0")+parseFloat(p.marginRight||"0");d.style.right=`calc(${L}px + 0.3rem)`,s.prepend(d);let l=s.querySelector("#mermaid-container");if(!l)return;let u=null;d.addEventListener("click",v),E(l,M),window.addCleanup(()=>{u?.cleanup(),d.removeEventListener("click",v)})}});
+</script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../postscript.js" type="module" data-persist="true"></script></html>
