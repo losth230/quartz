@@ -59,6 +59,17 @@ jobs:
       - name: Install dependencies (jeu)
         run: npm install --no-audit --no-fund
         working-directory: jeu
+      #  Filet de sécurité avant tout déploiement du jeu : le moteur
+      #  (tests de régression runTurn + invariants, tsx --test) et le
+      #  typage strict doivent passer, sinon le déploiement est refusé.
+      #  (cf. src/engine/regression.test.ts : « refusé par la CI avant
+      #  tout déploiement » — cette étape exécute enfin cette promesse.)
+      - name: Typecheck jeu (tsc --noEmit)
+        run: npm run typecheck
+        working-directory: jeu
+      - name: Tests jeu (tsx --test)
+        run: npm test
+        working-directory: jeu
       - name: Build jeu (vite)
         run: npm run build
         working-directory: jeu
