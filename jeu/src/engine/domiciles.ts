@@ -86,8 +86,8 @@ export function totalLogementsVille(ville: City): number {
 /** Domiciles apportés au parc de logements d'une ville par ses
  *  CONSTRUCTIONS (AMÉNAGEMENTS et BÂTIMENTS — fiche bâtiments rang 2,
  *  2026-10-26) : Taudis et autres types, lus VIA LA BANQUE (retour
- *  Thibaut 2026-10-27 : les taudisApportes / domicilesApportes du
- *  référentiel sont traduits en effets `logements` — ce canal est la
+ *  Thibaut 2026-10-27 (normalisé 2026-11-02) : les domicilesApportes du
+ *  référentiel (Taudis compris) sont traduits en effets `logements` — ce canal est la
  *  voie moteur unique, comme les flux). Agrégat par type ; les noms
  *  des vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
  *  la lecture est par nom de construction dans le référentiel. */

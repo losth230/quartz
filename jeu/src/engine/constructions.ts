@@ -8,7 +8,7 @@
 //  chaque entrée porte ses DONNÉES : `couts` (paires {ressource, valeur}),
 //  `requis` (bâtiment prérequis, même ville), `effets` (flux/garnison via
 //  la banque), `emplacements` (métiers — canal placesMetier de la banque),
-//  `taudisApportes` / `domicilesApportes` (logements — canal logements de
+//  `domicilesApportes` (logements, Taudis compris — canal logements de
 //  la banque). Les anciens textes cout/production/description sont VIDÉS.)
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
@@ -224,7 +224,8 @@ export function emplacementsConstructionRef(ref: ConstructionRef, cfg?: GameConf
 
 /** LOGEMENTS apportés au parc d'une ville par une construction — VIA LA
  *  BANQUE (retour Thibaut 2026-10-27 : les logements passent par la
- *  banque — taudisApportes et domicilesApportes sont traduits en
+ *  banque — domicilesApportes (Taudis compris, normalisation 2026-11-02)
+ *  sont traduits en
  *  effets `logements` ; les Taudis et les autres types de domicile
  *  passent par le MÊME canal). Clé = type de logement, valeur =
  *  nombre apporté. */

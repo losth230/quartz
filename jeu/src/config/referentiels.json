@@ -2086,7 +2086,6 @@
           "places": 4
         }
       ],
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -2095,6 +2094,12 @@
         {
           "ressource": "Fer",
           "valeur": 4
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -2294,7 +2299,6 @@
       "description": "",
       "effets": [],
       "rangMinHabitation": 1,
-      "taudisApportes": 20,
       "couts": [
         {
           "ressource": "Bois",
@@ -2303,6 +2307,12 @@
         {
           "ressource": "Or",
           "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 20
         }
       ]
     },
@@ -2322,7 +2332,6 @@
           "places": 4
         }
       ],
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -2333,7 +2342,13 @@
           "valeur": 4
         }
       ],
-      "requis": "Poste de garde"
+      "requis": "Poste de garde",
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -2699,7 +2714,6 @@
           "places": 4
         }
       ],
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -2708,6 +2722,12 @@
         {
           "ressource": "Fer",
           "valeur": 4
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -2954,7 +2974,6 @@
       "description": "",
       "effets": [],
       "rangMinHabitation": 1,
-      "taudisApportes": 20,
       "couts": [
         {
           "ressource": "Bois",
@@ -2963,6 +2982,12 @@
         {
           "ressource": "Or",
           "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 20
         }
       ]
     },
@@ -2982,7 +3007,6 @@
           "places": 4
         }
       ],
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -2993,7 +3017,13 @@
           "valeur": 4
         }
       ],
-      "requis": "Poste de garde"
+      "requis": "Poste de garde",
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
+        }
+      ]
     },
     {
       "categorie": "Bâtiment",
@@ -3492,7 +3522,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3501,6 +3530,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3520,7 +3555,6 @@
           "places": 3
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3529,6 +3563,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3552,7 +3592,6 @@
           "places": 1
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3561,6 +3600,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3580,7 +3625,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3589,6 +3633,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3608,7 +3658,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3617,6 +3666,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3636,7 +3691,6 @@
           "places": 6
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3645,6 +3699,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3664,7 +3724,6 @@
           "places": 1
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3673,6 +3732,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3692,7 +3757,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3701,6 +3765,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3720,7 +3790,6 @@
           "places": 4
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3729,6 +3798,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3752,7 +3827,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3761,6 +3835,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3784,7 +3864,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3793,6 +3872,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3812,7 +3897,6 @@
           "places": 2
         }
       ],
-      "taudisApportes": 5,
       "couts": [
         {
           "ressource": "Or",
@@ -3821,6 +3905,12 @@
         {
           "ressource": "Bois",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 5
         }
       ]
     },
@@ -3966,7 +4056,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Carrière",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -3975,6 +4064,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4000,7 +4095,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Carrière (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4009,6 +4103,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4030,7 +4130,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Champ",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4039,6 +4138,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4060,7 +4165,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Champ (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4069,6 +4173,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4094,7 +4204,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Foire",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4103,6 +4212,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4128,7 +4243,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Foire (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4137,6 +4251,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4158,7 +4278,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine de Charbon",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4167,6 +4286,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4188,7 +4313,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine de Charbon (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4197,6 +4321,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4222,7 +4352,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine de Fer",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4231,6 +4360,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4256,7 +4391,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine de Fer (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4265,6 +4399,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4286,7 +4426,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Mine d'Or",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4295,6 +4434,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4316,7 +4461,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Mine d'Or (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4325,6 +4469,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4346,7 +4496,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Observatoire",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4355,6 +4504,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4376,7 +4531,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Observatoire (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4385,6 +4539,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4406,7 +4566,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Pâturage",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4415,6 +4574,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4436,7 +4601,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Pâturage (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4445,6 +4609,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4466,7 +4636,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Rizière",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4475,6 +4644,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4496,7 +4671,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Rizière (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4505,6 +4679,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4530,7 +4710,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Scierie",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4539,6 +4718,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4564,7 +4749,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Scierie (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4573,6 +4757,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4598,7 +4788,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Sériciculture",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4607,6 +4796,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4632,7 +4827,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Sériciculture (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4641,6 +4835,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     },
@@ -4662,7 +4862,6 @@
       ],
       "rangMinHabitation": 2,
       "remplaceAmenagement": "Site archéologique",
-      "taudisApportes": 8,
       "couts": [
         {
           "ressource": "Or",
@@ -4671,6 +4870,12 @@
         {
           "ressource": "Pierre",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 8
         }
       ]
     },
@@ -4692,7 +4897,6 @@
       ],
       "rangMinHabitation": 3,
       "remplaceAmenagement": "Site archéologique (tier 2)",
-      "taudisApportes": 10,
       "couts": [
         {
           "ressource": "Or",
@@ -4701,6 +4905,12 @@
         {
           "ressource": "Fer",
           "valeur": 3
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
         }
       ]
     }

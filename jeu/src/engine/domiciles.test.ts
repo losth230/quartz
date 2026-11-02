@@ -19,6 +19,7 @@ import assert from 'node:assert/strict'
 import { createGame, defaultSetups } from './setup'
 import { cfgOf, type Cfg } from './gameData'
 import { migrerEtat } from './migrations'
+import { migrerDomicilesApportes, cloneDefaultConfig } from '../config/defaultConfig'
 import {
   domicileDef, qualiteDomicile, stockRang, totalLogementsVille,
   vivantsVille, attribuerDomicilesVille, initStockVille,
@@ -312,7 +313,8 @@ test('fiche aménagements : Scierie tier 2 — 2 Tisseurs (correction fiche 2026
   const { C } = partieTemoin()
   const ref = constructionRef('Scierie (tier 2)', C.config)
   assert.ok(ref, 'Scierie tier 2 dans le référentiel')
-  assert.equal(ref.taudisApportes, 8)
+  assert.deepEqual((ref.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis'),
+    { domicile: 'Taudis', nombre: 8 }, '8 Taudis via domicilesApportes (normalisation 2026-11-02)')
   const emp = ref.emplacements ?? []
   const tisseur = emp.find((e) => e.metier === 'Tisseur')
   const bucheron = emp.find((e) => e.metier === 'Bûcheron')
@@ -397,7 +399,7 @@ test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudi
     const ref = C.config.constructions.find((c) => c.nom === 'Caserne' && c.groupe === g)
     assert.ok(ref, `Caserne ${g} dans le référentiel`)
     assert.equal(ref?.rangMinHabitation, 2, `${g} : rang 2`)
-    assert.equal(ref?.taudisApportes, 10, `${g} : +10 Taudis`)
+    assert.equal((ref?.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis')?.nombre, 10, `${g} : +10 Taudis (via domicilesApportes)`)
     assert.deepEqual((ref?.emplacements ?? []).find((e) => e.metier === 'Garde'), { metier: 'Garde', places: 4 })
   }
 })
@@ -417,4 +419,65 @@ test('fiche bâtiments : l\'Herboristerie (rang 1) n\'accueille plus de Guériss
   //  le picker ne retombe pas sur la description du classeur
   assert.ok(resumeConstruction(herb).includes('+5% guérison'),
     'Herboristerie : « +5% guérison » dans le résumé structuré')
+})
+
+// ── NORMALISATION DOMICILES (2026-11-02) ──────────────────────────────
+
+test('normalisation domiciles : les Taudis vivent dans domicilesApportes — plus aucun champ taudisApportes au référentiel', () => {
+  const { C } = partieTemoin()
+  const refs = C.config.constructions ?? []
+  // AUCUNE entrée ne porte l'ancien champ
+  const anciens = refs.filter((c) => (c as unknown as { taudisApportes?: number }).taudisApportes != null)
+  assert.equal(anciens.length, 0, `l'ancien champ taudisApportes ne doit plus exister (trouvé sur : ${anciens.map((c) => c.nom).join(', ')})`)
+  // Les entrées qui apportaient des Taudis les portent désormais en domicilesApportes
+  const postes = refs.filter((c) => c.nom === 'Poste de garde')
+  assert.ok(postes.length > 0, 'Poste de garde au référentiel')
+  for (const ref of postes) {
+    const taudis = (ref.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis')
+    assert.equal(taudis?.nombre, 10, `${ref.groupe} : +10 Taudis via domicilesApportes`)
+  }
+  // Champ : +5 Taudis (fiche tier 1) — même canal
+  const champ = refs.find((c) => c.nom === 'Champ')
+  assert.equal((champ?.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis')?.nombre, 5, 'Champ : +5 Taudis via domicilesApportes')
+})
+
+test('normalisation domiciles : une construction peut porter Taudis ET Maisons ENSEMBLE (le cas impossible avant)', () => {
+  // Config CLONÉE (le registre de la banque cache les règles par
+  //  référence de Cfg et cfgOf met la config par défaut en cache :
+  //  pousser l'entrée perso dans la config PARTAGÉE déjà lue ne
+  //  reconstruirait pas sa règle — un clone donne un Cfg neuf).
+  const C = cfgOf(cloneDefaultConfig())
+  const state = createGame(defaultSetups(), 424242, 'local')
+  const ville = state.players[0].villes[0]
+  // Entrée PERSO dans la config : les deux types de logement dans LE même champ
+  const perso = {
+    nom: 'Grand ensemble (perso)', groupe: 'Ville', categorie: 'Bâtiment' as const,
+    famille: 'Economique', couts: [],
+    domicilesApportes: [
+      { domicile: 'Taudis', nombre: 10 },
+      { domicile: 'Maison', nombre: 20 },
+    ],
+  }
+  C.config.constructions.push(perso)
+  ville.batiments.push(perso.nom)
+  const apportes = domicilesApportesVille(ville, C)
+  const taudis = apportes.find((e) => e.domicile === 'Taudis')?.nombre ?? 0
+  const maisons = apportes.find((e) => e.domicile === 'Maison')?.nombre ?? 0
+  assert.equal(taudis, 10, 'les 10 Taudis sont comptés')
+  assert.equal(maisons, 20, 'les 20 Maisons sont comptées dans le MÊME canal')
+})
+
+test('normalisation domiciles : migrerDomicilesApportes convertit les configs perso d’avant la fusion (idempotent)', () => {
+  const avant = {
+    nom: 'Vieille entrée perso', groupe: 'Ville', categorie: 'Bâtiment' as const,
+    couts: [],
+    taudisApportes: 8,
+  } as never as import('./constructions').ConstructionRef
+  const apres = migrerDomicilesApportes(avant)
+  assert.equal((apres.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis')?.nombre, 8,
+    'taudisApportes 8 → domicilesApportes [{Taudis, 8}]')
+  assert.equal((apres as unknown as { taudisApportes?: number }).taudisApportes, undefined, "l'ancien champ est retiré")
+  // idempotent : re-migrer l'entrée déjà convertie ne change rien
+  const encore = migrerDomicilesApportes(apres)
+  assert.deepEqual(encore.domicilesApportes, apres.domicilesApportes, 'migration idempotente')
 })

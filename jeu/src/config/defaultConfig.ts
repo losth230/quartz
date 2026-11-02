@@ -299,12 +299,14 @@ export interface ConstructionRef {
    *  {Or: 5, Bois: 1} tant que ce champ est absent). Données
    *  structurées, retour Thibaut 2026-10-27. */
   reduction?: CoutRef[]
-  /** TAUDIS apportés au stock de logements de la ville (fiches
-   *  aménagements 2026-10-25 : tier 1 = 5, tier 2 = 8, tier 3 = 10,
-   *  sauf Baleinier/Bâteau de pêche qui n'en apportent pas).
-   *  Champ optionnel : absent = 0. Comptés par le facteur Logement
-   *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
-  taudisApportes?: number
+  // (RETRAIT 2026-11-02, normalisation domiciles : l'ancien champ
+  //  taudisApportes (nombre simple) est FUSIONNÉ dans
+  //  domicilesApportes — les Taudis SONT des domiciles, ils y vivent
+  //  comme {domicile: 'Taudis', nombre: N} (même effet de banque
+  //  `logements`, même lecteur domicilesApportesVille). Les configs
+  //  sauvegardées d'avant la normalisation sont converties à la
+  //  convergence par migrerDomicilesApportes ci-dessous. L'ancien
+  //  contenu reste dans l'historique git, règle 9.)
   /** ROUTES commerciales apportées au cap conseillé du joueur
    *  (retour Thibaut 2026-10-27 : « je ne vois pas dans l'échoppe la
    *  possibilité de posséder une route commerciale supplémentaire » —
@@ -325,10 +327,12 @@ export interface ConstructionRef {
    *  reductionLeveeBatiments (engine/constructions.ts) pour la ville
    *  de levée. Champ optionnel : absent = aucune réduction. */
   reductionLeveeArmee?: number
-  /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
+  /** DOMICILES apportés au parc de logements de la ville — LE canal
+   *  UNIQUE depuis la normalisation du 2026-11-02 (fiche bâtiments
    *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
    *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de
-   *  notable — les TAUDIS passent par taudisApportes). Champ
+   *  notable — et les TAUDIS désormais aussi par ICI, entrées
+   *  {domicile: 'Taudis', nombre: N}, plus de champ séparé). Champ
    *  optionnel : absent = aucun. Comptés par le facteur Logement du
    *  bonheur (bonheur.ts, domicilesApportesVille). */
   domicilesApportes?: Array<{ domicile: string; nombre: number }>
@@ -1217,7 +1221,39 @@ export function realignerConstructions(
   const parCle = new Map(
     defauts.map((d) => [`${d.nom}|${d.groupe}`, d]),
   )
-  return list.map((c) => parCle.get(`${c.nom}|${c.groupe}`) ?? c)
+  // (NORMALISATION DOMICILES, 2026-11-02 : les entrées PERSONO (clé
+  //  absente du référentiel) portées par une config d'avant la
+  //  fusion portent encore l'ancien champ taudisApportes — les
+  //  entrées du référentiel sont remplacées par le défaut courant
+  //  (déjà migré), les PERSO sont converties ICI (patron taxes25,
+  //  sans bump de SCHEMA_VERSION_CONFIG : conversion pure, aucune
+  //  clé ne re-vient).)
+  return list.map((c) => {
+    const aligne = parCle.get(`${c.nom}|${c.groupe}`)
+    if (aligne) return aligne
+    return migrerDomicilesApportes(c as ConstructionRef)
+  })
+}
+
+/** (NORMALISATION DOMICILES, 2026-11-02) : convertit l'ancien champ
+ *  `taudisApportes` (nombre) d'une construction en entrée
+ *  `{domicile: 'Taudis', nombre: N}` de `domicilesApportes` — le
+ *  Taudis est un DOMICILE comme les autres (même canal de banque
+ *  `logements`, même lecteur). Idempotent : une entrée déjà migrée
+ *  (sans taudisApportes) passe sans changement. Retourne le même
+ *  objet (mutation contrôlée à la convergence, comme les autres
+ *  migrations de cfgOf). */
+export function migrerDomicilesApportes(c: ConstructionRef): ConstructionRef {
+  const t = (c as { taudisApportes?: number }).taudisApportes
+  if (t == null) return c
+  const out = { ...c } as ConstructionRef & { taudisApportes?: number }
+  delete out.taudisApportes
+  const dom = [...(out.domicilesApportes ?? [])]
+  const i = dom.findIndex((e) => e.domicile === 'Taudis')
+  if (i >= 0) dom[i] = { domicile: 'Taudis', nombre: dom[i]!.nombre + t }
+  else dom.unshift({ domicile: 'Taudis', nombre: t })
+  out.domicilesApportes = dom
+  return out
 }
 
 /** Table des types d'habitation (Ville / Château) d'une configuration
