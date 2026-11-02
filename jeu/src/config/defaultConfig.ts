@@ -34,8 +34,9 @@ export interface MetierDef {
    *  3b) : absent = illimité — la cap de base vient du rang
    *  d'habitation, les paramètres capMetierChasseur* sont supprimés. */
   /** Production UNIQUEMENT pendant l'été (vague 3a — ex. Fermier
-   *  « +5 Nourriture par tour en été », montant porté à +15 par
-   *  l'arbitrage du 2026-11-01) : les gains valeur1/ressource1 et
+   *  « +5 Nourriture par tour en été », montant porté à +15 puis
+   *  réduit à +10 le même jour 2026-11-01 par l'arbitre) : les gains
+   *  valeur1/ressource1 et
    *  valeur2/ressource2 ne sont crédités qu'en saison d'Été. */
   ete?: boolean
   capParVille?: number
@@ -1825,16 +1826,18 @@ export function cfgOf(config?: GameConfig): Cfg {
       }
     }
   }
-  // GAINS FERMIER & CHASSEUR (arbitrage Thibaut 2026-11-01 : « change
+  // GAINS FERMIER & CHASSEUR (arbitrages Thibaut 2026-11-01 : « change
   //  maintenant les fermiers à +15 nourriture en été, et les chasseurs
-  //  à +2 nourriture toute l'année ») : les deux valeurs changent dans
+  //  à +2 nourriture toute l'année », puis relance « réduis les
+  //  fermiers à +10 nourriture en été ») : les deux valeurs changent dans
   //  le RÉFÉRENTIEL, mais les configs SAUVEGARDÉES (la config MONDIALE
   //  du salon en cours, les configs locales) embarquent la table
   //  métiers ENTIÈRE (convergerConfig sauve la structure fusionnée ;
   //  la fusion {...DEFAULT_CONFIG, ...c} remplace la table par la
   //  table sauvegardée). Même patron que le vidage des textes
-  //  « Ministre » : une entrée qui vaut ENCORE l'ANCIEN défaut exact
-  //  (Chasseur 1,5 Nourriture ; Fermier 5 Nourriture + ete) est
+  //  « Ministre » : une entrée qui vaut ENCORE un ANCIEN défaut exact
+  //  (Chasseur 1,5 Nourriture ; Fermier 5 ou 15 Nourriture + ete —
+  //  défauts SUCCESSIFS du 2026-11-01) est
   //  actualisée vers le défaut courant ; une entrée PERSONNALISÉE par
   //  l'arbitre est conservée telle quelle. Appliqué à CHAQUE cfgOf,
   //  idempotent, SANS bump de SCHEMA_VERSION_CONFIG (règle (x)) —
@@ -1849,7 +1852,7 @@ export function cfgOf(config?: GameConfig): Cfg {
         t.valeur1 = defChasseur.valeur1
       }
       if (t.metier === 'Fermier' && defFermier && t.ete === true
-        && t.valeur1 === 5 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        && (t.valeur1 === 5 || t.valeur1 === 15) && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1
       }
     }
