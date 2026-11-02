@@ -343,7 +343,7 @@ test('reaffecterMetiers (vague 3a) : priorisation — un sans-emploi prend un po
     'le log agrégé raconte les postes pris')
 })
 
-test('Fermier (arbitrage 2026-11-01) : +15 Nourriture en ÉTÉ seulement (champ ete du référentiel)', () => {
+test('Fermier (arbitrage 2026-11-01) : +10 Nourriture en ÉTÉ seulement (champ ete du référentiel)', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -355,7 +355,7 @@ test('Fermier (arbitrage 2026-11-01) : +15 Nourriture en ÉTÉ seulement (champ 
   const ville = p.villes[0]
   state.saison = 'Été'
   const dete = detailGainsVille(state, p, ville, C)
-  assert.ok(Math.abs(dete.metiers['Nourriture'] - (15 + 2)) < 1e-9, 'été : Fermier +15 et Chasseur +2 Nourriture')
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (10 + 2)) < 1e-9, 'été : Fermier +10 et Chasseur +2 Nourriture')
   state.saison = 'Hiver'
   const dhiver = detailGainsVille(state, p, ville, C)
   assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2) < 1e-9, 'hors été : le Fermier ne produit rien, le Chasseur reste')
