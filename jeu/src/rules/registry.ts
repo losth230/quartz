@@ -67,16 +67,18 @@ export function reglesConstructions(C: Cfg): RegleBanque[] {
   for (const ref of refs) {
     // (Retour Thibaut 2026-10-27 : « des valeurs qui passent par la
     //  banque » — les EMPLACEMENTS de métiers et les LOGEMENTS
-    //  (taudisApportes / domicilesApportes) sont traduits en EFFETS
-    //  de banque comme les flux : une construction porte une règle
-    //  dès qu'elle a un effet QUELCONQUE, et le moteur lit tout par
-    //  le même canal.)
+    //  sont traduits en EFFETS de banque comme les flux : une
+    //  construction porte une règle dès qu'elle a un effet
+    //  QUELCONQUE, et le moteur lit tout par le même canal.
+    //  NORMALISATION DOMICILES 2026-11-02 : le canal logements ne
+    //  lit PLUS que domicilesApportes — les Taudis y vivent comme
+    //  toute autre entrée de domicile (l'ancien champ séparé
+    //  taudisApportes est retiré, cf. defaultConfig.)
     const effets: Effet[] = [
       ...effetsConstructionVersBanque(ref.effets ?? []),
       ...(ref.emplacements ?? []).map((e): Effet => ({
         type: 'placesMetier', metier: e.metier, valeur: Number(e.places) || 0,
       })),
-      ...(ref.taudisApportes ? [{ type: 'logements', logement: 'Taudis', valeur: ref.taudisApportes } as Effet] : []),
       ...(ref.domicilesApportes ?? []).map((e): Effet => ({
         type: 'logements', logement: e.domicile, valeur: e.nombre,
       })),

@@ -51,7 +51,7 @@ export function CulturePays({
         const cult = cultureDef(p.culture, C.config)
         const lois = detailLoisHabitants(state, p, C)
         const traits = cult
-          ? `hérédité ${String(cult.heredite).toLowerCase()} · mariages homosexuels ${cult.homoAutorisee ? 'autorisés' : 'interdits'}`
+          ? `hérédité ${String(cult.heredite).toLowerCase()}`
           : ''
         // ── Dogmes de culture (fondations 2026-10-30) ──
         const pas = Math.max(1, C.p.palierTourismeDogme)

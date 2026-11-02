@@ -138,7 +138,8 @@ export interface EffetReductionLeveeArmee {
 
 /** Logements ajoutés au parc de la ville du contexte (retour Thibaut
  *  2026-10-27 : les logements passent par la banque — les
- *  taudisApportes et domicilesApportes du référentiel sont traduits en
+ *  domicilesApportes du référentiel (Taudis compris — normalisation
+ *  2026-11-02) sont traduits en
  *  effet `logements` ; ex. Champ : +5 Taudis, Quartier intermédiaire :
  *  +20 Maisons). */
 export interface EffetLogements {
@@ -256,7 +257,8 @@ export interface ContributionEffets {
    *  canal des `emplacements` du référentiel, clé = métier). */
   placesMetier: Record<string, number>
   /** Logements apportés au parc de la ville (retour Thibaut
-   *  2026-10-27 : canal des taudisApportes / domicilesApportes,
+   *  2026-10-27 (normalisé 2026-11-02) : canal des domicilesApportes
+   *  (Taudis compris),
    *  clé = type de logement). */
   logements: Record<string, number>
   /** Réduction d'Or sur une LEVÉE D'ARMÉE dans la ville du contexte

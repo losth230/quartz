@@ -10,7 +10,6 @@ import type { Rng } from './rng'
 import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
 import { bump, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
-import { killCharacter } from './sante'
 import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
 import { effetsDogmeCulture } from './dogmes'
@@ -144,12 +143,11 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     mere.statut = 'Sain'
     mere.pereBio = null
     mere.pereBioId = null
-    // Règle simplifiée : une femme tombée malade pendant sa grossesse
-    // accouche, puis meurt de la maladie.
-    if (mere.enceinteMalade) {
-      mere.enceinteMalade = false
-      killCharacter(state, p, mere, 'maladie', recap)
-    }
+    // (RETRAIT 2026-11-02, arbitrage Thibaut : le cas « tombée malade
+    //  pendant sa grossesse » ne peut plus se produire — une enceinte
+    //  qui contracte fait une fausse couche (sante.ts) et n'est plus
+    //  Enceinte à l'accouchement. Le flag enceinteMalade et le
+    //  killCharacter associé disparaissent.)
   }
 
   // 2. Tentatives de conception (femmes adultes saines — ou malades :
@@ -207,23 +205,27 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
     if (rng.chance(proba)) {
       let pereBio: Character | undefined
       let batard = false
+      // (ARBITRAGE Thibaut 2026-11-02 : la conception prend le MARI
+      //  s'il existe ; sinon un homme PRÉSENT DANS LA VILLE de la
+      //  mère — JAMAIS ailleurs. AVANT : les amants (adultère et
+      //  célibataires) étaient tirés dans TOUTE la population du
+      //  joueur, toutes villes confondues.)
+      const amantsDeLaVille = pop.filter(
+        (x) => x.sexe === 'M' && (x.statut === 'Sain' || x.statut === 'Malade')
+          && x.age >= C.p.adultAge && x.ville === mere.ville,
+      )
       if (mari) {
         if (rng.chance(C.p.adulteryRate)) {
-          // adultère : amant aléatoire
-          const amants = pop.filter(
-            (x) => x.sexe === 'M' && (x.statut === 'Sain' || x.statut === 'Malade') && x.age >= C.p.adultAge && x.id !== mari.id,
-          )
+          // adultère : amant de la ville (jamais le mari)
+          const amants = amantsDeLaVille.filter((x) => x.id !== mari.id)
           pereBio = amants.length > 0 ? rng.pick(amants) : undefined
           batard = true
         } else {
           pereBio = mari
         }
       } else {
-        // célibataire : amant aléatoire, enfant bâtard
-        const amants = pop.filter(
-          (x) => x.sexe === 'M' && (x.statut === 'Sain' || x.statut === 'Malade') && x.age >= C.p.adultAge,
-        )
-        pereBio = amants.length > 0 ? rng.pick(amants) : undefined
+        // célibataire : amant de la ville, enfant bâtard
+        pereBio = amantsDeLaVille.length > 0 ? rng.pick(amantsDeLaVille) : undefined
         batard = true
       }
       // une femme malade qui tombe enceinte est guérie (bug assumé)

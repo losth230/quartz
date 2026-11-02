@@ -72,7 +72,7 @@ test('référentiel : les 12 lois des cultures (défauts verrouillés)', () => {
 test('migrerCultures : vieilles configs → nouveaux champs, clés mortes supprimées', () => {
   const C = cfgOf(undefined)
   const vieille = C.config.cultures.map((c) => ({
-    nom: c.nom, heredite: c.heredite, homoAutorisee: c.homoAutorisee,
+    nom: c.nom, heredite: c.heredite,
     fertFactor: 1,
     reglePays: 'ANCIENNE', reglePerso: 'ANCIENNE',
     capitalNourrParHabMonde: 3, scienceParConstruction: 4,
@@ -416,7 +416,7 @@ test('Ferveur martiale : DEUX cultures martiales présentes — chaque loi s app
   // une DEUXIÈME culture martiale au référentiel (loi −10 × rang),
   // encore ABSENTE du monde : sa loi ne compte pas
   C.config.cultures.push({
-    nom: 'Marsisme', heredite: 'Patrilinéaire', homoAutorisee: false, fertFactor: 1,
+    nom: 'Marsisme', heredite: 'Patrilinéaire', fertFactor: 1,
     regleVille: 'Loi de ville de test', regleHabitant: 'Loi d habitant de test',
     garnisonHorsCultureParRang: 10,
   })

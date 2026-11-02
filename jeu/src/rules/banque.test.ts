@@ -129,7 +129,7 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
   //  réduction de levée d'armée (champ reductionLeveeArmee) est un
   //  effet de banque AU MÊME TITRE, canal reductionLeveeArmee.)
   const aEffet = (r: typeof refs[number]) =>
-    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length || r.reductionLeveeArmee)
+    !!(r.effets?.length || r.emplacements?.length || r.domicilesApportes?.length || r.reductionLeveeArmee)
   const regles = reglesConstructions(C)
   assert.equal(regles.length, refs.filter(aEffet).length)
   const parCle = new Map(regles.map((r) => [`${r.nom}|${r.groupe}`, r]))
@@ -166,9 +166,10 @@ test('VOIE UNIQUE : les accès moteur rendent exactement la contribution de la r
       attenduEmp,
       `emplacements différents pour ${ref.nom} : banque=${JSON.stringify(out.placesMetier)} moteur=${JSON.stringify(attenduEmp)}`,
     )
-    // (2026-10-27) logements : le moteur lit le canal logements — les
-    //  Taudis (taudisApportes) et les autres domiciles y passent PAREIL.
-    const attenduLog: Record<string, number> = { ...(ref.taudisApportes ? { Taudis: ref.taudisApportes } : {}) }
+    // (2026-10-27 ; NORMALISATION DOMICILES 2026-11-02) logements :
+    //  le moteur lit le canal logements — les Taudis y passent comme
+    //  toute entrée de domicilesApportes (plus de champ séparé).
+    const attenduLog: Record<string, number> = {}
     for (const e of ref.domicilesApportes ?? []) attenduLog[e.domicile] = (attenduLog[e.domicile] ?? 0) + e.nombre
     assert.deepEqual(out.logements, attenduLog, `logements différents pour ${ref.nom}`)
     assert.deepEqual(logementsConstructionRef(ref), attenduLog, `canal moteur logements différent pour ${ref.nom}`)
@@ -188,7 +189,7 @@ test('SANS règle de banque : production NULLE sur tous les canaux (repli texte 
   //  Arbitrage Thibaut 2026-10-28 : la réduction de levée est la
   //  QUATRIÈME famille — une construction qui la porte a une règle.)
   const aEffet = (r: typeof refs[number]) =>
-    !!(r.effets?.length || r.emplacements?.length || r.taudisApportes || r.domicilesApportes?.length || r.reductionLeveeArmee)
+    !!(r.effets?.length || r.emplacements?.length || r.domicilesApportes?.length || r.reductionLeveeArmee)
   const sansEffets = refs.filter((r) => !aEffet(r))
   assert.ok(sansEffets.length > 0, 'des constructions sans effets structurés existent')
   for (const ref of sansEffets) {

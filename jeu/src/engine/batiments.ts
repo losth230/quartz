@@ -22,6 +22,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, Player } from './types'
+import type { GameConfig } from '../config/defaultConfig'
 import type { Cfg } from './gameData'
 import {
   constructionRef, coutBatimentRef, effetsConstructionRef, garnisonConstructionRef,
@@ -41,15 +42,20 @@ export function batimentsConstructionsRefs(C?: Cfg): ConstructionRef[] {
 //  banque d'effets (effetsConstructionRef) ; un bâtiment sans règle ne
 //  produit rien.
 
-/** « Remplace X » : les effets du bâtiment remplacé sont ignorés quand
- *  le remplaçant est présent dans la même ville. (AUDIT 2026-10-27 :
- *  purgé des clés/cibles mortes — bâtiments retirés du référentiel ;
- *  ne restent que les remplacements réellement constructibles.) */
-const REMPLACE: Record<string, string[]> = {
-  'Camp de travailleurs': ['Camp de bûcheron', 'Camp de mineur'],
-  'Silo à grain': ['Grange'],
-  'Moulin à vent': ['Silo à grain', 'Grange'],
-  'Ecole intermédiaire': ['Ecole élémentaire'],
+// (NORMALISATION 2026-11-02, arbitrage Thibaut « rien ne vit dans le
+//  code ») : la table REMPLACE hardcodée est RETIRÉE — les
+//  remplacements vivent dans le champ `remplaceBatiment` (TABLEAU)
+//  du RÉFÉRENTIEL (données paramétrables, éditeur Référentiels), lu
+//  par remplaceBatimentRef. Sémantique inchangée : les effets du
+//  bâtiment remplacé sont ignorés quand le remplaçant est présent
+//  dans la même ville. L'ancien contenu reste dans l'historique git,
+//  règle 9.)
+
+/** Bâtiments neutralisés par `remplaceBatiment` de la construction
+ *  donnée (lecture du référentiel, groupe optionnel). */
+export function remplaceBatimentRef(nom: string, cfg?: GameConfig, groupe?: string): string[] {
+  const ref = constructionRef(nom, cfg, groupe)
+  return ref?.remplaceBatiment ?? []
 }
 
 /** Effets par tour d'un bâtiment : production EXACTE du référentiel,
@@ -96,12 +102,15 @@ export function coutBatiment(nom: string, C: Cfg, groupe?: string): Record<strin
   return coutBatimentRef(nom, C.config, groupe)
 }
 
-/** Bâtiments d'une ville neutralisés par un remplaçant présent. */
-function batimentsRemplaces(ville: City): Set<string> {
+/** Bâtiments d'une ville neutralisés par un remplaçant présent
+ *  (lecture du champ remplaceBatiment du RÉFÉRENTIEL, avec le groupe
+ *  de la ville — les remplacements doublés Ville/Château se lisent
+ *  dans la bonne version). */
+function batimentsRemplaces(ville: City, C: Cfg): Set<string> {
   const presents = new Set(ville.batiments)
   const ignores = new Set<string>()
   for (const nom of presents) {
-    for (const remplace of REMPLACE[nom] ?? []) {
+    for (const remplace of remplaceBatimentRef(nom, C.config, ville.type)) {
       if (presents.has(remplace)) ignores.add(remplace)
     }
   }
@@ -113,7 +122,7 @@ function batimentsRemplaces(ville: City): Set<string> {
  *  les bâtiments doublés du référentiel rendent leurs effets de la
  *  bonne version (cf. effetsTourBatiment). */
 export function effetsBatimentsVille(ville: City, C: Cfg): Record<string, number> {
-  const ignores = batimentsRemplaces(ville)
+  const ignores = batimentsRemplaces(ville, C)
   const groupe = ville.type
   const out: Record<string, number> = {}
   for (const nom of ville.batiments) {
@@ -156,7 +165,7 @@ interface LigneBatiment {
 export function detailsBatimentsJoueur(p: Player, C: Cfg): LigneBatiment[] {
   const lignes = new Map<string, LigneBatiment>()
   for (const ville of p.villes) {
-    const ignores = batimentsRemplaces(ville)
+    const ignores = batimentsRemplaces(ville, C)
     for (const nom of ville.batiments) {
       let l = lignes.get(nom)
       if (!l) {
@@ -166,7 +175,7 @@ export function detailsBatimentsJoueur(p: Player, C: Cfg): LigneBatiment[] {
       l.villes.push(ville.nom)
       if (ignores.has(nom)) {
         for (const autre of ville.batiments) {
-          if ((REMPLACE[autre] ?? []).includes(nom) && !l.remplacePar.includes(autre)) {
+          if (remplaceBatimentRef(autre, C.config, ville.type).includes(nom) && !l.remplacePar.includes(autre)) {
             l.remplacePar.push(autre)
           }
         }

@@ -77,7 +77,6 @@ export interface TraitDef {
 export interface CultureDef {
   nom: string
   heredite: string
-  homoAutorisee: boolean
   fertFactor: number
   /** (RENOMMÉS 2026-10-29, refonte « 12 lois » — anciens reglePays /
    *  reglePerso : une culture porte une loi de VILLE (culture
@@ -230,6 +229,17 @@ export interface FicheLigne { label: string; texte: string }
 //  pré-canonicalisation (batimentsVille, batimentsChateau,
 //  batimentsCouts, amenagements) — supprimées avec elles (la table
 //  canonique `constructions` les remplace).
+/** (NORMALISATION remplaceBatiment, 2026-11-02) : convertit le champ
+ *  d'une construction au format TABLEAU — une config sauvegardée
+ *  d'avant peut porter un string (l'ancien champ était singulier).
+ *  Idempotent : un tableau (ou l'absence du champ) passe tel quel. */
+function normaliserConstruction(c: ConstructionRef): ConstructionRef {
+  const rb = (c as { remplaceBatiment?: string | string[] }).remplaceBatiment
+  if (typeof rb !== 'string') return c
+  const out = { ...c, remplaceBatiment: [rb] } as ConstructionRef
+  return out
+}
+
 /** Table canonique des constructions (feuille « Ville » du classeur 7.19) :
  *  coût EXACT, production EXACTE (analysable par le moteur) et description
  *  EXACTE du classeur — parfois similaires. */
@@ -266,6 +276,13 @@ export interface ConstructionRef {
    *  MINIMUM requis pour construire/améliorer (1 = Hameau/Motte…,
    *  2 = Cité/Donjon, 3 = Grande Cité/Forteresse). Champ optionnel. */
   rangMinHabitation?: number
+  /** Bâtiment CÔTIER (2026-11-02, arbitrage Thibaut « un paramètre
+   *  cotier aux bâtiments ») : ses emplacements et effets moteurs ne
+   *  s'appliquent que dans une ville à proximité (Rivière ou Mer —
+   *  villeCotiere) ; hors proximité le bâtiment reste affiché mais
+   *  n'a aucun effet. Ex. Ponton. Champ optionnel : absent = pas de
+   *  contrainte de proximitié. */
+  cotier?: boolean
   terrain?: string     // aménagements uniquement
   /** Aménagements tiers 2/3 (vague 3c, arbitrage Thibaut
    *  2026-10-22) : nom de l'aménagement de TIER INFÉRIEUR que cette
@@ -299,12 +316,14 @@ export interface ConstructionRef {
    *  {Or: 5, Bois: 1} tant que ce champ est absent). Données
    *  structurées, retour Thibaut 2026-10-27. */
   reduction?: CoutRef[]
-  /** TAUDIS apportés au stock de logements de la ville (fiches
-   *  aménagements 2026-10-25 : tier 1 = 5, tier 2 = 8, tier 3 = 10,
-   *  sauf Baleinier/Bâteau de pêche qui n'en apportent pas).
-   *  Champ optionnel : absent = 0. Comptés par le facteur Logement
-   *  du bonheur (bonheur.ts) et l'attribution des domiciles. */
-  taudisApportes?: number
+  // (RETRAIT 2026-11-02, normalisation domiciles : l'ancien champ
+  //  taudisApportes (nombre simple) est FUSIONNÉ dans
+  //  domicilesApportes — les Taudis SONT des domiciles, ils y vivent
+  //  comme {domicile: 'Taudis', nombre: N} (même effet de banque
+  //  `logements`, même lecteur domicilesApportesVille). Les configs
+  //  sauvegardées d'avant la normalisation sont converties à la
+  //  convergence par migrerDomicilesApportes ci-dessous. L'ancien
+  //  contenu reste dans l'historique git, règle 9.)
   /** ROUTES commerciales apportées au cap conseillé du joueur
    *  (retour Thibaut 2026-10-27 : « je ne vois pas dans l'échoppe la
    *  possibilité de posséder une route commerciale supplémentaire » —
@@ -325,20 +344,26 @@ export interface ConstructionRef {
    *  reductionLeveeBatiments (engine/constructions.ts) pour la ville
    *  de levée. Champ optionnel : absent = aucune réduction. */
   reductionLeveeArmee?: number
-  /** AUTRES domiciles apportés au parc de logements (fiche bâtiments
+  /** DOMICILES apportés au parc de logements de la ville — LE canal
+   *  UNIQUE depuis la normalisation du 2026-11-02 (fiche bâtiments
    *  rang 2, 2026-10-26 : Quartier intermédiaire +20 Maisons, Haut
    *  quartier +20 Maisons de notable, Tour de sorcier +1 Maison de
-   *  notable — les TAUDIS passent par taudisApportes). Champ
+   *  notable — et les TAUDIS désormais aussi par ICI, entrées
+   *  {domicile: 'Taudis', nombre: N}, plus de champ séparé). Champ
    *  optionnel : absent = aucun. Comptés par le facteur Logement du
    *  bonheur (bonheur.ts, domicilesApportesVille). */
   domicilesApportes?: Array<{ domicile: string; nombre: number }>
   /** Bâtiment remplacé par cette construction (fiche bâtiments rang 2,
    *  2026-10-26 : Silo à grain → Grange, Moulin à vent ← Silo à grain,
    *  Ecole intermédiaire → Ecole élémentaire, Guilde des artisans de
-   *  la terre → Moulin à vent). Champ de DONNÉE pour la mécanique
-   *  d'amélioration des bâtiments (à venir) — la description fait foi
-   *  en attendant. */
-  remplaceBatiment?: string
+   *  la terre → Moulin à vent).
+   *  NORMALISATION 2026-11-02 : le champ devient un TABLEAU (un
+   *  remplaçant peut neutraliser PLUSIEURS bâtiments — Camp de
+   *  travailleurs → Camp de bûcheron ET Camp de mineur, Moulin à
+   *  vent → Silo à grain ET Grange) et la mécanique est BRANCHÉE :
+   *  batiments.ts lit les données (batimentsRemplaces), plus de
+   *  table REMPLACE codée en dur — « rien ne vit dans le code ». */
+  remplaceBatiment?: string[]
   /** Effets STRUCTURÉS (marqueur (s)) — source du moteur quand présents ;
    *  sinon repli sur l'analyse du texte exact (anciennes configs). */
   effets?: EffetConstruction[]
@@ -762,7 +787,6 @@ function normaliserCultures(): CultureDef[] {
   return ref.cultures.map((c: any) => ({
     nom: c.nom,
     heredite: c.heredite,
-    homoAutorisee: c.homoAutorisee === true || c.homoAutorisee === 'true',
     // (audit express 2026-10-26 : piège falsy-zéro — un futur
     //  fertFactor 0 légal serait écrasé en 1 par `|| 1` (même
     //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
@@ -873,7 +897,10 @@ export const DEFAULT_CONFIG: GameConfig = {
   metiersEffets: ref.metiersEffets,
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  constructions: ref.constructions,
+  // (NORMALISATION remplaceBatiment 2026-11-02 : le champ devient un
+  //  TABLEAU ; une config sauvegardée d'avant peut porter un string —
+  //  conversion à la lecture, patron idempotent.)
+  constructions: ref.constructions.map(normaliserConstruction),
   typesHabitation: ref.typesHabitation,
   domiciles: (ref.domiciles ?? []).map((d: { domicile?: string; qualite?: number | string }) => ({
     domicile: String(d.domicile ?? ''),
@@ -1072,7 +1099,7 @@ export function migrerCultures(list: CultureDef[] | undefined): CultureDef[] {
     const d = defs.find((x) => x.nom === c?.nom)
     if (!d) return c
     const out: CultureDef = {
-      nom: c.nom, heredite: c.heredite, homoAutorisee: c.homoAutorisee,
+      nom: c.nom, heredite: c.heredite,
       regleVille: c.regleVille ?? d.regleVille,
       regleHabitant: c.regleHabitant ?? d.regleHabitant,
       fertFactor: c.fertFactor === 1 && d.fertFactor !== 1 ? d.fertFactor : (c.fertFactor ?? d.fertFactor),
@@ -1217,7 +1244,39 @@ export function realignerConstructions(
   const parCle = new Map(
     defauts.map((d) => [`${d.nom}|${d.groupe}`, d]),
   )
-  return list.map((c) => parCle.get(`${c.nom}|${c.groupe}`) ?? c)
+  // (NORMALISATION DOMICILES, 2026-11-02 : les entrées PERSONO (clé
+  //  absente du référentiel) portées par une config d'avant la
+  //  fusion portent encore l'ancien champ taudisApportes — les
+  //  entrées du référentiel sont remplacées par le défaut courant
+  //  (déjà migré), les PERSO sont converties ICI (patron taxes25,
+  //  sans bump de SCHEMA_VERSION_CONFIG : conversion pure, aucune
+  //  clé ne re-vient).)
+  return list.map((c) => {
+    const aligne = parCle.get(`${c.nom}|${c.groupe}`)
+    if (aligne) return aligne
+    return migrerDomicilesApportes(c as ConstructionRef)
+  })
+}
+
+/** (NORMALISATION DOMICILES, 2026-11-02) : convertit l'ancien champ
+ *  `taudisApportes` (nombre) d'une construction en entrée
+ *  `{domicile: 'Taudis', nombre: N}` de `domicilesApportes` — le
+ *  Taudis est un DOMICILE comme les autres (même canal de banque
+ *  `logements`, même lecteur). Idempotent : une entrée déjà migrée
+ *  (sans taudisApportes) passe sans changement. Retourne le même
+ *  objet (mutation contrôlée à la convergence, comme les autres
+ *  migrations de cfgOf). */
+export function migrerDomicilesApportes(c: ConstructionRef): ConstructionRef {
+  const t = (c as { taudisApportes?: number }).taudisApportes
+  if (t == null) return c
+  const out = { ...c } as ConstructionRef & { taudisApportes?: number }
+  delete out.taudisApportes
+  const dom = [...(out.domicilesApportes ?? [])]
+  const i = dom.findIndex((e) => e.domicile === 'Taudis')
+  if (i >= 0) dom[i] = { domicile: 'Taudis', nombre: dom[i]!.nombre + t }
+  else dom.unshift({ domicile: 'Taudis', nombre: t })
+  out.domicilesApportes = dom
+  return out
 }
 
 /** Table des types d'habitation (Ville / Château) d'une configuration

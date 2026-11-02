@@ -47,7 +47,7 @@
 import type { Character, City, GameState, Player } from './types'
 import { cultureDef, type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
-import { logementsConstructionRef } from './constructions'
+import { logementsConstructionRef, constructionRef } from './constructions'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
 
@@ -86,15 +86,23 @@ export function totalLogementsVille(ville: City): number {
 /** Domiciles apportés au parc de logements d'une ville par ses
  *  CONSTRUCTIONS (AMÉNAGEMENTS et BÂTIMENTS — fiche bâtiments rang 2,
  *  2026-10-26) : Taudis et autres types, lus VIA LA BANQUE (retour
- *  Thibaut 2026-10-27 : les taudisApportes / domicilesApportes du
- *  référentiel sont traduits en effets `logements` — ce canal est la
+ *  Thibaut 2026-10-27 (normalisé 2026-11-02) : les domicilesApportes du
+ *  référentiel (Taudis compris) sont traduits en effets `logements` — ce canal est la
  *  voie moteur unique, comme les flux). Agrégat par type ; les noms
  *  des vieilles sauvegardes peuvent porter le suffixe « (tier N) » —
  *  la lecture est par nom de construction dans le référentiel. */
 export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
   const total = new Map<string, number>()
   for (const nom of [...(ville.amenagements ?? []), ...(ville.batiments ?? [])]) {
-    const ref = C.config.constructions.find((c) => c.nom === nom)
+    // (2026-11-02, correctif (a) : le lookup passe le GROUPE de la
+    //  ville — 13 constructions existent en version Ville ET
+    //  Château (doublons du référentiel) et constructionRef sans
+    //  groupe replie sur la première variante trouvée : une
+    //  Château lisait potentiellement les logements de la version
+    //  Ville. Effet neutre aujourd'hui (logements identiques entre
+    //  groupes), mais la lecture est désormais correcte par
+    //  construction.)
+    const ref = constructionRef(nom, C.config, ville.type)
     if (!ref) continue
     for (const [domicile, nombre] of Object.entries(logementsConstructionRef(ref, C.config))) {
       if (nombre > 0) total.set(domicile, (total.get(domicile) ?? 0) + nombre)

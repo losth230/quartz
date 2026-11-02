@@ -38,8 +38,10 @@ export function probaContracterMaladie(c: Character, C: Cfg = cfgOf()): number {
 //    tableau de maladies distinctes) ──────────────────────────────────
 //    · une personne saine (ou enceinte) peut contracter la maladie ;
 //    · un malade qui la re-contracte meurt ;
-//    · une femme enceinte qui tombe malade accouchera puis mourra
-//      (flag enceinteMalade) ;
+//    · une femme enceinte qui tombe malade perd le bébé (fausse
+//      couche) : elle n'est NI enceinte NI malade (arbitrage Thibaut
+//      2026-11-02 — remplace « accouche puis meurt » / flag
+//      enceinteMalade, RETIRÉ) ;
 //    · une femme malade qui tombe enceinte est guérie (bug assumé).
 
 export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng, recap: PlayerRecap) {
@@ -87,11 +89,17 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
     const pContract = probaContracterMaladie(c, C) + contractMod
     if (rng.chance(Math.max(0, pContract))) {
       if (c.statut === 'Enceinte') {
-        // une femme enceinte qui tombe malade mourra après l'accouchement
-        c.enceinteMalade = true
+        // (ARBITRAGE Thibaut 2026-11-02 : une femme enceinte qui
+        //  tombe malade perd simplement le bébé — elle n'est NI
+        //  enceinte NI malade. Remplace « accouchera puis mourra » ;
+        //  le flag enceinteMalade est retiré (types + naissances).)
+        c.statut = 'Sain'
+        c.pereBio = null
+        c.pereBioId = null
+        c.enfantBatard = false
         state.log.push({
           turn: state.turn + 1, type: 'Naissance', joueur: p.n,
-          texte: `${fullName(c)} tombe malade en étant enceinte — elle accouchera, puis mourra de la maladie.`,
+          texte: `${fullName(c)} tombe malade en étant enceinte — elle perd le bébé, et se rétablit.`,
         })
       } else {
         c.statut = 'Malade'

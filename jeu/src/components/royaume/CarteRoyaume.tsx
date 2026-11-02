@@ -48,8 +48,7 @@ export function CarteRoyaume({ state, p, C, joueur, setPlayer, update }: {
           {cult && (
             <>
               <div className="muted small">
-                Hérédité {String(cult.heredite).toLowerCase()} ·
-                mariage homosexuel {cult.homoAutorisee ? 'autorisé' : 'interdit'}
+                Hérédité {String(cult.heredite).toLowerCase()}
               </div>
               {cult.regleVille && <div className="small muted">Loi de ville : {cult.regleVille}</div>}
               {cult.regleHabitant && <div className="small muted">Loi d'habitant : {cult.regleHabitant}</div>}

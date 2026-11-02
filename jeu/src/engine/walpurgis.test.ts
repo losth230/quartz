@@ -179,3 +179,55 @@ test('Hérédité : computeBabyDynasty lit la culture de la MÈRE (convertie), p
   assert.equal(bebe!.dynastie, pere.dynastie,
     'hérité Masculine de la culture PROPRE de la mère (Déisme) : dynastie du PÈRE, pas celle imposée par le joueur (Sethisme = Féminine)')
 })
+
+// ── Amants intra-ville (arbitrage Thibaut 2026-11-02) ─────────────────
+
+test('conception : le père (adultère ou célibat) est un homme DE LA VILLE de la mère — jamais ailleurs', () => {
+  // rng espion : chance(proba) → true au 1er appel (conception),
+  // chance(adulteryRate) → false (fidélité) puis contrôlé par test.
+  let appel = 0
+  let probasConception: number[] = []
+  // pick espion : capture le POOL tiré (preuve du périmètre intra-ville)
+  let poolCapture: unknown[] = []
+  const rngFake = {
+    next: () => 0.99, int: () => 1, die: () => 1,
+    chance: (p: number) => { appel++; if (appel === 1) { probasConception.push(p); return true } return false },
+    pick: <T,>(a: T[]) => { poolCapture = a; return a[0]! },
+    pickWeighted: <T,>(i: T[]) => i[0]!,
+    shuffle: <T,>(a: T[]) => a,
+  } as unknown as Rng
+  const mkChar = (over: Partial<Character>): Character => ({
+    id: 'x', nom: 'N', prenom: 'P', dynastie: 'D', sexe: 'M', age: 20, culture: 'Déisme',
+    ville: 'Capitale', orientation: 'Hétérosexuel', traits: ['', '', ''], statut: 'Sain',
+    mariage: null, mariageId: null, mere: null, mereId: null, pere: null, pereId: null,
+    pereBio: null, pereBioId: null, enfantBatard: false, metier: null, fecondite: 0, armee: null,
+    ...over,
+  } as Character)
+
+  const state = partie()
+  const p = state.players[0]
+  // CÉLIBATAIRE de la ville A ; hommes adultes répartis : 1 dans la
+  // ville A, 2 dans la ville B (autre ville du joueur).
+  const femme = mkChar({ id: 'f-cel', sexe: 'F', ville: 'A' })
+  const hommeA = mkChar({ id: 'h-a', ville: 'A' })
+  const hommeB1 = mkChar({ id: 'h-b1', ville: 'B' })
+  const hommeB2 = mkChar({ id: 'h-b2', ville: 'B' })
+  state.population[p.n] = [femme, hommeA, hommeB1, hommeB2]
+  p.villes = [
+    { ...p.villes[0], nom: 'A' },
+    { ...p.villes[0], nom: 'B' },
+  ] as typeof p.villes
+  const recap = emptyRecap()
+  appel = 0
+  conceptionEtNaissances(state, p, rngFake, recap)
+  // conçue (chance→true au 1er appel), père = hommeA (le seul de SA ville)
+  assert.equal(femme.statut, 'Enceinte', 'la conception a lieu')
+  // PREUVE du périmètre : le pool des amants ne contient QUE les
+  // hommes de la ville A — jamais ceux de la ville B.
+  const ids = (poolCapture as Array<{ id: string }>).map((x) => x.id)
+  assert.ok(ids.includes('h-a'), 'le pool contient l\u2019homme de la ville de la mère')
+  assert.ok(!ids.includes('h-b1') && !ids.includes('h-b2'),
+    `le pool ne contient AUCUN homme d\u2019une autre ville (pool: ${ids.join(', ')})`)
+  assert.equal(femme.pereBioId, 'h-a', 'le père est un homme de SA ville, jamais une autre ville')
+  assert.equal(femme.enfantBatard, true, 'célibataire : enfant bâtard')
+})

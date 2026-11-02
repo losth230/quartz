@@ -179,14 +179,13 @@ export function ParamsPanel() {
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
-                <tr><th>Culture</th><th>Hérédité</th><th>Homo autorisée</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. faction</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
+                <tr><th>Culture</th><th>Hérédité</th><th>Fécondité</th><th>Taudis/hab. (ville)</th><th>Palais/hab. (ville)</th><th>Seuil bourgeois</th><th>Scient./bât. faction</th><th>Maladie (habit.)</th><th>Tourisme/noble (habit.)</th><th>Nourr. été/fermier (ville)</th><th>Amén. requis (caravane)</th><th>Routes/caravane (ville)</th><th>Science/noble (habit.)</th><th>Garnison hors cult./rang</th><th>Garnison/garde cult.</th><th>Or/garde (habit.)</th><th>Loi de ville</th><th>Loi d'habitant</th></tr>
               </thead>
               <tbody>
                 {config.cultures.map((t, i) => (
                   <tr key={i}>
                     <td><TextInput value={t.nom} onChange={(v) => setCfg((c) => { c.cultures[i].nom = v })} /></td>
                     <td><TextInput value={t.heredite} onChange={(v) => setCfg((c) => { c.cultures[i].heredite = v })} /></td>
-                    <td><input type="checkbox" checked={t.homoAutorisee} onChange={(e) => setCfg((c) => { c.cultures[i].homoAutorisee = e.target.checked })} /></td>
                     <td><NumberInput value={t.fertFactor} step={0.05} onChange={(v) => setCfg((c) => { c.cultures[i].fertFactor = v })} /></td>
                     <td><NumberInput value={t.taudisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].taudisParHabitation = v })} /></td>
                     <td><NumberInput value={t.palaisParHabitation ?? 0} onChange={(v) => setCfg((c) => { c.cultures[i].palaisParHabitation = v })} /></td>

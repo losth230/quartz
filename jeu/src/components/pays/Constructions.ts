@@ -123,14 +123,15 @@ export function faireConstruire(o: {
           texte: `⚠ ${nom} exige normalement une habitation de rang ${ref.rangMinHabitation} minimum (${ville.nom} est de rang ${rangNiveau(ville, C)}). Construction quand même enregistrée.`,
         })
       }
-      // Ponton (vague 3b, arbitrage Thibaut 2026-10-22) : bâtiment
-      //  CÔTIER — proximité Rivière ou Mer requise (garde-fou non
-      //  bloquant, même calibre que le rang d'habitation : le moteur
-      //  ignore de toute façon ses effets hors proximité).
-      if (nom === 'Ponton' && !villeCotiere(ville)) {
+      // (2026-11-02, paramètre `cotier` : bâtiment CÔTIER —
+      //  proximité Rivière ou Mer requise (garde-fou non bloquant,
+      //  même calibre que le rang d'habitation : le moteur ignore de
+      //  toute façon ses effets hors proximité). Donnée du
+      //  référentiel, plus de nom codé en dur.)
+      if (ref?.cotier && !villeCotiere(ville)) {
         s.log.push({
           turn: s.turn, type: 'Système', joueur: t.n,
-          texte: `⚠ Ponton exige normalement une ville côtière (proximité Rivière ou Mer — ${ville.nom} est en Plaine). Construction quand même enregistrée, mais le bâtiment n'y a aucun effet.`,
+          texte: `⚠ ${nom} exige normalement une ville côtière (proximité Rivière ou Mer — ${ville.nom} est en Plaine). Construction quand même enregistrée, mais le bâtiment n'y a aucun effet.`,
         })
       }
       // Prérequis de construction (revue 2026-10-16) : « X requis » dans
