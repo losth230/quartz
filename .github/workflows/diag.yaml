@@ -32,11 +32,11 @@ jobs:
         #  .json en modules ES, comme tsx pour les tests.)
         run: node --experimental-strip-types --import ./scripts/diag-loader.mjs scripts/diag.ts > ../diag-out.txt 2>&1 || true
       - name: Commit du résultat
-        working-directory: .
+        working-directory: ./
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add ../diag-out.txt
+          git add diag-out.txt
           if git diff --cached --quiet; then
             echo "diag-out.txt inchangé — rien à committer."
           else
