@@ -39,7 +39,9 @@ import assert from 'node:assert/strict'
 import { createGame, type SetupLine } from './setup'
 import type { Character, City, GameState } from './types'
 import { cfgOf } from './gameData'
-import { capMetierVille, reaffecterMetiers, occupationsMetierVille } from './metiers'
+import { capMetierVille, reaffecterMetiers, occupationsMetierVille, gestionMariages } from './metiers'
+import { makeRng } from './rng'
+import { emptyRecap } from './shared'
 import { invaliderIndexPopulation } from './indexPopulation'
 import { detailGainsVille, multProdRang, consoNourrHabitant } from './economie'
 import * as habitationsMod from './habitations'
@@ -651,4 +653,41 @@ test('vague 3c : caps des aménagements tiers 2/3 — le tier remplacé ne compt
   // plusieurs exemplaires : 2 Baleiniers dont un seul amélioré
   const mixte: City = { ...p.villes[0], type: 'Ville', rang: 'Hameau', batiments: [], amenagements: ['Baleinier', 'Baleinier (tier 2)'] }
   assert.equal(capMetierVille('Pêcheur', mixte, C), 8, 'Baleinier tier 1 (3) + tier 2 (5) : caps cumulées = 8 Pêcheurs')
+})
+
+// ── Mariages intra-ville (arbitrage Thibaut 2026-11-02) ────────────────
+
+test('mariages automatiques : uniquement entre célibataires d’une MÊME VILLE (2026-11-02)', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  // une femme célibataire en ville A ; hommes célibataires en A et B
+  const femme = perso('fem', 20, {})
+  femme.sexe = 'F'
+  femme.ville = 'A'
+  const hommeA = perso('h-a', 25, {})
+  hommeA.ville = 'A'
+  const hommeB = perso('h-b', 25, {})
+  hommeB.ville = 'B'
+  state.population[p.n] = [femme, hommeA, hommeB]
+  p.villes = [
+    { ...p.villes[0], nom: 'A' },
+    { ...p.villes[0], nom: 'B' },
+  ] as typeof p.villes
+  // rng espion : chance(mariage) → true (le mariage a lieu), pick capture le pool
+  let pool: unknown[] = []
+  const rngSpy = {
+    next: () => 0.1, int: () => 1, die: () => 1,
+    chance: () => true,
+    pick: <T,>(a: T[]) => { pool = a; return a[0]! },
+    pickWeighted: <T,>(i: T[]) => i[0]!,
+    shuffle: <T,>(a: T[]) => a,
+  } as unknown as ReturnType<typeof makeRng>
+  gestionMariages(state, p, rngSpy, emptyRecap())
+  assert.ok(femme.mariageId, 'la femme s’est mariée')
+  const ids = (pool as Array<{ id: string }>).map((x) => x.id)
+  assert.ok(ids.includes(hommeA.id), 'le pool de candidats contient l’homme de SA ville')
+  assert.ok(!ids.includes(hommeB.id), 'le pool ne contient AUCUN candidat d’une autre ville')
+  assert.equal(femme.mariageId, hommeA.id, 'elle a épousé l’homme de sa ville')
+  assert.ok(C, 'config lue')
 })
