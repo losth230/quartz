@@ -97,10 +97,6 @@ export interface EtapeTour {
   description: string
 }
 
-// (UNIFICATION 2026-11-02 : le jeu vit désormais dans jeu/ sur v4 —
-//  cf. docs/ia/journal-technique.md ; ce commentaire ne change AUCUNE
-//  règle moteur et sert aussi de marqueur de re-déclenchement du workflow
-//  deploy-function après son correctif --yes.)
 export const ETAPES_TOUR: EtapeTour[] = [
   {
     numero: '1',
