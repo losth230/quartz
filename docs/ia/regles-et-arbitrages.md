@@ -2066,3 +2066,50 @@ paramètres). Le pèlerinage y figure comme étape 3quindecies ;
 les étapes retirées (événements, cartes dynastie, consommation
 d'habitations, bonus de faction, progrès) n'y figurent plus —
 l'historique vit dans git et le journal technique.
+
+## Émissaires des bâtiments : Délégation, Chancellerie, Ambassade (arbitrage Thibaut, 2026-11-03)
+
+**Retour Thibaut** : trois nouveaux bâtiments de CHÂTEAU, chaîne de
+tiers d'émissaires « tant que ce bâtiment est construit » :
+- **Délégation** (tier 1) : 10 Or + 4 Soie — **+1 émissaire** tant
+  que construite ;
+- **Chancellerie** (tier 2, Délégation requise) : 20 Or + 4 Pierres +
+  6 Soies — REMPLACE la Délégation — **+2 émissaires** tant que
+  construite ;
+- **Ambassade** (tier 3, Chancellerie requise) : 40 Or + 4 Charbons +
+  10 Soies — REMPLACE la Chancellerie — **+4 émissaires** tant que
+  construite.
+
+**Modélisation** (patron `routesApportees` de l'Échoppe, valeur
+d'ÉTAT « tant que construit ») :
+- nouveau champ **`emissairesApportes`** du référentiel
+  (`ConstructionRef`), lu par `emissairesApportesConstructionRef`
+  (constructions.ts) — le résumé affichable (picker « + Construire »,
+  badges de la carte de ville, wiki Référentiels → Bâtiments) montre
+  « +1/+2/+4 émissaire(s) » ;
+- comptage par joueur : **`emissairesBatimentsJoueur`**
+  (batiments.ts) somme le champ sur toutes les villes du joueur
+  (groupe Ville/Château), en réutilisant la mécanique des
+  REMPLACEMENTS (`batimentsRemplaces`) : **le tier remplacé ne
+  compte PLUS** — la Chancellerie neutralise le +1 de la Délégation,
+  l'Ambassade le +2 de la Chancellerie ; les bonus se CUMULENT
+  entre villes ;
+- la réserve MOBILISABLE du joueur = `p.emissaires` (réserve
+  MANUELLE, revue 2026-10-15) **+** ce bonus : la carte
+  « Réserves d'émissaires » (cités libres) affiche
+  « +N (bâtiments) → M mobilisables », et le placement
+  (`changerEmissaires`) vérifie la limite sur cette réserve totale
+  — un débit plafonne la réserve manuelle à 0 (le bonus absorbe,
+  placement « à crédit » autorisé) ; un émissaire déjà PLACÉ dans
+  une cité libre y reste même si le bâtiment disparaît ;
+- familles/rangs : les trois entrées vivent au référentiel en
+  famille **Economique** (cohérente avec l'Échoppe), groupe
+  Château, rangs minimums 1/2/3 (Motte / Donjon / Forteresse) —
+  convention des tiers des aménagements.
+
+**Verrous** : `engine/emissaires.test.ts` (Délégation +1 ;
+Chancellerie remplace → +2 seul ; Ambassade remplace → +4 seul ;
+chaîne complète → +4 ; cumul multi-villes ; bâtiment sans
+émissaires = 0 ; libellés « +N émissaire(s) ») ; compteurs du
+référentiel amendés dans `state/config.test.ts` (51 bâtiments,
+25 de rang ≥ 2).
