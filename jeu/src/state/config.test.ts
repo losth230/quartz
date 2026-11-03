@@ -220,7 +220,10 @@ test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plu
     0, 'les 4 merveilles sont purgées à l ouverture')
   assert.equal(
     C.config.constructions.filter((x) => x.categorie === 'Bâtiment').length,
-    49, '48 bâtiments du référentiel + le perso, ni perdus ni doublés')
+    // 52 = 51 bâtiments du référentiel (48 + Délégation / Chancellerie /
+    //  Ambassade, arbitrage Thibaut 2026-11-03) + le perso, ni perdus
+    //  ni doublés
+    52, '51 bâtiments du référentiel + le perso, ni perdus ni doublés')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
     'un bâtiment perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
@@ -380,8 +383,10 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
   // fiche bâtiments 2026-10-26 : les 23 bâtiments rang 2 (Caserne,
   //  Réseau de routes, Tour de sorcier, quartiers, ports, guildes…)
   //  sont au référentiel — répartis Ville et Château.
+  //  Arbitrage Thibaut 2026-11-03 : + la Chancellerie (rang 2) et
+  //  l'Ambassade (rang 3), chaîne d'émissaires du château → 25.
   const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
-  assert.equal(rang2defs.length, 23, `23 bâtiments rang 2 attendus au référentiel (trouvé ${rang2defs.length})`)
+  assert.equal(rang2defs.length, 25, `25 bâtiments rang 2 attendus au référentiel (trouvé ${rang2defs.length})`)
   // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
   //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
   //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL

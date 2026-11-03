@@ -30,6 +30,7 @@ import { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf } from '../engine/gameData'
 import { citesLibresDe, garnisonCiteLibre } from '../engine/citesLibres'
+import { emissairesBatimentsJoueur } from '../engine/batiments'
 import type { CiteLibre } from '../engine/types'
 import { Card } from './ui'
 import { CarteReservesEmissaires } from './citesLibres/CarteReservesEmissaires'
@@ -99,13 +100,22 @@ export function CitesLibresView() {
       // Revue 2026-10-15 : les émissaires sont une RESSOURCE du joueur
       //  (p.emissaires) — placer un émissaire dans une cité le DÉPENSE,
       //  le retirer le RECREDITE. Impossible de placer sans réserve.
+      // (2026-11-03, Délégation/Chancellerie/Ambassade) : la réserve
+      //  MOBILISABLE = réserve manuelle (p.emissaires, plateau) +
+      //  les émissaires accordés par les BÂTIMENTS du joueur tant
+      //  qu'ils sont construits (valeur d'état) — on peut donc placer
+      //  « à crédit » du bonus ; le débit de la réserve manuelle est
+      //  PLAFONNÉ à 0 (le bonus absorbe), et le bâtiment parti, la
+      //  capacité mobilisable baisse (l'émissaire déjà PLACÉ dans la
+      //  cité reste placé — fait de plateau).
       const e = c.emissaires ?? (c.emissaires = {})
       const places = e[joueur] ?? 0
-      const reserve = p.emissaires ?? 0
+      const bonus = emissairesBatimentsJoueur(p, C)
+      const reserve = (p.emissaires ?? 0) + bonus
       if (delta > 0 && reserve <= 0) return
       const v = Math.max(0, places + delta)
       const dv = v - places
-      p.emissaires = Math.max(0, reserve - dv)
+      p.emissaires = Math.max(0, (p.emissaires ?? 0) - dv)
       if (v === 0) delete e[joueur]
       else e[joueur] = v
       if (dv !== 0) {
@@ -136,7 +146,7 @@ export function CitesLibresView() {
 
   return (
     <div className="stack">
-      <CarteReservesEmissaires players={state.players} recruterEmissaire={recruterEmissaire} />
+      <CarteReservesEmissaires players={state.players} C={C} recruterEmissaire={recruterEmissaire} />
       <CarteRegle C={C} garnison={garnison} cites={cites} players={state.players} />
       <CarteCreation typeOptions={typeOptions} typesConfig={typesConfig} cultures={cultures} update={update} />
 

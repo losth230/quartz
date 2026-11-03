@@ -151,6 +151,31 @@ export function appliquerEffetsBatiments(p: Player, C: Cfg): Record<string, numb
   return out
 }
 
+// ── Émissaires « tant que le bâtiment est construit » (2026-11-03) ────────
+
+/** ÉMISSAIRES accordés par les bâtiments PRÉSENTS du joueur (valeur
+ *  d'état, pas un flux — arbitrage Thibaut 2026-11-03 : Délégation
+ *  tier 1 château +1, Chancellerie tier 2 +2, Ambassade tier 3 +4).
+ *  Contrairement au comptage des ROUTES (maxRoutesJoueur, commerce.ts),
+ *  les bâtiments REMPLACÉS sont EXCLUS : c'est le cœur du design en
+ *  tiers — la Chancellerie neutralise le +1 de la Délégation qu'elle
+ *  remplace, l'Ambassade le +2 de la Chancellerie (patron
+ *  batimentsRemplaces). Le total s'ajoute à la réserve MANUELLE
+ *  (p.emissaires, saisie au plateau) pour donner la réserve
+ *  MOBILISABLE — cf. CitesLibresView. */
+export function emissairesBatimentsJoueur(p: Player, C: Cfg): number {
+  let total = 0
+  for (const ville of p.villes) {
+    const ignores = batimentsRemplaces(ville, C)
+    for (const nom of ville.batiments) {
+      if (ignores.has(nom)) continue
+      const ref = constructionRef(nom, C.config, ville.type)
+      total += (ref?.emissairesApportes ?? 0)
+    }
+  }
+  return total
+}
+
 // ── Vue détaillée pour l'interface (tableau des bâtiments) ─────────────
 
 interface LigneBatiment {

@@ -183,6 +183,14 @@ export function routesApporteesConstructionRef(ref: ConstructionRef | undefined)
   return ref?.routesApportees ?? 0
 }
 
+/** ÉMISSAIRES accordés par une construction (valeur d'état « tant
+ *  que construit », arbitrage Thibaut 2026-11-03 : Délégation +1,
+ *  Chancellerie +2, Ambassade +4 — cf. emissairesBatimentsJoueur
+ *  pour le comptage par joueur). Patron routesApporteesConstructionRef. */
+export function emissairesApportesConstructionRef(ref: ConstructionRef | undefined): number {
+  return ref?.emissairesApportes ?? 0
+}
+
 /** Valeur d'ÉTAT d'une construction : la Garnison (défense tant que la
  *  construction tient). Le Tourisme n'y figure PLUS : flux normal depuis
  *  le retour Thibaut 2026-10-16 (voir la sémantique en tête de section). */
@@ -315,6 +323,13 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   //  Construire », les badges de la carte et le wiki Référentiels.
   const routes = routesApporteesConstructionRef(ref)
   if (routes > 0) parts.push(`+${routes} route${routes > 1 ? 's' : ''} commerciale${routes > 1 ? 's' : ''}`)
+  // Retour Thibaut 2026-11-03 (Délégation / Chancellerie / Ambassade) :
+  //  les ÉMISSAIRES accordés « tant que le bâtiment est construit »
+  //  s'affichent pareil — l'effet vit dans le référentiel
+  //  (emissairesApportes), il doit être visible dans le picker « +
+  //  Construire », les badges de la carte et le wiki Référentiels.
+  const emissaires = emissairesApportesConstructionRef(ref)
+  if (emissaires > 0) parts.push(`+${emissaires} émissaire${emissaires > 1 ? 's' : ''}`)
   for (const [logement, nombre] of Object.entries(log)) {
     if (logement === 'Taudis' || nombre <= 0) continue
     const nom = nombre > 1 ? logement.replace(/^(\S+)/, (m) => `${m}s`) : logement
