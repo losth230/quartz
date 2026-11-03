@@ -7,8 +7,8 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 83 règles — sources : batiment 41, amenagement 42
-── canal placesMetier : 71 règles ──
+total : 101 règles — sources : batiment 59, amenagement 42
+── canal placesMetier : 82 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
   batiment.camp-de-mineur@ville — Camp de mineur (Ville) : Mineur +2
@@ -73,6 +73,11 @@ total : 83 règles — sources : batiment 41, amenagement 42
   batiment.port-de-peche@ville — Port de pêche (Ville) : Pêcheur +6
   batiment.clinique@ville — Clinique (Ville) : Guérisseur +5
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
+  batiment.barraquements@ville — Barraquements (Ville) : Garde +4
+  batiment.complexe-d-exploitation-maritime@ville — Complexe d'exploitation maritime (Ville) : Commerçant +24
+  batiment.usine@ville — Usine (Ville) : Bûcheron +2 · Mineur +2 · Forgeron +2 · Tisseur +2 · Charbonnier +2
+  batiment.hopital@ville — Hôpital (Ville) : Guérisseur +10
+  batiment.guilde-des-marins@ville — Guilde des marins (Ville) : Charbon -1 · Commerçant +40
   batiment.caserne@chateau — Caserne (Château) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@chateau — Tour de sorcier (Château) : Scientifique +1 · Maison de notable +1
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
@@ -80,7 +85,13 @@ total : 83 règles — sources : batiment 41, amenagement 42
   batiment.cabinet-d-astronomie@chateau — Cabinet d'astronomie (Château) : Scientifique +4
   batiment.chapelle@chateau — Chapelle (Château) : Artiste +7
   batiment.ecole-intermediaire@chateau — Ecole intermédiaire (Château) : Or -3 · Professeur +2 · Scientifique +1
-── canal logements : 47 règles ──
+  batiment.barraquements@chateau — Barraquements (Château) : Garde +4
+  batiment.commanderie@chateau — Commanderie (Château) : Artiste +10
+  batiment.ecole-superieure@chateau — Ecole supérieure (Château) : Or -6 · Professeur +4 · Scientifique +2
+  batiment.institut-de-recherche@chateau — Institut de recherche (Château) : Scientifique +8
+  batiment.hopital@chateau — Hôpital (Château) : Guérisseur +10
+  batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
+── canal logements : 51 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.bas-quartier@ville — Bas quartier (Ville) : Taudis +20
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
@@ -124,16 +135,20 @@ total : 83 règles — sources : batiment 41, amenagement 42
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.quartier-intermediaire@ville — Quartier intermédiaire (Ville) : Maison +20
+  batiment.banlieue@ville — Banlieue (Ville) : Maison +40
+  batiment.guilde-des-bourgeois@ville — Guilde des bourgeois (Ville) : Maison de notable +20
   batiment.caserne@chateau — Caserne (Château) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@chateau — Tour de sorcier (Château) : Scientifique +1 · Maison de notable +1
   batiment.quartier-intermediaire@chateau — Quartier intermédiaire (Château) : Maison +20
   batiment.haut-quartier@chateau — Haut quartier (Château) : Maison de notable +20
+  batiment.banlieue@chateau — Banlieue (Château) : Maison +40
+  batiment.guilde-des-bourgeois@chateau — Guilde des bourgeois (Château) : Maison de notable +20
 ── canal reductionLeveeArmee : 4 règles ──
   batiment.terrain-d-entrainement@chateau — Terrain d'entrainement (Château) : levée d'armée −10 Or
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
-── canal fluxVille : 9 règles ──
+── canal fluxVille : 15 règles ──
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.banque-centrale@capitale — Banque centrale (Capitale) : Or +8
@@ -141,8 +156,14 @@ total : 83 règles — sources : batiment 41, amenagement 42
   batiment.jardin-interieur@capitale — Jardin intérieur (Capitale) : Nourriture +14
   batiment.moulin-a-vent@ville — Moulin à vent (Ville) : Charbon -1 · Éleveur +4 · Fermier +15
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
+  batiment.guilde-des-marchands@ville — Guilde des marchands (Ville) : Charbon -1
+  batiment.guilde-des-marins@ville — Guilde des marins (Ville) : Charbon -1 · Commerçant +40
   batiment.ecole-intermediaire@chateau — Ecole intermédiaire (Château) : Or -3 · Professeur +2 · Scientifique +1
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
+  batiment.ecole-superieure@chateau — Ecole supérieure (Château) : Or -6 · Professeur +4 · Scientifique +2
+  batiment.guilde-des-diplomates@chateau — Guilde des diplomates (Château) : Charbon -1
+  batiment.guilde-des-evangelistes@chateau — Guilde des évangélistes (Château) : Charbon -1 · Tourisme +70
+  batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
 ── canal garnisonVille : 1 règle ──
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
 
