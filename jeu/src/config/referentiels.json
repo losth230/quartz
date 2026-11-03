@@ -3333,6 +3333,88 @@
     },
     {
       "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Délégation",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "emissairesApportes": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Chancellerie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "emissairesApportes": 2,
+      "requis": "Délégation",
+      "remplaceBatiment": [
+        "Délégation"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 4
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 6
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Ambassade",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emissairesApportes": 4,
+      "requis": "Chancellerie",
+      "remplaceBatiment": [
+        "Chancellerie"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 4
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
       "groupe": "Capitale",
       "famille": "Capitale",
       "nom": "Banque centrale",

@@ -335,6 +335,18 @@ export interface ConstructionRef {
    *  version du groupe (Ville/Château) de la ville qui porte le
    *  bâtiment. */
   routesApportees?: number
+  /** ÉMISSAIRES accordés à tout le joueur TANT QUE CE bâtiment est
+   *  construit (arbitrage Thibaut 2026-11-03 : Délégation tier 1
+   *  château +1, Chancellerie tier 2 — requise Délégation, la
+   *  remplace — +2, Ambassade tier 3 — requise Chancellerie, la
+   *  remplace — +4). VALEUR D'ÉTAT, pas un flux : elle s'ajoute à la
+   *  réserve MOBILISABLE d'émissaires (p.emissaires, saisi au
+   *  plateau) tant que le bâtiment tient — patron routesApportees ;
+   *  comptée par emissairesBatimentsJoueur (engine/batiments.ts),
+   *  bâtiments REMPLACÉS exclus (la Chancellerie neutralise le +1
+   *  de la Délégation, l'Ambassade celui de la Chancellerie).
+   *  Champ optionnel : absent = aucun apport. */
+  emissairesApportes?: number
   /** RÉDUCTION DE LEVÉE D'ARMÉE (arbitrage Thibaut 2026-10-28 : « les
    *  armées, et surtout les réductions de levée, rejoignent la
    *  banque ») — champ DONNÉES de la fiche de construction, en Or,
