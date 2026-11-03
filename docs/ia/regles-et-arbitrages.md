@@ -2113,3 +2113,89 @@ chaîne complète → +4 ; cumul multi-villes ; bâtiment sans
 émissaires = 0 ; libellés « +N émissaire(s) ») ; compteurs du
 référentiel amendés dans `state/config.test.ts` (51 bâtiments,
 25 de rang ≥ 2).
+
+## 2026-11-03 (retour n° 2 du jour) — VAGUE TIER 3 : 20 bâtiments (Barraquements, Responsable des voies, Banlieue, Complexe d'exploitation maritime, Usine, Plateforme commerciale, Commanderie, Ecole supérieure, Institut de recherche, Hôpital, 6 guildes)
+
+**Retour Thibaut** (texte exact, tier 3 Militaire / Économique /
+Guildes) : « Barraquements (les deux) : requiert caserne, 25 Or +
+4 Fer. +4 emplacements de Garde. Responsable des voies, 30 Or +
+6 Soie. les case à 3 cases ou moins de cette habitation ne
+coûtent qu'un PM à franchir. Banlieue (les deux) : Quartier
+intermédiaire requis, 40 Or + 10 Fer + 10 Fer. +40 Maisons. » —
+coquille « 10 Fer + 10 Fer » corrigée en **40 Or + 10 Fer +
+10 Bois** (arbitrage Thibaut) ; puis le lot Économique (Complexe
+d'exploitation maritime +24 Commerçant, Usine, Plateforme
+commerciale +2 routes, Commanderie +10 Artistes, Ecole
+supérieure, Institut de recherche +8 Scientifiques, Hôpital +10
+Guérisseurs) et les six guildes de classe (bourgeois, marchands,
+marins, diplomates, évangélistes, savants).
+
+**Le référentiel passe de 51 à 71 bâtiments** (93 → 113
+constructions) : 9 entrées Ville, 11 entrées Château, toutes rang
+minimum 3 (Grande Cité / Forteresse), familles Militaire /
+Economique / Guilde. « les deux » = versions Ville ET Château
+(Barraquements, Banlieue, Hôpital, Guilde des bourgeois) ;
+« Complexe d'exploitation maritime » = VILLE, coût arbitré
+Thibaut **50 Or + 10 Bois + 4 Fer** (pas de paramètre cotier) ;
+Responsable des voies = château. Orthographe « Barraquements »
+conservée telle quelle.
+
+**Arbitrages de modélisation** :
+- **règle « le remplacé ne compte plus » GÉNÉRALISÉE** aux
+  valeurs d'état : nouvelle primitive `batimentsActifsVille`
+  (batiments.ts, réutilise `batimentsRemplaces` privé) branchée
+  dans `emplacementsMetierVille` (caps de métiers),
+  `maxRoutesJoueur` (routes apportées) et
+  `domicilesApportesVille` (domiciles) — sans elle, Complexe +
+  Guilde des marins = cap 64 Commerçants au lieu de 40,
+  Plateforme + Guilde des marchands = +4 routes au lieu de +2 ;
+- **modificateurs de PAYS** (`modificateursPaysJoueur`,
+  interface `ModificateursPays`) : 6 nouveaux champs de
+  `ConstructionRef` — `multProductionBourgeois` (Guilde des
+  bourgeois : ×1,5 ADDITIONNEL au multiplicateur de rang,
+  cumul multiplicatif par instance → ×2,25 pour un bourgeois),
+  `bonusMetierParHabitant` (Guilde des marins : +0,5 Or par
+  Commerçant, avant taxes, × mult de rang — patron Ponton),
+  `multRevenusCommerce` (Guilde des marchands : ×1,5 DANS
+  `effetsCommerceJoueur`, source unique stock + récap),
+  `tributVassalPlus` (Guilde des diplomates : +5 % sur les DEUX
+  chemins du tribut, vassal paie SA part, différence CRÉÉE —
+  patrons Mère Patrie / Vassaux dévoués), `conversionLocalePlus`
+  (Guilde des évangélistes : +10 % vers la culture de la ville
+  DANS le tirage pondéré, pattern exact du Nationalisme, lu par
+  ville d'accueil, cumulatif au dogme), `scienceProfesseurPlus`
+  (Guilde des savants : part de taxe Science du Professeur 0,10 →
+  0,15) ;
+- **effets de PLATEAU** (`effetPlateau`, texte d'affichage
+  uniquement) : Responsable des voies (cases à ≤3 : 1 PM) et
+  Guilde des marchands (portée des routes +6 cases) — la portée
+  se règle À LA MAIN sur le plateau, AUCUNE lecture moteur ;
+- **chaînes de tiers** : Guilde des marchands remplace la
+  Plateforme commerciale (routes +2 conservées), Guilde des
+  marins remplace le Complexe, Guilde des diplomates remplace
+  l'Ambassade (émissaires +7 — le +4 de l'Ambassade ne compte
+  plus), Guilde des évangélistes remplace la Commanderie, Guilde
+  des savants remplace l'Institut de recherche ; Ecole
+  supérieure remplace l'Ecole INTERMÉDIAIRE (arbitrage
+  Thibaut — le texte disait « élémentaire », la chaîne est
+  intermédiaire → supérieure, `ecoleRang` 3) ;
+- toutes les guildes consomment 1 Charbon par tour (canal
+  `effets`, patron Guilde des artisans de la terre), la Guilde
+  des évangélistes produit Tourisme +70 (canal `effets`).
+
+**Verrous** : `engine/tier3.test.ts` (7 tests : agrégat
+`modificateursPaysJoueur` identités → guildes → cumuls ×2,25 →
+diplomates émissaires +7 l'Ambassade neutralisée → conversion
++0,1 ; `batimentsActifsVille` caps Complexe→marins +16 pas +40,
+Ecoles +2/+1, routes +3 pas +5 ; `detailGainsVille` chasseurs
+2/3/4,5, commerçant 1→1,5 Or, part Science 0,10→0,15 ; commerce
+×1,5 avec la vraie fixture 2 joueurs ; tribut vassal ×1,05 sur
+les DEUX chemins ; conversion dans le tirage avec une guilde de
+TEST injectée, la vraie portant Tourisme +70 qui polluerait la
+pression ; libellés des guildes dans `resumeConstruction`) ;
+compteurs du référentiel amendés dans `state/config.test.ts`
+(71 bâtiments, 45 de rang ≥ 2).
+
+**Diagnostic** : `diag-out.txt` régénéré (101 règles au total —
+18 règles de bâtiments en plus : placesMetier 71 → 82, logements
+47 → 51, fluxVille 9 → 15).

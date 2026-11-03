@@ -78,7 +78,7 @@ src/
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
 └── engine/*.test.ts, rules/*.test.ts, state/*.test.ts, components/*.test.ts
-                             — tests natifs node:test (305) + tests de rendu (13 fichiers, 23 tests)
+                             — tests natifs node:test (312) + tests de rendu (13 fichiers, 23 tests)
                              (compteurs réalignés 2026-11-01 — pèlerinage + ordre du tour)
 ```
 
@@ -107,10 +107,10 @@ protocoles possible dans un salon.
    moteur : sans ce check, un identifiant non défini dans le handler part en
    production (incident 2026-10-19 : `cfgMondiale`, ReferenceError à chaque
    résolution serveur, déployé vert par tous les contrôles).
-3. `npm test` — tests natifs `node --test` (305 : fusion, migrations, régression 20 tours
+3. `npm test` — tests natifs `node --test` (312 : fusion, migrations, régression 20 tours
    avec invariants, config, registre, banque, mutateurs, métiers, commerce, santé,
    bonheur, domiciles, statut social, santé/Guérisseur, dogmes de culture —
-   fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts ; pèlerinage du pontife + registre ordre du tour, 12 tests dans pelerinage.test.ts + tour.test.ts)
+   fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts ; pèlerinage du pontife + registre ordre du tour, 12 tests dans pelerinage.test.ts + tour.test.ts ; vague tier 3 — 20 bâtiments, 7 tests dans tier3.test.ts)
    + tests de rendu (13 fichiers, 23 tests) — R3 (2026-10-24) : chaque vue vérifie des DONNÉES
    dérivées de l'état (valeurs, noms, comptes), plus seulement des titres.
    NB (réalignements 2026-10-25) : les compteurs dataient de R4 — les vagues
