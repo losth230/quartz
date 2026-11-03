@@ -2707,6 +2707,321 @@
     },
     {
       "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Barraquements",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "requis": "Caserne",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Banlieue",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "requis": "Quartier intermédiaire",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 40
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Complexe d'exploitation maritime",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 24
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 50
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Usine",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Bûcheron",
+          "places": 2
+        },
+        {
+          "metier": "Mineur",
+          "places": 2
+        },
+        {
+          "metier": "Forgeron",
+          "places": 2
+        },
+        {
+          "metier": "Tisseur",
+          "places": 2
+        },
+        {
+          "metier": "Charbonnier",
+          "places": 2
+        }
+      ],
+      "requis": "Camp de travailleurs",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 6
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 8
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Plateforme commerciale",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "routesApportees": 2,
+      "effets": [],
+      "rangMinHabitation": 3,
+      "requis": "Place du marché",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 12
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Hôpital",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 10
+        }
+      ],
+      "requis": "Clinique",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Guilde des bourgeois",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "requis": "Banlieue",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 60
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 10
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 20
+        }
+      ],
+      "multProductionBourgeois": 1.5
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Guilde des marchands",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "routesApportees": 2,
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 3,
+      "requis": "Plateforme commerciale",
+      "remplaceBatiment": [
+        "Plateforme commerciale"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 30
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 8
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 8
+        }
+      ],
+      "multRevenusCommerce": 1.5,
+      "effetPlateau": "portée des routes commerciales du pays +6 cases (effet de plateau)"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Guilde des marins",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Commerçant",
+          "places": 40
+        }
+      ],
+      "requis": "Complexe d'exploitation maritime",
+      "remplaceBatiment": [
+        "Complexe d'exploitation maritime"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 50
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 6
+        }
+      ],
+      "bonusMetierParHabitant": [
+        {
+          "metier": "Commerçant",
+          "ressource": "Or",
+          "valeur": 0.5
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
       "groupe": "Château",
       "famille": "Militaire",
       "nom": "Poste de garde",
@@ -3412,6 +3727,374 @@
           "valeur": 10
         }
       ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Barraquements",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "requis": "Caserne",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 25
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Responsable des voies",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 30
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 6
+        }
+      ],
+      "effetPlateau": "les cases à 3 cases ou moins de cette habitation ne coûtent qu'1 PM à franchir (effet de plateau)"
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Banlieue",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "requis": "Quartier intermédiaire",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 40
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Commanderie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Artiste",
+          "places": 10
+        }
+      ],
+      "requis": "Chapelle",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 6
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Ecole supérieure",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Or",
+          "quantite": -6
+        }
+      ],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Professeur",
+          "places": 4
+        },
+        {
+          "metier": "Scientifique",
+          "places": 2
+        }
+      ],
+      "ecoleRang": 3,
+      "requis": "Ecole intermédiaire",
+      "remplaceBatiment": [
+        "Ecole intermédiaire"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Institut de recherche",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 8
+        }
+      ],
+      "requis": "Cabinet d'astronomie",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 6
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 8
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Hôpital",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 10
+        }
+      ],
+      "requis": "Clinique",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des bourgeois",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "requis": "Banlieue",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 60
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 10
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 10
+        }
+      ],
+      "domicilesApportes": [
+        {
+          "domicile": "Maison de notable",
+          "nombre": 20
+        }
+      ],
+      "multProductionBourgeois": 1.5
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des diplomates",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 3,
+      "emissairesApportes": 7,
+      "requis": "Ambassade",
+      "remplaceBatiment": [
+        "Ambassade"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 60
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 8
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 20
+        }
+      ],
+      "tributVassalPlus": 0.05
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des évangélistes",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        },
+        {
+          "ressource": "Tourisme",
+          "quantite": 70
+        }
+      ],
+      "rangMinHabitation": 3,
+      "requis": "Commanderie",
+      "remplaceBatiment": [
+        "Commanderie"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 60
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 12
+        }
+      ],
+      "conversionLocalePlus": 0.1
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des savants",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 3,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 15
+        }
+      ],
+      "requis": "Institut de recherche",
+      "remplaceBatiment": [
+        "Institut de recherche"
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 50
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 6
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 8
+        }
+      ],
+      "scienceProfesseurPlus": 0.05
     },
     {
       "categorie": "Bâtiment",

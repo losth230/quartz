@@ -347,6 +347,55 @@ export interface ConstructionRef {
    *  de la Délégation, l'Ambassade celui de la Chancellerie).
    *  Champ optionnel : absent = aucun apport. */
   emissairesApportes?: number
+  // ── VAGUE TIER 3 (arbitrage Thibaut 2026-11-03) : modificateurs de
+  //  PAYS portés par les bâtiments, tous optionnels, absent = neutre.
+  //  Lectures centralisées dans modificateursPaysJoueur (engine/
+  //  batiments.ts) ; libellés dans resumeConstruction (constructions.ts).
+  /** GUILDE DES BOURGEOIS (ville ET château, tier 3) : « la production
+   *  des Bourgeois du pays est augmentée de 50 % » — multiplicateur
+   *  ADDITIONNEL au multiplicateur de rang social (multProdRang, ×1,5
+   *  pour un bourgeois) : une instance ×1,5, deux instances ×2,25
+   *  (CUMUL MULTIPLICATIF par bâtiment présent, toutes villes). Lu
+   *  dans detailGainsVille (economie.ts), AVANT les taxes. */
+  multProductionBourgeois?: number
+  /** GUILDE DES MARINS (tier 3) : « vos commerçants dans votre pays
+   *  produisent +0,5 Or par tour » — bonus PAR HABITANT titulaire du
+   *  métier, AVANT les taxes, × multiplicateur de rang (patron
+   *  Ponton `cotier` / Champs nourriciers). Champ
+   *  { metier, ressource, valeur } répétable par bâtiment. */
+  bonusMetierParHabitant?: Array<{ metier: string; ressource: string; valeur: number }>
+  /** GUILDE DES MARCHANDS (tier 3) : « les revenus du commerce dans
+   *  votre pays sont augmentés de 50 % » — multiplicateur appliqué
+   *  DANS effetsCommerceJoueur (commerce.ts), source unique du
+   *  stock et du récap. */
+  multRevenusCommerce?: number
+  /** GUILDE DES DIPLOMATES (tier 3) : « vous gagnez 5 % de taxes
+   *  supplémentaires en provenance de vos vassaux » — part ADDITIVE
+   *  (v = 0,05) sur les DEUX chemins du tribut : transfererTributVassal
+   *  (fin de tour) et impotsVassaux (impôt manuel), cumulée aux
+   *  multiplicateurs du régime (Vassaux dévoués) et du dogme
+   *  (Mère Patrie) — le vassal paie SA part, la différence CRÉÉE
+   *  pour le suzerain. */
+  tributVassalPlus?: number
+  /** GUILDE DES ÉVANGÉLISTES (tier 3) : « les habitants se
+   *  convertissant à une culture ont 10 % de chances de plus de se
+   *  convertir à la culture de cette ville » — poids d'accueil +=
+   *  v × poids total des autres cultures AU TIRAGE (pattern exact du
+   *  dogme Nationalisme conversionLocale, cumulatif), lu PAR VILLE
+   *  D'ACCUEIL (culture.ts). */
+  conversionLocalePlus?: number
+  /** GUILDE DES SAVANTS (tier 3) : « vos professeurs augmentent le
+   *  gain de science de 5 % supplémentaires » — part de taxe Science
+   *  du Professeur 0,10 → 0,15 (additive sur la part, detailGainsVille
+   *  economie.ts). */
+  scienceProfesseurPlus?: number
+  /** EFFET DE PLATEAU (vague tier 3, arbitrage Thibaut 2026-11-03 :
+   *  « Responsable des voies : les cases à 3 cases ou moins ne
+   *  coûtent qu'un PM » ; « Guilde des marchands : portée des routes
+   *  +6 cases ») — TEXTE D'AFFICHAGE uniquement (picker « +
+   *  Construire », badges, wiki) : la portée des PM et des routes se
+   *  règle À LA MAIN sur le plateau. AUCUNE lecture moteur. */
+  effetPlateau?: string
   /** RÉDUCTION DE LEVÉE D'ARMÉE (arbitrage Thibaut 2026-10-28 : « les
    *  armées, et surtout les réductions de levée, rejoignent la
    *  banque ») — champ DONNÉES de la fiche de construction, en Or,
