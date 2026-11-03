@@ -191,6 +191,42 @@ export function emissairesApportesConstructionRef(ref: ConstructionRef | undefin
   return ref?.emissairesApportes ?? 0
 }
 
+// ── Lecteurs des modificateurs de PAYS tier 3 (arbitrage Thibaut
+//  2026-11-03) — patrons emissairesApportesConstructionRef ; le
+//  comptage par joueur vit dans modificateursPaysJoueur (batiments.ts).
+
+/** Production des Bourgeois du pays ×N (Guilde des bourgeois, tier 3). */
+export function multProductionBourgeoisRef(ref: ConstructionRef | undefined): number {
+  return ref?.multProductionBourgeois ?? 1
+}
+
+/** Bonus PAR HABITANT d'un métier (Guilde des marins, tier 3 :
+ *  +0,5 Or par Commerçant). */
+export function bonusMetierParHabitantRef(ref: ConstructionRef | undefined): Array<{ metier: string; ressource: string; valeur: number }> {
+  return ref?.bonusMetierParHabitant ?? []
+}
+
+/** Revenus du commerce ×N (Guilde des marchands, tier 3). */
+export function multRevenusCommerceRef(ref: ConstructionRef | undefined): number {
+  return ref?.multRevenusCommerce ?? 1
+}
+
+/** Tribut vassal +v en part additive (Guilde des diplomates, tier 3). */
+export function tributVassalPlusRef(ref: ConstructionRef | undefined): number {
+  return ref?.tributVassalPlus ?? 0
+}
+
+/** Conversion locale vers la culture de la ville +v (Guilde des
+ *  évangélistes, tier 3 — pattern Nationalisme conversionLocale). */
+export function conversionLocalePlusRef(ref: ConstructionRef | undefined): number {
+  return ref?.conversionLocalePlus ?? 0
+}
+
+/** Part de taxe Science du Professeur +v (Guilde des savants, tier 3). */
+export function scienceProfesseurPlusRef(ref: ConstructionRef | undefined): number {
+  return ref?.scienceProfesseurPlus ?? 0
+}
+
 /** Valeur d'ÉTAT d'une construction : la Garnison (défense tant que la
  *  construction tient). Le Tourisme n'y figure PLUS : flux normal depuis
  *  le retour Thibaut 2026-10-16 (voir la sémantique en tête de section). */
@@ -330,6 +366,26 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   //  Construire », les badges de la carte et le wiki Référentiels.
   const emissaires = emissairesApportesConstructionRef(ref)
   if (emissaires > 0) parts.push(`+${emissaires} émissaire${emissaires > 1 ? 's' : ''}`)
+  // (Vague tier 3, arbitrage Thibaut 2026-11-03 : les modificateurs de
+  //  PAYS des guildes tier 3 s'affichent pareil — l'effet vit dans le
+  //  référentiel (champs dédiés), il doit être visible dans le picker
+  //  « + Construire », les badges de la carte et le wiki Référentiels.)
+  const multBourgeois = multProductionBourgeoisRef(ref)
+  if (multBourgeois > 1) parts.push(`production des Bourgeois ×${multBourgeois}`)
+  for (const bm of bonusMetierParHabitantRef(ref)) {
+    parts.push(`${bm.metier.toLowerCase()} +${bm.valeur} ${bm.ressource} / habitant`)
+  }
+  const multCommerce = multRevenusCommerceRef(ref)
+  if (multCommerce > 1) parts.push(`revenus du commerce ×${multCommerce}`)
+  const tribut = tributVassalPlusRef(ref)
+  if (tribut > 0) parts.push(`+${Math.round(tribut * 100)} % tribut vassal`)
+  const convLocale = conversionLocalePlusRef(ref)
+  if (convLocale > 0) parts.push(`+${Math.round(convLocale * 100)} % conversion vers la culture de la ville`)
+  const sciProf = scienceProfesseurPlusRef(ref)
+  if (sciProf > 0) parts.push(`Science des Professeurs +${Math.round(sciProf * 100)} %`)
+  // Effets de PLATEAU (Responsable des voies, Guilde des marchands) :
+  //  texte du référentiel affiché tel quel — la portée se règle à la main.
+  if (ref.effetPlateau) parts.push(ref.effetPlateau)
   for (const [logement, nombre] of Object.entries(log)) {
     if (logement === 'Taudis' || nombre <= 0) continue
     const nom = nombre > 1 ? logement.replace(/^(\S+)/, (m) => `${m}s`) : logement

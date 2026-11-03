@@ -15,6 +15,7 @@ import { villeCotiere } from './geographie'
 import { constructionRef, estCotiereRef } from './constructions'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
+import { modificateursPaysJoueur } from './batiments'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -173,6 +174,14 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  vient que l'été) ; le bonus suit la même saison, ×
   //  multiplicateur de rang, AVANT les taxes, comme le bonus Ponton.)
   const champsNourriciers = cultureDef(ville.culture, C.config)?.nourrEteParFermier ?? 0
+  // (Vague tier 3, arbitrage Thibaut 2026-11-03 : les modificateurs de
+  //  PAYS des guildes tier 3 — Guilde des bourgeois ×1,5 sur la
+  //  production des Bourgeois, Guilde des marins +0,5 Or par
+  //  Commerçant — se lisent UNE FOIS par joueur et s'appliquent
+  //  VILLE PAR VILLE dans la boucle, AVANT les taxes, × multiplicateur
+  //  de rang, comme les bonus Ponton / Champs nourriciers. Bâtiments
+  //  REMPLACÉS exclus par modificateursPaysJoueur.)
+  const modsTier3 = modificateursPaysJoueur(p, C)
   for (const c of vivants) {
     // (Dogme du Travail, 2026-10-30 : les SANS-EMPLOIS d'une culture
     //  ayant pris le dogme produisent +v Nourriture par tour —
@@ -193,7 +202,21 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     //  multipliée par le multiplicateur de son RANG SOCIAL — bourgeois
     //  ×1,5, noble ×1,5, AVANT les taxes — le gain amplifié est taxé
     //  comme les autres.)
-    const mult = multProdRang(c, C)
+    // (Vague tier 3 : `let` — la Guilde des bourgeois multiplie la
+    //  production des Bourgeois du pays ×1,5 EN PLUS du multiplicateur
+    //  de rang — une instance : ×2,25 pour un bourgeois, deux : ×3,375
+    //  — cumul MULTIPLICATIF par bâtiment présent, toutes villes.)
+    let mult = multProdRang(c, C)
+    if (modsTier3.multProductionBourgeois > 1 && rangDe(c, C) === 'bourgeois') {
+      mult *= modsTier3.multProductionBourgeois
+    }
+    // (Vague tier 3 : bonus PAR HABITANT de la Guilde des marins —
+    //  +0,5 Or par Commerçant du pays, avant taxes, × mult de rang.)
+    for (const bm of modsTier3.bonusMetierParHabitant) {
+      if (c.metier === bm.metier) {
+        metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
+      }
+    }
     if (batimentCotierActif && c.metier === 'Pêcheur') {
       metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5 * mult
     }
@@ -230,7 +253,11 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  EFFECTIVEMENT produites dans la ville (comme le Gouverneur) —
   //  un Troubadour sans production de Tourisme n'ouvre aucune clé.
   if (C.p.metierBanquier && vivants.some((c) => c.metier === C.p.metierBanquier) && metiers['Or'] !== undefined) ajouteBonus('Or', 0.1)
-  if (C.p.metierProfesseur && vivants.some((c) => c.metier === C.p.metierProfesseur) && metiers['Science'] !== undefined) ajouteBonus('Science', 0.1)
+  if (C.p.metierProfesseur && vivants.some((c) => c.metier === C.p.metierProfesseur) && metiers['Science'] !== undefined) {
+    // (Vague tier 3 : la Guilde des savants monte la part du
+    //  Professeur +5 % — 0,10 → 0,15, additive sur la part.)
+    ajouteBonus('Science', 0.1 + modsTier3.scienceProfesseurPlus)
+  }
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers['Tourisme'] !== undefined) ajouteBonus('Tourisme', 0.1)
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
@@ -303,11 +330,18 @@ export function impotsVassaux(state: GameState, p: Player, C: Cfg): ImpotVassal[
   //  dévoués », appliqué sur la culture du SUZERAIN cette fois).
   //  Symétrique du branchement de transfererTributVassal (fin de
   //  tour) : les deux chemins du tribut portent le dogme.)
+  // (Vague tier 3, arbitrage Thibaut 2026-11-03 : la Guilde des
+  //  diplomates — « vous gagnez 5 % de taxes supplémentaires en
+  //  provenance de vos vassaux » — part ADDITIVE ×(1+v) sur l'impôt
+  //  manuel, cumulée au dogme (Mère Patrie) et au régime (Vassaux
+  //  dévoués). Symétrique du branchement de transfererTributVassal
+  //  (fin de tour) : les deux chemins du tribut portent la guilde.)
+  const multGuilde = 1 + modificateursPaysJoueur(p, C).tributVassalPlus
   const multDogme = 1 + effetsDogmeCulture(state, p.culture, 'tributVassal', C)
   for (const v of state.players) {
     if (v.vassalDe !== p.n || p.vassalDe === v.n) continue // serment croisé ignoré
     const gains = gainsPopulationJoueur(state, v, C)
-    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement * multDogme
+    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement * multDogme * multGuilde
     if (part !== 0) out.push({ vassal: v.nom, montant: part })
   }
   return out

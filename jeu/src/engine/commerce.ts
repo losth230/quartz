@@ -50,6 +50,7 @@ import type {
 import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
 import { constructionRef, effetsConstructionRef, effetsEteConstructionRef, routesApporteesConstructionRef } from './constructions'
+import { modificateursPaysJoueur, batimentsActifsVille } from './batiments'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
  *  Seules les routes du modèle DISSOCIÉ (sans marchandId) sont
@@ -159,6 +160,16 @@ export function effetsCommerceJoueur(
     for (const [res, v] of Object.entries(src)) {
       out[res] = (out[res] ?? 0) + v
     }
+  }
+  // (Vague tier 3, arbitrage Thibaut 2026-11-03 : la Guilde des
+  //  marchands — « les revenus du commerce dans votre pays sont
+  //  augmentés de 50 % » — multiplie TOUTES les ressources du récap
+  //  de commerce, ICI, source unique du stock et du récap
+  //  (appliquerEffetsCommerce et detailCommerceJoueur y passent).
+  //  Bâtiment REMPLACÉ exclu par modificateursPaysJoueur.)
+  const mult = modificateursPaysJoueur(p, C).multRevenusCommerce
+  if (mult > 1) {
+    for (const res of Object.keys(out)) out[res] *= mult
   }
   return out
 }
@@ -289,8 +300,13 @@ export function maxRoutesJoueur(
   //  l'ancien comptage citait des Plateforme commerciale / Guilde
   //  des marchands ABSENTES du référentiel et MANQUAIT la Place
   //  du marché, qui promet une route dans sa description.)
+  // (Vague tier 3, 2026-11-03 : la boucle passe par batimentsActifsVille
+  //  — la règle « le remplacé ne compte plus » s'étend aux ROUTES
+  //  apportées : la Guilde des marchands (routesApportees 2) NEUTRALISE
+  //  les +2 routes de la Plateforme commerciale qu'elle remplace, au
+  //  lieu de s'y ajouter (+4 au lieu de +2 sinon).)
   for (const v of p.villes) {
-    for (const b of v.batiments) {
+    for (const b of batimentsActifsVille(v, C)) {
       max += routesApporteesConstructionRef(constructionRef(b, C.config, v.type))
     }
   }

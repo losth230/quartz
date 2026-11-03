@@ -48,6 +48,7 @@ import type { Character, City, GameState, Player } from './types'
 import { cultureDef, type Cfg } from './gameData'
 import { rangsDefsType, nomRang } from './rangs'
 import { logementsConstructionRef, constructionRef } from './constructions'
+import { batimentsActifsVille } from './batiments'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
 
@@ -93,7 +94,13 @@ export function totalLogementsVille(ville: City): number {
  *  la lecture est par nom de construction dans le référentiel. */
 export function domicilesApportesVille(ville: City, C: Cfg): Array<{ domicile: string; nombre: number }> {
   const total = new Map<string, number>()
-  for (const nom of [...(ville.amenagements ?? []), ...(ville.batiments ?? [])]) {
+  // (Vague tier 3, 2026-11-03 : garde-fou uniforme — la boucle
+  //  BÂTIMENTS passe par batimentsActifsVille, la règle « le
+  //  remplacé ne compte plus » vaut aussi pour les DOMICILES apportés
+  //  (aucune chaîne tier 3 n'en porte aujourd'hui, mais Banlieue →
+  //  Guilde des bourgeois en portera si une vague tier 4 remplace la
+  //  Banlieue). Les AMÉNAGEMENTS restent hors remplacement.)
+  for (const nom of [...(ville.amenagements ?? []), ...batimentsActifsVille(ville, C)]) {
     // (2026-11-02, correctif (a) : le lookup passe le GROUPE de la
     //  ville — 13 constructions existent en version Ville ET
     //  Château (doublons du référentiel) et constructionRef sans

@@ -12,6 +12,7 @@ import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
 import { rangDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef, estCotiereRef } from './constructions'
+import { batimentsActifsVille } from './batiments'
 import { metiersDisponiblesRang } from './habitations'
 import { villeCotiere } from './geographie'
 import { effetsDogmeCulture } from './dogmes'
@@ -313,7 +314,13 @@ function emplacementsMetierVille(
   ctx?: { state: GameState; joueur: number },
 ): number {
   let total = 0
-  for (const nom of [...(ville.batiments ?? []), ...(ville.amenagements ?? [])]) {
+  // (Vague tier 3, 2026-11-03 : la boucle BÂTIMENTS passe par
+  //  batimentsActifsVille — la règle « le remplacé ne compte plus »
+  //  s'étend aux EMPLACEMENTS : la Guilde des marins (+40 Commerçant)
+  //  neutralise les 24 du Complexe d'exploitation maritime qu'elle
+  //  remplace (cap 40, pas 64), l'Ecole supérieure les places de
+  //  l'Ecole intermédiaire. Les AMÉNAGEMENTS restent hors remplacement.)
+  for (const nom of [...batimentsActifsVille(ville, C), ...(ville.amenagements ?? [])]) {
     const ref = constructionRef(nom, C.config)
     if (!ref) continue
     // (2026-11-02, paramètre `cotier` : bâtiment CÔTIER — ses

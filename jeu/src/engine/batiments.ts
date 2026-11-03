@@ -176,6 +176,82 @@ export function emissairesBatimentsJoueur(p: Player, C: Cfg): number {
   return total
 }
 
+// ── Règle « le remplacé ne compte plus » — généralisée (vague tier 3,
+//  2026-11-03) ─────────────────────────────────────────────────────────
+
+/** Bâtiments d'une ville qui COMPTENT encore : ceux qui ne sont
+ *  neutralisés par aucun remplaçant présent (batimentsRemplaces).
+ *  Avant la vague tier 3, seuls les FLUX (effetsBatimentsVille)
+ *  excluaient les remplacés ; avec les chaînes tier 3 (Complexe →
+ *  Guilde des marins, Plateforme → Guilde des marchands, Ecole
+ *  intermédiaire → Ecole supérieure…) la règle s'étend aux
+ *  EMPLACEMENTS (metiers.ts), aux ROUTES apportées (commerce.ts,
+ *  maxRoutesJoueur) et aux DOMICILES (domiciles.ts) — sans elle, un
+ *  Complexe ET sa Guilde des marins compteraient 24 + 40 = 64
+ *  emplacements au lieu de 40. Les AMÉNAGEMENTS restent hors du
+ *  périmètre du remplacement (remplaceAmenagement se règle ailleurs). */
+export function batimentsActifsVille(ville: City, C: Cfg): string[] {
+  const ignores = batimentsRemplaces(ville, C)
+  return (ville.batiments ?? []).filter((nom) => !ignores.has(nom))
+}
+
+// ── Modificateurs de PAYS tier 3 (arbitrage Thibaut 2026-11-03) ────────
+
+/** Modificateurs de pays lus sur les bâtiments ACTIFS du joueur
+ *  (vague tier 3 — guildes) : multiplicateurs cumulés
+ *  MULTIPLICATIVEMENT, parts additives ADDITIVEMENT. Bâtiments
+ *  REMPLACÉS exclus (batimentsRemplaces) : la règle « le remplacé
+ *  ne compte plus » vaut pour toute lecture de valeur d'état. */
+export interface ModificateursPays {
+  multProductionBourgeois: number   // ×1 par défaut, ×1,5 par Guilde des bourgeois
+  bonusMetierParHabitant: Array<{ metier: string; ressource: string; valeur: number }>
+  multRevenusCommerce: number        // ×1 par défaut, ×1,5 par Guilde des marchands
+  tributVassalPlus: number           // +0 par défaut, +0,05 par Guilde des diplomates
+  conversionLocalePlus: number       // +0 par défaut, +0,10 par Guilde des évangélistes
+  scienceProfesseurPlus: number      // +0 par défaut, +0,05 par Guilde des savants
+}
+
+/** Agrégat des modificateurs de pays portés par les bâtiments ACTIFS
+ *  de TOUTES les villes du joueur (valeurs d'état « tant que ce
+ *  bâtiment est construit », patron emissairesBatimentsJoueur). */
+export function modificateursPaysJoueur(p: Player, C: Cfg): ModificateursPays {
+  const out: ModificateursPays = {
+    multProductionBourgeois: 1,
+    bonusMetierParHabitant: [],
+    multRevenusCommerce: 1,
+    tributVassalPlus: 0,
+    conversionLocalePlus: 0,
+    scienceProfesseurPlus: 0,
+  }
+  for (const ville of p.villes) {
+    const ignores = batimentsRemplaces(ville, C)
+    for (const nom of ville.batiments) {
+      if (ignores.has(nom)) continue
+      const ref = constructionRef(nom, C.config, ville.type)
+      if (!ref) continue
+      out.multProductionBourgeois *= (ref.multProductionBourgeois ?? 1)
+      out.multRevenusCommerce *= (ref.multRevenusCommerce ?? 1)
+      out.tributVassalPlus += (ref.tributVassalPlus ?? 0)
+      out.conversionLocalePlus += (ref.conversionLocalePlus ?? 0)
+      out.scienceProfesseurPlus += (ref.scienceProfesseurPlus ?? 0)
+      for (const bm of ref.bonusMetierParHabitant ?? []) out.bonusMetierParHabitant.push(bm)
+    }
+  }
+  return out
+}
+
+/** Conversion locale vers la culture de la VILLE d'accueil portée par
+ *  ses bâtiments ACTIFS (Guilde des évangélistes, tier 3 — cumulée au
+ *  dogme Nationalisme conversionLocale, lu PAR VILLE d'accueil dans
+ *  culture.ts). */
+export function conversionLocaleBatimentsVille(ville: City, C: Cfg): number {
+  let total = 0
+  for (const nom of batimentsActifsVille(ville, C)) {
+    total += (constructionRef(nom, C.config, ville.type)?.conversionLocalePlus ?? 0)
+  }
+  return total
+}
+
 // ── Vue détaillée pour l'interface (tableau des bâtiments) ─────────────
 
 interface LigneBatiment {

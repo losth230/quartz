@@ -9,7 +9,7 @@ import type { GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { bump, fullName } from './shared'
-import { productionTourismeBatiment } from './batiments'
+import { productionTourismeBatiment, conversionLocaleBatimentsVille } from './batiments'
 import { detailGainsVille } from './economie'
 import { effetsDogmeCulture } from './dogmes'
 
@@ -88,6 +88,15 @@ export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, rec
     const nationalisme = culteAccueil && culteAccueil !== c.culture
       ? effetsDogmeCulture(state, culteAccueil, 'conversionLocale', C)
       : 0
+    // (Vague tier 3, arbitrage Thibaut 2026-11-03 : la Guilde des
+    //  évangélistes — « les habitants se convertissant a une culture
+    //  ont 10% de chances de plus de se convertir à la culture de
+    //  cette ville » — porte le MÊME effet que le dogme Nationalisme
+    //  (+v × poids total des autres cultures, AU TIRAGE, vers la
+    //  culture d'accueil uniquement), lu PAR VILLE D'ACCUEIL sur ses
+    //  bâtiments ACTIFS et CUMULÉ au dogme. Texte de Thibaut conservé.)
+    const villeAccueil = p.villes.find((v) => v.nom === c.ville)
+    const convBatiment = villeAccueil ? conversionLocaleBatimentsVille(villeAccueil, C) : 0
     if (rng.chance(C.p.conversionProba)) {
       const poids: Record<string, number> = {}
       for (const [cult, w] of Object.entries(pression)) {
@@ -106,11 +115,11 @@ export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, rec
       // (Dogme du Nationalisme, suite : intégration AU TIRAGE —
       //  bonus de part pour la culture d'accueil dans le pickWeighted,
       //  pas de jet supplémentaire.)
-      if (nationalisme > 0 && culteAccueil) {
+      if ((nationalisme > 0 || convBatiment > 0) && culteAccueil) {
         const poidsAutres = Object.entries(poids)
           .filter(([cult]) => cult !== culteAccueil)
           .reduce((acc, [, w]) => acc + w, 0)
-        poids[culteAccueil] = (poids[culteAccueil] ?? 0) + nationalisme * poidsAutres
+        poids[culteAccueil] = (poids[culteAccueil] ?? 0) + (nationalisme + convBatiment) * poidsAutres
       }
       const entries = Object.entries(poids)
       const nouvelle = rng.pickWeighted(entries, (e) => e[1])[0]
