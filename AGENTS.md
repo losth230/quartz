@@ -27,6 +27,11 @@ Le dépôt `losth230/quartz` contient aussi le site vitrine « Quartz » ; le je
   tout le reste (émissaires, effets de technologies, ministres « Plateau », voies de
   victoire à cocher, armées, dogmes) est suivi à la main. L'aide « 🧮 Qu'est-ce que
   l'application compte automatiquement ? » (page Pays) fait foi.
+- **Ce qui n'est pas compté par le moteur s'affiche en ITALIQUE** (convention
+  2026-11-04, retour Thibaut) : dans le picker « + Construire » et le wiki
+  Référentiels, les effets de plateau (arbitrés à la main au plateau) partent du
+  moteur enveloppés du marqueur `*…*` (`resumeConstruction`) et sont rendus en
+  `<i>` par `TexteAvecItalique` (components/ui.tsx).
 - **L'Influence n'existe plus** : remplacée par les **émissaires**. Toute référence
   restante à l'Influence dans les textes est une dette à convertir.
 - **La Garnison est une valeur d'état instantanée** (`RESSOURCES_INSTANTANEES`,

@@ -2199,3 +2199,19 @@ compteurs du référentiel amendés dans `state/config.test.ts`
 **Diagnostic** : `diag-out.txt` régénéré (101 règles au total —
 18 règles de bâtiments en plus : placesMetier 71 → 82, logements
 47 → 51, fluxVille 9 → 15).
+
+## 2026-11-04 — Convention d'affichage : l'italique signale ce qui n'est pas pris en compte par le moteur
+
+**Arbitrage Thibaut (retour du 2026-11-04)** : les descriptions d'effets
+NON pris en compte par le moteur — effets de plateau, arbitrés à la main
+au plateau — s'affichent en ITALIQUE partout où un résumé d'effets est
+rendu (picker « + Construire », wiki Référentiels).
+
+Implémentation : `resumeConstruction` (engine/constructions.ts) enveloppe
+le champ `effetPlateau` du marqueur `*…*` — le texte est inchangé, seul
+le rendu change ; `TexteAvecItalique` (components/ui.tsx) sépare les
+segments marqués et les rend en `<i>` (Picker.tsx,
+reference/OngletsBatiments.tsx). Concerne aujourd'hui le Responsable des
+voies (cases à 3 cases ou moins : 1 PM) et la Guilde des marchands
+(portée des routes +6 cases) ; toute future entrée `effetPlateau`
+héritera du même affichage.
