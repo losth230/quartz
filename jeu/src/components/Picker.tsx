@@ -11,7 +11,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import { useEffect, useState } from 'react'
-import { Button } from './ui'
+import { Button, TexteAvecItalique } from './ui'
 
 export interface PickerOption {
   /** valeur renvoyée au choix */
@@ -102,7 +102,7 @@ export function ChoicePicker({ bouton, categories, onPick, disabled }: {
                 {o.droite && <span className="picker-droite">{o.droite}</span>}
               </span>
               {o.alerte && <span className="picker-desc neg">⚠ {o.alerte}</span>}
-              {o.description && <span className="picker-desc">{o.description}</span>}
+              {o.description && <span className="picker-desc"><TexteAvecItalique texte={o.description} /></span>}
             </button>
           ))}
         </div>

@@ -314,7 +314,11 @@ export function reductionLeveeBatiments(ville: { batiments?: string[] } | undefi
 /** Résumé affichable des effets d'une construction (badges page Pays et
  *  wiki Référentiels) : « +2 Or / tour · été : +10 Nourriture ·
  *  Garnison +40 ». Le Tourisme apparaît comme flux (« +16 Tourisme /
- *  tour ») conformément à la sémantique stock = production. */
+ *  tour ») conformément à la sémantique stock = production.
+ *  (Convention 2026-11-04, retour Thibaut : les effets NON pris en
+ *  compte par le moteur — effets de plateau, arbitrés à la main —
+ *  s'affichent en ITALIQUE : le texte d'effetPlateau part enveloppé du
+ *  marqueur *…*, rendu <i> par TexteAvecItalique dans l'UI.) */
 export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameConfig): string {
   if (!ref) return ''
   const parts: string[] = []
@@ -384,8 +388,11 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   const sciProf = scienceProfesseurPlusRef(ref)
   if (sciProf > 0) parts.push(`Science des Professeurs +${Math.round(sciProf * 100)} %`)
   // Effets de PLATEAU (Responsable des voies, Guilde des marchands) :
-  //  texte du référentiel affiché tel quel — la portée se règle à la main.
-  if (ref.effetPlateau) parts.push(ref.effetPlateau)
+  //  texte du référentiel affiché tel quel — la portée se règle à la
+  //  main. (Convention 2026-11-04, retour Thibaut : ce qui n'est PAS
+  //  pris en compte par le moteur s'affiche en ITALIQUE — le texte
+  //  part enveloppé du marqueur *…*, rendu <i> par TexteAvecItalique.)
+  if (ref.effetPlateau) parts.push(`*${ref.effetPlateau}*`)
   for (const [logement, nombre] of Object.entries(log)) {
     if (logement === 'Taudis' || nombre <= 0) continue
     const nom = nombre > 1 ? logement.replace(/^(\S+)/, (m) => `${m}s`) : logement

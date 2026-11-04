@@ -182,3 +182,22 @@ export const TAX_OPTIONS = [
   { value: 'Moyenne' as const, label: 'Moyenne (×1 partout)' },
   { value: 'Forte' as const, label: 'Forte (naissances & Nourriture ×0,75 · autres productions ×1,25)' },
 ]
+
+// (Convention 2026-11-04, retour Thibaut : les effets NON pris en
+//  compte par le moteur — effets de plateau, arbitrés à la main au
+//  plateau — s'affichent en ITALIQUE partout où un texte descriptif
+//  est rendu. Le moteur enveloppe ces passages du marqueur *…*
+//  (resumeConstruction) ; ce composant sépare les segments marqués et
+//  les rend en <i> — le texte sous-jacent reste inchangé.)
+export function TexteAvecItalique({ texte }: { texte: string }) {
+  const segments = texte.split(/(\*[^*]+\*)/g).filter((s) => s !== '')
+  return (
+    <>
+      {segments.map((s, i) =>
+        s.startsWith('*') && s.endsWith('*') && s.length > 2
+          ? <i key={i}>{s.slice(1, -1)}</i>
+          : <span key={i}>{s}</span>,
+      )}
+    </>
+  )
+}

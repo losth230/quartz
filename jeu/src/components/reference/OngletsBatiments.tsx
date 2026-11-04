@@ -8,7 +8,7 @@
 import type { Cfg } from '../../engine/gameData'
 import { resumeConstruction, coutConstructionRef } from '../../engine/constructions'
 import { fmtCout, titreAmenagement } from '../pays/pays-utils'
-import { Card } from '../ui'
+import { Card, TexteAvecItalique } from '../ui'
 
 export function OngletBatiments({ C }: { C: Cfg }) {
   const cfg = C.config
@@ -18,7 +18,9 @@ export function OngletBatiments({ C }: { C: Cfg }) {
         <p className="muted small">
           Effets calculés par le moteur : flux / tour, production d'été (canal
           « Nourr - été »), Garnison (valeur d'état), emplacements de métiers et
-          logements apportés. Deux colonnes — VILLE et CHÂTEAU ; tri par RANG
+          logements apportés. Les effets NON pris en compte par le moteur
+          (effets de plateau, arbitrés à la main au plateau) s'affichent en
+          italique. Deux colonnes — VILLE et CHÂTEAU ; tri par RANG
           d'habitation puis par FAMILLE (Militaire, Économique, Guilde,
           Capitale).
         </p>
@@ -54,7 +56,9 @@ export function OngletBatiments({ C }: { C: Cfg }) {
                                 <strong>{b.nom}</strong>
                                 <span className="refbat-cout">{fmtCout(coutConstructionRef(b))}</span>
                                 <span className="refbat-effets">
-                                  {resumeConstruction(b, cfg) || '—'}
+                                  {resumeConstruction(b, cfg)
+                                    ? <TexteAvecItalique texte={resumeConstruction(b, cfg)} />
+                                    : '—'}
                                 </span>
                               </div>
                             ))}
@@ -111,7 +115,7 @@ export function OngletAmenagements({ C }: { C: Cfg }) {
                     redondante, est retirée.) */}
                 <td><strong>{titreAmenagement(c.nom, c.terrain)}</strong></td>
                 <td>{fmtCout(coutConstructionRef(c))}</td>
-                <td>{resumeConstruction(c, cfg) || <span className="muted">—</span>}</td>
+                <td>{resumeConstruction(c, cfg) ? <TexteAvecItalique texte={resumeConstruction(c, cfg)} /> : <span className="muted">—</span>}</td>
               </tr>
             ))}
           </tbody>
