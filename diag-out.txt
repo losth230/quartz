@@ -7,7 +7,7 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 101 règles — sources : batiment 59, amenagement 42
+total : 106 règles — sources : batiment 59, amenagement 47
 ── canal placesMetier : 82 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
@@ -91,7 +91,7 @@ total : 101 règles — sources : batiment 59, amenagement 42
   batiment.institut-de-recherche@chateau — Institut de recherche (Château) : Scientifique +8
   batiment.hopital@chateau — Hôpital (Château) : Guérisseur +10
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
-── canal logements : 51 règles ──
+── canal logements : 52 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.bas-quartier@ville — Bas quartier (Ville) : Taudis +20
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
@@ -132,6 +132,7 @@ total : 101 règles — sources : batiment 59, amenagement 42
   amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5 · Taudis +10
   amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4 · Taudis +8
   amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7 · Taudis +10
+  amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.quartier-intermediaire@ville — Quartier intermédiaire (Ville) : Maison +20
@@ -143,17 +144,21 @@ total : 101 règles — sources : batiment 59, amenagement 42
   batiment.haut-quartier@chateau — Haut quartier (Château) : Maison de notable +20
   batiment.banlieue@chateau — Banlieue (Château) : Maison +40
   batiment.guilde-des-bourgeois@chateau — Guilde des bourgeois (Château) : Maison de notable +20
-── canal reductionLeveeArmee : 4 règles ──
+── canal reductionLeveeArmee : 5 règles ──
   batiment.terrain-d-entrainement@chateau — Terrain d'entrainement (Château) : levée d'armée −10 Or
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
+  amenagement.antre-de-magmadon@merveille-naturelle — Antre de Magmadon (Merveille naturelle) : levée d'armée −15 Or
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
-── canal fluxVille : 15 règles ──
+── canal fluxVille : 18 règles ──
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.banque-centrale@capitale — Banque centrale (Capitale) : Or +8
   batiment.hotel-de-tourisme@capitale — Hôtel de tourisme (Capitale) : Tourisme +12
   batiment.jardin-interieur@capitale — Jardin intérieur (Capitale) : Nourriture +14
+  amenagement.pic-ascendant@merveille-naturelle — Pic Ascendant (Merveille naturelle) : Science +1
+  amenagement.ruines-de-seth@merveille-naturelle — Ruines de Seth (Merveille naturelle) : Or +2 · Tourisme +10
+  amenagement.echine-du-dragon@merveille-naturelle — Echine du dragon (Merveille naturelle) : Charbon +1 · Fer +1
   batiment.moulin-a-vent@ville — Moulin à vent (Ville) : Charbon -1 · Éleveur +4 · Fermier +15
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
   batiment.guilde-des-marchands@ville — Guilde des marchands (Ville) : Charbon -1
@@ -164,8 +169,9 @@ total : 101 règles — sources : batiment 59, amenagement 42
   batiment.guilde-des-diplomates@chateau — Guilde des diplomates (Château) : Charbon -1
   batiment.guilde-des-evangelistes@chateau — Guilde des évangélistes (Château) : Charbon -1 · Tourisme +70
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
-── canal garnisonVille : 1 règle ──
+── canal garnisonVille : 2 règles ──
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
+  amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10
 
 ═══ SCÉNARIOS DE DÉGRADATION (runTurn sur état cloné puis dégradé) ═══
   [ÉCHEC runTurn] population supprimée → Cannot read properties of undefined (reading '1')
