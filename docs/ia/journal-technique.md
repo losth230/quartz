@@ -4340,3 +4340,46 @@ les malus de lois culturelles (Ferveur martiale, Guerres
 saintes) de la partie témoin annulaient l'apport (+20 → 0).
 339/339 natifs verts, tsc strict 0, handler Deno 0, bundle OK,
 build vite OK, diag exit 0.
+
+## Correctif multijoueur : plus aucun chemin ne créait la ligne du salon (2026-11-11)
+
+**Symptôme** (retour arbitre) : « le multijoueur ne fonctionne
+plus » — les tours ne s'advancent plus, les joueurs re-poussent
+leurs sections sans effet.
+
+**Investigation en prod** (REST en lecture, clé publishable) :
+- projet Supabase VIVANT (pas en pause), table + Edge Function
+  opérationnelles ;
+- **dernière résolution serveur : 22 octobre** (chasse-peche3,
+  tour 5) — rien depuis, malgré des déploiements quotidiens ;
+- **preuve du bug** : le salon `chasse-peche5` (récent) a des
+  sections dans cp_events (tour 1, joueur 1 ×2 — il retente !)
+  mais AUCUNE ligne dans parties_chasse_peche.
+
+**Cause racine** : avant le 19/10, chaque mutation faisait un
+upsert d'état (~5 Mo) — c'est ce qui CRÉAIT la ligne du salon au
+premier save. Le retrait du protocole v1 (audit R5, 27a5173c) a
+supprimé l'upsert — et `publierEtatFusionne` ne fait qu'un
+UPDATE. Depuis : le créateur lance la partie (localStorage
+seul), les joueurs poussent leurs sections, l'Edge Function
+répond « salon introuvable » (404), le repli local publie via
+un UPDATE sur une ligne inexistante (0 ligne, silencieux) →
+le tour n'avance pour personne. Les salons du 22/10 avaient
+des lignes car créés avant/après via les restes du flux v1.
+
+**Correctif** : `creerSalonRemote` (client.ts) — appelé par
+newGame en mode supabase. INSERT idempotent
+`ON CONFLICT (id) DO NOTHING` : ne peut JAMAIS écraser une
+ligne existante (client périmé inoffensif), tour_publie 0
+compatible avec le trigger anti-rollback, payload via
+etatReseau (contrat egress : pas de cache config). La
+construction de ligne est une fonction PURE
+(`ligneCreationSalon`) verrouillée par salon.test.ts (3
+tests : payload réseau sans config, tour_publie 0, état
+joignable par loadRemote).
+
+**Reprise pour le salon cassé** : recréer la partie avec le
+même code de salon (l'INSERT créera la ligne) — ou un code
+frais pour éviter les sections orphelines du tour 1.
+
+342/342 natifs verts, tsc 0, handler 0, bundle OK, build OK.

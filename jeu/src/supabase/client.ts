@@ -178,6 +178,50 @@ export interface SectionJoueur {
 //  avec le protocole v1 : les sections passent désormais par des
 //  ÉVÉNEMENTS append-only (pousserSectionV2, table cp_events).
 
+/** CRÉER la ligne d'un NOUVEAU SALON (correctif multijoueur
+ *  2026-11-11 : depuis le retrait du protocole v1 — qui upsertait
+ *  l'état à chaque mutation et créait donc la ligne au premier
+ *  save — PLUS AUCUN chemin de code ne créait la ligne du salon :
+ *  le créateur lançait une partie, les joueurs poussaient leurs
+ *  sections dans cp_events, mais la Edge Function répondait
+ *  « salon introuvable » (404) et le repli local publiait sur une
+ *  ligne inexistante (UPDATE 0 ligne, silencieux) — le tour
+ *  n'avançait jamais pour les autres joueurs (constaté en prod :
+ *  salon chasse-peche5 avec sections au tour 1 et AUCUNE ligne en
+ *  table). Ce correctif restaure la création, à la CRÉATION de
+ *  partie uniquement : INSERT … ON CONFLICT (id) DO NOTHING —
+ *  idempotent, ne peut JAMAIS écraser une ligne existante (un
+ *  client périmé re-créant « sa » partie ne touche pas la ligne
+ *  du salon vivant), tour_publie 0 compatible avec le trigger
+ *  anti-rollback. */
+export async function creerSalonRemote(id: string, state: GameState): Promise<boolean> {
+  const sb = getSupabase()
+  if (!sb) return false
+  const { error } = await sb.from(TABLE).upsert(
+    ligneCreationSalon(id, state, CLIENT_ID, new Date().toISOString()),
+    { onConflict: 'id', ignoreDuplicates: true },
+  )
+  return !error
+}
+
+/** Ligne d'INSERT d'un nouveau salon — FONCTION PURE (contrat
+ *  verrouillé par salon.test.ts) : l'état passe par etatReseau
+ *  (PAS de cache config dans le payload réseau), tour_publie 0
+ *  (compatible trigger anti-rollback), sections vides. */
+export function ligneCreationSalon(
+  id: string, state: GameState, clientId: string, maintenant: string,
+): { id: string; state: GameState; sections: Record<string, never>; turn_done: number; tour_publie: number; updated_by: string; updated_at: string } {
+  return {
+    id,
+    state: etatReseau(state),
+    sections: {},
+    turn_done: state.turn,
+    tour_publie: 0,
+    updated_by: clientId,
+    updated_at: maintenant,
+  }
+}
+
 /** Publier l'état de référence du NOUVEAU tour (résolution de la
  *  barrière) et réinitialiser les sections.
  *

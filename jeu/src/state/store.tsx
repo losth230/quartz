@@ -726,6 +726,14 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     stateRef.current = s
     setState(s)
     persist(s, m, salonId ?? '')
+    // (correctif multijoueur 2026-11-11) : en mode supabase, la
+    //  ligne du salon DOIT exister en table dès la création —
+    //  sinon l'Edge Function répond « salon introuvable » et le
+    //  repli local publie dans le vide (UPDATE 0 ligne). INSERT
+    //  idempotent (ON CONFLICT DO NOTHING — jamais d'écrasement).
+    if (m === 'supabase' && salonId) {
+      void remote.creerSalonRemote(salonId, s)
+    }
   }, [persist])
 
   /** Rejoint une partie multijoueur existante (chargée depuis Supabase). */
