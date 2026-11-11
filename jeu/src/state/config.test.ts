@@ -540,11 +540,11 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
 })
 
 // ── Gains Fermier & Chasseur (arbitrages 2026-11-01) : migration ciblée ──
-test('config : gains Fermier +10 été / Chasseur +2 actualisés dans une config sauvegardée à un ancien défaut (arbitrages 2026-11-01)', () => {
+test('config : gains Fermier +15 été / Chasseur +2 actualisés dans une config sauvegardée à un ancien défaut (arbitrages 2026-11-01 et 2026-11-11)', () => {
   // les défauts du référentiel portent les nouveaux gains
   const refF = cfgOf(undefined).metiers.find((t) => t.metier === 'Fermier')!
   const refC = cfgOf(undefined).metiers.find((t) => t.metier === 'Chasseur')!
-  assert.equal(refF.valeur1, 10, 'référentiel : Fermier +10 Nourriture')
+  assert.equal(refF.valeur1, 15, 'référentiel : Fermier +15 Nourriture (arbitrage 2026-11-11)')
   assert.equal(refF.ete, true, 'référentiel : le Fermier reste ete (été seulement)')
   assert.equal(refC.valeur1, 2, 'référentiel : Chasseur +2 Nourriture')
   // une config SAUVEGARDÉE AVANT (p. ex. la config mondiale du salon en
@@ -561,8 +561,8 @@ test('config : gains Fermier +10 été / Chasseur +2 actualisés dans une config
   const pe = c.metiers.find((t) => t.metier === 'Pêcheur')!
   pe.valeur1 = 99
   const C = cfgOf(c)
-  assert.equal(C.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 10,
-    'config sauvegardée : le Fermier à l ancien défaut exact (5) passe à +10')
+  assert.equal(C.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
+    'config sauvegardée : le Fermier à l ancien défaut exact (5) passe à +15')
   assert.equal(C.metiers.find((t) => t.metier === 'Chasseur')!.valeur1, 2,
     'config sauvegardée : le Chasseur à l ancien défaut exact passe à +2')
   assert.equal(C.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1, 99,
@@ -573,11 +573,11 @@ test('config : gains Fermier +10 été / Chasseur +2 actualisés dans une config
   c15.schemaVersion = 5
   c15.metiers.find((t) => t.metier === 'Fermier')!.valeur1 = 15
   const C15 = cfgOf(c15)
-  assert.equal(C15.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 10,
-    'config convergée au défaut intermédiaire (+15) : migrée vers +10')
+  assert.equal(C15.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
+    'config convergée au défaut intermédiaire (+15) : reste à +15 (défaut courant)')
   // idempotence : la re-lecture d une config déjà actualisée est stable
   const C2 = cfgOf(C.config)
-  assert.equal(C2.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 10,
+  assert.equal(C2.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
 })
 

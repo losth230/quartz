@@ -6337,7 +6337,7 @@
     {
       "valeur1": 0.5,
       "ressource1": "Bétail",
-      "valeur2": 2,
+      "valeur2": 4,
       "ressource2": "Nourriture",
       "description": "",
       "nobleSeul": false,
@@ -6359,7 +6359,7 @@
       "qualite": "roturier"
     },
     {
-      "valeur1": 10,
+      "valeur1": 15,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",

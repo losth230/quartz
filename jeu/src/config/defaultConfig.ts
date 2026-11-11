@@ -1924,8 +1924,12 @@ export function cfgOf(config?: GameConfig): Cfg {
         && t.valeur1 === 1.5 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
         t.valeur1 = defChasseur.valeur1
       }
+      // (arbitrage 2026-11-11 : Fermier +15 — le défaut +10 du
+      //  2026-11-01 rejoint les anciens défauts 5 et 15 du même
+      //  jour ; tous migrent vers le défaut courant)
       if (t.metier === 'Fermier' && defFermier && t.ete === true
-        && (t.valeur1 === 5 || t.valeur1 === 15) && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        && (t.valeur1 === 5 || t.valeur1 === 15 || t.valeur1 === 10)
+        && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1
       }
     }

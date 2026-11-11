@@ -2252,3 +2252,17 @@ données : `effetsParRang` (production × rang) et `bonheurApporte`
 (bonheur des constructions). Les sites de consommation (garnison,
 réduction de levée, cap de routes) lisent désormais les
 AMÉNAGEMENTS en plus des bâtiments.
+
+## Métiers de la nourriture — recalibrage (arbitrage 2026-11-11)
+
+- **Fermier** : **+15 Nourriture par tour, ÉTÉ seulement** (était
+  +10 depuis le 2026-11-01 — historique du jour : 5 le matin, 15
+  l'après-midi, 10 le soir ; retour à 15) ;
+- **Chasseur** : **+2 Nourriture par tour** (inchangé — déjà à 2
+  depuis le recalibrage précédent) ;
+- **Éleveur** : **+4 Nourriture par tour** (était +2 ; le +0,5
+  Bétail de la fiche précédente est conservé).
+
+Le garde-fou cfgOf migre les anciens défauts du Fermier (5, 10,
+15) vers le défaut courant — la config mondiale du salon en cours
+ passe à +15 sans republication.
