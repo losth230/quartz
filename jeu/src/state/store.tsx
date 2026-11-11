@@ -80,6 +80,12 @@ interface GameContextValue {
   /** Édite la configuration commune — persistée et propagée à la partie en cours. */
   setGlobalCfg: (fn: (c: GameConfig) => void) => void
   newGame: (setups: SetupLine[], seed: number, mode: Mode, salon?: string) => void
+  /** Créer une partie ET (mode supabase) créer la ligne du salon
+   *  en table — BLOQUANT et vérifié : le créateur SAIT si le salon
+   *  existe avant de partager le code (durcissement 2026-11-11 :
+   *  l'appel asynchrone jeté laissait croire à une création
+   *  réussie silencieusement échouée). */
+  creerPartie: (setups: SetupLine[], seed: number, mode: Mode, salon?: string) => Promise<boolean>
   joinGame: (salon: string) => Promise<boolean>
   /** Mon n° de joueur dans le salon multijoueur (persisté par salon). */
   monNumero: number
@@ -726,15 +732,20 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     stateRef.current = s
     setState(s)
     persist(s, m, salonId ?? '')
-    // (correctif multijoueur 2026-11-11) : en mode supabase, la
-    //  ligne du salon DOIT exister en table dès la création —
-    //  sinon l'Edge Function répond « salon introuvable » et le
-    //  repli local publie dans le vide (UPDATE 0 ligne). INSERT
-    //  idempotent (ON CONFLICT DO NOTHING — jamais d'écrasement).
-    if (m === 'supabase' && salonId) {
-      void remote.creerSalonRemote(salonId, s)
-    }
   }, [persist])
+
+  /** Créer la partie + (mode supabase) la ligne du salon — la
+   *  création RÉSEAU est ATTENDUE et son résultat RETOURNÉ au
+   *  bouton (SetupPanel) : un échec d'INSERT s'affiche au
+   *  créateur au lieu de partir silencieusement (l'état local
+   *  reste jouable — recréer au même code est idempotent). */
+  const creerPartie = useCallback(async (
+    setups: SetupLine[], seed: number, m: Mode, salonId?: string,
+  ): Promise<boolean> => {
+    newGame(setups, seed, m, salonId)
+    if (m !== 'supabase' || !salonId) return true
+    return remote.creerSalonRemote(salonId, stateRef.current!)
+  }, [newGame])
 
   /** Rejoint une partie multijoueur existante (chargée depuis Supabase). */
   const joinGame = useCallback(async (salonId: string): Promise<boolean> => {
@@ -909,7 +920,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo<GameContextValue>(() => ({
     state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec,
     globalConfig, peutEditerConfig, setGlobalCfg, calculTour,
-    newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
+    newGame, creerPartie, joinGame, nextTurn, update, replaceState, reset, importState, exportState,
     monNumero, setMonNumero: setMonNumeroPersist, barriere, forceNextTurn,
   }), [state, mode, salon, saving, conflit, lastSavedAt, saveLocaleEchec, globalConfig, peutEditerConfig, setGlobalCfg,
     calculTour, newGame, joinGame, nextTurn, update, replaceState, reset, importState, exportState,

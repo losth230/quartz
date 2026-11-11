@@ -4383,3 +4383,28 @@ même code de salon (l'INSERT créera la ligne) — ou un code
 frais pour éviter les sections orphelines du tour 1.
 
 342/342 natifs verts, tsc 0, handler 0, bundle OK, build OK.
+
+## Durcissement multijoueur : création de salon BLOQUANTE et vérifiée (2026-11-11)
+
+Retour arbitre après le correctif : « impossible de rejoindre une
+partie fraîchement créée ». Constat en prod : AUCUNE nouvelle ligne
+dans parties_chasse_peche — le fix n'a pas joué chez l'arbitre
+(cache navigateur du vieux bundle, Pages redéployé à 10:28). MAIS
+l'investigation révèle une faiblesse réelle du premier correctif :
+l'appel `void remote.creerSalonRemote(...)` JETAIT le résultat —
+un échec d'INSERT laissait le créateur croire au succès et
+partager un code de salon inexistant.
+
+Durcissement :
+- `creerPartie` (store) : création + INSERT ATTENDU, résultat
+  RETOURNÉ au bouton ;
+- SetupPanel : « ▶ Créer la partie » affiche « Salon créé et
+  publié — partagez ce code » ou « ⚠ Impossible de créer le
+  salon (table injoignable ?) » — plus d'échec silencieux ;
+- newGame redevient pur local (l'INSERT vit dans creerPartie).
+
+Note opérationnelle : index.html est servi par GitHub Pages avec
+un cache ~10 min — après un déploiement, un rechargement dur
+(Ctrl+Shift+R) est nécessaire pour charger le nouveau bundle.
+
+342/342 verts, tsc 0, build OK.

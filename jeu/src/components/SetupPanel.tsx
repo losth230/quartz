@@ -46,7 +46,7 @@ export function genererCodeSalon(): string {
 }
 
 export function SetupPanel() {
-  const { newGame, joinGame, monNumero, setMonNumero } = useGame()
+  const { newGame, creerPartie, joinGame, monNumero, setMonNumero } = useGame()
   const [setups, setSetups] = useState<SetupLine[]>(() => defaultSetups().map((s, i) => ({
     ...s,
     culture: CULTURES.length > 0 ? CULTURES[i % CULTURES.length].nom : s.culture,
@@ -270,8 +270,24 @@ export function SetupPanel() {
         </div>
         <Button
           tone="primary"
-          disabled={mode === 'supabase' && !supabaseAvailable()}
-          onClick={() => newGame(setups.slice(0, nbJoueurs), seed, mode, salon)}
+          disabled={busy || (mode === 'supabase' && !supabaseAvailable())}
+          onClick={async () => {
+            setBusy(true)
+            // (durcissement multijoueur 2026-11-11) : en mode
+            //  supabase, la création de la ligne du salon est
+            //  ATTENDUE et son résultat AFFICHÉ — plus d'échec
+            //  silencieux qui laissait le créateur partager un
+            //  code de salon inexistant.
+            if (mode === 'supabase') {
+              const ok = await creerPartie(setups.slice(0, nbJoueurs), seed, mode, salon.trim())
+              setSbStatus(ok
+                ? { ok: true, message: `Salon « ${salon.trim()} » créé et publié — partagez ce code aux autres joueurs, ils peuvent le rejoindre.` }
+                : { ok: false, message: `⚠ Impossible de créer le salon « ${salon.trim()} » (table Supabase injoignable ?). La partie est jouable en local — recréez-la au même code une fois la connexion rétablie.` })
+            } else {
+              newGame(setups.slice(0, nbJoueurs), seed, mode)
+            }
+            setBusy(false)
+          }}
         >
           ▶ Créer la partie
         </Button>
