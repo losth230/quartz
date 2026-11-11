@@ -1919,10 +1919,26 @@ export function cfgOf(config?: GameConfig): Cfg {
   if (Array.isArray(merged.metiers)) {
     const defChasseur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Chasseur')
     const defFermier = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Fermier')
+    const defEleveur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Éleveur')
+    const defArtiste = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Artiste')
     for (const t of merged.metiers) {
+      // (2026-11-11, incident « 0 Bétail avec 2 Éleveurs » : la
+      //  config MONDIALE du salon en cours est une config v1 du
+      //  2026-10-19 (table titres) — ses métiers PRÉSENTS portent
+      //  les anciennes fiches et le garde-fou ne couvrait que
+      //  Chasseur 1,5/Fermier. Signatures v1 réelles migrées ici :
+      //  Chasseur 1,2 N + 0,1 Or ; Éleveur 2,4 N (PAS de Bétail) ;
+      //  Artiste 1,2 Tourisme. Les métiers ABSENTS de la table v1
+      //  (Bûcheron, Fermier, Pêcheur…) sont complétés depuis le
+      //  référentiel courant — seuls les présents ont besoin du
+      //  garde-fou.)
       if (t.metier === 'Chasseur' && defChasseur
-        && t.valeur1 === 1.5 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        && t.ressource1 === 'Nourriture'
+        && ((t.valeur1 === 1.5 && t.valeur2 === 0)
+          || (t.valeur1 === 1.2 && t.valeur2 === 0.1 && t.ressource2 === 'Or'))) {
         t.valeur1 = defChasseur.valeur1
+        t.valeur2 = defChasseur.valeur2
+        t.ressource2 = defChasseur.ressource2
       }
       // (arbitrage 2026-11-11 : Fermier +15 — le défaut +10 du
       //  2026-11-01 rejoint les anciens défauts 5 et 15 du même
@@ -1931,6 +1947,23 @@ export function cfgOf(config?: GameConfig): Cfg {
         && (t.valeur1 === 5 || t.valeur1 === 15 || t.valeur1 === 10)
         && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1
+      }
+      // ÉLEVEUR (2026-11-11) : anciens défauts — v1 (2,4 Nourriture,
+      //  pas de Bétail) et fiche 2026-10-25 (0,5 Bétail + 2 Nourriture)
+      //  → courant (0,5 Bétail + 4 Nourriture).
+      if (t.metier === 'Éleveur' && defEleveur
+        && ((t.valeur1 === 2.4 && t.ressource1 === 'Nourriture' && t.valeur2 === 0)
+          || (t.valeur1 === 0.5 && t.ressource1 === 'Bétail' && t.valeur2 === 2))) {
+        t.valeur1 = defEleveur.valeur1
+        t.ressource1 = defEleveur.ressource1
+        t.valeur2 = defEleveur.valeur2
+        t.ressource2 = defEleveur.ressource2
+      }
+      // ARTISTE (2026-11-11) : ancien défaut v1 (1,2 Tourisme)
+      //  → courant (5 Tourisme).
+      if (t.metier === 'Artiste' && defArtiste
+        && t.valeur1 === 1.2 && t.ressource1 === 'Tourisme' && t.valeur2 === 0) {
+        t.valeur1 = defArtiste.valeur1
       }
     }
   }

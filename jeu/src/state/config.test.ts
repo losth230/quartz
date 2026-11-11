@@ -633,3 +633,59 @@ test('config : incident 6e retour — config mondiale d avant le 24/10 (table do
   const reconv = JSON.parse(JSON.stringify(cfgOf(conv).config)) as GameConfig
   assert.equal(reconv.dogmes?.length, 12, 're-convergence idempotente (12)')
 })
+
+
+// ── Incident « 0 Bétail avec 2 Éleveurs » (2026-11-11) ──────────────
+
+test('config mondiale v1 (table titres réelle du 19/10) : Éleveur/Chasseur/Artiste migrés vers les fiches courantes', () => {
+  // La config mondiale du salon en cours est une config v1 du
+  //  2026-10-19 : table `titres` avec les ANCIENNES fiches —
+  //  Éleveur 2,4 Nourriture (PAS de Bétail : ses 2 Éleveurs
+  //  produisaient 0 Bétail), Chasseur 1,2 N + 0,1 Or (le garde-fou
+  //  exigeait valeur2 === 0 : jamais migré), Artiste 1,2 Tourisme.
+  const c = cloneDefaultConfig()
+  const asAny = c as unknown as Record<string, unknown>
+  delete asAny.metiers
+  asAny.titres = [
+    { titre: 'Chasseur', valeur1: 1.2, valeur2: 0.1, education: '', nobleSeul: false, regleGenre: '', ressource1: 'Nourriture', ressource2: 'Or', attribution: '', description: 'Titre par défaut' },
+    { titre: 'Éleveur', valeur1: 2.4, valeur2: 0, education: 'Agricole', nobleSeul: false, regleGenre: '', ressource1: 'Nourriture', ressource2: '', attribution: 'Education', description: '' },
+    { titre: 'Artiste', valeur1: 1.2, valeur2: 0, education: 'Culturelle', nobleSeul: false, regleGenre: '', ressource1: 'Tourisme', ressource2: '', attribution: 'Education', description: '' },
+  ]
+  asAny.schemaVersion = 1
+  const C = cfgOf(c)
+  const ch = C.metiers.find((t) => t.metier === 'Chasseur')!
+  assert.equal(ch.valeur1, 2, 'Chasseur v1 (1,2 + 0,1 Or) migré vers +2 Nourriture')
+  assert.equal(ch.valeur2, 0, 'le 0,1 Or parasite du Chasseur v1 est nettoyé')
+  const el = C.metiers.find((t) => t.metier === 'Éleveur')!
+  assert.equal(el.valeur1, 0.5, 'Éleveur v1 (2,4 Nourriture) migré : +0,5 Bétail')
+  assert.equal(el.ressource1, 'Bétail', 'l\u2019Éleveur v1 retrouve son Bétail')
+  assert.equal(el.valeur2, 4, 'Éleveur : +4 Nourriture (arbitrage 2026-11-11)')
+  const ar = C.metiers.find((t) => t.metier === 'Artiste')!
+  assert.equal(ar.valeur1, 5, 'Artiste v1 (1,2 Tourisme) migré vers +5 Tourisme')
+})
+
+test('config : Éleveur fiche 2026-10-25 (0,5 Bétail + 2 Nourriture) migrée vers +4 Nourriture', () => {
+  const c = cloneDefaultConfig()
+  c.schemaVersion = 5 // déjà convergée : le garde-fou joue quand même
+  const el = c.metiers.find((t) => t.metier === 'Éleveur')!
+  el.valeur1 = 0.5
+  el.ressource1 = 'Bétail'
+  el.valeur2 = 2
+  el.ressource2 = 'Nourriture'
+  const C = cfgOf(c)
+  const el2 = C.metiers.find((t) => t.metier === 'Éleveur')!
+  assert.equal(el2.valeur1, 0.5, 'Bétail conservé')
+  assert.equal(el2.valeur2, 4, 'Nourriture migrée 2 → 4 (arbitrage 2026-11-11)')
+  // une fiche PERSONNALISÉE par l'arbitre est conservée
+  const c2 = cloneDefaultConfig()
+  c2.schemaVersion = 5
+  const elp = c2.metiers.find((t) => t.metier === 'Éleveur')!
+  elp.valeur1 = 1
+  elp.ressource1 = 'Bétail'
+  elp.valeur2 = 6
+  elp.ressource2 = 'Nourriture'
+  const C2 = cfgOf(c2)
+  const elp2 = C2.metiers.find((t) => t.metier === 'Éleveur')!
+  assert.equal(elp2.valeur1, 1, 'fiche personnalisée : Bétail conservé')
+  assert.equal(elp2.valeur2, 6, 'fiche personnalisée : Nourriture conservée')
+})

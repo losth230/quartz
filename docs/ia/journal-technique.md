@@ -4408,3 +4408,35 @@ un cache ~10 min — après un déploiement, un rechargement dur
 (Ctrl+Shift+R) est nécessaire pour charger le nouveau bundle.
 
 342/342 verts, tsc 0, build OK.
+
+## Incident « 0 Bétail avec 2 Éleveurs » (2026-11-11) — config mondiale v1
+
+**Symptômes** (retour arbitre) : « +1,1 Bois avec 2 Bûcherons ? »
+et « 0 Bétail avec 2 Éleveurs ? ».
+
+**Le +1,1 Bois est NORMAL** : 2 × 0,5 = 1,0 Bois, ×1,1 par la
+taxe du Gouverneur (+10 % toutes ressources) = +1,1.
+
+**Le 0 Bétail était un BUG de migration** : la config mondiale
+'__config__' de prod est une config v1 du 2026-10-19 (table
+titres). Ses métiers PRÉSENTS portent les anciennes fiches :
+Éleveur 2,4 Nourriture (PAS de Bétail — d'où 0), Chasseur
+1,2 N + 0,1 Or (le garde-fou exigeait valeur2 === 0 : jamais
+migré — 40 Chasseurs = +4 Or/tour parasite), Artiste 1,2
+Tourisme (courant : 5). Les métiers ABSENTS de la table v1
+(Bûcheron, Fermier, Pêcheur…) sont complétés depuis le
+référentiel courant — d'où le Bois correct.
+
+**Correctif** : garde-fou cfgOf étendu aux signatures v1
+réelles — Chasseur (1,2 N + 0,1 Or → 2 N, Or nettoyé),
+Éleveur (2,4 N → 0,5 Bétail + 4 N ; et fiche 2026-10-25
+0,5 Bétail + 2 N → 4 N), Artiste (1,2 → 5 Tourisme). Les
+fiches PERSONNALISÉES restent conservées. 2 tests de
+régression (la table titres v1 RÉELLE de prod, la fiche
+2026-10-25).
+
+**Effet immédiat** : la migration joue à chaque cfgOf — la
+partie en cours récupère les bonnes fiches au prochain tour,
+SANS republication de la config mondiale.
+
+344/344 verts, tsc 0, build OK, diag 0.
