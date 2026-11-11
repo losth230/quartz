@@ -335,6 +335,18 @@ export interface ConstructionRef {
    *  version du groupe (Ville/Château) de la ville qui porte le
    *  bâtiment. */
   routesApportees?: number
+  /** MERVEILLE NATURELLE (fiches 2026-10-25) : aménageable comme un
+   *  aménagement de base (coût uniforme 12 Or + 5 Bois), JAMAIS
+   *  améliorable (aucun tier 2/3 ne la référence), groupe
+   *  « Merveille naturelle ». */
+  merveilleNaturelle?: boolean
+  /** BONHEUR apporté à l'habitation (Jardins Flamboyants : +10) —
+   *  lu par le facteur Bonheur (engine/bonheur.ts), plafonné 100. */
+  bonheurApporte?: number
+  /** Production PAR RANG D'HABITATION par tour (Caverne de la
+   *  tisseuse : +1 Soie × rang 1/2/3) — lu par le moteur de
+   *  production des aménagements (× rangNiveau de la ville). */
+  effetsParRang?: { ressource: string; quantite: number }[]
   /** ÉMISSAIRES accordés à tout le joueur TANT QUE CE bâtiment est
    *  construit (arbitrage Thibaut 2026-11-03 : Délégation tier 1
    *  château +1, Chancellerie tier 2 — requise Délégation, la

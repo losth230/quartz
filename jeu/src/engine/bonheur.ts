@@ -39,6 +39,7 @@ import { metiersDisponiblesRang } from './habitations'
 import { rangNiveau, rangsDefsType, nomRang } from './rangs'
 import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
 import { effetsDogmeCulture } from './dogmes'
+import { constructionRef } from './constructions'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
 
@@ -210,8 +211,27 @@ export function bonheurVilleComplete(state: GameState, p: Player, ville: City, C
   const dogme = effetsDogmeCulture(state, ville.culture, 'bonheurVille', C)
   return Math.min(
     100,
-    bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme,
+    bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme
+      // MERVEILLES NATURELLES (fiches 2026-10-25) : Bonheur apporté
+      //  par les constructions de la ville (Jardins Flamboyants :
+      //  +10) — champ bonheurApporte du référentiel, bâtiments ET
+      //  aménagements, cumulable, plafonné par le min(100) commun.
+      + bonheurApportesVille(ville, C),
   )
+}
+
+/** Bonheur apporté par les CONSTRUCTIONS de la ville (bâtiments et
+ *  aménagements — merveilles naturelles comprises) : somme des
+ *  champs bonheurApporte du référentiel (fiches 2026-10-25). */
+export function bonheurApportesVille(ville: City, C: Cfg): number {
+  let total = 0
+  for (const b of ville.batiments ?? []) {
+    total += constructionRef(b, C.config, ville.type)?.bonheurApporte ?? 0
+  }
+  for (const a of ville.amenagements ?? []) {
+    total += constructionRef(a, C.config)?.bonheurApporte ?? 0
+  }
+  return total
 }
 
 /** Bonheur d'un joueur : moyenne des bonheurs de ses villes

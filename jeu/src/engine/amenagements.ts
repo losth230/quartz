@@ -12,6 +12,8 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, Player, Saison } from './types'
+import { rangNiveau } from './rangs'
+import { cfgOf } from './gameData'
 import type { GameConfig } from '../config/defaultConfig'
 import {
   constructionRef, coutConstructionRef, effetsConstructionRef,
@@ -87,11 +89,19 @@ function effetsTourAmenagement(nom: string, saison: Saison, cfg?: GameConfig): R
  *  mélangée avec la nourriture générale. */
 export function effetsAmenagementsVille(ville: City, cfg?: GameConfig): Record<string, number> {
   const out: Record<string, number> = {}
+  // MERVEILLES NATURELLES (fiches 2026-10-25) : production PAR RANG
+  //  d'habitation (Caverne de la tisseuse : +1 Soie × rang) — le
+  //  rang de LA ville qui porte l'aménagement.
+  const C = cfg ? cfgOf(cfg) : cfgOf()
+  const rang = rangNiveau(ville, C)
   for (const nom of ville.amenagements ?? []) {
     const ref = amenagementRef(nom, cfg)
     if (!ref || eteSeulementRef(ref, cfg)) continue // production d'été → canal « Nourr - été »
     for (const [res, v] of Object.entries(effetsConstructionRef(ref, cfg))) {
       out[res] = (out[res] ?? 0) + v
+    }
+    for (const e of ref.effetsParRang ?? []) {
+      out[e.ressource] = (out[e.ressource] ?? 0) + e.quantite * rang
     }
   }
   return out

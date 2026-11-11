@@ -2215,3 +2215,40 @@ reference/OngletsBatiments.tsx). Concerne aujourd'hui le Responsable des
 voies (cases à 3 cases ou moins : 1 PM) et la Guilde des marchands
 (portée des routes +6 cases) ; toute future entrée `effetPlateau`
 héritera du même affichage.
+
+
+## Merveilles naturelles (fiches Thibaut 2026-10-25)
+
+Tier SPÉCIAL des aménagements : aménageables comme un aménagement
+de base (coût uniforme **12 Or + 5 Bois**), **jamais améliorables**
+(aucun tier 2/3). Groupe « Merveille naturelle », catégorie dédiée
+du picker « + Aménager une case… ».
+
+- **Caverne de la tisseuse** : +1 Soie PAR RANG d'habitation
+  (Hameau 1, Cité 2, Grande Cité 3) — champ `effetsParRang`,
+  moteur × rangNiveau de la ville porteuse.
+- **Jardins Flamboyants** : +10 Bonheur dans l'habitation — champ
+  `bonheurApporte`, cumulable, plafonné par le min(100) du bonheur.
+- **Pic Ascendant** : +1 Science/tour (flux) ; siège −30 garnison
+  (effet de PLATEAU, italique).
+- **Ruines de Seth** : +2 Or, +10 Tourisme par tour.
+- **Sépulcre du Rayonnant** : +20 Garnison (valeur d'état — les
+  aménagements rejoignent le canal garnison des bâtiments) et
+  +10 Taudis (canal logements).
+- **Trésor du roi sorcier** : +1 route commerciale (champ
+  `routesApportees` — les aménagements rejoignent le cap).
+- **Coeur Ancestral** : +1 émissaire tant que possédée (champ
+  `emissairesApportes`, suivi plateau).
+- **Echine du dragon** : +1 Charbon, +1 Fer par tour.
+- **Pilliers Célestes** : armées +1 PM (effet de PLATEAU, italique).
+- **Antre de Magmadon** : levée d'armée −15 Or dans cette
+  habitation (champ `reductionLeveeArmee` — les aménagements
+  rejoignent le canal de réduction).
+
+Implémentation : fiches 2026-10-25, `merveillesNaturelle.test.ts`
+(9 tests). Les canaux banque existants (effets/logements/routes/
+émissaires/réduction) sont réutilisés ; DEUX nouveaux champs
+données : `effetsParRang` (production × rang) et `bonheurApporte`
+(bonheur des constructions). Les sites de consommation (garnison,
+réduction de levée, cap de routes) lisent désormais les
+AMÉNAGEMENTS en plus des bâtiments.

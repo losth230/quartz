@@ -309,6 +309,11 @@ export function maxRoutesJoueur(
     for (const b of batimentsActifsVille(v, C)) {
       max += routesApporteesConstructionRef(constructionRef(b, C.config, v.type))
     }
+    // MERVEILLES NATURELLES (fiches 2026-10-25) : les aménagements
+    //  apportent aussi des routes (Trésor du roi sorcier : +1).
+    for (const a of v.amenagements ?? []) {
+      max += routesApporteesConstructionRef(constructionRef(a, C.config))
+    }
   }
   // (Refonte 12 lois, 2026-10-29, Sethisme « Caravanes » : chaque
   //  VILLE de culture Sethisme comptant au moins

@@ -13,6 +13,8 @@ import { cultureDef, type Cfg } from './gameData'
 import { garnisonBatiment } from './batiments'
 import { rangNiveau } from './rangs'
 import { effetsDogmeCulture } from './dogmes'
+import { garnisonConstructionRef } from './constructions'
+import { amenagementRef } from './amenagements'
 
 /** Garnison des habitations d'une ville : garnisons statiques des
  *  bâtiments, bonus de la loi du régime (ex. Autoritarisme : +
@@ -27,6 +29,13 @@ import { effetsDogmeCulture } from './dogmes'
 export function garnisonHabitationVille(p: Player, ville: City, C: Cfg, state?: GameState): number {
   let g = 0
   for (const b of ville.batiments) g += garnisonBatiment(b, C, ville.type)
+  // MERVEILLES NATURELLES (fiches 2026-10-25) : les aménagements
+  //  portent aussi de la Garnison d'état (Sépulcre du Rayonnant :
+  //  +20) — même canal que les bâtiments, valeur d'ÉTAT.
+  for (const a of ville.amenagements ?? []) {
+    const ref = amenagementRef(a, C.config)
+    if (ref) g += garnisonConstructionRef(ref, C.config)
+  }
   // Garde (vague 3a, rework métiers & emplacements, arbitrage
   //  2026-10-21) : +garnisonParGarde Garnison STATIQUE par Garde en
   //  poste dans la ville — valeur d'ÉTAT, jamais un flux par tour

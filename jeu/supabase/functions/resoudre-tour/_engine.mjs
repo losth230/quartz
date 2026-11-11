@@ -526,7 +526,6 @@ var referentiels_default = {
   cultures: [
     {
       nom: "Communautarisme",
-      homoAutorisee: false,
       fertFactor: 1,
       heredite: "Parit\xE9",
       regleVille: "Logements \xE9largis : les habitations ont +5 Taudis.",
@@ -536,7 +535,6 @@ var referentiels_default = {
     },
     {
       nom: "D\xE9isme",
-      homoAutorisee: false,
       fertFactor: 1,
       heredite: "Masculine",
       regleVille: "Monuments pieux : les b\xE2timents de faction offrent +1 emplacement de Scientifique.",
@@ -546,7 +544,6 @@ var referentiels_default = {
     },
     {
       nom: "Lunisme",
-      homoAutorisee: false,
       fertFactor: 1,
       heredite: "Masculine",
       regleVille: "Villes Saintes : les habitations ont +2 emplacements de Palais.",
@@ -556,7 +553,6 @@ var referentiels_default = {
     },
     {
       nom: "Naturalisme",
-      homoAutorisee: false,
       fertFactor: 1.1,
       heredite: "Parit\xE9",
       regleVille: "Champs nourriciers : les fermiers rapportent +1 Nourriture par tour en \xE9t\xE9.",
@@ -565,7 +561,6 @@ var referentiels_default = {
     },
     {
       nom: "Sethisme",
-      homoAutorisee: false,
       fertFactor: 1,
       heredite: "F\xE9minine",
       regleVille: "Caravanes : une fois 3 am\xE9nagements atteints, +1 route commerciale disponible.",
@@ -576,7 +571,6 @@ var referentiels_default = {
     },
     {
       nom: "Z\xE9lotisme",
-      homoAutorisee: false,
       fertFactor: 1,
       heredite: "F\xE9minine",
       regleVille: "Ferveur martiale : les garnisons des habitations qui ne sont pas de cette culture sont r\xE9duites de 20 points par rang de l'habitation.",
@@ -2125,7 +2119,6 @@ var referentiels_default = {
           places: 4
         }
       ],
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -2134,6 +2127,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 4
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -2305,6 +2304,7 @@ var referentiels_default = {
       production: "",
       description: "",
       rangMinHabitation: 1,
+      cotier: true,
       effets: [],
       emplacements: [
         {
@@ -2333,7 +2333,6 @@ var referentiels_default = {
       description: "",
       effets: [],
       rangMinHabitation: 1,
-      taudisApportes: 20,
       couts: [
         {
           ressource: "Bois",
@@ -2342,6 +2341,12 @@ var referentiels_default = {
         {
           ressource: "Or",
           valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 20
         }
       ]
     },
@@ -2361,7 +2366,6 @@ var referentiels_default = {
           places: 4
         }
       ],
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -2372,7 +2376,13 @@ var referentiels_default = {
           valeur: 4
         }
       ],
-      requis: "Poste de garde"
+      requis: "Poste de garde",
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
+        }
+      ]
     },
     {
       categorie: "B\xE2timent",
@@ -2485,7 +2495,11 @@ var referentiels_default = {
           valeur: 4
         }
       ],
-      requis: "Camp de b\xFBcheron"
+      requis: "Camp de b\xFBcheron",
+      remplaceBatiment: [
+        "Camp de b\xFBcheron",
+        "Camp de mineur"
+      ]
     },
     {
       categorie: "B\xE2timent",
@@ -2507,7 +2521,9 @@ var referentiels_default = {
           places: 7
         }
       ],
-      remplaceBatiment: "Grange",
+      remplaceBatiment: [
+        "Grange"
+      ],
       couts: [
         {
           ressource: "Or",
@@ -2558,7 +2574,11 @@ var referentiels_default = {
           valeur: 4
         }
       ],
-      requis: "Silo \xE0 grain"
+      requis: "Silo \xE0 grain",
+      remplaceBatiment: [
+        "Silo \xE0 grain",
+        "Grange"
+      ]
     },
     {
       categorie: "B\xE2timent",
@@ -2706,7 +2726,9 @@ var referentiels_default = {
           places: 30
         }
       ],
-      remplaceBatiment: "Moulin \xE0 vent",
+      remplaceBatiment: [
+        "Moulin \xE0 vent"
+      ],
       couts: [
         {
           ressource: "Or",
@@ -2719,6 +2741,321 @@ var referentiels_default = {
         {
           ressource: "B\xE9tail",
           valeur: 6
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Militaire",
+      nom: "Barraquements",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Garde",
+          places: 4
+        }
+      ],
+      requis: "Caserne",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 25
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Militaire",
+      nom: "Banlieue",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      requis: "Quartier interm\xE9diaire",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Fer",
+          valeur: 10
+        },
+        {
+          ressource: "Bois",
+          valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Maison",
+          nombre: 40
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Economique",
+      nom: "Complexe d'exploitation maritime",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Commer\xE7ant",
+          places: 24
+        }
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 50
+        },
+        {
+          ressource: "Bois",
+          valeur: 10
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Economique",
+      nom: "Usine",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "B\xFBcheron",
+          places: 2
+        },
+        {
+          metier: "Mineur",
+          places: 2
+        },
+        {
+          metier: "Forgeron",
+          places: 2
+        },
+        {
+          metier: "Tisseur",
+          places: 2
+        },
+        {
+          metier: "Charbonnier",
+          places: 2
+        }
+      ],
+      requis: "Camp de travailleurs",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 20
+        },
+        {
+          ressource: "Fer",
+          valeur: 6
+        },
+        {
+          ressource: "Charbon",
+          valeur: 8
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Economique",
+      nom: "Plateforme commerciale",
+      cout: "",
+      production: "",
+      description: "",
+      routesApportees: 2,
+      effets: [],
+      rangMinHabitation: 3,
+      requis: "Place du march\xE9",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Bois",
+          valeur: 12
+        },
+        {
+          ressource: "Soie",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Economique",
+      nom: "H\xF4pital",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Gu\xE9risseur",
+          places: 10
+        }
+      ],
+      requis: "Clinique",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Pierre",
+          valeur: 10
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Guilde",
+      nom: "Guilde des bourgeois",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      requis: "Banlieue",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 60
+        },
+        {
+          ressource: "Charbon",
+          valeur: 10
+        },
+        {
+          ressource: "Soie",
+          valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Maison de notable",
+          nombre: 20
+        }
+      ],
+      multProductionBourgeois: 1.5
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Guilde",
+      nom: "Guilde des marchands",
+      cout: "",
+      production: "",
+      description: "",
+      routesApportees: 2,
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: -1
+        }
+      ],
+      rangMinHabitation: 3,
+      requis: "Plateforme commerciale",
+      remplaceBatiment: [
+        "Plateforme commerciale"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 30
+        },
+        {
+          ressource: "Charbon",
+          valeur: 8
+        },
+        {
+          ressource: "Soie",
+          valeur: 8
+        }
+      ],
+      multRevenusCommerce: 1.5,
+      effetPlateau: "port\xE9e des routes commerciales du pays +6 cases (effet de plateau)"
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ville",
+      famille: "Guilde",
+      nom: "Guilde des marins",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: -1
+        }
+      ],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Commer\xE7ant",
+          places: 40
+        }
+      ],
+      requis: "Complexe d'exploitation maritime",
+      remplaceBatiment: [
+        "Complexe d'exploitation maritime"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 50
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        },
+        {
+          ressource: "Charbon",
+          valeur: 6
+        }
+      ],
+      bonusMetierParHabitant: [
+        {
+          metier: "Commer\xE7ant",
+          ressource: "Or",
+          valeur: 0.5
         }
       ]
     },
@@ -2738,7 +3075,6 @@ var referentiels_default = {
           places: 4
         }
       ],
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -2747,6 +3083,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 4
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -2993,7 +3335,6 @@ var referentiels_default = {
       description: "",
       effets: [],
       rangMinHabitation: 1,
-      taudisApportes: 20,
       couts: [
         {
           ressource: "Bois",
@@ -3002,6 +3343,12 @@ var referentiels_default = {
         {
           ressource: "Or",
           valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 20
         }
       ]
     },
@@ -3021,7 +3368,6 @@ var referentiels_default = {
           places: 4
         }
       ],
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -3032,7 +3378,13 @@ var referentiels_default = {
           valeur: 4
         }
       ],
-      requis: "Poste de garde"
+      requis: "Poste de garde",
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
+        }
+      ]
     },
     {
       categorie: "B\xE2timent",
@@ -3287,7 +3639,9 @@ var referentiels_default = {
           places: 1
         }
       ],
-      remplaceBatiment: "Ecole \xE9l\xE9mentaire",
+      remplaceBatiment: [
+        "Ecole \xE9l\xE9mentaire"
+      ],
       couts: [
         {
           ressource: "Or",
@@ -3330,6 +3684,456 @@ var referentiels_default = {
         }
       ],
       requis: "Ecole militaire"
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "D\xE9l\xE9gation",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 1,
+      emissairesApportes: 1,
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 10
+        },
+        {
+          ressource: "Soie",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "Chancellerie",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 2,
+      emissairesApportes: 2,
+      requis: "D\xE9l\xE9gation",
+      remplaceBatiment: [
+        "D\xE9l\xE9gation"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 20
+        },
+        {
+          ressource: "Pierre",
+          valeur: 4
+        },
+        {
+          ressource: "Soie",
+          valeur: 6
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "Ambassade",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emissairesApportes: 4,
+      requis: "Chancellerie",
+      remplaceBatiment: [
+        "Chancellerie"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Charbon",
+          valeur: 4
+        },
+        {
+          ressource: "Soie",
+          valeur: 10
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Militaire",
+      nom: "Barraquements",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Garde",
+          places: 4
+        }
+      ],
+      requis: "Caserne",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 25
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Militaire",
+      nom: "Responsable des voies",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 30
+        },
+        {
+          ressource: "Soie",
+          valeur: 6
+        }
+      ],
+      effetPlateau: "les cases \xE0 3 cases ou moins de cette habitation ne co\xFBtent qu'1 PM \xE0 franchir (effet de plateau)"
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Militaire",
+      nom: "Banlieue",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      requis: "Quartier interm\xE9diaire",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Fer",
+          valeur: 10
+        },
+        {
+          ressource: "Bois",
+          valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Maison",
+          nombre: 40
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "Commanderie",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Artiste",
+          places: 10
+        }
+      ],
+      requis: "Chapelle",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Pierre",
+          valeur: 12
+        },
+        {
+          ressource: "Fer",
+          valeur: 6
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "Ecole sup\xE9rieure",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [
+        {
+          ressource: "Or",
+          quantite: -6
+        }
+      ],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Professeur",
+          places: 4
+        },
+        {
+          metier: "Scientifique",
+          places: 2
+        }
+      ],
+      ecoleRang: 3,
+      requis: "Ecole interm\xE9diaire",
+      remplaceBatiment: [
+        "Ecole interm\xE9diaire"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 20
+        },
+        {
+          ressource: "Pierre",
+          valeur: 10
+        },
+        {
+          ressource: "Soie",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "Institut de recherche",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Scientifique",
+          places: 8
+        }
+      ],
+      requis: "Cabinet d'astronomie",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 20
+        },
+        {
+          ressource: "Pierre",
+          valeur: 6
+        },
+        {
+          ressource: "Soie",
+          valeur: 8
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Economique",
+      nom: "H\xF4pital",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Gu\xE9risseur",
+          places: 10
+        }
+      ],
+      requis: "Clinique",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 40
+        },
+        {
+          ressource: "Pierre",
+          valeur: 10
+        },
+        {
+          ressource: "Fer",
+          valeur: 4
+        }
+      ]
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Guilde",
+      nom: "Guilde des bourgeois",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [],
+      rangMinHabitation: 3,
+      requis: "Banlieue",
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 60
+        },
+        {
+          ressource: "Charbon",
+          valeur: 10
+        },
+        {
+          ressource: "Soie",
+          valeur: 10
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Maison de notable",
+          nombre: 20
+        }
+      ],
+      multProductionBourgeois: 1.5
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Guilde",
+      nom: "Guilde des diplomates",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: -1
+        }
+      ],
+      rangMinHabitation: 3,
+      emissairesApportes: 7,
+      requis: "Ambassade",
+      remplaceBatiment: [
+        "Ambassade"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 60
+        },
+        {
+          ressource: "Charbon",
+          valeur: 8
+        },
+        {
+          ressource: "Soie",
+          valeur: 20
+        }
+      ],
+      tributVassalPlus: 0.05
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Guilde",
+      nom: "Guilde des \xE9vang\xE9listes",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: -1
+        },
+        {
+          ressource: "Tourisme",
+          quantite: 70
+        }
+      ],
+      rangMinHabitation: 3,
+      requis: "Commanderie",
+      remplaceBatiment: [
+        "Commanderie"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 60
+        },
+        {
+          ressource: "Fer",
+          valeur: 12
+        }
+      ],
+      conversionLocalePlus: 0.1
+    },
+    {
+      categorie: "B\xE2timent",
+      groupe: "Ch\xE2teau",
+      famille: "Guilde",
+      nom: "Guilde des savants",
+      cout: "",
+      production: "",
+      description: "",
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: -1
+        }
+      ],
+      rangMinHabitation: 3,
+      emplacements: [
+        {
+          metier: "Scientifique",
+          places: 15
+        }
+      ],
+      requis: "Institut de recherche",
+      remplaceBatiment: [
+        "Institut de recherche"
+      ],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 50
+        },
+        {
+          ressource: "Charbon",
+          valeur: 6
+        },
+        {
+          ressource: "Soie",
+          valeur: 8
+        }
+      ],
+      scienceProfesseurPlus: 0.05
     },
     {
       categorie: "B\xE2timent",
@@ -3531,7 +4335,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3540,6 +4343,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3559,7 +4368,6 @@ var referentiels_default = {
           places: 3
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3568,6 +4376,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3591,7 +4405,6 @@ var referentiels_default = {
           places: 1
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3600,6 +4413,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3619,7 +4438,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3628,6 +4446,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3647,7 +4471,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3656,6 +4479,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3675,7 +4504,6 @@ var referentiels_default = {
           places: 6
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3684,6 +4512,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3703,7 +4537,6 @@ var referentiels_default = {
           places: 1
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3712,6 +4545,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3731,7 +4570,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3740,6 +4578,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3759,7 +4603,6 @@ var referentiels_default = {
           places: 4
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3768,6 +4611,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3791,7 +4640,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3800,6 +4648,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3823,7 +4677,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3832,6 +4685,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -3851,7 +4710,6 @@ var referentiels_default = {
           places: 2
         }
       ],
-      taudisApportes: 5,
       couts: [
         {
           ressource: "Or",
@@ -3860,6 +4718,12 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 5
         }
       ]
     },
@@ -4005,7 +4869,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Carri\xE8re",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4014,6 +4877,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4039,7 +4908,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Carri\xE8re (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4048,6 +4916,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4069,7 +4943,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Champ",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4078,6 +4951,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4099,7 +4978,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Champ (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4108,6 +4986,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4133,7 +5017,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Foire",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4142,6 +5025,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4167,7 +5056,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Foire (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4176,6 +5064,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4197,7 +5091,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Mine de Charbon",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4206,6 +5099,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4227,7 +5126,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Mine de Charbon (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4236,6 +5134,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4261,7 +5165,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Mine de Fer",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4270,6 +5173,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4295,7 +5204,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Mine de Fer (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4304,6 +5212,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4325,7 +5239,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Mine d'Or",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4334,6 +5247,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4355,7 +5274,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Mine d'Or (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4364,6 +5282,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4385,7 +5309,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Observatoire",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4394,6 +5317,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4415,7 +5344,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Observatoire (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4424,6 +5352,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4445,7 +5379,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "P\xE2turage",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4454,6 +5387,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4475,7 +5414,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "P\xE2turage (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4484,6 +5422,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4505,7 +5449,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Rizi\xE8re",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4514,6 +5457,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4535,7 +5484,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Rizi\xE8re (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4544,6 +5492,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4569,7 +5523,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Scierie",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4578,6 +5531,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4603,7 +5562,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Scierie (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4612,6 +5570,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4637,7 +5601,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "S\xE9riciculture",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4646,6 +5609,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4671,7 +5640,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "S\xE9riciculture (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4680,6 +5648,12 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
         }
       ]
     },
@@ -4701,7 +5675,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 2,
       remplaceAmenagement: "Site arch\xE9ologique",
-      taudisApportes: 8,
       couts: [
         {
           ressource: "Or",
@@ -4710,6 +5683,12 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
+        }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 8
         }
       ]
     },
@@ -4731,7 +5710,6 @@ var referentiels_default = {
       ],
       rangMinHabitation: 3,
       remplaceAmenagement: "Site arch\xE9ologique (tier 2)",
-      taudisApportes: 10,
       couts: [
         {
           ressource: "Or",
@@ -4741,7 +5719,289 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
+      ],
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
+        }
       ]
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Caverne de la tisseuse",
+      terrain: "",
+      cout: "",
+      production: "+1 Soie par rang de l'habitation par tour.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      effetsParRang: [
+        {
+          ressource: "Soie",
+          quantite: 1
+        }
+      ]
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Jardins Flamboyants",
+      terrain: "",
+      cout: "",
+      production: "+10 Bonheur dans l'habitation.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      bonheurApporte: 10
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Pic Ascendant",
+      terrain: "",
+      cout: "",
+      production: "+1 Science par tour.",
+      description: "",
+      effets: [
+        {
+          ressource: "Science",
+          quantite: 1
+        }
+      ],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      effetPlateau: "Si\xE8ge : lorsque vous attaquez une habitation, sa garnison est r\xE9duite de 30"
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Ruines de Seth",
+      terrain: "",
+      cout: "",
+      production: "+2 Or et +10 Tourisme par tour.",
+      description: "",
+      effets: [
+        {
+          ressource: "Or",
+          quantite: 2
+        },
+        {
+          ressource: "Tourisme",
+          quantite: 10
+        }
+      ],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "S\xE9pulcre du Rayonnant",
+      terrain: "",
+      cout: "",
+      production: "+20 Garnison dans l'habitation, +10 Taudis.",
+      description: "",
+      effets: [
+        {
+          ressource: "Garnison",
+          quantite: 20
+        }
+      ],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      domicilesApportes: [
+        {
+          domicile: "Taudis",
+          nombre: 10
+        }
+      ]
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Tr\xE9sor du roi sorcier",
+      terrain: "",
+      cout: "",
+      production: "+1 emplacement de route commerciale.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      routesApportees: 1
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Coeur Ancestral",
+      terrain: "",
+      cout: "",
+      production: "+1 \xE9missaire tant que poss\xE9d\xE9e.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      emissairesApportes: 1
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Echine du dragon",
+      terrain: "",
+      cout: "",
+      production: "+1 Charbon et +1 Fer par tour.",
+      description: "",
+      effets: [
+        {
+          ressource: "Charbon",
+          quantite: 1
+        },
+        {
+          ressource: "Fer",
+          quantite: 1
+        }
+      ],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Pilliers C\xE9lestes",
+      terrain: "",
+      cout: "",
+      production: "Vos arm\xE9es ont +1 PM.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      effetPlateau: "Vos arm\xE9es ont +1 PM"
+    },
+    {
+      categorie: "Am\xE9nagement",
+      groupe: "Merveille naturelle",
+      famille: "",
+      nom: "Antre de Magmadon",
+      terrain: "",
+      cout: "",
+      production: "Co\xFBt de lev\xE9e d'arm\xE9e dans cette habitation -15 Or.",
+      description: "",
+      effets: [],
+      emplacements: [],
+      couts: [
+        {
+          ressource: "Or",
+          valeur: 12
+        },
+        {
+          ressource: "Bois",
+          valeur: 5
+        }
+      ],
+      merveilleNaturelle: true,
+      reductionLeveeArmee: 15
     }
   ],
   typesHabitation: [
@@ -5138,7 +6398,7 @@ var referentiels_default = {
       qualite: "roturier"
     },
     {
-      valeur1: 15,
+      valeur1: 10,
       ressource1: "Nourriture",
       valeur2: 0,
       ressource2: "",
@@ -5428,7 +6688,13 @@ var DEFAULT_PARAMS = {
   prodMultBourgeois: 1.5,
   prodMultNoble: 1,
   gainsCrediteStock: 1,
-  fertBaseRate: 1.5,
+  // (2026-11-02, arbitrage Thibaut « la fertilité de base doit être
+  //  à 1 » : AVANT 1,5 — une proba > 1 était cappée par le rng.chance,
+  //  une femme mariée jeune sans malus concevait à CHAQUE tour. À 1,
+  //  la proba de base ne dépasse jamais 100 % : les facteurs
+  //  (âges, mari, traits, culture, dogmes, taxes) la font monter
+  //  JUSQU'À 1 au maximum.)
+  fertBaseRate: 1,
   fertSingleFactor: 0.1,
   fertTwinsRate: 0.05,
   fertTripletsRate: 1e-3,
@@ -5552,6 +6818,12 @@ function mergeParams(custom) {
 }
 
 // src/config/defaultConfig.ts
+function normaliserConstruction(c) {
+  const rb = c.remplaceBatiment;
+  if (typeof rb !== "string") return c;
+  const out = { ...c, remplaceBatiment: [rb] };
+  return out;
+}
 var COULEURS_JOUEURS_DEFAUT = [
   "#C80000",
   // J1 rouge
@@ -5636,7 +6908,6 @@ function normaliserCultures() {
   return ref.cultures.map((c) => ({
     nom: c.nom,
     heredite: c.heredite,
-    homoAutorisee: c.homoAutorisee === true || c.homoAutorisee === "true",
     // (audit express 2026-10-26 : piège falsy-zéro — un futur
     //  fertFactor 0 légal serait écrasé en 1 par `|| 1` (même
     //  famille que le bug Taudis 0 du 2026-10-25) ; le défaut 1 ne
@@ -5733,7 +7004,10 @@ var DEFAULT_CONFIG = {
   metiersEffets: ref.metiersEffets,
   peuplesLibres: ref.peuplesLibres,
   peuplesAutres: ref.peuplesAutres,
-  constructions: ref.constructions,
+  // (NORMALISATION remplaceBatiment 2026-11-02 : le champ devient un
+  //  TABLEAU ; une config sauvegardée d'avant peut porter un string —
+  //  conversion à la lecture, patron idempotent.)
+  constructions: ref.constructions.map(normaliserConstruction),
   typesHabitation: ref.typesHabitation,
   domiciles: (ref.domiciles ?? []).map((d) => ({
     domicile: String(d.domicile ?? ""),
@@ -5872,7 +7146,6 @@ function migrerCultures(list) {
     const out = {
       nom: c.nom,
       heredite: c.heredite,
-      homoAutorisee: c.homoAutorisee,
       regleVille: c.regleVille ?? d.regleVille,
       regleHabitant: c.regleHabitant ?? d.regleHabitant,
       fertFactor: c.fertFactor === 1 && d.fertFactor !== 1 ? d.fertFactor : c.fertFactor ?? d.fertFactor
@@ -5952,7 +7225,23 @@ function realignerConstructions(list, defauts) {
   const parCle = new Map(
     defauts.map((d) => [`${d.nom}|${d.groupe}`, d])
   );
-  return list.map((c) => parCle.get(`${c.nom}|${c.groupe}`) ?? c);
+  return list.map((c) => {
+    const aligne = parCle.get(`${c.nom}|${c.groupe}`);
+    if (aligne) return aligne;
+    return migrerDomicilesApportes(c);
+  });
+}
+function migrerDomicilesApportes(c) {
+  const t = c.taudisApportes;
+  if (t == null) return c;
+  const out = { ...c };
+  delete out.taudisApportes;
+  const dom = [...out.domicilesApportes ?? []];
+  const i = dom.findIndex((e) => e.domicile === "Taudis");
+  if (i >= 0) dom[i] = { domicile: "Taudis", nombre: dom[i].nombre + t };
+  else dom.unshift({ domicile: "Taudis", nombre: t });
+  out.domicilesApportes = dom;
+  return out;
 }
 function parseMetiersBaseTexte(texte, metiersConnus) {
   const out = [];
@@ -6151,7 +7440,7 @@ function cfgOf(config) {
       if (t.metier === "Chasseur" && defChasseur && t.valeur1 === 1.5 && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
         t.valeur1 = defChasseur.valeur1;
       }
-      if (t.metier === "Fermier" && defFermier && t.ete === true && t.valeur1 === 5 && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
+      if (t.metier === "Fermier" && defFermier && t.ete === true && (t.valeur1 === 5 || t.valeur1 === 15) && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1;
       }
     }
@@ -6529,7 +7818,6 @@ function reglesConstructions(C) {
         metier: e.metier,
         valeur: Number(e.places) || 0
       })),
-      ...ref2.taudisApportes ? [{ type: "logements", logement: "Taudis", valeur: ref2.taudisApportes }] : [],
       ...(ref2.domicilesApportes ?? []).map((e) => ({
         type: "logements",
         logement: e.domicile,
@@ -6704,14 +7992,15 @@ function garnisonConstructionRef(ref2, cfg) {
   const c = contributionBanque(ref2, cfg);
   return c ? c.garnison : 0;
 }
+function estCotiereRef(ref2) {
+  return ref2?.cotier === true;
+}
 
 // src/engine/batiments.ts
-var REMPLACE = {
-  "Camp de travailleurs": ["Camp de b\xFBcheron", "Camp de mineur"],
-  "Silo \xE0 grain": ["Grange"],
-  "Moulin \xE0 vent": ["Silo \xE0 grain", "Grange"],
-  "Ecole interm\xE9diaire": ["Ecole \xE9l\xE9mentaire"]
-};
+function remplaceBatimentRef(nom, cfg, groupe) {
+  const ref2 = constructionRef(nom, cfg, groupe);
+  return ref2?.remplaceBatiment ?? [];
+}
 function effetsTourBatiment(nom, C, groupe) {
   const ref2 = constructionRef(nom, C.config, groupe);
   return ref2 ? effetsConstructionRef(ref2, C.config) : {};
@@ -6724,18 +8013,18 @@ function productionTourismeBatiment(nom, C, groupe) {
   const ref2 = constructionRef(nom, C.config, groupe);
   return ref2 ? effetsConstructionRef(ref2, C.config)["Tourisme"] ?? 0 : 0;
 }
-function batimentsRemplaces(ville) {
+function batimentsRemplaces(ville, C) {
   const presents = new Set(ville.batiments);
   const ignores = /* @__PURE__ */ new Set();
   for (const nom of presents) {
-    for (const remplace of REMPLACE[nom] ?? []) {
+    for (const remplace of remplaceBatimentRef(nom, C.config, ville.type)) {
       if (presents.has(remplace)) ignores.add(remplace);
     }
   }
   return ignores;
 }
 function effetsBatimentsVille(ville, C) {
-  const ignores = batimentsRemplaces(ville);
+  const ignores = batimentsRemplaces(ville, C);
   const groupe = ville.type;
   const out = {};
   for (const nom of ville.batiments) {
@@ -6760,6 +8049,42 @@ function appliquerEffetsBatiments(p, C) {
   }
   return out;
 }
+function batimentsActifsVille(ville, C) {
+  const ignores = batimentsRemplaces(ville, C);
+  return (ville.batiments ?? []).filter((nom) => !ignores.has(nom));
+}
+function modificateursPaysJoueur(p, C) {
+  const out = {
+    multProductionBourgeois: 1,
+    bonusMetierParHabitant: [],
+    multRevenusCommerce: 1,
+    tributVassalPlus: 0,
+    conversionLocalePlus: 0,
+    scienceProfesseurPlus: 0
+  };
+  for (const ville of p.villes) {
+    const ignores = batimentsRemplaces(ville, C);
+    for (const nom of ville.batiments) {
+      if (ignores.has(nom)) continue;
+      const ref2 = constructionRef(nom, C.config, ville.type);
+      if (!ref2) continue;
+      out.multProductionBourgeois *= ref2.multProductionBourgeois ?? 1;
+      out.multRevenusCommerce *= ref2.multRevenusCommerce ?? 1;
+      out.tributVassalPlus += ref2.tributVassalPlus ?? 0;
+      out.conversionLocalePlus += ref2.conversionLocalePlus ?? 0;
+      out.scienceProfesseurPlus += ref2.scienceProfesseurPlus ?? 0;
+      for (const bm of ref2.bonusMetierParHabitant ?? []) out.bonusMetierParHabitant.push(bm);
+    }
+  }
+  return out;
+}
+function conversionLocaleBatimentsVille(ville, C) {
+  let total = 0;
+  for (const nom of batimentsActifsVille(ville, C)) {
+    total += constructionRef(nom, C.config, ville.type)?.conversionLocalePlus ?? 0;
+  }
+  return total;
+}
 
 // src/engine/amenagements.ts
 function amenagementRef(nom, cfg) {
@@ -6767,11 +8092,16 @@ function amenagementRef(nom, cfg) {
 }
 function effetsAmenagementsVille(ville, cfg) {
   const out = {};
+  const C = cfg ? cfgOf(cfg) : cfgOf();
+  const rang = rangNiveau(ville, C);
   for (const nom of ville.amenagements ?? []) {
     const ref2 = amenagementRef(nom, cfg);
     if (!ref2 || eteSeulementRef(ref2, cfg)) continue;
     for (const [res, v] of Object.entries(effetsConstructionRef(ref2, cfg))) {
       out[res] = (out[res] ?? 0) + v;
+    }
+    for (const e of ref2.effetsParRang ?? []) {
+      out[e.ressource] = (out[e.ressource] ?? 0) + e.quantite * rang;
     }
   }
   return out;
@@ -6880,6 +8210,10 @@ function effetsCommerceJoueur(state, p, saison, C = cfgOf(state.config)) {
       out[res] = (out[res] ?? 0) + v;
     }
   }
+  const mult = modificateursPaysJoueur(p, C).multRevenusCommerce;
+  if (mult > 1) {
+    for (const res of Object.keys(out)) out[res] *= mult;
+  }
   return out;
 }
 function nomCibleRoute(state, route) {
@@ -6935,6 +8269,10 @@ function appliquerEffetsCommerce(state, C = cfgOf(state.config)) {
 function garnisonHabitationVille(p, ville, C, state) {
   let g = 0;
   for (const b of ville.batiments) g += garnisonBatiment(b, C, ville.type);
+  for (const a of ville.amenagements ?? []) {
+    const ref2 = amenagementRef(a, C.config);
+    if (ref2) g += garnisonConstructionRef(ref2, C.config);
+  }
   if (state) {
     const pop = state.population[p.n] ?? [];
     const gardes = pop.filter(
@@ -7394,8 +8732,8 @@ function stockRang(type, rang, C) {
 }
 function domicilesApportesVille(ville, C) {
   const total = /* @__PURE__ */ new Map();
-  for (const nom of [...ville.amenagements ?? [], ...ville.batiments ?? []]) {
-    const ref2 = C.config.constructions.find((c) => c.nom === nom);
+  for (const nom of [...ville.amenagements ?? [], ...batimentsActifsVille(ville, C)]) {
+    const ref2 = constructionRef(nom, C.config, ville.type);
     if (!ref2) continue;
     for (const [domicile, nombre] of Object.entries(logementsConstructionRef(ref2, C.config))) {
       if (nombre > 0) total.set(domicile, (total.get(domicile) ?? 0) + nombre);
@@ -7544,8 +8882,18 @@ function bonheurVilleComplete(state, p, ville, C) {
   const dogme = effetsDogmeCulture(state, ville.culture, "bonheurVille", C);
   return Math.min(
     100,
-    bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme
+    bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme + bonheurApportesVille(ville, C)
   );
+}
+function bonheurApportesVille(ville, C) {
+  let total = 0;
+  for (const b of ville.batiments ?? []) {
+    total += constructionRef(b, C.config, ville.type)?.bonheurApporte ?? 0;
+  }
+  for (const a of ville.amenagements ?? []) {
+    total += constructionRef(a, C.config)?.bonheurApporte ?? 0;
+  }
+  return total;
 }
 
 // src/engine/statutSocial.ts
@@ -7703,20 +9051,18 @@ function gestionMariages(state, p, rng, recap) {
     if (rng.chance(computeMarriageProbability(a, b, C))) marier(a, b);
     return true;
   };
-  const femmes = rng.shuffle(celib.filter((c) => c.sexe === "F"));
-  const hommes = celib.filter((c) => c.sexe === "M");
-  for (const f of femmes) {
-    if (f.mariageId) continue;
-    if (!tenter(f, hommes)) break;
+  const celibParVille = /* @__PURE__ */ new Map();
+  for (const c of celib) {
+    const l = celibParVille.get(c.ville);
+    if (l) l.push(c);
+    else celibParVille.set(c.ville, [c]);
   }
-  if (cultureDef(p.culture, C.config)?.homoAutorisee) {
-    for (const [sexeA, sexeB] of [["F", "F"], ["M", "M"]]) {
-      const premiers = rng.shuffle(celib.filter((c) => c.sexe === sexeA));
-      const seconds = celib.filter((c) => c.sexe === sexeB);
-      for (const a of premiers) {
-        if (a.mariageId) continue;
-        if (!tenter(a, seconds)) break;
-      }
+  for (const celibVille of celibParVille.values()) {
+    const femmes = rng.shuffle(celibVille.filter((c) => c.sexe === "F"));
+    const hommes = celibVille.filter((c) => c.sexe === "M");
+    for (const f of femmes) {
+      if (f.mariageId) continue;
+      if (!tenter(f, hommes)) break;
     }
   }
 }
@@ -7808,10 +9154,10 @@ function designerGouverneurs(state, C = cfgOf(state.config)) {
 }
 function emplacementsMetierVille(metier, ville, C = cfgOf(), ctx) {
   let total = 0;
-  for (const nom of [...ville.batiments ?? [], ...ville.amenagements ?? []]) {
+  for (const nom of [...batimentsActifsVille(ville, C), ...ville.amenagements ?? []]) {
     const ref2 = constructionRef(nom, C.config);
     if (!ref2) continue;
-    if (nom === "Ponton" && !villeCotiere(ville)) continue;
+    if (estCotiereRef(ref2) && !villeCotiere(ville)) continue;
     for (const e of emplacementsConstructionRef(ref2, C.config)) {
       if (e.metier === metier) total += e.places;
     }
@@ -8006,8 +9352,9 @@ function detailGainsVille(state, p, ville, C) {
   const pop = state.population[p.n] ?? [];
   const vivants = pop.filter((c) => c.statut !== "D\xE9c\xE9d\xE9" && c.ville === ville.nom);
   const metiers = {};
-  const ponton = villeCotiere(ville) && (ville.batiments ?? []).includes("Ponton");
+  const batimentCotierActif = villeCotiere(ville) && (ville.batiments ?? []).some((b) => estCotiereRef(constructionRef(b, C.config)));
   const champsNourriciers = cultureDef(ville.culture, C.config)?.nourrEteParFermier ?? 0;
+  const modsTier3 = modificateursPaysJoueur(p, C);
   for (const c of vivants) {
     if (!c.metier) {
       const trav = effetsDogmeCulture(state, c.culture, "travailNourriture", C);
@@ -8017,8 +9364,16 @@ function detailGainsVille(state, p, ville, C) {
     const td = metierDef(c.metier, C.config);
     if (!td) continue;
     if (td.ete && state.saison !== "\xC9t\xE9") continue;
-    const mult = multProdRang(c, C);
-    if (ponton && c.metier === "P\xEAcheur") {
+    let mult = multProdRang(c, C);
+    if (modsTier3.multProductionBourgeois > 1 && rangDe(c, C) === "bourgeois") {
+      mult *= modsTier3.multProductionBourgeois;
+    }
+    for (const bm of modsTier3.bonusMetierParHabitant) {
+      if (c.metier === bm.metier) {
+        metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult;
+      }
+    }
+    if (batimentCotierActif && c.metier === "P\xEAcheur") {
       metiers["B\xE9tail"] = (metiers["B\xE9tail"] ?? 0) + 0.5 * mult;
     }
     if (champsNourriciers && state.saison === "\xC9t\xE9" && c.metier === "Fermier") {
@@ -8041,7 +9396,9 @@ function detailGainsVille(state, p, ville, C) {
     for (const res of Object.keys(metiers)) ajouteBonus(res, 0.1);
   }
   if (C.p.metierBanquier && vivants.some((c) => c.metier === C.p.metierBanquier) && metiers["Or"] !== void 0) ajouteBonus("Or", 0.1);
-  if (C.p.metierProfesseur && vivants.some((c) => c.metier === C.p.metierProfesseur) && metiers["Science"] !== void 0) ajouteBonus("Science", 0.1);
+  if (C.p.metierProfesseur && vivants.some((c) => c.metier === C.p.metierProfesseur) && metiers["Science"] !== void 0) {
+    ajouteBonus("Science", 0.1 + modsTier3.scienceProfesseurPlus);
+  }
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers["Tourisme"] !== void 0) ajouteBonus("Tourisme", 0.1);
   const taxes = {};
   for (const [res, v] of Object.entries(metiers)) {
@@ -8076,7 +9433,7 @@ function transfererTributVassal(state, gainsParJoueur, C) {
     const part = (gains["Or"] ?? 0) * C.p.vassalPrelevement;
     if (part === 0) continue;
     gains["Or"] = (gains["Or"] ?? 0) - part;
-    const recu = part * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1) * (1 + effetsDogmeCulture(state, suzerain.culture, "tributVassal", C));
+    const recu = part * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1) * (1 + effetsDogmeCulture(state, suzerain.culture, "tributVassal", C)) * (1 + modificateursPaysJoueur(suzerain, C).tributVassalPlus);
     const gainsSuz = gainsParJoueur[suzerain.n] ?? (gainsParJoueur[suzerain.n] = {});
     gainsSuz["Or"] = (gainsSuz["Or"] ?? 0) + recu;
     state.log.push({
@@ -8158,12 +9515,15 @@ function maladieStep(state, p, c, rng, recap) {
     const pContract = probaContracterMaladie(c, C) + contractMod;
     if (rng.chance(Math.max(0, pContract))) {
       if (c.statut === "Enceinte") {
-        c.enceinteMalade = true;
+        c.statut = "Sain";
+        c.pereBio = null;
+        c.pereBioId = null;
+        c.enfantBatard = false;
         state.log.push({
           turn: state.turn + 1,
           type: "Naissance",
           joueur: p.n,
-          texte: `${fullName(c)} tombe malade en \xE9tant enceinte \u2014 elle accouchera, puis mourra de la maladie.`
+          texte: `${fullName(c)} tombe malade en \xE9tant enceinte \u2014 elle perd le b\xE9b\xE9, et se r\xE9tablit.`
         });
       } else {
         c.statut = "Malade";
@@ -8271,7 +9631,7 @@ function computeFecondite(state, p, c) {
   const C = cfgOf(state.config);
   if (c.statut === "D\xE9c\xE9d\xE9" || c.age < C.p.adultAge) return 0;
   if (c.sexe !== "F") {
-    return maleAgeFactor(c.age) * orientationFertFactor(c.orientation) * (1 + effetsDogmeCulture(state, c.culture, "fecondite", C));
+    return maleAgeFactor(c.age) * orientationFertFactor(c.orientation) * cultureFertFactor(c.culture, C) * (1 + effetsDogmeCulture(state, c.culture, "fecondite", C));
   }
   const ville = p.villes.find((v) => v.nom === c.ville);
   const mari = c.mariageId ? indexPopulationMonde(state).get(c.mariageId) : void 0;
@@ -8281,7 +9641,7 @@ function computeFecondite(state, p, c) {
   proba *= femaleAgeFactor(c.age);
   proba *= factorMari;
   proba *= traitsFertFactor(c, mari ?? null, C);
-  proba *= cultureFertFactor(p.culture, C);
+  proba *= cultureFertFactor(c.culture, C);
   proba *= 1 + effetsDogmeCulture(state, c.culture, "fecondite", C);
   proba *= orientationFertFactor(c.orientation);
   proba *= taxBirthFactor(ville, C);
@@ -8334,10 +9694,6 @@ function conceptionEtNaissances(state, p, rng, recap) {
     mere.statut = "Sain";
     mere.pereBio = null;
     mere.pereBioId = null;
-    if (mere.enceinteMalade) {
-      mere.enceinteMalade = false;
-      killCharacter(state, p, mere, "maladie", recap);
-    }
   }
   const indexMonde = indexPopulationMonde(state);
   const villesParNom = new Map(p.villes.map((v) => [v.nom, v]));
@@ -8347,33 +9703,31 @@ function conceptionEtNaissances(state, p, rng, recap) {
     const ville = villesParNom.get(mere.ville);
     const mari = mere.mariageId ? indexMonde.get(mere.mariageId) : void 0;
     if (mari && mari.sexe !== "M") continue;
-    const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) * (1 + effetsDogmeCulture(state, mari.culture, "fecondite", C)) : C.p.fertSingleFactor;
+    const factorMari = mari ? maleAgeFactor(mari.age) * orientationFertFactor(mari.orientation) * cultureFertFactor(mari.culture, C) * (1 + effetsDogmeCulture(state, mari.culture, "fecondite", C)) : C.p.fertSingleFactor;
     let proba = C.p.fertBaseRate;
     proba *= femaleAgeFactor(mere.age);
     proba *= factorMari;
     proba *= traitsFertFactor(mere, mari ?? null, C);
-    proba *= cultureFertFactor(p.culture, C);
+    proba *= cultureFertFactor(mere.culture, C);
     proba *= 1 + effetsDogmeCulture(state, mere.culture, "fecondite", C);
     proba *= orientationFertFactor(mere.orientation);
     proba *= taxBirthFactor(ville, C);
     if (rng.chance(proba)) {
       let pereBio;
       let batard = false;
+      const amantsDeLaVille = pop.filter(
+        (x) => x.sexe === "M" && (x.statut === "Sain" || x.statut === "Malade") && x.age >= C.p.adultAge && x.ville === mere.ville
+      );
       if (mari) {
         if (rng.chance(C.p.adulteryRate)) {
-          const amants = pop.filter(
-            (x) => x.sexe === "M" && (x.statut === "Sain" || x.statut === "Malade") && x.age >= C.p.adultAge && x.id !== mari.id
-          );
+          const amants = amantsDeLaVille.filter((x) => x.id !== mari.id);
           pereBio = amants.length > 0 ? rng.pick(amants) : void 0;
           batard = true;
         } else {
           pereBio = mari;
         }
       } else {
-        const amants = pop.filter(
-          (x) => x.sexe === "M" && (x.statut === "Sain" || x.statut === "Malade") && x.age >= C.p.adultAge
-        );
-        pereBio = amants.length > 0 ? rng.pick(amants) : void 0;
+        pereBio = amantsDeLaVille.length > 0 ? rng.pick(amantsDeLaVille) : void 0;
         batard = true;
       }
       const etaitMalade = mere.statut === "Malade";
@@ -8399,7 +9753,7 @@ function accoucher(state, p, mere, pere, rng, recap) {
   const batard = mere.enfantBatard;
   const consanguin = isConsanguineous(mere, pere);
   for (let i = 0; i < nb; i++) {
-    const dyn = computeBabyDynasty(state, p, mere, pere, batard, rng);
+    const dyn = computeBabyDynasty(state, mere, pere, batard, rng);
     const enfant = {
       id: newId(rng),
       nom: mere.nom,
@@ -8457,14 +9811,14 @@ function isConsanguineous(mere, pere) {
   if (mere.pereId && mere.pereId === pere.pereId) return true;
   return false;
 }
-function computeBabyDynasty(state, p, mere, pere, batard, rng) {
+function computeBabyDynasty(state, mere, pere, batard, rng) {
   const C = cfgOf(state.config);
   if (batard) {
     if (pere && isNobleDyn(pere.dynastie, C)) return pere.dynastie;
     if (isNobleDyn(mere.dynastie, C)) return mere.dynastie;
     return C.p.dynastieRoturier;
   }
-  const cult = cultureDef(p.culture, C.config);
+  const cult = cultureDef(mere.culture, C.config);
   const hered = cult ? cult.heredite : "Masculine";
   if (hered === "Masculine") return pere ? pere.dynastie : mere.dynastie;
   if (hered === "F\xE9minine") return mere.dynastie;
@@ -8551,6 +9905,8 @@ function applyCultureInfluence(state, p, rng, recap) {
     if (c.statut === "D\xE9c\xE9d\xE9" || c.metier === C.p.metierDirigeant) continue;
     const culteAccueil = p.villes.find((v) => v.nom === c.ville)?.culture;
     const nationalisme = culteAccueil && culteAccueil !== c.culture ? effetsDogmeCulture(state, culteAccueil, "conversionLocale", C) : 0;
+    const villeAccueil = p.villes.find((v) => v.nom === c.ville);
+    const convBatiment = villeAccueil ? conversionLocaleBatimentsVille(villeAccueil, C) : 0;
     if (rng.chance(C.p.conversionProba)) {
       const poids = {};
       for (const [cult, w] of Object.entries(pression)) {
@@ -8561,9 +9917,9 @@ function applyCultureInfluence(state, p, rng, recap) {
         weight += same * C.p.conversionPoidsLocal;
         poids[cult] = weight;
       }
-      if (nationalisme > 0 && culteAccueil) {
+      if ((nationalisme > 0 || convBatiment > 0) && culteAccueil) {
         const poidsAutres = Object.entries(poids).filter(([cult]) => cult !== culteAccueil).reduce((acc, [, w]) => acc + w, 0);
-        poids[culteAccueil] = (poids[culteAccueil] ?? 0) + nationalisme * poidsAutres;
+        poids[culteAccueil] = (poids[culteAccueil] ?? 0) + (nationalisme + convBatiment) * poidsAutres;
       }
       const entries = Object.entries(poids);
       const nouvelle = rng.pickWeighted(entries, (e) => e[1])[0];

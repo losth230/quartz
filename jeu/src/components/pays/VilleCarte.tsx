@@ -96,7 +96,11 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
   //  AMÉLIORATIONS (tiers 2/3 — coût uniforme, rangMinHabitation,
   //  remplaceAmenagement : l'action REMPLACE une instance du tier
   //  inférieur, qui doit être présent dans la ville).
-  const amRefsBase = refs.filter((r) => r.categorie === 'Aménagement' && !r.remplaceAmenagement)
+  // (Fiches 2026-10-25 : les MERVEILLES NATURELLES sont aménageables
+  //  comme un aménagement de base mais JAMAIS améliorables —
+  //  catégorie dédiée du picker pour les distinguer.)
+  const amRefsBase = refs.filter((r) => r.categorie === 'Aménagement' && !r.remplaceAmenagement && !r.merveilleNaturelle)
+  const mnRefs = refs.filter((r) => r.categorie === 'Aménagement' && r.merveilleNaturelle)
   const amRefsTier = refs.filter((r) => r.categorie === 'Aménagement' && r.remplaceAmenagement)
   // Améliorations proposées : uniquement celles dont le tier inférieur
   //  est présent à la ville (et masquées si le rang d'habitation est
@@ -669,6 +673,17 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                   // (Retour Thibaut 2026-10-27 : la case requise vit
                   //  entre parenthèses dans le TITRE — plus besoin du
                   //  suffixe « · terrain » à droite du coût.)
+                  metier: titreAmenagement(a.nom, a.terrain),
+                  droite: fmtCout(coutConstructionRef(a)),
+                  description: [
+                    resumeConstruction(a, C.config),
+                  ].filter(Boolean).join('\n'),
+                })),
+              },
+              {
+                label: 'Merveilles naturelles',
+                options: mnRefs.map((a) => ({
+                  value: a.nom,
                   metier: titreAmenagement(a.nom, a.terrain),
                   droite: fmtCout(coutConstructionRef(a)),
                   description: [

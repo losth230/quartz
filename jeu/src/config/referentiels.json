@@ -5687,6 +5687,282 @@
           "nombre": 10
         }
       ]
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Caverne de la tisseuse",
+      "terrain": "",
+      "cout": "",
+      "production": "+1 Soie par rang de l'habitation par tour.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "effetsParRang": [
+        {
+          "ressource": "Soie",
+          "quantite": 1
+        }
+      ]
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Jardins Flamboyants",
+      "terrain": "",
+      "cout": "",
+      "production": "+10 Bonheur dans l'habitation.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "bonheurApporte": 10
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Pic Ascendant",
+      "terrain": "",
+      "cout": "",
+      "production": "+1 Science par tour.",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Science",
+          "quantite": 1
+        }
+      ],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "effetPlateau": "Siège : lorsque vous attaquez une habitation, sa garnison est réduite de 30"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Ruines de Seth",
+      "terrain": "",
+      "cout": "",
+      "production": "+2 Or et +10 Tourisme par tour.",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Or",
+          "quantite": 2
+        },
+        {
+          "ressource": "Tourisme",
+          "quantite": 10
+        }
+      ],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Sépulcre du Rayonnant",
+      "terrain": "",
+      "cout": "",
+      "production": "+20 Garnison dans l'habitation, +10 Taudis.",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Garnison",
+          "quantite": 20
+        }
+      ],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Trésor du roi sorcier",
+      "terrain": "",
+      "cout": "",
+      "production": "+1 emplacement de route commerciale.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "routesApportees": 1
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Coeur Ancestral",
+      "terrain": "",
+      "cout": "",
+      "production": "+1 émissaire tant que possédée.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "emissairesApportes": 1
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Echine du dragon",
+      "terrain": "",
+      "cout": "",
+      "production": "+1 Charbon et +1 Fer par tour.",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": 1
+        },
+        {
+          "ressource": "Fer",
+          "quantite": 1
+        }
+      ],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Pilliers Célestes",
+      "terrain": "",
+      "cout": "",
+      "production": "Vos armées ont +1 PM.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "effetPlateau": "Vos armées ont +1 PM"
+    },
+    {
+      "categorie": "Aménagement",
+      "groupe": "Merveille naturelle",
+      "famille": "",
+      "nom": "Antre de Magmadon",
+      "terrain": "",
+      "cout": "",
+      "production": "Coût de levée d'armée dans cette habitation -15 Or.",
+      "description": "",
+      "effets": [],
+      "emplacements": [],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 12
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 5
+        }
+      ],
+      "merveilleNaturelle": true,
+      "reductionLeveeArmee": 15
     }
   ],
   "typesHabitation": [

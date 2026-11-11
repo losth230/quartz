@@ -4299,3 +4299,44 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **Documents** : convention consignée dans AGENTS.md (nouveau point après « Automatique vs plateau ») + nouvelle section dans docs/ia/regles-et-arbitrages.md + docblocks moteur amendés.
 - ⚠ INCIDENT d'outillage : bac à sable natif INDISPONIBLE ce tour (upgrade impossible) — PAS de tests locaux. Découvertes : (1) `open_url` WRAP le texte des fichiers bruts (retours à la ligne insérés ~colonne 100, mots coupés) → JAMAIS reconstruire un fichier depuis un fetch web ; (2) l'API GitHub anonyme est rate-limitée. Contournement : lecture byte-exact via `github_app.get_file_contents` (texte intégral + SHA du blob git annoncé), VALIDÉE par un SHA-1 maison STREAMING recalculé (git blob `blob <len>\0<contenu>`) sur CHAQUE fetch — 7/7 vérifiés ; validation à distance par lecture croisée des tests concernés (aucun assert ne touche les extrémités des textes plateau, aucun compteur ne bouge) ; la CI (tsc strict + tests + build) sert de garde syntaxique. Validation locale complète à REJOUER au prochain tour (312 natifs / 23 rendus / tsc baseline / diag attendus INCHANGÉS — seul constructions.ts est touché côté moteur, aucune donnée du référentiel ne bouge).
 - Push en 3 commits : `0ff4cddf` feat(jeu) — constructions.ts + ui.tsx + Picker.tsx + OngletsBatiments.tsx ; `bd9fc2e6` docs(ia) — regles-et-arbitrages.md + AGENTS.md ; ce commit docs(ia) — journal seul.
+
+## Merveilles naturelles (fiches Thibaut 2026-10-25) — 10 aménagements spéciaux
+
+Tier SPÉCIAL des aménagements : aménageables comme un aménagement
+de base (12 Or + 5 Bois), jamais améliorables. Réalisé sur la
+structure consolidée v4 (jeu/), en réutilisant les canaux de la
+BANQUE D'EFFETS existants :
+- flux (effets[]) : Pic Ascendant Science+1, Ruines de Seth
+  Or+2/Tourisme+10, Echine du dragon Charbon+1/Fer+1 ;
+- garnison d'état (effets[Garnison]) : Sépulcre +20 —
+  garnisonHabitationVille lit désormais les AMÉNAGEMENTS en plus
+  des bâtiments ;
+- logements (domicilesApportes) : Sépulcre +10 Taudis ;
+- routes (routesApportees) : Trésor +1 — maxRoutesJoueur lit les
+  aménagements ;
+- réduction de levée (reductionLeveeArmee) : Antre de Magmadon
+  −15 — reductionLeveeBatiments lit les aménagements ;
+- émissaires (emissairesApportes) : Coeur Ancestral +1 (plateau) ;
+- effets de plateau en ITALIQUE (convention 2026-11-04,
+  effetPlateau) : Pic Ascendant (siège −30), Pilliers Célestes
+  (+1 PM).
+
+DEUX nouveaux champs données : `effetsParRang` (Caverne de la
+tisseuse : production × rangNiveau de la ville porteuse —
+Hameau 1, Cité 2, Grande Cité 3) et `bonheurApporte` (Jardins
+Flamboyants : +10, cumulable, plafonné min(100) du bonheur —
+lu par bonheurApportesVille, bâtiments ET aménagements).
+
+UI : catégorie « Merveilles naturelles » dédiée dans le picker
+« + Aménager une case… » (VilleCarte) — distincte des
+aménagements de base et des améliorations tier 2/3.
+
+Tests : merveillesNaturelles.test.ts (9) — les 10 présentes,
+coût uniforme, jamais améliorables, chaque effet moteur vérifié
+(Soie×rang 1/2/3, +10 bonheur, flux, +20 garnison, +10 Taudis,
++1 route, −15 levée, +1 émissaire, italiques plateau).
+PIÈGE DE TEST consigné : la garnison se vérifie SANS state —
+les malus de lois culturelles (Ferveur martiale, Guerres
+saintes) de la partie témoin annulaient l'apport (+20 → 0).
+339/339 natifs verts, tsc strict 0, handler Deno 0, bundle OK,
+build vite OK, diag exit 0.

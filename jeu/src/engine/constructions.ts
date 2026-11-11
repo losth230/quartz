@@ -302,10 +302,17 @@ export function reductionLeveeConstructionRef(ref: ConstructionRef, cfg?: GameCo
  *  reductionLeveeArmee, arbitrage Thibaut 2026-10-28) et se lisent
  *  par (nom, groupe) pour chaque bâtiment présent. Lecture sur la
  *  config C passée — les éditions de Paramètres s'appliquent. */
-export function reductionLeveeBatiments(ville: { batiments?: string[] } | undefined, C: Cfg): number {
+export function reductionLeveeBatiments(ville: { batiments?: string[]; amenagements?: string[] } | undefined, C: Cfg): number {
   let total = 0
   for (const b of ville?.batiments ?? []) {
     const ref = constructionRef(b, C.config)
+    if (ref) total += reductionLeveeConstructionRef(ref, C.config)
+  }
+  // MERVEILLES NATURELLES (fiches 2026-10-25) : les aménagements
+  //  portent aussi des réductions de levée (Antre de Magmadon :
+  //  −15 Or dans cette habitation) — même canal que les bâtiments.
+  for (const a of ville?.amenagements ?? []) {
+    const ref = constructionRef(a, C.config)
     if (ref) total += reductionLeveeConstructionRef(ref, C.config)
   }
   return total
