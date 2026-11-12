@@ -4571,3 +4571,65 @@ session (ce texte) ; npm interdit → validation locale limitée aux
 natifs, la CI (tsc strict + tests + build) couvre le reste.
 
 Rappelé Ctrl+F5.
+
+## Les routes commerciales ne permettaient pas de copier un aménagement — la garde ne voyait que les flux (retour Thibaut 2026-11-12, base bd85aba7)
+
+Retour arbitre : « autre problème : les routes commerciales ne
+permettent pas de copier un aménagement ». Repro exécutée : le Select
+« Aménagement copié » du formulaire (components/pays/CommerceRoutes.tsx)
+reste VIDE et l'ouverture renvoie « Choisis un aménagement à copier. »
+(aEff='') — impossible d'ouvrir une route vers un autre joueur.
+
+**Cause racine** : bug de garde, PAS un manque de fonctionnalité.
+`amenagementsCopiables` (engine/commerce.ts) ne listait que les
+aménagements à FLUX (`ressourcesCopiables` → contributionBanque().flux)
+— or depuis la vague 3a, les aménagements de base n'ont PLUS de flux :
+leurs apports vivent dans les `emplacements` du référentiel
+({metier, places} — Champ : 3 Fermier, Mine de Fer, Scierie…). Ne
+restaient copiables que 3/52 aménagements (merveilles naturelles à
+flux) et 5/71 bâtiments. Le mécanisme de copie d'emplacements EXISTAIT
+et marchait : `emplacementsRoutesVille` (engine/metiers.ts) ajoute les
+emplacements de l'aménagement copié aux caps de la ville d'ORIGINE,
+conformément au design ACTÉ 2026-10-24 (« copier exactement un
+aménagement, y compris ses emplacements de population » — l'aide en
+jeu le promet déjà).
+
+**Deux commits sur `v4` depuis `bd85aba7`** :
+- `6c4bd50e` feat(jeu) : `emplacementsCopiables(nom, cfg)` (export,
+  places > 0 via `emplacementsConstructionRef` — voie constructions.ts,
+  le docblock interdit toujours amenagements.ts) ; copiable = flux OU
+  emplacements dans `amenagementsCopiables` ; gardes de
+  `creerRouteCommerce` et `changerCopieRoute` unifiées (« n'a rien à
+  copier (ni production, ni emplacements de métier) ») ; logs via
+  `descriptionCopie` (flux + « N place(s) Métier ») ;
+  `effetsRouteProprietaire` et la garde `(ville.amenagements ?? [])
+  .includes(...)` inchangées (design) ; UI CommerceRoutes.tsx : colonne
+  « Copie / tour (production + emplacements) » avec les places copiées
+  « +N place(s) Métier (cap de la ville d'origine) », aides et label
+  reformulés ; +2 tests natifs dans engine/commerce.test.ts (Champ à
+  emplacements seuls : copiable + route ouvrable + cap Fermier +3 à
+  l'origine + log « 3 place(s) Fermier » ; garde : aménagement sans
+  flux ni emplacements refusé, y compris par changerCopieRoute) —
+  le commentaire du test Scierie (route injectée) amendé : le parcours
+  NORMAL couvre désormais les emplacements.
+- `6f9cd7e1` docs(ia) : section dédiée dans regles-et-arbitrages.md +
+  compteurs AGENTS.md réalignés à 354 natifs (352 + 2 correctif).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac upgradé)** : npm install INTERDIT → natifs
+uniquement, harnais strip-types + hooks RECONSTRUIT deux fois (le bac
+a été réinitialisé DEUX FOIS en pleine session : corpus re-téléchargé
+depuis codeload à la même tête bd85aba7, correctif régimes `loi: d.loi`
+re-vérifié après chaque re-extraction, harnais + stub @supabase
+recréés) : **336/336 natifs verts** (33 fichiers sans react ni
+Constructions.test.ts — les 5 échecs restants du bac viennent tous de
+components/pays/Constructions.test.ts, hors harnais, couvert par la
+CI), y compris les 2 nouveaux. Diff complet vs extraction propre du
+tarball AVANT push : exactement 3 fichiers modifiés (règle absolue
+incident 2026-10-14).
+
+**Effet immédiat pour l'arbitre** : le Select « Aménagement copié »
+se remplit (tous les aménagements à emplacements : Champ, Scierie,
+Mine de Fer…) ; les routes s'ouvrent ; les emplacements copiés
+s'annoncent dans la table (colonne « Copie / tour ») et se
+matérialisent via les caps de la ville d'origine. Ctrl+F5 requis.
