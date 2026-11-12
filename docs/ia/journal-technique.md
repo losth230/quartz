@@ -4769,3 +4769,64 @@ chez le donneur dans la fusion. Ctrl+F5 requis.
   const locale d'abord. CI verte prouvée par le bundle
   `index-B8HDQ0kU.js` (chaînes « transfert_pop » et « rejoué à la
   résolution du tour » présentes).
+
+## Le Coeur Ancestral ne créditait aucun émissaire (retour Thibaut 2026-11-12, base 7ddb96f2)
+
+Retour arbitre : « lors de la création du coeur ancestral (merveille
+naturelle), aucun émissaire n'est crédité. Vérifie, et vérifie pour
+toutes les autres sources qui peuvent créditer des émissaires ».
+
+**Cause racine** : la réserve MOBILISABLE d'émissaires = réserve
+manuelle (p.emissaires, plateau) + le bonus des constructions « tant
+que présentes » (champ emissairesApportes, arbitrage 2026-11-03).
+Mais le comptage (`emissairesBatimentsJoueur`, engine/batiments.ts)
+ne parcourait que les BÂTIMENTS (ville.batiments) — le Coeur
+Ancestral est une MERVEILLE NATURELLE (catégorie Aménagement) : il
+vit dans ville.amenagements et n'était compté NULLE PART. Le
+référentiel et le picker « + Construire » affichaient correctement
+« +1 émissaire » (resumeConstruction, générique) ; seule la réserve
+mobilisable était aveugle.
+
+**Revue demandée — toutes les autres sources d'émissaires,
+vérifiées SAINES** : bâtiments porteurs (Délégation +1,
+Chancellerie +2, Ambassade +4, Guilde des diplomates +7 — remplacés
+exclus) ; routes vers cité libre (+1 émissaire AUPRÈS de la cité
+tant que la route est active, `emissairesEffectifsCite` — hors
+réserve, par design) ; ville libérée en cité libre (+1 émissaire
+PLACÉ dans la cité, `villeDevientCiteLibre`) ; cité annexée
+(émissaires placés RECREDITÉS aux réserves,
+`citeLibreDevientVille`) ; réserve manuelle du plateau.
+
+**Deux commits sur `v4` depuis `7ddb96f2`** :
+- `36f131c2` feat(jeu) : `emissairesBatimentsJoueur` devient
+  `emissairesConstructionsJoueur` et somme AUSSI les aménagements
+  (même champ emissairesApportes, même sémantique « tant que la
+  construction tient » ; les aménagements améliorés sont remplacés
+  EN PLACE dans la liste, rien à neutraliser — les merveilles ne
+  sont jamais améliorables ; les bâtiments gardent la règle
+  « remplacés exclus »). Docblocks amendés (defaultConfig champ,
+  constructions helper, entête emissaires.test.ts) ; renommage
+  répercuté aux 2 vues (CitesLibresView, CarteReservesEmissaires)
+  et aux tests tier3/emissaires. Test Coeur Ancestral étendu
+  (merveillesNaturelles.test.ts : le champ ET le comptage) ;
+  +1 test natif emissaires.test.ts (aménagement porteur compté,
+  cumul bâtiment + aménagement, aménagement sans émissaires
+  neutre).
+- `61a8eabc` docs(ia) : section dédiée dans regles-et-arbitrages.md
+  (avec la revue des sources) + compteurs AGENTS.md réalignés à
+  359 natifs (358 + 1).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac réinitialisé entre les tours)** : corpus
+re-codeload à la tête 7ddb96f2, harnais tshooks + stub @supabase
+recréés : **341/341 natifs verts** (33 fichiers sans react ni
+Constructions.test.ts), y compris le nouveau et le test amendé.
+Diff complet vs extraction propre du tarball AVANT push :
+EXACTEMENT 8 fichiers modifiés, dont 4 au renommage pur vérifiés
+par diff ligne à ligne (règle absolue incident 2026-10-14).
+
+**Effet immédiat pour l'arbitre** : construire le Coeur Ancestral
+crédite +1 dans la réserve MOBILISABLE d'émissaires (carte
+« Réserves d'émissaires », placement dans les cités libres), au
+même titre que la Délégation ; le bonus disparaît si la merveille
+disparaît. Ctrl+F5 requis.
