@@ -51,6 +51,14 @@ Le dépôt `losth230/quartz` contient aussi le site vitrine « Quartz » ; le je
   incrémenter `SCHEMA_VERSION_CONFIG` (config/defaultConfig.ts). Les configs sont
   « convergées » une fois puis tamponnées : supprimer/renommer une ligne dans les
   Paramètres est DÉFINITIF (seule une table vidée entièrement retrouve les défauts).
+- **Le TEXTE d'affichage des tables de référentiel fait foi au DÉPÔT** (convention
+  2026-11-12, retour Thibaut « je vois de vieux textes ») : les textes `loi` des
+  régimes et `bonus` des rangs de pays sont RÉALIGNÉS sur le référentiel à chaque
+  chargement (cfgOf → migrerRegimes / migrerPaysRangs, patron garde-fou victoires) —
+  les configs locales antérieures aux refontes ne portent plus d'anciens textes
+  (garnisons, rizières, bonus saisonniers) à côté des montants MIGRÉS. Les montants
+  chiffrés réglés restent conservés ; les colonnes texte des Paramètres sont en
+  lecture seule.
 
 ## Structure du code
 
@@ -83,8 +91,9 @@ src/
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
 └── engine/*.test.ts, rules/*.test.ts, state/*.test.ts, components/*.test.ts
-                             — tests natifs node:test (342) + tests de rendu (13 fichiers, 23 tests)
-                             (compteurs réalignés 2026-11-01 — pèlerinage + ordre du tour)
+                             — tests natifs node:test (350) + tests de rendu (13 fichiers, 23 tests)
+                             (348 au 2026-11-11 + 2 migrations régimes/paysRangs le 2026-11-12 ;
+                             le « 342 » précédent était périmé — dérive résorbée, à revérifier sur la sortie CI)
 ```
 
 ## Multijoueur (protocole v2 UNIQUE — à ne pas casser)
@@ -112,10 +121,11 @@ protocoles possible dans un salon.
    moteur : sans ce check, un identifiant non défini dans le handler part en
    production (incident 2026-10-19 : `cfgMondiale`, ReferenceError à chaque
    résolution serveur, déployé vert par tous les contrôles).
-3. `npm test` — tests natifs `node --test` (342 : fusion, migrations, régression 20 tours
+3. `npm test` — tests natifs `node --test` (350 : fusion, migrations, régression 20 tours
    avec invariants, config, registre, banque, mutateurs, métiers, commerce, santé,
    bonheur, domiciles, statut social, santé/Guérisseur, dogmes de culture —
-   fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts ; pèlerinage du pontife + registre ordre du tour, 12 tests dans pelerinage.test.ts + tour.test.ts ; vague tier 3 — 20 bâtiments, 7 tests dans tier3.test.ts)
+   fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts ; pèlerinage du pontife + registre ordre du tour, 12 tests dans pelerinage.test.ts + tour.test.ts ; vague tier 3 — 20 bâtiments, 7 tests dans tier3.test.ts ;
+   migration textes de référentiel — lois de régime réalignées + bonus paysRangs, 2 tests dans regimes.test.ts)
    + tests de rendu (13 fichiers, 23 tests) — R3 (2026-10-24) : chaque vue vérifie des DONNÉES
    dérivées de l'état (valeurs, noms, comptes), plus seulement des titres.
    NB (réalignements 2026-10-25) : les compteurs dataient de R4 — les vagues

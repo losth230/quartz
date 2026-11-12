@@ -2326,3 +2326,42 @@ gouverneur nommé en fin de tour s'applique au tour suivant.
    intermédiaire +20 Maisons…) ; les MERVEILLES NATURELLES
    gardent leurs effets (Sépulcre du Rayonnant +10 Taudis, fiche
    arbitre 2026-11-11) — à retirer aussi si l'arbitre le veut.
+
+## Le texte des tables de référentiel fait foi au dépôt (convention 2026-11-12, retour Thibaut « je vois de vieux textes »)
+
+**Constat** (retour Thibaut du 12/11) : les descriptions des régimes
+politiques « ne font aucun sens » — il voyait les ANCIENS textes
+(garnisons +15 par rang d'habitation, rizières) conservés par sa config
+navigateur, à côté des MONTANTS chiffrés réalignés par la refonte
+« 8 lois » du 29/10 ; même chose dans « Pays & rangs » avec des bonus
+de fin d'été / fin d'hiver, hérités du modèle d'avant la refonte des
+rangs du 14/10 (bonus saisonniers, ministres, Influence).
+
+**Cause racine** : `migrerRegimes` complétait les montants mais
+conservait le TEXTE `loi` tel quel (`loi: r.loi`) ; `migrerPaysRangs`
+remplaçait la table au VIEUX format mais gardait telle quelle une
+table au format neuf portant un champ `bonus` périmé. Le design vit
+pourtant dans le DÉPÔT (règle du 19/10 : le dépôt est la référence
+unique).
+
+**Décision (convention, actée sur le même patron que le garde-fou
+victoires — le texte du référentiel fait foi)** :
+- `migrerRegimes` (config/defaultConfig.ts) : le texte `loi` d'un
+  régime qui porte le nom d'un régime du référentiel est RÉALIGNÉ sur
+  celui du référentiel à chaque chargement (cfgOf). Les MONTANTS
+  réglés restent conservés (un 0 explicite reste une loi désactivée) ;
+  un régime hors référentiel est conservé tel quel.
+- `migrerPaysRangs` (config/defaultConfig.ts, désormais exportée et
+  testée) : le champ `bonus` d'un rang qui porte le nom d'un rang du
+  référentiel est RÉALIGNÉ sur ce dernier (vide à ce jour — le design
+  des rangs féodaux n'a AUCUN bonus). Les coûts (Or/Nourriture/
+  serments) réglés restent conservés ; un rang ajouté par l'arbitre
+  (hors échelle du référentiel) est conservé avec son annotation.
+- Paramètres (UI) : la colonne « Loi (texte) » de l'onglet Régimes et
+  la colonne « Bonus » de « Pays & rangs » passent en LECTURE SEULE
+  (les textes vivent dans le référentiel du dépôt ; seuls les
+  montants chiffrés se règlent dans les paramètres).
+- Verrous : 2 tests natifs dans engine/regimes.test.ts (réalignement
+  des vieux textes, conservation des montants réglés, purge des
+  champs morts ; bonus périmés réalignés, coûts et rangs arbitres
+  conservés, vieux format à blocs → défauts).
