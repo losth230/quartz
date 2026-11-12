@@ -301,13 +301,14 @@ test('2026-10-27 : MÉTIERS et LOGEMENTS passent par la banque (canaux placesMet
   // Champ : +5 Taudis ; Quartier intermédiaire : +20 Maisons — canal
   //  logements (Taudis et autres domiciles par le MÊME canal).
   const champ = constructionRef('Champ', C.config)!
-  assert.deepEqual(logementsConstructionRef(champ, C.config), { Taudis: 5 },
-    'logements du Champ : canal logements de la banque')
+  assert.deepEqual(logementsConstructionRef(champ, C.config), {},
+    'le Champ n\u2019apporte plus aucun logement (arbitrage 2026-11-12)')
   const quart = constructionRef('Quartier intermédiaire', C.config)!
   assert.deepEqual(logementsConstructionRef(quart, C.config), { Maison: 20 },
     'logements du Quartier intermédiaire : canal logements de la banque')
   // Le résumé affichable rend ces canaux (« +5 Taudis », « +20 Maisons »).
-  assert.ok(resumeConstruction(champ, C.config).includes('+5 Taudis'))
+  assert.ok(!resumeConstruction(champ, C.config).includes('Taudis'),
+    'le r\u00e9sum\u00e9 du Champ ne mentionne plus les Taudis (arbitrage 2026-11-12)')
   assert.ok(resumeConstruction(quart, C.config).includes('+20 Maisons'))
 })
 

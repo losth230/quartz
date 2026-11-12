@@ -2305,3 +2305,24 @@ Conséquences assumées (arbitre) : un mort du tour a produit une
 dernière fois (il était vivant à la clôture) ; les Fermiers ne
 produisent qu'à partir du 2e tour d'Été ; le bonus d'un
 gouverneur nommé en fin de tour s'applique au tour suivant.
+
+## Logements — trois arbitrages (2026-11-12)
+
+1. **PLANCHER NOBLE** : un noble ne reçoit JAMAIS un domicile de
+   qualité inférieure à la **Maison de notable** (qualité 3) —
+   s'il n'y a plus de place noble (notable/Palais), le noble
+   reste SANS domicile. Un noble hérité d'un Taudis (vieille
+   partie) est relogé à la première attribution. Amendement au
+   retour « 1 logement = 1 habitant » (2026-10-26) : il vaut
+   pour les roturiers.
+2. **La CAPITALE porte 8 Palais par défaut TOUT LE TEMPS** — en
+   plus du stock de son rang, à la création ET à chaque
+   changement de rang : les Palais ne disparaissent plus lors
+   de l'amélioration de la capitale.
+3. **PLUS AUCUN logement sur les AMÉNAGEMENTS** (les 14
+   aménagements × tiers 1/2/3, 36 entrées nettoyées) — les
+   aménagements n'ouvrent que des EMPLOIS. Les BÂTIMENTS gardent
+   leurs logements (Poste de garde +10 Taudis, Quartier
+   intermédiaire +20 Maisons…) ; les MERVEILLES NATURELLES
+   gardent leurs effets (Sépulcre du Rayonnant +10 Taudis, fiche
+   arbitre 2026-11-11) — à retirer aussi si l'arbitre le veut.

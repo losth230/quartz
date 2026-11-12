@@ -4305,12 +4305,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4337,12 +4331,6 @@
         {
           "ressource": "Bois",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
         }
       ]
     },
@@ -4375,12 +4363,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4407,12 +4389,6 @@
         {
           "ressource": "Bois",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
         }
       ]
     },
@@ -4441,12 +4417,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4473,12 +4443,6 @@
         {
           "ressource": "Bois",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
         }
       ]
     },
@@ -4507,12 +4471,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4540,12 +4498,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4572,12 +4524,6 @@
         {
           "ressource": "Bois",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
         }
       ]
     },
@@ -4610,12 +4556,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4647,12 +4587,6 @@
           "ressource": "Bois",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
-        }
       ]
     },
     {
@@ -4679,12 +4613,6 @@
         {
           "ressource": "Bois",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 5
         }
       ]
     },
@@ -4839,12 +4767,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -4878,12 +4800,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -4913,12 +4829,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -4947,12 +4857,6 @@
         {
           "ressource": "Fer",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
         }
       ]
     },
@@ -4987,12 +4891,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5026,12 +4924,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5061,12 +4953,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5095,12 +4981,6 @@
         {
           "ressource": "Fer",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
         }
       ]
     },
@@ -5135,12 +5015,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5174,12 +5048,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5208,12 +5076,6 @@
         {
           "ressource": "Pierre",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
         }
       ]
     },
@@ -5244,12 +5106,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5278,12 +5134,6 @@
         {
           "ressource": "Pierre",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
         }
       ]
     },
@@ -5314,12 +5164,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5348,12 +5192,6 @@
         {
           "ressource": "Pierre",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
         }
       ]
     },
@@ -5384,12 +5222,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5419,12 +5251,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5453,12 +5279,6 @@
         {
           "ressource": "Fer",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
         }
       ]
     },
@@ -5493,12 +5313,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5531,12 +5345,6 @@
         {
           "ressource": "Fer",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
         }
       ]
     },
@@ -5571,12 +5379,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5610,12 +5412,6 @@
           "ressource": "Fer",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
-        }
       ]
     },
     {
@@ -5645,12 +5441,6 @@
           "ressource": "Pierre",
           "valeur": 3
         }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 8
-        }
       ]
     },
     {
@@ -5679,12 +5469,6 @@
         {
           "ressource": "Fer",
           "valeur": 3
-        }
-      ],
-      "domicilesApportes": [
-        {
-          "domicile": "Taudis",
-          "nombre": 10
         }
       ]
     },

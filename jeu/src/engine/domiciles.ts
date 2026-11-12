@@ -178,6 +178,15 @@ export function reserveNobleDomicile(nom: string | null | undefined): boolean {
   return n === 'maison de notable' || n === 'palais'
 }
 
+/** PLANCHER NOBLE (arbitrage Thibaut 2026-11-12 : « des nobles
+ *  vivent en taudis alors que c'est minimum maison de notable ») :
+ *  un noble ne reçoit JAMAIS un domicile de qualité inférieure à
+ *  la Maison de notable (qualité 3) — s'il n'y en a plus de
+ *  disponible, le noble reste SANS domicile. */
+export function plancherNobleDomicile(nom: string | null | undefined, C: Cfg): boolean {
+  return qualiteDomicile(nom ?? '', C) >= 3
+}
+
 /** Habitants VIVANTS d'une ville — l'unité d'attribution (retour
  *  Thibaut 2026-10-26 : 1 logement = 1 habitant, plus de foyers). */
 export function vivantsVille(state: GameState, nJoueur: number, ville: City): Character[] {
@@ -249,6 +258,10 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
       c.domicile &&
       (stock.get(c.domicile) ?? 0) > 0 &&
       (noble || !reserveNobleDomicile(c.domicile))
+      // PLANCHER NOBLE (arbitrage 2026-11-12) : un noble déjà logé
+      //  SOUS la Maison de notable est RELOGÉ — sa place retourne
+      //  au stock et il repasse par l'attribution noble.
+      && (!noble || plancherNobleDomicile(c.domicile, C))
     ) {
       stock.set(c.domicile, (stock.get(c.domicile) ?? 0) - 1)
       loges++
@@ -259,6 +272,10 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
     let place: string | null = null
     for (const t of typesTries) {
       if (!noble && reserveNobleDomicile(t.domicile)) continue
+      // PLANCHER NOBLE (arbitrage 2026-11-12) : un noble ne voit
+      //  QUE les domiciles de qualité >= Maison de notable (3) —
+      //  jamais un Taudis, une Maison ou une Auberge, même libres.
+      if (noble && !plancherNobleDomicile(t.domicile, C)) continue
       const restant = stock.get(t.domicile) ?? 0
       if (restant > 0) {
         stock.set(t.domicile, restant - 1)
@@ -277,7 +294,20 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
  *  (appelé à la création de ville et au changement de rang — cf.
  *  debiterCoutHabitation). Écrase le stock existant : le rang
  *  DÉFINIT l'offre (arbitrage : pas de stock accumulé pour
- *  l'instant, les bâtissements constructibles viendront). */
+ *  l'instant, les bâtissements constructibles viendront).
+ *  (Arbitrage Thibaut 2026-11-12 : « la capitale doit avoir 8
+ *  palais par défaut tout le temps » — la CAPITALE reçoit 8
+ *  Palais EN PLUS du stock de son rang, à la création ET à
+ *  chaque changement de rang : les Palais ne disparaissent plus
+ *  lors de l'amélioration. Capitale reconnue par son nom
+ *  (« Capitale », insensible à la casse — même convention que
+ *  capitaleDe, engine/factions.ts).) */
 export function initStockVille(ville: City, C: Cfg): void {
-  ville.domiciles = stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
+  const stock = stockRang(ville.type ?? 'Ville', ville.rang ?? 'Hameau', C)
+  if ((ville.nom ?? '').trim().toLowerCase() === 'capitale') {
+    const palais = stock.find((e) => e.domicile.toLowerCase() === 'palais')
+    if (palais) palais.nombre += 8
+    else stock.push({ domicile: 'Palais', nombre: 8 })
+  }
+  ville.domiciles = stock
 }

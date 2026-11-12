@@ -14,6 +14,7 @@
 //     garder.
 // ═══════════════════════════════════════════════════════════════════════════
 
+import { rangDe } from './statutSocial'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createGame, defaultSetups } from './setup'
@@ -120,40 +121,41 @@ test('normaliserEtat / migrerEtat : le stock de la ville est complété (vieille
   assert.ok(totalLogementsVille(ville) >= 50, `au moins les maisons du rang (${totalLogementsVille(ville)})`)
 })
 
-test('initStockVille : le rang DÉFINIT l\'offre (écrase le stock)', () => {
+test('initStockVille : le rang DÉFINIT l\u2019offre (écrase le stock) \u2014 la CAPITALE garde 8 Palais (arbitrage 2026-11-12)', () => {
   const { ville, C } = partieTemoin()
   initStockVille(ville, C)
   const total1 = totalLogementsVille(ville)
-  assert.equal(total1, 51) // Hameau : 50 Taudis + 1 Maison de notable
-  // on change le rang : le stock suit
+  // Hameau : 50 Taudis + 1 Maison de notable + 8 Palais (la ville
+  //  témoin est la CAPITALE : « la capitale doit avoir 8 palais
+  //  par défaut tout le temps »)
+  assert.equal(total1, 59)
+  assert.equal((ville.domiciles ?? []).find((e) => e.domicile === 'Palais')?.nombre, 8,
+    'la capitale porte ses 8 Palais dès le Hameau')
+  // on change le rang : le stock suit — les Palais NE DISPARAISSENT PAS
   ville.rang = 'Cité'
   initStockVille(ville, C)
-  assert.equal(totalLogementsVille(ville), 121) // Cité : 100 + 20 + 1
+  assert.equal(totalLogementsVille(ville), 129) // Cité : 100 + 20 + 1 + 8 Palais
+  assert.equal((ville.domiciles ?? []).find((e) => e.domicile === 'Palais')?.nombre, 8,
+    'amélioration : les 8 Palais de la capitale sont toujours là')
 })
 
-test('attribuerDomicilesVille : 1 logement = 1 habitant — chaque vivant consomme une place (retour Thibaut 2026-10-26)', () => {
+test('attribuerDomicilesVille : 1 logement = 1 habitant \u2014 chaque vivant consomme une place (retour Thibaut 2026-10-26)', () => {
   const { state, p, ville, C } = partieTemoin()
   initStockVille(ville, C)
   const loges = attribuerDomicilesVille(state, p, ville, C)
   const vivants = vivantsVille(state, p.n, ville)
-  // (fiche habitations 2026-10-26 : stock du Hameau = 50 Taudis +
-  //  1 Maison de notable = 51 logements. La partie témoin porte
-  //  53 habitants : avec 1 logement = 1 habitant, EXACTEMENT
-  //  min(51, population) est logé — 2 habitants restent dehors
-  //  (l'ancienne attribution par foyer logeait tout le monde : les
-  //  familles partageaient une place ; c'est précisément ce que le
-  //  retour Thibaut retire).)
   const capacite = totalLogementsVille(ville)
   assert.equal(loges, Math.min(capacite, vivants.length),
-    `logés = min(capacité ${capacite}, habitants ${vivants.length})`)
-  assert.equal(vivants.filter((c) => c.domicile).length, loges, 'un logement par habitant logé, pas de surbooking')
+    `loges = min(capacite ${capacite}, habitants ${vivants.length})`)
+  assert.equal(vivants.filter((c) => c.domicile).length, loges, 'un logement par habitant loge, pas de surbooking')
   for (const c of vivants.filter((c) => c.domicile)) {
     assert.ok(domicileDef(c.domicile, C), `domicile inconnu : ${c.domicile}`)
   }
-  // meilleure qualité d'abord : la Maison de notable part au
-  //  premier servi (tous à prestige 0 → ordre de recensement)
-  assert.ok(vivants.some((c) => c.domicile === 'Maison de notable'),
-    'la Maison de notable est attribuée (meilleure qualité d\'abord)')
+  // meilleure qualite d'abord : avec les 8 Palais de la capitale
+  //  (arbitrage 2026-11-12), les premiers servis partent en Palais
+  //  ou Maison de notable
+  assert.ok(vivants.some((c) => c.domicile === 'Palais' || c.domicile === 'Maison de notable'),
+    'le meilleur logement disponible est attribue (Palais de la capitale ou Maison de notable)')
 })
 
 test('attribuerDomicilesVille : les bâtiments les plus qualitatifs servent le HAUT RANG (prestige décroissant)', () => {
@@ -267,8 +269,19 @@ test('normaliserEtat + attribuer : les vieilles parties gagnent leurs domiciles 
   assert.equal(state.turn, avant, 'pas de mutation du tour')
   const vivants = vivantsVille(state, p.n, ville)
   const loges = vivants.filter((c) => c.domicile).length
-  assert.equal(loges, Math.min(totalLogementsVille(ville), vivants.length),
-    'l\'attribution initialise le stock et loge (1 logement = 1 habitant)')
+  // (AMENDEMENT plancher noble, arbitrage 2026-11-12 : « 1 logement
+  //  = 1 habitant » vaut pour les ROTURIERS — un noble sans place
+  //  de qualité >= Maison de notable reste SANS domicile plutôt
+  //  que de vivre en Taudis. Chaque non-logé doit donc être un
+  //  noble : le plancher explique chaque absence.)
+  const attendu = Math.min(totalLogementsVille(ville), vivants.length)
+  const nonLoges = vivants.filter((c) => !c.domicile)
+  assert.ok(loges <= attendu, `loges (${loges}) <= capacite (${attendu})`)
+  for (const c of nonLoges) {
+    assert.equal(rangDe(c, C), 'noble',
+      `non-loge ${c.prenom} : un noble sans place de qualite (plancher noble 2026-11-12)`)
+  }
+  assert.ok(loges > 0, 'l\'attribution initialise le stock et loge')
 })
 
 
@@ -299,27 +312,28 @@ test('audit merge : vieille partie tamponnée (v4) sans stock — attribution r�
 
 // ── Fiche aménagements 3 tiers (retour Thibaut 2026-10-26) ────────────
 
-test('fiche aménagements : Taudis apportés — cumul sur les aménagements de la ville', () => {
+test('fiche amenagements : PLUS AUCUN logement (arbitrage Thibaut 2026-11-12)', () => {
   const { ville, C } = partieTemoin()
-  // Champ = 5 Taudis, Baleinier = aucun (null dans le référentiel)
-  ville.amenagements = ['Champ', 'Champ', 'Baleinier']
-  assert.equal(taudisApportesVille(ville, C), 10, '5 + 5 + 0')
-  // le tier 2 en remplace un de base : 5 + 8
-  ville.amenagements = ['Champ', 'Champ (tier 2)']
-  assert.equal(taudisApportesVille(ville, C), 13, '5 + 8')
+  ville.amenagements = ['Champ', 'Champ', 'Baleinier', 'Champ (tier 2)', 'Riziere (tier 3)']
+  assert.equal(taudisApportesVille(ville, C), 0, 'aucun amenagement n\u2019apporte plus de Taudis')
+  assert.equal(domicilesApportesVille(ville, C).length, 0, 'aucun amenagement n\u2019apporte plus de logements')
+  // les BATIMENTS gardent leurs logements (non concernes par l\u2019arbitrage)
+  ville.amenagements = []
+  ville.batiments = ['Poste de garde']
+  assert.equal(taudisApportesVille(ville, C), 10, 'les batiments conservent leurs +10 Taudis')
 })
 
-test('fiche aménagements : Scierie tier 2 — 2 Tisseurs (correction fiche 2026-10-26)', () => {
+test('fiche amenagements : Scierie tier 2 \u2014 2 Tisseurs, PLUS de logements (arbitrage 2026-11-12)', () => {
   const { C } = partieTemoin()
   const ref = constructionRef('Scierie (tier 2)', C.config)
-  assert.ok(ref, 'Scierie tier 2 dans le référentiel')
-  assert.deepEqual((ref.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis'),
-    { domicile: 'Taudis', nombre: 8 }, '8 Taudis via domicilesApportes (normalisation 2026-11-02)')
+  assert.ok(ref, 'Scierie tier 2 dans le referentiel')
+  assert.equal((ref.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis'), undefined,
+    'plus aucun logement sur les amenagements (arbitrage 2026-11-12)')
   const emp = ref.emplacements ?? []
   const tisseur = emp.find((e) => e.metier === 'Tisseur')
   const bucheron = emp.find((e) => e.metier === 'Bûcheron')
   assert.equal(tisseur?.places, 2, '2 emplacements de Tisseur (fiche, ex-1)')
-  assert.equal(bucheron?.places, 4, '4 emplacements de Bûcheron')
+  assert.equal(bucheron?.places, 4, '4 emplacements de Bucheron')
 })
 
 test('fiche aménagements : Mine d\'Or — 1 Marchand = 2 Commerçants (arbitrage Thibaut 2026-10-26)', () => {
@@ -335,15 +349,13 @@ test('fiche aménagements : Mine d\'Or — 1 Marchand = 2 Commerçants (arbitrag
   }
 })
 
-test('fiche aménagements : resumeConstruction affiche les Taudis (retour Thibaut 2026-10-26)', () => {
+test('fiche amenagements : resumeConstruction sans Taudis (arbitrage 2026-11-12)', () => {
   const { C } = partieTemoin()
-  // Le résumé est LA source affichée partout (picker Aménager/Améliorations,
-  //  lignes de carte, Constructions) : les Taudis y sont désormais visibles.
-  assert.ok(resumeConstruction(constructionRef('Champ', C.config)).includes('+5 Taudis'),
-    'Champ : « +5 Taudis » dans le résumé')
+  assert.ok(!resumeConstruction(constructionRef('Champ', C.config)).includes('Taudis'),
+    'Champ : plus de Taudis dans le resume')
   const scierie2 = resumeConstruction(constructionRef('Scierie (tier 2)', C.config))
-  assert.ok(scierie2.includes('+8 Taudis'), 'Scierie tier 2 : « +8 Taudis »')
-  assert.ok(scierie2.includes('2 tisseur'), 'Scierie tier 2 : 2 tisseurs dans le résumé')
+  assert.ok(!scierie2.includes('Taudis'), 'Scierie tier 2 : plus de Taudis')
+  assert.ok(scierie2.includes('2 tisseur'), 'Scierie tier 2 : 2 tisseurs toujours dans le resume')
 })
 
 // ── Fiche bâtiments rang 1 + 2 (retour Thibaut 2026-10-26) ─────────────
@@ -440,7 +452,8 @@ test('normalisation domiciles : les Taudis vivent dans domicilesApportes — plu
   }
   // Champ : +5 Taudis (fiche tier 1) — même canal
   const champ = refs.find((c) => c.nom === 'Champ')
-  assert.equal((champ?.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis')?.nombre, 5, 'Champ : +5 Taudis via domicilesApportes')
+  assert.equal((champ?.domicilesApportes ?? []).find((e) => e.domicile === 'Taudis'), undefined,
+    'Champ : plus aucun Taudis (arbitrage 2026-11-12)')
 })
 
 test('normalisation domiciles : une construction peut porter Taudis ET Maisons ENSEMBLE (le cas impossible avant)', () => {
@@ -482,4 +495,44 @@ test('normalisation domiciles : migrerDomicilesApportes convertit les configs pe
   // idempotent : re-migrer l'entrée déjà convertie ne change rien
   const encore = migrerDomicilesApportes(apres)
   assert.deepEqual(encore.domicilesApportes, apres.domicilesApportes, 'migration idempotente')
+})
+
+
+// ── PLANCHER NOBLE (arbitrage Thibaut 2026-11-12) ────────────────────
+
+test('plancher noble : un noble ne reçoit JAMAIS un domicile sous la Maison de notable', () => {
+  const { state, p, ville, C } = partieTemoin()
+  initStockVille(ville, C)
+  // stock : uniquement des Taudis (on vide le reste)
+  ville.domiciles = [{ domicile: 'Taudis', nombre: 50 }]
+  const vivants = vivantsVille(state, p.n, ville)
+  for (const c of vivants) { c.domicile = null; c.prestige = 0 }
+  // un noble (prestige 300 = rang noble de naissance), le reste à 0
+  const noble = vivants[0]
+  noble.prestige = 300
+  assert.equal(vivants.filter((c) => (c.prestige ?? 0) >= 250).length, 1, 'fixture : un seul noble')
+  attribuerDomicilesVille(state, p, ville, C)
+  // le noble n'a PAS pris un Taudis : il reste SANS domicile
+  assert.equal(noble.domicile, null,
+    'le noble reste sans domicile plutôt que de vivre en Taudis (plancher noble)')
+  // les roturiers, eux, sont logés en Taudis
+  assert.ok(vivants.some((c) => c !== noble && c.domicile === 'Taudis'),
+    'les roturiers prennent les Taudis')
+})
+
+test('plancher noble : un noble déjà logé en Taudis (vieille partie) est RELOGé ou sans domicile', () => {
+  const { state, p, ville, C } = partieTemoin()
+  initStockVille(ville, C)
+  const vivants = vivantsVille(state, p.n, ville)
+  for (const c of vivants) c.prestige = 0
+  const noble = vivants[0]
+  noble.prestige = 300
+  noble.domicile = 'Taudis' // état hérité d'avant l'arbitrage
+  ville.domiciles = [{ domicile: 'Taudis', nombre: 50 }]
+  for (const c of vivants) if (c !== noble && c.domicile === 'Palais') c.domicile = null
+  attribuerDomicilesVille(state, p, ville, C)
+  assert.notEqual(noble.domicile, 'Taudis',
+    'le noble hérité d\u2019un Taudis ne le garde pas (relogé ou sans domicile)')
+  assert.ok(noble.domicile === null || (domicileDef(noble.domicile, C)?.qualite ?? 0) >= 3,
+    'si le noble est logé, c\u2019est en qualité >= Maison de notable (3)')
 })

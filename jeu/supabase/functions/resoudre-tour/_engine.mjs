@@ -4344,12 +4344,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4376,12 +4370,6 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
         }
       ]
     },
@@ -4414,12 +4402,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4446,12 +4428,6 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
         }
       ]
     },
@@ -4480,12 +4456,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4512,12 +4482,6 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
         }
       ]
     },
@@ -4546,12 +4510,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4579,12 +4537,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4611,12 +4563,6 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
         }
       ]
     },
@@ -4649,12 +4595,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4686,12 +4626,6 @@ var referentiels_default = {
           ressource: "Bois",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
-        }
       ]
     },
     {
@@ -4718,12 +4652,6 @@ var referentiels_default = {
         {
           ressource: "Bois",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 5
         }
       ]
     },
@@ -4878,12 +4806,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -4917,12 +4839,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -4952,12 +4868,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -4986,12 +4896,6 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
         }
       ]
     },
@@ -5026,12 +4930,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5065,12 +4963,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5100,12 +4992,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5134,12 +5020,6 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
         }
       ]
     },
@@ -5174,12 +5054,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5213,12 +5087,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5247,12 +5115,6 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
         }
       ]
     },
@@ -5283,12 +5145,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5317,12 +5173,6 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
         }
       ]
     },
@@ -5353,12 +5203,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5387,12 +5231,6 @@ var referentiels_default = {
         {
           ressource: "Pierre",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
         }
       ]
     },
@@ -5423,12 +5261,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5458,12 +5290,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5492,12 +5318,6 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
         }
       ]
     },
@@ -5532,12 +5352,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5570,12 +5384,6 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
         }
       ]
     },
@@ -5610,12 +5418,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5649,12 +5451,6 @@ var referentiels_default = {
           ressource: "Fer",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
-        }
       ]
     },
     {
@@ -5684,12 +5480,6 @@ var referentiels_default = {
           ressource: "Pierre",
           valeur: 3
         }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 8
-        }
       ]
     },
     {
@@ -5718,12 +5508,6 @@ var referentiels_default = {
         {
           ressource: "Fer",
           valeur: 3
-        }
-      ],
-      domicilesApportes: [
-        {
-          domicile: "Taudis",
-          nombre: 10
         }
       ]
     },
@@ -8769,6 +8553,9 @@ function reserveNobleDomicile(nom) {
   const n = (nom ?? "").trim().toLowerCase();
   return n === "maison de notable" || n === "palais";
 }
+function plancherNobleDomicile(nom, C) {
+  return qualiteDomicile(nom ?? "", C) >= 3;
+}
 function vivantsVille(state, nJoueur, ville) {
   return (state.population[nJoueur] ?? []).filter(
     (c) => c.statut !== "D\xE9c\xE9d\xE9" && c.ville === ville.nom
@@ -8787,7 +8574,7 @@ function attribuerDomicilesVille(state, p, ville, C) {
   let loges = 0;
   for (const c of servs) {
     const noble = rangDe(c, C) === "noble";
-    if (c.domicile && (stock.get(c.domicile) ?? 0) > 0 && (noble || !reserveNobleDomicile(c.domicile))) {
+    if (c.domicile && (stock.get(c.domicile) ?? 0) > 0 && (noble || !reserveNobleDomicile(c.domicile)) && (!noble || plancherNobleDomicile(c.domicile, C))) {
       stock.set(c.domicile, (stock.get(c.domicile) ?? 0) - 1);
       loges++;
       continue;
@@ -8795,6 +8582,7 @@ function attribuerDomicilesVille(state, p, ville, C) {
     let place = null;
     for (const t of typesTries) {
       if (!noble && reserveNobleDomicile(t.domicile)) continue;
+      if (noble && !plancherNobleDomicile(t.domicile, C)) continue;
       const restant = stock.get(t.domicile) ?? 0;
       if (restant > 0) {
         stock.set(t.domicile, restant - 1);
@@ -8808,7 +8596,13 @@ function attribuerDomicilesVille(state, p, ville, C) {
   return loges;
 }
 function initStockVille(ville, C) {
-  ville.domiciles = stockRang(ville.type ?? "Ville", ville.rang ?? "Hameau", C);
+  const stock = stockRang(ville.type ?? "Ville", ville.rang ?? "Hameau", C);
+  if ((ville.nom ?? "").trim().toLowerCase() === "capitale") {
+    const palais = stock.find((e) => e.domicile.toLowerCase() === "palais");
+    if (palais) palais.nombre += 8;
+    else stock.push({ domicile: "Palais", nombre: 8 });
+  }
+  ville.domiciles = stock;
 }
 
 // src/engine/habitations.ts

@@ -4472,3 +4472,30 @@ places → 1,0 Bois max), gouverneur nommé en fin de tour, phases
 A/B de la population. 348/348 natifs verts (les 344 existants
 sont passés INTACTS — aucun ne verrouillait l'ordre), tsc 0,
 handler 0, bundle OK, build OK, diag 0.
+
+## Logements : plancher noble, 8 Palais de la capitale, retrait des logements des aménagements (arbitrage Thibaut 2026-11-12)
+
+Trois retours arbitre :
+1. « des nobles vivent en taudis alors que c'est minimum maison
+   de notable » → PLANCHER NOBLE : plancherNobleDomicile
+   (qualité ≥ 3), filtre à l'attribution + relogement des nobles
+   hérités d'un logement sous le plancher ; amendement au retour
+   « 1 logement = 1 habitant » (les non-logés d'une attribution
+   pleine sont désormais des NOBLES sans place noble) ;
+2. « lors de l'amélioration de la capitale, les palais
+   disparaissent » → initStockVille ajoute 8 Palais à la
+   CAPITALE (reconnue par nom, convention capitaleDe) à la
+   création ET à chaque changement de rang ;
+3. « les aménagements agissent davantage sur les logements que
+   sur l'emploi » → domicilesApportes retirés des 36 entrées
+   d'aménagements (tiers 1/2/3) ; bâtiments et merveilles
+   naturelles conservés. NOTE : ces Taudis étaient HORS
+   attribution (convention) — ils ne logeaient personne, ils ne
+   gonflaient que le facteur Logement du bonheur : le retrait
+   dégonfle le score logement des villes aménagées.
+
+Tests : 2 nouveaux (plancher noble, relogement hérité), 7
+réalignés (stock capitale 59/129, aménagements sans logements,
+résumés sans Taudis, banque, normalisation, attribution pleine
+amendée). 350/350 verts, tsc 0, handler 0, bundle OK, build OK,
+diag 0.
