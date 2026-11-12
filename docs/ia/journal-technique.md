@@ -4691,3 +4691,63 @@ Lunisme voient le Tourisme de « Foi supérieure » (+1 par noble) ;
 le pontife peut être le porteur des nobles sans posséder les villes
 productrices ; les écrans Dogmes et « Culture du pays » affichent la
 nouvelle définition. Ctrl+F5 requis.
+
+## Les transferts de ville et les dons de population perdaient leur objet à la résolution (retour Thibaut 2026-11-12, base 0ab6bad4)
+
+Retour arbitre : « les villes disparaissent lors du transfert de
+ville, idem pour la population lors du transfert de pop ».
+
+**Cause racine** (bug 2026-10-17 corrigé CÔTÉ VILLE seulement à
+l'époque) : la fusion remplace l'état de chaque joueur par SA
+section. Depuis le rafraîchissement de la section À CHAQUE mutation,
+la section du DONNEUR, poussée après le transfert local, ne porte
+PLUS la ville ; celle du RECEVEUR ne l'a jamais portée (on ne voit
+les actions des autres qu'à la résolution). Le rejeu
+(`rejouerTransfertVille`) cherchait la ville PAR NOM chez le donneur
+dans l'état fusionné → introuvable → « idempotent » sans effet →
+ville perdue des deux côtés, habitants compris. Le DON de
+personnage (« Donner à… », `deplacerPersonnage`) était une mutation
+inter-joueurs SANS événement partagé : population[src] venait de la
+section du donneur (sans la fiche), population[dst] de celle du
+receveur (jamais vue) → le personnage disparaissait du monde.
+
+**Deux commits sur `v4` depuis `0ab6bad4`** :
+- `6ff5f7aa` feat(jeu) : payload 'transfert_ville' étendu (ville
+  COMPLÈTE + fiches des habitants qui suivent, capturées AVANT le
+  transfert local par `transfererVillePartage` — engine/villes.ts) ;
+  le rejeu MATÉRIALISE la ville chez le receveur si le donneur ne
+  l'a plus (renommage de collision + resynchronisation Tourisme
+  comme `transfererVille` ; chemin historique conservé pour
+  l'ancien format). NOUVEAU événement partagé 'transfert_pop'
+  (engine/shared.ts `rejouerTransfertPop`, branché dans
+  rejouerEvenementsPartages — engine/fusion.ts) : fiche complète
+  APRÈS le don + clés STABLES (joueur par numéro, cité par NOM —
+  l'index des options de don ne survit pas au tour) ; rejeu BRUT
+  idempotent (retrait par id partout, insertion chez la cible si
+  absente). UI : VilleCarte.tsx pousse le payload complet,
+  PopulationTable.tsx pousse le don. +3 tests natifs fusion.test.ts
+  (scénarios donneur/receveur complets + idempotence rejeu double +
+  don vers cité libre déjà fusionnée par diff).
+- `a02a1d7a` docs(ia) : section dédiée dans regles-et-arbitrages.md
+  (le mariage manuel inter-porteurs reste hors protocole : l'UI
+  restreint déjà au porteur courant) + compteurs AGENTS.md
+  réalignés à 358 natifs (355 + 3).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac upgradé)** : harnais tshooks + stub
+@supabase recréés après reset : **340/340 natifs verts** (33
+fichiers sans react ni Constructions.test.ts), y compris les 3
+nouveaux. Diff complet vs extraction propre du tarball AVANT push :
+EXACTEMENT 6 fichiers modifiés (règle absolue incident 2026-10-14).
+Piège de fixture : la COUR (nobles de la ville) ne suit PAS la ville
+transférée — le filtre du test doit exclure `isNobleDyn` comme
+`transfererVillePartage` (3 nobles chez J2).
+
+**Effet immédiat pour l'arbitre** : un transfert de ville ou un don
+de personnage fait en cours de tour SURVIT à la fin du tour — la
+ville arrive chez le receveur avec ses habitants, la fiche donnée
+arrive chez son nouveau porteur (joueur ou cité libre), sans
+doublon même si l'événement est rejoué deux fois. Les transferts du
+TOUR EN COURS au moment du déploiement gardent l'ancien format :
+rejouables par le chemin historique tant que la ville est encore
+chez le donneur dans la fusion. Ctrl+F5 requis.
