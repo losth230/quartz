@@ -33,11 +33,12 @@ export function PaysRangsParams({ config, setCfg }: TableProps) {
     <Card title="Rangs de pays — échelle féodale unique">
       <p className="muted small">
         Montée par <strong>sacre</strong> : payer Or + Nourriture et posséder les <strong>serments</strong>
-        requis (vassal ou cité libre sous suzeraineté).
+        requis (vassal ou cité libre sous suzeraineté). Le texte de <strong>bonus</strong> vit
+        dans le référentiel (réaligné automatiquement — les coûts restent réglables ici).
       </p>
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments requis</th><th>Bonus (plateau)</th><th></th></tr></thead>
+          <thead><tr><th>Rang</th><th>Sacre (Or)</th><th>Sacre (Nourriture)</th><th>Serments requis</th><th>Bonus (référentiel, lecture seule)</th><th></th></tr></thead>
           <tbody>
             {config.paysRangs.map((r, i) => (
               <tr key={i}>
@@ -45,7 +46,7 @@ export function PaysRangsParams({ config, setCfg }: TableProps) {
                 <td><NumberInput value={r.coutOr} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].coutOr = v })} /></td>
                 <td><NumberInput value={r.coutNourriture} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].coutNourriture = v })} /></td>
                 <td><NumberInput value={r.serments} min={0} onChange={(v) => setCfg((c) => { c.paysRangs[i].serments = v })} /></td>
-                <td><TextInput value={r.bonus} onChange={(v) => setCfg((c) => { c.paysRangs[i].bonus = v })} /></td>
+                <td className="muted">{r.bonus || '—'}</td>
                 <td>
                   <Button tone="danger" onClick={() => setCfg((c) => { c.paysRangs.splice(i, 1) })}>✕</Button>
                 </td>

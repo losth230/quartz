@@ -1197,12 +1197,22 @@ export function migrerRegimes(list: RegimeDef[] | undefined): RegimeDef[] {
   //  sont PURGÉS ; les champs de la refonte absents de la ligne
   //  sont complétés par les DÉFAUTS du référentiel, un 0 explicite
   //  reste un 0 = loi désactivée.)
+  // (Convention 2026-11-12, retour Thibaut « je vois de vieux textes
+  //  (garnisons, rizières) » : le TEXTE d'affichage d'une loi vit
+  //  dans le RÉFÉRENTIEL, pas dans la config mémorisée par le
+  //  navigateur — les configs antérieures aux refontes gardaient
+  //  d'anciens textes qui décrivaient des lois disparues, à côté
+  //  des montants chiffrés MIGRÉS : plus aucun sens. Le texte est
+  //  RÉALIGNÉ sur celui du référentiel (même patron que le garde-fou
+  //  des victoires) ; seuls les MONTANTS chiffrés restent réglables
+  //  dans les paramètres, le moteur ne lit qu'eux. L'éditeur du
+  //  texte dans l'onglet Régimes est passé en lecture seule.)
   return list.map((r) => {
     const d = defs.find((x) => x.nom === r?.nom)
     if (!d) return r
     return {
       nom: r.nom,
-      loi: r.loi,
+      loi: d.loi,
       leveeOrParRangPays: r.leveeOrParRangPays ?? d.leveeOrParRangPays,
       departHabitantsMult: r.departHabitantsMult ?? d.departHabitantsMult,
       orParMigrant: r.orParMigrant ?? d.orParMigrant,
@@ -1430,13 +1440,27 @@ export function migrerTypesHabitation(list: HabitationDef[] | undefined): Habita
 // (champs bloc/cout/succession en texte libre) vers l'échelle féodale
 // unique (champs coutOr/coutNourriture/serments). Les parties
 // sauvegardées avec l'ancien format repassent sur la table par défaut.
-function migrerPaysRangs(rangs: GameConfig['paysRangs']): GameConfig['paysRangs'] {
+// (Convention 2026-11-12, retour Thibaut « je vois des descriptions avec
+//  des bonus de fin d'été et fin d'hiver » : le champ texte `bonus` d'une
+//  ligne qui porte le NOM d'un rang du référentiel est RÉALIGNÉ sur ce
+//  dernier (les bonus saisonniers/ministres/Influence du modèle
+//  d'avant la refonte du 2026-10-14 survivaient dans les configs
+//  locales, alors que le design actuel n'a AUCUN bonus de rang). Les
+//  MONTANTS réglés (Or/Nourriture/serments) restent conservés ; une
+//  ligne qui ne matche AUCUN rang du référentiel (rang ajouté par
+//  l'arbitre) est conservée telle quelle. L'éditeur du bonus dans
+//  « Pays & rangs » est passé en lecture seule.)
+export function migrerPaysRangs(rangs: GameConfig['paysRangs']): GameConfig['paysRangs'] {
   if (!Array.isArray(rangs) || rangs.length === 0) return DEFAULT_CONFIG.paysRangs
   const r0 = rangs[0] as Record<string, unknown>
   if (typeof r0.coutOr !== 'number' || typeof r0.serments !== 'number') {
     return DEFAULT_CONFIG.paysRangs
   }
-  return rangs
+  return rangs.map((r) => {
+    const d = DEFAULT_CONFIG.paysRangs.find((x) => x.nom === r?.nom)
+    if (!d) return r
+    return { nom: r.nom, coutOr: r.coutOr, coutNourriture: r.coutNourriture, serments: r.serments, bonus: d.bonus }
+  })
 }
 
 // Voies de victoire (feuille « Référentiel », table victoires) : migration

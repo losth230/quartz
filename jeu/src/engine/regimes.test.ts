@@ -30,6 +30,7 @@ import { consoNourrHabitant, detailGainsVille } from './economie'
 import { bonusBonheurRegime, bonheurVille, bonheurVilleComplete, scoresVille } from './bonheur'
 import { multDepartRegime } from './migrationBonheur'
 import { transfererTributVassal } from './vassalite'
+import { migrerRegimes, migrerPaysRangs, DEFAULT_CONFIG, type GameConfig } from '../config/defaultConfig'
 import type { Character, GameState } from './types'
 
 /** Partie complète (8 joueurs par défaut) — les lois de régime du
@@ -215,4 +216,57 @@ test('lois structurelles : Élections (sacre gratuit) et Droit Divin (+1 serment
   const { C } = partie()
   assert.ok(regimeDef('Démocratie', C.config)?.loi.includes('Elections'), 'le texte de la loi Démocratie porte « Elections »')
   assert.ok(regimeDef('Monarchie', C.config)?.loi.includes('Droit Divin'), 'le texte de la loi Monarchie porte « Droit Divin »')
+})
+
+// ── 8. Migrations de config : le TEXTE fait foi au référentiel (2026-11-12) ──
+
+test('migrerRegimes : les vieux textes de lois sont RÉALIGNÉS sur le référentiel, montants réglés conservés', () => {
+  // (Convention 2026-11-12, retour Thibaut « je vois de vieux textes
+  //  (garnisons, rizières) » : les configs antérieures à la refonte
+  //  « 8 lois » gardaient leurs ANCIENS textes à côté des montants
+  //  chiffrés MIGRÉS — incohérence totale. Le texte est désormais
+  //  réaligné sur celui du référentiel ; un montant EXPLICITEMENT
+  //  réglé (7 ici) reste réglé, un champ absent est complété par le
+  //  défaut du référentiel (patron migrerRegimes inchangé sur les
+  //  montants).)
+  const vieille = [
+    {
+      nom: 'Autoritarisme',
+      loi: 'Garnisons +15 par rang d\'habitation.',
+      garnisonParRang: 15, // champ mort de la V2, purgé
+      leveeOrParRangPays: 7, // réglage arbitre explicite : conservé
+    },
+  ] as unknown as import('../config/defaultConfig').RegimeDef[]
+  const migrees = migrerRegimes(vieille)
+  const def = migrerRegimes(undefined).find((r) => r.nom === 'Autoritarisme')
+  assert.ok(def, 'défaut Autoritarisme présent')
+  assert.ok(migrees[0].loi.includes('Conscription'), 'le texte réaligné porte « Conscription »')
+  assert.equal(migrees[0].loi, def!.loi, 'le texte = texte du référentiel, pas celui de la config')
+  assert.equal(migrees[0].leveeOrParRangPays, 7, 'montant réglé conservé')
+  assert.equal(migrees[0].departHabitantsMult, def!.departHabitantsMult, 'champ absent complété par le défaut')
+  assert.equal((migrees[0] as unknown as Record<string, unknown>).garnisonParRang, undefined, 'champ mort purgé')
+})
+
+test('migrerPaysRangs : bonus périmés réalignés sur le référentiel, coûts réglés et rangs arbitres conservés', () => {
+  // (Convention 2026-11-12, retour Thibaut « je vois des descriptions
+  //  avec des bonus de fin d'été et fin d'hiver » : les bonus
+  //  saisonniers du modèle d'avant la refonte du 2026-10-14
+  //  survivaient dans les configs locales. Le bonus d'une ligne qui
+  //  matche un rang du référentiel est réaligné ; les COÛTS réglés
+  //  restent ; une ligne qui ne matche AUCUN rang (ajoutée par
+  //  l'arbitre) est conservée telle quelle.)
+  const table = [
+    { nom: 'Baronnie', coutOr: 0, coutNourriture: 0, serments: 0, bonus: '+5 Nourriture fin d\'hiver' },
+    { nom: 'Comté', coutOr: 33, coutNourriture: 40, serments: 1, bonus: '+10 Or fin d\'été' },
+    { nom: 'Margraviat', coutOr: 99, coutNourriture: 0, serments: 5, bonus: 'annotation arbitre' },
+  ]
+  const migres = migrerPaysRangs(table)
+  assert.equal(migres[0].bonus, '', 'bonus périmé de la Baronnie réaligné sur le référentiel (vide)')
+  assert.equal(migres[1].bonus, '', 'bonus périmé du Comté réaligné sur le référentiel (vide)')
+  assert.equal(migres[1].coutOr, 33, 'coût réglé conservé')
+  assert.equal(migres[2].nom, 'Margraviat', 'rang arbitre conservé')
+  assert.equal(migres[2].bonus, 'annotation arbitre', 'annotation du rang arbitre conservée')
+  // Vieille table à blocs (format Féodal/Républicain) : défauts entiers.
+  const vieille = [{ bloc: 'Féodal', rang: 'Baronnie', cout: '20 Or' }] as unknown as GameConfig['paysRangs']
+  assert.deepEqual(migrerPaysRangs(vieille), DEFAULT_CONFIG.paysRangs, 'vieux format → table par défaut')
 })

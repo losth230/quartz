@@ -215,12 +215,14 @@ export function ParamsPanel() {
           <p className="muted small">
             Colonnes chiffrées = lois du régime, lues automatiquement par le moteur là où
             elles agissent (refonte « 8 lois », 2026-10-29). 0 = désactivé.
+            Le TEXTE des lois vit dans le référentiel (réaligné automatiquement) —
+            seuls les montants chiffrés se règlent ici.
           </p>
           <div className="table-wrap">
             <table className="tbl small">
               <thead>
                 <tr>
-                  <th>Régime</th><th>Loi (texte)</th>
+                  <th>Régime</th><th>Loi (texte du référentiel, lecture seule)</th>
                   <th>Conscription (−Or/rang du pays)</th>
                   <th>Frontières closes (× départs)</th>
                   <th>Terre d'accueil (Or/migrant)</th>
@@ -234,7 +236,7 @@ export function ParamsPanel() {
                 {config.regimes.map((r, i) => (
                   <tr key={i}>
                     <td><TextInput value={r.nom} onChange={(v) => setCfg((c) => { c.regimes[i].nom = v })} /></td>
-                    <td><TextInput value={r.loi} onChange={(v) => setCfg((c) => { c.regimes[i].loi = v })} /></td>
+                    <td className="muted">{r.loi || '—'}</td>
                     <td><NumberInput value={r.leveeOrParRangPays ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].leveeOrParRangPays = v })} /></td>
                     <td><NumberInput step={0.05} value={r.departHabitantsMult ?? 1} onChange={(v) => setCfg((c) => { c.regimes[i].departHabitantsMult = v })} /></td>
                     <td><NumberInput value={r.orParMigrant ?? 0} onChange={(v) => setCfg((c) => { c.regimes[i].orParMigrant = v })} /></td>
