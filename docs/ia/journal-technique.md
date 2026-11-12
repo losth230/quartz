@@ -4499,3 +4499,71 @@ réalignés (stock capitale 59/129, aménagements sans logements,
 résumés sans Taudis, banque, normalisation, attribution pleine
 amendée). 350/350 verts, tsc 0, handler 0, bundle OK, build OK,
 diag 0.
+
+## Le texte des tables de référentiel fait foi au dépôt — régimes & rangs de pays (retour Thibaut 2026-11-12, base 2d1d9369)
+
+Retour arbitre : « j'ai deux problèmes visuels plus que techniques :
+les descriptions des régimes politiques ne font aucun sens ; les pays
+et rangs dans les paramètres ne font aucun sens non plus ». Précisions
+obtenues : Thibaut voyait les VIEUX textes (« garnisons, rizières »)
+et des « descriptions avec des bonus de fin d'été et fin d'hiver ».
+
+**Cause racine** (une seule, les deux écrans) : les migrations de
+config réalignaient les MONTANTS mais jamais les TEXTES. Le
+navigateur de l'arbitre mémorise la config commune : ses textes
+dataient d'avant les refontes.
+- `migrerRegimes` : `loi: r.loi` conservait l'ancien texte
+  d'avant la refonte « 8 lois » (29/10) à côté des montants MIGRÉS —
+  d'où des lois qui décrivent... d'autres lois.
+- `migrerPaysRangs` : une table au format neuf gardait son champ
+  `bonus` rempli de textes du modèle d'avant la refonte des rangs
+  (14/10) — bonus saisonniers fin d'été/fin d'hiver, ministres et
+  Influence, tous retirés depuis.
+
+**Trois commits sur `v4` depuis `2d1d9369`** :
+- `b36bbad1` feat(jeu) : `migrerRegimes` passe à `loi: d.loi` (texte
+  RÉALIGNÉ sur le référentiel à chaque chargement cfgOf ; montants
+  réglés conservés, champs morts purgés, régime hors référentiel
+  conservé) ; `migrerPaysRangs` exportée + réalignement du `bonus`
+  d'un rang qui porte un nom du référentiel (vide à ce jour — le
+  design des rangs féodaux n'a aucun bonus ; coûts réglés conservés,
+  rang arbitre ajouté conservé avec son annotation) ;
+  `ParamsPanel.tsx` + `params/PaysHabitationsParams.tsx` : colonnes
+  « Loi (texte) » et « Bonus » en LECTURE SEULE ; 2 tests natifs dans
+  `engine/regimes.test.ts` (vieux textes réalignés / montants réglés
+  conservés / purge champs morts ; bonus périmés réalignés / coûts et
+  rangs arbitres conservés / vieux format à blocs → défauts).
+- `70a3938c` docs(ia) : section dédiée dans regles-et-arbitrages.md +
+  point de convention et compteurs dans AGENTS.md (le « 342 » datait
+  du 2026-11-01, le dernier run complet du 11/11 était à 348 → 350 ;
+  dérive notée, à revérifier sur la sortie CI).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac upgradé)** : npm install INTERDIT dans ce
+bac (« Package installation is forbidden ») → pas de tests de rendu,
+ni tsc, ni build locaux (CI = garde). Le harnais Node 22
+strip-types + hooks a été RECONSTRUIT (tshooks.mjs : resolve
+''.ts'/index.ts + load JSON sans attribut d'import) : **332/332
+natifs verts** (33 fichiers sans react, stub ESM @supabase recréé
+dans node_modules local non poussé), y compris les 2 nouveaux.
+Effet immédiat pour l'arbitre : la migration joue à chaque cfgOf —
+les textes redeviennent cohérents AU RECHARGEMENT de la page, sans
+réinitialiser la config (les montants réglés restent).
+
+**Outillage du tour** (leçons) : git absent du bac upgradé → dépôt
+via tarball codeload (44 Mo, OK) ; le raccord par morceaux de
+`tools.file_system.read_file` (500 lignes) a été VALIDÉ byte-exact
+par le SHA-1 maison streaming (sha1Blob('blob <n>\0'+contenu) ==
+SHA du blob annoncé par get_file_contents, 4/4 fichiers) AVANT tout
+push — le raccord est donc fiable pour pousser les fichiers locaux ;
+⚠ INCIDENT : le bac a été RÉINITIALISÉ en pleine session (entre le
+push `b36bbad1` et les docs — « installed software and other files
+may not be [kept] ») → tout le corpus local a été RE-TÉLÉCHARGÉ
+depuis codeload à la nouvelle tête avant de refaire les docs : ne
+JAMAIS compter sur la persistance des fichiers de travail entre deux
+commandes longues, re-vérifier la tête (grep du correctif) après un
+reset, et les contenus docs se reconstruisent depuis le journal de
+session (ce texte) ; npm interdit → validation locale limitée aux
+natifs, la CI (tsc strict + tests + build) couvre le reste.
+
+Rappelé Ctrl+F5.
