@@ -2548,3 +2548,51 @@ le picker « + Construire » affichaient correctement « +1 émissaire »
   réserve) ; +1 test natif emissaires.test.ts (aménagement porteur
   compté, cumul bâtiment + aménagement, aménagement sans émissaires
   neutre).
+
+## Récapitulatif des évolutions de population par habitation (retour Thibaut 2026-11-12 « il est difficile de suivre les migrations, ajoute en haut de la page des habitations un récapitulatif rapide : naissances, migrations, etc. »)
+
+**Constat** : les mouvements de population du tour (naissances,
+décès, arrivées et départs du flux de migration) n'étaient visibles
+qu'en fouillant le Journal entrée par entrée — aucun récapitulatif
+par habitation n'existait, et le « Récap du dernier tour » de la
+page Population (conceptions, naissances, décès, mariages,
+conversions, métiers) ne parlait PAS des migrations.
+
+**Décision** :
+- `PlayerRecap.mouvementsVille` : compteur PAR HABITATION (clé =
+  nom de la ville) des naissances, décès, arrivées et départs du
+  tour moteur. Champ OPTIONNEL (vieilles sauvegardes : posé
+  paresseusement par `bumpMouvement`, engine/shared.ts ; les vues
+  lisent `?? {}`).
+- **Carte « Villes » (page 👑 Pays)** : bloc « Évolutions de
+  population du dernier tour » EN TÊTE, une ligne par habitation —
+  👶 naissances, ⚰️ décès, ⬅️ arrivées, ➡️ départs, solde, ligne
+  Total ; « — » à 0 ; villes du joueur dans l'ordre, puis toute
+  ville du récap transférée en cours de tour (mouvement visible).
+- **Récap du dernier tour (page 👥 Population)** : ligne
+  « Migrations : X arrivée(s) / Y départ(s) » quand il y en a eu,
+  avec pointeur vers le détail par ville.
+- **Journal** : la ligne « Migrations — X arrivée(s), Y départ(s) »
+  du récap de fin de tour ne paraît que s'il y a eu des migrations.
+
+**Périmètre (arbitrage d'implémentation)** :
+- ARRIVÉES créditées au récap du joueur DESTINATAIRE (y compris
+  les migrants venus d'AUTRES joueurs) ; DÉPARTS au récap du
+  joueur SOURCE — une migration INTERNE compte les deux sur le
+  même récap. Le FOYER COMPLET compte chaque membre
+  (chef + conjoint + enfants non mariés) au départ ET à l'arrivée.
+- Naissances : la ville de la MÈRE (fratrie comprise). Décès :
+  maladie uniquement (seule cause de décès du moteur).
+- Les actions MANUELLES (ajout d'habitants, dons de personnages,
+  transferts de ville, pertes militaires) restent au 📜 Journal :
+  elles ne passent pas par le récap de fin de tour — note de bas
+  de carte.
+
+**Verrous** : engine/mouvements.test.ts NOUVEAU (7 tests) —
+primitives pures (emptyRecap, bumpMouvement, totauxMouvements,
+repli vieilles sauvegardes), décès sur la ville du défunt,
+fratrie de 2 naissances dans la ville de la mère, migration
+croisée (départ côté source / arrivée côté destinataire), foyer
+complet (3 départs ET 3 arrivées), migration interne (les deux
+compteurs sur le même récap), ligne Migrations du journal
+(absente sans mouvement, totaux exacts sinon).
