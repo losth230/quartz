@@ -4830,3 +4830,110 @@ crédite +1 dans la réserve MOBILISABLE d'émissaires (carte
 « Réserves d'émissaires », placement dans les cités libres), au
 même titre que la Délégation ; le bonus disparaît si la merveille
 disparaît. Ctrl+F5 requis.
+
+## Récap des évolutions de population par habitation, en tête de la carte Villes (retour Thibaut 2026-11-12, base 85f7be99)
+
+Retour arbitre : « il y a un autre problème, il est difficile de
+suivre les migrations — peux-tu ajouter en haut de la page
+habitations un récapitulatif rapide des différentes évolutions de
+population, telles que les naissances, les migrations, etc. ».
+
+**Décision** : le « Récap du dernier tour » de la page Population
+existait déjà (conceptions, naissances, décès, mariages,
+conversions, métiers) mais ne parlait PAS des migrations, et la
+page des habitations (carte « Villes », page 👑 Pays) n'avait
+AUCUN récap par ville. Nouveau compteur PAR HABITATION :
+`PlayerRecap.mouvementsVille` (clé = nom de la ville) — naissances,
+décès, arrivées, départs du tour moteur, champ OPTIONNEL (les
+mutateurs le posent paresseusement via `bumpMouvement`,
+engine/shared.ts — compatibilité vieilles sauvegardes). Trois
+surfaces de lecture :
+- carte « Villes » : bloc « Évolutions de population du dernier
+  tour » EN TÊTE (nouveau composant pays/RecapMouvements.tsx) —
+  une ligne par habitation (villes du joueur dans l'ordre, puis
+  toute ville transférée en cours de tour), 👶 naissances /
+  ⚰️ décès / ⬅️ arrivées / ➡️ départs / solde, ligne Total,
+  « — » à 0 ;
+- « Récap du dernier tour » (page Population) : ligne
+  « Migrations : X arrivée(s) / Y départ(s) » + pointeur vers le
+  détail par ville ;
+- journal : ligne « Migrations — X arrivée(s), Y départ(s) » du
+  récap de fin de tour, seulement s'il y en a eu.
+
+**Périmètre (arbitrage d'implémentation)** : naissances = ville de
+la MÈRE (fratrie comprise, engine/naissances.ts) ; décès = maladie
+(engine/sante.ts killCharacter — seule cause de décès moteur) ;
+migrations = chaque membre du FOYER COMPLET compte UN départ sur
+la ville quittée au récap du joueur SOURCE et UNE arrivée sur la
+ville de destination au récap du joueur DESTINATAIRE, migrants
+d'autres joueurs compris (migration interne = les deux compteurs
+sur le même récap) ; les actions MANUELLES (ajouts d'habitants,
+dons, transferts de ville, pertes militaires) restent au 📜
+Journal — note de bas de carte.
+
+**Quatre commits sur `v4` depuis `85f7be99`** :
+- `16165578` feat(jeu) : 10 fichiers src — types.ts
+  (MouvementsVille + champ PlayerRecap), shared.ts (emptyRecap +
+  bumpMouvement + totauxMouvements), sante.ts, naissances.ts,
+  migrationBonheur.ts (accumulation), journal.ts (ligne
+  Migrations), pays/RecapMouvements.tsx NOUVEAU,
+  pays/VillesCarte.tsx (bloc en tête), population/
+  CarteRecapTour.tsx (ligne Migrations), engine/mouvements.test.ts
+  NOUVEAU (7 tests : primitives pures + repli vieilles sauvegardes,
+  décès sur la ville du défunt, fratrie de 2 dans la ville de la
+  mère, migration croisée, foyer complet 3+3, migration interne,
+  ligne journal absente sans mouvement) ;
+- `10026acc` docs(ia) : section règles (arbitrages, périmètre,
+  verrous) + compteurs AGENTS.md 366 natifs (359 + 7) ;
+- `24b6e918` fix(jeu) : **⚠ UNE CI ROUGE** (jeu + build en échec
+  sur `16165578` — annotations des check-runs : « Element
+  implicitly has an 'any' type because expression of type '""'
+  can't be used to index '{ Bergen…; Oslo…; }' ») : le
+  RÉTRÉCISSISSEMENT CFA des asserts de node:assert (« asserts
+  actual is T ») — assert.deepEqual(r.mouvementsVille, {…})
+  rétrécit la PROPRIÉTÉ au type du littéral pour le reste du flux
+  (patron de l'incident dogmes 5583313d, 3e occurrence) et
+  l'indexation suivante est refusée par tsc strict, invisible au
+  harnais node --test (pas de typage). Correctif : capture du
+  dictionnaire dans une const AVANT les asserts + fiches
+  COMPLÈTES en un seul assert par ville (pas de second accès
+  après narrowing). LEÇON : jamais d'assert node:assert sur une
+  propriété/chaine d'indexation qu'on relit ensuite ; capturer
+  d'abord. NB tsc désormais disponible EN LOCAL ce tour
+  (tarballs typescript 5.6.3 + @types/react/node/scheduler +
+  csstype via registry.npmmirror.com, node_modules du jeu en
+  symlinks, JAMAIS poussés) : baseline = les 3 erreurs stub
+  @supabase documentées, aucune autre — le rattrapage a été
+  validé par tsc AVANT repush, plus par les tests natifs
+  (348/348).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac reconstruit après le reset entre les
+tours)** : corpus re-codeload à la tête 85f7be99, harnais
+tshooks.mjs/tshooks-register.mjs recréé — NB Node 22.20 : le
+résolveur par défaut ne JETTE PAS sur un spécificateur sans
+extension (il renvoie une URL inexistante que le load échoue à
+ouvrir) → tester l'existence du fichier AVANT de chaîner,
+jamais retenter le nu (harnais documenté en tête de fichier) ;
+stub @supabase ESM chaînable recréé. **348/348 natifs verts**
+(34 fichiers hors components/), tsc baseline 3 stubs IDENTIQUE,
+**diag BYTE-IDENTIQUE** (aucun RNG déplacé — mes compteurs ne
+touchent pas aux tirages), diff vs base = EXACTEMENT 10 fichiers
+src dont 2 nouveaux (règle absolue incident 2026-10-14),
+équilibre JSX des 3 .tsx touchés validé par esbuild 0.23.1
+(binaire npmmirror, jamais poussé), intégrité post-push par curl
+raw + cmp : **12/12 byte-identiques** au sha `24b6e918`.
+
+**CI** : UNE rouge (rattrapée ci-dessus), puis sur `24b6e918` :
+jeu + build + diag + deploy TOUS success. Bundle live
+`index-BgTbFbOF.js` (ancien `index-Bo5CmOR3.js` parti) —
+« Évolutions de population du dernier tour » ×1, « Migrations — »
+×1, « arrivée(s) / » ×1, mouvementsVille ×5 (les propriétés
+survivent à la minification) vérifiés présents.
+
+**Effet immédiat pour l'arbitre** : la page des habitations
+commence par un tableau qui résume, par ville, les naissances,
+décès, arrivées et départs du dernier tour avec le solde — les
+migrations se lisent d'un coup d'œil côté départ ET côté arrivée
+(y compris les migrants reçus d'autres joueurs) ; la page
+Population et le journal portent les totaux. Ctrl+F5 requis.
