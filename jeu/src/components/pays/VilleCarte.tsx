@@ -1041,7 +1041,12 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 const payload = transfererVillePartage(st, src, idx, dst)
                 if (payload) {
                   void remote.pousserEvenementPartage(
-                    salon, st.turn, joueur, 'transfert_ville', payload,
+                    salon, st.turn, joueur, 'transfert_ville',
+                    // Spread : PayloadTransfertVille est une
+                    //  INTERFACE (pas de signature d'index implicite)
+                    //  — le littéral est assignable au payload
+                    //  réseau Record<string, unknown>, pas l'interface.
+                    { ...payload },
                   )
                 }
               }
