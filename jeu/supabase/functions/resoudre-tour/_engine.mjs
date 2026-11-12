@@ -6376,7 +6376,7 @@ var referentiels_default = {
     {
       valeur1: 0.5,
       ressource1: "B\xE9tail",
-      valeur2: 2,
+      valeur2: 4,
       ressource2: "Nourriture",
       description: "",
       nobleSeul: false,
@@ -6398,7 +6398,7 @@ var referentiels_default = {
       qualite: "roturier"
     },
     {
-      valeur1: 10,
+      valeur1: 15,
       ressource1: "Nourriture",
       valeur2: 0,
       ressource2: "",
@@ -7436,12 +7436,25 @@ function cfgOf(config) {
   if (Array.isArray(merged.metiers)) {
     const defChasseur = DEFAULT_CONFIG.metiers.find((t) => t.metier === "Chasseur");
     const defFermier = DEFAULT_CONFIG.metiers.find((t) => t.metier === "Fermier");
+    const defEleveur = DEFAULT_CONFIG.metiers.find((t) => t.metier === "\xC9leveur");
+    const defArtiste = DEFAULT_CONFIG.metiers.find((t) => t.metier === "Artiste");
     for (const t of merged.metiers) {
-      if (t.metier === "Chasseur" && defChasseur && t.valeur1 === 1.5 && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
+      if (t.metier === "Chasseur" && defChasseur && t.ressource1 === "Nourriture" && (t.valeur1 === 1.5 && t.valeur2 === 0 || t.valeur1 === 1.2 && t.valeur2 === 0.1 && t.ressource2 === "Or")) {
         t.valeur1 = defChasseur.valeur1;
+        t.valeur2 = defChasseur.valeur2;
+        t.ressource2 = defChasseur.ressource2;
       }
-      if (t.metier === "Fermier" && defFermier && t.ete === true && (t.valeur1 === 5 || t.valeur1 === 15) && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
+      if (t.metier === "Fermier" && defFermier && t.ete === true && (t.valeur1 === 5 || t.valeur1 === 15 || t.valeur1 === 10) && t.ressource1 === "Nourriture" && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1;
+      }
+      if (t.metier === "\xC9leveur" && defEleveur && (t.valeur1 === 2.4 && t.ressource1 === "Nourriture" && t.valeur2 === 0 || t.valeur1 === 0.5 && t.ressource1 === "B\xE9tail" && t.valeur2 === 2)) {
+        t.valeur1 = defEleveur.valeur1;
+        t.ressource1 = defEleveur.ressource1;
+        t.valeur2 = defEleveur.valeur2;
+        t.ressource2 = defEleveur.ressource2;
+      }
+      if (t.metier === "Artiste" && defArtiste && t.valeur1 === 1.2 && t.ressource1 === "Tourisme" && t.valeur2 === 0) {
+        t.valeur1 = defArtiste.valeur1;
       }
     }
   }
@@ -9221,7 +9234,7 @@ function premierPosteLibre(state, p, ville, C, vivantsParVille) {
   const premier = postes.find((x) => x.libres > 0);
   return premier ? premier.metier : null;
 }
-function reaffecterMetiers(state, C = cfgOf(state.config)) {
+function purgerMetiersSurnombre(state, C = cfgOf(state.config)) {
   for (const p of state.players) {
     const pop = state.population[p.n] ?? [];
     const vivantsParVille = /* @__PURE__ */ new Map();
@@ -9264,6 +9277,21 @@ function reaffecterMetiers(state, C = cfgOf(state.config)) {
           texte: `${ville.nom} : capacit\xE9 de ${t.metier.toLowerCase()}(s) atteinte (${Math.floor(cap)}) \u2014 ${perdants.length} habitant(s) (les plus \xE2g\xE9s) passe(nt) sans emploi.`
         });
       }
+    }
+  }
+}
+function attribuerPlacesLibres(state, C = cfgOf(state.config)) {
+  for (const p of state.players) {
+    const pop = state.population[p.n] ?? [];
+    const vivantsParVille = /* @__PURE__ */ new Map();
+    for (const c of pop) {
+      if (c.statut === "D\xE9c\xE9d\xE9") continue;
+      const l = vivantsParVille.get(c.ville);
+      if (l) l.push(c);
+      else vivantsParVille.set(c.ville, [c]);
+    }
+    for (const ville of p.villes) {
+      const vivants = vivantsParVille.get(ville.nom) ?? [];
       const attribues = /* @__PURE__ */ new Map();
       const changements = /* @__PURE__ */ new Map();
       const candidats = vivants.filter((c) => !c.metier && c.age >= C.p.adultAge || c.metier === C.p.metierChasseur).sort((a, b) => b.age - a.age);
@@ -9988,12 +10016,12 @@ function writeRecap(state, p, recap) {
 }
 
 // src/engine/population.ts
-function populationTurn(state, p, rng) {
+function populationTourA(state, p, rng) {
   const C = cfgOf(state.config);
   const pop = state.population[p.n];
-  if (!pop) return;
   const recap = emptyRecap();
   p.recap = recap;
+  if (!pop) return recap;
   maybeAssignProfesseurs(state, p, rng, recap);
   gestionMariages(state, p, rng, recap);
   const vivants = pop.filter((c) => c.statut !== "D\xE9c\xE9d\xE9");
@@ -10010,15 +10038,23 @@ function populationTurn(state, p, rng) {
     if (c.age >= C.p.adultAge && !c.metier) assignAdultMetier(state, p, c, recap, vivantsParVille);
     maladieStep(state, p, c, rng, recap);
   }
-  conceptionEtNaissances(state, p, rng, recap);
-  applyCultureInfluence(state, p, rng, recap);
+  return recap;
+}
+function populationTourB(state, p, rng, recap) {
+  const C = cfgOf(state.config);
+  const pop = state.population[p.n];
+  if (!pop) return;
+  const monRecap = recap ?? emptyRecap();
+  p.recap = monRecap;
+  conceptionEtNaissances(state, p, rng, monRecap);
+  applyCultureInfluence(state, p, rng, monRecap);
   updateCityCultures(state, p);
   for (const v of p.villes) attribuerDomicilesVille(state, p, v, C);
   const evenementsRang = evaluerFamilles(state, p, C);
   for (const ev of evenementsRang) {
     state.log.push({ turn: state.turn + 1, type: "Syst\xE8me", joueur: p.n, texte: ev.texte });
   }
-  writeRecap(state, p, recap);
+  writeRecap(state, p, monRecap);
 }
 
 // src/engine/migrationBonheur.ts
@@ -10198,9 +10234,7 @@ function runTurn(state) {
   const rng = makeRng(state.rngState);
   const turnBefore = state.turn;
   const newSaison = saisonForTurn(turnBefore + 1, C);
-  if (newSaison !== state.saison) state.saison = newSaison;
-  designerGouverneurs(state, C);
-  reaffecterMetiers(state, C);
+  purgerMetiersSurnombre(state, C);
   const gainsParJoueur = {};
   for (const p of state.players) {
     gainsParJoueur[p.n] = calculerGainsPopulation(state, p);
@@ -10290,10 +10324,16 @@ function runTurn(state) {
       }
     }
   }
+  const recapsPopulation = {};
   for (const p of state.players) {
-    populationTurn(state, p, rng);
+    recapsPopulation[p.n] = populationTourA(state, p, rng);
   }
   migrationBonheur(state, rng);
+  for (const p of state.players) {
+    populationTourB(state, p, rng, recapsPopulation[p.n]);
+  }
+  designerGouverneurs(state, C);
+  attribuerPlacesLibres(state, C);
   for (const p of state.players) {
     recruitForArmies(state, p, rng);
   }
@@ -10327,6 +10367,7 @@ function runTurn(state) {
     };
   }
   snapshotRessources(state, turnBefore + 1, apportsParJoueur);
+  if (newSaison !== state.saison) state.saison = newSaison;
   state.turn = turnBefore + 1;
   if (state.log.length > C.p.maxLog) {
     state.log = state.log.slice(state.log.length - C.p.maxLog);

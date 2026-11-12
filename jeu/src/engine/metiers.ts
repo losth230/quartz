@@ -560,7 +560,27 @@ export function occupationsMetierVille(
  *    jamais qu'un poste de repli ; sans place, l'habitant reste
  *    Sans-emploi.
  *  Les cités libres ne passent PAS ici (hors du champ des caps). */
+// (RÉORDONNANCEMENT DES TOURS, arbitrage Thibaut 2026-11-11 : la
+//  réaffectation est DÉCOUPÉE en deux phases —
+//  · purgerMetiersSurnombre : purge des métiers retirés + surnombre,
+//    AVANT le calcul des gains (un métier en surnombre ne produit
+//    JAMAIS — arbitre : « les métiers en surnombre ne produisent
+//    plus ») ;
+//  · attribuerPlacesLibres : prise des postes libres, APRÈS le
+//    moteur de population (morts/départs/naissances) — les
+//    réattributions se font en fin de tour : un poste libéré par
+//    un décès est repris DANS LE MÊME TOUR (le nouveau titulaire
+//    produit au tour suivant).
+//  reaffecterMetiers (les deux phases d'affilée) reste exporté pour
+//  les tests et les usages hors tour.)
 export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)): void {
+  purgerMetiersSurnombre(state, C)
+  attribuerPlacesLibres(state, C)
+}
+
+/** Phase 1 — purge des métiers retirés du référentiel + surnombre
+ *  (les plus âgés sortent). AVANT le calcul des gains. */
+export function purgerMetiersSurnombre(state: GameState, C: Cfg = cfgOf(state.config)): void {
   for (const p of state.players) {
     const pop = state.population[p.n] ?? []
     // Vague scalabilité (arbitrage Thibaut) : partition des vivants
@@ -620,6 +640,28 @@ export function reaffecterMetiers(state: GameState, C: Cfg = cfgOf(state.config)
           texte: `${ville.nom} : capacité de ${t.metier.toLowerCase()}(s) atteinte (${Math.floor(cap)}) — ${perdants.length} habitant(s) (les plus âgés) passe(nt) sans emploi.`,
         })
       }
+    }
+  }
+}
+
+/** Phase 2 — prise des postes libres (sans-emploi et Chasseurs de
+ *  repli), APRÈS le moteur de population : les réattributions de
+ *  fin de tour. Un poste libéré par un décès du tour est repris
+ *  DANS LE MÊME TOUR (arbitrage Thibaut 2026-11-11 : « si un
+ *  gouverneur — ou tout autre métier — meurt, il est remplacé dans
+ *  le même tour ») ; le nouveau titulaire produit au tour suivant. */
+export function attribuerPlacesLibres(state: GameState, C: Cfg = cfgOf(state.config)): void {
+  for (const p of state.players) {
+    const pop = state.population[p.n] ?? []
+    const vivantsParVille = new Map<string, Character[]>()
+    for (const c of pop) {
+      if (c.statut === 'Décédé') continue
+      const l = vivantsParVille.get(c.ville)
+      if (l) l.push(c)
+      else vivantsParVille.set(c.ville, [c])
+    }
+    for (const ville of p.villes) {
+      const vivants = vivantsParVille.get(ville.nom) ?? []
       // 2. places libres (arbitrage Thibaut 2026-10-22) : ordre de
       //    prise de poste « n'importe quel métier → Chasseur → sans
       //    métier ». Candidats : les Sans-emploi ADULTES ET les

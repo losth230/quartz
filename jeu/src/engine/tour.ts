@@ -40,7 +40,7 @@ import { makeRng } from './rng'
 import { cfgOf } from './gameData'
 import { saisonForTurn } from './saisons'
 import { calculerGainsPopulation } from './economie'
-import { designerGouverneurs, reaffecterMetiers } from './metiers'
+import { designerGouverneurs, purgerMetiersSurnombre, attribuerPlacesLibres } from './metiers'
 import { appliquerEffetsBatiments } from './batiments'
 import { appliquerEffetsAmenagements, effetsNourrEteAmenagementsVille } from './amenagements'
 import { appliquerEffetsAutres, effetsNourrEteAutresVille } from './autres'
@@ -51,7 +51,7 @@ import { appliquerTaxesCitesLibres, citesSuzerainesDe } from './citesLibres'
 import { transfererTributVassal } from './vassalite'
 import { preleverPelerinage } from './pelerinage'
 import { appliquerBonusProximite } from './villes'
-import { populationTurn } from './population'
+import { populationTourA, populationTourB } from './population'
 import { migrationBonheur } from './migrationBonheur'
 import { recruitForArmies } from './armees'
 import { snapshotRessources } from './journal'
@@ -210,27 +210,29 @@ export function runTurn(state: GameState): GameState {
   const turnBefore = state.turn
   const newSaison = saisonForTurn(turnBefore + 1, C)
 
-  // 1. Changement de saison (si la saison change au tour qui commence).
-  //    RETIRÉ le 2026-10-24 (retour arbitre Thibaut) : plus de tirage
-  //    d'événement de saison ni de carte dynastie — l'ancienne étape
-  //    tirait un événement dans la table `events` du référentiel et
-  //    l'ancienne étape 2 une carte dans `dynasties` pour chaque
-  //    joueur (tables supprimées, l'historique vit dans git et le
-  //    journal technique). La saison change désormais à sec.
-  if (newSaison !== state.saison) state.saison = newSaison
+  // (RÉORDONNANCEMENT DES TOURS, arbitrage Thibaut 2026-11-11 —
+  //  « ce que je vois en clôturant est ce qui produira » :
+  //  · les REVENUS se calculent sur la population telle que le
+  //    joueur la voit (gouverneurs et réattributions ne jouent
+  //    plus avant) ;
+  //  · tout ce qui fait bouger la population (démographie,
+  //    migrations, nominations, réattributions) se joue APRÈS le
+  //    crédit des revenus — un poste libéré par un décès est repris
+  //    DANS LE MÊME TOUR, le nouveau titulaire produit au suivant ;
+  //  · la SAISON bascule en FIN de tour : les revenus se calculent
+  //    dans la saison affichée pendant que le joueur joue (les
+  //    effets de saison — Fermiers, Nourr-été — prennent effet au
+  //    tour suivant la bascule).
+  //  La saison et les nominations vivaient en tête de tour
+  //  (étapes 1/2bis/2ter) ; elles vivent désormais en fin (étapes
+  //  10bis/10ter/10quater ci-dessous).)
 
-  // 2bis. Gouverneurs automatiques (marqueur (w), retour Thibaut) :
-  //    une ville sans gouverneur qui abrite un noble prend pour
-  //    gouverneur son noble le plus âgé (hors Dirigeant/Héritier) —
-  //    AVANT le calcul des gains : le bonus +10 % d'impôts de la
-  //    ville s'applique dès le tour de la nomination.
-  designerGouverneurs(state, C)
-
-  // 2ter. Réaffectation des métiers plafonnés (rework habitants
-  //    2026-10-20) : caps de Chasseurs par ville (Ville 50 / Château 25,
-  //    paramétrables) — AVANT le calcul des gains : les caps
-  //    s'appliquent aux impôts du même tour.
-  reaffecterMetiers(state, C)
+  // 0. Purge des métiers retirés + surnombre — AVANT le calcul des
+  //    gains : un métier en surnombre ne produit JAMAIS (arbitre
+  //    2026-11-11 : « les métiers en surnombre ne produisent plus »).
+  //    La prise des postes libérés (places libres) se joue en fin
+  //    de tour, après la démographie.
+  purgerMetiersSurnombre(state, C)
 
   // 3. Gains de population par joueur (CalculerGainsPopulation), puis
   //    production de base : stock += prod (lignes 18-28 des J{n}).
@@ -425,19 +427,48 @@ export function runTurn(state: GameState): GameState {
     }
   }
 
-  // 4. Moteur de population (PersonnagesPourJoueur) pour chaque joueur
+  // 4. Moteur de population — PHASE A (les MORTS d'abord) :
+  //    mariages, vieillissement, métier automatique à l'âge adulte,
+  //    maladie et décès (arbitrage 2026-11-11 : « les morts et
+  //    départs avant les naissances »).
+  const recapsPopulation: Record<number, ReturnType<typeof populationTourA>> = {}
   for (const p of state.players) {
-    populationTurn(state, p, rng)
+    recapsPopulation[p.n] = populationTourA(state, p, rng)
   }
 
   // 4bis. Migration par bonheur (arbitrage Thibaut 2026-10-28) : plus
   //  le bonheur d'une ville est bas, plus ses habitants ont de chances
   //  de la quitter (linéaire : 0 % à 100 de bonheur, 10 % à 0) pour
   //  une ville du monde tirée au hasard PONDÉRÉ (culture du migrant,
-  //  bonheur de la candidate — engine/migrationBonheur.ts). APRÈS
-  //  tous les moteurs de population : un migrant n'est pas retraité
-  //  (vieillissement, maladie) au même tour chez son nouveau porteur.
+  //  bonheur de la candidate — engine/migrationBonheur.ts). Les
+  //  DÉPARTS se jouent entre les morts et les naissances (arbitrage
+  //  2026-11-11) : un migrant n'est pas retraité (vieillissement,
+  //  maladie) au même tour chez son nouveau porteur — sa phase A
+  //  est déjà faite chez son ancien porteur, sa phase B (naissances,
+  //  domiciles, prestige) se joue chez le nouveau.
   migrationBonheur(state, rng)
+
+  // 4ter. Moteur de population — PHASE B (les NAISSANCES) :
+  //    grossesses/naissances, influence culturelle, domiciles,
+  //    statut social.
+  for (const p of state.players) {
+    populationTourB(state, p, rng, recapsPopulation[p.n])
+  }
+
+  // 10ter. Gouverneurs automatiques (marqueur (w)) — APRÈS la
+  //    démographie (arbitrage 2026-11-11 : « si un gouverneur meurt,
+  //    il est remplacé dans le même tour ») : une ville sans
+  //    gouverneur qui abrite un noble prend pour gouverneur son
+  //    noble le plus âgé (hors Dirigeant/Héritier). Le bonus +10 %
+  //    d'impôts s'applique au tour SUIVANT (les gains de CE tour
+  //    sont déjà calculés).
+  designerGouverneurs(state, C)
+
+  // 10quater. Réattributions de métiers — places libres (APRÈS la
+  //    démographie, arbitrage 2026-11-11) : les postes libérés par
+  //    les décès/départs du tour sont repris DANS LE MÊME TOUR ;
+  //    les nouveaux titulaires produisent au tour suivant.
+  attribuerPlacesLibres(state, C)
 
   // 5. Armées (RecruitForArmies)
   for (const p of state.players) {
@@ -476,6 +507,15 @@ export function runTurn(state: GameState): GameState {
     }
   }
   snapshotRessources(state, turnBefore + 1, apportsParJoueur)
+
+  // 10bis. Changement de saison — FIN DE TOUR (arbitrage Thibaut
+  //    2026-11-11) : les revenus de CE tour se sont calculés dans la
+  //    saison affichée pendant le tour ; la saison du tour à venir
+  //    bascule ici (le snapshot ci-dessus porte la saison jouée).
+  //    RETIRÉ le 2026-10-24 (retour arbitre) : plus de tirage
+  //    d'événement de saison ni de carte dynastie — la saison
+  //    change à sec.
+  if (newSaison !== state.saison) state.saison = newSaison
 
   // 7. Tour suivant
   state.turn = turnBefore + 1

@@ -4440,3 +4440,35 @@ partie en cours récupère les bonnes fiches au prochain tour,
 SANS republication de la config mondiale.
 
 344/344 verts, tsc 0, build OK, diag 0.
+
+## Réordonnancement des tours (arbitrage Thibaut 2026-11-11)
+
+Motivation (retour arbitre) : « les fins de tours et les revenus
+sont difficiles à anticiper à cause des mouvements dans les
+populations ». Nouvel ordre : les REVENUS se calculent sur la
+population vue en clôturant ; tout ce qui bouge la population
+se joue après le crédit.
+
+Changements :
+- réaffectation DÉCOUPÉE : purgerMetiersSurnombre (avant les
+  gains — un surnombre ne produit JAMAIS) + attribuerPlacesLibres
+  (après la démographie — un poste libéré par un décès est repris
+  DANS LE MÊME TOUR) ;
+- moteur de population DÉCOUPÉ en phases : populationTourA
+  (mariages, vieillissement, maladie/décès — les MORTS) puis,
+  après la migration, populationTourB (naissances, culture,
+  domiciles, prestige) — « les morts et départs avant les
+  naissances et les réattributions » ;
+- gouverneurs automatiques APRÈS la démographie (remplacement
+  même tour, bonus au tour suivant) ;
+- saison en FIN DE TOUR (les revenus se calculent dans la saison
+  affichée ; effets de saison au tour suivant la bascule ; le
+  snapshot porte la saison jouée).
+
+4 tests de verrouillage du NOUVEL ordre
+(reordonnancement.test.ts) : bascule de saison en fin de
+résolution, surnombre purgé avant les gains (3 Bûcherons/2
+places → 1,0 Bois max), gouverneur nommé en fin de tour, phases
+A/B de la population. 348/348 natifs verts (les 344 existants
+sont passés INTACTS — aucun ne verrouillait l'ordre), tsc 0,
+handler 0, bundle OK, build OK, diag 0.

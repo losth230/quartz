@@ -2266,3 +2266,42 @@ AMÉNAGEMENTS en plus des bâtiments.
 Le garde-fou cfgOf migre les anciens défauts du Fermier (5, 10,
 15) vers le défaut courant — la config mondiale du salon en cours
  passe à +15 sans republication.
+
+
+## Ordre de résolution des tours (arbitrage 2026-11-11)
+
+Principe directeur : **« ce que je vois en clôturant est ce qui
+produira »** — les revenus se calculent sur la population telle
+que le joueur la voit ; tout ce qui fait bouger la population se
+joue APRÈS le crédit des revenus.
+
+Ordre (runTurn) :
+1. **Purge surnombre** (métiers retirés + caps) — AVANT les
+   gains : un métier en surnombre ne produit JAMAIS ;
+2. **Revenus des habitants** (métiers × taxes − conso), vassalité,
+   crédit au stock ;
+3. **Autres canaux** (bâtiments → pèlerinage, ordre inchangé) ;
+4. **Population — phase A (les MORTS)** : mariages,
+   vieillissement, métier à l'âge adulte, maladie/décès ;
+5. **Migration par bonheur (les DÉPARTS)** — entre les morts et
+   les naissances ;
+6. **Population — phase B (les NAISSANCES)** : accouchements,
+   conceptions, culture, domiciles, prestige ;
+7. **Gouverneurs automatiques** — un gouverneur décédé est
+   remplacé DANS LE MÊME TOUR ; le +10 % prend effet au tour
+   suivant ;
+8. **Places libres (réattributions)** — les postes libérés par
+   les décès/départs sont repris dans le même tour, les nouveaux
+   titulaires produisent au tour suivant ;
+9. **Armées** (recrutement) ;
+10. **Snapshot historique** (il porte la saison jouée) ;
+11. **Changement de saison** — FIN de tour : les revenus se
+    calculent dans la saison affichée pendant le tour (les
+    effets de saison — Fermiers, Nourr-été — prennent effet au
+    tour suivant la bascule) ;
+12. **Tour suivant**.
+
+Conséquences assumées (arbitre) : un mort du tour a produit une
+dernière fois (il était vivant à la clôture) ; les Fermiers ne
+produisent qu'à partir du 2e tour d'Été ; le bonus d'un
+gouverneur nommé en fin de tour s'applique au tour suivant.

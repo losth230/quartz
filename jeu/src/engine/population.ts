@@ -5,7 +5,7 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, GameState, Player } from './types'
+import type { Character, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { emptyRecap } from './shared'
@@ -21,12 +21,33 @@ import { attribuerDomicilesVille } from './domiciles'
 //  MOTEUR DE POPULATION (PersonnagesPourJoueur)
 // ══════════════════════════════════════════════════════════════════════
 
+// (RÉORDONNANCEMENT DES TOURS, arbitrage Thibaut 2026-11-11 : le
+//  moteur de population est DÉCOUPÉ en deux phases autour de la
+//  migration —
+//  · Phase A (populationTourA) : mariages, vieillissement, métier
+//    automatique à l'âge adulte, maladie et DÉCÈS — les morts
+//    d'abord ;
+//  · la MIGRATION par bonheur (les départs) se joue entre les deux,
+//    GLOBALEMENT (arbitre : « les morts et départs avant les
+//    naissances ») ;
+//  · Phase B (populationTourB) : NAISSANCES, influence culturelle,
+//    domiciles, statut social.
+//  populationTurn (A puis B d'affilée) reste exporté pour les
+//  usages hors réordonnancement.)
 export function populationTurn(state: GameState, p: Player, rng: Rng) {
+  const recap = populationTourA(state, p, rng)
+  populationTourB(state, p, rng, recap)
+}
+
+/** Phase A — mariages, vieillissement, maladie/décès (les MORTS
+ *  d'abord, avant la migration et les naissances). Retourne le
+ *  récap à compléter en phase B. */
+export function populationTourA(state: GameState, p: Player, rng: Rng) {
   const C = cfgOf(state.config)
   const pop = state.population[p.n]
-  if (!pop) return
   const recap = emptyRecap()
   p.recap = recap
+  if (!pop) return recap
 
   // 3.1 Professeurs
   maybeAssignProfesseurs(state, p, rng, recap)
@@ -61,11 +82,25 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
     maladieStep(state, p, c, rng, recap)
   }
 
+  return recap
+}
+
+/** Phase B — naissances, culture, domiciles, statut social (APRÈS
+ *  la migration par bonheur : les départs ont eu lieu, arbitre
+ *  « les morts et départs avant les naissances et les
+ *  réattributions »). */
+export function populationTourB(state: GameState, p: Player, rng: Rng, recap?: PlayerRecap) {
+  const C = cfgOf(state.config)
+  const pop = state.population[p.n]
+  if (!pop) return
+  const monRecap = recap ?? emptyRecap()
+  p.recap = monRecap
+
   // 3.4 Grossesses et naissances
-  conceptionEtNaissances(state, p, rng, recap)
+  conceptionEtNaissances(state, p, rng, monRecap)
 
   // 3.6 Influence culturelle
-  applyCultureInfluence(state, p, rng, recap)
+  applyCultureInfluence(state, p, rng, monRecap)
   updateCityCultures(state, p)
 
   // (RETRAIT 2026-10-28, arbitrage Thibaut : l'étape 3.6bis
@@ -93,7 +128,7 @@ export function populationTurn(state: GameState, p: Player, rng: Rng) {
   }
 
   // Récap dans le journal
-  writeRecap(state, p, recap)
+  writeRecap(state, p, monRecap)
 }
 
 // ══════════════════════════════════════════════════════════════════════
