@@ -22,11 +22,21 @@
 //   · 2026-10-17 : les événements partagés (transfert de ville) sont
 //     REJOUÉS après la fusion, AVANT runTurn — une mutation inter-joueurs
 //     ne peut pas vivre dans une section.
+//   · 2026-11-12 : les DONS de personnages (« Donner à… », onglet
+//     Population) sont des mutations inter-joueurs comme le transfert
+//     de ville — ils partent en événement partagé 'transfert_pop' et
+//     sont rejoués ici (la fiche embarquée remplace les sections qui
+//     ne l'ont jamais vue). Le rejeu du transfert de ville MATÉRIALISE
+//     désormais la ville depuis le payload (villeObj + habitants)
+//     quand la section du donneur, rafraîchie à chaque mutation, ne
+//     l'a plus (retour Thibaut : villes et personnages perdus aux
+//     transferts — engine/villes.ts, rejouerTransfertVille).
 // ═══════════════════════════════════════════════════════════════════════════
 
-import type { GameState, RouteCommerce, CiteLibre, LogEntry } from './types'
+import type { Character, GameState, RouteCommerce, CiteLibre, LogEntry } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import { rejouerTransfertVille } from './villes'
+import { rejouerTransfertPop, type CleDetenteur } from './shared'
 
 /** Section d'un joueur pour la barrière de fin de tour (cf. supabase/client.ts).
  *  Redéclarée ici pour que le module soit autonome (client + serveur). */
@@ -216,6 +226,12 @@ export function rejouerEvenementsPartages(
   for (const ev of evenements) {
     if (ev.type === 'transfert_ville') {
       rejouerTransfertVille(draft, ev.payload as { ville: string; src: number; dst: number })
+    } else if (ev.type === 'transfert_pop') {
+      rejouerTransfertPop(draft, ev.payload as {
+        personnage: Character
+        src: CleDetenteur
+        dst: CleDetenteur
+      })
     } else if (ev.type === 'forcer_absents') {
       const message = typeof ev.payload.message === 'string' ? ev.payload.message : '⏭ Tour forcé.'
       draft.log.push({

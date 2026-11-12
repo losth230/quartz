@@ -158,6 +158,93 @@ export function deplacerPersonnage(
   return null
 }
 
+// ── Dons de personnages en multijoueur (retour Thibaut 2026-11-12) ────
+//  BUG réel : le don (onglet Population, « Donner à… ») est une
+//  mutation INTER-JOUEURS faite EN LOCAL chez le donneur — comme la
+//  fusion remplace la population de chaque joueur par SA section
+//  (fusionnerSections), la fiche donnée n'était ni dans la section du
+//  donneur (il ne l'a plus) ni dans celle du receveur (il ne l'a
+//  JAMAIS vue localement) : le personnage DISPARAISSAIT à la
+//  résolution du tour. Même famille que le bug 2026-10-17 (transfert
+//  de ville) : le don part désormais en ÉVÉNEMENT PARTAGÉ
+//  'transfert_pop' (cp_events) et est REJOUÉ après la fusion.
+
+/** Clé SÉRIALISABLE d'un détenteur (payload réseau des événements
+ *  partagés 'transfert_pop') : joueur par NUMÉRO, cité libre par NOM
+ *  (l'identité stable des cités à la fusion — cf. fusionnerSections,
+ *  qui les fusionne par nom ; l'index « c<i> » des options de don ne
+ *  survit pas au tour). */
+export type CleDetenteur =
+  | { kind: 'joueur'; n: number }
+  | { kind: 'cite'; nom: string }
+
+/** Clé sérialisable d'un détenteur vivant (pour construire un payload). */
+export function cleDe(d: Detenteur): CleDetenteur {
+  return d.kind === 'joueur'
+    ? { kind: 'joueur', n: d.p.n }
+    : { kind: 'cite', nom: d.cite.nom }
+}
+
+/** Détenteur vivant depuis une clé sérialisable (undefined = porteur
+ *  disparu de l'état fusionné — cité renommée, joueur retiré…). */
+export function detenteurDeCleStable(
+  state: GameState, cle: CleDetenteur,
+): Detenteur | undefined {
+  if (!cle || typeof cle !== 'object') return undefined
+  if (cle.kind === 'joueur') {
+    const q = state.players.find((x) => x.n === cle.n)
+    return q ? { kind: 'joueur', p: q } : undefined
+  }
+  const cc = (state.citesLibres ?? []).find((c) => c.nom === cle.nom)
+  return cc ? { kind: 'cite', cite: cc } : undefined
+}
+
+/** Rejoue un DON de personnage à la RÉSOLUTION du tour (événement
+ *  partagé 'transfert_pop' — payload { personnage, src, dst }). La
+ *  fiche embarquée est celle APRÈS le don local (ville déjà ré-ancrée
+ *  chez la cible, perte du métier déjà appliquée par
+ *  deplacerPersonnage) : le rejeu fait un déplacement BRUT, il ne
+ *  ré-applique PAS la logique du don (pas de double perte de métier).
+ *  Idempotent : fiche déjà chez la cible (rejeu double, ou don vers
+ *  une CITÉ LIBRE dont la version modifiée a déjà été fusionnée par
+ *  diff) → ne rien faire. Retourne true si l'état a bougé ou était
+ *  déjà en ordre, false si le rejeu est impossible. */
+export function rejouerTransfertPop(
+  state: GameState,
+  payload: { personnage: Character; src: CleDetenteur; dst: CleDetenteur },
+): boolean {
+  const c = payload?.personnage
+  if (!c || typeof c.id !== 'string') return false
+  const dstD = detenteurDeCleStable(state, payload.dst)
+  if (!dstD) return false
+  const popDst = populationDe(state, dstD)
+  // Idempotence : déjà chez la cible.
+  if (popDst.some((x) => x.id === c.id)) return true
+  // Retirer la fiche par id de TOUTES les populations (défense : la
+  //  section du donneur peut être antérieure au don — cas d'un push
+  //  de section raté puis rejoué —, ou une cité source encore à sa
+  //  version de référence à la fusion).
+  let retireDe: Detenteur | undefined
+  for (const d of detenteursDe(state)) {
+    const arr = populationDe(state, d)
+    const i = arr.findIndex((x) => x.id === c.id)
+    if (i >= 0) { arr.splice(i, 1); retireDe = d }
+  }
+  // Insérer la fiche chez la cible — en GARANTISSANT le tableau
+  //  (populationDe renvoie un tableau détaché si cite.population est
+  //  absent : le push s'y perdrait, cf. deplacerPersonnage).
+  const arrDst = dstD.kind === 'joueur'
+    ? (state.population[dstD.p.n] ?? (state.population[dstD.p.n] = []))
+    : (dstD.cite.population ?? (dstD.cite.population = []))
+  arrDst.push(structuredClone(c))
+  state.log.push({
+    turn: state.turn, type: 'Système',
+    joueur: dstD.kind === 'joueur' ? dstD.p.n : null,
+    texte: `🤝 ${fullName(c)} (${c.dynastie}) rejoint ${nomDe(dstD)} (don de ${retireDe ? nomDe(retireDe) : 'un autre porteur'} rejoué à la résolution du tour).`,
+  })
+  return true
+}
+
 export function emptyRecap(): PlayerRecap {
   return {
     conceptions: {}, naissances: {}, deces: {}, decesMaladie: 0,

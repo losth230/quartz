@@ -12,6 +12,9 @@ import { fusionnerSections, rejouerEvenementsPartages, type SectionJoueurFusion 
 import type { GameState, RouteCommerce } from './types'
 import { createGame } from './setup'
 import type { SetupLine } from './setup'
+import { transfererVillePartage } from './villes'
+import { deplacerPersonnage, neDemenageJamais, isNobleDyn } from './shared'
+import { cfgOf } from './gameData'
 
 const SETUP: SetupLine[] = [
   { nom: 'J1', peuple: 'NORLS', culture: 'Culture Nordique', regime: 'Autoritarisme', taillePopulation: 20, pourcentageMariages: 40, villes: ['A'] },
@@ -133,6 +136,120 @@ test('BUG 2026-10-17 : transfert de ville (événement partagé) rejoué après 
   ])
   assert.equal(out.players[1].villes.length, 0, 'la ville a quitté J2')
   assert.equal(out.players[0].villes.filter((v) => v.nom === villeB.nom).length, 1, 'la ville est chez J1')
+})
+
+test('BUG 2026-11-12 : transfert de ville — la ville survit quand la section du DONNEUR (post-transfert) ne l\'a plus', () => {
+  const ref = base()
+  const villeB = ref.players[1].villes[0]
+  // Même filtre que transfererVillePartage : la COUR (nobles de la
+  //  ville) reste auprès de J2 — seuls les roturiers suivent la ville.
+  const habB = (ref.population[2] ?? []).filter(
+    (c) => c.ville === villeB.nom && !isNobleDyn(c.dynastie, cfgOf(ref.config)),
+  )
+  assert.ok(villeB, 'fixture : J2 a une ville')
+  assert.ok(habB.length > 0, 'fixture : la ville de J2 est habitée')
+  // J2 transfère la ville à J1 PENDANT le tour (état local du donneur)
+  //  et pousse l'événement complet (villeObj + fiches des habitants).
+  const stateJ2 = base()
+  const payload = transfererVillePartage(stateJ2, stateJ2.players[1], 0, stateJ2.players[0])
+  assert.ok(payload, 'le transfert local a eu lieu')
+  assert.equal(payload.deplaces?.length, habB.length, 'payload : tous les habitants de la ville suivent')
+  // Fin de tour : la section de J2, RAFRAÎCHIE après le transfert, ne
+  //  porte plus la ville ni ses habitants ; J1 n'a JAMAIS rien vu.
+  const stateJ1 = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '2': { player: structuredClone(stateJ2.players[1]), population: structuredClone(stateJ2.population[2]), log: [], tour: ref.turn },
+    '1': { player: structuredClone(stateJ1.players[0]), population: structuredClone(stateJ1.population[1]), log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.equal(out.players[1].villes.length, 0, 'J2 n\'a plus la ville')
+  assert.equal(out.players[0].villes.filter((v) => v.nom === villeB.nom).length, 0,
+    'avant rejeu : la ville est CHEZ PERSONNE (le bug)')
+  assert.ok(!(out.population[1] ?? []).some((x) => habB.some((h) => h.id === x.id)),
+    'avant rejeu : les habitants sont perdus (le bug)')
+  rejouerEvenementsPartages(out, [
+    { joueur: 2, type: 'transfert_ville', payload: { ...payload } },
+  ])
+  assert.equal(out.players[0].villes.filter((v) => v.nom === villeB.nom).length, 1,
+    'la ville est MATÉRIALISÉE chez J1')
+  const pop1 = (out.population[1] ?? []).map((x) => x.id)
+  for (const c of habB) assert.ok(pop1.includes(c.id), `l'habitant ${c.id} suit la ville chez J1`)
+  assert.ok(!(out.population[2] ?? []).some((x) => habB.some((h) => h.id === x.id)),
+    'plus personne chez J2')
+  // Idempotence : rejeu double (événement dupliqué) → aucun doublon.
+  rejouerEvenementsPartages(out, [
+    { joueur: 2, type: 'transfert_ville', payload: { ...payload } },
+  ])
+  assert.equal(out.players[0].villes.filter((v) => v.nom === villeB.nom).length, 1, 'pas de ville en double')
+  assert.equal((out.population[1] ?? []).length, (stateJ1.population[1] ?? []).length + habB.length,
+    'pas d\'habitant en double')
+})
+
+test('BUG 2026-11-12 : don de personnage (transfert_pop) survit à la fusion des sections', () => {
+  const ref = base()
+  // J1 donne un roturier à J2 pendant le tour (état local du donneur).
+  const stateJ1 = base()
+  const C = cfgOf(stateJ1.config)
+  const donne = (stateJ1.population[1] ?? []).find(
+    (c) => c.statut !== 'Décédé' && !neDemenageJamais(c, C),
+  )
+  assert.ok(donne, 'fixture : J1 a un habitant donnable')
+  assert.equal(deplacerPersonnage(stateJ1, donne, { kind: 'joueur', p: stateJ1.players[1] }), null,
+    'le don local a eu lieu')
+  const fiche = structuredClone(donne)
+  // Fin de tour : la section de J1 (post-don) ne porte plus la fiche ;
+  //  celle de J2 (qui n'a jamais vu le don) non plus.
+  const stateJ2 = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: structuredClone(stateJ1.players[0]), population: structuredClone(stateJ1.population[1]), log: [], tour: ref.turn },
+    '2': { player: structuredClone(stateJ2.players[1]), population: structuredClone(stateJ2.population[2]), log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  assert.ok(!(out.population[1] ?? []).some((x) => x.id === donne.id), 'le donneur fusionné n\'a plus la fiche')
+  assert.ok(!(out.population[2] ?? []).some((x) => x.id === donne.id),
+    'avant rejeu : la fiche est CHEZ PERSONNE (le bug)')
+  rejouerEvenementsPartages(out, [
+    { joueur: 1, type: 'transfert_pop', payload: { personnage: fiche, src: { kind: 'joueur', n: 1 }, dst: { kind: 'joueur', n: 2 } } },
+  ])
+  assert.equal((out.population[2] ?? []).filter((x) => x.id === donne.id).length, 1,
+    'la fiche est chez J2 après rejeu')
+  // Idempotence : rejeu double → aucun doublon.
+  rejouerEvenementsPartages(out, [
+    { joueur: 1, type: 'transfert_pop', payload: { personnage: fiche, src: { kind: 'joueur', n: 1 }, dst: { kind: 'joueur', n: 2 } } },
+  ])
+  assert.equal((out.population[2] ?? []).filter((x) => x.id === donne.id).length, 1, 'pas de fiche en double')
+})
+
+test('BUG 2026-11-12 : don vers une CITÉ LIBRE — rejeu idempotent même si la cité modifiée est déjà fusionnée', () => {
+  const ref = base()
+  ref.citesLibres = [{ nom: 'Avignon', type: 'Industrielles - Ville', population: [] }]
+  // J1 donne un habitant à la cité : SA section embarque la cité
+  //  MODIFIÉE → la fusion par diff l'apporte déjà ; le rejeu doit
+  //  être IDEMPOTENT (pas de doublon de fiche dans la cité).
+  const stateJ1 = structuredClone(ref)
+  const C = cfgOf(stateJ1.config)
+  const cite = stateJ1.citesLibres![0]!
+  const donne = (stateJ1.population[1] ?? []).find(
+    (c) => c.statut !== 'Décédé' && !neDemenageJamais(c, C),
+  )
+  assert.ok(donne, 'fixture : J1 a un habitant donnable')
+  assert.equal(deplacerPersonnage(stateJ1, donne, { kind: 'cite', cite }), null)
+  const fiche = structuredClone(donne)
+  const stateJ2 = base()
+  const sections: Record<string, SectionJoueurFusion> = {
+    '1': { player: structuredClone(stateJ1.players[0]), population: structuredClone(stateJ1.population[1]), citesLibres: structuredClone(stateJ1.citesLibres), log: [], tour: ref.turn },
+    '2': { player: structuredClone(stateJ2.players[1]), population: structuredClone(stateJ2.population[2]), log: [], tour: ref.turn },
+  }
+  const out = fusionnerSections(ref, sections)
+  const citeF = (out.citesLibres ?? []).find((c) => c.nom === 'Avignon')
+  assert.ok(citeF, 'la cité est fusionnée')
+  assert.equal((citeF.population ?? []).filter((x) => x.id === donne.id).length, 1,
+    'la fiche est dans la cité (fusion par diff)')
+  rejouerEvenementsPartages(out, [
+    { joueur: 1, type: 'transfert_pop', payload: { personnage: fiche, src: { kind: 'joueur', n: 1 }, dst: { kind: 'cite', nom: 'Avignon' } } },
+  ])
+  assert.equal((citeF.population ?? []).filter((x) => x.id === donne.id).length, 1,
+    'rejeu idempotent : pas de doublon dans la cité')
 })
 
 test('événements de type inconnu ignorés silencieusement (forward compat)', () => {

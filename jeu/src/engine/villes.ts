@@ -195,10 +195,70 @@ export function transfererVille(
  *  receveur, poussée avant le transfert, l'écrasait à la fusion.
  *  Le transfert est donc stocké en ÉVÉNEMENT PARTAGÉ du tour
  *  (type 'transfert_ville') et REJOUÉ ici, APRÈS la fusion des
- *  sections, sur l'état fusionné. */
+ *  sections, sur l'état fusionné.
+ *
+ *  BUG 2026-11-12 (retour Thibaut : « les villes disparaissent lors du
+ *  transfert de ville ») : le rejeu cherchait la ville PAR NOM chez le
+ *  donneur dans l'état fusionné — or depuis le rafraîchissement de la
+ *  section À CHAQUE mutation (store.tsx), la section du DONNEUR
+ *  poussée APRÈS le transfert local ne contient PLUS la ville, et
+ *  celle du receveur non plus : la ville était introuvable CHEZ
+ *  PERSONNE, le rejeu rendait false et la ville DISPARAISSAIT. Le
+ *  payload embarque désormais la ville COMPLÈTE (villeObj) et les
+ *  fiches des habitants qui suivent (deplaces), capturées par
+ *  transfererVillePartage AVANT le transfert local : si la ville
+ *  n'est plus chez le donneur, le rejeu la MATÉRIALISE chez le
+ *  receveur. Les événements de l'ANCIEN format (sans villeObj)
+ *  restent rejouables par le chemin historique tant que la ville
+ *  est encore chez le source (rétrocompatibilité du tour en cours).
+ */
+export interface PayloadTransfertVille {
+  ville: string
+  src: number
+  dst: number
+  /** Ville complète au moment du transfert (AVANT renommage de
+   *  collision) — matérialisée chez le receveur si le donneur ne
+   *  l'a plus à la fusion. Optionnel : ancien format. */
+  villeObj?: City
+  /** Habitants « classiques » qui suivent la ville (fiches complètes,
+   *  AVANT transfert) — ré-insérés chez le receveur si leurs fiches
+   *  n'ont survécu dans aucune section. Optionnel : ancien format. */
+  deplaces?: Character[]
+}
+
+/** Transfère la ville (transfererVille ci-dessus) ET retourne le
+ *  payload de l'ÉVÉNEMENT PARTAGÉ 'transfert_ville' à pousser par
+ *  l'UI (cp_events) : nom avant renommage + ville complète + fiches
+ *  des habitants qui suivent, capturées AVANT la mutation locale.
+ *  Retourne null si le transfert a été refusé (rien à pousser). */
+export function transfererVillePartage(
+  state: GameState, p: Player, idx: number, cible: Player,
+): PayloadTransfertVille | null {
+  const C = cfgOf(state.config)
+  const ville = p.villes[idx]
+  if (!ville || cible.n === p.n) return null
+  const nomAvant = ville.nom
+  const villeObj = structuredClone(ville)
+  // Même filtre que transfererVille (roturiers de la ville, vivants
+  //  ET décédés ; la cour reste) — fiches capturées AVANT mutation.
+  const deplaces = structuredClone(
+    (state.population[p.n] ?? []).filter(
+      (c) => c.ville === nomAvant && !isNobleDyn(c.dynastie, C),
+    ),
+  )
+  if (!transfererVille(state, p, idx, cible)) return null
+  return { ville: nomAvant, src: p.n, dst: cible.n, villeObj, deplaces }
+}
+
+/** Rejoue un transfert de ville sur l'état FUSIONNÉ (voir
+ *  PayloadTransfertVille) : chemin classique si la ville est encore
+ *  chez le source (section du donneur antérieure au transfert —
+ *  transfererVille refait alors tout le déplacement), sinon
+ *  MATÉRIALISATION depuis le payload (ville + habitants). Idempotent :
+ *  déjà rejoué → true sans rien toucher. */
 export function rejouerTransfertVille(
   state: GameState,
-  payload: { ville: string; src: number; dst: number },
+  payload: PayloadTransfertVille,
 ): boolean {
   const src = state.players.find((q) => q.n === payload.src)
   const dst = state.players.find((q) => q.n === payload.dst)
@@ -206,12 +266,54 @@ export function rejouerTransfertVille(
   // La ville a pu être renommée (collision chez le receveur lors du
   //  premier passage) : on la retrouve par nom chez le source.
   const idx = src.villes.findIndex((v) => v.nom === payload.ville)
-  if (idx < 0) {
-    // déjà rejouée (double événement) ou ville rendue libre :
-    //  sans effet, idempotent.
-    return false
+  if (idx >= 0) return transfererVille(state, src, idx, dst)
+  // BUG 2026-11-12 : la ville n'est plus chez le source — la section
+  //  du donneur a été poussée APRÈS le transfert local. Sans
+  //  villeObj (ancien format), rien à matérialiser : déjà rejouée
+  //  (double événement) ou données déjà perdues (tour antérieur).
+  if (!payload.villeObj) return false
+  const deplaces = (payload.deplaces ?? []).filter((c) => typeof c?.id === 'string')
+  // Idempotence : un habitant qui suit la ville est déjà chez le
+  //  receveur → le transfert a déjà été rejoué (ou la fusion des
+  //  cités/sections l'a déjà amené) → sans effet.
+  if (deplaces.some((c) => (state.population[dst.n] ?? []).some((x) => x.id === c.id))) return true
+  // Ville déjà présente chez le receveur (ville sans habitant déjà
+  //  matérialisée, ou cité existante) → idempotent.
+  if (dst.villes.some((v) => v.nom === payload.villeObj.nom)) return true
+  // Retirer d'éventuels résidus chez le source (défense : fiches
+  //  encore dans sa section pré-transfert).
+  for (const c of deplaces) {
+    const arr = state.population[src.n] ?? []
+    const i = arr.findIndex((x) => x.id === c.id)
+    if (i >= 0) arr.splice(i, 1)
   }
-  return transfererVille(state, src, idx, dst)
+  // Matérialiser la ville chez le receveur, avec le MÊME renommage de
+  //  collision que transfererVille (rattachement des habitants sans
+  //  ambiguïté — M5).
+  const ville = structuredClone(payload.villeObj)
+  let renommee = ''
+  if (dst.villes.some((v) => v.nom === ville.nom)) {
+    let i = 2
+    while (dst.villes.some((v) => v.nom === `${ville.nom} ${i}`)) i++
+    renommee = `${ville.nom} ${i}`
+    ville.nom = renommee
+  }
+  dst.villes.push(ville)
+  const fiches = deplaces.map((c) => {
+    const f = structuredClone(c)
+    if (renommee) f.ville = renommee
+    return f
+  })
+  state.population[dst.n] = [...(state.population[dst.n] ?? []), ...fiches]
+  // Le tourisme est un stock resynchronisé sur la production (M6) :
+  //  recalculer les deux côtés comme transfererVille.
+  resynchroniserTourisme(state, src, `ville « ${payload.villeObj.nom} » transférée à ${dst.nom} (rejeu)`)
+  resynchroniserTourisme(state, dst, `ville « ${ville.nom} » reçue de ${src.nom} (rejeu)`)
+  state.log.push({
+    turn: state.turn, type: 'Système', joueur: dst.n,
+    texte: `🗝 ${payload.villeObj.nom}${renommee ? ` (renommée « ${renommee} »)` : ''} passe de ${src.nom} à ${dst.nom}${fiches.length ? `, avec ses ${fiches.length} habitant(s)` : ''} — transfert rejoué à la résolution du tour.`,
+  })
+  return true
 }
 
 // ── Proximité des villes (marqueur (y), retour Thibaut 2026-10-15) ──────

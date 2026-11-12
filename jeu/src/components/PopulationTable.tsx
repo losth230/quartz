@@ -39,7 +39,8 @@ import { cfgOf } from '../engine/gameData'
 import { validateMetierAssignment } from '../engine/validation'
 import { ajouterHabitant } from '../engine/setup'
 import { metiersAccessibles } from '../engine/metiers'
-import { fullName, deplacerPersonnage, toutesLesPopulations } from '../engine/shared'
+import { fullName, deplacerPersonnage, toutesLesPopulations, cleDe, type CleDetenteur } from '../engine/shared'
+import * as remote from '../supabase/client'
 import { rangDe } from '../engine/statutSocial'
 import { marierPersonnages } from '../engine/cour'
 import { metiersAccessiblesCite, pseudoJoueurDeCite, ajouterHabitantsCiteLibre, ajouterFamilleNobleCiteLibre } from '../engine/citesLibres'
@@ -52,7 +53,7 @@ import { CarteMetiersPlaces } from './population/CarteMetiersPlaces'
 import { CarteAjoutHabitants } from './population/CarteAjoutHabitants'
 
 export function PopulationTable({ joueur }: { joueur: number }) {
-  const { state, update } = useGame()
+  const { state, update, salon } = useGame()
   // OPTIMISATION RENDU 2026-10-16 : à 16 000+ personnages, rendre
   //  toutes les lignes = DOM énorme (plusieurs secondes). Pagination
   //  simple : 200 lignes par page.
@@ -214,13 +215,38 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     if (p && c.metier === C.p.metierDirigeant
       && !window.confirm(`Donner ${fullName(c)} (${C.p.metierDirigeant} de ${p.nom}) à ${dstNom} ?`)) return
     let errDon: string | null = null
+    // PROTOCOLE (bug 2026-11-12 : un personnage donné disparaissait à
+    //  la fin du tour) : le don est une mutation INTER-JOUEURS —
+    //  ni la section du donneur (il ne l'a plus) ni celle du
+    //  receveur (il ne l'a jamais vue localement) ne portent la
+    //  fiche, et la fusion remplace les populations par les
+    //  sections. Le don part donc en ÉVÉNEMENT PARTAGÉ
+    //  'transfert_pop' (cp_events) avec la fiche COMPLÈTE après le
+    //  déplacement local et des clés STABLES de porteurs (joueur
+    //  par numéro, cité par nom — pas l'index des options) : la
+    //  résolution le rejoue APRÈS la fusion (idempotent). best
+    //  effort : si l'insert échoue, le don reste visible localement.
+    let fiche: Character | null = null
+    let tourDon = state?.turn ?? 0
+    const srcCle: CleDetenteur = cite ? { kind: 'cite', nom: cite.nom } : { kind: 'joueur', n: joueur }
+    const dstCle = cleDe(dst)
     update((s) => {
+      tourDon = s.turn
       const tc = cite
         ? ((s.citesLibres ?? [])[citeIdx]?.population ?? []).find((x) => x.id === c.id)
         : (s.population[joueur] ?? []).find((x) => x.id === c.id)
       const dstS = detenteurDeCle(s, v)
-      if (tc && dstS) errDon = deplacerPersonnage(s, tc, dstS)
+      if (tc && dstS) {
+        errDon = deplacerPersonnage(s, tc, dstS)
+        if (!errDon) fiche = structuredClone(tc)
+      }
     })
+    if (!errDon && fiche) {
+      void remote.pousserEvenementPartage(
+        salon, tourDon, joueur, 'transfert_pop',
+        { personnage: fiche, src: srcCle, dst: dstCle },
+      )
+    }
     setErrors((e) => {
       const copy = { ...e }
       if (errDon) copy[c.id] = errDon

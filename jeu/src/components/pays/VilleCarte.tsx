@@ -60,7 +60,7 @@ import { occupationsMetierVille } from '../../engine/metiers'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
 import { productionVille } from '../../engine/production'
 import { effetsNourrEteAutresVille } from '../../engine/autres'
-import { supprimerVille, transfererVille } from '../../engine/villes'
+import { supprimerVille, transfererVillePartage } from '../../engine/villes'
 import { couleurRessource, fondRessource, type Cfg } from '../../engine/gameData'
 import { villeDevientCiteLibre } from '../../engine/citesLibres'
 import { compterClassesSociales } from '../../engine/statutSocial'
@@ -1023,22 +1023,27 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
               const src = st.players.find((x) => x.n === joueur)
               const dst = st.players.find((x) => x.n === parseInt(v, 10))
               if (src && dst) {
-                const nomAvant = src.villes[idx]?.nom ?? ''
-                transfererVille(st, src, idx, dst)
                 // PROTOCOLE v2 (bug 2026-10-17 : ville transférée
-                //  perdue en fin de tour) : le transfert est une
-                //  mutation INTER-JOUEURS — la section du
-                //  RECEVEUR, poussée avant, l'écraserait à la
-                //  fusion. Il part donc aussi en ÉVÉNEMENT
-                //  PARTAGÉ (cp_events, type 'transfert_ville'),
-                //  rejoué par la résolution APRÈS la fusion des
-                //  sections (idempotent). best effort : si
-                //  l'insert échoue, le transfert reste visible
-                //  localement chez l'émetteur.
-                void remote.pousserEvenementPartage(
-                  salon, st.turn, joueur, 'transfert_ville',
-                  { ville: nomAvant, src: joueur, dst: parseInt(v, 10) },
-                )
+                //  perdue en fin de tour ; bug 2026-11-12 : elle
+                //  l'était ENCORE car le rejeu cherchait la ville
+                //  chez le donneur, dont la section — rafraîchie à
+                //  CHAQUE mutation — ne l'a plus) : le transfert
+                //  est une mutation INTER-JOUEURS qui part en
+                //  ÉVÉNEMENT PARTAGÉ (cp_events, type
+                //  'transfert_ville') avec la ville COMPLÈTE et
+                //  les fiches des habitants qui suivent
+                //  (transfererVillePartage) : la résolution le
+                //  rejoue APRÈS la fusion et MATÉRIALISE la ville
+                //  chez le receveur si aucune section ne l'a
+                //  (idempotent). best effort : si l'insert
+                //  échoue, le transfert reste visible localement
+                //  chez l'émetteur.
+                const payload = transfererVillePartage(st, src, idx, dst)
+                if (payload) {
+                  void remote.pousserEvenementPartage(
+                    salon, st.turn, joueur, 'transfert_ville', payload,
+                  )
+                }
               }
             })}
           />
