@@ -4633,3 +4633,61 @@ se remplit (tous les aménagements à emplacements : Champ, Scierie,
 Mine de Fer…) ; les routes s'ouvrent ; les emplacements copiés
 s'annoncent dans la table (colonne « Copie / tour ») et se
 matérialisent via les caps de la ville d'origine. Ctrl+F5 requis.
+
+## Les paliers de dogmes ignoraient le Tourisme des lois d'habitant (retour Thibaut 2026-11-12, base baa0756d)
+
+Retour arbitre : « autre bug : le tourisme du lunisme n'est pas
+compté pour les dogmes, je pense qu'il y a un problème sur la
+manière dont les dogmes comptent le tourisme ». Repro exécutée : un
+joueur luniste ne franchit AUCUN palier alors que « Foi supérieure »
+lui rapporte +1 Tourisme par noble et par tour.
+
+**Cause racine** : `tourismeCulture` et `joueurPontifeCulture`
+(engine/dogmes.ts) ne lisaient que le Tourisme des VILLES
+(`tourismeVille` = `productionVille().total['Tourisme']`, arbitrage
+n°2 du 30/10 « somme des valeurs de Tourisme de ses villes, tous
+joueurs, sans les cités libres »). Or depuis la refonte « 12 lois »
+des cultures (29/10), le Tourisme du Lunisme vit dans le canal lois
+d'HABITANT (`loisHabitants` : +N par noble luniste, où qu'il vive),
+agrégé côté JOUEUR et ABSENT de `productionVille` (par ville). Le
+Tourisme luniste était donc crédité au joueur (« stock = production »,
+`tourismeCourant` l.262 le documente) mais restait INVISIBLE pour
+les paliers — un joueur luniste sans Chapelle ne franchissait
+jamais le premier palier.
+
+**Deux commits sur `v4` depuis `baa0756d`** :
+- `4d1542c6` feat(jeu) : `tourismeLoisHabitantsCulture(state, p,
+  culture, C)` NOUVEAU (engine/production.ts, à côté de
+  `productionVille` : la part « Tourisme » de `detailLoisHabitants`
+  revenant à la culture — exporté là pour AUCUN nouveau cycle :
+  production importe déjà regimes et est déjà importé par dogmes.ts) ;
+  `tourismeCulture` et `joueurPontifeCulture` additionnent villes +
+  lois d'habitant de la culture (amendement de l'arbitrage n°2,
+  docblocks datés) ; UI DogmesView.tsx + pays/CulturePays.tsx
+  reformulées (« ...sans les cités libres, + lois d'habitant de la
+  culture ») ; +1 test natif dogmes.test.ts (2 nobles lunistes
+  sans ville productrice → tourismeCulture = 2, pontife = leur
+  joueur avec Tourisme 2, 1 palier en attente à palier réglé à 2 ;
+  aucun Tourisme pour la culture non porteuse) ; le test de
+  l'arbitrage n°2 (populations vides → lois 0) garde sa lecture,
+  titre amendé.
+- `479bc842` docs(ia) : section dédiée dans regles-et-arbitrages.md +
+  compteurs AGENTS.md réalignés à 355 natifs (354 + 1).
+- présent commit : journal seul (tête).
+
+**Validation locale (bac upgradé)** : bac réinitialisé UNE FOIS en
+pleine session (corpus re-codeload à la tête baa0756d, harnais
+tshooks + stub @supabase recréés) : **337/337 natifs verts** (33
+fichiers sans react ni Constructions.test.ts), y compris le nouveau.
+Diff complet vs extraction propre du tarball AVANT push :
+EXACTEMENT 5 fichiers modifiés (règle absolue incident 2026-10-14).
+Piège de fixture corrigé en route : la population du setup vit sous
+la clé du NUMÉRO du joueur de base (state.population[1], n=1 — pas
+[0]) ; personnages modèles capturés AVANT l'écrasement, joueur
+fantôme à n=2.
+
+**Effet immédiat pour l'arbitre** : les paliers de dogmes du
+Lunisme voient le Tourisme de « Foi supérieure » (+1 par noble) ;
+le pontife peut être le porteur des nobles sans posséder les villes
+productrices ; les écrans Dogmes et « Culture du pays » affichent la
+nouvelle définition. Ctrl+F5 requis.
