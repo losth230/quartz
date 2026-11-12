@@ -272,14 +272,21 @@ export function rejouerTransfertVille(
   //  villeObj (ancien format), rien à matérialiser : déjà rejouée
   //  (double événement) ou données déjà perdues (tour antérieur).
   if (!payload.villeObj) return false
+  // Narrowing : les accès dans un CALLBACK perdent l'affinement de
+  //  payload.villeObj (« possibly undefined ») — tout passe par des
+  //  consts locales.
+  const nomAvant = payload.villeObj.nom
+  const ville = structuredClone(payload.villeObj)
   const deplaces = (payload.deplaces ?? []).filter((c) => typeof c?.id === 'string')
   // Idempotence : un habitant qui suit la ville est déjà chez le
   //  receveur → le transfert a déjà été rejoué (ou la fusion des
-  //  cités/sections l'a déjà amené) → sans effet.
+  //  cités/sections l'a déjà amené) → sans effet. Une ville SANS
+  //  habitant n'a pas d'identifiant : on ne DEVINE PAS « déjà
+  //  rejoué » sur une collision de nom (le receveur peut avoir une
+  //  autre ville homonyme qui est la sienne — deviner perdrait le
+  //  transfert légitime) : on MATÉRIALISE avec renommage de
+  //  collision, comme transfererVille.
   if (deplaces.some((c) => (state.population[dst.n] ?? []).some((x) => x.id === c.id))) return true
-  // Ville déjà présente chez le receveur (ville sans habitant déjà
-  //  matérialisée, ou cité existante) → idempotent.
-  if (dst.villes.some((v) => v.nom === payload.villeObj.nom)) return true
   // Retirer d'éventuels résidus chez le source (défense : fiches
   //  encore dans sa section pré-transfert).
   for (const c of deplaces) {
@@ -290,7 +297,6 @@ export function rejouerTransfertVille(
   // Matérialiser la ville chez le receveur, avec le MÊME renommage de
   //  collision que transfererVille (rattachement des habitants sans
   //  ambiguïté — M5).
-  const ville = structuredClone(payload.villeObj)
   let renommee = ''
   if (dst.villes.some((v) => v.nom === ville.nom)) {
     let i = 2
@@ -307,11 +313,11 @@ export function rejouerTransfertVille(
   state.population[dst.n] = [...(state.population[dst.n] ?? []), ...fiches]
   // Le tourisme est un stock resynchronisé sur la production (M6) :
   //  recalculer les deux côtés comme transfererVille.
-  resynchroniserTourisme(state, src, `ville « ${payload.villeObj.nom} » transférée à ${dst.nom} (rejeu)`)
+  resynchroniserTourisme(state, src, `ville « ${nomAvant} » transférée à ${dst.nom} (rejeu)`)
   resynchroniserTourisme(state, dst, `ville « ${ville.nom} » reçue de ${src.nom} (rejeu)`)
   state.log.push({
     turn: state.turn, type: 'Système', joueur: dst.n,
-    texte: `🗝 ${payload.villeObj.nom}${renommee ? ` (renommée « ${renommee} »)` : ''} passe de ${src.nom} à ${dst.nom}${fiches.length ? `, avec ses ${fiches.length} habitant(s)` : ''} — transfert rejoué à la résolution du tour.`,
+    texte: `🗝 ${nomAvant}${renommee ? ` (renommée « ${renommee} »)` : ''} passe de ${src.nom} à ${dst.nom}${fiches.length ? `, avec ses ${fiches.length} habitant(s)` : ''} — transfert rejoué à la résolution du tour.`,
   })
   return true
 }
