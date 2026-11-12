@@ -57,17 +57,22 @@ function hab(id: string, age: number, o: { metier?: string | null; ville?: strin
 
 test('emptyRecap porte mouvementsVille vide ; bumpMouvement pose la fiche paresseusement, ville vide ignorée', () => {
   const r = emptyRecap()
-  assert.deepEqual(r.mouvementsVille, {}, 'le récap neuf porte un dictionnaire vide')
+  // ⚠ Capture AVANT tout assert : un assert.deepEqual(x, littéral)
+  //  RÉTRÉCIT le type de x pour le reste du flux (patron incident
+  //  dogmes 5583313d — « asserts actual is T » de node:assert) et
+  //  l indexation suivante serait refusée par tsc strict.
+  const dict = r.mouvementsVille ?? {}
+  assert.equal(Object.keys(dict).length, 0, 'le récap neuf porte un dictionnaire vide')
+  bumpMouvement(r, '', 'naissances')
+  assert.ok(!dict[''], 'ville vide ignorée (personnage sans ville)')
   bumpMouvement(r, 'Bergen', 'arrivees')
   bumpMouvement(r, 'Bergen', 'arrivees')
   bumpMouvement(r, 'Bergen', 'deces')
   bumpMouvement(r, 'Oslo', 'departs')
-  assert.deepEqual(r.mouvementsVille, {
+  assert.deepEqual(dict, {
     Bergen: { naissances: 0, deces: 1, arrivees: 2, departs: 0 },
     Oslo: { naissances: 0, deces: 0, arrivees: 0, departs: 1 },
   }, 'fiches posées paresseusement, compteurs exacts')
-  bumpMouvement(r, '', 'naissances')
-  assert.ok(!r.mouvementsVille[''], 'ville vide ignorée (personnage sans ville)')
   // Compatibilité vieilles sauvegardes : récap SANS le champ (posé
   //  undefined comme un état chargé d'une sauvegarde antérieure).
   const vieux = { ...emptyRecap(), mouvementsVille: undefined } as PlayerRecap
@@ -182,9 +187,13 @@ test('migration INTERNE : départ et arrivée sur le même récap, villes distin
   migrationBonheur(state, makeRng(7))
   assert.equal(mig.ville, villeB.nom, 'pré-condition : déménagement interne vers la ville B')
   const mouv = p0.recap?.mouvementsVille ?? {}
-  assert.equal(mouv[villeA]?.departs, 1, 'départ compté sur la ville quittée')
-  assert.equal(mouv[villeB.nom]?.arrivees, 1, 'arrivée comptée sur la ville de destination')
-  assert.equal(mouv[villeA]?.arrivees ?? 0, 0, 'pas d\'arrivée sur la ville quittée')
+  // ⚠ Fiches COMPLÈTES en un seul assert chacune : un second accès
+  //  après un assert.equal sur la même propriété serait rétréci
+  //  (patron dogmes 5583313d).
+  assert.deepEqual(mouv[villeA], { naissances: 0, deces: 0, arrivees: 0, departs: 1 },
+    'départ compté sur la ville quittée, rien d autre')
+  assert.deepEqual(mouv[villeB.nom], { naissances: 0, deces: 0, arrivees: 1, departs: 0 },
+    'arrivée comptée sur la ville de destination')
   const tot = totauxMouvements(p0.recap ?? emptyRecap())
   assert.deepEqual({ arrivees: tot.arrivees, departs: tot.departs }, { arrivees: 1, departs: 1 },
     'migration interne : 1 départ ET 1 arrivée pour le même joueur')
