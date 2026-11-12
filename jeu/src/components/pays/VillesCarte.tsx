@@ -12,6 +12,7 @@ import { peuplerNouvelleVille } from '../../engine/setup'
 import type { Cfg } from '../../engine/gameData'
 import { Card, Select, Button } from '../ui'
 import { VilleCarte } from './VilleCarte'
+import { RecapMouvements } from './RecapMouvements'
 export function VillesCarte({ joueur, p, C, setPlayer }: {
   joueur: number
   p: Player
@@ -23,6 +24,10 @@ export function VillesCarte({ joueur, p, C, setPlayer }: {
   const [typeAjout, setTypeAjout] = useState<'Ville' | 'Château'>('Ville')
   return (
     <Card title="Villes">
+      {/* (Retour Thibaut 2026-11-12) : récap des évolutions de
+          population (naissances, décès, migrations) EN TÊTE de la
+          page des habitations. */}
+      <RecapMouvements p={p} />
       {/* 2 villes par ligne ; repli à 1 colonne en fenêtre étroite —
           les tableaux internes restent lisibles (défilement horizontal
           via .table-wrap si besoin). */}

@@ -105,7 +105,7 @@
 import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf, regimeDef, type Cfg } from './gameData'
-import { fullName, neDemenageJamais, perteDemenagement } from './shared'
+import { bumpMouvement, emptyRecap, fullName, neDemenageJamais, perteDemenagement } from './shared'
 import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bonheur'
 import { updateCityCultures } from './culture'
 
@@ -268,6 +268,17 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
         //  scolaire) — conjoint et enfants suivent sans tirage propre.
+        // (Retour Thibaut 2026-11-12 — « il est difficile de suivre
+        //  les migrations ») : récap par HABITATION — chaque membre du
+        //  foyer compte UN DÉPART sur la ville quittée (récap du
+        //  joueur SOURCE) et UNE ARRIVÉE sur la ville de destination
+        //  (récap du joueur DESTINATAIRE ; migration interne = les
+        //  deux compteurs sur le même récap). En cours de tour,
+        //  p.recap est déjà posé par la phase A du moteur de
+        //  population et l'objet survit jusqu'à la phase B ; en appel
+        //  direct (tests), il est posé paresseusement ici.
+        const recDepart = p.recap ?? (p.recap = emptyRecap())
+        const recArrivee = dest.joueur.recap ?? (dest.joueur.recap = emptyRecap())
         const foyer = [c, ...(conj ? [conj] : []), ...enfantsFoyer]
         for (const m of foyer) {
           if (dest.joueur.n !== p.n) {
@@ -281,6 +292,8 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
           m.ville = dest.ville.nom
           perteDemenagement(m, C)
           deplaces.add(m.id)
+          bumpMouvement(recDepart, avant, 'departs')
+          bumpMouvement(recArrivee, dest.ville.nom, 'arrivees')
           const chez = dest.joueur.n === p.n ? '' : ` chez ${dest.joueur.nom}`
           const verbe = m === c ? 'quitte' : `suit ${fullName(c)} — quitte`
           state.log.push({

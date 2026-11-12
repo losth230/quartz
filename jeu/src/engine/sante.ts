@@ -10,7 +10,7 @@ import type { Character, GameState, Player, PlayerRecap } from './types'
 import { makeRng, type Rng } from './rng'
 import { cfgOf, cultureDef, traitDef, type Cfg } from './gameData'
 import { buildingDef } from './gameData2'
-import { bump, fullName, isNobleDyn, toutesLesPopulations } from './shared'
+import { bump, bumpMouvement, fullName, isNobleDyn, toutesLesPopulations } from './shared'
 import { metierAllowedForCharacter } from './metiers'
 import { effetsDogmeCulture } from './dogmes'
 
@@ -139,6 +139,9 @@ export function killCharacter(state: GameState, p: Player, c: Character, cause: 
   }
   bump(recap.deces, c.dynastie)
   if (cause === 'maladie') recap.decesMaladie++
+  // (Retour Thibaut 2026-11-12) : compteur par HABITATION pour le
+  //  récap des évolutions de population (carte Villes).
+  bumpMouvement(recap, c.ville, 'deces')
   state.log.push({
     turn: state.turn + 1, type: 'Décès', joueur: p.n,
     texte: `${fullName(c)} (${c.age} ans, ${c.dynastie}${c.metier ? `, ${c.metier}` : ''}) meurt de ${cause === 'maladie' ? 'la maladie' : cause}.`,

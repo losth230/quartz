@@ -7,6 +7,7 @@
 
 import type { ApportsTour, GameState, Player, PlayerRecap } from './types'
 import { cfgOf } from './gameData'
+import { totauxMouvements } from './shared'
 
 // ── Historique (SnapshotRessources) ──────────────────────────────────────
 
@@ -57,6 +58,14 @@ export function writeRecap(state: GameState, p: Player, recap: PlayerRecap) {
     `Conversions culturelles — ${fmt(recap.conversions)}`,
     `Métiers attribués — ${fmt(recap.metiersAttribues)}`,
   ]
+  // (Retour Thibaut 2026-11-12 — « il est difficile de suivre les
+  //  migrations ») : total des migrations du tour au récap journal,
+  //  seulement s'il y en a eu (le détail PAR VILLE vit dans la carte
+  //  Villes de la page Pays).
+  const mig = totauxMouvements(recap)
+  if (mig.arrivees > 0 || mig.departs > 0) {
+    lignes.push(`Migrations — ${mig.arrivees} arrivée(s), ${mig.departs} départ(s)`)
+  }
   if (recap.crises.length > 0) lignes.push(`⚠ Crises : ${recap.crises.join(' ; ')}`)
   if (recap.commandantTombe) lignes.push(`⚠ Commandant tombé : ${recap.commandantTombe}`)
   state.log.push({

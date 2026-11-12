@@ -8,7 +8,7 @@
 import type { Character, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf, traitDef, cultureDef, peupleDef, type Cfg } from './gameData'
-import { bump, fullName, isNobleDyn, newId } from './shared'
+import { bump, bumpMouvement, fullName, isNobleDyn, newId } from './shared'
 import { taxBirthFactor } from './economie'
 import { PRESTIGE_NOBLE_NAISSANCE } from './statutSocial'
 import { indexPopulationMonde, ajouterALIndexPopulation } from './indexPopulation'
@@ -295,6 +295,10 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
     //  naissance (fratries comprises).
     ajouterALIndexPopulation(state, enfant)
     bump(recap.naissances, enfant.dynastie)
+    // (Retour Thibaut 2026-11-12) : compteur par HABITATION pour le
+    //  récap des évolutions de population (carte Villes) — le
+    //  nouveau-né naît dans la ville de sa mère (fratrie comprise).
+    bumpMouvement(recap, enfant.ville, 'naissances')
     state.log.push({
       turn: state.turn + 1, type: 'Naissance', joueur: p.n,
       texte: `Naissance : ${fullName(enfant)} (${enfant.sexe}, ${enfant.dynastie})${nb > 1 ? ` — fratrie de ${nb}` : ''}.`,

@@ -5,7 +5,7 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, CiteLibre, GameState, Player, PlayerRecap } from './types'
+import type { Character, CiteLibre, GameState, MouvementsVille, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf, type Cfg } from './gameData'
 
@@ -250,7 +250,36 @@ export function emptyRecap(): PlayerRecap {
     conceptions: {}, naissances: {}, deces: {}, decesMaladie: 0,
     mariagesNobles: {}, conversions: {}, metiersAttribues: {}, crises: [],
     commandantTombe: null,
+    // (Retour Thibaut 2026-11-12) : récap par habitation — les vues
+    //  lisent p.recap.mouvementsVille ?? {}.
+    mouvementsVille: {},
   }
+}
+
+/** (Retour Thibaut 2026-11-12 — récapitulatif des évolutions de
+ *  population par habitation) : incrémente un compteur de mouvement
+ *  pour UNE ville du récap. Pose paresseusement le dictionnaire et la
+ *  fiche ville (compatibilité vieilles sauvegardes sans le champ).
+ *  Ville vide ignorée (personnage sans ville — n arrive pas au moteur). */
+export function bumpMouvement(
+  recap: PlayerRecap, ville: string,
+  champ: 'naissances' | 'deces' | 'arrivees' | 'departs',
+): void {
+  if (!ville) return
+  const dict = recap.mouvementsVille ?? (recap.mouvementsVille = {})
+  const fiche = dict[ville] ?? (dict[ville] = { naissances: 0, deces: 0, arrivees: 0, departs: 0 })
+  fiche[champ]++
+}
+
+/** Totaux des mouvements sur toutes les habitations du récap (retour
+ *  Thibaut 2026-11-12) — journal, carte Villes et récap Population. */
+export function totauxMouvements(recap: PlayerRecap): MouvementsVille {
+  const t: MouvementsVille = { naissances: 0, deces: 0, arrivees: 0, departs: 0 }
+  for (const f of Object.values(recap.mouvementsVille ?? {})) {
+    t.naissances += f.naissances; t.deces += f.deces
+    t.arrivees += f.arrivees; t.departs += f.departs
+  }
+  return t
 }
 
 export function bump(dict: Record<string, number>, key: string, n = 1) {

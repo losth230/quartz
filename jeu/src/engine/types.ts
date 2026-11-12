@@ -380,6 +380,26 @@ export interface PlayerRecap {
   metiersAttribues: Record<string, number>
   crises: string[]
   commandantTombe: string | null
+  /** (Retour Thibaut 2026-11-12 — « il est difficile de suivre les
+   *  migrations, ajoute un récapitulatif rapide des évolutions de
+   *  population en haut de la page des habitations ») : mouvements de
+   *  population PAR HABITATION du dernier tour moteur — clé = nom de
+   *  la ville. Champ OPTIONNEL : les récaps des vieilles sauvegardes
+   *  ne le portent pas, les mutateurs le posent paresseusement
+   *  (bumpMouvement, engine/shared.ts). Périmètre = moteur de fin de
+   *  tour (naissances, décès maladie, flux de migration) ; les actions
+   *  manuelles (ajouts d'habitants, dons, pertes militaires) restent
+   *  au journal. */
+  mouvementsVille?: Record<string, MouvementsVille>
+}
+
+/** Fiche de mouvements de population d'UNE habitation (retour
+ *  Thibaut 2026-11-12, cf. PlayerRecap.mouvementsVille). */
+export interface MouvementsVille {
+  naissances: number
+  deces: number
+  arrivees: number
+  departs: number
 }
 
 export interface Player {
