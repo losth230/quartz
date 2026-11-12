@@ -2408,3 +2408,43 @@ aménagement, y compris ses emplacements de population »).
   s'ouvre, le cap Fermier de la ville d'origine gagne SES 3 places,
   le journal décrit « 3 place(s) Fermier » ; aménagement sans flux ni
   emplacements refusé, y compris par `changerCopieRoute`).
+
+## Paliers de dogmes : le Tourisme des lois d'habitant compte (correctif 2026-11-12, retour Thibaut « le tourisme du lunisme n'est pas compté pour les dogmes »)
+
+**Constat** (retour du 12/11) : un joueur luniste ne franchit pas
+les paliers de Tourisme de sa culture alors que « Foi supérieure »
+(+1 Tourisme par noble, référentiel) lui rapporte du Tourisme
+chaque tour.
+
+**Cause racine** : les paliers (`tourismeCulture`, `joueurPontifeCulture`
+— engine/dogmes.ts) ne lisaient que le Tourisme des VILLES
+(`productionVille`, arbitrage n°2 du 30/10 : « somme des valeurs de
+Tourisme de ses villes, tous joueurs, sans les cités libres »). Or
+depuis la refonte « 12 lois » des cultures (29/10), le Tourisme du
+Lunisme vit dans le canal lois d'HABITANT (`loisHabitants` :
++N par noble luniste, où qu'il vive — arbitrage « bonus partout où
+il vit »), un canal agrégé côté JOUEUR qui n'apparaît PAS dans
+`productionVille` (par ville). Le Tourisme luniste était donc bien
+crédité au joueur (« stock = production », `tourismeCourant`) mais
+restait INVISIBLE pour les paliers : un joueur luniste sans
+Chapelle ne franchissait jamais le premier palier.
+
+**Décision (correctif, amendement de l'arbitrage n°2 du 30/10)** :
+- Le Tourisme d'une culture pour les paliers = somme des valeurs de
+  Tourisme des villes de cette culture (tous joueurs, sans les cités
+  libres — inchangé) PLUS le Tourisme des lois d'HABITANT de cette
+  culture (`tourismeLoisHabitantsCulture` — engine/production.ts,
+  la part « Tourisme » de `detailLoisHabitants` revenant à la
+  culture). Même lecture pour le PONTIFE : un joueur porteur de
+  nobles lunistes peut être pontife du Lunisme sans en posséder les
+  villes productrices.
+- Aucun double compte possible : `productionVille` ne porte pas le
+  canal lois d'habitant ; les lois ne sont sommées que pour leur
+  culture porteuse.
+- UI : DogmesView et la carte « Culture du pays » reformulent la
+  définition (« villes de cette culture, tous joueurs, sans les
+  cités libres, + lois d'habitant de la culture »).
+- Verrous : 1 test natif dans engine/dogmes.test.ts (2 nobles
+  lunistes sans ville productrice → tourismeCulture = 2, pontife =
+  leur joueur, 1 palier franchi à palier 2) ; le test de
+  l'arbitrage n°2 (populations vides) garde sa lecture.
