@@ -4751,3 +4751,21 @@ doublon même si l'événement est rejoué deux fois. Les transferts du
 TOUR EN COURS au moment du déploiement gardent l'ancien format :
 rejouables par le chemin historique tant que la ville est encore
 chez le donneur dans la fusion. Ctrl+F5 requis.
+
+**Correctifs CI du même tour (après le journal initial)** :
+- `b08f62fb` fix(ci) : payload 'transfert_ville' passé en LITTÉRAL
+  (`{ ...payload }`) — une INTERFACE n'a pas de signature d'index
+  implicite, tsc rejetait l'appel `Record<string, unknown>`.
+- `4af57d34` fix(ci) : `'payload.villeObj' is possibly 'undefined'`
+  — l'affinement TS d'une propriété est PERDU dans un callback
+  (`.some((v) => … payload.villeObj.nom …)`) : tout passe par des
+  consts locales (`nomAvant`, `ville`). Au passage, retrait de la
+  garde d'idempotence PAR NOM : une ville homonyme du receveur
+  n'est PAS un rejeu (elle peut être la sienne — deviner perdait le
+  transfert légitime) ; on matérialise avec renommage de collision,
+  comme `transfererVille`. Leçons outillage : (1) passer les
+  interfaces en littéral aux paramètres réseau Record ; (2) jamais
+  d'accès à propriété optionnelle d'un paramètre dans un callback —
+  const locale d'abord. CI verte prouvée par le bundle
+  `index-B8HDQ0kU.js` (chaînes « transfert_pop » et « rejoué à la
+  résolution du tour » présentes).
