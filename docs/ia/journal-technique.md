@@ -4535,8 +4535,12 @@ dataient d'avant les refontes.
   rangs arbitres conservés / vieux format à blocs → défauts).
 - `70a3938c` docs(ia) : section dédiée dans regles-et-arbitrages.md +
   point de convention et compteurs dans AGENTS.md (le « 342 » datait
-  du 2026-11-01, le dernier run complet du 11/11 était à 348 → 350 ;
-  dérive notée, à revérifier sur la sortie CI).
+  du 2026-11-01 ; AMENDEMENT POSTÉRIEUR : la vague « Logements » du
+  jour (session parallèle, 2 tests — plancher noble, relogement
+  hérité) validait déjà 350/350 → compteurs réalignés à 352 natifs ;
+  à revérifier sur la sortie CI). NB : le raccord byte-exact 4/4
+  AVANT le push prouve que cette vague n'avait touché AUCUN de mes
+  4 fichiers — b36bbad1 n'a rien écrasé de son travail.
 - présent commit : journal seul (tête).
 
 **Validation locale (bac upgradé)** : npm install INTERDIT dans ce
