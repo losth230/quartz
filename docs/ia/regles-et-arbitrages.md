@@ -2365,3 +2365,46 @@ victoires — le texte du référentiel fait foi)** :
   des vieux textes, conservation des montants réglés, purge des
   champs morts ; bonus périmés réalignés, coûts et rangs arbitres
   conservés, vieux format à blocs → défauts).
+
+## Routes commerciales : la copie voit aussi les emplacements de métier (correctif 2026-11-12, retour Thibaut « les routes ne permettent pas de copier un aménagement »)
+
+**Constat** (retour du 12/11) : le Select « Aménagement copié » du
+formulaire de route commerciale reste VIDE et l'ouverture refuse tout
+(« n'a aucune production copiable ») — impossible d'ouvrir une route
+vers la ville d'un autre joueur.
+
+**Cause racine** : bug de garde, PAS un manque de fonctionnalité.
+`amenagementsCopiables` (engine/commerce.ts) ne listait que les
+aménagements à FLUX copiables (`ressourcesCopiables`) — or depuis la
+vague 3a, les aménagements de base n'ont PLUS de flux : leurs apports
+vivent dans les `emplacements` du référentiel ({metier, places} — Champ :
+3 Fermier, Mine de Fer, Scierie…). Ne restaient copiables que les
+quelques constructions à flux (merveilles naturelles, Hôtel de
+tourisme…). Le mécanisme de copie d'emplacements EXISTAIT et marchait
+déjà : `emplacementsRoutesVille` (engine/metiers.ts) ajoute les
+emplacements de l'aménagement copié aux caps de la ville d'ORIGINE,
+conformément au design ACTÉ le 2026-10-24 (« copier exactement un
+aménagement, y compris ses emplacements de population »).
+
+**Décision (correctif, retour au design acté)** :
+- **Copiable = flux OU emplacements** : `amenagementsCopiables`
+  accepte désormais un aménagement qui porte AU MOINS un emplacement
+  de métier (`emplacementsCopiables`, places > 0). Le Select se
+  remplit ; la garde refusante ne rejette plus qu'un aménagement sans
+  flux NI emplacements (« n'a rien à copier (ni production, ni
+  emplacements de métier) »), à l'identique dans `creerRouteCommerce`
+  et `changerCopieRoute`.
+- **Journal** : la description de la copie liste flux ET emplacements
+  (« 3 place(s) Fermier »). Les emplacements se matérialisent TOUJOURS
+  via les caps de la ville d'origine (ctx routes de `capMetierVille`),
+  jamais crédités dans `effetsRouteProprietaire` — inchangé.
+- **UI** (components/pays/CommerceRoutes.tsx) : colonne « Copie /
+  tour (production + emplacements) » affichant sous la production les
+  places copiées (« +3 place(s) Fermier (cap de la ville d'origine) ») ;
+  paragraphes d'aide et label du champ reformulés (production le cas
+  échéant + emplacements ajoutés aux caps).
+- **Verrous** : 2 tests natifs dans engine/commerce.test.ts (Champ à
+  emplacements seuls : il apparaît dans les copiables, la route
+  s'ouvre, le cap Fermier de la ville d'origine gagne SES 3 places,
+  le journal décrit « 3 place(s) Fermier » ; aménagement sans flux ni
+  emplacements refusé, y compris par `changerCopieRoute`).
