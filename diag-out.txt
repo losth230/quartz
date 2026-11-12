@@ -23,46 +23,46 @@ total : 106 règles — sources : batiment 59, amenagement 47
   batiment.observatoire@capitale — Observatoire (Capitale) : Scientifique +1
   amenagement.baleinier@terrain — Baleinier (Terrain) : Pêcheur +3 · Commerçant +2
   amenagement.bateau-de-peche@terrain — Bâteau de pêche (Terrain) : Pêcheur +2
-  amenagement.carriere@terrain — Carrière (Terrain) : Mineur +2 · Taudis +5
-  amenagement.champ@terrain — Champ (Terrain) : Fermier +3 · Taudis +5
-  amenagement.foire@terrain — Foire (Terrain) : Artiste +1 · Commerçant +1 · Taudis +5
-  amenagement.mine-de-charbon@terrain — Mine de Charbon (Terrain) : Charbonnier +2 · Taudis +5
-  amenagement.mine-de-fer@terrain — Mine de Fer (Terrain) : Forgeron +2 · Taudis +5
-  amenagement.mine-d-or@terrain — Mine d'Or (Terrain) : Commerçant +6 · Taudis +5
-  amenagement.observatoire@terrain — Observatoire (Terrain) : Scientifique +1 · Taudis +5
-  amenagement.paturage@terrain — Pâturage (Terrain) : Éleveur +2 · Taudis +5
-  amenagement.riziere@terrain — Rizière (Terrain) : Fermier +4 · Taudis +5
-  amenagement.scierie@terrain — Scierie (Terrain) : Bûcheron +2 · Chasseur +2 · Taudis +5
-  amenagement.sericiculture@terrain — Sériciculture (Terrain) : Tisseur +2 · Chasseur +2 · Taudis +5
-  amenagement.site-archeologique@terrain — Site archéologique (Terrain) : Archéologue +2 · Taudis +5
+  amenagement.carriere@terrain — Carrière (Terrain) : Mineur +2
+  amenagement.champ@terrain — Champ (Terrain) : Fermier +3
+  amenagement.foire@terrain — Foire (Terrain) : Artiste +1 · Commerçant +1
+  amenagement.mine-de-charbon@terrain — Mine de Charbon (Terrain) : Charbonnier +2
+  amenagement.mine-de-fer@terrain — Mine de Fer (Terrain) : Forgeron +2
+  amenagement.mine-d-or@terrain — Mine d'Or (Terrain) : Commerçant +6
+  amenagement.observatoire@terrain — Observatoire (Terrain) : Scientifique +1
+  amenagement.paturage@terrain — Pâturage (Terrain) : Éleveur +2
+  amenagement.riziere@terrain — Rizière (Terrain) : Fermier +4
+  amenagement.scierie@terrain — Scierie (Terrain) : Bûcheron +2 · Chasseur +2
+  amenagement.sericiculture@terrain — Sériciculture (Terrain) : Tisseur +2 · Chasseur +2
+  amenagement.site-archeologique@terrain — Site archéologique (Terrain) : Archéologue +2
   amenagement.baleinier-tier-2@terrain — Baleinier (tier 2) (Terrain) : Pêcheur +5 · Commerçant +5
   amenagement.baleinier-tier-3@terrain — Baleinier (tier 3) (Terrain) : Pêcheur +7 · Commerçant +10
   amenagement.bateau-de-peche-tier-2@terrain — Bâteau de pêche (tier 2) (Terrain) : Pêcheur +4
   amenagement.bateau-de-peche-tier-3@terrain — Bâteau de pêche (tier 3) (Terrain) : Pêcheur +7
-  amenagement.carriere-tier-2@terrain — Carrière (tier 2) (Terrain) : Mineur +4 · Taudis +8
-  amenagement.carriere-tier-3@terrain — Carrière (tier 3) (Terrain) : Mineur +6 · Charbonnier +2 · Taudis +10
-  amenagement.champ-tier-2@terrain — Champ (tier 2) (Terrain) : Fermier +6 · Taudis +8
-  amenagement.champ-tier-3@terrain — Champ (tier 3) (Terrain) : Fermier +10 · Taudis +10
-  amenagement.foire-tier-2@terrain — Foire (tier 2) (Terrain) : Artiste +2 · Commerçant +2 · Taudis +8
-  amenagement.foire-tier-3@terrain — Foire (tier 3) (Terrain) : Artiste +4 · Commerçant +4 · Taudis +10
-  amenagement.mine-de-charbon-tier-2@terrain — Mine de Charbon (tier 2) (Terrain) : Charbonnier +4 · Taudis +8
-  amenagement.mine-de-charbon-tier-3@terrain — Mine de Charbon (tier 3) (Terrain) : Charbonnier +6 · Taudis +10
-  amenagement.mine-de-fer-tier-2@terrain — Mine de Fer (tier 2) (Terrain) : Forgeron +4 · Garde +1 · Taudis +8
-  amenagement.mine-de-fer-tier-3@terrain — Mine de Fer (tier 3) (Terrain) : Forgeron +6 · Garde +3 · Taudis +10
-  amenagement.mine-d-or-tier-2@terrain — Mine d'Or (tier 2) (Terrain) : Commerçant +14 · Taudis +8
-  amenagement.mine-d-or-tier-3@terrain — Mine d'Or (tier 3) (Terrain) : Commerçant +24 · Taudis +10
-  amenagement.observatoire-tier-2@terrain — Observatoire (tier 2) (Terrain) : Scientifique +3 · Taudis +8
-  amenagement.observatoire-tier-3@terrain — Observatoire (tier 3) (Terrain) : Scientifique +5 · Taudis +10
-  amenagement.paturage-tier-2@terrain — Pâturage (tier 2) (Terrain) : Éleveur +5 · Taudis +8
-  amenagement.paturage-tier-3@terrain — Pâturage (tier 3) (Terrain) : Éleveur +8 · Taudis +10
-  amenagement.riziere-tier-2@terrain — Rizière (tier 2) (Terrain) : Fermier +8 · Taudis +8
-  amenagement.riziere-tier-3@terrain — Rizière (tier 3) (Terrain) : Fermier +15 · Taudis +10
-  amenagement.scierie-tier-2@terrain — Scierie (tier 2) (Terrain) : Bûcheron +4 · Tisseur +2 · Taudis +8
-  amenagement.scierie-tier-3@terrain — Scierie (tier 3) (Terrain) : Bûcheron +6 · Tisseur +2 · Taudis +10
-  amenagement.sericiculture-tier-2@terrain — Sériciculture (tier 2) (Terrain) : Tisseur +4 · Commerçant +2 · Taudis +8
-  amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5 · Taudis +10
-  amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4 · Taudis +8
-  amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7 · Taudis +10
+  amenagement.carriere-tier-2@terrain — Carrière (tier 2) (Terrain) : Mineur +4
+  amenagement.carriere-tier-3@terrain — Carrière (tier 3) (Terrain) : Mineur +6 · Charbonnier +2
+  amenagement.champ-tier-2@terrain — Champ (tier 2) (Terrain) : Fermier +6
+  amenagement.champ-tier-3@terrain — Champ (tier 3) (Terrain) : Fermier +10
+  amenagement.foire-tier-2@terrain — Foire (tier 2) (Terrain) : Artiste +2 · Commerçant +2
+  amenagement.foire-tier-3@terrain — Foire (tier 3) (Terrain) : Artiste +4 · Commerçant +4
+  amenagement.mine-de-charbon-tier-2@terrain — Mine de Charbon (tier 2) (Terrain) : Charbonnier +4
+  amenagement.mine-de-charbon-tier-3@terrain — Mine de Charbon (tier 3) (Terrain) : Charbonnier +6
+  amenagement.mine-de-fer-tier-2@terrain — Mine de Fer (tier 2) (Terrain) : Forgeron +4 · Garde +1
+  amenagement.mine-de-fer-tier-3@terrain — Mine de Fer (tier 3) (Terrain) : Forgeron +6 · Garde +3
+  amenagement.mine-d-or-tier-2@terrain — Mine d'Or (tier 2) (Terrain) : Commerçant +14
+  amenagement.mine-d-or-tier-3@terrain — Mine d'Or (tier 3) (Terrain) : Commerçant +24
+  amenagement.observatoire-tier-2@terrain — Observatoire (tier 2) (Terrain) : Scientifique +3
+  amenagement.observatoire-tier-3@terrain — Observatoire (tier 3) (Terrain) : Scientifique +5
+  amenagement.paturage-tier-2@terrain — Pâturage (tier 2) (Terrain) : Éleveur +5
+  amenagement.paturage-tier-3@terrain — Pâturage (tier 3) (Terrain) : Éleveur +8
+  amenagement.riziere-tier-2@terrain — Rizière (tier 2) (Terrain) : Fermier +8
+  amenagement.riziere-tier-3@terrain — Rizière (tier 3) (Terrain) : Fermier +15
+  amenagement.scierie-tier-2@terrain — Scierie (tier 2) (Terrain) : Bûcheron +4 · Tisseur +2
+  amenagement.scierie-tier-3@terrain — Scierie (tier 3) (Terrain) : Bûcheron +6 · Tisseur +2
+  amenagement.sericiculture-tier-2@terrain — Sériciculture (tier 2) (Terrain) : Tisseur +4 · Commerçant +2
+  amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5
+  amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4
+  amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.camp-de-travailleurs@ville — Camp de travailleurs (Ville) : Bûcheron +2 · Mineur +2
@@ -91,47 +91,11 @@ total : 106 règles — sources : batiment 59, amenagement 47
   batiment.institut-de-recherche@chateau — Institut de recherche (Château) : Scientifique +8
   batiment.hopital@chateau — Hôpital (Château) : Guérisseur +10
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
-── canal logements : 52 règles ──
+── canal logements : 16 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.bas-quartier@ville — Bas quartier (Ville) : Taudis +20
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
   batiment.bas-quartier@chateau — Bas quartier (Château) : Taudis +20
-  amenagement.carriere@terrain — Carrière (Terrain) : Mineur +2 · Taudis +5
-  amenagement.champ@terrain — Champ (Terrain) : Fermier +3 · Taudis +5
-  amenagement.foire@terrain — Foire (Terrain) : Artiste +1 · Commerçant +1 · Taudis +5
-  amenagement.mine-de-charbon@terrain — Mine de Charbon (Terrain) : Charbonnier +2 · Taudis +5
-  amenagement.mine-de-fer@terrain — Mine de Fer (Terrain) : Forgeron +2 · Taudis +5
-  amenagement.mine-d-or@terrain — Mine d'Or (Terrain) : Commerçant +6 · Taudis +5
-  amenagement.observatoire@terrain — Observatoire (Terrain) : Scientifique +1 · Taudis +5
-  amenagement.paturage@terrain — Pâturage (Terrain) : Éleveur +2 · Taudis +5
-  amenagement.riziere@terrain — Rizière (Terrain) : Fermier +4 · Taudis +5
-  amenagement.scierie@terrain — Scierie (Terrain) : Bûcheron +2 · Chasseur +2 · Taudis +5
-  amenagement.sericiculture@terrain — Sériciculture (Terrain) : Tisseur +2 · Chasseur +2 · Taudis +5
-  amenagement.site-archeologique@terrain — Site archéologique (Terrain) : Archéologue +2 · Taudis +5
-  amenagement.carriere-tier-2@terrain — Carrière (tier 2) (Terrain) : Mineur +4 · Taudis +8
-  amenagement.carriere-tier-3@terrain — Carrière (tier 3) (Terrain) : Mineur +6 · Charbonnier +2 · Taudis +10
-  amenagement.champ-tier-2@terrain — Champ (tier 2) (Terrain) : Fermier +6 · Taudis +8
-  amenagement.champ-tier-3@terrain — Champ (tier 3) (Terrain) : Fermier +10 · Taudis +10
-  amenagement.foire-tier-2@terrain — Foire (tier 2) (Terrain) : Artiste +2 · Commerçant +2 · Taudis +8
-  amenagement.foire-tier-3@terrain — Foire (tier 3) (Terrain) : Artiste +4 · Commerçant +4 · Taudis +10
-  amenagement.mine-de-charbon-tier-2@terrain — Mine de Charbon (tier 2) (Terrain) : Charbonnier +4 · Taudis +8
-  amenagement.mine-de-charbon-tier-3@terrain — Mine de Charbon (tier 3) (Terrain) : Charbonnier +6 · Taudis +10
-  amenagement.mine-de-fer-tier-2@terrain — Mine de Fer (tier 2) (Terrain) : Forgeron +4 · Garde +1 · Taudis +8
-  amenagement.mine-de-fer-tier-3@terrain — Mine de Fer (tier 3) (Terrain) : Forgeron +6 · Garde +3 · Taudis +10
-  amenagement.mine-d-or-tier-2@terrain — Mine d'Or (tier 2) (Terrain) : Commerçant +14 · Taudis +8
-  amenagement.mine-d-or-tier-3@terrain — Mine d'Or (tier 3) (Terrain) : Commerçant +24 · Taudis +10
-  amenagement.observatoire-tier-2@terrain — Observatoire (tier 2) (Terrain) : Scientifique +3 · Taudis +8
-  amenagement.observatoire-tier-3@terrain — Observatoire (tier 3) (Terrain) : Scientifique +5 · Taudis +10
-  amenagement.paturage-tier-2@terrain — Pâturage (tier 2) (Terrain) : Éleveur +5 · Taudis +8
-  amenagement.paturage-tier-3@terrain — Pâturage (tier 3) (Terrain) : Éleveur +8 · Taudis +10
-  amenagement.riziere-tier-2@terrain — Rizière (tier 2) (Terrain) : Fermier +8 · Taudis +8
-  amenagement.riziere-tier-3@terrain — Rizière (tier 3) (Terrain) : Fermier +15 · Taudis +10
-  amenagement.scierie-tier-2@terrain — Scierie (tier 2) (Terrain) : Bûcheron +4 · Tisseur +2 · Taudis +8
-  amenagement.scierie-tier-3@terrain — Scierie (tier 3) (Terrain) : Bûcheron +6 · Tisseur +2 · Taudis +10
-  amenagement.sericiculture-tier-2@terrain — Sériciculture (tier 2) (Terrain) : Tisseur +4 · Commerçant +2 · Taudis +8
-  amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5 · Taudis +10
-  amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4 · Taudis +8
-  amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7 · Taudis +10
   amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
