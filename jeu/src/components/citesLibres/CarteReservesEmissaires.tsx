@@ -12,7 +12,7 @@
 
 import type { Player } from '../../engine/types'
 import type { Cfg } from '../../engine/gameData'
-import { emissairesBatimentsJoueur } from '../../engine/batiments'
+import { emissairesConstructionsJoueur } from '../../engine/batiments'
 import { Card, Button } from '../ui'
 
 export function CarteReservesEmissaires({ players, C, recruterEmissaire }: {
@@ -23,7 +23,7 @@ export function CarteReservesEmissaires({ players, C, recruterEmissaire }: {
   return (
     <Card title="✉ Réserves d'émissaires">
       {players.map((p) => {
-        const bonus = emissairesBatimentsJoueur(p, C)
+        const bonus = emissairesConstructionsJoueur(p, C)
         const mobilisables = (p.emissaires ?? 0) + bonus
         return (
           <div key={p.n} className="cl-emiss">

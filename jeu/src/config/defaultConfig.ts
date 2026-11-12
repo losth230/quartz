@@ -347,16 +347,22 @@ export interface ConstructionRef {
    *  tisseuse : +1 Soie × rang 1/2/3) — lu par le moteur de
    *  production des aménagements (× rangNiveau de la ville). */
   effetsParRang?: { ressource: string; quantite: number }[]
-  /** ÉMISSAIRES accordés à tout le joueur TANT QUE CE bâtiment est
-   *  construit (arbitrage Thibaut 2026-11-03 : Délégation tier 1
-   *  château +1, Chancellerie tier 2 — requise Délégation, la
-   *  remplace — +2, Ambassade tier 3 — requise Chancellerie, la
-   *  remplace — +4). VALEUR D'ÉTAT, pas un flux : elle s'ajoute à la
+  /** ÉMISSAIRES accordés à tout le joueur TANT QUE CETTE
+   *  construction tient — BÂTIMENTS (arbitrage Thibaut 2026-11-03 :
+   *  Délégation tier 1 château +1, Chancellerie tier 2 — requise
+   *  Délégation, la remplace — +2, Ambassade tier 3 — requise
+   *  Chancellerie, la remplace — +4, Guilde des diplomates +7) ET
+   *  AMÉNAGEMENTS, dont les merveilles naturelles (Coeur Ancestral
+   *  +1, fiche arbitre 2026-10-25 ; bug 2026-11-12 : les merveilles
+   *  vivent dans ville.amenagements, le comptage les a rejointes).
+   *  VALEUR D'ÉTAT, pas un flux : elle s'ajoute à la
    *  réserve MOBILISABLE d'émissaires (p.emissaires, saisi au
-   *  plateau) tant que le bâtiment tient — patron routesApportees ;
-   *  comptée par emissairesBatimentsJoueur (engine/batiments.ts),
+   *  plateau) tant que la construction tient — patron routesApportees ;
+   *  comptée par emissairesConstructionsJoueur (engine/batiments.ts),
    *  bâtiments REMPLACÉS exclus (la Chancellerie neutralise le +1
-   *  de la Délégation, l'Ambassade celui de la Chancellerie).
+   *  de la Délégation, l'Ambassade celui de la Chancellerie) ; les
+   *  aménagements améliorés sont remplacés EN PLACE dans leur
+   *  liste (rien à neutraliser).
    *  Champ optionnel : absent = aucun apport. */
   emissairesApportes?: number
   // ── VAGUE TIER 3 (arbitrage Thibaut 2026-11-03) : modificateurs de

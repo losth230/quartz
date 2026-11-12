@@ -30,7 +30,7 @@ import { useState } from 'react'
 import { useGame } from '../state/store'
 import { cfgOf } from '../engine/gameData'
 import { citesLibresDe, garnisonCiteLibre } from '../engine/citesLibres'
-import { emissairesBatimentsJoueur } from '../engine/batiments'
+import { emissairesConstructionsJoueur } from '../engine/batiments'
 import type { CiteLibre } from '../engine/types'
 import { Card } from './ui'
 import { CarteReservesEmissaires } from './citesLibres/CarteReservesEmissaires'
@@ -110,7 +110,7 @@ export function CitesLibresView() {
       //  cité reste placé — fait de plateau).
       const e = c.emissaires ?? (c.emissaires = {})
       const places = e[joueur] ?? 0
-      const bonus = emissairesBatimentsJoueur(p, C)
+      const bonus = emissairesConstructionsJoueur(p, C)
       const reserve = (p.emissaires ?? 0) + bonus
       if (delta > 0 && reserve <= 0) return
       const v = Math.max(0, places + delta)

@@ -153,23 +153,44 @@ export function appliquerEffetsBatiments(p: Player, C: Cfg): Record<string, numb
 
 // ── Émissaires « tant que le bâtiment est construit » (2026-11-03) ────────
 
-/** ÉMISSAIRES accordés par les bâtiments PRÉSENTS du joueur (valeur
- *  d'état, pas un flux — arbitrage Thibaut 2026-11-03 : Délégation
- *  tier 1 château +1, Chancellerie tier 2 +2, Ambassade tier 3 +4).
- *  Contrairement au comptage des ROUTES (maxRoutesJoueur, commerce.ts),
- *  les bâtiments REMPLACÉS sont EXCLUS : c'est le cœur du design en
- *  tiers — la Chancellerie neutralise le +1 de la Délégation qu'elle
- *  remplace, l'Ambassade le +2 de la Chancellerie (patron
- *  batimentsRemplaces). Le total s'ajoute à la réserve MANUELLE
- *  (p.emissaires, saisie au plateau) pour donner la réserve
- *  MOBILISABLE — cf. CitesLibresView. */
-export function emissairesBatimentsJoueur(p: Player, C: Cfg): number {
+/** ÉMISSAIRES accordés par les CONSTRUCTIONS présentes du joueur :
+ *  BÂTIMENTS (valeur d'état, pas un flux — arbitrage Thibaut
+ *  2026-11-03 : Délégation tier 1 château +1, Chancellerie tier 2
+ *  +2, Ambassade tier 3 +4, Guilde des diplomates +7) ET
+ *  AMÉNAGEMENTS — dont les MERVEILLES NATURELLES (Coeur Ancestral
+ *  +1, fiche arbitre 2026-10-25). BUG 2026-11-12 (retour Thibaut «
+ *  aucun émissaire n'est crédité pour le Coeur Ancestral ») : les
+ *  merveilles sont des AMÉNAGEMENTS — elles vivent dans
+ *  ville.amenagements, jamais dans ville.batiments, et le +1 du
+ *  Coeur Ancestral n'était compté NULLE PART (référentiel et picker
+ *  corrects, réserve mobilisable AVEUGLE). Même champ
+ *  emissairesApportes, même sémantique « tant que la construction
+ *  tient » : les deux listes sont sommées. Renommée depuis
+ *  emissairesBatimentsJoueur (le nom historique mentait sur le
+ *  périmètre).
+ *  Pour les BÂTIMENTS, contrairement au comptage des ROUTES
+ *  (maxRoutesJoueur, commerce.ts), les REMPLACÉS sont EXCLUS :
+ *  c'est le cœur du design en tiers — la Chancellerie neutralise le
+ *  +1 de la Délégation qu'elle remplace, l'Ambassade le +2 de la
+ *  Chancellerie (patron batimentsRemplaces). Les AMÉNAGEMENTS n'ont
+ *  PAS de neutralisation à faire : l'amélioration REMPLACE
+ *  l'exemplaire EN PLACE dans la liste (Constructions.ts,
+ *  cible[iBase] = nom) qui ne porte donc que des aménagements
+ *  actifs, et les merveilles naturelles ne sont JAMAIS améliorables.
+ *  Le total s'ajoute à la réserve MANUELLE (p.emissaires, saisie au
+ *  plateau) pour donner la réserve MOBILISABLE — cf. CitesLibresView
+ *  et la carte « Réserves d'émissaires ». */
+export function emissairesConstructionsJoueur(p: Player, C: Cfg): number {
   let total = 0
   for (const ville of p.villes) {
     const ignores = batimentsRemplaces(ville, C)
     for (const nom of ville.batiments) {
       if (ignores.has(nom)) continue
       const ref = constructionRef(nom, C.config, ville.type)
+      total += (ref?.emissairesApportes ?? 0)
+    }
+    for (const nom of ville.amenagements ?? []) {
+      const ref = constructionRef(nom, C.config)
       total += (ref?.emissairesApportes ?? 0)
     }
   }

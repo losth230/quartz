@@ -185,7 +185,7 @@ export function routesApporteesConstructionRef(ref: ConstructionRef | undefined)
 
 /** ÉMISSAIRES accordés par une construction (valeur d'état « tant
  *  que construit », arbitrage Thibaut 2026-11-03 : Délégation +1,
- *  Chancellerie +2, Ambassade +4 — cf. emissairesBatimentsJoueur
+ *  Chancellerie +2, Ambassade +4 — cf. emissairesConstructionsJoueur
  *  pour le comptage par joueur). Patron routesApporteesConstructionRef. */
 export function emissairesApportesConstructionRef(ref: ConstructionRef | undefined): number {
   return ref?.emissairesApportes ?? 0

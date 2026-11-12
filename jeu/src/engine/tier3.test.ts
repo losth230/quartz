@@ -35,7 +35,7 @@ import { cfgOf } from './gameData'
 import { emptyRecap } from './shared'
 import { rangDe } from './statutSocial'
 import {
-  batimentsActifsVille, modificateursPaysJoueur, emissairesBatimentsJoueur,
+  batimentsActifsVille, modificateursPaysJoueur, emissairesConstructionsJoueur,
 } from './batiments'
 import { detailGainsVille, impotsVassaux } from './economie'
 import { effetsCommerceJoueur, maxRoutesJoueur, creerRouteCommerce } from './commerce'
@@ -127,7 +127,7 @@ test('modificateursPaysJoueur (tier 3) : neutre sans guilde ; bourgeois ×1,5 (�
   const avecDiplomates = modificateursPaysJoueur(p, C)
   assert.ok(Math.abs(avecDiplomates.tributVassalPlus - 0.05) < 1e-9,
     'Guilde des diplomates : +5 % de tribut vassal')
-  assert.equal(emissairesBatimentsJoueur(p, C), 7,
+  assert.equal(emissairesConstructionsJoueur(p, C), 7,
     'Guilde des diplomates : +7 émissaires (le +4 de l Ambassade neutralisée ne compte plus)')
 
   // Guilde des évangélistes : conversion locale +0,1

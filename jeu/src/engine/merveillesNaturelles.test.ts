@@ -27,6 +27,7 @@ import { garnisonHabitationVille } from './garnisons'
 import { bonheurApportesVille } from './bonheur'
 import { maxRoutesJoueur } from './commerce'
 import { reductionLeveeBatiments } from './constructions'
+import { emissairesConstructionsJoueur } from './batiments'
 
 function partieTemoin(): { state: GameState; p: Player; ville: City; C: Cfg } {
   const C = cfgOf()
@@ -113,10 +114,20 @@ test('Antre de Magmadon : −15 Or sur la levée DANS cette habitation', () => {
   assert.equal(reductionLeveeBatiments(ville, C), 15, 'la réduction des aménagements compte')
 })
 
-test('Coeur Ancestral : +1 émissaire (champ emissairesApportes — suivi plateau)', () => {
-  const { C } = partieTemoin()
+test("Coeur Ancestral : +1 émissaire — champ emissairesApportes ET compté dans la réserve mobilisable (bug 2026-11-12)", () => {
+  const { p, ville, C } = partieTemoin()
   const coeur = C.config.constructions.find((c) => c.nom === 'Coeur Ancestral')
-  assert.equal(coeur?.emissairesApportes, 1)
+  assert.equal(coeur?.emissairesApportes, 1, 'le champ référentiel vaut +1')
+  assert.equal(emissairesConstructionsJoueur(p, C), 0, 'sans merveille : bonus 0')
+  // BUG 2026-11-12 (retour Thibaut) : le Coeur Ancestral est une
+  //  MERVEILLE NATURELLE = AMÉNAGEMENT — il vit dans
+  //  ville.amenagements, jamais dans ville.batiments : l'ancien
+  //  comptage (bâtiments seuls) ne le voyait pas et le +1 n'était
+  //  crédité NULLE PART (référentiel et picker corrects, réserve
+  //  mobilisable aveugle).
+  ville.amenagements = ['Coeur Ancestral']
+  assert.equal(emissairesConstructionsJoueur(p, C), 1,
+    "l'aménagement (merveille) est compté dans la réserve mobilisable")
 })
 
 test('Pic Ascendant et Pilliers Célestes : effets de PLATEAU en italique (*…*)', () => {
