@@ -21,7 +21,8 @@ import assert from 'node:assert/strict'
 import { runTurn } from './tour'
 import { normaliserEtat } from './villes'
 import {
-  creerRouteCommerce, ressourcesCopiables, effetsCommerceJoueur,
+  creerRouteCommerce, changerCopieRoute, ressourcesCopiables, amenagementsCopiables,
+  effetsCommerceJoueur,
   routesCommerceDe, routesCommerceVers, routesCommerceVersCite,
   nettoyerRoutesCommerce, supprimerRouteCommerce, maxRoutesJoueur,
 } from './commerce'
@@ -116,10 +117,10 @@ test('routes dissociées (3b) : la copie ouvre les emplacements du métier copi�
   const villeCible = cible.villes[0]
   // La Scierie porte 2 emplacements de Bûcheron ; injectée dans la
   //  ville cible, la route sortante copie SES emplacements dans la
-  //  ville d'ORIGINE (la route est injectée directement : le
-  //  référentiel 3a ne combine plus production ET emplacements dans
-  //  un même aménagement, la copie d'emplacements vise les configs
-  //  personnalisées/antérieures qui les portent encore).
+  //  ville d'ORIGINE (la route est injectée directement pour isoler
+  //  le canal des caps du parcours d'ouverture — depuis le correctif
+  //  2026-11-12 le parcours NORMAL marche aussi : flux OU
+  //  emplacements, voir le test « Champ » plus bas).
   villeCible.amenagements = [...(villeCible.amenagements ?? []), 'Scierie']
   const capBucheronAvant = capMetierVille('Bûcheron', copieur.villes[0], C, { state, joueur: copieur.n })
   state.routesCommerce = [{
@@ -281,4 +282,74 @@ test('resumeConstruction : l Échoppe AFFICHE sa route commerciale dans le résu
   assert.equal(ref.routesApportees, 1, 'champ routesApportees = 1')
   const r = resumeConstruction(ref)
   assert.match(r, /route commerciale/, `le résumé du picker affiche la route : « ${r} »`)
+})
+
+// ── Correctif 2026-11-12 (retour Thibaut : « les routes commerciales
+//  ne permettent pas de copier un aménagement ») : la garde historique
+//  ne voyait que les FLUX (ressourcesCopiables) — or depuis la vague
+//  3a, la plupart des aménagements de base ne produisent plus rien :
+//  leurs apports vivent dans les emplacements ({metier, places}). Le
+//  Select « Aménagement copié » restait vide et creerRouteCommerce
+//  refusait TOUT. Amenagements copiables = flux OU emplacements ;
+//  la copie d'emplacements via les caps (emplacementsRoutesVille)
+//  était déjà codée et conforme au design acté 2026-10-24. ──
+
+test('correctif 2026-11-12 : un aménagement à EMPLACEMENTS SEULS (Champ) est copiable et la route ouvre SES places à l origine', () => {
+  const state = partieDeuxJoueurs()
+  normaliserEtat(state)
+  const copieur = state.players[0]
+  const cible = state.players[1]
+  const C = cfgOf(state.config)
+  const villeOrigine = copieur.villes[0]
+  const villeCible = cible.villes[0]
+  // Préconditions (vague 3a) : le Champ n'a AUCUN flux, seulement
+  //  3 emplacements de Fermier au référentiel.
+  assert.equal(ressourcesCopiables('Champ', C.config).length, 0,
+    'précondition : le Champ n a AUCUN flux copiable')
+  // Le Select se remplit désormais (flux OU emplacements).
+  villeCible.amenagements = [...(villeCible.amenagements ?? []), 'Champ']
+  assert.ok(amenagementsCopiables(villeCible, C.config).includes('Champ'),
+    'le Champ apparaît dans les aménagements copiables de la ville ciblée')
+  // Le parcours NORMAL d'ouverture ne refuse plus : cap Fermier +3
+  //  dans la ville d'ORIGINE (mesuré avant/après).
+  const capAvant = capMetierVille('Fermier', villeOrigine, C, { state, joueur: copieur.n })
+  const err = creerRouteCommerce(state, copieur.n, villeOrigine.nom, cible.n, null, villeCible.nom, 'Champ')
+  assert.equal(err, null, `la route doit s ouvrir sur le Champ (obtenu : ${err})`)
+  assert.equal(
+    capMetierVille('Fermier', villeOrigine, C, { state, joueur: copieur.n }),
+    capAvant + 3,
+    'la copie du Champ ouvre SES 3 places de Fermier dans la ville d origine',
+  )
+  // Le journal décrit la copie d'emplacements, pas seulement la
+  //  production.
+  const log = state.log[state.log.length - 1]
+  assert.match(log.texte, /3 place\(s\) Fermier/,
+    `le log décrit les emplacements copiés : « ${log.texte} »`)
+})
+
+test('correctif 2026-11-12 : un aménagement sans flux NI emplacements reste refusé (garde)', () => {
+  const state = partieDeuxJoueurs()
+  normaliserEtat(state)
+  const copieur = state.players[0]
+  const cible = state.players[1]
+  const C = cfgOf(state.config)
+  const villeCible = cible.villes[0]
+  // Nom hors référentiel poussé à la main dans la ville ciblée :
+  //  ni flux ni emplacements → pas copiable.
+  villeCible.amenagements = [...(villeCible.amenagements ?? []), 'Aménagement fantôme']
+  assert.ok(!amenagementsCopiables(villeCible, C.config).includes('Aménagement fantôme'),
+    'un aménagement sans flux ni emplacements n apparaît pas dans les copiables')
+  const err = creerRouteCommerce(state, copieur.n, copieur.villes[0].nom, cible.n, null, villeCible.nom, 'Aménagement fantôme')
+  assert.ok(err !== null && err.includes('rien à copier'),
+    `refus attendu avec le message « rien à copier » (obtenu : ${err})`)
+  // changerCopieRoute garde la MÊME garde (une route existante ne
+  //  peut pas basculer sur un aménagement vide).
+  state.routesCommerce = [{
+    id: 'rc-garde', joueur: copieur.n, villeOrigine: copieur.villes[0].nom,
+    joueurCible: cible.n, citeCible: null, villeCible: villeCible.nom,
+    amenagement: 'Champ',
+  }]
+  const errChg = changerCopieRoute(state, 'rc-garde', 'Aménagement fantôme')
+  assert.ok(errChg !== null && errChg.includes('rien à copier'),
+    `changerCopieRoute refuse aussi (obtenu : ${errChg})`)
 })

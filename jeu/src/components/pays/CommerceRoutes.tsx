@@ -3,10 +3,14 @@
 //  3b, arbitrage Thibaut 2026-10-24) — une route relie une de tes villes
 //  à la ville d'un autre joueur ou à une cité libre, SANS personnage :
 //  copie de l'aménagement ENTIER choisi (marqueur (u)) dans la ville
-//  d'ORIGINE, plus d'Or passif (marchandOrTour retiré). Le métier de
-//  Marchand a été RETIRÉ du jeu le 2026-10-24 (arbitrage Thibaut) :
-//  une route vers une CITÉ LIBRE octroie +1 émissaire auprès de la
-//  cité tant que la route est active (citesLibres.ts,
+//  d'ORIGINE — production (flux le cas échéant) ET emplacements de
+//  métier, matérialisés via les caps de la ville d'origine
+//  (correctif 2026-11-12 : le filtre ne voyait que les flux, vides
+//  depuis la vague 3a — amenagementsCopiables accepte désormais flux
+//  OU emplacements) ; plus d'Or passif (marchandOrTour retiré). Le
+//  métier de Marchand a été RETIRÉ du jeu le 2026-10-24 (arbitrage
+//  Thibaut) : une route vers une CITÉ LIBRE octroie +1 émissaire
+//  auprès de la cité tant que la route est active (citesLibres.ts,
 //  emissairesEffectifsCite). Ouverture gratuite ; fermeture par
 //  la seule ville d'origine. Le formulaire d'ouverture et son état
 //  vivent ici. (Extrait de PlayerView.tsx — un fichier par UI.)
@@ -17,7 +21,7 @@ import type { Player } from '../../engine/types'
 import { useGame } from '../../state/store'
 import {
   routesCommerceDe, routesCommerceVers, maxRoutesJoueur,
-  amenagementsCopiables, ressourcesCopiables,
+  amenagementsCopiables, ressourcesCopiables, emplacementsCopiables,
   changerCopieRoute, supprimerRouteCommerce, creerRouteCommerce,
 } from '../../engine/commerce'
 import type { Cfg } from '../../engine/gameData'
@@ -66,10 +70,12 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                 {mes.length} route(s) ouverte(s) · cap conseillé : {cap}
               </Badge>{' '}
               <span className="muted small">
-                Chaque route vers une ville copie la production d'un
-                aménagement de la ville ciblée dans ta ville d'origine ; une
-                route vers une cité libre octroie +1 émissaire auprès de la
-                cité tant que la route est active. Le cap est indicatif — tu
+                Chaque route vers une ville copie un aménagement de la
+                ville ciblée dans ta ville d'origine : sa production le
+                cas échéant, ET ses emplacements de métier, qui
+                s'ajoutent aux caps de ta ville d'origine ; une
+                route vers une cité libre octroie +1 émissaire auprès de
+                la cité tant que la route est active. Le cap est indicatif — tu
                 peux ouvrir autant de routes que tu veux (dépassement annoncé
                 au journal).
               </span>
@@ -78,8 +84,10 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
               <p className="muted">
                 Aucune route commerciale. Ouvre une route gratuite depuis une de
                 tes villes vers la ville d'un autre joueur (copie d'un
-                aménagement) ou vers une cité libre (+1 émissaire auprès de la
-                cité tant que la route est active).
+                aménagement : production le cas échéant + emplacements de
+                métier ajoutés aux caps de ta ville d'origine) ou vers une
+                cité libre (+1 émissaire auprès de la cité tant que la route
+                est active).
               </p>
             )}
             {mes.length > 0 && (
@@ -90,7 +98,7 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                       <th>Ville d'origine</th>
                       <th>Cible</th>
                       <th>Aménagement copié</th>
-                      <th>Production copiée / tour</th>
+                      <th>Copie / tour (production + emplacements)</th>
                       <th></th>
                     </tr>
                   </thead>
@@ -100,6 +108,11 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                       const villeCible = cible?.villes.find((v) => v.nom === route.villeCible)
                       const amenList = villeCible ? amenagementsCopiables(villeCible, C.config) : []
                       const copList = route.amenagement ? ressourcesCopiables(route.amenagement, C.config) : []
+                      // Correctif 2026-11-12 : les emplacements de métier
+                      //  copiés s'affichent aussi (ils se matérialisent via
+                      //  les caps de la ville d'ORIGINE, engine/metiers.ts
+                      //  emplacementsRoutesVille — pas une production/tour).
+                      const empList = route.amenagement ? emplacementsCopiables(route.amenagement, C.config) : []
                       return (
                         <tr key={route.id}>
                           <td><strong>{route.villeOrigine}</strong></td>
@@ -122,11 +135,14 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                                 />}
                           </td>
                           <td className="small">
-                            {copList.length === 0 && <span className="muted">—</span>}
+                            {copList.length === 0 && empList.length === 0 && <span className="muted">—</span>}
                             {copList.map((x, i) => (
                               (!x.ete || state.saison === 'Été')
                                 ? <div key={i}>+{fmt(x.valeur)} {x.ressource}</div>
                                 : <div key={i} className="muted">+{fmt(x.valeur)} {x.ressource} (uniquement en été — rien en hiver)</div>
+                            ))}
+                            {empList.map((e, i) => (
+                              <div key={`e${i}`}>+{e.places} place(s) {e.metier} <span className="muted">(cap de la ville d'origine)</span></div>
                             ))}
                           </td>
                           <td>
@@ -180,7 +196,7 @@ export function CommerceRoutes({ p, C }: { p: Player; C: Cfg }) {
                   <Field label="Ville ciblée">
                     <Select value={cEff} options={(joueurCibleForm?.villes ?? []).map((v) => ({ value: v.nom, label: v.nom }))} onChange={(v) => { setRcVille(v); setRcAmen('') }} />
                   </Field>
-                  <Field label="Aménagement copié (production entière)">
+                  <Field label="Aménagement copié (entier : production le cas échéant + emplacements de métier)">
                     <Select value={aEff} options={amenForm.map((a) => ({ value: a, label: a }))} onChange={setRcAmen} />
                   </Field>
                 </>

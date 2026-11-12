@@ -23,9 +23,12 @@
 //  disparus, cible annexée) à chaque fin de tour.
 //  Copie (marqueur (u)) : l'aménagement ENTIER est copié — toutes ses
 //  ressources positives (flux + production d'été, créditée en été
-//  seulement) ; la Garnison (valeur d'état) et les effets négatifs
-//  sont exclus ; le Tourisme EST copiable (arbitrage Thibaut
-//  2026-10-19 : stock de Tourisme = production, jamais cumulé).
+//  seulement) ET ses emplacements de métier ({metier, places}), ces
+//  derniers matérialisés dans la ville d'ORIGINE via les caps
+//  (engine/metiers.ts emplacementsRoutesVille — jamais crédités ici) ;
+//  la Garnison (valeur d'état) et les effets négatifs sont exclus ;
+//  le Tourisme EST copiable (arbitrage Thibaut 2026-10-19 : stock de
+//  Tourisme = production, jamais cumulé).
 //  Canal « Commerce » du récap ressources (engine/production.ts),
 //  étape 3terdecies de FinDeTour.
 //  HISTORIQUE (règle 9) : l'ancien modèle « un marchand tient la
@@ -49,7 +52,7 @@ import type {
 } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import { cfgOf, cultureDef, type Cfg } from './gameData'
-import { constructionRef, effetsConstructionRef, effetsEteConstructionRef, routesApporteesConstructionRef } from './constructions'
+import { constructionRef, emplacementsConstructionRef, effetsConstructionRef, effetsEteConstructionRef, routesApporteesConstructionRef } from './constructions'
 import { modificateursPaysJoueur, batimentsActifsVille } from './batiments'
 
 /** Toutes les routes commerciales du monde (champ optionnel → vide).
@@ -114,12 +117,46 @@ export function ressourcesCopiables(nom: string, cfg?: GameConfig): RessourceCop
   return out
 }
 
-/** Aménagements d'une ville qui possèdent AU MOINS une ressource
- *  copiable (sans doublés, dans l'ordre de la ville). */
+/** Emplacements de métier copiables d'un aménagement (places > 0,
+ *  ordre du référentiel). CORRECTIF 2026-11-12 : depuis la vague 3a,
+ *  la plupart des aménagements ne produisent PLUS de flux — leurs
+ *  apports vivent dans les emplacements ({metier, places}), qui se
+ *  matérialisent dans la ville d'ORIGINE via les caps
+ *  (engine/metiers.ts emplacementsRoutesVille, design acté
+ *  Thibaut 2026-10-24 « copier exactement un aménagement, y compris
+ *  ses emplacements de population »). */
+export function emplacementsCopiables(nom: string, cfg?: GameConfig): Array<{ metier: string, places: number }> {
+  const ref = constructionRef(nom, cfg)
+  if (!ref) return []
+  return emplacementsConstructionRef(ref, cfg).filter((e) => e.places > 0)
+}
+
+/** Description de la copie d'un aménagement (flux + emplacements) —
+ *  utilisée par les gardes et les logs des routes (correctif
+ *  2026-11-12 : décrire AUSSI les emplacements de métier copiés vers
+ *  les caps de la ville d'origine, pas seulement la production). */
+function descriptionCopie(nom: string, cfg?: GameConfig): string {
+  const parts: string[] = []
+  for (const c of ressourcesCopiables(nom, cfg)) {
+    parts.push(`${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`)
+  }
+  for (const e of emplacementsCopiables(nom, cfg)) {
+    parts.push(`${e.places} place(s) ${e.metier}`)
+  }
+  return parts.join(', ')
+}
+
+/** Aménagements d'une ville copiables par une route : AU MOINS un
+ *  flux copiable OU un emplacement de métier (correctif 2026-11-12 :
+ *  le filtre historique ne voyait que les flux, vides depuis la
+ *  vague 3a — le Select « Aménagement copié » restait vide et
+ *  aucune route ne pouvait s'ouvrir ; sans doublons, dans l'ordre
+ *  de la ville). */
 export function amenagementsCopiables(ville: City, cfg?: GameConfig): string[] {
   const out: string[] = []
   for (const nom of ville.amenagements ?? []) {
-    if (!out.includes(nom) && ressourcesCopiables(nom, cfg).length > 0) out.push(nom)
+    if (out.includes(nom)) continue
+    if (ressourcesCopiables(nom, cfg).length > 0 || emplacementsCopiables(nom, cfg).length > 0) out.push(nom)
   }
   return out
 }
@@ -390,9 +427,10 @@ export function creerRouteCommerce(
   if (!(ville.amenagements ?? []).includes(amenagement)) {
     return `${villeCible} ne possède pas l'aménagement « ${amenagement} ».`
   }
-  const cops = ressourcesCopiables(amenagement, C.config)
-  if (cops.length === 0) {
-    return `« ${amenagement} » n'a aucune production copiable.`
+  // Correctif 2026-11-12 : un aménagement n'est copiable que s'il a
+  //  des flux OU des emplacements de métier (les deux vides = refus).
+  if (ressourcesCopiables(amenagement, C.config).length === 0 && emplacementsCopiables(amenagement, C.config).length === 0) {
+    return `« ${amenagement} » n'a rien à copier (ni production, ni emplacements de métier).`
   }
   ;(state.routesCommerce ?? (state.routesCommerce = [])).push({
     id: `rc-${joueur}-${nb}-${villeCible}`,
@@ -402,7 +440,7 @@ export function creerRouteCommerce(
   })
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur,
-    texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${villeCible} (${cible?.nom ?? '?'}) — copie de « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
+    texte: `🛒 Route commerciale ouverte : ${villeOrigine} ↔ ${villeCible} (${cible?.nom ?? '?'}) — copie de « ${amenagement} » (${descriptionCopie(amenagement, C.config)}).`,
   })
   return null
 }
@@ -424,14 +462,15 @@ export function changerCopieRoute(
   if (!(ville.amenagements ?? []).includes(amenagement)) {
     return `${route.villeCible} ne possède pas l'aménagement « ${amenagement} ».`
   }
-  const cops = ressourcesCopiables(amenagement, C.config)
-  if (cops.length === 0) {
-    return `« ${amenagement} » n'a aucune production copiable.`
+  // Correctif 2026-11-12 : garde alignée sur creerRouteCommerce (flux
+  //  OU emplacements de métier — les deux vides = refus).
+  if (ressourcesCopiables(amenagement, C.config).length === 0 && emplacementsCopiables(amenagement, C.config).length === 0) {
+    return `« ${amenagement} » n'a rien à copier (ni production, ni emplacements de métier).`
   }
   route.amenagement = amenagement
   state.log.push({
     turn: state.turn, type: 'Commerce', joueur: route.joueur,
-    texte: `🛒 Route ${route.villeOrigine} ↔ ${nomCibleRoute(state, route)} : copie désormais « ${amenagement} » (${cops.map((c) => `${c.valeur} ${c.ressource}${c.ete ? ' (été)' : ''}`).join(', ')}).`,
+    texte: `🛒 Route ${route.villeOrigine} ↔ ${nomCibleRoute(state, route)} : copie désormais « ${amenagement} » (${descriptionCopie(amenagement, C.config)}).`,
   })
   return null
 }
