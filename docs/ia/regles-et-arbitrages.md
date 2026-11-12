@@ -2448,3 +2448,61 @@ Chapelle ne franchissait jamais le premier palier.
   lunistes sans ville productrice → tourismeCulture = 2, pontife =
   leur joueur, 1 palier franchi à palier 2) ; le test de
   l'arbitrage n°2 (populations vides) garde sa lecture.
+
+## Transferts de ville et dons de personnages : survivent à la fusion des sections (correctif 2026-11-12, retour Thibaut « les villes disparaissent lors du transfert de ville, idem pour la population lors du transfert de pop »)
+
+**Constat** (retour du 12/11) : une ville transférée à un autre
+joueur en cours de tour DISPARAÎT à la résolution du tour (plus chez
+personne) ; de même un habitant donné via « Donner à… » (onglet
+Population) disparaît du monde.
+
+**Cause racine** (même famille que le bug 2026-10-17, corrigé
+CÔTÉ VILLE seulement à l'époque) :
+- VILLE : le rejeu (`rejouerTransfertVille`) cherchait la ville PAR
+  NOM chez le DONNEUR dans l'état fusionné. Or la fusion remplace le
+  joueur par SA section — et depuis le rafraîchissement de la
+  section À CHAQUE mutation (correctif 2026-10-17 des mutations
+  post-push), la section du donneur, poussée APRÈS le transfert
+  local, ne contient PLUS la ville ; celle du receveur ne l'a jamais
+  contenue (on ne voit les actions des autres qu'à la résolution).
+  Ville introuvable → rejeu « idempotent » sans effet → ville perdue
+  des deux côtés, habitants compris.
+- POPULATION : le don (`donnerA` → `deplacerPersonnage`) était une
+  mutation INTER-JOUEURS sans événement partagé : la fusion
+  remplace population[src] par la section du donneur (sans la
+  fiche, il ne l'a plus) et population[dst] par celle du receveur
+  (qui ne l'a jamais vue localement) → le personnage disparaissait
+  du monde à la fin du tour.
+
+**Décision (correctif — le même protocole v2 pour les deux)** :
+- L'événement partagé 'transfert_ville' embarque désormais la ville
+  COMPLÈTE et les fiches des habitants qui suivent, capturées AVANT
+  le transfert local (`transfererVillePartage`) : à la résolution,
+  si la ville n'est plus chez le donneur, le rejeu la MATÉRIALISE
+  chez le receveur (renommage de collision et resynchronisation du
+  Tourisme comme `transfererVille` ; la cour restée a déjà été
+  ré-ancrée par la section du donneur). Le chemin historique est
+  conservé (ville encore chez le donneur → `transfererVille`
+  complet) : les événements de l'ancien format restent rejouables.
+- NOUVEAU événement partagé 'transfert_pop' pour les dons
+  (« Donner à… ») : fiche complète APRÈS le don local + clés
+  STABLES de porteurs (joueur par NUMÉRO, cité libre par NOM —
+  l'index des options de don ne survit pas au tour). Le rejeu
+  (`rejouerTransfertPop`, shared.ts) fait un déplacement BRUT :
+  retrait de la fiche par id de toutes les populations, insertion
+  chez la cible si absente. La logique du don (ré-ancrage de ville,
+  perte du métier) n'est PAS rejouée : elle est déjà dans la fiche.
+- Idempotence dans les deux cas : ville/fiche déjà chez la cible →
+  aucun doublon (notamment le don vers une cité libre dont la
+  version modifiée a déjà été fusionnée par diff).
+- Le MARIAGE manuel inter-porteurs reste hors protocole :
+  l'interface restreint déjà le choix du conjoint au porteur courant
+  (marqueur (z)) — le moteur sait l'unir entre porteurs, mais aucune
+  UI ne le propose : rien à rejouer.
+- **Verrous** : 3 tests natifs dans engine/fusion.test.ts (scénarios
+  donneur/receveur complets : transfert de ville dont la section du
+  donneur ne porte plus la ville → ville matérialisée chez le
+  receveur AVEC ses habitants, aucun doublon au rejeu double ; don
+  joueur→joueur → fiche chez le receveur, aucun doublon ; don
+  joueur→cité libre → idempotent quand la cité modifiée est déjà
+  fusionnée par diff).
