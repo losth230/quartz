@@ -22,6 +22,14 @@
 //      choix d'un palier revient au pontife au moment du choix ;
 //      un dogme déjà posé n'est PAS remplaçable.
 //   4. Dogmes, lois de culture et effets de culture se CUMULENT.
+//   5. (2026-11-12, retour Thibaut « le tourisme du lunisme n'est
+//      pas compté pour les dogmes ») : le Tourisme d'une culture
+//      compte AUSSI les lois d'HABITANT de cette culture (ex.
+//      Lunisme « Foi supérieure » +N Tourisme par noble, où qu'il
+//      vive) — AMENDE l'arbitrage n°2 : la somme des villes restait
+//      juste, mais le canal lois d'habitant (côté joueur, PAS dans
+//      productionVille) lui échappait : un joueur luniste sans
+//      Chapelle ne franchissait JAMAIS le premier palier.
 //
 //  ÉTAT DE LA MISE EN FORME (retour Thibaut « code la mise en
 //  forme sans dogme réellement créé, les dogmes définitifs
@@ -39,7 +47,7 @@
 
 import type { GameState, Player, City, Dogme } from './types'
 import { cfgOf, type Cfg } from './gameData'
-import { productionVille } from './production'
+import { productionVille, tourismeLoisHabitantsCulture } from './production'
 import type { DogmeDef } from '../config/defaultConfig'
 
 /** Tourisme d'une VILLE : sa production Tourisme par tour —
@@ -49,17 +57,24 @@ export function tourismeVille(state: GameState, p: Player, ville: City, C: Cfg):
   return productionVille(state, p, ville, C).total['Tourisme'] ?? 0
 }
 
-/** Tourisme d'une CULTURE (arbitrage 30/10 n°2) : somme des
- *  valeurs de Tourisme des villes de cette culture, TOUS JOUEURS
- *  confondus, SANS les cités libres — la fonction n'itère QUE les
- *  villes des joueurs, les cités libres sont exclues par
- *  construction. */
+/** Tourisme d'une CULTURE (arbitrage 30/10 n°2, AMENDÉ 2026-11-12,
+ *  point 5 ci-dessus) : somme des valeurs de Tourisme des villes de
+ *  cette culture, TOUS JOUEURS confondus, SANS les cités libres —
+ *  la fonction n'itère QUE les villes des joueurs, les cités libres
+ *  sont exclues par construction — PLUS le Tourisme des lois
+ *  d'HABITANT de la culture (Lunisme « Foi supérieure » +N par
+ *  noble, quel que soit le lieu de vie ; productionVille ne porte
+ *  pas ce canal, agrégé côté joueur par loisHabitants). */
 export function tourismeCulture(state: GameState, culture: string, C: Cfg): number {
   let total = 0
   for (const q of state.players) {
     for (const v of q.villes) {
       if (v.culture === culture) total += tourismeVille(state, q, v, C)
     }
+    // Correctif 2026-11-12 : lois d'habitant de la culture (retour
+    //  Thibaut du jour — sinon le Tourisme luniste restait invisible
+    //  pour les paliers).
+    total += tourismeLoisHabitantsCulture(state, q, culture, C)
   }
   return total
 }
@@ -81,9 +96,11 @@ export function dogmesCulture(state: GameState, culture: string): Dogme[] {
     .sort((a, b) => a.palier - b.palier)
 }
 
-/** PONTIFE d'une culture (arbitrage 30/10 n°3) : celui dont
- *  les villes de cette culture totalisent le plus de Tourisme — le
- *  choix du dogme d'un palier lui revient au moment du choix.
+/** PONTIFE d'une culture (arbitrage 30/10 n°3, amendé comme
+ *  tourismeCulture le 2026-11-12) : celui dont les villes de cette
+ *  culture ET les lois d'habitant de cette culture (nobles
+ *  lunistes…) totalisent le plus de Tourisme — le choix du dogme
+ *  d'un palier lui revient au moment du choix.
  *  Égalité : le plus PETIT n° de joueur l'emporte (l'itération
  *  dans l'ordre des joueurs avec un strict supérieur le garantit,
  *  déterminisme documenté). Retourne undefined si aucun joueur
@@ -97,6 +114,9 @@ export function joueurPontifeCulture(
     for (const v of q.villes) {
       if (v.culture === culture) t += tourismeVille(state, q, v, C)
     }
+    // Correctif 2026-11-12 : lois d'habitant de la culture, même
+    //  lecture que tourismeCulture.
+    t += tourismeLoisHabitantsCulture(state, q, culture, C)
     if (t <= 0) continue
     if (!meilleur || t > meilleur.tourisme) meilleur = { joueur: q, tourisme: t }
   }

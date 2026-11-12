@@ -105,7 +105,7 @@ test('tourismeVille : la valeur de Tourisme d une ville = sa production affiché
   assert.ok(tourismeVille(state, j2, ville, C) > 0, 'le Conjuratoire produit du Tourisme (référentiel)')
 })
 
-test('tourismeCulture : somme TOUS JOUEURS des villes de la culture, SANS les cités libres (arbitrage n°2)', () => {
+test('tourismeCulture : somme TOUS JOUEURS des villes de la culture, SANS les cités libres (arbitrage n°2, amendé 2026-11-12 : + lois d habitant — populations VIDES ici, voir le test Lunisme plus bas)', () => {
   const { state, C } = partie()
   const base = state.players[0]
   const j1 = joueurVille(base, 1, 'Culture Nordique', ['Conjuratoire'])
@@ -805,4 +805,53 @@ test('Dogme de la Mère Patrie : tribut reçu ×1,05 (les DEUX chemins : fin de 
   assert.ok(impotsSans[0] && impotsAvec[0])
   assert.ok(Math.abs(impotsAvec[0]!.montant / impotsSans[0]!.montant - 1.05) < 1e-9,
     'l impôt manuel des vassaux porte le même ×1,05')
+})
+
+// ── Correctif 2026-11-12 (retour Thibaut « le tourisme du lunisme
+//  n'est pas compté pour les dogmes ») : tourismeCulture et
+//  joueurPontifeCulture lisaient UNIQUEMENT le Tourisme des VILLES
+//  (productionVille) — or le Tourisme du Lunisme « Foi supérieure »
+//  (+1 par noble) vit dans le canal lois d'HABITANT, agrégé côté
+//  JOUEUR (loisHabitants) et absent de productionVille : un joueur
+//  luniste sans Chapelle ne franchissait JAMAIS le premier palier.
+//  Le palier compte désormais villes + lois d'habitant. ──
+
+test('correctif 2026-11-12 : le Tourisme des lois d HABITANT (Lunisme « Foi supérieure ») compte pour les paliers', () => {
+  const { state, C } = partie()
+  const base = state.players[0]
+  // Joueur luniste SANS bâtiment producteur de Tourisme : son seul
+  //  Tourisme = ses nobles (Foi supérieure +1/noble, où qu'ils
+  //  vivent — arbitrage « bonus partout où il vit »).
+  // Personnages du setup capturés AVANT l'écrasement (le joueur de
+  //  base passe à population vide, comme les autres fixtures de ce
+  //  fichier, pour le déterminisme des paliers).
+  const modeles = (state.population[base.n] ?? []).filter((c) => c.statut !== 'Décédé')
+  assert.ok(modeles.length >= 2, 'au moins 2 personnages modèles au setup')
+  const j1 = joueurVille(base, 2, 'Lunisme', [])
+  state.players.push(j1)
+  state.population[2] = []
+  state.population[base.n] = []
+  for (const m of modeles.slice(0, 2)) {
+    state.population[2].push({ ...m, dynastie: '', prestige: 300, culture: 'Lunisme' })
+  }
+  // Pré-condition (référentiel) : la loi vaut +1 Tourisme par noble.
+  const lun = C.config.cultures.find((c) => c.nom === 'Lunisme')
+  assert.ok(lun && lun.tourismeParNoble === 1, 'Lunisme tourismeParNoble = 1 (référentiel)')
+  // La culture voit le Tourisme des NOBLES, pas seulement les villes.
+  assert.equal(tourismeCulture(state, 'Lunisme', C), 2,
+    '2 nobles lunistes sans ville productrice → 2 de Tourisme pour la culture')
+  // Le pontife est le porteur des nobles, Tourisme = 2.
+  const dom = joueurPontifeCulture(state, 'Lunisme', C)
+  assert.ok(dom, 'un pontife existe (le joueur aux nobles lunistes)')
+  assert.equal(dom!.joueur.n, 2, 'le joueur luniste est pontife')
+  assert.equal(dom!.tourisme, 2, 'le Tourisme du pontife inclut les lois d habitant')
+  // Palier réglé à 2 : exactement UN palier franchi, choix au pontife.
+  C.p.palierTourismeDogme = 2
+  const attente = paliersDogmesEnAttente(state, C).filter((a) => a.culture === 'Lunisme')
+  assert.equal(attente.length, 1, '2 de Tourisme, palier 2 → 1 palier en attente')
+  assert.equal(attente[0]!.pontife?.joueur.n, 2, 'le choix revient au pontife luniste')
+  // Une culture sans loi de ce type reste inchangée (aucun doublon) :
+  //  le Tourisme des lois n est compté QUE pour la culture porteuse.
+  assert.equal(tourismeCulture(state, 'Culture Nordique', C), 0,
+    'aucun Tourisme nordique ici (population du joueur 0 sans loi Tourisme)')
 })

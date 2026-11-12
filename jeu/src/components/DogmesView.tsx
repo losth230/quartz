@@ -66,7 +66,8 @@ export function DogmesView({ joueur }: { joueur: number }) {
         <div className="stack">
           <div>
             À chaque palier de <strong>{pas} de Tourisme</strong> cumulé par une <strong>culture</strong>{' '}
-            (toutes les villes de cette culture, tous joueurs, sans les cités libres), le joueur
+            (toutes les villes de cette culture, tous joueurs, sans les cités libres, plus les
+            lois d'habitant de la culture — ex. nobles lunistes « Foi supérieure »), le joueur
             ayant le plus de Tourisme dans cette culture — le <strong>pontife</strong> — choisit
             UN dogme pour elle.
           </div>
@@ -123,8 +124,8 @@ export function DogmesView({ joueur }: { joueur: number }) {
                   : <Badge tone="good">{pris.length} dogme(s) choisi(s)</Badge>}
               </div>
               <div className="muted small">
-                Tourisme de la culture {culture} : {fmt(tCult)} (toutes les villes de cette culture,
-                tous joueurs, sans les cités libres) — {paliersFranchis} palier(s) franchi(s) tous
+                Tourisme de la culture {culture} : {fmt(tCult)} (villes de cette culture, tous
+                joueurs, sans les cités libres, + lois d'habitant de la culture) — {paliersFranchis} palier(s) franchi(s) tous
                 les {pas}, {pris.length} dogme(s) choisi(s). Pontife :{' '}
                 {pontife ? <strong>{pontife.joueur.nom}</strong> : '—'}
                 {pontife ? ` (${fmt(pontife.tourisme)} Tourisme)` : ''}.

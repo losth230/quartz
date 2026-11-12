@@ -89,8 +89,8 @@ export function CulturePays({
                 {fmt(tCult)} Tourisme · palier {prochainPalier}
               </Badge>
               <div className="muted small">
-                Tourisme de la culture {p.culture} : {fmt(tCult)} (toutes les villes de cette
-                culture, tous joueurs, sans les cités libres) — {paliersFranchis} palier(s)
+                Tourisme de la culture {p.culture} : {fmt(tCult)} (villes de cette culture,
+                tous joueurs, sans les cités libres, + lois d'habitant de la culture) — {paliersFranchis} palier(s)
                 franchi(s) tous les {pas}, {pris.length} dogme(s) choisi(s).
               </div>
             </div>

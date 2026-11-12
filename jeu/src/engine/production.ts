@@ -293,6 +293,29 @@ export function productionVille(
   return { batiments, amenagements, nourrEte, autres, habitants, total }
 }
 
+/** Tourisme des LOIS D'HABITANT d'une culture pour un joueur
+ *  (correctif 2026-11-12, retour Thibaut « le tourisme du lunisme
+ *  n'est pas compté pour les dogmes ») : la part « Tourisme » du
+ *  canal « Lois des cultures » qui revient à CETTE culture — ex.
+ *  Lunisme « Foi supérieure » +N Tourisme par noble luniste, où
+ *  qu'il vive (arbitrage « bonus partout où il vit »). Les paliers
+ *  de dogmes (engine/dogmes.ts tourismeCulture) lisaient UNIQUEMENT
+ *  le Tourisme des VILLES (productionVille ne porte PAS le canal
+ *  lois d'habitant, agrégé côté joueur) : le Tourisme luniste était
+ *  crédité au joueur (« stock = production », engine/regimes.ts
+ *  tourismeCourant) mais INVISIBLE pour les paliers. Exporté ici
+ *  (production importe déjà regimes et est déjà importé par
+ *  dogmes.ts : aucun nouveau cycle d'import). */
+export function tourismeLoisHabitantsCulture(
+  state: GameState, p: Player, culture: string, C: Cfg,
+): number {
+  let total = 0
+  for (const d of detailLoisHabitants(state, p, C)) {
+    if (d.res === 'Tourisme' && d.culture === culture) total += d.total
+  }
+  return total
+}
+
 // (RETRAIT 2026-10-19, retour arbitre : attraitTouristiqueVille et
 //  attraitMaxMonde ont été retirés avec la migration spontanée par
 //  attrait touristique — système à refaire.)
