@@ -91,11 +91,13 @@ src/
 │   └── pays/                 — cartes de la page « Pays », un fichier par carte
 ├── styles.css               — styles globaux (design sombre, cartes)
 └── engine/*.test.ts, rules/*.test.ts, state/*.test.ts, components/*.test.ts
-                             — tests natifs node:test (358) + tests de rendu (13 fichiers, 23 tests)
+                             — tests natifs node:test (359) + tests de rendu (13 fichiers, 23 tests)
                              (352 le 2026-11-12 après la vague « logements » + 2 migrations régimes/paysRangs
                              + 2 correctif copie de routes + 1 correctif dogmes/tourisme Lunisme
                              + 3 correctif transferts multijoueur (ville matérialisée au rejeu, dons
-                             'transfert_pop') le 2026-11-12 ; à revérifier sur la sortie CI)
+                             'transfert_pop') + 1 correctif émissaires des constructions (Coeur
+                             Ancestral compté, renommage emissairesConstructionsJoueur) le 2026-11-12 ;
+                             à revérifier sur la sortie CI)
 ```
 
 ## Multijoueur (protocole v2 UNIQUE — à ne pas casser)
@@ -123,14 +125,15 @@ protocoles possible dans un salon.
    moteur : sans ce check, un identifiant non défini dans le handler part en
    production (incident 2026-10-19 : `cfgMondiale`, ReferenceError à chaque
    résolution serveur, déployé vert par tous les contrôles).
-3. `npm test` — tests natifs `node --test` (358 : fusion, migrations, régression 20 tours
+3. `npm test` — tests natifs `node --test` (359 : fusion, migrations, régression 20 tours
    avec invariants, config, registre, banque, mutateurs, métiers, commerce, santé,
    bonheur, domiciles, statut social, santé/Guérisseur, dogmes de culture —
    fondations + 12 dogmes définitifs, 20 tests dans dogmes.test.ts ; pèlerinage du pontife + registre ordre du tour, 12 tests dans pelerinage.test.ts + tour.test.ts ; vague tier 3 — 20 bâtiments, 7 tests dans tier3.test.ts ;
    migration textes de référentiel — lois de régime réalignées + bonus paysRangs, 2 tests dans regimes.test.ts ;
    correctif copie de routes — aménagement à emplacements seuls copiable + garde « ni flux ni emplacements », 2 tests dans commerce.test.ts ;
    correctif dogmes/tourisme — lois d'habitant (Lunisme « Foi supérieure ») comptées dans tourismeCulture/joueurPontifeCulture, 1 test dans dogmes.test.ts ;
-   correctif transferts multijoueur — transfert de ville MATÉRIALISÉ au rejeu (payload ville + habitants) et dons 'transfert_pop' rejoués idempotents, 3 tests dans fusion.test.ts)
+   correctif transferts multijoueur — transfert de ville MATÉRIALISÉ au rejeu (payload ville + habitants) et dons 'transfert_pop' rejoués idempotents, 3 tests dans fusion.test.ts ;
+   correctif émissaires des constructions — le Coeur Ancestral (aménagement/merveille) est compté dans la réserve mobilisable, emissairesConstructionsJoueur (ex-emissairesBatimentsJoueur), 1 test dans emissaires.test.ts)
    + tests de rendu (13 fichiers, 23 tests) — R3 (2026-10-24) : chaque vue vérifie des DONNÉES
    dérivées de l'état (valeurs, noms, comptes), plus seulement des titres.
    NB (réalignements 2026-10-25) : les compteurs dataient de R4 — les vagues

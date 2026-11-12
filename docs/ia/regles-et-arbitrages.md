@@ -2506,3 +2506,45 @@ CÔTÉ VILLE seulement à l'époque) :
   joueur→joueur → fiche chez le receveur, aucun doublon ; don
   joueur→cité libre → idempotent quand la cité modifiée est déjà
   fusionnée par diff).
+
+## Coeur Ancestral : le +1 émissaire des merveilles naturelles est compté dans la réserve mobilisable (correctif 2026-11-12, retour Thibaut « lors de la création du coeur ancestral, aucun émissaire n'est crédité »)
+
+**Constat** (retour du 12/11) : construire le Coeur Ancestral ne
+crédite aucun émissaire.
+
+**Cause racine** : la réserve MOBILISABLE d'émissaires = réserve
+manuelle (p.emissaires, saisie au plateau) + le bonus des
+constructions « tant que présentes » (champ emissairesApportes du
+référentiel, arbitrage 2026-11-03). Mais le comptage
+(emissairesBatimentsJoueur, engine/batiments.ts) ne parcourait que
+les BÂTIMENTS (ville.batiments) — or le Coeur Ancestral est une
+MERVEILLE NATURELLE (catégorie Aménagement) : il vit dans
+ville.amenagements et n'était compté NULLE PART. Le référentiel et
+le picker « + Construire » affichaient correctement « +1 émissaire »
+(resumeConstruction) ; seule la réserve mobilisable était aveugle.
+
+**Décision (correctif)** :
+- Le champ emissairesApportes couvre TOUTE construction : BÂTIMENTS
+  ET AMÉNAGEMENTS, merveilles naturelles comprises. La fonction de
+  comptage est renommée emissairesConstructionsJoueur (l'ancien nom
+  emissairesBatimentsJoueur mentait sur le périmètre).
+- Les BÂTIMENTS gardent la règle « les REMPLACÉS ne comptent plus »
+  (la Chancellerie neutralise la Délégation qu'elle remplace…) ;
+  les AMÉNAGEMENTS n'ont rien à neutraliser : l'amélioration
+  remplace l'exemplaire EN PLACE dans la liste
+  (Constructions.ts, cible[iBase] = nom) qui ne porte donc que des
+  aménagements actifs, et les merveilles ne sont jamais
+  améliorables.
+- Revue des AUTRES sources d'émissaires (toutes vérifiées saines) :
+  routes vers cité libre (+1 émissaire AUPRÈS de la cité tant que
+  la route est active, emissairesEffectifsCite — hors réserve) ;
+  ville libérée en cité libre (+1 émissaire PLACÉ dans la cité,
+  villeDevientCiteLibre) ; cité annexée (émissaires placés
+  RECREDITÉS aux réserves, citeLibreDevientVille) ; réserve
+  manuelle du plateau. Les bâtiments porteurs : Délégation +1,
+  Chancellerie +2, Ambassade +4, Guilde des diplomates +7.
+- **Verrous** : test Coeur Ancestral étendu dans
+  merveillesNaturelles.test.ts (le champ ET le comptage dans la
+  réserve) ; +1 test natif emissaires.test.ts (aménagement porteur
+  compté, cumul bâtiment + aménagement, aménagement sans émissaires
+  neutre).
