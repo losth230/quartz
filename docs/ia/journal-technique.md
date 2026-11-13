@@ -5992,3 +5992,84 @@ montagnes (relief inversé de la profondeur), toujours en
 additions pures. NB : le cap Océan 250 mord toujours sur
 Fragmenté rayon 12 (~31 tuiles converties, terre 47 %). Cache-
 buster iframe ?v=8. Ctrl+F5 requis.
+## Labo générateur : cap Océan = baisse globale du seuil, curseur « Élévation de la mer » (retour Thibaut 2026-11-13, base 592318d)
+
+Retour Thibaut (2 demandes) : « si le maximum de mer
+est atteint, ce sont les mers en bas à gauche qui disparaissent
+toujours, créant une zone lisse en bas à gauche — est-ce qu'il ne
+serait pas plus intéressant de faire −0,1 au niveau de la mer
+global ? » ; « dans cette optique, j'aimerais que tu m'ajoutes un
+bouton "élévation de la mer" ».
+
+**Ce qui a été fait** :
+
+- **Cap Océan : baisse GLOBALE du seuil**. Cause racine de la
+  zone lisse : l'ancien cap piochait ses victimes par score
+  (tous les océans à 0) départagé par INDEX de tuile → toujours
+  le même coin de la carte, mangé en bloc. Nouveau mécanisme
+  (celui proposé par Thibaut) : quand l'océan dépasse son cap,
+  le seuil de mer BAISSSE globalement au quantile exact du cap
+  (`seaLevel = elevTrié[cap]`). Ce sont les hauts-fonds juste
+  sous l'ancien seuil, PARTOUT sur les côtes, qui deviennent
+  terre : la mer rétrécit naturellement sur toute la carte,
+  aucun coin sacrifié. Les tuiles qui remontent gardent leur
+  élévation légitime (hauts-fonds), seule l'humidité (BFS océan
+  courant) et le biome sont recalculés (même pipeline que
+  l'anneau, mode sans relief miroir : `convertOceanToLand(victims,
+  mirror)` — l'anneau garde son relief miroir
+  fosses → montagnes, le cap n'en a pas besoin). Bonus corrigé
+  au passage : les ressources étant tirées APRÈS les caps, une
+  ressource océanique ne peut plus se retrouver sur une terre
+  remontée ;
+- **Curseur « Élévation de la mer »** (section rapide, sous
+  « Mer »). Le curseur « Mer » est un QUANTILE : une carte à
+  45 % a toujours exactement 45 % d'océan, quoi qu'il arrive.
+  Le nouveau curseur déplace le seuil ABSOLU en unités
+  d'élévation, indépendamment du quantile : −0,10 à +0,10
+  (pas de 0,01), défaut 0 = quantile pur, comportement d'origine
+  inchangé. Négatif = mer globalement plus basse (hauts-fonds
+  découverts partout), positif = transgression (golfes, baies).
+  C'est exactement le réglage manuel du mécanisme du cap. À 0,
+  byte-identique au quantile pur.
+
+**Validation** (harnais maison `harnais-labo-types.cjs`,
+64 ok / 0 échec) :
+
+- (a) seaElev absent ≡ 0 (quantile pur) ; (a2) custom Perlin
+  ring 0 **byte pour byte** ≡ 31973e1 (caps à 0 + params
+  explicites, 4 seeds) ; (a3) les 5 types non recalibrés
+  **byte pour byte** ≡ c0629c9 — moteur inchangé, seul le
+  cap Océan (caps actifs) change ;
+- (h) cap Océan sur Fragmenté rayon 12, 4 seeds : océan
+  281 → 250, seuil abaissé (ex. grimoire 0,489 → 0,449), 31
+  tuiles remontées réparties sur TOUTE la carte (q −11..+12,
+  r −12..+11, 23 à 27 groupes connexes — contre UN coin
+  avant : 2/31 tuiles en commun avec l'ancienne sélection par
+  index), aucune ressource océanique sur les terres remontées ;
+- (h) curseur : océan monotone sur l'offset −0,10 → +0,10
+  (20 → 85 → 211 → 373 → 445 tuiles sur custom/grimoire), seuil
+  = quantile + offset exact ;
+- (b/c/d/e/f/g) suites existentes REVERTES au vert intégral :
+  déterminisme, morphologie 8 seeds × 8 types (% de la terre),
+  24 cartes tous biomes ≤ caps (Plaine max 142), ressources
+  (Bétail/Baleines/Poissons/Ruines/Soie 24/24, Or 20, Fer 20,
+  Charbon 22, Geyser 5/24 inchangé), anneau F1/F4/F5/F6/F7,
+  déserts (53) et montagnes (1 552) parmi les tuiles ajoutées.
+
+**Commits** (2 sur `v4` depuis 592318d) :
+
+- `138b0d8` feat(wargame) : labo — cap océan = baisse globale
+  du seuil de mer + curseur « Élévation de la mer »
+  (+ cache-buster ?v=9) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : quand le cap Océan mord (Fragmenté
+rayon 12 : 281 → 250 tuiles d'océan), la mer rétrécit
+maintenant sur toutes les côtes à la fois — plus de zone lisse
+mangée dans un seul coin ; la géographie reste naturelle. Le
+curseur « Élévation de la mer » permet en plus de régler FINEMENT
+la hauteur absolue de la mer indépendamment du pourcentage
+« Mer » : −0,10 découvre massivement les hauts-fonds partout,
++0,10 fait transgresser la mer dans les golfes et baies, 0 =
+comportement d'origine. Cache-buster iframe ?v=9. Ctrl+F5
+requis.
