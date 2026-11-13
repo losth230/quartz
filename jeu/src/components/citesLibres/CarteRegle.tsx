@@ -21,7 +21,7 @@ export function CarteRegle({ C, garnison, cites, players }: {
     <Card title="🗼 Cités libres — règle et fonctionnement">
       <p className="small muted pre-wrap">{C.config.regleCitesLibres}</p>
       <div className="badges-wrap">
-        <Badge tone="good">✓ population : adultes avec métier (Chasseurs ×1,1 Nourriture) ; enfants sans métier (consomment, ne produisent pas)</Badge>
+        <Badge tone="good">✓ population : adultes avec métier (Chasseurs : production de base du référentiel, arbitrage 2026-11-13) ; enfants sans métier (consomment, ne produisent pas)</Badge>
         <Badge tone="good">✓ garnison : 100 + 40 × rang de pays le plus haut (auto)</Badge>
         <Badge tone="good">✓ taxes au suzerain : versées à chaque fin de tour (canal « Cités libres »)</Badge>
         <Badge tone="good">✓ consommation de Nourriture : par habitant vivant, comme une ville de joueur</Badge>

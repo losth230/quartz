@@ -156,7 +156,7 @@ export const ETAPES_TOUR: EtapeTour[] = [
   {
     numero: '3decies',
     nom: 'Cités libres',
-    description: 'Chaque cité libre ayant un suzerain lui verse ses taxes (production nette de ses habitants, Chasseurs ×1,1 Nourriture).',
+    description: 'Chaque cité libre ayant un suzerain lui verse ses taxes (production nette de ses habitants).',
   },
   {
     numero: '3quaterdecies',
@@ -354,8 +354,9 @@ export function runTurn(state: GameState): GameState {
   }
 
   // 3decies. Cités libres : chaque cité libre possédant un suzerain lui
-  // verse ses taxes (production nette de ses habitants, Chasseurs ×1,1
-  // Nourriture — engine/citesLibres.ts), canal « Cités libres ».
+  // verse ses taxes (production nette de ses habitants — le ×1,1
+  // Nourriture des Chasseurs est retiré, arbitrage 2026-11-13 —
+  // engine/citesLibres.ts), canal « Cités libres ».
   const citesLibresParJoueur: Record<number, Record<string, number>> =
     appliquerTaxesCitesLibres(state, C)
 

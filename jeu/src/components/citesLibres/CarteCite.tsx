@@ -231,7 +231,6 @@ export function CarteCite({ cite, state, C, garnison, typeOptions, typesConfig, 
       <div className="small">
         <span className="muted">
           {d.habitants} vivant(s) — {d.adultes} adulte(s), {d.enfants} enfant(s){d.enfants > 0 ? ' (ne produisent pas, consomment)' : ''}, dont {d.chasseurs} chasseur(s)
-          {d.chasseurs > 0 && <> — <strong>Nourriture ×1,1</strong> (règle des cités libres)</>}
           {' '}· taxes {fmtTaxesCite(d.taxeMult)}
         </span>
         <div className="badges-wrap">

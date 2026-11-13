@@ -4,7 +4,11 @@
 //  du référentiel). Elle possède sa PROPRE POPULATION : ses habitants
 //  ont des métiers comme ceux d'une ville de joueur, avec une règle
 //  propre aux cités libres — les Chasseurs y produisent 1,1 × la
-//  Nourriture (revue 2026-10-16).
+//  Nourriture (revue 2026-10-16) — RETIRÉE le 2026-11-13 (arbitrage
+//  Thibaut « retire le multiplicateur de nourriture pour les cités
+//  libres ») : les Chasseurs d'une cité libre produisent désormais
+//  la valeur de BASE du référentiel, comme ceux d'une ville de
+//  joueur.
 //  Garnison (règle du référentiel) : 100 + 40 par rang de pays du
 //  joueur ayant le plus haut rang (valeur d'état, batailles manuelles).
 //  Suzerain : lorsqu'un joueur devient suzerain de la cité (3
@@ -39,10 +43,11 @@ import { routesCommerceVersCite } from './commerce'
 import { consoNourrHabitant } from './economie'
 
 /** Consommation d'une cité libre : même règle qu'une ville de joueur —
- *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour. */
-/** Multiplicateur de Nourriture des Chasseurs d'une cité libre : ×1,1
- *  (revue 2026-10-16 — était ×2). */
-export const MULT_NOURR_CHASSEUR_CITE = 1.1
+ *  chaque habitant vivant consomme consoNourrParHab Nourriture par tour.
+ *  (Le multiplicateur ×1,1 Nourriture des Chasseurs de cité libre,
+ *  revu 2026-10-16 puis ×2 avant, est RETIRÉ le 2026-11-13 — arbitrage
+ *  Thibaut « retire le multiplicateur de nourriture pour les cités
+ *  libres » : production de base du référentiel, comme une ville.) */
 
 // ── État ──────────────────────────────────────────────────────────────
 
@@ -96,11 +101,12 @@ export function citesSuzerainesDe(state: GameState, p: Player): CiteLibre[] {
   return citesLibresDe(state).filter((c) => c.suzerain === p.n)
 }
 
-// ── Gains de la population de la cité (chasseurs ×1,1 Nourriture) ──────
+// ── Gains de la population de la cité ─────────────────────────────────
 
 /** Détail des gains d'une cité libre, canal par canal :
- *    metiers     : production brute des metiers des habitants vivants —
- *                 les Chasseurs produisent 1,1 × la Nourriture,
+ *    metiers     : production brute des metiers des habitants vivants
+ *                 (valeurs de base du référentiel — le ×1,1 Nourriture
+ *                 des Chasseurs est retiré, arbitrage 2026-11-13),
  *    taxeMult   : multiplicateur de taxes de la cité PAR RESSOURCE
  *                (arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr*,
  *                toutes les autres ressources ×taxOr*),
@@ -125,9 +131,11 @@ export interface DetailCiteLibre {
   transfert: Record<string, number>
 }
 
-/** Production brute des métiers des habitants vivants d'une cité libre.
- *  Règle propre aux cités libres : les Chasseurs produisent 1,1 × la
- *  Nourriture (les autres ressources du metier sont inchangées).
+/** Production brute des métiers des habitants vivants d'une cité libre —
+ *  valeurs de base du référentiel, comme une ville de joueur (le ×1,1
+ *  Nourriture des Chasseurs propre aux cités libres est RETIRÉ le
+ *  2026-11-13, arbitrage Thibaut « retire le multiplicateur de
+ *  nourriture pour les cités libres »).
  *  (Arbitrage Thibaut 2026-11-01, relance « les fermiers ne produisent
  *  qu'en été » : le champ `ete` du référentiel (vague 3a — ex. Fermier
  *  « +5 Nourriture par tour en été ») s'applique AUSSI aux cités
@@ -152,12 +160,10 @@ export function detailCiteLibre(cite: CiteLibre, C: Cfg, state?: GameState): Det
     const chass = c.metier === C.p.metierChasseur
     if (chass) chasseurs++
     if (td.ressource1 && td.valeur1 !== 0) {
-      const v = chass && td.ressource1 === 'Nourriture' ? td.valeur1 * MULT_NOURR_CHASSEUR_CITE : td.valeur1
-      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + v
+      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1
     }
     if (td.ressource2 && td.valeur2 !== 0) {
-      const v = chass && td.ressource2 === 'Nourriture' ? td.valeur2 * MULT_NOURR_CHASSEUR_CITE : td.valeur2
-      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + v
+      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2
     }
   }
   // Taxes de la cité : le niveau module la production PAR RESSOURCE
@@ -237,7 +243,7 @@ export function appliquerTaxesCitesLibres(
     if (parts.length > 0) {
       state.log.push({
         turn: state.turn + 1, type: 'Système', joueur: suz.n,
-        texte: `🗼 Cités libres — ${suz.nom} reçoit les taxes de ${cite.nom} (${d.habitants} hab. dont ${d.adultes} adulte(s) / ${d.enfants} enfant(s), ${d.chasseurs} chasseur(s) : Nourriture ×1,1) : ${parts.join(', ')}.`,
+        texte: `🗼 Cités libres — ${suz.nom} reçoit les taxes de ${cite.nom} (${d.habitants} hab. dont ${d.adultes} adulte(s) / ${d.enfants} enfant(s), ${d.chasseurs} chasseur(s)) : ${parts.join(', ')}.`,
       })
     }
   }

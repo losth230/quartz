@@ -129,8 +129,9 @@ test('detailCiteLibre : le transfert au suzerain suit les mêmes facteurs PAR RE
   const dF = detailCiteLibre({ ...base, taxes: 'Faible' }, C)
   const dH = detailCiteLibre({ ...base, taxes: 'Forte' }, C)
   assert.ok(dM.taxes['Nourriture'] && dM.taxes['Or'], 'la cité produit bien Nourriture ET Or')
-  // Faible : Nourriture ×1,25, Or ×0,75 (règle ×1,1 des Chasseurs de cité
-  //  comprise dans la production brute, le facteur de taxe s'applique après)
+  // Faible : Nourriture ×1,25, Or ×0,75 (le multiplicateur ×1,1 Nourriture des
+  //  Chasseurs de cité est RETIRÉ, arbitrage 2026-11-13 ; le facteur de
+  //  taxe s'applique après)
   assert.equal(dF.taxes['Nourriture'], dM.taxes['Nourriture'] * C.p.taxNourrFaibles)
   assert.equal(dF.taxes['Or'], dM.taxes['Or'] * C.p.taxOrFaibles)
   // Forte : l'inverse
@@ -151,19 +152,20 @@ test('detailCiteLibre (arbitrage Thibaut 2026-11-01) : le Fermier (métier ete) 
   const cite: CiteLibre = { nom: 'Cité', type: 'Industrielles - Ville', population }
   const fermierDef = metierDef('Fermier', C.config)
   assert.ok(fermierDef?.ete, 'fixture : le Fermier du référentiel porte bien ete')
-  // Été : Fermier +15 (arbitrage 2026-11-11), Chasseur +2 ×1,1 (règle cité) = 18,7
+  // Été : Fermier +15 (arbitrage 2026-11-11), Chasseur +2 (base du
+  //  référentiel — ×1,1 retiré, arbitrage 2026-11-13) = 17
   state.saison = 'Été'
   const dete = detailCiteLibre(cite, C, state)
-  assert.ok(Math.abs(dete.metiers['Nourriture'] - (15 + 2 * 1.1)) < 1e-9,
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (15 + 2)) < 1e-9,
     'été : le Fermier de la cité produit ses 15 Nourriture (arbitrage 2026-11-11)')
-  // Hiver : le Fermier ne produit RIEN, le Chasseur reste (×1,1)
+  // Hiver : le Fermier ne produit RIEN, le Chasseur reste (base)
   state.saison = 'Hiver'
   const dhiver = detailCiteLibre(cite, C, state)
-  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2 * 1.1) < 1e-9,
+  assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2) < 1e-9,
     'hors été : le Fermier de la cité ne produit rien (le Chasseur reste)')
   // sans état (affichage statique) : production créditée comme avant
   const sansEtat = detailCiteLibre(cite, C)
-  assert.ok(Math.abs(sansEtat.metiers['Nourriture'] - (15 + 2 * 1.1)) < 1e-9,
+  assert.ok(Math.abs(sansEtat.metiers['Nourriture'] - (15 + 2)) < 1e-9,
     'sans état passé : comportement inchangé (tous les appelants moteur/UI passent l\'état)')
 })
 

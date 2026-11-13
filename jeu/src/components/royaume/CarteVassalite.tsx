@@ -125,7 +125,7 @@ export function CarteVassalite({ state, p, C, joueur, update }: {
                   : cites.map((c) => (
                     <div key={c.nom} className="muted small">
                       <strong>{c.nom}</strong> — verse ses taxes à chaque fin de tour
-                      (Chasseurs ×1,1 Nourriture, canal « Cités libres »).
+                      (canal « Cités libres »).
                     </div>
                   ))}
               </div>

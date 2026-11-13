@@ -6,8 +6,9 @@
 //  par props, docblocks d'arbitrage déplacés avec leur code).
 //  Sémantique strictement identique (découpage mécanique).
 //    · chaque cité possède sa PROPRE POPULATION (habitants titrés,
-//      roturiers OU nobles — les Chasseurs des cités libres produisent
-//      1,1 × la Nourriture, la population consomme de la Nourriture
+//      roturiers OU nobles — production de métier de base du référentiel
+//      (le ×1,1 Nourriture des Chasseurs est retiré, arbitrage 2026-11-13),
+//      la population consomme de la Nourriture
 //      comme une ville de joueur). Retour Thibaut (2026-10-14, suite) :
 //      la population n'est
 //      PLUS gérée ici — elle vit dans l'onglet « 👥 Population »,
