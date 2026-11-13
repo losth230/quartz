@@ -4937,3 +4937,91 @@ décès, arrivées et départs du dernier tour avec le solde — les
 migrations se lisent d'un coup d'œil côté départ ET côté arrivée
 (y compris les migrants reçus d'autres joueurs) ; la page
 Population et le journal portent les totaux. Ctrl+F5 requis.
+
+
+## Générateur de carte wargame : purge des contrôles morts, retrait du biome Neige, tooltips inversés (arbitrage Thibaut 2026-11-13, base b8d08ec)
+
+Retour arbitre : « porte un regard critique, j'ai l'impression que
+la plupart des paramétrages ne fonctionnent pas » — puis arbitrage :
+retirer les contrôles morts ou quasi-morts, retirer la possibilité
+d'avoir de la neige, réparer les tooltips inversés, ne PAS toucher
+aux ressources pour l'instant.
+
+**Audit de sensibilité d'abord** (avant de couper) : le moteur de
+`quartz/static/generateur-carte.html` (générateur de carte du
+Wargame, iframe de la page « Générateur de carte ») a été extrait
+et exécuté HORS NAVIGATEUR dans un harnais Node (DOM simulé,
+contrôles parsés du HTML, 5 seeds), chaque paramètre poussé à ses
+extrêmes, mesure du % de tuiles dont le biome change. Constat : le
+câblage est sain (une trentaine de contrôles agissent réellement)
+mais 5 contrôles sont morts/quasi-morts et 2 tooltips sont
+INVERSÉS (on règle à l'envers, d'où l'impression générale).
+
+**Contrôles retirés (morts, cause racine documentée)** :
+- `Îlots` (e-islands) : le niveau de la mer est un QUANTILE — les
+  bosses d'îlots dans l'océan étaient réabsorbées par le seuil
+  recalculé (0,3-0,5 % de tuiles changées seulement). Bloc moteur
+  retiré (nIsle supprimé).
+- `Taches climat.` (t-scale) : la fréquence du bruit thermique
+  n'avait quasi aucun effet (2-3 %) ; fréquence FIXÉE à 0.10 en
+  dur, `Désordre` (t-noise) garde son effet via l'amplitude.
+- `Froid altitude` (t-alt) : formule max(0, elev−0,5)×t-alt mais
+  l'élévation terrestre plafonne à ~0,6 → refroidissement
+  infime, « sommets gelés » jamais tenus. Ligne retirée.
+- `Encerclement` (c-surround-any, défaut désactivé) : 0,2 % au
+  maximum — situations trop rares après lissage, la règle ne
+  mutait qu'un voisin. `applyRuleAny` supprimé ; la règle
+  « Même biome » (c-surround-same, active à 5 par défaut, 8,7 %)
+  reste.
+- `cap Neige` : le biome Neige disparaît (ci-dessous).
+- option `Temp › Élév › Humid` (TEH) du sélecteur Priorité :
+  STRICTEMENT identique à ETH (0,00 % sur tous les seeds — les
+  deux ordres ne diffèrent que sur des tuiles glaciales ET
+  élevées, inexistantes aux défauts). Option retirée.
+
+**Retrait du biome Neige** (arbitrage Thibaut) : zone `glacial`
+fusionnée dans `froid` (tempZone, t<0,30 ; les anciennes tuiles
+Neige deviennent Forêt si h>0,55 sinon Plaine), palette BIOMES,
+RES_BY_BIOME, ADJ_BIOMES 6→5 (15→10 paires), exemptions
+anti-encerclement, ordre updateBiomeCounts. Les pôles restent
+utiles (gradient chaud/froid → déserts vs forêts).
+
+**Tooltips inversés réparés** : « Taille continents » disait
+« haut = continents LARGES » alors que c'est la FRÉQUENCE du bruit
+(bas = un ou deux gros continents ; mesuré : e-cont=2 → 1 masse de
+258 tuiles, e-cont=15 → 6 masses de 43) ; « Taille zones »
+(humidité) disait « haut = grandes régions » — idem inversé
+(mesuré : h-scale=30 → plus d'amas de forêt, plus petits).
+Intro de la section température mise à jour.
+
+**Ressources INTACTES** (arbitrage) : l'audit a montré qu'aux
+défauts seuls Poissons/Bétail/Or/Ruines apparaissent (Fer,
+Charbon, Baleines, Geyser, Soie : zéro sur 4 seeds) — la
+recalibration des densités est EXPRÉSSEMENT DIFFÉRÉE par Thibaut.
+
+**Commits sur `v4` depuis `b8d08ec`** :
+- `fix(wargame)` (71dfb68) : quartz/static/generateur-carte.html seul
+  (113 963 unités UTF-16, 38 remplacements exacts vérifiés un à
+  un) ; public/ n'est PAS touché (régénéré par `npx quartz build`
+  au déploiement) ;
+- présent commit : journal seul (tête).
+
+**Validation locale (bac réinitialisé entre les tours)** :
+node --check OK ; harnais DOM simulé : 46 900 tuiles × 5 ordres de
+biomes × 4 modes de pôles sans AUCUN biome inconnu (Neige
+absente) ; sanity checks des paramètres vivants (sealevel 43,5 %,
+e-cont 47,2 %, h-cont 25,2 %, c-surround-same 8,7 % de tuiles
+changées) ; adjacency à 10 paires converge (0 contact interdit
+restant en « interdit » total) ; cap désert respecté ; 8 presets
+régénèrent des compositions distinctes ; placement joueurs : les
+avertissements « sans 2e tuile » sont PRÉEXISTANTS (présents sur
+la version d'origine) — la nouvelle version place MÊME PLUS de
+seconds sites (les anciennes tuiles Neige, devenues Forêt/Plaine,
+sont jouables). Zéro référence résiduelle (grep
+Neige/glacial/e-islands/t-scale/t-alt/c-surround-any/cap-neige/TEH
+= vide).
+
+**Effet immédiat pour l'arbitre** : la page « Générateur de carte »
+perd les contrôles fantômes, ne produit plus de neige, et les deux
+curseurs de taille se comportent comme leurs libellés.
+Ctrl+F5 requis.
