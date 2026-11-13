@@ -347,7 +347,7 @@
   <div class="body">
     <div class="field" style="background:var(--accent-bg);border:1px solid var(--btn-border);border-radius:4px;padding:6px 10px;margin-bottom:4px;">
       <label style="color:var(--accent);font-weight:bold;letter-spacing:0.5px;">TYPE</label>
-      <select id="map-type" style="width:110px;" title="Le type ne change pas seulement les curseurs : il applique un MASQUE DE FORME à l'élévation (bosse centrale pour un continent, lobes séparés, excavation centrale pour une mer intérieure…), puis PERTURBE les frontières par un bruit dédié (domain warping) : côtes découpées, formes irrégulières — pas de cercles parfaits ni d'anneaux de biomes. « Personnalisé » = aucun masque. Toucher un curseur de géographie repasse en Personnalisé.">
+      <select id="map-type" style="width:110px;" title="Le type ne change pas seulement les curseurs : il applique un MASQUE DE FORME à l'élévation (bosse centrale pour un continent, lobes séparés, excavation centrale pour une mer intérieure…), puis PERTURBE les frontières par un bruit dédié (domain warping) : côtes découpées, formes irrégulières — pas de cercles parfaits ni d'anneaux de biomes. Le masque s'applique PAR-DESSUS les curseurs : après génération, on peut tout affiner sans perdre le type. « Personnalisé » = aucun masque.">
         <option value="continent">Continent</option>
         <option value="continents">Continents</option>
         <option value="pangea">Pangée</option>
@@ -358,6 +358,11 @@
         <option value="lakes">Terres + lacs</option>
         <option value="custom" selected>Personnalisé</option>
       </select>
+    </div>
+    <div class="field" title="Ajoute de la masse de terre sur le POURTOUR de la carte, dans la bande où les joueurs peuvent apparaître (entre « Marge centre » et « Marge bord », section Joueurs — mêmes bornes que le placement). 0 % = désactivé ; 100 % = pourtour massivement terrestre. La bande suit le domain warping : un anneau irrégulier, pas un cercle parfait. S'applique à TOUS les types de carte, « Personnalisé » compris.">
+      <label>Anneau</label>
+      <input type="range" id="ring-intensity" min="0" max="100" value="0" step="5">
+      <span class="value" id="ring-intensity-v">0%</span>
     </div>
     <div class="field">
       <label>Joueurs</label>
@@ -410,9 +415,9 @@
     </div>
     <div class="field">
       <label>Bruit</label>
-      <select id="noise-type">
-        <option value="perlin" selected>Perlin</option>
-        <option value="simplex">Simplex</option>
+      <select id="noise-type" title="Bruit de base de la génération. Simplex (nouveau défaut, retour Thibaut 2026-11-13) : variations plus vives que Perlin. Les versions « v2 » ajoutent une redistribution des valeurs (continents plus contrastés, côtes plus découpées) ; « Mixte » = Perlin v2 pour les masses, Simplex v2 pour le détail.">
+        <option value="perlin">Perlin</option>
+        <option value="simplex" selected>Simplex</option>
         <option value="perlin2">Perlin v2</option>
         <option value="simplex2">Simplex v2</option>
         <option value="mixed">Mixte</option>
@@ -731,9 +736,12 @@ const MAP_PRESETS = {
   // Quelques grandes îles bien distinctes
   // (compact abaissé : le canal « continent » basse fréquence reliait les îles
   //  en une seule masse ; le masque de forme angulaire fait le reste)
-  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50 après
+  //  passage au Simplex : le seuil de mer verrouille la morphologie — à 45 %,
+  //  les bosses du bruit soudent les 3 îles en un anneau continu sur
+  //  certains seeds ; à 50 % d'eau, 3 îles équilibrées mesuré sur 7 seeds)
   'islands-large': {
-    sealevel: 45,
+    sealevel: 50,
     'e-cont':    8,
     'e-scale':   18,
     'e-compact': 35,
@@ -744,9 +752,11 @@ const MAP_PRESETS = {
   // (compact 35→18 et scale 22→24 : le canal basse fréquence produisait UNE
   //  masse dominante de 85-95 % de la terre ; edge 15→25 : les bords
   //  océaniques détachent les îles côtières)
-  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50 après
+  //  passage au Simplex : les arcs d'îles soudent sur certains seeds à 45 %,
+  //  50 % d'eau les détache — mesuré 7 seeds : principale ≤ 45 %)
   'archipelago': {
-    sealevel: 45,
+    sealevel: 50,
     'e-cont':    11,
     'e-scale':   24,
     'e-compact': 18,
@@ -754,12 +764,15 @@ const MAP_PRESETS = {
     'e-pers':    60
   },
   // Miettes de terre éparpillées dans un océan
-  // (sealevel 60 → 50, retour Thibaut 2026-11-13 : trop d'eau)
+  // (sealevel 60 → 50, retour Thibaut 2026-11-13 ; 50 → 55 + scale 26 → 30,
+  //  compact 15 → 10 après passage au Simplex : le détail plus fin et le canal
+  //  « continent » réduit font de vraies miettes — sans quoi les amas collent
+  //  en un bloc dominant sur certains seeds)
   'fragmented': {
-    sealevel: 50,
+    sealevel: 55,
     'e-cont':    13,
-    'e-scale':   26,
-    'e-compact': 15,
+    'e-scale':   30,
+    'e-compact': 10,
     'e-edge':    35,
     'e-pers':    65
   },
@@ -1263,10 +1276,17 @@ function generateMap(N, seedStr, params) {
     // Pattern angulaire à 3 lobes (cos 3θ) × distance + creux central :
     // trois grandes îles en anneau autour d'une mer centrale (même garantie
     // topologique que « continents » — le disque central relie sinon tout).
+    // LABO (retour Thibaut, bruit Simplex par défaut) : entailles cos 4θ
+    // additionnelles, comme l'archipel — avec le Simplex plus vif que le
+    // Perlin, les bosses du bruit comblent les creux inter-lobes et
+    // soudent les trois îles en UN anneau continu (mesuré : 95 % de la
+    // terre en une composante sur labo-42). Les entailles coupent l'anneau.
     const phase = (randShape() * Math.PI * 2) / 3;
+    const phase4 = randShape() * Math.PI / 2;
     shapeBias = (dc, th) =>
-      0.36 * Math.cos(3 * (th - phase)) * dc
-      - 0.30 * Math.pow(1 - dc, 2);
+      0.48 * Math.cos(3 * (th - phase)) * dc
+      - 0.42 * Math.pow(1 - dc, 2)
+      - 0.10 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'archipelago') {
     // Creux central modéré + 4 entailles angulaires traversantes : sans le
     // creux, le détail forme au centre UNE masse géante ; creux trop fort,
@@ -1274,10 +1294,12 @@ function generateMap(N, seedStr, params) {
     // le creux disperse les terres vers l'anneau, les entailles (cos 4θ,
     // plus fortes à l'extérieur) découpent cet anneau en arcs d'îles.
     // Le domain warping (ci-dessus) casse ensuite la régularité des arcs.
+    // (entailles renforcées −0.12 → −0.18 : avec le Simplex par défaut, les
+    //  bosses du bruit soudaient les arcs en une masse unique)
     const phase4 = randShape() * Math.PI / 2;
     shapeBias = (dc, th) =>
-      -0.30 * Math.pow(1 - dc, 2)
-      - 0.12 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
+      -0.42 * Math.pow(1 - dc, 2)
+      - 0.18 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'fragmented') {
     shapeBias = (dc) => -0.13 * Math.pow(1 - dc, 2);
   } else if (mapType === 'inland-sea') {
@@ -1288,6 +1310,15 @@ function generateMap(N, seedStr, params) {
   } else if (mapType === 'lakes') {
     shapeBias = (dc) => 0.04 * (1 - dc);
   }
+
+  // LABO (retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — ajoute de la masse
+  // de terre sur le pourtour de la carte, dans la bande où les joueurs peuvent
+  // apparaître. Mêmes bornes que placePlayers : rayon hex de playerCenter
+  // (marge centre) à N - playerEdge (marge bord). Le biais suit le domain
+  // warping (dcW) → anneau irrégulier, pas un cercle parfait. 0 par défaut.
+  const ringAmp = (params.ring || 0) * 0.70;
+  const dcRingIn  = Math.max(0, Math.min(1, ((params.playerCenter | 0) || 0) / N));
+  const dcRingOut = Math.max(0, Math.min(1, 1 - ((params.playerEdge | 0) || 0) / N));
 
   const elev = new Float32Array(size);
   const humid = new Float32Array(size);
@@ -1322,13 +1353,38 @@ function generateMap(N, seedStr, params) {
     // LABO : masque de forme par type de carte (voir plus haut) — ajout
     // positionnel APRÈS le blend bruit + le masque de bord, avant le clamp.
     // Les coordonnées (dc, θ) sont PERTURBÉES par le bruit dédié (domain
-    // warping) : c'est lui qui casse la régularité des masques lisses.
-    if (shapeBias) {
-      const wDc = nWarp.fbm(px * WARP_FREQ, py * WARP_FREQ, 3, 0.5, 2.0);
-      const wTh = nWarp.fbm(px * WARP_FREQ + 31.4, py * WARP_FREQ + 96.1, 3, 0.5, 2.0);
-      const dcW = Math.max(0, Math.min(1, dist + WARP_AMP_DC * wDc));
-      const thW = Math.atan2(py, px) + WARP_AMP_TH * wTh;
-      e += shapeBias(dcW, thW);
+    // warping) : c'est lui qui casse la régularité des masques lisses. Elles
+    // servent AUSSI à l'intensité d'anneau (même irrégularité).
+    const wDc = nWarp.fbm(px * WARP_FREQ, py * WARP_FREQ, 3, 0.5, 2.0);
+    const wTh = nWarp.fbm(px * WARP_FREQ + 31.4, py * WARP_FREQ + 96.1, 3, 0.5, 2.0);
+    const dcW = Math.max(0, Math.min(1, dist + WARP_AMP_DC * wDc));
+    const thW = Math.atan2(py, px) + WARP_AMP_TH * wTh;
+    if (shapeBias || ringAmp > 0) {
+      // Le masque de forme (type de carte, OU anneau actif) doit DOMINER le
+      // bruit : on comprime d'abord la variance du bruit autour de sa médiane
+      // (le seuil de mer étant un QUANTILE, la translation par 0.5 ne change
+      // rien — seule la variance relative bruit/masque compte). Sans cela,
+      // les bosses du Simplex (plus vif que le Perlin : fbm ±0.7-0.9) percent
+      // les creux des masques et soudent les îles en masses géantes (mesuré :
+      // 95 % en une composante), et volent au quantile la terre de l'anneau.
+      // Avec une variance ×0.42, le masque garde la main quel que soit le
+      // bruit, et le bruit fournit la texture.
+      e = 0.5 + (e - 0.5) * 0.42;
+      if (shapeBias) e += shapeBias(dcW, thW);
+    }
+    // LABO : intensité d'anneau — biais de terre en PLATEAU sur toute la bande
+    // jouable [marge centre, marge bord] (calculée ci-dessus) : montée douce
+    // depuis l'intérieur, atténué au-delà de la marge bord (bord extrême non
+    // jouable) pour que la bande garde la terre attirée par le quantile.
+    if (ringAmp > 0) {
+      const RING_W = 0.12;
+      let up = (dcW - (dcRingIn - RING_W)) / RING_W;
+      up = Math.max(0, Math.min(1, up));
+      up = up * up * (3 - 2 * up);
+      let down = (dcW - dcRingOut) / RING_W;
+      down = Math.max(0, Math.min(1, down));
+      down = 1 - 0.65 * down;
+      e += ringAmp * up * down;
     }
 
     elev[i] = Math.max(0, Math.min(1, e));
@@ -2754,7 +2810,9 @@ const PARAM_SPECS = {
   // événements
   'evt-volcan':  { fmt: v => v + '%', conv: v => v / 100 },
   'evt-river':   { fmt: v => v + '%', conv: v => v / 100 },
-  'evt-riverlen': { fmt: v => v, conv: v => v }
+  'evt-riverlen': { fmt: v => v, conv: v => v },
+  // forme (LABO, retour Thibaut 2026-11-13 : anneau de terre sur le pourtour)
+  'ring-intensity': { fmt: v => v + '%', conv: v => v / 100 }
   // Les paramètres par-ressource ('res-<slug>-*') sont ajoutés dynamiquement
   // par buildResourceControls() ci-dessous.
 };
@@ -2817,6 +2875,9 @@ function getParams() {
     res,
     resMode: (document.getElementById('res-mode') || {}).value || 'bruit',
     mapType: (document.getElementById('map-type') || {}).value || 'custom',
+    ring: read('ring-intensity'),
+    playerEdge: readInt('player-edge'),
+    playerCenter: readInt('player-center'),
     evt: {
       volcan: read('evt-volcan'),
       river:  read('evt-river'),
@@ -3052,18 +3113,12 @@ document.getElementById('map-type').addEventListener('change', e => {
   applyPreset(e.target.value);
 });
 
-// Quand l'utilisateur touche un slider de géographie manuellement, bascule
-// sur "Personnalisé" pour être honnête sur ce qui est affiché
-const GEO_PARAM_IDS = ['sealevel', 'e-cont', 'e-scale', 'e-compact', 'e-edge', 'e-pers'];
-function markCustomOnUserEdit(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.addEventListener('input', () => {
-    if (applyingPreset) return;
-    document.getElementById('map-type').value = 'custom';
-  });
-}
-GEO_PARAM_IDS.forEach(markCustomOnUserEdit);
+// LABO (retour Thibaut 2026-11-13) : les curseurs de géographie ne
+// rebasculent PLUS automatiquement sur « Personnalisé ». Le type reste
+// actif et son masque de forme s'applique PAR-DESSUS les curseurs : on
+// choisit un type (Archipel…), la carte se génère, puis on affine avec
+// les curseurs sans le perdre. « Personnalisé » reste sélectionnable
+// manuellement dans le sélecteur pour désactiver tout masque.
 
 ['sealevel', 'mountains'].forEach(id => {
   const el = document.getElementById(id);
@@ -3111,18 +3166,25 @@ document.getElementById('players').addEventListener('change', rerollPlayersAndRe
 document.getElementById('player-spread').addEventListener('change', rerollPlayersAndRender);
 
 // Sliders joueurs : mettre à jour libellé puis re-placer
-function bindPlayerSlider(id, fmt) {
+function bindPlayerSlider(id, fmt, ringAware) {
   const el = document.getElementById(id);
   if (!el) return;
   const lbl = document.getElementById(id + '-v');
   el.addEventListener('input', () => {
     if (lbl) lbl.textContent = fmt(+el.value);
-    rerollPlayersAndRender();
+    // LABO : si l'intensité d'anneau est active, « Marge bord » et
+    // « Marge centre » définissent la bande de terre → la carte doit être
+    // régénérée (sinon, simple replacement des joueurs).
+    if (ringAware && +document.getElementById('ring-intensity').value > 0) {
+      scheduleRegen();
+    } else {
+      rerollPlayersAndRender();
+    }
   });
 }
 bindPlayerSlider('player-dist',    v => v);
-bindPlayerSlider('player-edge',    v => v);
-bindPlayerSlider('player-center',  v => v);
+bindPlayerSlider('player-edge',    v => v, true);
+bindPlayerSlider('player-center', v => v, true);
 bindPlayerSlider('player-cont',    v => v);
 bindPlayerSlider('player-inspect', v => v);
 
