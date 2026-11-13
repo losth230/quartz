@@ -5107,3 +5107,47 @@ guérison » ; chaque Guérisseur en poste module ±3 % (±4 % avec
 la Guilde) ; la Guilde des médecins apparaît dans le picker
 (famille Guilde, rang 4, exige l'Hôpital). Les parties
 sauvegardées migrent seules au chargement. Ctrl+F5 requis.
+
+## Pas de conception le tour de l'accouchement (retour Thibaut 2026-11-13, base 2f1df071)
+
+Suite de l'audit naissances (question Thibaut : « une femme enceinte
+peut-elle accoucher et tomber enceinte au même tour ? ») puis
+arbitrage : « il faut changer ça, une femme ne peut accoucher et
+tomber enceinte au même tour ».
+
+**Changements** :
+- `engine/naissances.ts` : l'étape 1 (accouchements) collecte les
+  mères qui viennent d'accoucher (`accoucheesCeTour`, ensemble
+  LOCAL à l'appel — aucun champ d'état, aucune migration) ; l'étape
+  2 (conceptions) les EXCLUT du jet de conception de CE tour.
+  Portée d'UN tour, pas de cooldown persistant : au tour suivant,
+  la mère est de nouveau éligible. Au cap de proba, une mère
+  accouche au mieux un tour sur deux (un bébé tous les 4 ans de
+  temps de jeu) au lieu d'un bébé par tour.
+- `engine/naissances.test.ts` NOUVEAU : la mère accouche et reste
+  'Sain' (conception certaine forcée — sans l'exclusion elle serait
+  retombée enceinte à 100 %) ; contrôle positif (une femme éligible
+  du même tour conçoit) ; 2e appel = la mère redevient éligible et
+  conçoit ; le témoin, enceinte au 2e tour, accouche sans
+  re-concevoir (double vérification).
+
+**Validation (bac réinitialisé, harnais + tsc locaux reconstruits)** :
+**352/352 tests natifs** (351 + 1, 35 fichiers) ; tsc : 3 erreurs
+de baseline stub @supabase, AUCUNE autre ; diff vs base
+EXACTEMENT 2 fichiers src (1 modifié + 1 nouveau) ; diag RÉGÉNÉRÉ
+et committé : log 550 → 459 entrées sur les 4 tours simulés
+(grossesses en chaîne évitées), commandants J1 4 → 6 (dynamique
+décalée) — les tables de règles et canaux sont INCHANGÉES (4
+lignes de diff seulement).
+
+**Commits sur `v4` depuis `2f1df071`** :
+- `feat(jeu)` (7cfd568) : naissances.ts + naissances.test.ts +
+  diag-out.txt ;
+- `docs(ia)` (85b6ddc0) : docs/ia/regles-et-arbitrages.md seul ;
+- présent commit : journal seul (tête).
+
+**Effet immédiat pour l'arbitre** : les naissances par habitante
+au cap passent d'un bébé par tour à un bébé tous les deux tours ;
+la fécondité affichée est inchangée (elle décrit une femme
+éligible). Aucune migration nécessaire : les parties en cours
+bénéficient de la règle au tour suivant. Ctrl+F5 requis.
