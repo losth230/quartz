@@ -5751,3 +5751,71 @@ Fragments/îles/archipels plus fiables qu'avant sur toutes les
 graines. « Personnalisé » reste strictement sans masque ni
 squeeze (l'anneau y fonctionne aussi, en additions pures).
 Cache-buster iframe ?v=5. Ctrl+F5 requis.
+## Labo générateur : anneau strictement borné par les marges joueurs (retour Thibaut 2026-11-13, base c638ba5)
+
+Retour Thibaut : « l'anneau modifie encore la carte entière alors
+qu'il ne doit modifier que les cases entre la marge centre et la
+marge bord ».
+
+**Diagnostic** (mesuré au harnais, réglages UI) : le moteur était
+bien additif (aucune tuile terre→océan, carte de base byte-
+identique), mais la BANDE dépassait l'intervalle [marge centre,
+marge bord] de trois façons :
+- rampe smoothstep `RING_W = 0,12` : la bande remontait jusqu'à
+  1,4 hex en deçà de « Marge centre » (conversions mesurées à
+  dc 0,25 pour centre=4) ;
+- queue à 35 % au-delà de « Marge bord » : le bord extrême
+  restait convertissable (12 additions hors bande sur 88 à
+  centre=4/bord=2) ;
+- distance WARPÉE (domain warping) pour l'appartenance à la
+  bande : frontière floue, des cases hors marges passaient.
+Et surtout : à « Marge centre » 0 (défaut), la bande couvrait
+TOUTE la carte — l'anneau saupoudrait des îles jusqu'au centre
+(additions dès dc 0,08). Confirmé avec Thibaut : c'est le
+comportement voulu à 0 (la bande PEUT couvrir toute la carte),
+mais la coupe doit être FRANCHE aux marges.
+
+**Ce qui a été fait** (passe anneau de `generateMap`) :
+- bande STRICTE : distance hex VRAIE (plus warpée) entière, d ≥
+  `ringInDist` (playerCenter) et d ≤ N − playerEdge, bornes
+  comprises — exactement l'ensemble où `placePlayers` peut poser
+  des joueurs. Plus de rampe, plus de queue, plus de flou : une
+  case hors bande ne bouge JAMAIS, à aucune intensité ;
+- budget uniforme : intensité = part de l'OCÉAN DE LA BANDE
+  convertie (floor(intensité × nb), moins profond d'abord),
+  préfixe strict → toujours monotone ;
+- suppression de `dcwBuf` (la coordonnée warpée ne sert plus
+  qu'aux masques de forme) ; tooltips du champ anneau mis à jour
+  (bande stricte, sémantique à « Marge centre » 0 explicitée) ;
+- cache-buster iframe ?v=6 dans CarteLaboView.
+
+**Validation** : harnais maison (`harnais-labo-types.cjs`,
+reconstruit après reset du sandbox) : **19 OK, 0 échec**.
+(a/a2/a3) moteur inchangé à ring 0 : custom ≡ 3ad9c18 et 5 types
+non recalibrés ≡ c0629c9, octet par octet × 3 seeds ; (b)
+déterminisme ; (c) morphologie 8 seeds inchangée ; (e) ressources
+quantile 9/9 sur 24 cartes ; (f) anneau, 7 cas (dont centre=4/
+bord=2, centre=8/bord=4 anneau-fin, centre=2/bord=0) × paliers
+0/25/50/100 % : F1 aucune tuile terre→océan + emboîtement
+monotone, **F2 toute case convertie est strictement entre les
+marges (distance entière), 0 hors bande sur les 7 cas**, F4 carte
+de base inchangée hors additions (elev/biome/ressources/
+rivières), F6 terre monotone, F5a placement jamais dégradé (5
+cas 6/6 → 6/6), F5b 8/8 seeds 6/6 joueurs sans warning
+(continent, anneau 60 %). Rendus ASCII : à centre=4/bord=2 et
+anneau 100 %, le cœur de la carte est intact, 122 additions
+toutes dans la bande, 0 hors bande. `node --check` OK.
+
+**Commits** (1 sur `v4` depuis c638ba5) :
+- `d809618` feat(wargame) : labo — anneau strictement borné par
+  les marges joueurs (+ cache-buster ?v=6) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : l'anneau ne touche plus QUE les cases
+entre « Marge centre » et « Marge bord » (bornes comprises, mêmes
+bornes que le placement des joueurs, coupure franche) : rien ne
+change ni plus au centre que la marge centre, ni plus au bord que
+la marge bord. À « Marge centre » 0 la bande couvre toute la
+carte (voulu) ; montez la marge centre pour réserver un cœur
+océanique. L'intensité = part de l'océan de la bande convertie.
+Cache-buster iframe ?v=6. Ctrl+F5 requis.
