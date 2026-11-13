@@ -5365,3 +5365,57 @@ discrétion de la pilule. Correctif (commit `cbe0158`) :
 Aucun changement du moteur : le <script> est inchangé octet par
 octet avant/après (vérifié), node --check OK.
 Ctrl+F5 requis.
+
+## Gestionnaire de campagne : onglet « 🧪 Carte labo » dans l'appli de jeu (retour Thibaut 2026-11-13, base 40d852c)
+
+Retour Thibaut : « c'est bien ce qu'il me semblait, on ne s'est
+pas entendu. Je veux que la version labo se trouve dans la partie
+jeux de campagne, dont on parlait au tout début, avec les onglets
+royaume, pays, population, etc. ». La version labo était
+accessible depuis la page Wargame du générateur (bouton-pilule +
+gros lien en tête du panneau ⚙) mais PAS depuis le gestionnaire
+de campagne (https://losth230.github.io/quartz/jeu/).
+
+**Ce qui a été fait** (commit `e0b1b3c`) :
+
+- **Nouvel onglet « 🧪 Carte labo »** dans l'appli de gestion de
+  campagne, inséré entre « 🎛 Paramètres » et « ⚙ Nouvelle
+  partie » — consultable SANS partie en cours (exempté comme
+  Référentiels/Paramètres) ;
+- **`jeu/src/components/CarteLaboView.tsx`** (nouveau composant,
+  volontairement trivial) : cartouche explicatif + iframe pleine
+  hauteur embarquant la copie labo `../static/generateur-carte-
+  labo.html?v=1` (chemin relatif correct : l'appli est servie
+  sous /quartz/jeu/, le labo sous /quartz/static/) ;
+- `jeu/src/App.tsx` : import + entrée SECTIONS + type Section +
+  deep links `#carte-labo` / `#carte_labo` (HASH_SECTIONS) +
+  exemption « sans partie en cours » + rendu. Aucun autre fichier
+  touché ; `public/` ignoré (régénéré par le build) ;
+- la page Wargame (bouton-pilule 🧪 + lien en tête du panneau)
+  reste en place — aucun mal, retirable à la demande.
+
+**Validation** : pas de build local possible (npm interdit dans
+le bac à sable) → vérificateur d'équilibre JSX maison
+(`check-jsx.cjs` : machine à états text/code + pile unifiée,
+génériques TS `Ident<...>(`, regex littérales, fragments, noms à
+points type React.StrictMode, template literals imbriquées) :
+**59/59 .tsx** de `jeu/src` BALANCED dont App.tsx modifié et
+CarteLaboView.tsx ; 4 mutations testées (fermantes `</p>`,
+`</Card>`, `}` retirées, iframe laissé ouvert) toutes détectées
+UNBALANCED, contrôle neutre (attribut ajoutée) toujours
+BALANCED. Classes CSS utilisées (`.card`, `.muted`, `.small`,
+var `--border`) présentes dans styles.css ; tsconfig
+`react-jsx` → aucun import React requis. Intégrité du push
+vérifiée octet par octet (curl raw au sha + cmp : identiques).
+
+**Commits** (1 sur `v4` depuis 40d852c) :
+- `e0b1b3c` feat(jeu) : onglet « 🧪 Carte labo » dans le
+  gestionnaire de campagne ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : la version labo du générateur est
+maintenant directement dans le gestionnaire de campagne (entre
+Paramètres et Nouvelle partie), utilisable sans partie en cours
+ni changement de site — le sélecteur MODE RESSOURCES (Bruit v1
+officiel vs Quantile v2) s'y teste comme avant, avec les mêmes
+réglages et la même seed. Ctrl+F5 requis.
