@@ -5887,3 +5887,108 @@ défaut (0 = illimité reste disponible en remettant le champ à
 rayon 12 gagne ~31 tuiles de terre (l'océan descend de ~281 à
 250) — monter le cap ou le remettre à 0 si des miettes plus
 noyées sont voulues. Cache-buster iframe ?v=7. Ctrl+F5 requis.
+## Labo générateur : ressources 3,5 %, volcans 20 %, caps préservés et relief naturel des conversions (retour Thibaut 2026-11-13, base 2829eff)
+
+Retour Thibaut (4 demandes) : densité de base des ressources
+4 % → 3,5 % ; volcans 15 % → 20 % ; « il y a maintenant trop de
+plaines, ce n'est pas parce que la mer est cap à 250 que la
+plaine doit exploser son cap — les caps de toutes les tuiles
+doivent être préservés, idem lors des anneaux » ; « lors des
+anneaux, il n'y a jamais de désert ou de montagne, pourquoi ? ».
+
+**Ce qui a été fait** :
+
+- **Ressources** : `RES_DEFAULTS` density 40 → 35 ‰ (= 3,5 %,
+  seuil bruit 1 − 0,035×8 = 0,72) pour les 8 ressources de
+  base ; Ruines inchangées (60 ‰, prox 0 % = éparpillées) ;
+- **Volcans** : défaut du tirage 15 % → 20 % (slider
+  `evt-volcan` + `DEFAULTS.evt.volcan`) ; le cap 15 tuiles par
+  carte est maintenu ;
+- **Caps préservés**. Cause racine du « trop de plaines » :
+  l'ancien cap Océan convertissait son excès en `Plaine`
+  aveugle, en une seule passe, sans re-vérifier les autres
+  caps (sur Fragmenté rayon 12 : 31 océans → Plaine pure).
+  Nouveau moteur dans `generateMap` : `altCandidates()`
+  (refactor des biomes alternatifs climatiques, comportement
+  inchangé pour l'anti-encerclement), `convertOceanToLand()`
+  (relief inversé de la profondeur : hauts-fonds → côtes,
+  fosses → sommets ; humidité recalculée au BFS océan courant ;
+  `classifyBiome` ; règle désert isolé), `countBiome()`,
+  `capOf()`, `reclassWithRoom()` (cible avec de la place sous
+  cap), puis **boucle de stabilité ≤ 12 tours** : chaque tour,
+  tout biome plafonné (hors Volcan, cap posé après tirage)
+  ramène son compte sous son cap — les conversions d'un tour
+  ne peuvent plus faire exploser le cap d'un autre. Victimes
+  triées par score de marginalité croissant (ex-océans à 0 =
+  premières à repartir, jamais les tuiles d'origine) ;
+- **Anneau : relief naturel**. Cause racine du « jamais de
+  désert ni de montagne » : l'élévation des tuiles converties
+  était épinglée à `seaLevel + 0,01` (sous le seuil montagne
+  par construction) et l'humidité prenait le bonus côtier
+  maximal. La passe anneau utilise désormais LE MÊME
+  `convertOceanToLand()` : la profondeur devient de l'altitude
+  (les fosses passent le seuil montagne), l'humidité est
+  recalculée sur la carte FINALE (une baie comblée devient
+  continentale donc sèche → déserts possibles). Et les caps
+  sont respectés dans l'anneau aussi : si les terres ajoutées
+  font déborder un cap, seules des tuiles AJOUTÉES sont
+  reclassées (ordre de conversion), la carte de base ne bouge
+  jamais. Tooltip de l'anneau mis à jour.
+
+**Validation** (harnais maison `harnais-labo-types.cjs`,
+57 ok / 0 échec ; npm interdit dans le sandbox) :
+
+- (a) custom ≡ sans mapType, ring absent ≡ ring 0 ;
+  (a2) custom Perlin ring 0 **byte pour byte** ≡ déployé
+  2829eff (caps à 0 + params explicites, 4 seeds) ; (a3) les
+  5 types non recalibrés (continent, continents, pangea,
+  inland-sea, lakes) **byte pour byte** ≡ c0629c9 — le moteur
+  est inchangé, seuls les défauts UI bougent ;
+- (b) déterminisme (3 configurations, 2 passages identiques) ;
+- (c) morphologie 8 seeds × 8 types, critères en fraction de
+  la terre : continent ≥ 90 % (8/8), continents 2 masses
+  40-65 % (8/8), pangea ≥ 85 % (8/8), islands 3 îles ≥ 20 %
+  (8/8), archipel comps ≥ 8 (8/8) et principale ≤ 55 % (8/8),
+  fragmented comps ≥ 8 (8/8) et principale ≤ 75 % (8/8),
+  inland-sea centre creusé (8/8), lakes masse ≥ 80 % (8/8) ;
+- (d) caps actifs : 24 cartes, tous les biomes ≤ leur cap,
+  volcans ≤ 15, Plaine max 142 ≤ 200 ; le bug Fragmenté est
+  mort (conversions océan réparties : Forêt 103, Montagne 37,
+  Plaine 57, Désert 8, Marais 6 — plus 100 % Plaine) ;
+- (e) défauts 3,5 % : Bétail, Baleines, Poissons, Ruines,
+  Soie 24/24 ; Charbon 22/24, Or 21/24, Fer 19/24 (21/24 à
+  4 % : conséquence directe du seuil bruit plus haut, moteur
+  inchangé) ; Geyser 4/24, identique au déployé à 4 % (pool
+  éligible Désert petit + priorité la plus basse — aucun
+  changement de comportement) ;
+- (f) anneau : F1 additions monotones + F4 carte de base
+  byte-identique + F6 terre croissante + F7 caps respectés
+  (4 cas × paliers 0/25/50/75/100 %), F5a le placement n'est
+  jamais dégradé, F5b continent ring 60 % : 6/6 joueurs sans
+  warning sur 8/8 seeds ;
+- (g) relief : sur 5 528 tuiles ajoutées à ring 100 % (8
+  seeds × 4 types), 66 Déserts et 1 454 Montagnes (ex.
+  archipel/grimoire : océan 211 → 34, Forêt plafonnée à 200
+  exactement, +177 tuiles réparties Forêt 57 / Montagne 50 /
+  Plaine 62 / Marais 8).
+
+**Commits** (2 sur `v4` depuis 2829eff) :
+
+- `31973e1` feat(wargame) : labo — ressources 3,5 %, volcans
+  20 %, caps préservés (mer classée + anneaux), relief naturel
+  des conversions (+ cache-buster ?v=8) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : les ressources de base sont un peu
+plus rares (3,5 % au lieu de 4 %) — en mode Bruit, Or/Fer/
+Charbon peuvent manquer sur ~1 à 5 cartes sur 24 (déjà possible
+à 4 %), le mode Quantile reste le bon choix pour garantir un
+taux exact ; les volcans sont plus fréquents au tirage (20 %)
+mais toujours plafonnés à 15 tuiles ; plafonner la mer ne
+produit PLUS de plaines en cascade : l'excès devient de la terre
+classée au climat et tous les caps restent tenus, anneau
+compris ; l'anneau peut désormais faire apparaître déserts et
+montagnes (relief inversé de la profondeur), toujours en
+additions pures. NB : le cap Océan 250 mord toujours sur
+Fragmenté rayon 12 (~31 tuiles converties, terre 47 %). Cache-
+buster iframe ?v=8. Ctrl+F5 requis.
