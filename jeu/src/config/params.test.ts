@@ -74,8 +74,8 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
   //  du nouveau référentiel derrière la table convertie : 1 Testeur +
   //  24 (le Marchand est retiré du jeu le 2026-10-24 ; le GUÉRISSEUR
-  //  est ajouté le 2026-10-25 — arbitre : +2 % guérison, −2 %
-  //  contraction, poste d'Herboristerie).
+  //  est ajouté le 2026-10-25 — arbitre 2026-11-13 : +3 % guérison,
+  //  −3 % contraction, poste d'Herboristerie).
   assert.equal(C.metiers.length, 25)
   assert.equal(C.metiers[0].metier, 'Testeur', 'le champ interne titre devient metier')
   assert.ok(C.metiers.some((m) => m.metier === 'Fermier'), 'vague 3a : les métiers manquants sont ajoutés')

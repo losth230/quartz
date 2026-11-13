@@ -65,13 +65,23 @@ export function maladieStep(state: GameState, p: Player, c: Character, rng: Rng,
     }
   }
   // GUÉRISSEURS (métier, 2026-10-25) : par Guérisseur VIVANT en
-  //  poste dans la ville du personnage — +2 % guérison, −2 %
-  //  contraction (paramètres, cumulables).
+  //  poste dans la ville du personnage — bonus de guérison et
+  //  réduction de contraction (paramètres, cumulables).
+  //  (Arbitrage Thibaut 2026-11-13 : +3 % / −3 % par poste — et
+  //  la GUILDE DES MÉDECINS augmente l'efficacité de TOUS les
+  //  Guérisseurs du PAYS de +1 % : une seule Guilde suffit
+  //  (plafonné, Ville ou Château — deux ne cumulent pas).)
   const guerisseurs = (state.population[p.n] ?? []).filter(
     (x) => x.statut !== 'Décédé' && x.ville === c.ville && x.metier === 'Guérisseur',
   ).length
-  contractMod -= guerisseurs * C.p.guerisseurContraction
-  cureMod += guerisseurs * C.p.guerisseurGuerison
+  let effGuerison = C.p.guerisseurGuerison
+  let effContraction = C.p.guerisseurContraction
+  if (p.villes.some((v) => (v.batiments ?? []).includes('Guilde des médecins'))) {
+    effGuerison += C.p.guildeMedecinsEfficacite
+    effContraction += C.p.guildeMedecinsEfficacite
+  }
+  contractMod -= guerisseurs * effContraction
+  cureMod += guerisseurs * effGuerison
   // (Refonte 12 lois, 2026-10-29, Déisme « Lavages de main » :
   //  −2 % de contraction pour un habitant de culture Déisme — sa
   //  culture PROPRE, où qu'il vive (loi d'HABITANT, pas loi de

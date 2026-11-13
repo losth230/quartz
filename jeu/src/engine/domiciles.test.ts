@@ -418,21 +418,23 @@ test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudi
   }
 })
 
-test('fiche bâtiments : l\'Herboristerie (rang 1) n\'accueille plus de Guérisseur — la Clinique (rang 2) en accueille 5', () => {
+test('fiche bâtiments : l\'Herboristerie (rang 1) accueille 2 Guérisseurs (plus de flat) — la Clinique (rang 2) en accueille 5', () => {
   const { C } = partieTemoin()
   const herb = constructionRef('Herboristerie', C.config)
   assert.ok(herb, 'Herboristerie au référentiel')
-  assert.equal(herb?.emplacements, undefined, 'plus d\'emplacements : uniquement ±5% maladie')
-  assert.equal(herb?.malContraction, 0.05)
-  assert.equal(herb?.bonusGuerison, 0.05)
+  // (Arbitrage Thibaut 2026-11-13 : l'Herboristerie ne produit PLUS
+  //  de flat ±5 % — elle offre 2 postes de Guérisseur.)
+  assert.equal(herb?.malContraction, undefined, 'plus de malContraction')
+  assert.equal(herb?.bonusGuerison, undefined, 'plus de bonusGuerison')
+  assert.deepEqual((herb?.emplacements ?? []).find((e) => e.metier === 'Guérisseur'), { metier: 'Guérisseur', places: 2 })
   const clin = constructionRef('Clinique', C.config)
   assert.ok(clin, 'Clinique au référentiel')
   assert.equal(clin?.rangMinHabitation, 2)
   assert.deepEqual((clin?.emplacements ?? []).find((e) => e.metier === 'Guérisseur'), { metier: 'Guérisseur', places: 5 })
-  // le résumé de l'Herboristerie reste STRUCTURÉ (effets ±5%) pour que
-  //  le picker ne retombe pas sur la description du classeur
-  assert.ok(resumeConstruction(herb).includes('+5% guérison'),
-    'Herboristerie : « +5% guérison » dans le résumé structuré')
+  // le résumé de l'Herboristerie affiche les emplacements structurés
+  //  pour que le picker ne retombe pas sur la description du classeur
+  assert.ok(resumeConstruction(herb).includes('2 guérisseur'),
+    'Herboristerie : « 2 guérisseur » dans le résumé structuré')
 })
 
 // ── NORMALISATION DOMICILES (2026-11-02) ──────────────────────────────

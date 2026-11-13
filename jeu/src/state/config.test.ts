@@ -225,7 +225,7 @@ test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plu
     // Complexe d'exploitation maritime, Usine, Plateforme commerciale,
     // Commanderie, Ecole supérieure, Institut de recherche, Hôpital et
     // les 6 guildes) + le perso, ni perdus ni doublés
-    72, '71 bâtiments du référentiel + le perso, ni perdus ni doublés')
+    74, '73 bâtiments du référentiel (+ Guilde des médecins ×2, 2026-11-13) + le perso, ni perdus ni doublés')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
     'un bâtiment perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
@@ -339,13 +339,25 @@ test('config : migration one-shot — le TEXTE « metiersDisponibles » devient 
 
 test('config : les effets moteur (écoles / santé) vivent en DONNÉES dans la table canonique constructions — vue batiments dérivée', () => {
   const c = cloneDefaultConfig()
+  // (Arbitrage Thibaut 2026-11-13 : l'Herboristerie ne porte PLUS
+  //  les champs santé — elle accueille 2 Guérisseurs. Aucune entrée
+  //  du référentiel ne porte un flat aujourd'hui ; la vue batiments
+  //  ne dérive plus que les ÉCOLES.)
   const herbo = c.constructions.find((x) => x.nom === 'Herboristerie')!
-  assert.equal(herbo.malContraction, 0.05, 'malContraction en donnée dans constructions')
-  assert.equal(herbo.bonusGuerison, 0.05, 'bonusGuerison en donnée dans constructions')
+  assert.equal(herbo.malContraction, undefined, 'plus de malContraction dans constructions')
+  assert.equal(herbo.bonusGuerison, undefined, 'plus de bonusGuerison dans constructions')
+  assert.ok(herbo.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 2),
+    'Herboristerie : 2 postes de Guérisseur en donnée')
+  // la Guilde des médecins n'est PLUS codée en dur dans la vue
+  //  (+10 % global retiré) : elle est CONSTRUCTIBLE au référentiel
+  //  (10 postes + efficacité pays, moteur sante.ts)
+  assert.ok(!c.batiments.some((b) => b.nom === 'Guilde des médecins'),
+    'plus de Guilde des médecins en dur dans la vue batiments')
+  assert.ok(c.constructions.some((x) => x.nom === 'Guilde des médecins' && x.groupe === 'Ville'
+    && x.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 10)),
+    'Guilde des médecins constructible (Ville, 10 Guérisseurs)')
   const ecole = c.constructions.find((x) => x.nom === 'Ecole élémentaire')!
   assert.equal(ecole.ecoleRang, 1, 'ecoleRang en donnée dans constructions')
-  assert.ok(c.batiments.some((b) => b.nom === 'Guilde des médecins' && b.bonusGuerisonGlobal === 0.10),
-    'la vue batiments garde la Guilde des médecins (livret, non constructible — arbitrage ouvert)')
   assert.ok(c.batiments.some((b) => b.nom === 'Ecole élémentaire' && b.ecoleRang === 1),
     'la vue batiments dérive les écoles de la table canonique')
   assert.ok(!('batimentsVille' in c) && !('batimentsChateau' in c)
@@ -389,8 +401,10 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
   //  l'Ambassade (rang 3), chaîne d'émissaires du château → 25.
   //  Vague tier 3 2026-11-03 : + les 20 bâtiments tier 3 (rang 3,
   //  tous) → 45.
+  //  Arbitrage Thibaut 2026-11-13 : + la Guilde des médecins Ville
+  //  et Château (rang 4) → 47.
   const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
-  assert.equal(rang2defs.length, 45, `45 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
+  assert.equal(rang2defs.length, 47, `47 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
   // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
   //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
   //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL

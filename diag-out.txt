@@ -7,19 +7,21 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 106 règles — sources : batiment 59, amenagement 47
-── canal placesMetier : 82 règles ──
+total : 110 règles — sources : batiment 63, amenagement 47
+── canal placesMetier : 86 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
   batiment.camp-de-mineur@ville — Camp de mineur (Ville) : Mineur +2
   batiment.echoppe@ville — Echoppe (Ville) : Commerçant +2
   batiment.grange@ville — Grange (Ville) : Éleveur +2 · Fermier +4
+  batiment.herboristerie@ville — Herboristerie (Ville) : Guérisseur +2
   batiment.ponton@ville — Ponton (Ville) : Pêcheur +2
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@chateau — Camp de bûcheron (Château) : Bûcheron +2
   batiment.camp-de-mineur@chateau — Camp de mineur (Château) : Mineur +2
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.echoppe@chateau — Echoppe (Château) : Commerçant +2
+  batiment.herboristerie@chateau — Herboristerie (Château) : Guérisseur +2
   batiment.observatoire@capitale — Observatoire (Capitale) : Scientifique +1
   amenagement.baleinier@terrain — Baleinier (Terrain) : Pêcheur +3 · Commerçant +2
   amenagement.bateau-de-peche@terrain — Bâteau de pêche (Terrain) : Pêcheur +2
@@ -77,6 +79,7 @@ total : 106 règles — sources : batiment 59, amenagement 47
   batiment.complexe-d-exploitation-maritime@ville — Complexe d'exploitation maritime (Ville) : Commerçant +24
   batiment.usine@ville — Usine (Ville) : Bûcheron +2 · Mineur +2 · Forgeron +2 · Tisseur +2 · Charbonnier +2
   batiment.hopital@ville — Hôpital (Ville) : Guérisseur +10
+  batiment.guilde-des-medecins@ville — Guilde des médecins (Ville) : Guérisseur +10
   batiment.guilde-des-marins@ville — Guilde des marins (Ville) : Charbon -1 · Commerçant +40
   batiment.caserne@chateau — Caserne (Château) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@chateau — Tour de sorcier (Château) : Scientifique +1 · Maison de notable +1
@@ -90,6 +93,7 @@ total : 106 règles — sources : batiment 59, amenagement 47
   batiment.ecole-superieure@chateau — Ecole supérieure (Château) : Or -6 · Professeur +4 · Scientifique +2
   batiment.institut-de-recherche@chateau — Institut de recherche (Château) : Scientifique +8
   batiment.hopital@chateau — Hôpital (Château) : Guérisseur +10
+  batiment.guilde-des-medecins@chateau — Guilde des médecins (Château) : Guérisseur +10
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
 ── canal logements : 16 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10

@@ -101,10 +101,17 @@ export interface GameParams {
   modGuerisonAge: number
   /** GUÉRISSEUR (métier, 2026-10-25) : par Guérisseur en poste
    *  dans la ville — bonus de guérison et réduction du risque de
-   *  contracter (fiche arbitre : +2 % / −2 % ; cumulables si
-   *  plusieurs Guérisseurs, ex. 2 Herboristeries). */
+   *  contracter. (Arbitrage Thibaut 2026-11-13 : +3 % / −3 %.
+   *  Cumulables si plusieurs Guérisseurs, ex. Herboristerie +
+   *  Clinique ; l'Herboristerie n'est PLUS un flat ±5 % — elle
+   *  offre 2 postes de Guérisseur.) */
   guerisseurGuerison: number
   guerisseurContraction: number
+  /** (Arbitrage Thibaut 2026-11-13) : la Guilde des médecins
+   *  augmente l'EFFICACITÉ de TOUS les Guérisseurs du PAYS de ce
+   *  bonus (contraction ET guérison). PLAFONNÉ : une seule Guilde
+   *  suffit, Ville ou Château — deux Guilhes ne cumulent pas. */
+  guildeMedecinsEfficacite: number
   // ── Métiers (caps par habitation, rework habitants 2026-10-20) ──
   /** Capacité maximale de Chasseurs dans une habitation « Ville »
    *  (arbitre 2026-10-20 : caps séparées selon le type). */
@@ -260,8 +267,9 @@ export const DEFAULT_PARAMS: GameParams = {
   maladiePente: 0.08,
   // (RETRAIT 2026-10-25 : maladieCap et modMaladieEnceinte supprimés)
   probaGuerison: 0.25,
-  guerisseurGuerison: 0.02,
-  guerisseurContraction: 0.02,
+  guerisseurGuerison: 0.03,
+  guerisseurContraction: 0.03,
+  guildeMedecinsEfficacite: 0.01,
   modGuerisonAge: 0.003,
   garnisonParGarde: 10,
   professeurBaseChance: 0.9,
@@ -393,6 +401,7 @@ export const PARAM_META: {
   { key: 'probaGuerison', label: 'Probabilité de guérison (base)', groupe: 'Maladie', unite: 'proba' },
   { key: 'guerisseurGuerison', label: 'Guérisseur — bonus de guérison par poste', groupe: 'Maladie', unite: 'proba' },
   { key: 'guerisseurContraction', label: 'Guérisseur — réduction de contraction par poste', groupe: 'Maladie', unite: 'proba' },
+  { key: 'guildeMedecinsEfficacite', label: "Guilde des médecins — bonus d'efficacité des Guérisseurs (pays, plafonné à une)", groupe: 'Maladie', unite: 'proba' },
   { key: 'modGuerisonAge', label: 'Guérison — modificateur par année d\'âge', groupe: 'Maladie' },
   { key: 'garnisonParGarde', label: 'Garnison par Garde en poste', groupe: 'Métiers' },
   { key: 'professeurBaseChance', label: 'Chance de base d\'attribution Professeur', groupe: 'Éducation' },

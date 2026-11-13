@@ -2243,8 +2243,12 @@
       "production": "",
       "description": "",
       "rangMinHabitation": 1,
-      "malContraction": 0.05,
-      "bonusGuerison": 0.05,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 2
+        }
+      ],
       "couts": [
         {
           "ressource": "Or",
@@ -2907,6 +2911,38 @@
       "categorie": "Bâtiment",
       "groupe": "Ville",
       "famille": "Guilde",
+      "nom": "Guilde des médecins",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 4,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 10
+        }
+      ],
+      "requis": "Hôpital",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 50
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Guilde",
       "nom": "Guilde des bourgeois",
       "cout": "",
       "production": "",
@@ -3273,8 +3309,12 @@
       "production": "",
       "description": "",
       "rangMinHabitation": 1,
-      "malContraction": 0.05,
-      "bonusGuerison": 0.05,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 2
+        }
+      ],
       "couts": [
         {
           "ressource": "Or",
@@ -3944,6 +3984,38 @@
         {
           "ressource": "Pierre",
           "valeur": 10
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 4
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Guilde",
+      "nom": "Guilde des médecins",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 4,
+      "emplacements": [
+        {
+          "metier": "Guérisseur",
+          "places": 10
+        }
+      ],
+      "requis": "Hôpital",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 50
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 12
         },
         {
           "ressource": "Fer",
@@ -6320,7 +6392,7 @@
       "ressource1": "",
       "valeur2": 0,
       "ressource2": "",
-      "description": "+2 % de chances de guérison et −2 % de risque de contracter la maladie pour la ville tant qu'en poste.",
+      "description": "+3 % de chances de guérison et −3 % de risque de contracter la maladie pour la ville tant qu'en poste.",
       "nobleSeul": false,
       "regleGenre": "vide",
       "attribution": "",

@@ -350,11 +350,14 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   //  carte et le wiki Référentiels.)
   const reducLevee = reductionLeveeConstructionRef(ref, cfg)
   if (reducLevee > 0) parts.push(`levée d'armée −${reducLevee} Or`)
-  // Fiche bâtiments rang 1 (retour Thibaut 2026-10-26) : l'Herboristerie
-  //  n'accueille plus de Guérisseur — ses effets ±5% maladie sont
-  //  structurés (malContraction / bonusGuerison) et s'affichent dans le
-  //  résumé pour que le picker ne retombe pas sur la description du
-  //  classeur (périmée).
+  // Champs santé structurés (2026-10-26) : malContraction /
+  //  bonusGuerison s'affichent dans le résumé pour que le picker ne
+  //  retombe pas sur la description du classeur (périmée).
+  //  (Arbitrage Thibaut 2026-11-13 : l'Herboristerie ne porte PLUS
+  //  ces champs — elle accueille 2 Guérisseurs, affichés par la
+  //  voie générique des emplacements ci-dessus. Aucune entrée du
+  //  référentiel ne porte un flat aujourd'hui ; le rendu reste pour
+  //  une future donnée.)
   if (ref.malContraction) parts.push(`+${Math.round(ref.malContraction * 100)}% chances de maladie`)
   if (ref.bonusGuerison) parts.push(`+${Math.round(ref.bonusGuerison * 100)}% guérison`)
   // Retour Thibaut 2026-10-27 : les TAUDIS et les AUTRES domiciles

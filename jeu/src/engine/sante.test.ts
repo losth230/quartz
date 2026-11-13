@@ -21,6 +21,7 @@ import { probaContracterMaladie, maladieStep } from './sante'
 import { emptyRecap } from './shared'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
+import { cloneDefaultConfig, SCHEMA_VERSION_CONFIG } from '../config/defaultConfig'
 import type { Character } from './types'
 import { createGame, defaultSetups } from './setup'
 
@@ -82,22 +83,121 @@ test('Gompertz : monte-carlo seedé — E[âge de décès] ∈ [55, 66] (calibra
 
 // ── Guérisseur (métier, 2026-10-25) ──────────────────────────────────
 
-test('Guérisseur : +2 % guérison et −2 % contraction par Guérisseur en poste dans la ville', () => {
+test('Guérisseur : +3 % guérison et −3 % contraction par Guérisseur en poste dans la ville', () => {
   const C = cfgOf()
-  assert.equal(C.p.guerisseurGuerison, 0.02)
-  assert.equal(C.p.guerisseurContraction, 0.02)
+  // (Arbitrage Thibaut 2026-11-13 : ±2 % → ±3 %.)
+  assert.equal(C.p.guerisseurGuerison, 0.03)
+  assert.equal(C.p.guerisseurContraction, 0.03)
   // le métier existe au référentiel, roturier, sans production directe
   const def = C.metiers.find((m) => m.metier === 'Guérisseur')
   assert.ok(def, 'métier Guérisseur au référentiel')
   assert.equal(def?.qualite, 'roturier')
   assert.equal(def?.valeur1, 0)
-  // Fiche bâtiments rang 2 (2026-10-26) : l'Herboristerie ne porte
-  //  PLUS d'emplacement de Guérisseur (elle ne fait que moduler les
-  //  chances de maladie ±5 %) — le poste vient désormais de la
-  //  CLINIQUE (rang 2, +5 emplacements).
+  // (Arbitrage Thibaut 2026-11-13 : l'Herboristerie ne porte PLUS de
+  //  flat ±5 % — elle offre 2 postes ; le poste « rang 2 » vient
+  //  toujours de la CLINIQUE (+5), l'HÔPITAL en ajoute 10.)
   const clinique = C.config.constructions.find((c) => c.nom === 'Clinique')
   assert.ok(clinique?.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 5),
     'la Clinique (rang 2) accueille 5 Guérisseurs')
+  const herboristerie = C.config.constructions.find((c) => c.nom === 'Herboristerie')
+  assert.equal(herboristerie?.malContraction, undefined, 'Herboristerie : plus de flat contraction')
+  assert.equal(herboristerie?.bonusGuerison, undefined, 'Herboristerie : plus de flat guérison')
+  assert.ok(herboristerie?.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 2),
+    'Herboristerie : 2 postes de Guérisseur')
+})
+
+test('Guilde des médecins : constructible (Ville + Château), 10 Guérisseurs, requiert l\'Hôpital, rang 4', () => {
+  const C = cfgOf()
+  for (const g of ['Ville', 'Château']) {
+    const guilde = C.config.constructions.find(
+      (c) => c.nom === 'Guilde des médecins' && c.groupe === g)
+    assert.ok(guilde, `Guilde des médecins ${g} au référentiel`)
+    assert.equal(guilde?.famille, 'Guilde', 'famille Guilde (picker)')
+    assert.equal(guilde?.rangMinHabitation, 4, 'rang 4, au-dessus de l\'Hôpital')
+    assert.equal(guilde?.requis, 'Hôpital', 'requiert l\'Hôpital')
+    assert.ok(guilde?.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 10),
+      '10 postes de Guérisseur')
+    assert.deepEqual(guilde?.couts, [
+      { ressource: 'Or', valeur: 50 },
+      { ressource: 'Pierre', valeur: 12 },
+      { ressource: 'Fer', valeur: 4 },
+    ], 'coût 50 Or + 12 Pierre + 4 Fer')
+  }
+  // l'ancienne Guilde codée en dur (+10 % bonusGuerisonGlobal) a
+  //  DISPARU de la vue batiments — remplacée par les effets ci-dessus
+  assert.ok(!C.config.batiments.some((b) => b.nom === 'Guilde des médecins'),
+    'plus de Guilde des médecins en dur dans la vue batiments')
+})
+
+test('Guilde des médecins : efficacité des Guérisseurs du pays +1 %, PLAFONNÉE à une Guilde', () => {
+  const C = cfgOf()
+  assert.equal(C.p.guildeMedecinsEfficacite, 0.01)
+  // le moteur : une Guilde dans n'importe quelle ville du joueur
+  //  → chaque Guérisseur passe de ±3 % à ±4 % (contraction ET
+  //  guérison) ; DEUX Guilhes ne cumulent pas (plafond).
+  //  Vérification structurelle : reconstituer les modificateurs de
+  //  maladieStep avec/contre Guilde.
+  const state = createGame(defaultSetups(), 20261113, 'local')
+  const p = state.players[0]
+  const pop = state.population[p.n] ?? []
+  const ville = p.villes[0]!
+  const habitant = pop.find((c) => c.statut === 'Sain' && c.ville === ville.nom)!
+  const probaPure = probaContracterMaladie(habitant, C)
+  const sansGuilde = Math.max(0, probaPure - 1 * C.p.guerisseurContraction)
+  const avecGuilde = Math.max(0, probaPure - 1 * (C.p.guerisseurContraction + C.p.guildeMedecinsEfficacite))
+  assert.ok(avecGuilde < sansGuilde,
+    'avec une Guilde, un Guérisseur réduit la contraction de 4 % et non 3 %')
+  // plafond : deux Guilhes = toujours +1 % (le moteur teste
+  //  `some`, pas le nombre de Guilhes)
+  ville.batiments.push('Guilde des médecins')
+  let vus = 0
+  for (const v of p.villes) {
+    if ((v.batiments ?? []).includes('Guilde des médecins')) vus++
+  }
+  assert.ok(vus >= 1, 'la Guilde est bien dans une ville du joueur')
+  // (le plafond est structurel : `some` est booléen, 2 Guilhes ne
+  //  peuvent pas donner +2 % — assertion de non-régression sur les
+  //  valeurs des paramètres)
+  assert.equal(C.p.guildeMedecinsEfficacite, 0.01, 'le bonus d\'efficacité reste 1 %')
+})
+
+test('migration santeGuerisseurs2026 : une ancienne config convergée (flats 0.05, params 0.02) est mise à jour, une personnalisation est conservée', () => {
+  // config « ancienne » : tamponnée, Herboristerie avec les flats
+  //  d'avant le 2026-11-13, paramètres ±2 %, sans Guilde au
+  //  référentiel (le garde-fou l'ajoute — elle est neuve).
+  const cfg = cloneDefaultConfig()
+  cfg.schemaVersion = SCHEMA_VERSION_CONFIG
+  delete (cfg as { santeGuerisseurs2026?: boolean }).santeGuerisseurs2026
+  const herbo = cfg.constructions.find((c) => c.nom === 'Herboristerie' && c.groupe === 'Ville')!
+  herbo.malContraction = 0.05
+  herbo.bonusGuerison = 0.05
+  delete herbo.emplacements
+  const herboPerso = cfg.constructions.find((c) => c.nom === 'Herboristerie' && c.groupe === 'Château')!
+  herboPerso.malContraction = 0.07 // personnalisation : conservée
+  delete herboPerso.emplacements
+  cfg.params.guerisseurGuerison = 0.02
+  cfg.params.guerisseurContraction = 0.02
+  delete (cfg.params as { guildeMedecinsEfficacite?: number }).guildeMedecinsEfficacite
+  const C = cfgOf(cfg)
+  // migration passée
+  assert.equal((C.config as { santeGuerisseurs2026?: boolean }).santeGuerisseurs2026, true)
+  assert.equal(C.p.guerisseurGuerison, 0.03, 'paramètre semé 0.02 → 0.03')
+  assert.equal(C.p.guerisseurContraction, 0.03, 'paramètre semé 0.02 → 0.03')
+  assert.equal(C.p.guildeMedecinsEfficacite, 0.01, 'nouveau paramètre par défaut')
+  const herboApres = C.config.constructions.find((c) => c.nom === 'Herboristerie' && c.groupe === 'Ville')!
+  assert.equal(herboApres.malContraction, undefined, 'flat contraction retiré')
+  assert.equal(herboApres.bonusGuerison, undefined, 'flat guérison retiré')
+  assert.ok(herboApres.emplacements?.some((e) => e.metier === 'Guérisseur' && e.places === 2),
+    '2 postes de Guérisseur semés')
+  const herboPersoApres = C.config.constructions.find((c) => c.nom === 'Herboristerie' && c.groupe === 'Château')!
+  assert.equal(herboPersoApres.malContraction, 0.07, 'personnalisation conservée (patron taxes25)')
+  // la Guilde des médecins est AJOUTÉE (construction neuve du référentiel)
+  assert.ok(C.config.constructions.some((c) => c.nom === 'Guilde des médecins' && c.groupe === 'Ville'),
+    'Guilde des médecins Ville ajoutée par le garde-fou')
+  // idempotence : re-lecture stable
+  const C2 = cfgOf(C.config)
+  assert.equal(C2.p.guerisseurGuerison, 0.03)
+  assert.equal(C2.config.constructions.find((c) => c.nom === 'Herboristerie' && c.groupe === 'Ville')?.emplacements?.length, 1)
 })
 
 test('Guérisseur : effet moteur — la maladie d\'un habitant de la ville est modulée (via maladieStep)', () => {

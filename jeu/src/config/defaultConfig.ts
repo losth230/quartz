@@ -687,6 +687,12 @@ export interface GameConfig {
    *  fiches de constructions. Une fois posé, la migration ne se
    *  rejoue pas. */
   armeesBanque2026?: boolean
+  /** Refonte santé (arbitrages Thibaut 2026-11-13 : Herboristerie
+   *  ±5 % → 2 postes de Guérisseur ; Guérisseur ±2 % → ±3 %) :
+   *  migration ciblée (cfgOf) indépendante du tampon schemaVersion,
+   *  même schéma que taxes25 — les valeurs ENCORE AUX ANCIENS
+   *  DÉFAUTS sont mises à jour, une personnalisation est conservée. */
+  santeGuerisseurs2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -918,19 +924,16 @@ function normaliserBatiments(): BuildingDef[] {
       bonusGuerisonGlobal: c.bonusGuerisonGlobal ?? 0,
     })
   }
-  // « Guilde des médecins » (livret 7.19 : +10 % de guérison globale)
-  //  n'a AUCUNE ligne dans la table canonique (le classeur ne lui
-  //  connaît pas de coût) : elle reste NON constructible mais son
-  //  effet moteur continue de s'appliquer aux villes qui la portent
-  //  (comportement historique conservé). POINT OUVERT (arbitrage
-  //  Thibaut) : l'ajouter au référentiel constructible avec un coût.
-  if (!out.some((b) => b.nom === 'Guilde des médecins')) {
-    out.push({
-      nom: 'Guilde des médecins', categorie: 'Santé',
-      effet: 'Bâtiment à effet moteur (santé / éducation).',
-      ecoleRang: 0, malContraction: 0, bonusGuerison: 0, bonusGuerisonGlobal: 0.10,
-    })
-  }
+  // (RETRAIT 2026-11-13, arbitrage Thibaut : la « Guilde des
+  //  médecins » quitte la vue codée en dur (+10 % de guérison
+  //  globale, livret 7.19) — elle devient CONSTRUCTIBLE au
+  //  référentiel (entrée Ville + entrée Château, famille Guilde :
+  //  50 Or + 12 Pierre + 4 Fer, requiert l'Hôpital, rang 4) et
+  //  offre 10 postes de Guérisseur + le bonus d'EFFICACITÉ pays
+  //  (paramètre guildeMedecinsEfficacite, moteur sante.ts). Le
+  //  +10 % bonusGuerisonGlobal DISPARAÎT (remplacé par les
+  //  nouveaux effets) ; plus AUCUNE entrée du référentiel ne porte
+  //  de champ santé today — la vue n'expose plus que les écoles.)
   return out
 }
 
@@ -2136,6 +2139,38 @@ export function cfgOf(config?: GameConfig): Cfg {
     if (pm.taxNaissFaibles === 1.5) pm.taxNaissFaibles = 1.25
     if (pm.taxNaissHautes === 0.5) pm.taxNaissHautes = 0.75
     merged.taxes25 = true
+  }
+  // (Arbitrages Thibaut 2026-11-13 — Herboristerie 2 postes de
+  //  Guérisseur (plus de flat ±5 %), Guérisseur ±3 % au lieu de
+  //  ±2 %, Guilde des médecins constructible avec bonus d'efficacité
+  //  pays) : migration ciblée (patron taxes25, SANS bump du tampon
+  //  schemaVersion — règle (x)) — les configs CONVERGÉES portent
+  //  encore les ANCIENS défauts. Seules les valeurs ENCORE AUX
+  //  ANCIENS DÉFAUTS sont touchées (0.02 → 0.03 ; flats 0.05 retirés
+  //  + 2 postes semés si l'entrée n'a pas d'emplacements) ; une
+  //  personnalisation est conservée telle quelle. La Guilde des
+  //  médecins est AJOUTÉE par le garde-fou « constructions du
+  //  référentiel manquantes » (elle est neuve, aucune purge) ; le
+  //  paramètre guildeMedecinsEfficacite vient de mergeParams. Le
+  //  +10 % global de la vue codée en dur disparaît avec le code.
+  if (!merged.santeGuerisseurs2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    if (pm.guerisseurGuerison === 0.02) pm.guerisseurGuerison = 0.03
+    if (pm.guerisseurContraction === 0.02) pm.guerisseurContraction = 0.03
+    for (const c of merged.constructions ?? []) {
+      if (c.nom !== 'Herboristerie') continue
+      if (c.malContraction === 0.05 && c.bonusGuerison === 0.05) {
+        delete (c as { malContraction?: number }).malContraction
+        delete (c as { bonusGuerison?: number }).bonusGuerison
+      }
+      if (!c.emplacements) {
+        const d = DEFAULT_CONFIG.constructions.find(
+          (x) => x.nom === c.nom && x.groupe === c.groupe,
+        )
+        if (d?.emplacements) c.emplacements = d.emplacements
+      }
+    }
+    merged.santeGuerisseurs2026 = true
   }
   // SUPPRESSION DE LA MARTIALITÉ (arbitrage Thibaut 2026-10-21) :
   //  l'hérédité est conservée, mais la martialité disparaît du jeu —
