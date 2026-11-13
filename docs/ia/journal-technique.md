@@ -5285,3 +5285,66 @@ code, le bundle live de la purge 71dfb68 reste la référence).
 taille réelle de partie (721 tuiles) sur les matrices de biomes,
 de pôles, d'adjacence, de caps, de placement joueurs et de
 ressources. Aucun Ctrl+F5 nécessaire (rien n'a été redéployé).
+
+## Générateur de carte wargame : copie « labo » d'expérimentation + mode ressources Quantile v2 (demande Thibaut 2026-11-13, base a51bafc9)
+
+Demande de Thibaut : « ajouter une copie dans un nouvel onglet dans
+le gestionnaire de campagne afin de faire des tests — par exemple
+refaire entièrement la génération des ressources ou des tuiles
+pour avoir quelque chose de meilleure qualité ».
+
+**Ce qui a été fait** (commit `5c7ae21`) :
+
+- **Nouvelle copie labo** `quartz/static/generateur-carte-labo.html` :
+  copie intégrale du générateur, identifiable au premier regard
+  (bandeau 🧪 LABO en bas à gauche + `<title>` dédié + lien
+  « ↩ officiel »). C'est LE bac à essai : les remaniements de
+  génération (ressources, tuiles) s'y tester sans jamais toucher
+  à l'officiel.
+- **Accès depuis le gestionnaire** : bouton « 🧪 Labo » en bas à
+  droite de l'officiel (pilule au-dessus du bouton thème) qui
+  ouvre la copie dans un NOUVEL ONGLET du navigateur
+  (target=_blank). L'officiel n'a reçu QUE ce bouton : aucun
+  changement de génération, arbitrage « ne pas toucher aux
+  ressources » respecté.
+- **Premier sujet de test livré avec le labo** : sélecteur
+  « MODE RESSOURCES » dans le groupe RESSOURCES —
+  « Bruit v1 (officiel) » (défaut, comportement strictement
+  identique) vs « Quantile v2 (test) ». Le v2 corrige le défaut
+  quantifié à la session précédente : le seuil `1 − densité×8`
+  sur un bruit de Perlin en cloche rendait les seuils > 0,85
+  quasi inatteignables (Baleines/Geyser jamais générés, ~24
+  tuiles à ressource par carte dont 90 % de Poissons). En v2, la
+  densité en ‰ devient le VRAI taux de tuiles éligibles : les
+  k = densité × éligibles meilleures tuiles au score de bruit
+  sont retenues (arrondi stochastique via le PRNG dédié randRes,
+  jusque-là déclaré mais inutilisé), puis écrêtage par amas
+  (curseur Taille inchangé). Le placement reste déterministe par
+  seed et l'ordre de priorité des ressources est conservé.
+- `content/Wargame/Générateur de carte.md` : cache-buster de
+  l'iframe ?v=1 → ?v=2 (l'officiel embarqué a changé).
+
+**Validation (harnais vm reconstruit, N=15, 721 tuiles)** :
+officiel modifié ≡ original sur 40 cartes (biomes + ressources
+octet par octet — le bouton ne change RIEN à la génération) ;
+labo mode v1 ≡ officiel sur 20 cartes ; labo mode v2 : 240
+cartes (5 ordres × 4 pôles × 12 seeds = 173 040 tuiles), zéro
+crash, zéro Neige, ressources uniquement sur biomes éligibles,
+bornes k respectées, LES 9 RESSOURCES apparaissent désormais
+(moyennes/carte : Poissons 11,3 — attendu 10,8 ; Ruines 4,2 —
+4,1 ; Baleines 4,0 — 3,7 ; Bétail 1,8 — 1,8 ; Soie 2,8 — 2,6 ;
+Fer 1,0 ; Charbon 0,8 ; Or 0,75 ; Geyser 0,12 = présent dans
+~12 % des cartes, honnête pour 8 ‰ sur ~6 tuiles éligibles) ;
+déterminisme v2 5/5 ; bascule v2→v1 sans divergence.
+
+**Commits** (2 sur `v4` depuis a51bafc9) :
+- `5c7ae21` feat(wargame) : labo + bouton + mode quantile ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : la page « Générateur de carte »
+officielle gagne un bouton 🧪 Labo (nouvel onglet) ; la version
+labo permet de comparer côte à côte le placement des ressources
+v1/v2 avec les MÊMES réglages et la même seed. Si le v2 lui
+plaît, il sera promu dans l'officiel lors d'un prochain arbitrage
+(les densités par défaut restent à régler : ~26 tuiles à
+ressource par carte en v2 aux défauts actuels). Ctrl+F5 requis.
