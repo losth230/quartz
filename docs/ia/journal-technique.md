@@ -5210,3 +5210,78 @@ regénérer, le workflow diag n'aura rien à committer).
 de Nourriture en moins à son suzerain (part Chasseurs) ; les autres
 ressources et la consommation de la cité sont inchangées. Parties en
 cours : effet au tour suivant, sans migration. Ctrl+F5 requis.
+
+## Générateur de carte wargame : validation à taille réelle de partie — N=15, 721 tuiles (suite de la purge 71dfb68, retour Thibaut 2026-11-13)
+
+Demande de Thibaut : « continue à faire des vérifications,
+habituellement le jeu se fait avec environ 700 tuiles ». Le rayon
+par défaut du générateur est N=12 (469 tuiles) ; la taille réelle
+de partie correspond à N=15 (3×15²+3×15+1 = **721 tuiles**). Toute
+la validation précédente (46 900 tuiles) avait tourné à 469 : re-
+validation complète à 721 sur la version poussée (commit 71dfb68),
+sans toucher au code.
+
+**Harnais reconstruit** (le bac à sable a été réinitialisé entre
+les tours) : moteur extrait du HTML et chargé dans node:vm avec
+stub DOM complet ; les sliders dynamiques res-* sont re-parsés du
+innerHTML de buildResourceControls, les 10 paires adj-* de celui
+de buildAdjacencyControls (la regex tolère le style après
+data-pair) ; les liaisons let/const du moteur se lisent via
+runInContext (elles ne vivent PAS sur l'objet contexte). Génération
+directe par generateMap(N, seed, params) avec getParams() +
+sea/mountains/noiseType aux défauts de l'UI.
+
+**Résultats, version 71dfb68 à N=15** :
+
+- Matrice 5 ordres × 4 modes de pôles × 6 seeds = 120 cartes,
+  86 520 tuiles : taille exacte partout, ZÉRO biome inconnu, ZÉRO
+  Neige. Répartition moyenne : Océan 44,9 %, Forêt 21,4 %, Marais
+  18,5 %, Plaine 9,0 %, Montagne 4,7 %, Désert 1,0 %, Volcan
+  0,3 %. Une seule carte sur 120 sans aucun Volcan.
+- Comparaison orig (b8d08ec) ↔ gen, mêmes seeds, 30 cartes :
+  tuiles Océan IDENTIQUES au tuile près sur les 30 cartes
+  (pipeline élévation intact), terres conservées (11 910 des deux
+  côtés), Neige présente dans 30/30 cartes orig (1,4 %) et dans
+  0/30 cartes gen ; écart max sur un biome = 26 tuiles
+  (redistribution de l'ancienne Neige vers Forêt/Plaine).
+- Adjacence activée : les 10 paires à « interdit » convergent
+  (0 paire interdite restante sur 6 seeds) ; réglage par défaut
+  propre ; adj off par défaut → contacts Désert↔Marais possibles
+  (normal).
+- Caps : respectés avec marge (cap Désert 20 % → pire cas 2,5 % ;
+  Forêt 25 % → 6,3 % ; Plaine 15 % → 3,8 %).
+- Joueurs 6/7/8 aux défauts : 18/18 placements primaires
+  complets, distance mini entre capitales ≥ 7 (minDist 5
+  respecté) ; seconds sites : 20/126 joueurs sans 2e tuile en gen
+  contre 22/126 en orig — comportement PRÉEXISTANT, légèrement
+  meilleur depuis la purge (les anciennes Neige sont devenues
+  Forêt/Plaine jouables).
+- Ressources aux défauts (recalibrage DIFFÉRÉ sur arbitrage de
+  Thibaut, mais quantifié à taille réelle) : ~24 tuiles à
+  ressource par carte sur 721 ; Poissons ~20/carte domine,
+  Bétail ~3, Fer ~0,5, Ruines/Soie/Or ~0,17 ;
+  **Baleines, Charbon, Geyser : JAMAIS générées aux défauts** à
+  N=15.
+- Divers : déterminisme vérifié (même seed → cartes identiques) ;
+  rivières 42 segments en moyenne, aucune carte sans rivière ;
+  continents : masse dominante de 339 à 397 tuiles + 0 à 8
+  îlots/îles secondaires selon la seed.
+
+**Observations pour l'arbitre (aucune action, aucun commit
+code)** : (1) Marais 18,5 % vs Plaine 9,0 % et Désert 1,0 % —
+l'humidité par défaut produit beaucoup de Marais et peu de
+Désert ; si la répartition visée est différente, c'est
+h-scale/h-cont/cap-desert à arbitrer, pas un bug ; (2) à 8
+joueurs certaines seeds laissent jusqu'à 4 joueurs sans 2e tuile
+(sans 2e tuile = avertissement préexistant) — un assouplissement
+de player-dist/spread réduirait ces avertissements ; (3) une
+carte sur 120 sans Volcan (evt-volcan 6 % par tuile éligible)
+paraît cohérente avec le paramétrage.
+
+**Commits** : présent commit = journal seul (aucun changement de
+code, le bundle live de la purge 71dfb68 reste la référence).
+
+**Effet pour l'arbitre** : la version purgée est validée à la
+taille réelle de partie (721 tuiles) sur les matrices de biomes,
+de pôles, d'adjacence, de caps, de placement joueurs et de
+ressources. Aucun Ctrl+F5 nécessaire (rien n'a été redéployé).
