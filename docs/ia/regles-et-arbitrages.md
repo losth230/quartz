@@ -2662,3 +2662,37 @@ compteurs bâtiments 73 / rang 2+ 47) ; config/params.test.ts
 (commentaire). **351/351 tests natifs** (348 + 3), diag régénéré :
 110 règles (batiment 63, canal placesMetier 86) — seules les
 4 nouvelles lignes de postes changent.
+
+## Pas de conception le tour de l'accouchement (arbitrage Thibaut 2026-11-13 « il faut changer ça, une femme ne peut accoucher et tomber enceinte au même tour »)
+
+**Constat** : dans `conceptionEtNaissances` (une seule étape du
+tour), l'étape 1 (accouchements) remettait la mère à 'Sain', et
+l'étape 2 (conceptions) la reprenait immédiatement — au cap de
+probabilité (fertBaseRate 1, facteurs cumulés ≥ 1), une jeune mère
+enchaînait UN BÉBÉ PAR TOUR (un tour = 2 ans) sans aucun délai de
+récupération.
+
+**Décision** :
+- Les mères qui viennent d'accoucher à l'étape 1 sont EXCLUES du
+  jet de conception de CE tour (ensemble `accoucheesCeTour` local
+  à l'appel). Une grossesse Issue d'un accouchement ne peut plus
+  commencer le tour même de celui-ci.
+- **Portée d'UN tour, pas de cooldown persistant** : aucun champ
+  d'état, aucune migration — au tour suivant, la mère est de
+  nouveau éligible. Au cap, une mère accouche au mieux UN tour
+  SUR DEUX (conception au tour suivant, accouchement au tour
+  d'après) — soit un bébé tous les 4 ans de temps de jeu.
+- La fécondité AFFICHÉE (`computeFecondite`) est inchangée : elle
+  décrit la proba d'une femme ÉLIGIBLE.
+
+**Verrous** : engine/naissances.test.ts NOUVEAU (1 test) — la
+mère accouche et reste 'Sain' au lieu de re-concevoir immédiatement
+(avec conception certaine forcée : sans l'exclusion, elle serait
+retombée enceinte à 100 %) ; contrôle positif qu'une femme
+éligible du même tour conçoit bien ; au tour SUIVANT la mère
+redevient éligible et conçoit ; le témoin, enceinte au 2e tour,
+accouche sans re-concevoir (double vérification de la règle).
+**352/352 tests natifs** (351 + 1). Diag régénéré : log 550 → 459
+entrées sur les 4 tours simulés (grossesses en chaîne évitées),
+commandants J1 4 → 6 (dynamique décalée) — les tables de règles
+sont inchangées.
