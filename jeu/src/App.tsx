@@ -17,13 +17,14 @@ import { HistoryPanel } from './components/HistoryPanel'
 import { SetupPanel } from './components/SetupPanel'
 import { ReferenceDataPanel } from './components/ReferenceDataPanel'
 import { ParamsPanel } from './components/ParamsPanel'
+import { CarteLaboView } from './components/CarteLaboView'
 // Marqueur (a) : filet de sécurité — une erreur de rendu d'une page
 //  affiche une carte rouge lisible au lieu d'une page toute blanche.
 import { ErrorBoundary } from './components/ErrorBoundary'
 
 // (RETRAIT 2026-10-24, retour arbitre : la section « progres » est
 //  supprimée avec le système de progrès.)
-type Section = 'accueil' | 'royaume' | 'joueur' | 'dogmes' | 'population' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'setup'
+type Section = 'accueil' | 'royaume' | 'joueur' | 'dogmes' | 'population' | 'citeslibres' | 'armees' | 'journal' | 'historique' | 'referentiels' | 'parametres' | 'carte-labo' | 'setup'
 
 const SECTIONS: { key: Section; label: string }[] = [
   { key: 'accueil', label: '🏛 Accueil' },
@@ -40,6 +41,7 @@ const SECTIONS: { key: Section; label: string }[] = [
   { key: 'historique', label: '📈 Historique' },
   { key: 'referentiels', label: '📚 Référentiels' },
   { key: 'parametres', label: '🎛 Paramètres' },
+  { key: 'carte-labo', label: '🧪 Carte labo' },
   { key: 'setup', label: '⚙ Nouvelle partie' },
 ]
 
@@ -53,6 +55,8 @@ const HASH_SECTIONS: Record<string, Section> = {
   'nouvelle-partie': 'setup',
   'nouvelle_partie': 'setup',
   setup: 'setup',
+  'carte-labo': 'carte-labo',
+  'carte_labo': 'carte-labo',
 }
 
 function sectionFromHash(): Section {
@@ -149,7 +153,7 @@ export default function App() {
       {(section === 'royaume' || section === 'joueur' || section === 'population' || section === 'armees' || section === 'dogmes') && joueursBars}
 
       <main className="main">
-        {!state && section !== 'setup' && section !== 'referentiels' && section !== 'parametres' ? (
+        {!state && section !== 'setup' && section !== 'referentiels' && section !== 'parametres' && section !== 'carte-labo' ? (
           <div className="card">Aucune partie en cours. Allez dans « ⚙ Nouvelle partie ».</div>
         ) : (
           <>
@@ -169,6 +173,7 @@ export default function App() {
             {section === 'referentiels' && <ReferenceDataPanel />}
             {section === 'parametres' && <ParamsPanel />}
             {section === 'setup' && <SetupPanel />}
+            {section === 'carte-labo' && <CarteLaboView />}
               </>
             </ErrorBoundary>
           </>
