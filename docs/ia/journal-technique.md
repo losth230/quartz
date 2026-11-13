@@ -5025,3 +5025,85 @@ Neige/glacial/e-islands/t-scale/t-alt/c-surround-any/cap-neige/TEH
 perd les contrôles fantômes, ne produit plus de neige, et les deux
 curseurs de taille se comportent comme leurs libellés.
 Ctrl+F5 requis.
+
+## Chaîne santé : l'Herboristerie offre des postes, le Guérisseur ±3 %, la Guilde des médecins constructible (retour Thibaut 2026-11-13, base b3fab4c4)
+
+Retour arbitre : « l'herboristerie ne produit plus de flat mais
+offre 2 postes de guérisseur » ; « le guérisseur réduit de 3 % les
+chances de contracter une maladie et augmente de 3 % les chances
+de guérison » ; « la guilde des médecins offre 10 postes de
+guérisseur et augmente l'efficacité de tous les guérisseurs du
+pays de 1 % ». Arbitrages complémentaires demandés et tranchés :
+coût de la Guilde 50 Or + 12 Pierre + 4 Fer (au-dessus de
+l'Hôpital), requiert l'Hôpital, le +10 % de guérison globale
+ancien est REMPLACÉ par les nouveaux effets, l'efficacité est
+PLAFONNÉE à une Guilde (Ville + Château ne cumulent pas).
+
+**Changements** :
+- `referentiels.json` : Herboristerie Ville + Château — les
+  champs malContraction/bonusGuerison (0.05) sont retirés, 2
+  postes de Guérisseur posés ; DEUX entrées « Guilde des
+  médecins » (Ville + Château, famille Guilde, rang 4, requis
+  Hôpital, coût 50/12/4, 10 postes) ; fiche métier Guérisseur
+  actualisée (±3 %).
+- `params.ts` : guerisseurGuerison/guerisseurContraction
+  0.02 → 0.03 ; NOUVEAU guildeMedecinsEfficacite 0.01 (+PARAM_META
+  « Maladie »).
+- `engine/sante.ts` : le bloc Guérisseurs calcule une EFFICACITÉ
+  (effGuerison/effContraction) majorée de
+  guildeMedecinsEfficacite si le joueur possède AU MOINS UNE
+  « Guilde des médecins » (some() sur les bâtiments de toutes ses
+  villes — plafond structurel, pas de comptage) ; la lecture
+  générique des flats (malContraction/bonusGuerison) reste pour
+  une future donnée (aucune entrée n'en porte aujourd'hui).
+- `config/defaultConfig.ts` : l'entrée « Guilde des médecins »
+  codée en dur dans normaliserBatiments (+10 %
+  bonusGuerisonGlobal) est RETIRÉE (la vue batiments ne dérive
+  plus que les écoles) ; MIGRATION CIBLÉE santeGuerisseurs2026
+  (patron taxes25, SANS bump de SCHEMA_VERSION_CONFIG — règle
+  (x)) : paramètres 0.02 → 0.03 si encore aux anciens défauts,
+  flats 0.05 retirés + 2 postes semés sur une Herboristerie sans
+  emplacements, personnalisation conservée ; la Guilde atteint
+  les configs existantes par le garde-fou « constructions du
+  référentiel manquantes » (elle est neuve).
+- `engine/constructions.ts` : le rendu générique ±% du résumé
+  reste, docblock actualisé (l'Herboristerie affiche désormais
+  « 2 guérisseur » par la voie générique des emplacements).
+- Tests : engine/sante.test.ts réécrit (±3 %, Herboristerie
+  2 postes sans flats) + 3 NOUVEAUX (Guilde constructible Ville +
+  Château, vue batiments sans entrée en dur ; efficacité +1 %
+  plafonnée ; migration avec personnalisation conservée +
+  idempotence) ; engine/domiciles.test.ts (fiche Herboristerie,
+  « 2 guérisseur ») ; state/config.test.ts (vue dérivée, plus de
+  flats au canonique + compteurs bâtiments 74 / rang 2+ 47) ;
+  config/params.test.ts (commentaire).
+
+**Chaîne santé complète** : Herboristerie (rang 1, 2 postes) →
+Clinique (rang 2, 5, exige Herboristerie) → Hôpital (rang 3, 10,
+exige la Clinique) → Guilde des médecins (rang 4, 10 + efficacité
+pays, exige l'Hôpital) — 27 postes cumulés par ville avec toute
+la chaîne.
+
+**Validation (bac réinitialisé entre les tours)** : harnais tests
+natifs reconstruit (tshooks.mjs : le hook load DOIT fournir la
+source pour le JSON, ERR_INVALID_RETURN_PROPERTY_VALUE sinon ;
+resolve teste existsSync AVANT de chaîner) ; **351/351 tests**
+(348 + 3), 34 fichiers ; tsc local (typescript 5.6.3 via miroir
+npmmirror, tarballs dans /home/user/npm-local) : 3 erreurs de
+baseline stub @supabase, AUCUNE autre ; diff vs base limité aux
+9 fichiers src voulus ; diag régénéré : 110 règles (batiment 63,
+canal placesMetier 86), seules les 4 nouvelles lignes de postes
+(Herboristerie ×2, Guilde ×2) — diag-out.txt committé dans le
+feat, le workflow diag n'a rien eu à committer.
+
+**Commits sur `v4` depuis `b3fab4c4`** :
+- `feat(jeu)` (3814932) : 9 fichiers src + diag-out.txt ;
+- `docs(ia)` (9d56c6c7) : docs/ia/regles-et-arbitrages.md seul ;
+- présent commit : journal seul (tête).
+
+**Effet immédiat pour l'arbitre** : l'Herboristerie affiche
+« 2 guérisseur » au lieu de « +5% chances de maladie / +5 %
+guérison » ; chaque Guérisseur en poste module ±3 % (±4 % avec
+la Guilde) ; la Guilde des médecins apparaît dans le picker
+(famille Guilde, rang 4, exige l'Hôpital). Les parties
+sauvegardées migrent seules au chargement. Ctrl+F5 requis.
