@@ -2596,3 +2596,69 @@ croisée (départ côté source / arrivée côté destinataire), foyer
 complet (3 départs ET 3 arrivées), migration interne (les deux
 compteurs sur le même récap), ligne Migrations du journal
 (absente sans mouvement, totaux exacts sinon).
+
+## Chaîne santé : l'Herboristerie offre des postes, le Guérisseur passe à ±3 %, la Guilde des médecins devient constructible (arbitrages Thibaut 2026-11-13 « l'herboristerie ne produit plus de flat mais offre 2 postes de guérisseur », « le guérisseur réduit de 3 % les chances de contracter une maladie et augmente de 3 % les chances de guérison », « la guilde des médecins offre 10 postes de guérisseur et augmente l'efficacité de tous les guérisseurs du pays de 1 % »)
+
+**Constat** : l'Herboristerie (Ville et Château) portait un flat
++5 % contraction / +5 % guérison lu par le moteur de maladie à
+chaque tour (champs malContraction / bonusGuerison) ; le
+Guérisseur donnait ±2 % par poste (paramètres
+guerisseurContraction / guerisseurGuerison) ; la « Guilde des
+médecins » (livret 7.19) n'était PAS constructible — codée en dur
+dans la vue batiments avec un +10 % de guérison globale
+(bonusGuerisonGlobal), sans ligne au référentiel.
+
+**Décision** :
+- **Herboristerie** (Ville + Château, rang 1, coût inchangé
+  10 Or + 2 Pierre) : les champs flat DISPARAISSENT ; elle offre
+  **2 postes de Guérisseur** (emplacements). Le prérequis de la
+  Clinique (Herboristerie) ne change pas.
+- **Guérisseur** : chaque Guérisseur vivant en poste dans la ville
+  donne **−3 % contraction / +3 % guérison** (paramètres
+  0.02 → 0.03), cumulables.
+- **Guilde des médecins** (arbitrages complémentaires Thibaut
+  2026-11-13 : coût 50 Or + 12 Pierre + 4 Fer, requiert
+  l'Hôpital, rang 4, le +10 % global est REMPLACÉ, efficacité
+  PLAFONNÉE à une Guilde) : DEUX nouvelles entrées au référentiel
+  (Ville + Château, famille Guilde) constructibles —
+  **10 postes de Guérisseur** chacune, et **+1 % d'efficacité
+  pour TOUS les Guérisseurs du PAYS** (chaque Guérisseur passe de
+  ±3 % à ±4 %, contraction et guérison) tant que le joueur
+  possède AU MOINS UNE Guilde, dans n'importe laquelle de ses
+  villes. PLAFOND : Ville + Château ne cumulent pas (le moteur
+  teste la PRÉSENCE, pas le nombre). Le +10 % bonusGuerisonGlobal
+  disparaît avec l'entrée codée en dur : plus AUCUNE entrée du
+  référentiel ne porte de champ santé aujourd'hui (le rendu
+  générique de resumeConstruction reste pour une future donnée).
+- **Migration ciblée** santeGuerisseurs2026 (patron taxes25, sans
+  bump de SCHEMA_VERSION_CONFIG) : les configs sauvegardées
+  encore aux ANCIENS défauts sont mises à jour (paramètres
+  0.02 → 0.03, flats 0.05 retirés + 2 postes semés sur
+  l'Herboristerie sans emplacements) ; une personnalisation est
+  conservée. La Guilde est AJOUTÉE aux configs existantes par le
+  garde-fou « constructions du référentiel manquantes » (elle est
+  neuve) ; le paramètre guildeMedecinsEfficacite vient de
+  mergeParams.
+- Fiche métier du Guérisseur (référentiel) actualisée : « +3 % de
+  chances de guérison et −3 % de risque de contracter la maladie
+  pour la ville tant qu'en poste. »
+
+**Chaîne santé complète** : Herboristerie (rang 1, 2 postes) →
+Clinique (rang 2, 5 postes, exige l'Herboristerie) → Hôpital
+(rang 3, 10 postes, exige la Clinique) → Guilde des médecins
+(rang 4, 10 postes + efficacité pays, exige l'Hôpital). Une
+ville avec toute la chaîne offre 27 postes de Guérisseur.
+
+**Verrous** : engine/sante.test.ts (Guérisseur ±3 %, Herboristerie
+2 postes sans flats, Clinique 5 ; Guilde constructible Ville +
+Château 10 postes/rang 4/requis Hôpital/coût 50-12-4, vue
+batiments sans Guilde en dur ; efficacité +1 % plafonnée ;
+migration santeGuerisseurs2026 avec personnalisation conservée
+et idempotence) ; engine/domiciles.test.ts (fiche Herboristerie :
+2 guérisseur dans le résumé structuré, plus de flat) ;
+state/config.test.ts (vue batiments dérivée : plus de flats
+santé au canonique, Guilde absente de la vue, écoles intactes ;
+compteurs bâtiments 73 / rang 2+ 47) ; config/params.test.ts
+(commentaire). **351/351 tests natifs** (348 + 3), diag régénéré :
+110 règles (batiment 63, canal placesMetier 86) — seules les
+4 nouvelles lignes de postes changent.
