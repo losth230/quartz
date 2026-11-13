@@ -5502,3 +5502,83 @@ déterministe par seed, et « Personnalisé » reproduit exactement
 l'ancien comportement. Grille et légende s'affichent d'office, le
 bouton ⛶ passe la carte en plein écran, densités de base à 3 %.
 Cache-buster iframe incrémenté (?v=2). Ctrl+F5 requis.
+
+## Labo générateur : formes cassées — domain warping des masques, humidité sans auréoles, moins d'eau (retour Thibaut 2026-11-13, base d9329b4)
+
+Retour Thibaut (avec capture) : « les formes sont beaucoup trop
+linéaires. Ça fait eau → marais → forêts → plaines → déserts de
+manière très fluide. Il y a trop d'eau, et pas assez de formes. »
+La capture montre un archipel : océan central lisse, terres en
+arcs réguliers, marais en auréole sur toute côte.
+
+**Diagnostic** (3 causes superposées, mesurées au harnais) :
+1. les masques de forme sont des fonctions LISSES de la position
+   (polynômes en dc, cosinus en θ) → côtes en arcs parfaits,
+   bandes de biomes concentriques ;
+2. le blend d'humidité (1−cont)·bruit + cont·côtier ÉCRASAIT la
+   variance du bruit : sur la côte h ≈ 0.6·bruit + 0.4 dépassait
+   presque toujours le seuil marais → auréole systématique ; au
+   cœur h ≈ 0.6·bruit tombait sous le seuil désert → anneau de
+   désert (le gradient complet de la capture) ;
+3. les presets océaniques avaient 55-60 % d'eau.
+
+**Ce qui a été fait** (uniquement la copie labo
+`quartz/static/generateur-carte-labo.html` ; l'officiel INTACT ;
+`jeu/src/components/CarteLaboView.tsx` pour le cache-buster ?v=3) :
+
+- **Domain warping des masques** : les coordonnées (dc, θ) passées
+  au masque sont perturbées par un bruit dédié
+  `nWarp = mulberry32(baseHash ^ 0x2545F491)` (freq 6, amp dc
+  0.55, amp θ 1.0 rad, 3 octaves) avant l'appel → les frontières
+  s'ondulent, les lobes deviennent irréguliers, et la distance à
+  l'océan (base de la continentalité) cesse d'être radiale ;
+  déterminisme par seed préservé (le harnais le vérifie) ;
+  'custom' reste strictement sans masque ni warp ;
+- **Humidité additive plafonnée** : h = min(1, bruit +
+  cont·0.25·(1−oceanDist)) − cont·0.15·oceanDist — le bonus côtier
+  ne garantit plus le marais seul, une légère pénalité de
+  continentalité fait vivre les déserts intérieurs (patches à la
+  forme du bruit, pas un anneau : les côtes découpées du warping
+  rendent oceanDist irrégulier) ;
+- **Seuils biomes rééquilibrés** (`humidZone` et `_humidByTemp`,
+  ce dernier étant le chemin effectif de l'ordre ETH par défaut) :
+  marais plus sélectif (0.58/0.65 → 0.68/0.70), désert un peu plus
+  présent (0.38/0.30 → 0.40/0.32) ;
+- **Presets moins aqueux** : islands-large et archipelago 55 → 45
+  % d'eau, fragmented 60 → 50 ;
+- tooltip du sélecteur TYPE mis à jour (masque + warping).
+
+**Validation** : harnais maison reconstruit
+(`harnais-labo-types.cjs`, partie pure du script évaluée) : (a)
+custom ≡ sans champ mapType, octet par octet ; (b) déterminisme
+2 appels identiques × 3 seeds ; (c) morphologie par type
+(flood fill) sur 3 seeds, N=12, presets appliqués comme l'UI :
+continent masse unique 98-100 %, continents 2 masses (principale
+49-52 %) + îlots satellites, islands-large 3 îles ~34 % +
+îlots, archipel 11-17 composantes principale 24-45 %, pangea
+99-100 %, inland-sea centre 15 % terre contre bord 64 % —
+critères de forme inchangés, le warping ne casse pas la
+morphologie garantie ; (d) AVANT/APRÈS mesurés (mêmes seeds) :
+marais 13-16 % de la carte en auréoles → 2-4 % en patches
+(2-23 taches au lieu de bandes), désert 0-1 % → 1-3 % en taches
+intérieures, côtes : archipel 58 → 67 % de tuiles côtières,
+forêts de pangée top 56-72 % en 1-2 masses → 19-45 % en
+9-24 taches ; (e) ressources quantile défauts 30 ‰ : 9/9 vues
+sur 16 cartes cumulées (Geyser 5). `node --check` OK sur le
+script extrait.
+
+**Commits** (1 sur `v4` depuis d9329b4) :
+- `c0629c9` feat(wargame) : labo — domain warping des types de
+  cartes, humidité additive, presets moins aqueux ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : dans le labo, chaque type de carte
+garantit sa morphologie (un continent, deux continents, un
+archipel…) mais avec des contours découpés et des biomes en
+mosaïque — plus de cercles parfaits, plus d'auréole de marais ni
+d'anneau de désert ; les types océaniques (Grandes îles,
+Archipel, Fragmenté) passent à 45-50 % d'eau. Le rendu change
+aussi en « Personnalisé » (moteur d'humidité partagé) : c'est
+assumé, le labo est le banc d'essai — si le nouveau mix plaît,
+il sera proposé à l'arbitrage pour l'officiel. Cache-buster
+iframe ?v=3. Ctrl+F5 requis.
