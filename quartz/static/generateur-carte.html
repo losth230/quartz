@@ -287,8 +287,33 @@
   }
   #theme-toggle:hover { transform: scale(1.08); }
   #theme-toggle:active { transform: scale(0.95); }
+
+  /* Lien vers la version labo : pilule au-dessus du bouton thème */
+  #labo-link {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 54px);
+    right: 10px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 18px;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--accent);
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex; align-items: center; gap: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    z-index: 10;
+  }
+  #labo-link:hover { transform: scale(1.05); }
+  #labo-link:active { transform: scale(0.95); }
 </style>
 <canvas id="map"></canvas>
+
+<!-- Ouvre la copie d'expérimentation dans un nouvel onglet (génération remaniée en test, la version officielle reste la référence) -->
+<a id="labo-link" href="generateur-carte-labo.html?v=1" target="_blank" rel="noopener" title="Version d'expérimentation : tests de génération (ressources, tuiles) sans toucher à l'officiel.">🧪 Labo</a>
 
 <div id="info" class="panel"></div>
 
