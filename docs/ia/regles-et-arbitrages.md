@@ -2696,3 +2696,47 @@ accouche sans re-concevoir (double vérification de la règle).
 entrées sur les 4 tours simulés (grossesses en chaîne évitées),
 commandants J1 4 → 6 (dynamique décalée) — les tables de règles
 sont inchangées.
+
+## Multiplicateur de Nourriture des cités libres retiré (retour Thibaut 2026-11-13)
+
+**Demande** : « tu peux retirer le multiplicateur de nourriture pour
+les cités libres ».
+
+**Avant** : règle propre aux cités libres (revue 2026-10-16, ×2
+avant) — les Chasseurs d'une cité libre produisaient 1,1 × la
+Nourriture de leur fiche métier (constante
+`MULT_NOURR_CHASSEUR_CITE`, engine/citesLibres.ts). Cette
+production brute alimentait les taxes versées au suzerain (étape
+3decies : production nette plafonnée aux parties positives).
+
+**Décision** :
+- La constante `MULT_NOURR_CHASSEUR_CITE` est SUPPRIMÉE : les
+  Chasseurs d'une cité libre produisent la valeur de BASE du
+  référentiel, exactement comme les Chasseurs d'une ville de
+  joueur. Aucune autre ressource ni métier n'était concerné (le
+  multiplicateur ne s'appliquait qu'à la ressource « Nourriture »
+  des Chasseurs).
+- Aucun champ d'état, aucune migration : les taxes des cités sous
+  suzeraineté sont recalculées au tour suivant avec la nouvelle
+  règle (le transfert est dérivé de la production à chaque fin de
+  tour, jamais persistant).
+- Écosystème nettoyé de toute mention : journaux moteur (log des
+  taxes, récap ressources, message de création des cités au setup),
+  description de l'étape 3decies, vues (carte de règle, carte de
+  cité, carte vassalité), tests réalignés sur la valeur de base.
+
+**Effet pour l'arbitre** : une cité libre sous suzeraineté verse
+environ 9 % de Nourriture en moins à son suzerain (part Chasseurs
+de sa production) ; les autres ressources sont inchangées. La
+consommation de la cité (par habitant vivant) est inchangée — une
+cité de 50 Chasseurs reste largement excédentaire.
+
+**Verrous** : taxes.test.ts réaligné — le test « Fermier de cité ne
+produit qu'en été » attend désormais 15 + 2 = 17 Nourriture en été
+(au lieu de 18,7) et 2 en hiver (au lieu de 2,2) ; le test des
+niveaux de taxes (Faible/Forte par ressource) reste exact (les
+facteurs s'appliquent après la production brute, inchangé par la
+suppression). **352/352 tests natifs**, tsc = baseline stub
+@supabase seule. Diag BYTE-IDENTIQUE (le scénario diag n'exerce
+AUCUNE cité libre sous suzeraineté : zéro ligne « Cités libres »
+dans le log — identité légitime).
