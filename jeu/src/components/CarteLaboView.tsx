@@ -28,7 +28,7 @@ export function CarteLaboView() {
         avant promotion éventuelle dans la version de référence.
       </p>
       <iframe
-        src="../static/generateur-carte-labo.html?v=2"
+        src="../static/generateur-carte-labo.html?v=3"
         title="Générateur de carte — version labo"
         style={{ width: '100%', height: 'calc(100vh - 220px)', minHeight: 520, border: '1px solid var(--border)', borderRadius: 8 }}
         allowFullScreen
