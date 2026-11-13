@@ -6073,3 +6073,81 @@ la hauteur absolue de la mer indépendamment du pourcentage
 +0,10 fait transgresser la mer dans les golfes et baies, 0 =
 comportement d'origine. Cache-buster iframe ?v=9. Ctrl+F5
 requis.
+
+## Labo générateur : case « 🎲 Variété », tirage de texture calé sur la graine (retour Thibaut 2026-11-13, base bd1aa9b5)
+
+Retour Thibaut : « j'ai l'impression que toutes les cartes se
+ressemblent, comment ça se fait ? » puis « oui, je veux bien un
+bouton générer qui tire un seed et tout ce que tu as dit en
+gardant le type sélectionné ».
+
+**Diagnostic** (mesuré sur 12 seeds, params grimoire fixes, N=12) :
+trois verrous expliquent la ressemblance — (1) les QUANTILES
+verrouillent la composition : 55 % de terre exactement sur les
+12 seeds, Forêt 51 ± 2 %, Plaine 32 ± 3 %, Montagne 8 ± 2 % ;
+(2) le bruit a un SPECTRE FIXE (cont 0,05, détail 0,18, 4
+octaves, compacité 0,65) : mêmes tailles de masses, même
+granularité de côtes, une seule masse dominante en moyenne
+94 % de la terre (jamais moins de 70 %) ; (3) le CLIMAT est un
+gabarit fixe (pôles ns, seuils temp/humidité constants) : mêmes
+bandes climatiques au même endroit. Le seed ne change que
+l'arrangement, jamais la recette.
+
+**Ce qui a été fait** :
+
+- **Case « 🎲 Variété »** (section rapide, sous « Montagnes »,
+  au-dessus de « ⟳ Générer »). Cochée, chaque clic sur
+  « Générer » tire en plus de la graine les curseurs de TEXTURE
+  (écriture directe dans les sliders AVANT la lecture des
+  params : carte, libellés et UI restent cohérents, tout reste
+  ajustable à la main ; rejouer une carte = graine + curseurs
+  affichés). Décochée : comportement d'origine exact ;
+- **Tirage `drawVariety(seed)`** (partie pure, PRNG DÉDIÉ dérivé
+  du hash de la graine, patron des autres étapes : même seed =
+  même tirage = même carte). CADRAN de morphologie u ∈ [0,1]
+  (0 = morcelé, 1 = continent unique) + JITTER indépendant :
+  compacité 10 + 85·u ; côtes 30 − 22·u ± 6 ; taille des masses
+  13 − 11·u ± 3 ; réduction des bords 0..30 ; pôles ns/ew/center.
+  Le cadran existe parce que les curseurs ne cassent la masse
+  dominante que CORRÉLÉS — mesuré : à 55 % de terre on est
+  AU-DESSUS du seuil de percolation du réseau hexagonal, une
+  masse dominante est quasi inévitable sans masque de forme ;
+- **PAS TIRÉS** : le type de carte (le sélecteur garde sa valeur,
+  son masque s'applique par-dessus le tirage, aucun event
+  déclenché), le bruit, la mer, les montagnes, l'élévation de la
+  mer et les caps. `generateMap` INCHANGÉ ;
+- Cache-buster iframe ?v=9 → ?v=10 (CarteLaboView).
+
+**Validation** (harnais maison reconstruit, 51 ok / 0 échec) :
+
+- (a2) moteur byte pour byte ≡ 138b0d8 : custom + les 8 types,
+  3 seeds (`grimoire`/`chasse-et-peche`/`labo-42`), N=12 —
+  biomes, ressources, rivières, seuils mer/montagne identiques,
+  27/27 ;
+- (v1) drawVariety : déterminisme (2 tirages identiques),
+  1 000 tirages dans les bornes (cont 2-15, scale 5-30,
+  compact 10-95, edge 0-30), pôles ns/ew/center équirépartis
+  (330/309/361), couverture des bornes atteinte ;
+- (v2) end-to-end 12 seeds : déterminisme seed → carte,
+  contraste réel (cartes à 1 masse ET cartes à 9 masses) ;
+  stats 60 seeds contre témoin params fixes : σ du nombre de
+  masses 1,8 → 3,3, part de cartes ≥ 7 masses 18 % → 37 %,
+  part de continents uniques (≤ 2 masses) 17 % → 23 %, part
+  sans masse écrasante (< 75 %) 3 % → 7 % ; type « grandes
+  îles » conservé + tirage sans crash (masque par-dessus).
+
+**Commits** (2 sur `v4` depuis bd1aa9b5) :
+
+- `7d057b3` feat(wargame) : labo — case « 🎲 Variété », tirage
+  de texture calé sur la graine (+ cache-buster ?v=10) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : avec la case cochée, deux clics sur
+« Générer » ne donnent plus la même silhouette — tantôt un
+continent unique aux côtes lisses, tantôt 9 masses éparpillées
+aux côtes déchirées, pôles nord/sud, est/ouest ou central selon
+le tirage. À 55 % de terre, la physique (percolation) garde le
+plus souvent une masse dominante : les types de carte (Archipel,
+Grandes îles…) restent le levier des silhouettes extrêmes, la
+case varie la texture et l'orientation. Cache-buster iframe
+?v=10. Ctrl+F5 requis.
