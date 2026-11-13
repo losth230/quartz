@@ -359,7 +359,7 @@
         <option value="custom" selected>Personnalisé</option>
       </select>
     </div>
-    <div class="field" title="Rajoute de la terre dans la bande où les joueurs peuvent apparaître : STRICTEMENT entre « Marge centre » et « Marge bord » (section Joueurs — exactement les mêmes bornes que le placement, coupure franche : RIEN ne change en dehors de la bande, ni plus au centre que la marge centre, ni plus au bord que la marge bord ; à « Marge centre » 0, la bande couvre toute la carte). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie, peu profond d'abord : 25 % = un quart, 100 % = tout l'océan de la bande. S'applique à TOUS les types de carte, « Personnalisé » compris.">
+    <div class="field" title="Rajoute de la terre dans la bande où les joueurs peuvent apparaître : STRICTEMENT entre « Marge centre » et « Marge bord » (section Joueurs — exactement les mêmes bornes que le placement, coupure franche : RIEN ne change en dehors de la bande, ni plus au centre que la marge centre, ni plus au bord que la marge bord ; à « Marge centre » 0, la bande couvre toute la carte). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie, peu profond d'abord : 25 % = un quart, 100 % = tout l'océan de la bande. Les nouvelles terres sont classées au relief inversé de la profondeur (fosses → montagnes, baies comblées → climat continental, déserts possibles) et respectent les caps max de chaque biome, sans jamais toucher la carte de base. S'applique à TOUS les types de carte, « Personnalisé » compris.">
       <label>Anneau</label>
       <input type="range" id="ring-intensity" min="0" max="100" value="0" step="5">
       <span class="value" id="ring-intensity-v">0%</span>
@@ -649,8 +649,8 @@
       <div class="sub-body">
         <div class="field">
           <label>Volcans</label>
-          <input type="range" id="evt-volcan" min="0" max="30" value="15">
-          <span class="value" id="evt-volcan-v">15%</span>
+          <input type="range" id="evt-volcan" min="0" max="30" value="20">
+          <span class="value" id="evt-volcan-v">20%</span>
         </div>
       </div>
     </div>
@@ -808,7 +808,7 @@ const DEFAULTS = {
   elev:  { cont: 5, scale: 18, compact: 65, oct: 4, pers: 50, edge: 10 },
   humid: { scale: 14, oct: 3, pers: 55, cont: 40 },
   temp:  { lat: 140, noise: 12 },
-  evt:   { volcan: 15, river: 8, riverlen: 3 },
+  evt:   { volcan: 20, river: 8, riverlen: 3 },
   constraints: {
     surroundSame: 5,
     // (Nouveau retour Thibaut 2026-11-13 : caps ACTIFS par défaut — 0 = illimité)
@@ -825,18 +825,19 @@ const DEFAULTS = {
 //  proximité 65 % partout — amas moyens ; SEULES les Ruines échappent à la
 //  règle : densité 60 ‰ = 6,0 % et proximité 0 % → fréquence maximale du
 //  bruit (freq = 0,46) : des ruines ÉPARPILLÉES une par une, jamais en
-//  amas contigus. En mode Bruit, seuil = 1 − densité×8 : 0,68 à 4 % et
-//  0,52 à 6 %, tous deux atteignables.)
+//  amas contigus.)
+// (Retour du soir 2026-11-13 : densité de base 40 → 35 ‰ = 3,5 %. En mode
+//  Bruit, seuil = 1 − densité×8 : 0,72 à 3,5 % (atteignable).)
 const RES_DEFAULTS = {
-  'Bétail':   { density: 40, prox: 65, size: 4 },
-  'Baleines': { density: 40, prox: 65, size: 3 },
-  'Poissons': { density: 40, prox: 65, size: 4 },
-  'Or':       { density: 40, prox: 65, size: 3 },
-  'Fer':      { density: 40, prox: 65, size: 4 },
-  'Charbon':  { density: 40, prox: 65, size: 4 },
+  'Bétail':   { density: 35, prox: 65, size: 4 },
+  'Baleines': { density: 35, prox: 65, size: 3 },
+  'Poissons': { density: 35, prox: 65, size: 4 },
+  'Or':       { density: 35, prox: 65, size: 3 },
+  'Fer':      { density: 35, prox: 65, size: 4 },
+  'Charbon':  { density: 35, prox: 65, size: 4 },
   'Ruines':   { density: 60, prox: 0,  size: 2 },
-  'Geyser':   { density: 40, prox: 65, size: 2 },
-  'Soie':     { density: 40, prox: 65, size: 3 }
+  'Geyser':   { density: 35, prox: 65, size: 2 },
+  'Soie':     { density: 35, prox: 65, size: 3 }
 };
 
 // ============================================================
@@ -1564,24 +1565,24 @@ function generateMap(N, seedStr, params) {
 
   // Biomes "alternatifs" cohérents, par ordre de préférence selon climat.
   // On évite de créer un alt qui violerait l'esprit climatique de la tuile.
-  function alternativeBiome(i, forbidden) {
+  function altCandidates(i) {
     const t = temp[i], h = humid[i], e = elev[i];
-    // Liste d'alternatives candidate selon le climat (ordre = préférence)
-    let candidates;
     if (e > mountainLevel * 0.92) {
       // Presque montagneux : privilégier Forêt/Plaine
-      candidates = ['Plaine', 'Forêt', 'Désert', 'Marais'];
+      return ['Plaine', 'Forêt', 'Désert', 'Marais'];
     } else if (t < 0.30) {
-      candidates = ['Plaine', 'Forêt'];
+      return ['Plaine', 'Forêt'];
     } else if (t > 0.60) {
-      if (h < 0.4) candidates = ['Désert', 'Plaine', 'Forêt'];
-      else         candidates = ['Forêt', 'Plaine', 'Marais'];
+      if (h < 0.4) return ['Désert', 'Plaine', 'Forêt'];
+      else         return ['Forêt', 'Plaine', 'Marais'];
     } else {
-      if (h < 0.35) candidates = ['Plaine', 'Désert', 'Forêt'];
-      else if (h > 0.60) candidates = ['Forêt', 'Marais', 'Plaine'];
-      else candidates = ['Plaine', 'Forêt'];
+      if (h < 0.35) return ['Plaine', 'Désert', 'Forêt'];
+      else if (h > 0.60) return ['Forêt', 'Marais', 'Plaine'];
+      else return ['Plaine', 'Forêt'];
     }
-    for (const c of candidates) {
+  }
+  function alternativeBiome(i, forbidden) {
+    for (const c of altCandidates(i)) {
       if (c !== forbidden) return c;
     }
     return 'Plaine';
@@ -1712,6 +1713,11 @@ function generateMap(N, seedStr, params) {
   // tuiles excédentaires. On choisit les tuiles à convertir par score :
   // celles qui ont le moins de "cohérence climatique" (les plus atypiques)
   // partent en premier, les tuiles centrales du biome restent.
+  // (Retour du soir Thibaut 2026-11-13 : les caps de TOUTES les tuiles
+  //  doivent être préservés — plafonner la mer ne doit PAS faire exploser
+  //  la Plaine. L'excès d'océan devient de la terre CLASSÉE au climat
+  //  (relief inversé de la profondeur), et l'application des caps BOUCLE
+  //  jusqu'à stabilité : un cap ne peut plus en gonfler un autre.)
   const biomeScore = new Float32Array(size);
   for (let i = 0; i < size; i++) {
     const b = biome[i];
@@ -1723,27 +1729,98 @@ function generateMap(N, seedStr, params) {
     else if (b === 'Désert') biomeScore[i] = (1 - humid[i]) + temp[i] * 0.5;
     else biomeScore[i] = 0.5; // Plaine : score neutre
   }
-  // Pour chaque biome avec un cap actif, convertir les tuiles les moins
-  // représentatives jusqu'à respecter le cap.
-  for (const [bname, cap] of Object.entries(CONV.caps)) {
-    if (!cap || cap <= 0) continue;
-    const tilesOfBiome = [];
-    for (let i = 0; i < size; i++) if (biome[i] === bname) tilesOfBiome.push(i);
-    if (tilesOfBiome.length <= cap) continue;
-    // Trier par score croissant : les moins représentatives en premier
-    tilesOfBiome.sort((a, b) => biomeScore[a] - biomeScore[b]);
-    const excess = tilesOfBiome.length - cap;
-    for (let k = 0; k < excess; k++) {
-      const i = tilesOfBiome[k];
-      if (bname === 'Océan') {
-        // Cas particulier : convertir un océan = le remonter en terre
-        biome[i] = 'Plaine';
-      } else if (bname === 'Montagne') {
-        biome[i] = 'Forêt';
-      } else {
-        biome[i] = alternativeBiome(i, bname);
+  // Distance à l'océan recalculée à la demande (le champ de base date
+  // d'avant les conversions) — même BFS normalisé que pour l'humidité.
+  function oceanDistField() {
+    const od = new Float32Array(size);
+    const queue = [];
+    for (let i = 0; i < size; i++) {
+      if (elev[i] < seaLevel) { od[i] = 0; queue.push(i); }
+      else od[i] = -1;
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const t = queue[head++];
+      const d = od[t];
+      for (const n of neighborsOf(t)) if (od[n] === -1) { od[n] = d + 1; queue.push(n); }
+    }
+    let maxD = 1;
+    for (let i = 0; i < size; i++) if (od[i] > maxD) maxD = od[i];
+    for (let i = 0; i < size; i++) od[i] = Math.max(0, od[i]) / maxD;
+    return od;
+  }
+  // Convertit des tuiles océan en terre NATURELLE : la profondeur devient
+  // de l'altitude (hauts-fonds → côtes basses, fosses → sommets), l'humidité
+  // est recalculée avec la distance à l'océan de la carte en cours, puis
+  // le classificateur habituel s'applique — déserts possibles là où le
+  // climat est sec, montagnes sur les fosses. Servi par le cap Océan ET par
+  // la passe anneau (mêmes règles, même naturel). Les ex-océans gardent le
+  // score 0 : si leur nouveau biome est lui aussi plafonné, ce sont elles
+  // qui repartent en premier (jamais les tuiles de la carte de base).
+  function convertOceanToLand(victims) {
+    // 1. Relief : la profondeur devient de l'altitude. D'ABORD l'élévation,
+    //    pour que le champ de distance océan soit calculé sur la carte
+    //    FINALE : une baie comblée devient « continentale » (sèche),
+    //    une tuile qui reste côtière reste humide.
+    for (const i of victims) {
+      const depth = seaLevel - elev[i];
+      elev[i] = Math.min(0.99, seaLevel + (depth / Math.max(1e-9, seaLevel)) * (1 - seaLevel));
+    }
+    // 2. Humidité sur la carte finale (victimes déjà en terre)
+    const od = oceanDistField();
+    for (const i of victims) {
+      const t = tiles[i];
+      const { x, y } = axialToPixel(t.q, t.r);
+      const px = x / HEX, py = y / HEX;
+      let h = nHumid.fbm(px * pH.scale + 100, py * pH.scale + 100, pH.oct, pH.pers, 2.0);
+      h = (h + 1) * 0.5;
+      h = Math.min(1, h + pH.cont * 0.25 * (1 - od[i]));
+      h -= pH.cont * 0.15 * od[i];
+      humid[i] = Math.max(0, Math.min(1, h));
+      biome[i] = classifyBiome(elev[i], temp[i], humid[i], seaLevel, mountainLevel, params.biomeOrder);
+      // Désert isolé (même règle que le lissage de la carte de base)
+      if (biome[i] === 'Désert') {
+        let dn = 0;
+        for (const n of neighborsOf(i)) if (biome[n] === 'Désert') dn++;
+        if (dn === 0) biome[i] = 'Plaine';
       }
     }
+  }
+  // Comptage et réclassement "avec de la place" : la cible doit être sous
+  // son cap, sinon on déborde d'un cap vers un autre (ping-pong).
+  function countBiome(b) { let n = 0; for (let i = 0; i < size; i++) if (biome[i] === b) n++; return n; }
+  function capOf(b) { return (CONV.caps && CONV.caps[b]) | 0; }
+  function reclassWithRoom(i, forbidden) {
+    for (const c of altCandidates(i)) if (c !== forbidden && (capOf(c) <= 0 || countBiome(c) < capOf(c))) { biome[i] = c; return; }
+    for (const c of ['Forêt', 'Plaine', 'Marais', 'Désert']) if (c !== forbidden && (capOf(c) <= 0 || countBiome(c) < capOf(c))) { biome[i] = c; return; }
+    biome[i] = 'Plaine';
+  }
+  // Boucle de stabilité : chaque tour, tout biome plafonné (hors Volcan,
+  // cap appliqué après le tirage) ramène son compte sous son cap. Les
+  // conversions d'un tour peuvent faire déborder un autre biome → le tour
+  // suivant le ramène. 12 tours max (convergence observée : ≤ 3).
+  for (let round = 0; round < 12; round++) {
+    let changed = false;
+    for (const bname of Object.keys(CONV.caps)) {
+      const cap = CONV.caps[bname];
+      if (!cap || cap <= 0 || bname === 'Volcan') continue;
+      const n = countBiome(bname);
+      if (n <= cap) continue;
+      const tilesOfBiome = [];
+      for (let i = 0; i < size; i++) if (biome[i] === bname) tilesOfBiome.push(i);
+      // Trier par score croissant (ex-océans à 0 en premier), index en
+      // départage : déterministe.
+      tilesOfBiome.sort((a, b) => biomeScore[a] - biomeScore[b] || a - b);
+      const victims = tilesOfBiome.slice(0, n - cap);
+      if (bname === 'Océan') {
+        // Terre classée au climat — PLUS de Plaine aveugle
+        convertOceanToLand(victims);
+      } else {
+        for (const i of victims) reclassWithRoom(i, bname);
+      }
+      changed = true;
+    }
+    if (!changed) break;
   }
 
   // Volcans
@@ -2133,50 +2210,43 @@ function generateMap(N, seedStr, params) {
     const newLand = [];
     for (let k = 0; k < budget && k < oceanIdx.length; k++) {
       const i = oceanIdx[k];
-      elev[i] = seaLevel + 0.01; // côte basse : jamais montagne
       resource[i] = null; // les ressources océaniques (pêche…) disparaissent
       newLand.push(i);
     }
-    // 3. Classification des nouvelles terres après coup : BFS océan sur la
-    // carte FINALE (les nouvelles terres sont des obstacles → continentalité
-    // réaliste : une baie comblée devient « continentale »), puis la même
-    // formule d'humidité et le même classificateur que la carte de base.
+    // 3. Conversion avec le MÊME moteur que le cap Océan (retour du soir
+    //    2026-11-13 : « il n'y a jamais de désert ou de montagne, pourquoi
+    //    ? ») : la profondeur est inversée en altitude — hauts-fonds →
+    //    côtes basses, fosses → sommets — et l'humidité est recalculée
+    //    sur la carte FINALE : une baie comblée devient continentale
+    //    donc sèche (déserts possibles), les grandes fosses passent le
+    //    seuil montagne (montagnes possibles). Plus d'élévation plate
+    //    épinglée sous le seuil de montagne.
     if (newLand.length > 0) {
-      const odF = new Float32Array(size);
-      {
-        const queue = [];
-        for (let i = 0; i < size; i++) {
-          if (elev[i] < seaLevel) { odF[i] = 0; queue.push(i); }
-          else odF[i] = -1;
-        }
-        let head = 0;
-        while (head < queue.length) {
-          const t = queue[head++];
-          const dt = odF[t];
-          for (const n of neighborsOf(t)) {
-            if (odF[n] === -1) { odF[n] = dt + 1; queue.push(n); }
+      convertOceanToLand(newLand);
+      // 4. Caps respectés dans l'anneau AUSSI (retour du soir 2026-11-13 :
+      //    « les caps de toutes les tuiles doivent être préservés, idem
+      //    lors des anneaux ») : si les terres ajoutées font déborder un
+      //    cap, on ne reclasse que des tuiles AJOUTÉES — la carte de base
+      //    ne bouge jamais. Elle respecte déjà les caps (boucle de
+      //    stabilité du cap par biome), donc tout débordement vient de
+      //    l'anneau.
+      for (let round = 0; round < 12; round++) {
+        let changed = false;
+        for (const bname of ['Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne']) {
+          const cap = capOf(bname);
+          if (cap <= 0) continue;
+          let excess = countBiome(bname) - cap;
+          if (excess <= 0) continue;
+          for (const i of newLand) {
+            if (excess <= 0) break;
+            if (biome[i] === bname) {
+              reclassWithRoom(i, bname);
+              excess--;
+              changed = true;
+            }
           }
         }
-        let maxD = 1;
-        for (let i = 0; i < size; i++) if (odF[i] > maxD) maxD = odF[i];
-        for (let i = 0; i < size; i++) odF[i] = Math.max(0, odF[i]) / maxD;
-      }
-      for (const i of newLand) {
-        const t = tiles[i];
-        const { x, y } = axialToPixel(t.q, t.r);
-        const px = x / HEX, py = y / HEX;
-        let h = nHumid.fbm(px * pH.scale + 100, py * pH.scale + 100, pH.oct, pH.pers, 2.0);
-        h = (h + 1) * 0.5;
-        h = Math.min(1, h + pH.cont * 0.25 * (1 - odF[i]));
-        h -= pH.cont * 0.15 * odF[i];
-        humid[i] = Math.max(0, Math.min(1, h));
-        biome[i] = classifyBiome(elev[i], temp[i], humid[i], seaLevel, mountainLevel, params.biomeOrder);
-        // Désert isolé (même règle que le lissage, appliquée localement)
-        if (biome[i] === 'Désert') {
-          let desertNs = 0;
-          for (const n of neighborsOf(i)) if (biome[n] === 'Désert') desertNs++;
-          if (desertNs === 0) biome[i] = 'Plaine';
-        }
+        if (!changed) break;
       }
     }
   }
