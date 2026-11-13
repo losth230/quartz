@@ -5582,3 +5582,82 @@ aussi en « Personnalisé » (moteur d'humidité partagé) : c'est
 assumé, le labo est le banc d'essai — si le nouveau mix plaît,
 il sera proposé à l'arbitrage pour l'officiel. Cache-buster
 iframe ?v=3. Ctrl+F5 requis.
+## Labo générateur : bruit Simplex par défaut, curseurs libres et paramètre « Intensité d'anneau » (retour Thibaut 2026-11-13, base 006d400)
+
+Retour Thibaut (3 demandes) : « par défaut, j'aimerais que le
+modèle utilise le bruit de simplex. De plus, j'aimerais qu'une
+fois le type de carte sélectionné et la carte générée, elle
+soit modifiable via les curseurs. De plus, j'aimerais un nouveau
+paramètre d'intensité d'anneau. […] un paramètre qui ajoute de
+la masse de terre sur le pourtour sur lequel peuvent apparaitre
+les joueurs, qui est donc définit par marge bord et marge
+centre ».
+
+**Ce qui a été fait** (uniquement la copie labo
+`quartz/static/generateur-carte-labo.html` ; l'officiel INTACT ;
+`jeu/src/components/CarteLaboView.tsx` pour le cache-buster ?v=4) :
+
+- **Simplex par défaut** : `<option value="simplex" selected>`
+  dans le sélecteur BRUIT, tooltip mis à jour ;
+- **Curseurs sans perdre le type** : suppression du bloc
+  `GEO_PARAM_IDS`/`markCustomOnUserEdit` — toucher un slider ne
+  bascule plus le sélecteur vers « Personnalisé ». Le mapType
+  reste ce que le sélecteur affiche : le masque de forme est
+  réappliqué par-dessus les curseurs à chaque régénération ;
+- **Paramètre « Intensité d'anneau »** : slider `#ring-intensity`
+  0-100 % (pas 5, défaut 0) dans ⚙ GÉNÉRATION, câblé dans
+  `PARAM_SPECS` (régénération automatique). Dans `generateMap` :
+  `ringAmp = ring × 0.70`, bande calculée avec les MÊMES bornes
+  que `placePlayers` (`dcRingIn = playerCenter/N`,
+  `dcRingOut = 1 − playerEdge/N`), biais en PLATEAU (smoothstep
+  de montée `RING_W = 0.12`, atténuation `1 − 0.65·t` au-delà de
+  `dcRingOut`) appliqué via `dcW` — la coordonnée perturbée par
+  le domain warping → anneau irrégulier, pas un cercle parfait.
+  `bindPlayerSlider('player-edge'/'player-center')` : si
+  ring > 0, changer une marge joueur régénère la carte au lieu
+  de replacer les joueurs ;
+- **Calibrage du passage au Simplex** : le fbm simplex (±0.7-0.9,
+  plus vif que le perlin ±0.5-0.7) reprenait le dessus sur les
+  masques (islands labo-42 : 95 % de la terre en 1 composante =
+  anneau soudé). Fixes : (1) squeeze dans la boucle d'élévation
+  `e = 0.5 + (e−0.5) × 0.42` quand un masque OU l'anneau est
+  actif — la variance du bruit est comprimée pour que le masque
+  domine (le seuil de mer étant un quantile, seule la géométrie
+  relative des élévations compte) ; (2) masques islands-large et
+  archipel renforcés (creux −0.42, entailles cos 4θ à −0.18,
+  terme supplémentaire sur islands) ; (3) presets verrouillés à
+  l'eau : islands-large et archipelago 45 → 50 %, fragmented
+  50 → 55 % + e-scale 26 → 30, e-compact 15 → 10.
+
+**Validation** : harnais maison (`harnais-labo-types.cjs`,
+défauts UI = simplex, ring 0) : (a) custom ≡ sans champ mapType,
+octet par octet, ring absent ≡ ring 0 ; (a2) moteur inchangé :
+custom perlin ring 0 ≡ version distante précédente, octet par
+octet × 3 seeds ; (b) déterminisme 2 appels identiques × 3 seeds
++ anneau 60 % ; (c) morphologie par type (flood fill, 3 seeds,
+presets comme l'UI) : continent masse unique 98-100 %,
+continents 2 masses 45-51 %, islands-large 3 îles 32-34 %,
+archipel 17-20 composantes principale 27-45 %, fragmented 21-28
+composantes, inland-sea centre creusé, lakes masse 84-98 % ;
+(f) anneau : bande pourtour +11 à +17 points de terre
+(48→65 %, 52→63 %), 6/6 joueurs placés avec anneau 100 % sans
+warning sur les 2 seeds testés, anneau actif aussi en
+Personnalisé (62→82 %, 59→79 % en bande) ; (e) ressources
+quantile défauts 30 ‰ : 9/9 vues sur 16 cartes cumulées.
+`node --check` OK sur le script extrait.
+
+**Commits** (1 sur `v4` depuis 006d400) :
+- `3ad9c18` feat(wargame) : labo — bruit Simplex par défaut,
+  curseurs sans perdre le type, paramètre intensité d'anneau ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : dans le labo, le Simplex donne des
+reliefs plus nervurés que le Perlin ; on garde le type de carte
+affiché tout en retouchant les curseurs (le masque se
+réapplique à chaque régénération) ; l'« Intensité d'anneau »
+épaissit les terres du pourtour jouable — utile pour garantir
+des départs côliers — avec des marges « bord » et « centre »
+qui pilotent la largeur de la bande, un anneau irrégulier grâce
+au domain warping, et zéro effet à 0 %. « Personnalisé » reste
+strictement sans masque, squeeze ni anneau. Cache-buster
+iframe ?v=4. Ctrl+F5 requis.
