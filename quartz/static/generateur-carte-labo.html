@@ -359,7 +359,7 @@
         <option value="custom" selected>Personnalisé</option>
       </select>
     </div>
-    <div class="field" title="Ajoute de la masse de terre sur le POURTOUR de la carte, dans la bande où les joueurs peuvent apparaître (entre « Marge centre » et « Marge bord », section Joueurs — mêmes bornes que le placement). 0 % = désactivé ; 100 % = pourtour massivement terrestre. La bande suit le domain warping : un anneau irrégulier, pas un cercle parfait. S'applique à TOUS les types de carte, « Personnalisé » compris.">
+    <div class="field" title="Rajoute de la terre sur le POURTOUR de la carte, dans la bande où les joueurs peuvent apparaître (entre « Marge centre » et « Marge bord », section Joueurs — mêmes bornes que le placement). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie : 25 % = un quart, 100 % = toute la bande jouable. La bande suit le domain warping : un anneau irrégulier, pas un cercle parfait. S'applique à TOUS les types de carte, « Personnalisé » compris.">
       <label>Anneau</label>
       <input type="range" id="ring-intensity" min="0" max="100" value="0" step="5">
       <span class="value" id="ring-intensity-v">0%</span>
@@ -415,9 +415,9 @@
     </div>
     <div class="field">
       <label>Bruit</label>
-      <select id="noise-type" title="Bruit de base de la génération. Simplex (nouveau défaut, retour Thibaut 2026-11-13) : variations plus vives que Perlin. Les versions « v2 » ajoutent une redistribution des valeurs (continents plus contrastés, côtes plus découpées) ; « Mixte » = Perlin v2 pour les masses, Simplex v2 pour le détail.">
-        <option value="perlin">Perlin</option>
-        <option value="simplex" selected>Simplex</option>
+      <select id="noise-type" title="Bruit de base de la génération. Perlin (défaut, retour Thibaut 2026-11-13) : reliefs lisses et classiques ; Simplex : variations plus vives. Les versions « v2 » ajoutent une redistribution des valeurs (continents plus contrastés, côtes plus découpées) ; « Mixte » = Perlin v2 pour les masses, Simplex v2 pour le détail.">
+        <option value="perlin" selected>Perlin</option>
+        <option value="simplex">Simplex</option>
         <option value="perlin2">Perlin v2</option>
         <option value="simplex2">Simplex v2</option>
         <option value="mixed">Mixte</option>
@@ -736,12 +736,12 @@ const MAP_PRESETS = {
   // Quelques grandes îles bien distinctes
   // (compact abaissé : le canal « continent » basse fréquence reliait les îles
   //  en une seule masse ; le masque de forme angulaire fait le reste)
-  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50 après
-  //  passage au Simplex : le seuil de mer verrouille la morphologie — à 45 %,
-  //  les bosses du bruit soudent les 3 îles en un anneau continu sur
-  //  certains seeds ; à 50 % d'eau, 3 îles équilibrées mesuré sur 7 seeds)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50
+  //  essayé avec le Simplex par défaut puis REVENU à 45 : le Perlin est de
+  //  retour par défaut (2e retour Thibaut 2026-11-13) — valeurs d'origine
+  //  validées au harnais)
   'islands-large': {
-    sealevel: 50,
+    sealevel: 45,
     'e-cont':    8,
     'e-scale':   18,
     'e-compact': 35,
@@ -752,11 +752,12 @@ const MAP_PRESETS = {
   // (compact 35→18 et scale 22→24 : le canal basse fréquence produisait UNE
   //  masse dominante de 85-95 % de la terre ; edge 15→25 : les bords
   //  océaniques détachent les îles côtières)
-  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50 après
-  //  passage au Simplex : les arcs d'îles soudent sur certains seeds à 45 %,
-  //  50 % d'eau les détache — mesuré 7 seeds : principale ≤ 45 %)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50
+  //  essayé avec le Simplex par défaut puis REVENU à 45 avec le Perlin de
+  //  retour par défaut, 2e retour Thibaut 2026-11-13 — valeurs d'origine
+  //  validées au harnais)
   'archipelago': {
-    sealevel: 50,
+    sealevel: 45,
     'e-cont':    11,
     'e-scale':   24,
     'e-compact': 18,
@@ -764,15 +765,15 @@ const MAP_PRESETS = {
     'e-pers':    60
   },
   // Miettes de terre éparpillées dans un océan
-  // (sealevel 60 → 50, retour Thibaut 2026-11-13 ; 50 → 55 + scale 26 → 30,
-  //  compact 15 → 10 après passage au Simplex : le détail plus fin et le canal
-  //  « continent » réduit font de vraies miettes — sans quoi les amas collent
-  //  en un bloc dominant sur certains seeds)
+  // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : sealevel
+  //  50 → 60, scale 26 → 38, compact 15 → 8 — accompagnent les entailles
+  //  traversantes cos 6θ du masque ; 15-19 composantes jouables, masse
+  //  principale ≤ 40 % sur 8/8 seeds au harnais)
   'fragmented': {
-    sealevel: 55,
+    sealevel: 60,
     'e-cont':    13,
-    'e-scale':   30,
-    'e-compact': 10,
+    'e-scale':   38,
+    'e-compact': 8,
     'e-edge':    35,
     'e-pers':    65
   },
@@ -1276,17 +1277,13 @@ function generateMap(N, seedStr, params) {
     // Pattern angulaire à 3 lobes (cos 3θ) × distance + creux central :
     // trois grandes îles en anneau autour d'une mer centrale (même garantie
     // topologique que « continents » — le disque central relie sinon tout).
-    // LABO (retour Thibaut, bruit Simplex par défaut) : entailles cos 4θ
-    // additionnelles, comme l'archipel — avec le Simplex plus vif que le
-    // Perlin, les bosses du bruit comblent les creux inter-lobes et
-    // soudent les trois îles en UN anneau continu (mesuré : 95 % de la
-    // terre en une composante sur labo-42). Les entailles coupent l'anneau.
+    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : lobes
+    //  0.36 → 0.48 et creux −0.30 → −0.38 — 3 îles équilibrées à 28-36 %
+    //  de la terre sur 8/8 seeds au harnais, aucune île dominante.)
     const phase = (randShape() * Math.PI * 2) / 3;
-    const phase4 = randShape() * Math.PI / 2;
     shapeBias = (dc, th) =>
       0.48 * Math.cos(3 * (th - phase)) * dc
-      - 0.42 * Math.pow(1 - dc, 2)
-      - 0.10 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
+      - 0.38 * Math.pow(1 - dc, 2);
   } else if (mapType === 'archipelago') {
     // Creux central modéré + 4 entailles angulaires traversantes : sans le
     // creux, le détail forme au centre UNE masse géante ; creux trop fort,
@@ -1294,14 +1291,25 @@ function generateMap(N, seedStr, params) {
     // le creux disperse les terres vers l'anneau, les entailles (cos 4θ,
     // plus fortes à l'extérieur) découpent cet anneau en arcs d'îles.
     // Le domain warping (ci-dessus) casse ensuite la régularité des arcs.
-    // (entailles renforcées −0.12 → −0.18 : avec le Simplex par défaut, les
-    //  bosses du bruit soudaient les arcs en une masse unique)
+    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : creux
+    //  −0.30 → −0.38, entailles −0.12 → −0.16 — 10-20 composantes, masse
+    //  principale ≤ 48 % sur 8/8 seeds au harnais.)
     const phase4 = randShape() * Math.PI / 2;
     shapeBias = (dc, th) =>
-      -0.42 * Math.pow(1 - dc, 2)
-      - 0.18 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
+      -0.38 * Math.pow(1 - dc, 2)
+      - 0.16 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'fragmented') {
-    shapeBias = (dc) => -0.13 * Math.pow(1 - dc, 2);
+    // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
+    // tirée par le PRNG dédié) : le seul creux laissait une masse unique à
+    // 94-97 % de la terre (le Perlin détail percole) ; les entailles
+    // traversantes coupent la pâte en vraies miettes équilibrées.
+    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : 15-19
+    //  composantes jouables, masse principale ≤ 40 % sur 8/8 seeds au
+    //  harnais ; preset sealevel 60 / scale 38 / compact 8 assorti.)
+    const phase6 = randShape() * Math.PI / 3;
+    shapeBias = (dc, th) =>
+      -0.10 * Math.pow(1 - dc, 2)
+      - 0.34 * Math.cos(6 * (th - phase6)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'inland-sea') {
     // Excavation centrale profonde et large : le quantile de mer suit le
     // creux → la mer se concentre au centre, l'anneau reste terrestre
@@ -1311,18 +1319,24 @@ function generateMap(N, seedStr, params) {
     shapeBias = (dc) => 0.04 * (1 - dc);
   }
 
-  // LABO (retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — ajoute de la masse
-  // de terre sur le pourtour de la carte, dans la bande où les joueurs peuvent
+  // LABO (retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — rajoute de la
+  // terre sur le pourtour de la carte, dans la bande où les joueurs peuvent
   // apparaître. Mêmes bornes que placePlayers : rayon hex de playerCenter
-  // (marge centre) à N - playerEdge (marge bord). Le biais suit le domain
-  // warping (dcW) → anneau irrégulier, pas un cercle parfait. 0 par défaut.
-  const ringAmp = (params.ring || 0) * 0.70;
+  // (marge centre) à N - playerEdge (marge bord). IMPORTANT (2e retour
+  // Thibaut 2026-11-13) : le biais est appliqué en TOUT DERNIER post-traitement
+  // (voir la passe finale avant le return) — il ne participe NI au quantile
+  // NI au squeeze : la carte de base est exactement celle d'un anneau à 0, et
+  // seules des cases océan de la bande deviennent terre. L'intensité est la
+  // FRACTION de l'océan de la bande convertie (25 % = un quart, 100 % = toute
+  // la bande jouable). 0 par défaut.
+  const ringFrac = Math.max(0, Math.min(1, params.ring || 0));
   const dcRingIn  = Math.max(0, Math.min(1, ((params.playerCenter | 0) || 0) / N));
   const dcRingOut = Math.max(0, Math.min(1, 1 - ((params.playerEdge | 0) || 0) / N));
 
   const elev = new Float32Array(size);
   const humid = new Float32Array(size);
   const temp = new Float32Array(size);
+  const dcwBuf = new Float32Array(size); // dist. au centre warpée, pour l'anneau
 
   for (let i = 0; i < size; i++) {
     const t = tiles[i];
@@ -1359,35 +1373,30 @@ function generateMap(N, seedStr, params) {
     const wTh = nWarp.fbm(px * WARP_FREQ + 31.4, py * WARP_FREQ + 96.1, 3, 0.5, 2.0);
     const dcW = Math.max(0, Math.min(1, dist + WARP_AMP_DC * wDc));
     const thW = Math.atan2(py, px) + WARP_AMP_TH * wTh;
-    if (shapeBias || ringAmp > 0) {
-      // Le masque de forme (type de carte, OU anneau actif) doit DOMINER le
-      // bruit : on comprime d'abord la variance du bruit autour de sa médiane
-      // (le seuil de mer étant un QUANTILE, la translation par 0.5 ne change
-      // rien — seule la variance relative bruit/masque compte). Sans cela,
-      // les bosses du Simplex (plus vif que le Perlin : fbm ±0.7-0.9) percent
-      // les creux des masques et soudent les îles en masses géantes (mesuré :
-      // 95 % en une composante), et volent au quantile la terre de l'anneau.
-      // Avec une variance ×0.42, le masque garde la main quel que soit le
-      // bruit, et le bruit fournit la texture.
-      e = 0.5 + (e - 0.5) * 0.42;
-      if (shapeBias) e += shapeBias(dcW, thW);
-    }
-    // LABO : intensité d'anneau — biais de terre en PLATEAU sur toute la bande
-    // jouable [marge centre, marge bord] (calculée ci-dessus) : montée douce
-    // depuis l'intérieur, atténué au-delà de la marge bord (bord extrême non
-    // jouable) pour que la bande garde la terre attirée par le quantile.
-    if (ringAmp > 0) {
-      const RING_W = 0.12;
-      let up = (dcW - (dcRingIn - RING_W)) / RING_W;
-      up = Math.max(0, Math.min(1, up));
-      up = up * up * (3 - 2 * up);
-      let down = (dcW - dcRingOut) / RING_W;
-      down = Math.max(0, Math.min(1, down));
-      down = 1 - 0.65 * down;
-      e += ringAmp * up * down;
+    if (shapeBias) {
+      // Le masque de forme (type de carte) doit DOMINER le bruit : on comprime
+      // la variance du bruit autour de sa médiane (le seuil de mer étant un
+      // QUANTILE, la translation par 0.5 ne change rien — seule la variance
+      // relative bruit/masque compte). Le facteur dépend du BRUIT choisi :
+      //  - Simplex (fbm ±0.7-0.9, plus vif que le Perlin) : ×0.42 — sans cela,
+      //    les bosses percent les creux des masques et soudent les îles en
+      //    masses géantes (mesuré : 95 % de la terre en une composante) ;
+      //  - Mixte (détail Simplex) : ×0.55 ;
+      //  - Perlin (±0.5-0.7) : ×1, aucun squeeze — le Perlin a une variance
+      //    naturellement compatible des masques (calibrage historique validé
+      //    au harnais, 2e retour Thibaut 2026-11-13 : un squeeze uniforme
+      //    ×0.42 figeait les formes du masque et soudait les lobes/îles).
+      // NB : l'anneau N'active PAS ce squeeze — il ne doit rien changer à la
+      // carte de base, seulement rajouter des cases (passe finale).
+      const sq = (noiseMode === 'simplex' || noiseMode === 'simplex2') ? 0.42
+               : (noiseMode === 'mixed') ? 0.55
+               : 1;
+      if (sq < 1) e = 0.5 + (e - 0.5) * sq;
+      e += shapeBias(dcW, thW);
     }
 
     elev[i] = Math.max(0, Math.min(1, e));
+    dcwBuf[i] = dcW; // dist. au centre warpée — servira à la passe anneau
     // (humidité et température calculées après le niveau de la mer)
 
     // --- Température : latitude + bruit + altitude
@@ -2057,6 +2066,100 @@ function generateMap(N, seedStr, params) {
     // C. Poser la ressource sur les tuiles acceptées
     for (let i = 0; i < size; i++) {
       if (accepted[i]) resource[i] = resName;
+    }
+  }
+
+  // ============================================================
+  // LABO (2e retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — passe
+  // TOUT À LA FIN, sur la carte déjà complète. La carte de base (côtes,
+  // biomes, montagnes, rivières, ressources) est EXACTEMENT celle d'une
+  // génération avec anneau à 0 : l'anneau ne fait qu'AJOUTER des cases
+  // océan → terre dans la bande jouable, et classe ces nouvelles terres
+  // après coup. Intensité = FRACTION de l'océan de la bande convertie
+  // (25 % = un quart, 100 % = toute la bande jouable). Bande = mêmes bornes
+  // que placePlayers, coordonnée warpée (dcW) → anneau irrégulier.
+  // ============================================================
+  if (ringFrac > 0) {
+    const RING_W = 0.12;
+    // 1. Poids de bande (plateau warpé) de chaque tuile océanique
+    const oceanIdx = [];
+    const wArr = new Float64Array(size);
+    let totalW = 0;
+    for (let i = 0; i < size; i++) {
+      if (elev[i] >= seaLevel) continue;
+      const dcW = dcwBuf[i];
+      // PLATEAU : montée douce depuis l'intérieur de la bande, atténué
+      // au-delà de la marge bord (bord extrême non jouable)
+      let up = (dcW - (dcRingIn - RING_W)) / RING_W;
+      up = Math.max(0, Math.min(1, up));
+      up = up * up * (3 - 2 * up);
+      let down = (dcW - dcRingOut) / RING_W;
+      down = Math.max(0, Math.min(1, down));
+      down = 1 - 0.65 * down;
+      const w = up * down;
+      if (w <= 0) continue;
+      wArr[i] = w;
+      oceanIdx.push(i);
+      totalW += w;
+    }
+    // 2. Budget = intensité × poids total ; ordre = coût croissant
+    // (profondeur sous le seuil / poids de bande) : les hauts-fonds bien
+    // placés dans l'anneau passent d'abord — la terre progresse depuis
+    // les côtes existantes en suivant l'irrégularité du domain warping.
+    // Conversion d'un PRÉFIXE strict → monotone en l'intensité (à X %,
+    // exactement les X premiers pour cent de la bande, jamais de perte).
+    let budget = ringFrac * totalW;
+    oceanIdx.sort((a, b) =>
+      (seaLevel - elev[a]) / wArr[a] - (seaLevel - elev[b]) / wArr[b]);
+    const newLand = [];
+    for (const i of oceanIdx) {
+      if (budget < wArr[i]) break;
+      elev[i] = seaLevel + 0.01 * wArr[i]; // côte basse : jamais montagne
+      resource[i] = null; // les ressources océaniques (pêche…) disparaissent
+      newLand.push(i);
+      budget -= wArr[i];
+    }
+    // 3. Classification des nouvelles terres après coup : BFS océan sur la
+    // carte FINALE (les nouvelles terres sont des obstacles → continentalité
+    // réaliste : une baie comblée devient « continentale »), puis la même
+    // formule d'humidité et le même classificateur que la carte de base.
+    if (newLand.length > 0) {
+      const odF = new Float32Array(size);
+      {
+        const queue = [];
+        for (let i = 0; i < size; i++) {
+          if (elev[i] < seaLevel) { odF[i] = 0; queue.push(i); }
+          else odF[i] = -1;
+        }
+        let head = 0;
+        while (head < queue.length) {
+          const t = queue[head++];
+          const dt = odF[t];
+          for (const n of neighborsOf(t)) {
+            if (odF[n] === -1) { odF[n] = dt + 1; queue.push(n); }
+          }
+        }
+        let maxD = 1;
+        for (let i = 0; i < size; i++) if (odF[i] > maxD) maxD = odF[i];
+        for (let i = 0; i < size; i++) odF[i] = Math.max(0, odF[i]) / maxD;
+      }
+      for (const i of newLand) {
+        const t = tiles[i];
+        const { x, y } = axialToPixel(t.q, t.r);
+        const px = x / HEX, py = y / HEX;
+        let h = nHumid.fbm(px * pH.scale + 100, py * pH.scale + 100, pH.oct, pH.pers, 2.0);
+        h = (h + 1) * 0.5;
+        h = Math.min(1, h + pH.cont * 0.25 * (1 - odF[i]));
+        h -= pH.cont * 0.15 * odF[i];
+        humid[i] = Math.max(0, Math.min(1, h));
+        biome[i] = classifyBiome(elev[i], temp[i], humid[i], seaLevel, mountainLevel, params.biomeOrder);
+        // Désert isolé (même règle que le lissage, appliquée localement)
+        if (biome[i] === 'Désert') {
+          let desertNs = 0;
+          for (const n of neighborsOf(i)) if (biome[n] === 'Désert') desertNs++;
+          if (desertNs === 0) biome[i] = 'Plaine';
+        }
+      }
     }
   }
 
