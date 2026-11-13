@@ -5661,3 +5661,93 @@ qui pilotent la largeur de la bande, un anneau irrégulier grâce
 au domain warping, et zéro effet à 0 %. « Personnalisé » reste
 strictement sans masque, squeeze ni anneau. Cache-buster
 iframe ?v=4. Ctrl+F5 requis.
+## Labo générateur : Perlin par défaut restauré et anneau purement additif (retour Thibaut 2026-11-13, base 8949dd3)
+
+Retour Thibaut (2 demandes) : « perlin par défaut était mieux,
+excuse moi » ; « l'anneau change complètement toute la
+morphologie de la map au lieu de simplement rajouter des cases
+dans l'anneau ».
+
+**Ce qui a été fait** :
+
+- **Perlin par défaut** : `<option value="perlin" selected>` dans
+  `#noise-type` (tooltip mis à jour) — retour aux reliefs
+  ronds d'origine, le Simplex reste sélectionnable ;
+- **Anneau refondu en post-traitement final**. Cause racine :
+  l'ancien biais d'anneau était additionné aux élévations AVANT
+  le calcul du seuil de mer — or ce seuil est un QUANTILE (45 %
+  de terre quoi qu'il arrive) : tout gain de la bande était
+  exactement compensé par de la terre volée au reste de la
+  carte, d'où la morphologie chamboulée. Nouvelle implémentation
+  (dernière passe de `generateMap`, avant le `return`) : collecte
+  des tuiles OCÉAN dans la bande de pourtour (mêmes bornes que
+  `placePlayers`, poids `w = up·down` en plateau smoothstep,
+  coordonnée warpée → anneau irrégulier), budget
+  `ringFrac × somme des poids`, tri par coût croissant
+  `(seaLevel − elev)/w` et conversion d'un PRÉFIXE strict —
+  l'intensité est la FRACTION DE L'OCÉAN DE LA BANDE convertie
+  (25 % = un quart de la bande, 100 % = toute la bande jouable),
+  la conversion est monotone ensembliste (plus d'intensité =
+  strictement plus de tuiles, jamais l'inverse). Chaque tuile
+  convertie devient une côte basse (`elev = seaLevel + 0.01·w`,
+  jamais de montagne), perd sa ressource océanique, puis est
+  reclassée après coup (BFS océan recalculé, humidité continentale,
+  `classifyBiome`, désert isolé → Plaine). À ring 0 tout est
+  skippé : byte-identique ;
+- **Squeeze adaptatif au bruit** (compense la vivacité du Simplex
+  si on le choisit) : ×0.42 simplex, ×0.55 mixed, ×1 (aucun
+  squeeze) perlin ;
+- **Recalibrage des 3 types pour Perlin** (8 seeds : grimoire,
+  chasse-et-peche, eldvarn, labo-42, belvarn, corwyn, draholm,
+  fergorn) : islands-large lobes 0.36 → 0.48 et creux
+  −0.30 → −0.38 ; archipelago creux −0.30 → −0.38 et entailles
+  −0.12 → −0.16 ; fragmented : masque à 6 entailles
+  TRAVERSANTES cos 6θ × (−0.34) (le seul creux laissait une masse
+  unique à 94-97 % de la terre — le Perlin détail percole) +
+  preset sealevel 50 → 60, e-scale 26 → 38, e-compact 15 → 8.
+
+**Validation** : harnais maison (`harnais-labo-types.cjs`, défauts
+UI = perlin, ring 0) : **18 OK, 0 échec**. (a) custom ≡ sans champ
+mapType, octet par octet ; (a2) moteur inchangé : custom perlin
+ring 0 ≡ version déployée 3ad9c18, octet par octet × 3 seeds ;
+(a3) les 5 types NON recalibrés (continent, continents, pangea,
+inland-sea, lakes) ≡ c0629c9, octet par octet × 3 seeds ; (b)
+déterminisme × 9 ; (c) morphologie 8 seeds : continent masse
+unique 94-100 % (8/8 ≥ 90), continents principale 49-57 % (8/8),
+pangea 99-100 % (8/8), islands-large 3 îles équilibrées 28-36 %
+(8/8, comps 8-13), archipel 10-20 composantes principale ≤ 48 %
+(8/8), fragmented 15-19 composantes principale 18-40 % (8/8),
+inland-sea centre 29-41 % contre bord 60-67 %, lakes 88-100 % ;
+(e) ressources quantile : 9/9 vues sur 24 cartes ; (f) anneau :
+F1 aucune tuile terre→océan + monotone ensembliste (5 cas × 4
+paliers), F4 carte de base byte-identique
+(elev/biome/ressources/rivières), F6 terre monotone, F5a l'anneau
+ne dégrade jamais le placement (4 cas 6/6 → 6/6), F5b 8/8 seeds
+avec 6/6 joueurs sans warning (continent, anneau 60 %). Terre %
+continent/grimoire à ring 0/25/50/100 : 65/73/82/100 — additions
+pures. Rendu ASCII de contrôle : archipel en arcs d'îles, anneau
+100 % = 211 X en périphérie, zéro « ! ». `node --check` OK sur le
+script extrait.
+- Correction du harnais au passage : `radius` lu en string par
+  `makeParams` (« -1 + \"12\" = \"-112\" ») tronquait les cartes à
+  247 tuiles au lieu de 469 — les mesures morphologiques du tour
+  précédent étaient faussées (parseInt appliqué sur tous les
+  champs numériques) ;
+
+**Commits** (1 sur `v4` depuis 8949dd3) :
+- `99dcaa0` feat(wargame) : labo — Perlin par défaut, anneau
+  purement additif (+ cache-buster ?v=5 dans CarteLaboView) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : le labo retrouve le Perlin par défaut
+(comme avant le dernier tour). L'« Intensité d'anneau » n'ajoute
+PLUS QUE des cases : la carte de base est rigoureusement
+identique (testée octet par octet), les additions tombent
+exclusivement dans la bande de pourtour jouable, l'intensité
+pilotant la fraction de l'océan de bande converti (25/50/100 %).
+Monter le curseur ne fait qu'ajouter des tuiles, ne retire
+jamais rien, et ne dégrade jamais le placement des joueurs.
+Fragments/îles/archipels plus fiables qu'avant sur toutes les
+graines. « Personnalisé » reste strictement sans masque ni
+squeeze (l'anneau y fonctionne aussi, en additions pures).
+Cache-buster iframe ?v=5. Ctrl+F5 requis.
