@@ -5419,3 +5419,86 @@ Paramètres et Nouvelle partie), utilisable sans partie en cours
 ni changement de site — le sélecteur MODE RESSOURCES (Bruit v1
 officiel vs Quantile v2) s'y teste comme avant, avec les mêmes
 réglages et la même seed. Ctrl+F5 requis.
+
+## Labo générateur : plein écran, calques par défaut, densités 3 % et vrais types de cartes par masques de forme (retour Thibaut 2026-11-13, base bbe1350e)
+
+**Ce qui a été fait** (uniquement la copie labo
+`quartz/static/generateur-carte-labo.html` ; l'officiel
+`quartz/static/generateur-carte.html` INTACT, vérifié octet par octet
+contre le distant ; `jeu/src/components/CarteLaboView.tsx` touché pour
+le seul cache-buster iframe `?v=1`→`?v=2`) :
+
+- **Plein écran** : bouton ⛶ flottant (`#fs-toggle`) calqué sur le
+  bouton thème, positionné 52 px au-dessus ; Fullscreen API avec replis
+  webkit ; fonctionne dans l'iframe de l'onglet 🧪 Carte labo
+  (allowFullScreen déjà présent) ;
+- **Grille et légende affichées par défaut** : `checked` sur
+  `#lay-grid`/`#lay-legend`, état initial des calques et classe
+  `visible` alignés ;
+- **Densités de base à 3 % pour toutes les ressources** : les 9
+  RES_DEFAULTS passent à `density: 30` (30 ‰ = 3 %, l'UI affichant
+  (v/10).toFixed(1)+'%') et la spec par défaut 20→30 ; les nouveaux
+  défauts sont ≥ anciens sur les 9 ressources ;
+- **Vrais types de cartes** : le sélecteur TYPE DE CARTE ne changeait
+  que des sliders ; désormais un MASQUE DE FORME positionnel biaise
+  l'élévation dans `generateMap` (ajouté après le masque de bord, en
+  fonction de la distance normalisée `dc` au centre — 0 centre → 1
+  bord — et de l'angle polaire θ ; phase tirée par PRNG dédié
+  `randShape = mulberry32(baseHash ^ 0x27D4EB2F)` → déterministe par
+  seed, indépendant du reste) :
+  - `continent` : +0,20·(1−dc)² → masse unique (98-100 % de la terre,
+    centre 92-100 % terre) ;
+  - `continents` : 0,45·cos(2(θ−θh))·dc − 0,30·(1−dc)² → deux masses
+    de 117-120 tuiles ;
+  - `pangea` : +0,16·(1−dc)^1,5 → 75 % de terre ;
+  - `islands-large` : 0,36·cos(3(θ−θh))·dc − 0,30·(1−dc)² → 3-4
+    composantes, principale 34-37 % ;
+  - `archipelago` : −0,30·(1−dc)² − 0,12·cos(4(θ−θh))·(0,3+0,7·dc) →
+    9-11 composantes, principale 25-28 % ; les entailles cos 4θ
+    (plus fortes vers le bord) découpent l'anneau en arcs d'îles —
+    elles évitent le piège constaté en réglage : creux central trop
+    fort (−0,38) → l'anneau extérieur devient UN bloc terrestre
+    continu (53-59 %), creux trop faible (−0,14) → masse centrale
+    géante (82-93 %) ;
+  - `fragmented` : −0,13·(1−dc)² → 6-15 composantes ;
+  - `inland-sea` : −0,50·max(0, 1−1,75·dc)² → centre 5-16 % terre
+    contre anneau 69-77 % (océan central cerclé de terres) ;
+  - `lakes` : +0,04·(1−dc) → 62 % terre ;
+  - `custom` : aucun masque (shapeBias null) → non-régression octet
+    par octet du comportement précédent ;
+  presets géo ajustés en conséquence (continents : compact 70→50,
+  edge 15→5 ; islands-large : compact 65→35 ; inland-sea : edge 55→10,
+  l'ancien edge élevé envoyait la mer au bord, contresens ;
+  archipelago : compact 35→18, scale 22→24, edge 30→25) ; tooltip
+  explicatif sur le sélecteur ; comportement « Personnalisé » au
+  toucher d'un slider conservé.
+
+**Validation** : script extrait et `node --check` OK ; harnais maison
+`harnais-labo-types.cjs` (partie pure du script évaluée, driver N=12,
+3 seeds `grimoire`/`chasse-et-peche`/`labo-42`, presets appliqués
+comme l'UI) : (a) non-régression custom octet par octet ;
+(b) déterminisme 2 appels identiques ; (c) morphologie par type via
+flood fill des composantes connexes de terre : TOUS OK, notamment
+archipelago 9-11 composantes et principale 25-28 % sur les 3 seeds ;
+(d) ressources : défauts 30 ‰ vérifiés, 9/9 présentes sur 16 cartes
+quantile, 30 ‰ ≥ anciens défauts (27 vs 17 tuiles). NB : le seuil
+quantile de mer rend seules les géométries RELATIVES d'élévation
+significatives (biais constants sans effet). Pas de npm dans le bac
+à sable → CI build sur push fait foi pour le .tsx (cache-buster
+seul, une ligne).
+
+**Commits** (1 sur `v4` depuis bbe1350e) :
+- `e36193c` feat(wargame) : labo — plein écran, grille/légende par
+  défaut, densités 3 %, vrais types de cartes par masques de forme ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : dans le labo (onglet 🧪 Carte labo du
+gestionnaire de campagne ou page Wargame), le sélecteur TYPE DE CARTE
+produit désormais de réelles morphologies : Continent = une masse
+unique, Continents = deux terres équilibrées, Archipel = une
+dizaine d'îles sans bloc dominant, Mer intérieure = océan central
+cerclé de terres, Fragmenté = miettes… — chaque type reste
+déterministe par seed, et « Personnalisé » reproduit exactement
+l'ancien comportement. Grille et légende s'affichent d'office, le
+bouton ⛶ passe la carte en plein écran, densités de base à 3 %.
+Cache-buster iframe incrémenté (?v=2). Ctrl+F5 requis.
