@@ -406,13 +406,12 @@
           <select id="biome-order">
             <option value="ETH" selected>Élév › Temp › Humid</option>
             <option value="EHT">Élév › Humid › Temp</option>
-            <option value="TEH">Temp › Élév › Humid</option>
             <option value="THE">Temp › Humid › Élév</option>
             <option value="HET">Humid › Élév › Temp</option>
             <option value="HTE">Humid › Temp › Élév</option>
           </select>
         </div>
-        <div class="field" title="Plus c'est haut, plus les continents sont LARGES. Bas = nombreuses petites masses, haut = un ou deux gros continents.">
+        <div class="field" title="Plus c'est BAS, plus les continents sont LARGES (un ou deux gros continents). Haut = nombreuses petites masses éparpillées.">
           <label>Taille continents</label>
           <input type="range" id="e-cont" min="2" max="15" value="5">
           <span class="value" id="e-cont-v">5</span>
@@ -442,11 +441,6 @@
           <input type="range" id="e-edge" min="0" max="60" value="10">
           <span class="value" id="e-edge-v">10%</span>
         </div>
-        <div class="field" title="Probabilité d'apparition d'îles isolées au milieu des océans. Haut = beaucoup d'archipels et d'îlots. Bas = océans propres sans îles parasites.">
-          <label>Îlots</label>
-          <input type="range" id="e-islands" min="0" max="100" value="20">
-          <span class="value" id="e-islands-v">20%</span>
-        </div>
       </div>
     </div>
 
@@ -458,7 +452,7 @@
       </div>
       <div class="sub-body">
         <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Influence forêts, déserts et marais.</div>
-        <div class="field" title="Taille des zones climatiques humides ou sèches. Haut = grandes régions homogènes (un grand désert, une grande forêt). Bas = patchwork de petites zones.">
+        <div class="field" title="Taille des zones climatiques humides ou sèches. Haut = patchwork de petites zones. Bas = grandes régions homogènes (un grand désert, une grande forêt).">
           <label>Taille zones</label>
           <input type="range" id="h-scale" min="3" max="30" value="14">
           <span class="value" id="h-scale-v">14</span>
@@ -488,7 +482,7 @@
         <button class="reset-btn" data-reset="temp">↺</button>
       </div>
       <div class="sub-body">
-        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Influence neige et zones glaciales.</div>
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Influence forêts froides et déserts chauds.</div>
         <div class="field" title="Position des pôles : Nord/Sud (haut/bas), Est/Ouest (gauche/droite), Centre (un seul pôle au milieu) ou Aucun (climat uniforme).">
           <label>Pôles</label>
           <select id="t-poles">
@@ -503,20 +497,10 @@
           <input type="range" id="t-lat" min="50" max="300" value="140">
           <span class="value" id="t-lat-v">1.40</span>
         </div>
-        <div class="field" title="Taille des taches climatiques chaudes/froides hors-gradient. Haut = grandes anomalies. Bas = perturbations fines.">
-          <label>Taches climat.</label>
-          <input type="range" id="t-scale" min="3" max="30" value="10">
-          <span class="value" id="t-scale-v">10</span>
-        </div>
         <div class="field" title="Intensité des perturbations climatiques aléatoires. Haut = climat chaotique, ne suit plus la latitude. Bas = climat purement zonal (équateur chaud, pôles froids).">
           <label>Désordre</label>
           <input type="range" id="t-noise" min="0" max="40" value="12">
           <span class="value" id="t-noise-v">0.12</span>
-        </div>
-        <div class="field" title="Refroidissement avec l'altitude. Haut = sommets gelés, neige dès que ça monte. Bas = montagnes gardent le climat de leur région.">
-          <label>Froid altitude</label>
-          <input type="range" id="t-alt" min="0" max="100" value="50">
-          <span class="value" id="t-alt-v">0.50</span>
         </div>
       </div>
     </div>
@@ -538,16 +522,6 @@
           </select>
         </div>
         <div style="font-size:10px;color:var(--text-dim);padding:0 4px 2px;">≥ N voisins du même biome → mute un voisin</div>
-        <div class="field">
-          <label>Encerclement</label>
-          <select id="c-surround-any">
-            <option value="0" selected>Désactivé</option>
-            <option value="4">Max 4 voisins</option>
-            <option value="5">Max 5 voisins</option>
-            <option value="6">Max 6 voisins</option>
-          </select>
-        </div>
-        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;">≥ N voisins d'un même biome (≠ centre) → un voisin adopte le biome central</div>
         <div style="font-size:10px;color:var(--text-dim);padding:2px 4px 4px;">Cap par biome (0 = illimité)</div>
         <div class="field">
           <label>Plaine</label>
@@ -572,10 +546,6 @@
         <div class="field">
           <label>Océan</label>
           <input type="number" id="cap-ocean" min="0" max="1000" value="0" step="10">
-        </div>
-        <div class="field">
-          <label>Neige</label>
-          <input type="number" id="cap-neige" min="0" max="1000" value="0" step="10">
         </div>
       </div>
     </div>
@@ -751,15 +721,14 @@ const MAP_PRESETS = {
 };
 
 const DEFAULTS = {
-  elev:  { cont: 5, scale: 18, compact: 65, oct: 4, pers: 50, edge: 10, islands: 20 },
+  elev:  { cont: 5, scale: 18, compact: 65, oct: 4, pers: 50, edge: 10 },
   humid: { scale: 14, oct: 3, pers: 55, cont: 40 },
-  temp:  { lat: 140, scale: 10, noise: 12, alt: 50 },
+  temp:  { lat: 140, noise: 12 },
   evt:   { volcan: 6, river: 8, riverlen: 3 },
   constraints: {
     surroundSame: 5,
-    surroundAny: 0,
     'cap-plaine': 0, 'cap-foret': 0, 'cap-desert': 0, 'cap-marais': 0,
-    'cap-montagne': 0, 'cap-ocean': 0, 'cap-neige': 0
+    'cap-montagne': 0, 'cap-ocean': 0
   }
 };
 
@@ -941,8 +910,7 @@ const BIOMES = {
   'Désert':   { color: '#e0c470', border: '#a48030' },
   'Marais':   { color: '#6a4828', border: '#3a2814' },
   'Montagne': { color: '#808088', border: '#404048' },
-  'Volcan':   { color: '#4a2018', border: '#1a0808' },
-  'Neige':    { color: '#e8eef4', border: '#a8b8c4' }
+  'Volcan':   { color: '#4a2018', border: '#1a0808' }
 };
 
 // =============================================================
@@ -956,7 +924,6 @@ const BIOMES = {
 
 // Catégories normalisées de chaque axe
 function tempZone(t) {
-  if (t < 0.15) return 'glacial';
   if (t < 0.30) return 'froid';
   if (t > 0.60) return 'chaud';
   return 'tempere';
@@ -990,9 +957,7 @@ function classifyBiome(e, t, h, seaLevel, mountainLevel, order) {
   // Température EN PREMIER : climat domine, montagne 2e ou 3e
   // -------------------------------------------------
   if (order[0] === 'T') {
-    // En zone glaciale, neige même au sommet (pas de Montagne)
-    if (tZ === 'glacial') return 'Neige';
-    // Sinon, montagne possible si on l'autorise (ordre[1] ou [2])
+    // Montagne possible si on l'autorise (ordre[1] ou [2])
     if (order[1] === 'E') {
       if (isHigh) return 'Montagne';
       return _humidByTemp(tZ, hZ, h);
@@ -1011,8 +976,6 @@ function classifyBiome(e, t, h, seaLevel, mountainLevel, order) {
     if (hZ === 'humide' && (tZ === 'tempere' || tZ === 'chaud')) return 'Marais';
     // Zones très sèches en climat tempéré/chaud → désert (même en altitude)
     if (hZ === 'sec' && (tZ === 'tempere' || tZ === 'chaud')) return 'Désert';
-    // Zones glaciales : neige domine
-    if (tZ === 'glacial') return 'Neige';
     // Sinon : T ou E pour décider
     if (order[1] === 'E') {
       if (isHigh) return 'Montagne';
@@ -1032,7 +995,6 @@ function classifyBiome(e, t, h, seaLevel, mountainLevel, order) {
 
 // Helpers : déclinaison standard climat (ordre H par défaut dans la zone T)
 function _humidByTemp(tZ, hZ, h) {
-  if (tZ === 'glacial') return 'Neige';
   if (tZ === 'froid') {
     if (h > 0.55) return 'Forêt';
     return 'Plaine';
@@ -1059,18 +1021,15 @@ function _byTempThenHumid(tZ, hZ, t, h) {
 function _byHumidThenTemp(tZ, hZ, t, h) {
   // Zones très humides forment des marais quel que soit le climat (sauf gel)
   if (hZ === 'humide') {
-    if (tZ === 'glacial') return 'Neige';
     if (tZ === 'froid') return 'Forêt';
     return 'Marais';
   }
-  // Zones très sèches : désert si pas gel, sinon toundra (Plaine)
+  // Zones très sèches : désert si pas froid, sinon toundra (Plaine)
   if (hZ === 'sec') {
-    if (tZ === 'glacial') return 'Neige';
     if (tZ === 'froid') return 'Plaine';
     return 'Désert';
   }
   // Modéré : selon climat
-  if (tZ === 'glacial') return 'Neige';
   if (tZ === 'froid') return 'Forêt';
   if (tZ === 'chaud' && h < 0.42) return 'Plaine';
   return 'Forêt';
@@ -1083,7 +1042,6 @@ const RES_BY_BIOME = {
   'Océan':    ['Baleines', 'Poissons'],
   'Montagne': ['Fer', 'Or', 'Charbon'],
   'Forêt':    ['Soie', 'Ruines'],
-  'Neige':    ['Ruines', 'Or', 'Fer', 'Charbon'],
   'Volcan':   []
 };
 
@@ -1145,7 +1103,6 @@ function generateMap(N, seedStr, params) {
   }
   const nCont  = new NoiseSlow(rand);  // continents (basse fréquence)
   const nDet   = new NoiseFast(rand);  // détail (haute fréquence)
-  const nIsle  = new NoiseFast(rand);  // îlots isolés au milieu des océans
   const nHumid = new NoiseSlow(rand);  // humidité (lisse pour grandes zones climatiques)
   const nTemp  = new NoiseFast(rand);  // température
 
@@ -1206,23 +1163,6 @@ function generateMap(N, seedStr, params) {
     const dist = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r)) / N;
     e = e * (1 - dist * dist * pE.edge);
 
-    // Îlots : bruit haute fréquence ajouté SEULEMENT là où l'élévation est
-    // basse (zones océaniques). Crée des points hauts isolés au milieu des
-    // océans → archipels et îlots indépendants du continent principal.
-    if (pE.islands > 0) {
-      // Bruit positif (0..1) à fréquence moyenne
-      let isle = nIsle.fbm(px * 0.10, py * 0.10, 3, 0.5, 2.0);
-      isle = (isle + 1) * 0.5;
-      // On accentue le bruit pour qu'il soit "tout ou rien" : on garde
-      // seulement les pics > 0.65, transformés en bumps positifs.
-      // Sinon le bruit serait juste du flou qui modulerait l'océan.
-      isle = Math.max(0, isle - 0.65) / 0.35; // 0..1, seulement les pics
-      // Influence : forte là où l'élévation est basse, nulle sur les terres
-      // (max(0, 0.5 - e) → 0 si e>=0.5, max 0.5 si e=0)
-      const oceanFactor = Math.max(0, 0.5 - e) * 2; // 0..1
-      e += isle * oceanFactor * pE.islands * 0.5;
-    }
-
     elev[i] = Math.max(0, Math.min(1, e));
     // (humidité et température calculées après le niveau de la mer)
 
@@ -1245,8 +1185,10 @@ function generateMap(N, seedStr, params) {
       lat = Math.abs(t.r) / N;
     }
     let te = 1 - Math.pow(lat, pT.lat);
-    te += pT.noise * nTemp.noise2D(px * pT.scale + 50, py * pT.scale + 50);
-    te -= Math.max(0, elev[i] - 0.5) * pT.alt;
+    // Fréquence des perturbations fixée à 0.10 (l'ancien slider associé
+    // n'avait pas d'effet mesurable, il a été retiré ; "Désordre" garde
+    // son effet via l'amplitude pT.noise).
+    te += pT.noise * nTemp.noise2D(px * 0.10 + 50, py * 0.10 + 50);
     temp[i] = Math.max(0, Math.min(1, te));
   }
 
@@ -1386,7 +1328,7 @@ function generateMap(N, seedStr, params) {
     return 'Plaine';
   }
 
-  if (CONV.surroundSame > 0 || CONV.surroundAny > 0) {
+  if (CONV.surroundSame > 0) {
     // Ordre de parcours déterministe non-directionnel
     const order = [];
     for (let i = 0; i < size; i++) order.push(i);
@@ -1409,58 +1351,14 @@ function generateMap(N, seedStr, params) {
       return 0;
     };
 
-    // --- Règle A : "encerclement par un AUTRE biome" (mute UN VOISIN)
-    // Si une tuile T a ≥ surroundAny voisins d'un même biome ≠ du sien,
-    // UN DE CES VOISINS adopte le biome de T (la tuile centrale impose).
-    // Exemple : une Montagne entourée de 6 Forêts → une forêt devient Montagne.
-    // L'océan reste protégé : une tuile océan ne peut pas être reconvertie
-    // par cette règle, et on ne force pas une tuile à devenir océan.
-    function applyRuleAny(threshold) {
-      for (const i of order) {
-        const bCenter = biome[i];
-        // Océan et Neige sont exemptés : ils n'imposent pas leur biome
-        // (on veut préserver les grandes masses d'eau et les calottes glaciaires)
-        if (bCenter === 'Océan' || bCenter === 'Neige') continue;
-        const ns = neighborsOf(i);
-        // Grouper les voisins par biome (hors biome central)
-        const groups = {};
-        for (const n of ns) {
-          const nb = biome[n];
-          if (nb === bCenter) continue;
-          if (nb === 'Océan' || nb === 'Neige') continue; // on ne convertit pas ces voisins
-          (groups[nb] = groups[nb] || []).push(n);
-        }
-        // Trouver le groupe le plus nombreux qui dépasse le seuil
-        let targetBiome = null, targetCount = 0;
-        for (const [b, arr] of Object.entries(groups)) {
-          if (arr.length >= threshold && arr.length > targetCount) {
-            targetCount = arr.length;
-            targetBiome = b;
-          }
-        }
-        if (!targetBiome) continue;
-        // Garde-fou altitude : ne force pas une tuile basse à devenir Montagne
-        if (bCenter === 'Montagne') {
-          const lowCandidates = groups[targetBiome].filter(n => elev[n] >= mountainLevel * 0.8);
-          if (lowCandidates.length === 0) continue;
-          lowCandidates.sort((a, b) => elev[b] - elev[a]);
-          biome[lowCandidates[0]] = bCenter;
-        } else {
-          const pool = [...groups[targetBiome]];
-          pool.sort((a, b) => marginScore(a) - marginScore(b));
-          biome[pool[0]] = bCenter;
-        }
-      }
-    }
-
-    // --- Règle B : "même biome" (mute UN VOISIN)
+    // --- Règle : "même biome" (mute UN VOISIN)
     // Si une tuile a ≥ surroundSame voisins du même biome, on mute un voisin
     // marginal pour briser la masse. Préserve le cœur.
     function applyRuleSame(threshold) {
       for (const i of order) {
         const b = biome[i];
-        // Océan et Neige sont exemptés (grandes masses uniformes autorisées)
-        if (b === 'Océan' || b === 'Neige') continue;
+        // Océan exempté (grandes masses uniformes autorisées)
+        if (b === 'Océan') continue;
         const ns = neighborsOf(i);
         const sameNs = [];
         for (const n of ns) if (biome[n] === b) sameNs.push(n);
@@ -1478,11 +1376,9 @@ function generateMap(N, seedStr, params) {
       }
     }
 
-    // On applique Any d'abord (résout les isolats prisonniers) puis Same
-    // (casse les masses uniformes). Deux passes pour la convergence.
+    // Deux passes pour la convergence.
     for (let pass = 0; pass < 2; pass++) {
-      if (CONV.surroundAny > 0)  applyRuleAny(CONV.surroundAny);
-      if (CONV.surroundSame > 0) applyRuleSame(CONV.surroundSame);
+      applyRuleSame(CONV.surroundSame);
     }
   }
 
@@ -1508,7 +1404,6 @@ function generateMap(N, seedStr, params) {
       if (b === 'Désert')   return (1 - humid[i]) + temp[i] * 0.5;
       if (b === 'Montagne') return elev[i];
       if (b === 'Plaine')   return 0.5 - Math.abs(humid[i] - 0.4);
-      if (b === 'Neige')    return 1 - temp[i];
       return 0;
     };
     // Ordre déterministe non-directionnel
@@ -2514,11 +2409,11 @@ function resShapeSvg(style, sz = 10) {
 
 // =============================================================
 // RÈGLES D'ADJACENCE DES BIOMES
-// 6 biomes terrestres × 6 = 21 paires distinctes (incluant les
-// auto-adjacences qu'on n'expose pas, biome-à-soi-même est toujours libre).
+// 5 biomes terrestres → 10 paires distinctes (biome-à-soi-même est
+// toujours libre, on ne l'expose pas).
 // 3 valeurs : 'libre' (✅) | 'tampon' (⚠) | 'interdit' (❌)
 // =============================================================
-const ADJ_BIOMES = ['Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne', 'Neige'];
+const ADJ_BIOMES = ['Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne'];
 
 // Défauts (issus de la discussion préalable)
 const ADJ_DEFAULTS = {
@@ -2526,17 +2421,12 @@ const ADJ_DEFAULTS = {
   'Plaine|Désert':     'libre',
   'Plaine|Marais':     'libre',
   'Plaine|Montagne':   'libre',
-  'Plaine|Neige':      'libre',
   'Forêt|Désert':      'tampon',
   'Forêt|Marais':      'libre',
   'Forêt|Montagne':    'libre',
-  'Forêt|Neige':       'libre',
   'Désert|Marais':     'interdit',
   'Désert|Montagne':   'libre',
-  'Désert|Neige':      'tampon',
-  'Marais|Montagne':   'tampon',
-  'Marais|Neige':      'interdit',
-  'Montagne|Neige':    'libre'
+  'Marais|Montagne':   'tampon'
 };
 
 // Clé canonique pour une paire (biome ordonnés alphabétiquement)
@@ -2643,7 +2533,6 @@ const PARAM_SPECS = {
   'e-oct':     { fmt: v => v,                     conv: v => v       },
   'e-pers':    { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
   'e-edge':    { fmt: v => v + '%',               conv: v => v / 100 },
-  'e-islands': { fmt: v => v + '%',               conv: v => v / 100 },
   // humidité
   'h-scale':   { fmt: v => v,                     conv: v => v / 100 },
   'h-oct':     { fmt: v => v,                     conv: v => v       },
@@ -2651,9 +2540,7 @@ const PARAM_SPECS = {
   'h-cont':    { fmt: v => v + '%',               conv: v => v / 100 },
   // température
   't-lat':     { fmt: v => (v / 100).toFixed(2), conv: v => v / 100 },
-  't-scale':   { fmt: v => v,                     conv: v => v / 100 },
   't-noise':   { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
-  't-alt':     { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
   // événements
   'evt-volcan':  { fmt: v => v + '%', conv: v => v / 100 },
   'evt-river':   { fmt: v => v + '%', conv: v => v / 100 },
@@ -2694,24 +2581,22 @@ function getParams() {
     'Désert':   readInt('cap-desert'),
     'Marais':   readInt('cap-marais'),
     'Montagne': readInt('cap-montagne'),
-    'Océan':    readInt('cap-ocean'),
-    'Neige':    readInt('cap-neige')
+    'Océan':    readInt('cap-ocean')
   };
   const surroundSame = parseInt(document.getElementById('c-surround-same').value, 10) || 0;
-  const surroundAny  = parseInt(document.getElementById('c-surround-any').value, 10) || 0;
   return {
     elev: {
       cont: read('e-cont'), scale: read('e-scale'), compact: read('e-compact'),
       oct: read('e-oct'), pers: read('e-pers'),
-      edge: read('e-edge'), islands: read('e-islands')
+      edge: read('e-edge')
     },
     humid: {
       scale: read('h-scale'), oct: read('h-oct'),
       pers: read('h-pers'), cont: read('h-cont')
     },
     temp: {
-      lat: read('t-lat'), scale: read('t-scale'),
-      noise: read('t-noise'), alt: read('t-alt')
+      lat: read('t-lat'),
+      noise: read('t-noise')
     },
     poles: document.getElementById('t-poles').value || 'ns',
     biomeOrder: document.getElementById('biome-order').value || 'ETH',
@@ -2725,7 +2610,7 @@ function getParams() {
       river:  read('evt-river'),
       riverLen: read('evt-riverlen')
     },
-    constraints: { caps, surroundSame, surroundAny }
+    constraints: { caps, surroundSame }
   };
 }
 
@@ -2764,14 +2649,12 @@ function resetGroup(group) {
   if (group === 'constraints') {
     const d = DEFAULTS.constraints;
     document.getElementById('c-surround-same').value = d.surroundSame;
-    document.getElementById('c-surround-any').value  = d.surroundAny;
     document.getElementById('cap-plaine').value   = d['cap-plaine'];
     document.getElementById('cap-foret').value    = d['cap-foret'];
     document.getElementById('cap-desert').value   = d['cap-desert'];
     document.getElementById('cap-marais').value   = d['cap-marais'];
     document.getElementById('cap-montagne').value = d['cap-montagne'];
     document.getElementById('cap-ocean').value    = d['cap-ocean'];
-    document.getElementById('cap-neige').value    = d['cap-neige'];
     return;
   }
   const g = DEFAULTS[group];
@@ -2842,7 +2725,7 @@ function updateBiomeCounts() {
   const counts = {};
   for (const b of map.biome) counts[b] = (counts[b] || 0) + 1;
   // Ordre fixe : Océan en premier, puis terrestres dans l'ordre Plaine → ...
-  const order = ['Océan', 'Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne', 'Neige', 'Volcan'];
+  const order = ['Océan', 'Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne', 'Volcan'];
   let html = '';
   for (const b of order) {
     const c = counts[b] || 0;
@@ -2999,7 +2882,7 @@ document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
 });
 
 // Contrôles de contraintes (select + inputs number)
-['c-surround-same', 'c-surround-any', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean', 'cap-neige'].forEach(id => {
+['c-surround-same', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean'].forEach(id => {
   const el = document.getElementById(id);
   if (!el) return;
   el.addEventListener('input', scheduleRegen);
