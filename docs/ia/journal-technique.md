@@ -5819,3 +5819,71 @@ la marge bord. À « Marge centre » 0 la bande couvre toute la
 carte (voulu) ; montez la marge centre pour réserver un cœur
 océanique. L'intensité = part de l'océan de la bande convertie.
 Cache-buster iframe ?v=6. Ctrl+F5 requis.
+## Labo générateur : ressources 4 %, ruines éparpillées, volcans 15 % et caps de tuiles actifs par défaut (retour Thibaut 2026-11-13, base 4acf7a3)
+
+Retour Thibaut (5 demandes) : densité de base des ressources à
+4 %, proximité à 65 % (sauf Ruines : proximité 0 % mais densité
+6 %) ; évènements volcans à 15 % de base ; nombres max de tuiles
+par défaut : Plaine 200, Montagne 80, Forêt 200, Océan 250,
+Marais 80, Désert 50, Volcan 15.
+
+**Ce qui a été fait** :
+
+- **Ressources** (`RES_DEFAULTS`, sliders reconstruits à partir
+  de ces valeurs) : densité 30 → 40 ‰ (4,0 % affiché) et
+  proximité 65 % pour les 9 ressources — SAUF Ruines : densité
+  60 ‰ (6,0 %) et proximité 0 %. Sémantique de la proximité :
+  haute = basse fréquence du bruit = amas contigus ; Ruines à
+  0 % → freq 0,46 (maximale) = ruines ÉPARPILLÉES une par une.
+  En mode Bruit le seuil devient 1 − densité×8 = 0,68 (4 %) et
+  0,52 (6 %) : les deux restent atteignables par le Perlin
+  (vérifié : 9/9 ressources vues en mode bruit) ;
+- **Volcans** : slider évènement 6 → 15 % (défaut, max 30) ;
+  mesuré : 0 à 6 volcans par carte rayon 12 (43 montagnes
+  × 15 %) ;
+- **Caps par biome ACTIFS par défaut** (ils étaient tous à
+  0 = illimité) : Plaine 200, Forêt 200, Désert 50, Marais 80,
+  Montagne 80, Océan 250, + NOUVEAU champ « Volcan » cap 15.
+  Mécanisme Volcan : le cap générique (avant le tirage) ne peut
+  pas s'appliquer puisque les volcans n'existent pas encore ;
+  on plaque le cap juste après le tirage — les excédentaires
+  redeviennent Montagne dans l'ordre du tirage. Séquence PRNG
+  du tirage inchangée (byte-identique quand le cap ne se
+  déclenche pas). Boutons ↺ et DEFAULTS.constraints à jour ;
+- Cache-buster iframe ?v=7 dans CarteLaboView.
+
+**Validation** : harnais maison (`harnais-labo-types.cjs`,
+défauts UI actuels) : **23 OK, 0 échec**. (a/a2/a3) moteur
+inchangé : custom ≡ 3ad9c18 et 5 types non recalibrés ≡
+c0629c9, octet par octet × 3 seeds avec les NOUVEAUX défauts
+passés explicitement (le moteur est piloté par params : les
+défauts UI ne le changent pas ; le cap Volcan est un no-op
+quand il ne se déclenche pas) ; (b) déterminisme ; (c)
+morphologie 8 seeds : tous les critères tiennent — SEULE
+exception attendue : le cap Océan 250 mord sur « Fragmenté »
+(sealevel 60 → ~281 tuiles d'océan) : 31 tuiles d'océan
+converties en Plaine, terre 40 → 47 %, comps 12-16,
+principale 38-62 % (critères ≥ 8 comps et ≤ 75 % toujours OK) ;
+(d) NOUVEAU : sur 24 cartes, chaque biome sous son cap et
+volcans ≤ 15 ; (e) ressources : 9/9 vues en quantile ET en
+bruit ; ruines éparpillées (plus grande composante de ruines :
+2 tuiles, sur 113 amas) ; (f) anneau strict inchangé : F1/F2/
+F4/F6 + F5a 5 cas 6/6 → 6/6 + F5b 8/8 seeds sans warning.
+`node --check` OK.
+
+**Commits** (1 sur `v4` depuis 4acf7a3) :
+- `d709119` feat(wargame) : labo — ressources 4 %/65 %, ruines
+  6 %/0 % éparpillées, volcans 15 %, caps tuiles par défaut
+  (+ cache-buster ?v=7) ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : les ressources de base couvrent
+davantage la carte (4 % au lieu de 3 %), les ruines sont plus
+fréquentes (6 %) mais toujours isolées (jamais d'amas) ; les
+volcans sont plus courants (15 % de tirage par montagne, cap
+15 tuiles par carte) ; chaque biome est désormais plafonné par
+défaut (0 = illimité reste disponible en remettant le champ à
+0). NB : avec Océan plafonné à 250, le type « Fragmenté » en
+rayon 12 gagne ~31 tuiles de terre (l'océan descend de ~281 à
+250) — monter le cap ou le remettre à 0 si des miettes plus
+noyées sont voulues. Cache-buster iframe ?v=7. Ctrl+F5 requis.
