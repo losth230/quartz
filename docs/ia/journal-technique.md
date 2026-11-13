@@ -5151,3 +5151,62 @@ au cap passent d'un bébé par tour à un bébé tous les deux tours ;
 la fécondité affichée est inchangée (elle décrit une femme
 éligible). Aucune migration nécessaire : les parties en cours
 bénéficient de la règle au tour suivant. Ctrl+F5 requis.
+
+## Multiplicateur ×1,1 Nourriture des cités libres retiré (retour Thibaut 2026-11-13, base 42784d57)
+
+**Demande** : « tu peux retirer le multiplicateur de nourriture pour
+les cités libres ».
+
+**Cause racine / périmètre** : la règle propre aux cités libres
+(revue 2026-10-16 — ×2 avant) faisait produire aux Chasseurs d'une
+cité libre 1,1 × la Nourriture de leur fiche métier (constante
+exportée `MULT_NOURR_CHASSEUR_CITE`, engine/citesLibres.ts) ; cette
+production brute alimentait les taxes versées au suzerain (étape
+3decies, production nette plafonnée aux parties positives).
+
+**Correctif** :
+- `MULT_NOURR_CHASSEUR_CITE` SUPPRIMÉE — les Chasseurs d'une cité
+  libre produisent la valeur de BASE du référentiel, comme ceux
+  d'une ville de joueur. Aucun autre métier/ressource touché.
+- Écosystème nettoyé de toute mention : log des taxes
+  (citesLibres.ts + production.ts, le « : Nourriture ×1,1 »
+  disparaît des parenthèses, le compte de chasseurs reste), message
+  du setup, description de l'étape 3decies (tour.ts), 4 vues
+  (CarteRegle badge reformulé, CarteCite ligne supprimée,
+  CarteVassalite, CitesLibresView), tests réalignés.
+- Aucun champ d'état, AUCUNE migration : le transfert au suzerain
+  est dérivé de la production à chaque fin de tour.
+
+**Validation bac** : harnais tests + tsc RECONSTRUITS (bac réinitialisé
+entre les tours). ⚠ LEÇONS HARNAIS du jour : (1) `tshooks-register.mjs`
+doit référencer les hooks par `new URL('./tshooks.mjs', import.meta.url)`
+— `pathToFileURL('./tshooks.mjs')` résout selon le CWD, pas le module ;
+(2) le hook `load` doit DÉLÉGUER (`nextLoad`) tout ce qui n'est pas un
+fichier local existant (URLs non file:, fichiers absents) ET TOUT CE QUI
+VIT SOUS node_modules — sinon ERR_INVALID_URL_SCHEME (data:/node:
+internes) puis ERR_UNSUPPORTED_NODE_MODULES_TYPE_STRIPPING (stub
+@supabase .mjs traité comme module-typescript) ; pour les .ts/.tsx le
+`load` fournit LUI-MÊME la source (readFileSync, shortCircuit, format
+'module-typescript') — nextLoad délégué renvoie source null rejetée.
+Résultat : **352/352 tests natifs** (352 pass, 0 fail, 35 fichiers,
+aucun changement de compteur — taxes.test.ts réaligné, pas de nouveau
+test : la suppression est couverte par les tests existants du
+détail de cité). tsc local 5.6.3 reconstruit (npmmirror, /home/user/
+npm-local, symlinks node_modules) = 3 erreurs stub @supabase de
+baseline, AUCUNE autre. Diff complet vs base EXACTEMENT 9 fichiers
+src (5 moteur + 4 vues), revus ligne à ligne. Diag BYTE-IDENTIQUE
+(légitime : le scénario diag n'exerce AUCUNE cité libre sous
+suzeraineté — zéro ligne « Cités libres » dans le log ; rien à
+regénérer, le workflow diag n'aura rien à committer).
+
+**Commits** (3 sur `v4` depuis 42784d57) :
+- `fa52fb91` feat(jeu) : citesLibres.ts + production.ts + setup.ts +
+  tour.ts + taxes.test.ts + 4 vues ;
+- `d9ddcda2` docs(ia) : règles (section « Multiplicateur de
+  Nourriture des cités libres retiré ») ;
+- présent commit : journal seul (tête).
+
+**Effet pour l'arbitre** : une cité libre sous suzeraineté verse ~9 %
+de Nourriture en moins à son suzerain (part Chasseurs) ; les autres
+ressources et la consommation de la cité sont inchangées. Parties en
+cours : effet au tour suivant, sans migration. Ctrl+F5 requis.
