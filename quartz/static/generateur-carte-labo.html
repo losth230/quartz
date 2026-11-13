@@ -445,6 +445,10 @@
       <input type="range" id="mountains" min="5" max="30" value="14">
       <span class="value" id="mountains-v">14%</span>
     </div>
+    <div class="field" title="Case « 🎲 Variété » (retour Thibaut 2026-11-13 : « toutes les cartes se ressemblent »). Cochée, chaque clic sur « Générer » tire en plus de la graine les curseurs de TEXTURE : taille des continents, découpe des côtes, compacité, réduction des bords et orientation des pôles (Nord/Sud, Est/Ouest ou Centre). Le tirage est calé sur la graine (même seed = même carte), les curseurs bougent et restent modifiables à la main. Le TYPE de carte sélectionné reste actif (son masque s'applique par-dessus le tirage) ; le bruit, la mer, les montagnes, l'élévation de la mer et les caps ne sont PAS tirés. Décochée : comportement d'origine exact.">
+      <label>Variété</label>
+      <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="variete-toggle"> 🎲 tirer la texture</label>
+    </div>
     <button class="primary" id="regen">⟳ Générer</button>
     <div id="warning"></div>
 
@@ -2305,6 +2309,45 @@ function generateMap(N, seedStr, params) {
 }
 
 // ============================================================
+// VARIÉTÉ — tirage des curseurs de texture calé sur la graine
+// (retour Thibaut 2026-11-13 : « toutes les cartes se ressemblent »)
+// Le générateur est param-driven : à seed égal, la recette est
+// identique (quantiles mer/montagnes, spectre du bruit fixe,
+// gabarit climatique fixe), seule l'arrangement change. Ce tirage
+// fait varier la MORPHOLOGIE d'une génération à l'autre.
+// Mesuré (N=12, terre 55 %) : au-dessus du seuil de percolation
+// du réseau hexagonal, une masse dominante est quasi inévitable ;
+// les curseurs ne la cassent que CORRÉLÉS : compacité basse +
+// côtes fines + petites masses = archipels ; compacité haute +
+// côtes lisses + masses larges = continent unique. D'où le CADRAN
+// u ∈ [0,1] (0 = morcelé, 1 = continent unique) qui FIXE les
+// corrélations, avec un JITTER indépendant par curseur pour
+// garder des textures inédites à u égal :
+//   - e-compact : 10 + 85·u   (10 = archipels, 95 = continent unique) ;
+//   - e-scale   : 30 − 22·u ± 6 (côtes finement découpées → lisses) ;
+//   - e-cont    : 13 − 11·u ± 3 (petites masses → très larges) ;
+//   - e-edge    : 0..30 indépendant (terre au bord → océan périphérique) ;
+//   - t-poles   : orientation des pôles (ns / ew / center).
+// Le TYPE de carte, le bruit, la mer, les montagnes et les caps ne
+// sont PAS tirés. PRNG DÉDIÉ dérivé du hash de la graine (patron
+// des autres étapes stochastiques) : déterminisme par seed
+// préservé, même seed = même tirage = même carte.
+// ============================================================
+function drawVariety(seedStr) {
+  const rand = mulberry32(hashString('variete:' + seedStr) ^ 0x2545F491);
+  const ri = (min, max) => min + Math.floor(rand() * (max - min + 1));
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const u = rand(); // cadran de morphologie : 0 = morcelé, 1 = continent unique
+  return {
+    'e-cont':    clamp(Math.round(13 - 11 * u) + ri(-3, 3), 2, 15),
+    'e-scale':   clamp(Math.round(30 - 22 * u) + ri(-6, 6), 5, 30),
+    'e-compact': Math.round(10 + 85 * u),
+    'e-edge':    ri(0, 30),
+    't-poles':   ['ns', 'ew', 'center'][Math.floor(rand() * 3)]
+  };
+}
+
+// ============================================================
 // PLACEMENT DES JOUEURS — fonction séparée
 // On ne touche PAS à la carte (biomes, ressources, etc.) : on lit seulement.
 // Appelé manuellement (bouton 🎲 ou changement du nombre de joueurs),
@@ -3313,9 +3356,25 @@ buildResourceControls();
 // Construction des règles d'adjacence (idem)
 buildAdjacencyControls();
 
-// Bouton Générer : nouvelle graine aléatoire + régénération complète
+// Bouton Générer : nouvelle graine aléatoire + régénération complète.
+// Case « 🎲 Variété » cochée : tire EN PLUS les curseurs de texture
+// calés sur la NOUVELLE graine (cf. drawVariety) — écriture directe
+// dans les sliders AVANT la lecture des params : carte, libellés et
+// UI restent cohérents, et tout reste ajustable à la main ensuite
+// (rejouer une carte = graine + curseurs affichés). Aucun event
+// n'est déclenché : le type de carte sélectionné reste actif, son
+// masque s'applique par-dessus le tirage.
 document.getElementById('regen').addEventListener('click', () => {
-  document.getElementById('seed').value = randomSeed();
+  const seed = randomSeed();
+  document.getElementById('seed').value = seed;
+  if (document.getElementById('variete-toggle').checked) {
+    const d = drawVariety(seed);
+    for (const id of ['e-cont', 'e-scale', 'e-compact', 'e-edge']) {
+      document.getElementById(id).value = d[id];
+    }
+    document.getElementById('t-poles').value = d['t-poles'];
+    updateParamLabels();
+  }
   regenerate(true);
 });
 // Entrée dans le champ seed : régénère avec la graine saisie (sans la modifier)
