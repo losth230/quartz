@@ -6151,3 +6151,94 @@ plus souvent une masse dominante : les types de carte (Archipel,
 Grandes îles…) restent le levier des silhouettes extrêmes, la
 case varie la texture et l'orientation. Cache-buster iframe
 ?v=10. Ctrl+F5 requis.
+
+
+## Labo générateur : les « 5 points » — parts des biomes garanties, partage par lien, Quantile v2 par défaut, harnais committé (retour Thibaut 2026-11-13, base b4b23f51)
+
+**Retour.** Après la critique chiffrée du labo (promesse Montagnes non
+tenue : 14 % au curseur, 9,6 % réels à cause du lissage
+anti-encerclement ; aucun partage ; parts climatiques émergentes et non
+réglables ; harnais jamais committé ; Quantile v2 encore marqué
+« test »), Thibaut arbitre : « oui, fais les 5 points proprement ».
+
+**Ce qui a été fait.**
+
+1. **Parts garanties (points 1 + 3 unifiés).** Une seule passe
+   « parts des biomes » dans `generateMap`, insérée APRÈS le lissage
+   anti-encerclement (les masses cassées restent cassées) et AVANT
+   l'adjacence (contrainte dure > part statistique, documenté dans les
+   tooltips). Cibles : Montagne = curseur existant, Forêt/Désert/Marais
+   = 3 nouveaux curseurs de la section rapide (défauts 50/3/5 %, calés
+   sur l'émergent mesuré 51,6/2,2/4,7), Plaine = complément exact.
+   Algorithme déterministe sans tirage : donneurs en excès cèdent leurs
+   tuiles de plus faible affinité ; receveurs en déficit prennent les
+   tuiles de plus forte affinité pour eux (affinités = les marginScore
+   existants : élévation pour Montagne, humidité pour Forêt,
+   sècheresse+chaleur pour Désert, humidité+chaleur pour Marais). Le
+   Volcan étant tiré APRÈS dans les Montagnes, Montagne+Volcan =
+   cible exacte. Somme des cibles > 100 % de terre → réduction au
+   prorata. Exceptions documentées : adjacence et caps peuvent rogner
+   après ; anneau et cap Océan ajoutent de la terre hors contrat.
+2. **Partage (point 2).** `encodeShare`/`decodeShare` purs (JSON
+   canonique à clés triées, round-trip testé) dans la partie pure ;
+   côté UI : `captureState` photographie tout (graine, rayon, tous les
+   curseurs, seed joueurs + options de placement), le hash `#c=...` est
+   synchronisé à chaque génération (`replaceState`, pas d'historique),
+   bouton « 🔗 Copier le lien » (clipboard, repli `prompt`) et
+   « 💾 Export JSON » (graine + params de rejeu + tuiles q/r/biome/
+   élévation/humidité/température + ressources + rivières + joueurs +
+   seuils, en regard de l'export PNG qui reste l'image). À
+   l'ouverture, un lien rejoue la carte à l'identique, placement
+   joueurs compris.
+3. **Harnais committé (point 4).** `scripts/harnais-labo.cjs` (Node
+   seul, zéro dépendance) : charge la partie pure coupée au marqueur
+   explicite `// ===== FIN DE LA PARTIE PURE` ajouté au labo (fini la
+   coupe au premier `\n}` après `placePlayers`, fragile). Tests de
+   CONTRAT, pas de bytes : C1 déterminisme, C2 part mer = 45 % sur les
+   8 types × 3 rayons, C3 parts biomes (±1,2 pt, sans adjacence/caps),
+   C4 ressources présentes en quantile (les défauts du FICHIER sont
+   lus via `RES_DEFAULTS`, le test suit les réglages au lieu de les
+   figer), C5 round-trip + canonique du codec. Usage :
+   `node scripts/harnais-labo.cjs` (chemin par défaut résolu relatif
+   au dépôt).
+4. **Quantile v2 par défaut (point 5).** `res-mode` : option
+   « Quantile v2 (officiel) » sélectionnée, « Bruit v1 (legacy) »
+   conservé pour rejouer les anciennes cartes, tooltip inversé ;
+   fallback de `getParams` aligné. Conséquence mesurée : à 3,5 ‰ le
+   mode quantile est honnête mais l'éligible de Geyser est le seul
+   biome Désert (~8 tuiles à 3 % de terre) → k = 0,28, absent de ~70 %
+   des cartes. Défaut Geyser porté à 120 ‰ (≈ 1 geyser par carte) :
+   c'est le réglage qui ne tenait pas sa promesse, pas le mode.
+
+**Validation.** Harnais committé : 10/10 sur le labo poussé (parts
+14,0/50,0/3,1/5,0/27,9 avec terre 258 sur 5 seeds ; déterminisme ;
+mer 45 % sur 24 combinaisons type×rayon ; les 9 ressources présentes
+sur 5 seeds ; codec round-trip + canonique). `node --check` sur le
+script complet extrait. Caractérisation du changement de comportement
+(arbitré ce tour, la contre-mesure byte vs 138b0d8 ne s'applique plus ;
+NOUVELLE base des byte-tests futurs = ce commit, avec `resMode:
+'quantile'` et `parts` explicites) : grimoire 18/469 tuiles changent,
+moyenne ~30/469 sur 6 seeds, soit 179/1 548 = 11,6 % de la terre —
+mêmes côtes (Océan 211 identique), histogramme recalé : Montagne 22→29
++ Volcan 5→7 = 36 tuiles = 14,0 % exact, Forêt 145→129 = 50 %, Plaine
+66→72. Intégrité post-push vérifiée par cmp sur les 3 fichiers.
+
+**Commits** (2 sur `v4` depuis b4b23f51) :
+
+- `8cf84ee` feat(wargame) : labo — les 5 points (passe parts,
+  partage lien/JSON, défaut quantile, Geyser 120 ‰, harnais
+  `scripts/harnais-labo.cjs`, cache-buster ?v=11,
+  `allow="clipboard-write"` sur l'iframe) ;
+- présent commit : journal seul.
+
+**Effet pour l'arbitre.** Le labo tient enfin TOUTES ses promesses de
+parts : ce qui est affiché au curseur est ce qui est sur la carte,
+mer et montagnes comprises. Trois curseurs de plus (Forêt, Désert,
+Marais) pour composer la campagne à froid, un lien copié qui rouvre
+la carte exacte (n'importe qui, aucun réglage), un JSON pour analyser
+ou archiver, et un harnais qui vérifie les promesses à chaque
+modifications futures (attention : les liens/labos créés avant ce
+commit rejouent différemment, la passe parts recalant
+l'histogramme ; les graines elles-mêmes produisent des cartes
+voisines mais pas identiques). Ctrl+F5 pour vider le cache du
+navigateur (le bundle jeu référence maintenant `?v=11`).
