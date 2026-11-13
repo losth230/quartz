@@ -435,6 +435,11 @@
       <input type="range" id="sealevel" min="25" max="65" value="45">
       <span class="value" id="sealevel-v">45%</span>
     </div>
+    <div class="field" title="Décalage FIN du seuil de la mer, en unités d'élévation — INDEPENDANT du curseur « Mer » (qui fixe la PART de tuiles en océan, en quantile : une carte à 45 % a toujours exactement 45 % d'océan quoi qu'il arrive). « Élévation de la mer » déplace le seuil ABSOLU : négatif = mer globalement plus basse, les hauts-fonds juste sous le seuil deviennent des côtes PARTOUT sur la carte (pas seulement dans un coin) ; positif = mer globalement plus haute (transgression, golfes et baies s'élargissent). 0 = quantile pur, comportement d'origine. Ex. : −0,10 sur une carte à 45 % découvre toutes les zones peu profondes. C'est aussi le mécanisme du cap Océan : quand le plafond est atteint, le seuil baisse GLOBALEMENT au lieu de supprimer des tuiles précises (fini la zone lisse dans un seul coin).">
+      <label>Élévation de la mer</label>
+      <input type="range" id="sea-elev" min="-10" max="10" value="0" step="1">
+      <span class="value" id="sea-elev-v">0.00</span>
+    </div>
     <div class="field">
       <label>Montagnes</label>
       <input type="range" id="mountains" min="5" max="30" value="14">
@@ -1442,7 +1447,16 @@ function generateMap(N, seedStr, params) {
   // Quantiles : seaLevel puis mountainLevel
   const elevSorted = new Float32Array(elev);
   elevSorted.sort();
-  const seaLevel = elevSorted[Math.floor(size * params.sea)];
+  // (Retour Thibaut 2026-11-13 : « Élévation de la mer » — décalage FIN du
+  //  seuil ABSOLU, indépendant du quantile « Mer » qui fixe la PART de
+  //  tuiles océanes. Négatif = mer globalement plus basse (les hauts-fonds
+  //  deviennent des côtes PARTOUT) ; positif = transgression. À 0 :
+  //  quantile pur, comportement d'origine inchangé. C'est aussi le
+  //  mécanisme du cap Océan : plafond atteint → le seuil BAISSSE
+  //  globalement au lieu de sacrifier des tuiles précises.)
+  let seaLevel = elevSorted[Math.floor(size * params.sea)];
+  const seaOffset = +params.seaElev || 0;
+  if (seaOffset !== 0) seaLevel = Math.max(0.001, Math.min(0.999, seaLevel + seaOffset));
   const landElevs = [];
   for (let i = 0; i < size; i++) if (elev[i] >= seaLevel) landElevs.push(elev[i]);
   landElevs.sort((a, b) => a - b);
@@ -1715,9 +1729,13 @@ function generateMap(N, seedStr, params) {
   // partent en premier, les tuiles centrales du biome restent.
   // (Retour du soir Thibaut 2026-11-13 : les caps de TOUTES les tuiles
   //  doivent être préservés — plafonner la mer ne doit PAS faire exploser
-  //  la Plaine. L'excès d'océan devient de la terre CLASSÉE au climat
-  //  (relief inversé de la profondeur), et l'application des caps BOUCLE
-  //  jusqu'à stabilité : un cap ne peut plus en gonfler un autre.)
+  //  la Plaine, et l'application des caps BOUCLE jusqu'à stabilité : un
+  //  cap ne peut plus en gonfler un autre.)
+  // (2e retour du soir 2026-11-13 : « si le maximum de mer est atteint, ce
+  //  sont toujours les mers en bas à gauche qui disparaissent » — le cap
+  //  Océan ne CONVERTIT plus de tuiles précises : il BAISSSE le seuil de
+  //  mer GLOBAL au quantile exact du cap, la mer rétrécit sur toutes les
+  //  côtes à la fois, naturellement.)
   const biomeScore = new Float32Array(size);
   for (let i = 0; i < size; i++) {
     const b = biome[i];
@@ -1749,22 +1767,32 @@ function generateMap(N, seedStr, params) {
     for (let i = 0; i < size; i++) od[i] = Math.max(0, od[i]) / maxD;
     return od;
   }
-  // Convertit des tuiles océan en terre NATURELLE : la profondeur devient
-  // de l'altitude (hauts-fonds → côtes basses, fosses → sommets), l'humidité
-  // est recalculée avec la distance à l'océan de la carte en cours, puis
-  // le classificateur habituel s'applique — déserts possibles là où le
-  // climat est sec, montagnes sur les fosses. Servi par le cap Océan ET par
-  // la passe anneau (mêmes règles, même naturel). Les ex-océans gardent le
-  // score 0 : si leur nouveau biome est lui aussi plafonné, ce sont elles
-  // qui repartent en premier (jamais les tuiles de la carte de base).
-  function convertOceanToLand(victims) {
-    // 1. Relief : la profondeur devient de l'altitude. D'ABORD l'élévation,
-    //    pour que le champ de distance océan soit calculé sur la carte
-    //    FINALE : une baie comblée devient « continentale » (sèche),
-    //    une tuile qui reste côtière reste humide.
-    for (const i of victims) {
-      const depth = seaLevel - elev[i];
-      elev[i] = Math.min(0.99, seaLevel + (depth / Math.max(1e-9, seaLevel)) * (1 - seaLevel));
+  // Convertit des tuiles océan en terre NATURELLE, pour les DEUX clients :
+  //  - l'ANNEAU (mirror = true) : la profondeur devient de l'altitude
+  //    (hauts-fonds → côtes basses, fosses → sommets), l'humidité est
+  //    recalculée avec la distance à l'océan de la carte en cours, puis le
+  //    classificateur habituel s'applique — déserts possibles là où le
+  //    climat est sec, montagnes sur les fosses ;
+  //  - le CAP OCÉAN (mirror = false) : le seuil de mer a BAISSÉ
+  //    globalement, les tuiles qui remontent gardent leur élévation
+  //    légitime (hauts-fonds juste au-dessus du nouveau seuil, PARTOUT sur
+  //    les côtes) — on ne recalcule QUE l'humidité et le biome.
+  // Dans les deux cas, aucune ressource océanique ne survit à
+  // l'atterrissage : le cap passe AVANT le tirage des ressources (elles ne
+  // seront posées que sur la carte finale), l'anneau purge explicitement
+  // les siennes. Les ex-océans gardent le score 0 : si leur nouveau
+  // biome est lui aussi plafonné, ce sont elles qui repartent en premier
+  // (jamais les tuiles de la carte de base).
+  function convertOceanToLand(victims, mirror) {
+    // 1. Relief (anneau uniquement) : la profondeur devient de l'altitude.
+    //    D'ABORD l'élévation, pour que le champ de distance océan soit
+    //    calculé sur la carte FINALE : une baie comblée devient
+    //    « continentale » (sèche), une tuile qui reste côtière reste humide.
+    if (mirror) {
+      for (const i of victims) {
+        const depth = seaLevel - elev[i];
+        elev[i] = Math.min(0.99, seaLevel + (depth / Math.max(1e-9, seaLevel)) * (1 - seaLevel));
+      }
     }
     // 2. Humidité sur la carte finale (victimes déjà en terre)
     const od = oceanDistField();
@@ -1799,6 +1827,14 @@ function generateMap(N, seedStr, params) {
   // cap appliqué après le tirage) ramène son compte sous son cap. Les
   // conversions d'un tour peuvent faire déborder un autre biome → le tour
   // suivant le ramène. 12 tours max (convergence observée : ≤ 3).
+  // (Retour Thibaut 2026-11-13 : « si le maximum de mer est atteint, ce
+  //  sont toujours les mers en bas à gauche qui disparaissent, zone lisse »
+  //  — l'ancien cap Océan piochait ses victimes par index (score égal 0,
+  //  départage par index) donc toujours le même coin. Nouveau mécanisme :
+  //  le seuil de mer BAISSSE GLOBALEMENT au quantile exact du cap — ce
+  //  sont les hauts-fonds juste sous le seuil, PARTOUT sur les côtes, qui
+  //  deviennent terre : la mer rétrécit naturellement, aucun coin
+  //  sacrifié, pas de zone lisse.)
   for (let round = 0; round < 12; round++) {
     let changed = false;
     for (const bname of Object.keys(CONV.caps)) {
@@ -1806,16 +1842,25 @@ function generateMap(N, seedStr, params) {
       if (!cap || cap <= 0 || bname === 'Volcan') continue;
       const n = countBiome(bname);
       if (n <= cap) continue;
-      const tilesOfBiome = [];
-      for (let i = 0; i < size; i++) if (biome[i] === bname) tilesOfBiome.push(i);
-      // Trier par score croissant (ex-océans à 0 en premier), index en
-      // départage : déterministe.
-      tilesOfBiome.sort((a, b) => biomeScore[a] - biomeScore[b] || a - b);
-      const victims = tilesOfBiome.slice(0, n - cap);
       if (bname === 'Océan') {
-        // Terre classée au climat — PLUS de Plaine aveugle
-        convertOceanToLand(victims);
+        // Baisse GLOBALE du seuil : seaLevel devient la valeur du quantile
+        // « cap » (au plus cap tuiles strictement sous le seuil, même avec
+        // des égalités d'élévation). Les tuiles qui remontent gardent leur
+        // élévation légitime (hauts-fonds), on ne reclasse qu'humidité +
+        // biome.
+        const sortedElev = new Float32Array(elev);
+        sortedElev.sort();
+        seaLevel = sortedElev[Math.min(size - 1, cap)];
+        const risen = [];
+        for (let i = 0; i < size; i++) if (biome[i] === 'Océan' && elev[i] >= seaLevel) risen.push(i);
+        convertOceanToLand(risen, false);
       } else {
+        const tilesOfBiome = [];
+        for (let i = 0; i < size; i++) if (biome[i] === bname) tilesOfBiome.push(i);
+        // Trier par score croissant (ex-océans à 0 en premier), index en
+        // départage : déterministe.
+        tilesOfBiome.sort((a, b) => biomeScore[a] - biomeScore[b] || a - b);
+        const victims = tilesOfBiome.slice(0, n - cap);
         for (const i of victims) reclassWithRoom(i, bname);
       }
       changed = true;
@@ -2213,16 +2258,16 @@ function generateMap(N, seedStr, params) {
       resource[i] = null; // les ressources océaniques (pêche…) disparaissent
       newLand.push(i);
     }
-    // 3. Conversion avec le MÊME moteur que le cap Océan (retour du soir
+    // 3. Atterrissage avec le MÊME moteur que le cap Océan (retour du soir
     //    2026-11-13 : « il n'y a jamais de désert ou de montagne, pourquoi
-    //    ? ») : la profondeur est inversée en altitude — hauts-fonds →
-    //    côtes basses, fosses → sommets — et l'humidité est recalculée
-    //    sur la carte FINALE : une baie comblée devient continentale
-    //    donc sèche (déserts possibles), les grandes fosses passent le
-    //    seuil montagne (montagnes possibles). Plus d'élévation plate
-    //    épinglée sous le seuil de montagne.
+    //    ? ») — en mode anneau (mirror), la profondeur est inversée en
+    //    altitude : hauts-fonds → côtes basses, fosses → sommets — et
+    //    l'humidité est recalculée sur la carte FINALE : une baie comblée
+    //    devient continentale donc sèche (déserts possibles), les grandes
+    //    fosses passent le seuil montagne (montagnes possibles). Plus
+    //    d'élévation plate épinglée sous le seuil de montagne.
     if (newLand.length > 0) {
-      convertOceanToLand(newLand);
+      convertOceanToLand(newLand, true);
       // 4. Caps respectés dans l'anneau AUSSI (retour du soir 2026-11-13 :
       //    « les caps de toutes les tuiles doivent être préservés, idem
       //    lors des anneaux ») : si les terres ajoutées font déborder un
@@ -2983,6 +3028,9 @@ function buildResourceControls() {
 // PARAMÈTRES — affichage et conversion
 // ============================================================
 const PARAM_SPECS = {
+  // élévation de la mer (retour Thibaut 2026-11-13 : décalage FIN du seuil
+  // global, indépendant du quantile « Mer »)
+  'sea-elev':  { fmt: v => (v > 0 ? '+' : '') + (v / 100).toFixed(2), conv: v => v / 100 },
   // élévation
   'e-cont':    { fmt: v => v,                     conv: v => v / 100 },
   'e-scale':   { fmt: v => v,                     conv: v => v / 100 },
@@ -3067,6 +3115,7 @@ function getParams() {
     res,
     resMode: (document.getElementById('res-mode') || {}).value || 'bruit',
     mapType: (document.getElementById('map-type') || {}).value || 'custom',
+    seaElev: read('sea-elev'),
     ring: read('ring-intensity'),
     playerEdge: readInt('player-edge'),
     playerCenter: readInt('player-center'),
