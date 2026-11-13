@@ -5348,3 +5348,20 @@ v1/v2 avec les MÊMES réglages et la même seed. Si le v2 lui
 plaît, il sera promu dans l'officiel lors d'un prochain arbitrage
 (les densités par défaut restent à régler : ~26 tuiles à
 ressource par carte en v2 aux défauts actuels). Ctrl+F5 requis.
+
+## Générateur de carte : bouton labo rendu visible dans le panneau (retour Thibaut 2026-11-13, base 0388a79)
+
+Retour Thibaut : « je ne trouve pas le bouton labo ». Diagnostic :
+le bouton-pilule 🧪 en bas à droite EST déployé (vérifié octet
+par octet sur le live) mais deux facteurs jouaient : cache
+navigateur (l'officiel embarqué a changé après ?v=1) et
+discrétion de la pilule. Correctif (commit `cbe0158`) :
+- gros bouton « 🧪 Version labo — nouvel onglet » EN TÊTE du
+  panneau ⚙ GÉNÉRATION, juste sous le champ TYPE (lien
+  target=_blank vers la copie labo) — la pilule bas-droite est
+  conservée ;
+- cache-buster de l'iframe ?v=2 → ?v=3 (l'officiel change à
+  nouveau, le navigateur doit recharger l'iframe).
+Aucun changement du moteur : le <script> est inchangé octet par
+octet avant/après (vérifié), node --check OK.
+Ctrl+F5 requis.
