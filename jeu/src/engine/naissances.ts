@@ -136,10 +136,19 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
   const pop = state.population[p.n] ?? []
 
   // 1. Naissances des femmes enceintes depuis le tour précédent
+  // (Arbitrage Thibaut 2026-11-13 : une femme ne peut PAS accoucher
+  //  ET concevoir au MÊME tour — les mères qui viennent d'accoucher
+  //  sont exclues du jet de conception de CE tour (ensemble local
+  //  au tour, ci-dessous). Exclusion d'UN tour, pas de cooldown
+  //  persistant : aucun champ d'état, la mère redevient éligible au
+  //  tour suivant. AVANT : une jeune mère au cap de proba enchaînait
+  //  un bébé par tour sans délai de récupération.)
+  const accoucheesCeTour = new Set<string>()
   for (const mere of pop) {
     if (mere.statut !== 'Enceinte') continue
     const pere = mere.pereBioId ? pop.find((x) => x.id === mere.pereBioId) : undefined
     accoucher(state, p, mere, pere, rng, recap)
+    accoucheesCeTour.add(mere.id)
     mere.statut = 'Sain'
     mere.pereBio = null
     mere.pereBioId = null
@@ -161,6 +170,9 @@ export function conceptionEtNaissances(state: GameState, p: Player, rng: Rng, re
   for (const mere of pop) {
     if (mere.sexe !== 'F' || (mere.statut !== 'Sain' && mere.statut !== 'Malade')) continue
     if (mere.age < C.p.adultAge) continue
+    // (Arbitrage Thibaut 2026-11-13 : pas de conception le tour de
+    //  l'accouchement — cf. l'ensemble accoucheesCeTour de l'étape 1.)
+    if (accoucheesCeTour.has(mere.id)) continue
     const ville = villesParNom.get(mere.ville)
     const mari = mere.mariageId ? indexMonde.get(mere.mariageId) : undefined
     // Mariage homosexuel (culture l'autorisant — mariages dans metiers.ts) :
