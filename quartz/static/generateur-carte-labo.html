@@ -575,27 +575,31 @@
         <div style="font-size:10px;color:var(--text-dim);padding:2px 4px 4px;">Cap par biome (0 = illimité)</div>
         <div class="field">
           <label>Plaine</label>
-          <input type="number" id="cap-plaine" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-plaine" min="0" max="1000" value="200" step="10">
         </div>
         <div class="field">
           <label>Forêt</label>
-          <input type="number" id="cap-foret" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-foret" min="0" max="1000" value="200" step="10">
         </div>
         <div class="field">
           <label>Désert</label>
-          <input type="number" id="cap-desert" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-desert" min="0" max="1000" value="50" step="10">
         </div>
         <div class="field">
           <label>Marais</label>
-          <input type="number" id="cap-marais" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-marais" min="0" max="1000" value="80" step="10">
         </div>
         <div class="field">
           <label>Montagne</label>
-          <input type="number" id="cap-montagne" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-montagne" min="0" max="1000" value="80" step="10">
         </div>
         <div class="field">
           <label>Océan</label>
-          <input type="number" id="cap-ocean" min="0" max="1000" value="0" step="10">
+          <input type="number" id="cap-ocean" min="0" max="1000" value="250" step="10">
+        </div>
+        <div class="field">
+          <label>Volcan</label>
+          <input type="number" id="cap-volcan" min="0" max="1000" value="15" step="1">
         </div>
       </div>
     </div>
@@ -645,8 +649,8 @@
       <div class="sub-body">
         <div class="field">
           <label>Volcans</label>
-          <input type="range" id="evt-volcan" min="0" max="30" value="6">
-          <span class="value" id="evt-volcan-v">6%</span>
+          <input type="range" id="evt-volcan" min="0" max="30" value="15">
+          <span class="value" id="evt-volcan-v">15%</span>
         </div>
       </div>
     </div>
@@ -804,11 +808,12 @@ const DEFAULTS = {
   elev:  { cont: 5, scale: 18, compact: 65, oct: 4, pers: 50, edge: 10 },
   humid: { scale: 14, oct: 3, pers: 55, cont: 40 },
   temp:  { lat: 140, noise: 12 },
-  evt:   { volcan: 6, river: 8, riverlen: 3 },
+  evt:   { volcan: 15, river: 8, riverlen: 3 },
   constraints: {
     surroundSame: 5,
-    'cap-plaine': 0, 'cap-foret': 0, 'cap-desert': 0, 'cap-marais': 0,
-    'cap-montagne': 0, 'cap-ocean': 0
+    // (Nouveau retour Thibaut 2026-11-13 : caps ACTIFS par défaut — 0 = illimité)
+    'cap-plaine': 200, 'cap-foret': 200, 'cap-desert': 50, 'cap-marais': 80,
+    'cap-montagne': 80, 'cap-ocean': 250, 'cap-volcan': 15
   }
 };
 
@@ -816,16 +821,22 @@ const DEFAULTS = {
 // Retour Thibaut 2026-11-13 : TOUTES les ressources à density 30 ‰ (= 3,0 %
 // affiché). En mode Quantile v2, 3 % = le VRAI taux de tuiles éligibles par
 // ressource ; en mode Bruit v1, seuil = 1 − 0,03×8 = 0,76 (atteignable).
+// (Nouveau retour Thibaut 2026-11-13 : densité de base 40 ‰ = 4,0 % et
+//  proximité 65 % partout — amas moyens ; SEULES les Ruines échappent à la
+//  règle : densité 60 ‰ = 6,0 % et proximité 0 % → fréquence maximale du
+//  bruit (freq = 0,46) : des ruines ÉPARPILLÉES une par une, jamais en
+//  amas contigus. En mode Bruit, seuil = 1 − densité×8 : 0,68 à 4 % et
+//  0,52 à 6 %, tous deux atteignables.)
 const RES_DEFAULTS = {
-  'Bétail':   { density: 30, prox: 70, size: 4 },
-  'Baleines': { density: 30, prox: 60, size: 3 },
-  'Poissons': { density: 30, prox: 65, size: 4 },
-  'Or':       { density: 30, prox: 55, size: 3 },
-  'Fer':      { density: 30, prox: 60, size: 4 },
-  'Charbon':  { density: 30, prox: 55, size: 4 },
-  'Ruines':   { density: 30, prox: 30, size: 2 },
-  'Geyser':   { density: 30, prox: 25, size: 2 },
-  'Soie':     { density: 30, prox: 50, size: 3 }
+  'Bétail':   { density: 40, prox: 65, size: 4 },
+  'Baleines': { density: 40, prox: 65, size: 3 },
+  'Poissons': { density: 40, prox: 65, size: 4 },
+  'Or':       { density: 40, prox: 65, size: 3 },
+  'Fer':      { density: 40, prox: 65, size: 4 },
+  'Charbon':  { density: 40, prox: 65, size: 4 },
+  'Ruines':   { density: 60, prox: 0,  size: 2 },
+  'Geyser':   { density: 40, prox: 65, size: 2 },
+  'Soie':     { density: 40, prox: 65, size: 3 }
 };
 
 // ============================================================
@@ -1736,8 +1747,20 @@ function generateMap(N, seedStr, params) {
   }
 
   // Volcans
-  for (let i = 0; i < size; i++) {
-    if (biome[i] === 'Montagne' && randVolcan() < pV.volcan) biome[i] = 'Volcan';
+  // (Nouveau retour Thibaut 2026-11-13 : cap Volcan — le cap générique ci-
+  //  dessus ne peut pas s'appliquer puisque les volcans n'existent pas
+  //  encore à ce stade ; on plaque le cap juste après le tirage, les
+  //  excédentaires redeviennent Montagne dans l'ordre du tirage.)
+  {
+    const volcanIdx = [];
+    for (let i = 0; i < size; i++) {
+      if (biome[i] === 'Montagne' && randVolcan() < pV.volcan) biome[i] = 'Volcan';
+      if (biome[i] === 'Volcan') volcanIdx.push(i);
+    }
+    const capV = (CONV.caps && CONV.caps['Volcan']) | 0;
+    if (capV > 0 && volcanIdx.length > capV) {
+      for (let k = capV; k < volcanIdx.length; k++) biome[volcanIdx[k]] = 'Montagne';
+    }
   }
 
   // Rivières — modèle de SOMMETS (corners).
@@ -2947,7 +2970,8 @@ function getParams() {
     'Désert':   readInt('cap-desert'),
     'Marais':   readInt('cap-marais'),
     'Montagne': readInt('cap-montagne'),
-    'Océan':    readInt('cap-ocean')
+    'Océan':    readInt('cap-ocean'),
+    'Volcan':   readInt('cap-volcan')
   };
   const surroundSame = parseInt(document.getElementById('c-surround-same').value, 10) || 0;
   return {
@@ -3026,6 +3050,7 @@ function resetGroup(group) {
     document.getElementById('cap-marais').value   = d['cap-marais'];
     document.getElementById('cap-montagne').value = d['cap-montagne'];
     document.getElementById('cap-ocean').value    = d['cap-ocean'];
+    document.getElementById('cap-volcan').value   = d['cap-volcan'];
     return;
   }
   const g = DEFAULTS[group];
@@ -3247,7 +3272,7 @@ document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
 });
 
 // Contrôles de contraintes (select + inputs number)
-['c-surround-same', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean'].forEach(id => {
+['c-surround-same', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean', 'cap-volcan'].forEach(id => {
   const el = document.getElementById(id);
   if (!el) return;
   el.addEventListener('input', scheduleRegen);
