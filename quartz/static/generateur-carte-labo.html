@@ -445,6 +445,21 @@
       <input type="range" id="mountains" min="5" max="30" value="14">
       <span class="value" id="mountains-v">14%</span>
     </div>
+    <div class="field" title="Parts garanties des biomes sur la TERRE (retour Thibaut 2026-11-13 « 5 points »). Le paradigme du labo : un curseur = une part CONTRACTUELLE, pas une suggestion. Ces trois curseurs + « Montagnes » fixent la composition finale, recalée APRÈS le lissage anti-encerclement (qui érodait un tiers des montagnes promises : 14 % visés, 9,6 % réels) : les tuiles reconverties sont les plus MÉRITANTES climatiquement pour leur biome (les plus hautes pour la Montagne, les plus humides pour la Forêt, les plus sèches-chaudes pour le Désert, humides-chaudes pour le Marais). La Plaine prend le reste (complément). Déterminisme total : même seed = même carte. Limites : l'ADJACENCE et les CAPS restent des contraintes dures appliquées APRÈS et peuvent rogner la part ; l'ANNEAU et le cap Océan ajoutent de la terre hors contrat ; si la somme des parts dépasse 100 % de la terre, elles sont réduites au prorata.">
+      <label>Forêt</label>
+      <input type="range" id="p-foret" min="0" max="70" value="50">
+      <span class="value" id="p-foret-v">50%</span>
+    </div>
+    <div class="field" title="Part garantie de Désert sur la terre (cf. Forêt). 0 % = aucune ; si le climat ne permet pas d'atteindre la cible, on s'en approche avec les tuiles les plus sèches et chaudes disponibles.">
+      <label>Désert</label>
+      <input type="range" id="p-desert" min="0" max="25" value="3">
+      <span class="value" id="p-desert-v">3%</span>
+    </div>
+    <div class="field" title="Part garantie de Marais sur la terre (cf. Forêt). Les tuiles reconverties sont les plus humides et chaudes disponibles — jamais de marais en zone gelée.">
+      <label>Marais</label>
+      <input type="range" id="p-marais" min="0" max="25" value="5">
+      <span class="value" id="p-marais-v">5%</span>
+    </div>
     <div class="field" title="Case « 🎲 Variété » (retour Thibaut 2026-11-13 : « toutes les cartes se ressemblent »). Cochée, chaque clic sur « Générer » tire en plus de la graine les curseurs de TEXTURE : taille des continents, découpe des côtes, compacité, réduction des bords et orientation des pôles (Nord/Sud, Est/Ouest ou Centre). Le tirage est calé sur la graine (même seed = même carte), les curseurs bougent et restent modifiables à la main. Le TYPE de carte sélectionné reste actif (son masque s'applique par-dessus le tirage) ; le bruit, la mer, les montagnes, l'élévation de la mer et les caps ne sont PAS tirés. Décochée : comportement d'origine exact.">
       <label>Variété</label>
       <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="variete-toggle"> 🎲 tirer la texture</label>
@@ -639,9 +654,9 @@
       </div>
       <div class="field" style="background:var(--accent-bg);border:1px solid var(--btn-border);border-radius:4px;padding:6px 10px;margin-bottom:4px;">
         <label style="color:var(--accent);font-weight:bold;letter-spacing:0.5px;">MODE RESSOURCES</label>
-        <select id="res-mode" style="width:135px;" title="Bruit v1 (officiel) : seuil sur le bruit de Perlin — la densité en ‰ ne correspond pas au taux réel (cloche du Perlin : seuils > 0,85 quasi inatteignables, d'où Baleines/Geyser jamais présents). Quantile v2 (labo) : la densité en ‰ devient le VRAI taux de tuiles éligibles — les k meilleures tuiles au score de bruit sont retenues (k = densité × éligibles, arrondi stochastique), puis écrêtage par amas (curseur Taille).">
-          <option value="bruit" selected>Bruit v1 (officiel)</option>
-          <option value="quantile">Quantile v2 (test)</option>
+        <select id="res-mode" style="width:135px;" title="Quantile v2 (officiel depuis le retour « 5 points » du 2026-11-13) : la densité en ‰ est le VRAI taux de tuiles éligibles — les k meilleures tuiles au score de bruit sont retenues (k = densité × éligibles, arrondi stochastique), puis écrêtage par amas (curseur Taille). Toutes les ressources, y compris Baleines/Geyser, atteignent leur densité. Bruit v1 (legacy) : seuil sur le bruit de Perlin — la densité ne correspondait PAS au taux réel (cloche du Perlin : seuils > 0,85 quasi inatteignables, d'où Baleines/Geyser absents de ~80 % des cartes) ; conservé pour rejouer les anciennes cartes.">
+          <option value="quantile" selected>Quantile v2 (officiel)</option>
+          <option value="bruit">Bruit v1 (legacy)</option>
         </select>
       </div>
       <div class="sub-body" id="res-container">
@@ -696,6 +711,8 @@
     </div>
 
     <button class="small" id="export">📷 Export PNG</button>
+    <button class="small" id="copy-link" title="Copie l'URL complète de la carte en cours (graine + tous les curseurs + placement joueurs). N'importe qui ouvre ce lien et voit EXACTEMENT la même carte, sans rien régler.">🔗 Copier le lien</button>
+    <button class="small" id="export-json" title="Exporte la carte en JSON : graine, paramètres, tuiles (position, biome, élévation, humidité, température), ressources, rivières, joueurs, seuils. Pour rejouer la carte ou l'analyser hors du labo (PNG = image, JSON = données).">💾 Export JSON</button>
     <button class="small" id="pick-tile">🎯 Tirer une case</button>
   </div>
 </div>
@@ -837,6 +854,11 @@ const DEFAULTS = {
 //  amas contigus.)
 // (Retour du soir 2026-11-13 : densité de base 40 → 35 ‰ = 3,5 %. En mode
 //  Bruit, seuil = 1 − densité×8 : 0,72 à 3,5 % (atteignable).)
+// (Retour « 5 points » 2026-11-13 : Geyser à 120 ‰ — en mode Quantile la
+//  densité est le VRAI taux mais l'éligible de Geyser est le SEUL biome
+//  Désert, minuscule (~8 tuiles à 3 % de terre) : à 3,5 ‰, k = 0,28 →
+//  absent de ~70 % des cartes malgré le taux honnête. 120 ‰ = ~1 geyser
+//  par carte avec déserts suffisants, ressource rare mais présente.)
 const RES_DEFAULTS = {
   'Bétail':   { density: 35, prox: 65, size: 4 },
   'Baleines': { density: 35, prox: 65, size: 3 },
@@ -845,7 +867,7 @@ const RES_DEFAULTS = {
   'Fer':      { density: 35, prox: 65, size: 4 },
   'Charbon':  { density: 35, prox: 65, size: 4 },
   'Ruines':   { density: 60, prox: 0,  size: 2 },
-  'Geyser':   { density: 35, prox: 65, size: 2 },
+  'Geyser':   { density: 120, prox: 65, size: 2 },
   'Soie':     { density: 35, prox: 65, size: 3 }
 };
 
@@ -1657,6 +1679,95 @@ function generateMap(N, seedStr, params) {
     // Deux passes pour la convergence.
     for (let pass = 0; pass < 2; pass++) {
       applyRuleSame(CONV.surroundSame);
+    }
+  }
+
+  // --- Parts garanties des biomes (retour Thibaut 2026-11-13 « 5 points ») ---
+  // Paradigme du labo : UN CURSEUR = UNE PART CONTRACTUELLE. La mer tient sa
+  // promesse (quantile exact) ; les montagnes non : le quantile vise
+  // params.mountains mais le lissage anti-encerclement ci-dessus en érode un
+  // tiers (14 % visés, 9,6 % mesurés), et Forêt/Désert/Marais émergent au
+  // gré des seuils climatiques et de la graine. Cette passe RAMÈNE
+  // l'histogramme final aux cibles, APRÈS le lissage (les masses cassées
+  // restent cassées : on reconvertit les tuiles les plus MÉRITANTES pour
+  // chaque biome — scores de cohérence climatique ci-dessous — pas
+  // nécessairement celles que le lissage a sacrifiées), AVANT l'adjacence,
+  // les caps et les événements (contraintes dures > part statistique ;
+  // l'adjacence peut donc rogner la part, documenté dans les tooltips).
+  // Ordre de grandeur des défauts : calés sur l'émergent mesuré avant la
+  // passe (Forêt ~51 %, Désert ~2 %, Marais ~5 %, Plaine complément) —
+  // les cartes gardent leur physionomie d'hier, mais la composition devient
+  // EXACTE au lieu d'émergente, et les montagnes remontent de 9,6 % à la
+  // valeur du curseur (changement de comportement arbitré ce tour).
+  // Le Volcan est tiré APRÈS cette passe, DANS les Montagnes →
+  // Montagne + Volcan = cible exacte (chaque Volcan était une Montagne).
+  // Déterminisme total : aucun tirage, tri par score puis index.
+  {
+    const parts = params.parts || {};
+    const fM = Math.max(0, Math.min(0.99, +params.mountains || 0));
+    const fF = Math.max(0, Math.min(0.85, +parts.foret  || 0));
+    const fD = Math.max(0, Math.min(0.50, +parts.desert || 0));
+    const fX = Math.max(0, Math.min(0.50, +parts.marais || 0));
+    // Somme > 100 % de la terre : réduction au prorata (la Plaine garde
+    // le reste, jamais négatif).
+    const tot = fM + fF + fD + fX;
+    const k = tot > 0.99 ? 0.99 / tot : 1;
+    const landIdx = [];
+    for (let i = 0; i < size; i++) if (biome[i] !== 'Océan') landIdx.push(i);
+    const L = landIdx.length;
+    if (L > 0) {
+      const target = {
+        'Montagne': Math.floor(L * (fM * k) + 0.5),
+        'Forêt':    Math.floor(L * (fF * k) + 0.5),
+        'Désert':   Math.floor(L * (fD * k) + 0.5),
+        'Marais':   Math.floor(L * (fX * k) + 0.5)
+      };
+      let sumT = 0;
+      for (const b in target) sumT += target[b];
+      target['Plaine'] = Math.max(0, L - sumT);
+      // Affinités (mêmes scores que margin/biomeScore) : la tuile la plus
+      // MÉRITANTE pour un biome est celle dont le climat local colle le
+      // mieux à son profil.
+      const affin = {
+        'Montagne': i => elev[i],
+        'Forêt':    i => humid[i],
+        'Désert':   i => (1 - humid[i]) + temp[i] * 0.5,
+        'Marais':   i => humid[i] + temp[i] * 0.5,
+        'Plaine':   i => 0.5 - Math.abs(humid[i] - 0.4)
+      };
+      const counts = {};
+      for (const b in target) counts[b] = 0;
+      for (const i of landIdx) if (counts[biome[i]] !== undefined) counts[biome[i]]++;
+      const countNow = (b) => {
+        let n = 0;
+        for (const i of landIdx) if (biome[i] === b) n++;
+        return n;
+      };
+      // Donneurs : chaque biome en excès cède ses tuiles les moins
+      // méritantes (affinité croissante, index en départage).
+      let pool = [];
+      for (const b in target) {
+        const excess = counts[b] - target[b];
+        if (excess <= 0) continue;
+        const mine = landIdx.filter(i => biome[i] === b);
+        mine.sort((a, c) => affin[b](a) - affin[b](c) || a - c);
+        for (let z = 0; z < excess && z < mine.length; z++) pool.push(mine[z]);
+      }
+      // Receveurs, par priorité : structure (Montagne) puis climat
+      // (Forêt, Désert, Marais) puis fourre-tout (Plaine). Chacun prend
+      // dans le pool les tuiles de MEILLEURE affinité pour lui. Somme des
+      // cibles = terre exactement → le pool se vide.
+      const ORDER = ['Montagne', 'Forêt', 'Désert', 'Marais', 'Plaine'];
+      for (const b of ORDER) {
+        const deficit = target[b] - countNow(b);
+        if (deficit <= 0 || pool.length === 0) continue;
+        pool.sort((a, c) => affin[b](c) - affin[b](a) || a - c);
+        const take = Math.min(deficit, pool.length);
+        for (let z = 0; z < take; z++) biome[pool[z]] = b;
+        pool = pool.slice(take);
+      }
+      // Résidu d'arrondi (cible imprenable) : vers la Plaine, jamais perdu.
+      for (const i of pool) biome[i] = 'Plaine';
     }
   }
 
@@ -2575,6 +2686,39 @@ function placePlayers(mapObj, opts) {
 }
 
 // ============================================================
+// PARTAGE (retour Thibaut 2026-11-13 « 5 points ») — codec URL.
+// Pures et testées par le harnais (round-trip). L'état complet de la
+// carte (graine + tous les curseurs + placement joueurs) tient dans le
+// hash de l'URL : un lien = une carte rejouable à l'identique, sans
+// base de données ni fichier.
+// ============================================================
+function encodeShare(state) {
+  // Canonique : clés triées pour que deux états égaux produisent le
+  // même hash, quelle que soit l'ordre de construction.
+  const canon = (v) => {
+    if (Array.isArray(v)) return v.map(canon);
+    if (v && typeof v === 'object') {
+      const o = {};
+      for (const k of Object.keys(v).sort()) o[k] = canon(v[k]);
+      return o;
+    }
+    return v;
+  };
+  return encodeURIComponent(JSON.stringify(canon(state)));
+}
+
+function decodeShare(str) {
+  try {
+    const st = JSON.parse(decodeURIComponent(str));
+    return (st && typeof st === 'object') ? st : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ===== FIN DE LA PARTIE PURE (harnais : couper ici) =====
+
+// ============================================================
 // RENDU
 // ============================================================
 const canvas = document.getElementById('map');
@@ -3094,7 +3238,12 @@ const PARAM_SPECS = {
   'evt-river':   { fmt: v => v + '%', conv: v => v / 100 },
   'evt-riverlen': { fmt: v => v, conv: v => v },
   // forme (LABO, retour Thibaut 2026-11-13 : anneau de terre sur le pourtour)
-  'ring-intensity': { fmt: v => v + '%', conv: v => v / 100 }
+  'ring-intensity': { fmt: v => v + '%', conv: v => v / 100 },
+  // parts des biomes (retour « 5 points » 2026-11-13) : part garantie de
+  // la terre par biome climatique, Plaine = complément
+  'p-foret':  { fmt: v => v + '%', conv: v => v / 100 },
+  'p-desert': { fmt: v => v + '%', conv: v => v / 100 },
+  'p-marais': { fmt: v => v + '%', conv: v => v / 100 }
   // Les paramètres par-ressource ('res-<slug>-*') sont ajoutés dynamiquement
   // par buildResourceControls() ci-dessous.
 };
@@ -3156,10 +3305,15 @@ function getParams() {
       rules: getAdjacencyRules()
     },
     res,
-    resMode: (document.getElementById('res-mode') || {}).value || 'bruit',
+    resMode: (document.getElementById('res-mode') || {}).value || 'quantile',
     mapType: (document.getElementById('map-type') || {}).value || 'custom',
     seaElev: read('sea-elev'),
     ring: read('ring-intensity'),
+    parts: {
+      foret:  read('p-foret'),
+      desert: read('p-desert'),
+      marais: read('p-marais')
+    },
     playerEdge: readInt('player-edge'),
     playerCenter: readInt('player-center'),
     evt: {
@@ -3269,6 +3423,7 @@ function regenerate(resetView = true) {
   if (resetView) fitView();
   selected = null;
   infoEl.classList.remove('visible');
+  syncHash();
   render();
 }
 
@@ -3328,6 +3483,158 @@ function applyPlayers() {
   } else {
     warnEl.classList.remove('visible');
   }
+}
+
+// ============================================================
+// PARTAGE — capture / restauration de l'état complet via l'URL.
+// (retour Thibaut 2026-11-13 « 5 points ») : un lien = une carte.
+// captureState() photographie TOUT ce qui détermine la partie :
+// graine, rayon, tous les curseurs (dont parts et ressources) et le
+// placement joueurs (seed dédiée incluse — sinon les emplacements
+// flotteraient d'une ouverture à l'autre).
+// ============================================================
+function captureState() {
+  const req = [];
+  if (document.getElementById('req-foret').checked)    req.push('Forêt');
+  if (document.getElementById('req-montagne').checked) req.push('Montagne');
+  if (document.getElementById('req-desert').checked)   req.push('Désert');
+  return {
+    v: 1,
+    n: Math.max(10, Math.min(18, +document.getElementById('radius').value)),
+    seed: document.getElementById('seed').value || 'grimoire',
+    sea: +document.getElementById('sealevel').value / 100,
+    mountains: +document.getElementById('mountains').value / 100,
+    noiseType: document.getElementById('noise-type').value,
+    p: getParams(),
+    pl: {
+      playerSeed,
+      count: parseInt(document.getElementById('players').value, 10) || 0,
+      spread: document.getElementById('player-spread').value || 'far',
+      minDist: parseInt(document.getElementById('player-dist').value, 10) || 5,
+      edge: parseInt(document.getElementById('player-edge').value, 10) || 0,
+      center: parseInt(document.getElementById('player-center').value, 10) || 0,
+      cont: parseInt(document.getElementById('player-cont').value, 10) || 0,
+      inspect: parseInt(document.getElementById('player-inspect').value, 10) || 3,
+      required: req
+    }
+  };
+}
+
+// Miroir de applyPlayers() : état placement en clair (pour captureState).
+function applyPlayerState(pl) {
+  if (!pl) return;
+  if (pl.playerSeed) playerSeed = String(pl.playerSeed);
+  const setI = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+  setI('players', pl.count);
+  if (pl.spread) setI('player-spread', pl.spread);
+  setI('player-dist', pl.minDist);
+  setI('player-edge', pl.edge);
+  setI('player-center', pl.center);
+  setI('player-cont', pl.cont);
+  setI('player-inspect', pl.inspect);
+  const req = Array.isArray(pl.required) ? pl.required : [];
+  const rq = document.getElementById('req-foret');
+  if (rq) rq.checked = req.includes('Forêt');
+  const rm = document.getElementById('req-montagne');
+  if (rm) rm.checked = req.includes('Montagne');
+  const rd = document.getElementById('req-desert');
+  if (rd) rd.checked = req.includes('Désert');
+}
+
+// Miroir de getParams() : remet les contrôles UI dans l'état capturé.
+// Ce que le hash ne mentionne pas garde sa valeur courante.
+function applyParamsToUI(p) {
+  if (!p) return;
+  const setV = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  const setPct = (id, v) => setV(id, Math.round((+v || 0) * 100));
+  const setInt = (id, v) => setV(id, Math.round(+v || 0));
+  // groupes scalaires (miroir exact des conv de PARAM_SPECS)
+  if (p.elev) {
+    setPct('e-cont', p.elev.cont);   setPct('e-scale', p.elev.scale);
+    setPct('e-compact', p.elev.compact); setInt('e-oct', p.elev.oct);
+    setPct('e-pers', p.elev.pers);   setPct('e-edge', p.elev.edge);
+  }
+  if (p.humid) {
+    setPct('h-scale', p.humid.scale); setInt('h-oct', p.humid.oct);
+    setPct('h-pers', p.humid.pers);   setPct('h-cont', p.humid.cont);
+  }
+  if (p.temp) {
+    setPct('t-lat', p.temp.lat); setPct('t-noise', p.temp.noise);
+  }
+  if (p.evt) {
+    setPct('evt-volcan', p.evt.volcan); setPct('evt-river', p.evt.river);
+    setInt('evt-riverlen', p.evt.riverLen);
+  }
+  if (p.seaElev !== undefined) setInt('sea-elev', p.seaElev);
+  if (p.ring !== undefined) setPct('ring-intensity', p.ring);
+  if (p.parts) {
+    setPct('p-foret', p.parts.foret);
+    setPct('p-desert', p.parts.desert);
+    setPct('p-marais', p.parts.marais);
+  }
+  // ressources (miroir des RES_PARAM_SPECS)
+  if (p.res) {
+    for (const resName of Object.keys(RES_DEFAULTS)) {
+      const r = p.res[resName];
+      if (!r) continue;
+      const slug = slugify(resName);
+      setV(`res-${slug}-density`, Math.round((+r.density || 0) * 1000));
+      setV(`res-${slug}-prox`, Math.round((+r.prox || 0) * 100));
+      setV(`res-${slug}-size`, Math.round(+r.size || 0));
+    }
+  }
+  // contraintes
+  if (p.constraints) {
+    if (p.constraints.surroundSame !== undefined) setInt('c-surround-same', p.constraints.surroundSame);
+    if (p.constraints.caps) {
+      setInt('cap-plaine', p.constraints.caps['Plaine']);
+      setInt('cap-foret', p.constraints.caps['Forêt']);
+      setInt('cap-desert', p.constraints.caps['Désert']);
+      setInt('cap-marais', p.constraints.caps['Marais']);
+      setInt('cap-montagne', p.constraints.caps['Montagne']);
+      setInt('cap-ocean', p.constraints.caps['Océan']);
+      setInt('cap-volcan', p.constraints.caps['Volcan']);
+    }
+  }
+  // sélecteurs
+  if (p.poles) setV('t-poles', p.poles);
+  if (p.biomeOrder) setV('biome-order', p.biomeOrder);
+  if (p.resMode) setV('res-mode', p.resMode);
+  if (p.mapType) setV('map-type', p.mapType);
+  // adjacence (règles par paire)
+  if (p.adjacency) {
+    const en = document.getElementById('adj-enabled');
+    if (en) en.checked = !!p.adjacency.enabled;
+    document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+      const v = (p.adjacency.rules || {})[el.dataset.pair];
+      if (v) el.value = v;
+    });
+  }
+  updateParamLabels();
+}
+
+// Restauration depuis le hash : #c=<encodeShare(...)>.
+function applySharedState() {
+  const st = decodeShare(location.hash.slice(3));
+  if (!st || !st.p) return false;
+  document.getElementById('radius').value = st.n || 12;
+  document.getElementById('seed').value = st.seed || 'grimoire';
+  document.getElementById('sealevel').value = Math.round((+st.sea || 0.45) * 100);
+  document.getElementById('mountains').value = Math.round((+st.mountains || 0.14) * 100);
+  if (st.noiseType) document.getElementById('noise-type').value = st.noiseType;
+  applyParamsToUI(st.p);
+  applyPlayerState(st.pl || null);
+  updateTileCount();
+  regenerate(true);
+  return true;
+}
+
+// L'URL EST la carte : chaque régénération réécrit le hash (sans polluer
+// l'historique — replaceState, pas pushState).
+function syncHash() {
+  try {
+    history.replaceState(null, '', '#c=' + encodeShare(captureState()));
+  } catch (e) { /* contexte sans history : on ignore */ }
 }
 
 let regenTimer = null;
@@ -3460,6 +3767,7 @@ document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
 // Champ joueurs : pas besoin de régénérer la carte, juste replacer les joueurs
 function rerollPlayersAndRender() {
   applyPlayers();
+  syncHash();
   render();
 }
 document.getElementById('players').addEventListener('input', rerollPlayersAndRender);
@@ -3563,6 +3871,70 @@ document.getElementById('export').addEventListener('click', () => {
   }, 'image/png');
 });
 
+// --- 🔗 Copier le lien (retour « 5 points ») : l'URL courante EST la
+// carte (hash synchronisé à chaque génération). Le seed joueurs ayant pu
+// changer, on resynchronise avant de copier.
+document.getElementById('copy-link').addEventListener('click', async () => {
+  syncHash();
+  const btn = document.getElementById('copy-link');
+  try {
+    await navigator.clipboard.writeText(location.href);
+    const old = btn.textContent;
+    btn.textContent = '✓ Lien copié !';
+    setTimeout(() => { btn.textContent = old; }, 1600);
+  } catch (e) {
+    // Contexte sans Clipboard API (http non sécurisé) : repli manuel.
+    prompt('Copiez ce lien :', location.href);
+  }
+});
+
+// --- 💾 Export JSON (retour « 5 points ») : la carte en DONNÉES.
+// PNG = l'image pour l'arbitre, JSON = la matière brute pour rejouer ou
+// analyser hors du labo : graine + paramètres complets (rejeu exact),
+// tuiles (position, biome, élévation, humidité, température, ressource),
+// rivières, joueurs, seuils.
+document.getElementById('export-json').addEventListener('click', () => {
+  if (!map) return;
+  const seed = document.getElementById('seed').value || 'grimoire';
+  const st = captureState();
+  const r4 = a => Array.from(a, v => Math.round(v * 10000) / 10000);
+  const counts = {};
+  for (const b of map.biome) counts[b] = (counts[b] || 0) + 1;
+  const doc = {
+    format: 'chasse-et-peche/carte-labo',
+    version: 1,
+    n: map.N,
+    seed,
+    replay: { sea: st.sea, mountains: st.mountains, noiseType: st.noiseType, params: st.p, players: st.pl },
+    seaLevel: Math.round(map.seaLevel * 10000) / 10000,
+    mountainLevel: Math.round(map.mountainLevel * 10000) / 10000,
+    counts,
+    tiles: map.tiles.map(t => ({ q: t.q, r: t.r })),
+    biome: Array.from(map.biome),
+    elev: r4(map.elev),
+    humid: r4(map.humid),
+    temp: r4(map.temp),
+    resources: Array.from(map.resource),
+    rivers: map.rivers ? Array.from(map.rivers) : [],
+    riverSegments: (map.riverSegments || []).map(s => ({
+      from: { q: map.tiles[s.tiles[0]].q, r: map.tiles[s.tiles[0]].r },
+      to:   { q: map.tiles[s.tiles[1]].q, r: map.tiles[s.tiles[1]].r }
+    })),
+    players: (map.players || []).map(p => ({
+      index: p.index,
+      color: p.color,
+      primary: { q: map.tiles[p.primary].q, r: map.tiles[p.primary].r },
+      secondary: { q: map.tiles[p.secondary].q, r: map.tiles[p.secondary].r }
+    }))
+  };
+  const blob = new Blob([JSON.stringify(doc)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `carte-${seed}-r${map.N}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
 window.addEventListener('resize', () => {
   resizeCanvas();
   fitView();
@@ -3619,7 +3991,12 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
   doc.addEventListener('webkitfullscreenchange', sync);
 })();
 
-regenerate(true);
+// (retour Thibaut 2026-11-13 « 5 points ») : si l'URL porte une carte
+// (#c=...), on la rejoue à l'identique — graine, curseurs ET placement
+// joueurs compris. Sinon, comportement d'origine.
+if (!(location.hash && location.hash.startsWith('#c=') && applySharedState())) {
+  regenerate(true);
+}
 
 setTimeout(() => {
   document.getElementById('hint').style.opacity = '0';

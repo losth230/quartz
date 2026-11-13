@@ -23,15 +23,17 @@ export function CarteLaboView() {
       <h2>🧪 Carte labo — bac à essai de génération</h2>
       <p className="muted small" style={{ marginBottom: 8 }}>
         Copie d'expérimentation du générateur de carte : les cartes produites ici ne sont pas
-        officielles. Les remaniements de génération s'y testent — groupe « RESSOURCES » →
-        sélecteur « MODE RESSOURCES » (Bruit v1 officiel vs Quantile v2, seed identique) —
-        avant promotion éventuelle dans la version de référence.
+        officielles. Les remaniements de génération s'y testent avant promotion éventuelle
+        dans la version de référence : parts des biomes garanties (Forêt/Désert/Marais),
+        ressources Quantile v2 par défaut, partage par lien (l'URL contient la carte) et
+        export JSON. Le lien copié s'ouvre directement dans le labo, à l'identique.
       </p>
       <iframe
-        src="../static/generateur-carte-labo.html?v=10"
+        src="../static/generateur-carte-labo.html?v=11"
         title="Générateur de carte — version labo"
         style={{ width: '100%', height: 'calc(100vh - 220px)', minHeight: 520, border: '1px solid var(--border)', borderRadius: 8 }}
         allowFullScreen
+        allow="clipboard-write"
       />
     </div>
   )
