@@ -289,6 +289,25 @@
   }
   #theme-toggle:hover { transform: scale(1.08); }
   #theme-toggle:active { transform: scale(0.95); }
+  /* LABO : bouton plein écran, calqué sur le bouton thème (juste au-dessus) */
+  #fs-toggle {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 52px);
+    right: 10px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--accent);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    z-index: 10;
+  }
+  #fs-toggle:hover { transform: scale(1.08); }
+  #fs-toggle:active { transform: scale(0.95); }
 
   /* Bandeau LABO : en bas à gauche, impossible à confondre avec l'officiel */
   #labo-banner {
@@ -318,7 +337,7 @@
 
 <div id="info" class="panel"></div>
 
-<div id="legend" class="panel"></div>
+<div id="legend" class="panel visible"></div>
 
 <div id="controls" class="panel">
   <div class="head" id="toggle-controls">
@@ -328,7 +347,7 @@
   <div class="body">
     <div class="field" style="background:var(--accent-bg);border:1px solid var(--btn-border);border-radius:4px;padding:6px 10px;margin-bottom:4px;">
       <label style="color:var(--accent);font-weight:bold;letter-spacing:0.5px;">TYPE</label>
-      <select id="map-type" style="width:110px;">
+      <select id="map-type" style="width:110px;" title="Le type ne change pas seulement les curseurs : il applique un MASQUE DE FORME à l'élévation (bosse centrale pour un continent, lobes séparés, excavation centrale pour une mer intérieure…). « Personnalisé » = aucun masque. Toucher un curseur de géographie repasse en Personnalisé.">
         <option value="continent">Continent</option>
         <option value="continents">Continents</option>
         <option value="pangea">Pangée</option>
@@ -653,8 +672,8 @@
       <div class="sub-body" style="padding-top: 4px;">
         <div class="field"><input type="checkbox" id="lay-rivers" checked><label>Rivières</label></div>
         <div class="field"><input type="checkbox" id="lay-resources" checked><label>Ressources</label></div>
-        <div class="field"><input type="checkbox" id="lay-grid"><label>Grille</label></div>
-        <div class="field"><input type="checkbox" id="lay-legend"><label>Légende</label></div>
+        <div class="field"><input type="checkbox" id="lay-grid" checked><label>Grille</label></div>
+        <div class="field"><input type="checkbox" id="lay-legend" checked><label>Légende</label></div>
       </div>
     </div>
 
@@ -666,6 +685,7 @@
 <div id="hint">Pan · Pinch · Tap pour inspecter</div>
 
 <button id="theme-toggle" title="Changer de thème" aria-label="Changer de thème">☾</button>
+<button id="fs-toggle" title="Plein écran" aria-label="Plein écran">⛶</button>
 
 <script>
 "use strict";
@@ -689,12 +709,14 @@ const MAP_PRESETS = {
     'e-pers':    45
   },
   // Deux ou trois continents séparés par de la mer
+  // (compact abaissé : à 70, la bosse lisse du canal « continent » dominait
+  //  le masque de forme angulaire et reliait les deux masses en une seule)
   'continents': {
     sealevel: 50,
     'e-cont':    6,
     'e-scale':   16,
-    'e-compact': 70,
-    'e-edge':    15,
+    'e-compact': 50,
+    'e-edge':    5,
     'e-pers':    50
   },
   // Une seule masse qui couvre quasiment toute la carte (comme la Pangée)
@@ -707,21 +729,26 @@ const MAP_PRESETS = {
     'e-pers':    40
   },
   // Quelques grandes îles bien distinctes
+  // (compact abaissé : le canal « continent » basse fréquence reliait les îles
+  //  en une seule masse ; le masque de forme angulaire fait le reste)
   'islands-large': {
     sealevel: 55,
     'e-cont':    8,
     'e-scale':   18,
-    'e-compact': 65,
+    'e-compact': 35,
     'e-edge':    25,
     'e-pers':    55
   },
   // Beaucoup de petites îles
+  // (compact 35→18 et scale 22→24 : le canal basse fréquence produisait UNE
+  //  masse dominante de 85-95 % de la terre ; edge 15→25 : les bords
+  //  océaniques détachent les îles côtières)
   'archipelago': {
     sealevel: 55,
     'e-cont':    11,
-    'e-scale':   22,
-    'e-compact': 35,
-    'e-edge':    30,
+    'e-scale':   24,
+    'e-compact': 18,
+    'e-edge':    25,
     'e-pers':    60
   },
   // Miettes de terre éparpillées dans un océan
@@ -734,12 +761,15 @@ const MAP_PRESETS = {
     'e-pers':    65
   },
   // Un grand continent avec une mer intérieure au milieu
+  // (edge abaissé 55 → 10 : le masque de bord élevé envoyait la mer au BORD,
+  //  l'inverse du but ; l'excavation centrale du masque de forme attire
+  //  désormais le quantile de mer au centre)
   'inland-sea': {
     sealevel: 40,
-    'e-cont':    5,
-    'e-scale':   16,
-    'e-compact': 75,
-    'e-edge':    55,  // bord élevé pousse la mer au centre
+    'e-cont':    4,
+    'e-scale':   14,
+    'e-compact': 70,
+    'e-edge':    10,
     'e-pers':    45
   },
   // Grand continent criblé de petits lacs et golfes
@@ -766,16 +796,19 @@ const DEFAULTS = {
 };
 
 // Défauts par ressource (density en ‰, prox et size en pourcentage ou valeur entière)
+// Retour Thibaut 2026-11-13 : TOUTES les ressources à density 30 ‰ (= 3,0 %
+// affiché). En mode Quantile v2, 3 % = le VRAI taux de tuiles éligibles par
+// ressource ; en mode Bruit v1, seuil = 1 − 0,03×8 = 0,76 (atteignable).
 const RES_DEFAULTS = {
   'Bétail':   { density: 30, prox: 70, size: 4 },
-  'Baleines': { density: 12, prox: 60, size: 3 },
-  'Poissons': { density: 35, prox: 65, size: 4 },
-  'Or':       { density: 15, prox: 55, size: 3 },
-  'Fer':      { density: 25, prox: 60, size: 4 },
-  'Charbon':  { density: 20, prox: 55, size: 4 },
-  'Ruines':   { density: 12, prox: 30, size: 2 },
-  'Geyser':   { density: 8,  prox: 25, size: 2 },
-  'Soie':     { density: 18, prox: 50, size: 3 }
+  'Baleines': { density: 30, prox: 60, size: 3 },
+  'Poissons': { density: 30, prox: 65, size: 4 },
+  'Or':       { density: 30, prox: 55, size: 3 },
+  'Fer':      { density: 30, prox: 60, size: 4 },
+  'Charbon':  { density: 30, prox: 55, size: 4 },
+  'Ruines':   { density: 30, prox: 30, size: 2 },
+  'Geyser':   { density: 30, prox: 25, size: 2 },
+  'Soie':     { density: 30, prox: 50, size: 3 }
 };
 
 // ============================================================
@@ -1165,6 +1198,71 @@ function generateMap(N, seedStr, params) {
   const pE = params.elev, pH = params.humid, pT = params.temp;
   const pV = params.evt;
 
+  // --- LABO : MASQUE DE FORME par type de carte (retour Thibaut 2026-11-13) -
+  // Les presets du sélecteur TYPE ne changeaient que des SLIDERS : toutes les
+  // cartes gardaient la même morphologie de bruit (le masque de bord existant
+  // est symétrique et uniforme). Pour avoir de RÉELS types de cartes, chaque
+  // type ajoute un biais DÉPENDANT DE LA POSITION à l'élévation :
+  //   - continent  : bosse centrale → UN continent massé au centre, océan au bord ;
+  //   - continents  : deux lobes gaussiens opposés → DEUX masses séparées par l'océan ;
+  //   - pangea      : biais central doux + réglages compacts → une masse quasi totale ;
+  //   - islands-large : trois lobes → quelques grandes îles bien distinctes ;
+  //   - archipelago/fragmented : creuse le CENTRE → pas de masse dominante,
+  //     la terre vient du détail → une myriade d'îlots ;
+  //   - inland-sea : excavation centrale → un anneau de terres autour d'une mer intérieure ;
+  //   - lakes      : léger biais terre global.
+  // Les positions des lobes sont tirées par un PRNG DÉDIÉ (indépendant des
+  // autres étapes) : déterminisme par seed préservé, même seed = mêmes formes.
+  // 'custom' : AUCUN masque — comportement strictement identique à avant.
+  const mapType = params.mapType || 'custom';
+  const randShape = mulberry32(baseHash ^ 0x27D4EB2F);
+  let shapeBias = null; // (px, py, dc) → ajout à l'élévation ; dc = dist centre 0→1
+  const pxRadius = 1.2 * N; // rayon approximatif de la carte en unités-tuiles
+  const gauss = (px, py, ax, ay, s) =>
+    Math.exp(-(((px - ax) * (px - ax) + (py - ay) * (py - ay)) / (2 * s * s)));
+  if (mapType === 'continent') {
+    shapeBias = (px, py, dc) => 0.20 * Math.pow(1 - dc, 2);
+  } else if (mapType === 'continents') {
+    // Pattern ANGULAIRE à 2 lobes (cos 2θ) × distance + creux central : deux
+    // masses opposées séparées par deux bras de mer traversants ET une mer
+    // centrale — sans le creux, le disque central (toutes directions à petit
+    // rayon) relie les deux lobes en une seule composante. θ0 tiré par le
+    // PRNG dédié : même seed = mêmes continents.
+    const th = randShape() * Math.PI;
+    shapeBias = (px, py, dc) =>
+      0.45 * Math.cos(2 * (Math.atan2(py, px) - th)) * dc
+      - 0.30 * Math.pow(1 - dc, 2);
+  } else if (mapType === 'pangea') {
+    shapeBias = (px, py, dc) => 0.16 * Math.pow(1 - dc, 1.5);
+  } else if (mapType === 'islands-large') {
+    // Pattern angulaire à 3 lobes (cos 3θ) × distance + creux central :
+    // trois grandes îles en anneau autour d'une mer centrale (même garantie
+    // topologique que « continents » — le disque central relie sinon tout).
+    const th = (randShape() * Math.PI * 2) / 3;
+    shapeBias = (px, py, dc) =>
+      0.36 * Math.cos(3 * (Math.atan2(py, px) - th)) * dc
+      - 0.30 * Math.pow(1 - dc, 2);
+  } else if (mapType === 'archipelago') {
+    // Creux central modéré + 4 entailles angulaires traversantes : sans le
+    // creux, le détail forme au centre UNE masse géante ; creux trop fort,
+    // c'est l'anneau extérieur qui devient un bloc continu. Le compromis :
+    // le creux disperse les terres vers l'anneau, les entailles (cos 4θ,
+    // plus fortes à l'extérieur) découpent cet anneau en arcs d'îles.
+    const th4 = randShape() * Math.PI / 2;
+    shapeBias = (px, py, dc) =>
+      -0.30 * Math.pow(1 - dc, 2)
+      - 0.12 * Math.cos(4 * (Math.atan2(py, px) - th4)) * (0.3 + 0.7 * dc);
+  } else if (mapType === 'fragmented') {
+    shapeBias = (px, py, dc) => -0.13 * Math.pow(1 - dc, 2);
+  } else if (mapType === 'inland-sea') {
+    // Excavation centrale profonde et large : le quantile de mer suit le
+    // creux → la mer se concentre au centre, l'anneau reste terrestre
+    // (le preset abaisse le masque de bord pour ne PAS y envoyer la mer).
+    shapeBias = (px, py, dc) => -0.50 * Math.pow(Math.max(0, 1 - dc * 1.75), 2);
+  } else if (mapType === 'lakes') {
+    shapeBias = (px, py, dc) => 0.04 * (1 - dc);
+  }
+
   const elev = new Float32Array(size);
   const humid = new Float32Array(size);
   const temp = new Float32Array(size);
@@ -1195,6 +1293,9 @@ function generateMap(N, seedStr, params) {
     // Masque de bord (léger par défaut : permet calanques et terres côtières)
     const dist = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r)) / N;
     e = e * (1 - dist * dist * pE.edge);
+    // LABO : masque de forme par type de carte (voir plus haut) — ajout
+    // positionnel APRÈS le blend bruit + le masque de bord, avant le clamp.
+    if (shapeBias) e += shapeBias(px, py, dist);
 
     elev[i] = Math.max(0, Math.min(1, e));
     // (humidité et température calculées après le niveau de la mer)
@@ -2099,7 +2200,7 @@ const ctx = canvas.getContext('2d', { alpha: false });
 
 let view = { x: 0, y: 0, scale: 1 };
 let map = null;
-let layers = { rivers: true, resources: true, grid: false };
+let layers = { rivers: true, resources: true, grid: true };
 let selected = null;
 
 function resizeCanvas() {
@@ -2613,7 +2714,7 @@ const PARAM_SPECS = {
 
 // Formatters pour les paramètres de ressources (tous identiques)
 const RES_PARAM_SPECS = {
-  density: { fmt: v => (v / 10).toFixed(1) + '%', conv: v => v / 1000, min: 0,  max: 80, def: 20 },
+  density: { fmt: v => (v / 10).toFixed(1) + '%', conv: v => v / 1000, min: 0,  max: 80, def: 30 },
   prox:    { fmt: v => v + '%',                    conv: v => v / 100,  min: 0,  max: 95, def: 55 },
   size:    { fmt: v => v,                          conv: v => v,        min: 1,  max: 12, def: 5  }
 };
@@ -2668,6 +2769,7 @@ function getParams() {
     },
     res,
     resMode: (document.getElementById('res-mode') || {}).value || 'bruit',
+    mapType: (document.getElementById('map-type') || {}).value || 'custom',
     evt: {
       volcan: read('evt-volcan'),
       river:  read('evt-river'),
@@ -3082,6 +3184,30 @@ document.getElementById('theme-toggle').addEventListener('click', () => {
   currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
   applyTheme(currentTheme);
 });
+
+// --- LABO : plein écran (retour Thibaut 2026-11-13) -----------------------
+// Fonctionne aussi DANS l'iframe de l'onglet « 🧪 Carte labo » du gestionnaire
+// de campagne : l'élément <iframe> de CarteLaboView porte allowFullScreen,
+// c'est ce qui autorise le passage en plein écran depuis le document embarqué.
+(function () {
+  const btn = document.getElementById('fs-toggle');
+  const doc = document;
+  const root = doc.documentElement;
+  const rq = root.requestFullscreen || root.webkitRequestFullscreen;
+  const ex = doc.exitFullscreen || doc.webkitExitFullscreen;
+  if (!rq || !ex) { btn.style.display = 'none'; return; }
+  const sync = () => {
+    const on = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
+    btn.title = on ? 'Quitter le plein écran' : 'Plein écran';
+    btn.setAttribute('aria-label', btn.title);
+  };
+  btn.addEventListener('click', () => {
+    if (doc.fullscreenElement || doc.webkitFullscreenElement) ex.call(doc);
+    else rq.call(root);
+  });
+  doc.addEventListener('fullscreenchange', sync);
+  doc.addEventListener('webkitfullscreenchange', sync);
+})();
 
 regenerate(true);
 
