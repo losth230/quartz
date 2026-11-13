@@ -309,6 +309,23 @@
   }
   #labo-link:hover { transform: scale(1.05); }
   #labo-link:active { transform: scale(0.95); }
+
+  /* Bouton labo visible DANS le panneau de génération */
+  #labo-open {
+    display: block;
+    text-align: center;
+    padding: 7px 10px;
+    border-radius: 4px;
+    background: var(--btn-bg);
+    border: 1px solid var(--btn-border);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    margin-bottom: 4px;
+  }
+  #labo-open:hover { background: var(--btn-hover); }
 </style>
 <canvas id="map"></canvas>
 
@@ -339,6 +356,8 @@
         <option value="custom" selected>Personnalisé</option>
       </select>
     </div>
+
+    <a id="labo-open" href="generateur-carte-labo.html?v=1" target="_blank" rel="noopener" title="Ouvrir la copie d'expérimentation (tests de génération) dans un nouvel onglet. La version officielle reste la référence.">🧪 Version labo — nouvel onglet</a>
     <div class="field">
       <label>Joueurs</label>
       <input type="number" id="players" min="0" max="12" value="0" step="1">
