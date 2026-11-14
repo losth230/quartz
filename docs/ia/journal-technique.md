@@ -6761,3 +6761,73 @@ la corde vs le disque AVANT d'écrire la boucle d'essais.
 Cache-busters : page Wargame ?v=10 (officiel), composant jeu et liens
 officiel→labo ?v=22, lien retour labo→officiel ?v=10. Harnais
 scripts/harnais-labo.cjs poussé avec C8 v2/C9 v2/C10 (v7).
+
+
+## Fin de tour bloquée à 1/2 : deux navigateurs sur le MÊME siège — badge « Vous êtes Joueur N » dans la barre (retour Thibaut 2026-11-14 « un petit symbole avec le numéro du joueur en haut pour pas que les joueurs se perdent », base 7fee9299, feat 7e444da2, règles cacf3259)
+
+RAPPORT D'INCIDENT (salon chasse-pecheL1, 2026-11-14, ~15h45-16h05).
+Symptôme rapporté : « la fin de tour semble planter et bloquer en
+permanence » — la barrière reste à 1/2 joueur prêt.
+
+ÉLIMINÉS par le diagnostic (tout est vert côté serveur) :
+- Moteur : repro locale 3 tours + 11 merveilles = 297 ms, aucune
+  exception ; sur l'état RÉEL du salon (fusion + runTurn) = 18 ms.
+- Edge Function resoudre-tour : déployée à 12:50 avec le moteur
+  merveilles (run 43596750207 success sur b32d3dca), répond en
+  1,65 s ; un CLONE du salon réel (ligne + section + config
+  mondiale copiés, salon diag-eot-2911) est résolu de bout en bout
+  en 1,46 s (fusion 2 ms, tour publié, file purgée).
+- Perf : benchmark 12 000 habitants/19 bâtiments = 18,3 s à HEAD vs
+  17,6 s à la base 01ca3a40 — AUCUNE régression du tour des
+  merveilles ; profil CPU : migrationBonheur ~20 %,
+  batimentsRemplaces 12,9 %, emplacementsMetierVille 11,6 %,
+  maladieStep 8,7 % — tout préexistant, rien du tour #29.
+- PostgREST/RLS : upsert onConflict, repli delete/insert, update
+  et insert testés en prod avec la clé anon (201/204/201) ; l'index
+  cp_events_section_unique EXISTE.
+- Pushes wargame parallèles : ne touchent pas le jeu (paramètre
+  ?v= d'iframe du générateur uniquement).
+
+LA CAUSE : le n° de joueur se choisit À LA MAIN à l'écran de
+connexion (« Mon n° de joueur », défaut 1, AUCUNE unicité
+vérifiée) — les DEUX navigateurs étaient sur le siège Joueur 1.
+La poussée de section est un upsert (clé unique salon/tour/
+joueur/type) : la fin de tour du second navigateur REMPLACE la
+section du premier au lieu d'ajouter la sienne — la barrière lit
+{J1} pour toujours, elle ne peut mathématiquement JAMAIS atteindre
+2/2. Preuves : la « Scierie » (action de l'ami) journalisée sous
+le siège 1 dans le tour publié ; une file ne contenant qu'une
+section joueur 1 qui change de contenu à chaque clic ; « il clique
+mais la barrière reste à 1/2 ».
+
+OPÉRATIONS D'INCIDENT (aucun commit) : le Forcer du joueur 1 a fini
+par passer (16:01, attendus réduits aux poussés) → tour 2 publié
+SANS le J2 (« ⏭ Tour forcé : sections de 1 joueur ignorées »,
+sémantique prévue). Demande de rewind au début du tour 1 :
+IMPOSSIBLE côté table — le trigger garde_tour_publie (schema-v2)
+refuse tout recul de tour_publie (2→1), et un état mentalement
+rembobiné soft-lockerait le salon (l'Edge répondrait dejaPublie à
+chaque tour 1). Équivalent fidèle exécuté : salon chasse-pecheL2
+créé avec l'état PRISTIN du début du tour 1 (sauvegardé avant la
+résolution — graine 3167087777, logs de création seuls, file
+vierge), sémantique de ligneCreationSalon (tour_publie 0). Salon de
+diagnostic diag-eot-2911 marqué tombstone (à purger via l'éditeur
+SQL : delete from parties_chasse_peche where id = 'diag-eot-2911').
+
+LE FIX (feat 7e444da2, jeu/src/components/TurnBar.tsx) :
+- badge « 👤 Vous êtes Joueur N » dans la barre de tour (mode
+  multijoueur uniquement), info-bulle rappelant le piège du siège
+  dupliqué ;
+- bandeau d'attente : chaque siège listé comme avant, le vôtre
+  marqué « (vous) » — un siège doublé saute aux yeux immédiatement.
+Attribution inchangée : choix manuel (pas de réservation
+automatique — hors scope du retour). Mode local : pas de badge.
+
+VÉRIFICATIONS : 371/371 tests natifs (node --experimental-strip-types,
+sans composants) ; diag régénéré IDENTIQUE (aucun changement moteur,
+rien à committer) ; aucun test composant ne référence TurnBar ;
+tsc validé par le build du déploiement Pages (« tsc && vite
+build ») ; bundle live index-CM3MCDYK.js vérifié : « Vous êtes
+Joueur » ×1, « (vous) » ×1 (bandeau — le commentaire JSX est
+strippé), « Mon n° de joueur » ×2 (info-bulle + SetupPanel),
+« Tour de Crystal » ×10 (merveilles intactes).
