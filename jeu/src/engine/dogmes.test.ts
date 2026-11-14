@@ -43,7 +43,7 @@ import { domicilesCultureVille } from './domiciles'
 import { logementsVille, bonheurVilleComplete } from './bonheur'
 import { maladieStep } from './sante'
 import { garnisonHabitationVille, malusGuerresSaintes } from './garnisons'
-import { applyCultureInfluence } from './culture'
+import { applyCultureInfluence, detailConversionVille } from './culture'
 import { transfererTributVassal } from './vassalite'
 import { cloneDefaultConfig, type DogmeDef } from '../config/defaultConfig'
 import {
@@ -682,8 +682,11 @@ test('Dogme des Guerres Saintes : −40 garnison hors culture porteuse, une fois
   assert.equal(gApres, Math.max(0, gAvant - 80), 'le malus passe à la garnison réelle, plancher 0')
 })
 
-test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et +0,15 de part DANS le tirage (applyCultureInfluence)', () => {
-  // (a) Évangile : le poids FINAL de la culture porteuse ×1,1 dans le tirage
+test('Dogmes de l\u2019Évangile et du Nationalisme : force ×1,1 et +0,15 de part DANS le duel V2 (applyCultureInfluence)', () => {
+  // (V2 « Pression/Ancrage », arbitrage Thibaut 2026-11-14 : plus de
+  //  tirage au hasard par habitant — le bonus du dogme vit dans les
+  //  FORCES du duel par ville, lisibles via detailConversionVille.)
+  // (a) Évangile : la FORCE de la culture porteuse ×1,1
   const pa = partie()
   const pA = pa.state.players[0]
   if (!pA) throw new Error('joueur absent')
@@ -691,33 +694,22 @@ test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et +0,15 de pa
   habitantA.culture = 'Déisme'
   pa.state.population[pA.n] = [habitantA]
   // la culture porteuse doit avoir du POIDS dans la pression : sans
-  //  Tourisme général, son poids vaut 0 (×1,1 ne se verrait pas) —
+  //  Tourisme général, sa force vaut 0 (×1,1 ne se verrait pas) —
   //  on lui donne du Tourisme général (hors villes)
   pA.resources['Tourisme'] = { stock: 10, prod: 0 }
-  let poidsNordique = 0
-  const runA = () => {
-    habitantA.culture = 'Déisme' // reset : le tirage précédent a pu convertir
-    applyCultureInfluence(pa.state, pA, fakeRng({
-      chance: () => true, // tente la conversion à chaque tour
-      pickWeighted: <T,>(items: T[], weight: (t: T) => number): T => {
-        for (const it of items as Array<[string, number]>) {
-          if (it[0] === 'Culture Nordique') poidsNordique = weight(it as never)
-        }
-        return (items as Array<[string, number]>)[0] as unknown as T
-      },
-    }), recapTest())
-  }
-  runA()
-  const poidsSans = poidsNordique
+  const bergenA = pA.villes.find((v) => v.nom === 'Bergen')
+  if (!bergenA) throw new Error('ville absente')
+  const forceSans = detailConversionVille(pa.state, pA, bergenA, pa.C).forces['Culture Nordique']?.force
+  assert.ok(forceSans !== undefined && forceSans > 0, 'pré-condition : la culture porteuse a une force')
   prendre(pa.state, 'Culture Nordique', 'Dogme de l\u2019Évangile')
-  runA()
-  assert.ok(poidsSans > 0, 'pré-condition : la culture porteuse a un poids')
-  assert.ok(Math.abs(poidsNordique / poidsSans - 1.1) < 1e-9,
-    'Évangile : le poids de la culture porteuse ×1,1')
+  const forceAvec = detailConversionVille(pa.state, pA, bergenA, pa.C).forces['Culture Nordique']?.force
+  assert.ok(forceAvec !== undefined)
+  assert.ok(Math.abs(forceAvec! / forceSans! - 1.1) < 1e-9,
+    'Évangile : la force de la culture porteuse ×1,1')
   // (b) Nationalisme : PAS de jet séparé (correctif arbitre Thibaut
   //  30/10 — « pris en compte dans le test de conversion culturelle
-  //  déjà présent ») : la culture d accueil gagne +0,15 × le poids
-  //  total des autres cultures DANS le tirage pondéré
+  //  déjà présent », remappé V2 dans les forces) : la culture
+  //  d ACCUEIL gagne +0,15 × la force totale des autres cultures
   const pb = partie()
   const pB = pb.state.players[0]
   if (!pB) throw new Error('joueur absent')
@@ -725,43 +717,32 @@ test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et +0,15 de pa
   habitantB.culture = 'Déisme'
   pb.state.population[pB.n] = [habitantB]
   pB.resources['Tourisme'] = { stock: 10, prod: 0 }
-  let poidsB: Record<string, number> = {}
-  const runB = (retour: boolean) => {
-    habitantB.culture = 'Déisme' // reset : le tirage précédent a pu convertir
-    let tirages = 0
-    applyCultureInfluence(pb.state, pB, fakeRng({
-      chance: () => { tirages++; return true }, // une SEULE tentative de conversion
-      pickWeighted: <T,>(items: T[], weight: (t: T) => number): T => {
-        poidsB = {}
-        for (const it of items as Array<[string, number]>) poidsB[it[0]] = weight(it as never)
-        const hote = (items as Array<[string, number]>).find((it) => it[0] === 'Culture Nordique')
-        if (retour && hote) return hote as unknown as T
-        return (items as Array<[string, number]>)[0] as unknown as T
-      },
-    }), recapTest())
-    return tirages
-  }
-  const tiragesSans = runB(false)
-  const poidsSansB = { ...poidsB }
+  const bergenB = pB.villes.find((v) => v.nom === 'Bergen')
+  if (!bergenB) throw new Error('ville absente')
+  const forcesSansB = { ...detailConversionVille(pb.state, pB, bergenB, pb.C).forces }
   prendre(pb.state, 'Culture Nordique', 'Dogme du Nationalisme')
-  const tiragesAvec = runB(true)
-  assert.equal(tiragesSans, 1, 'sans dogme : un seul tirage de conversion par personnage')
-  assert.equal(tiragesAvec, 1, 'avec dogme : TOUJOURS un seul tirage — le bonus est DANS le tirage, pas un jet séparé')
-  // le poids d accueil = poids sans dogme + 0,15 × le poids des autres
-  const autres = Object.entries(poidsB).filter(([cult]) => cult !== 'Culture Nordique')
-    .reduce((acc, [, w]) => acc + w, 0)
-  const attendu = (poidsSansB['Culture Nordique'] ?? 0) + 0.15 * autres
-  assert.ok(Math.abs((poidsB['Culture Nordique'] ?? 0) - attendu) < 1e-9,
-    'Nationalisme : la culture d accueil gagne +0,15 × le poids total des autres cultures')
-  // les autres poids ne bougent pas
-  for (const [cult, w] of Object.entries(poidsSansB)) {
+  const detailAvec = detailConversionVille(pb.state, pB, bergenB, pb.C)
+  // la force d accueil = force sans dogme + 0,15 × la force des autres
+  const autres = Object.entries(forcesSansB).filter(([cult]) => cult !== 'Culture Nordique')
+    .reduce((acc, [, f]) => acc + f.force, 0)
+  const attendu = (forcesSansB['Culture Nordique']?.force ?? 0) + 0.15 * autres
+  assert.ok(Math.abs((detailAvec.forces['Culture Nordique']?.force ?? 0) - attendu) < 1e-9,
+    'Nationalisme : la culture d accueil gagne +0,15 × la force totale des autres cultures')
+  // les autres forces ne bougent pas
+  for (const [cult, f] of Object.entries(forcesSansB)) {
     if (cult !== 'Culture Nordique') {
-      assert.ok(Math.abs((poidsB[cult] ?? 0) - w) < 1e-9, `le poids de ${cult} est inchangé`)
+      assert.ok(Math.abs((detailAvec.forces[cult]?.force ?? 0) - f.force) < 1e-9,
+        `la force de ${cult} est inchangée`)
     }
   }
-  // la conversion mène à la culture d accueil par le log NORMAL (pas de mention dédiée)
+  // la conversion est DÉTERMINISTE : l habitant peu ancré bascule vers
+  //  la culture d accueil, SANS aucun jet rng (le bonus est dans les
+  //  forces, pas un jet séparé)
+  let jets = 0
+  applyCultureInfluence(pb.state, pB, fakeRng({ chance: () => { jets++; return true } }), recapTest())
+  assert.equal(jets, 0, 'aucun jet rng en ville mixte — la conversion est déterministe')
   assert.equal(habitantB.culture, 'Culture Nordique',
-    'converti vers la culture d accueil par le tirage normal dopé')
+    'converti vers la culture d accueil par le duel déterministe dopé')
   assert.ok(!pb.state.log.some((l) => l.texte.includes('(dogme du Nationalisme)')),
     'plus de log dédié — l entrée de conversion normale suffit')
 })

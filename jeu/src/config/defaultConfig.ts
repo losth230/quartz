@@ -693,6 +693,16 @@ export interface GameConfig {
    *  même schéma que taxes25 — les valeurs ENCORE AUX ANCIENS
    *  DÉFAUTS sont mises à jour, une personnalisation est conservée. */
   santeGuerisseurs2026?: boolean
+  /** Conversion culturelle V2 « Pression/Ancrage » (arbitrage
+   *  Thibaut 2026-11-14 « proposer autre chose, plus cohérent et
+   *  plus jouable techniquement ») : fin du tirage au hasard par
+   *  habitant (conversionProba / conversionMemeCulture, clés
+   *  mortes retirées) — duel déterministe par ville ; les
+   *  nouveaux paramètres (conversionMax 1 PROVISOIRE,
+   *  conversionPlancher 0,01, conversionAncrageNoble 15) viennent
+   *  de mergeParams. Marqueur (z) : migration ciblée (cfgOf)
+   *  indépendante du tampon schemaVersion, patron taxes25. */
+  conversionDeterministe2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -2171,6 +2181,22 @@ export function cfgOf(config?: GameConfig): Cfg {
       }
     }
     merged.santeGuerisseurs2026 = true
+  }
+  // (Arbitrage Thibaut 2026-11-14 — conversion culturelle V2
+  //  « Pression/Ancrage » : duel déterministe par ville, plus de
+  //  tirage au hasard par habitant. Migration ciblée (patron
+  //  taxes25, SANS bump du tampon schemaVersion — règle (x)) :
+  //  les clés conversionProba / conversionMemeCulture sont mortes
+  //  (aucune personnalisation ne peut survivre : le moteur ne les
+  //  lit plus) et sont dépouillées ; les trois nouveaux paramètres
+  //  (conversionMax, conversionPlancher, conversionAncrageNoble)
+  //  sont semés par mergeParams, qui étale DEFAULT_PARAMS sous la
+  //  personnalisation — une clé personnalisée existante prime.)
+  if (!merged.conversionDeterministe2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    delete pm.conversionProba
+    delete pm.conversionMemeCulture
+    merged.conversionDeterministe2026 = true
   }
   // SUPPRESSION DE LA MARTIALITÉ (arbitrage Thibaut 2026-10-21) :
   //  l'hérédité est conservée, mais la martialité disparaît du jeu —

@@ -64,6 +64,7 @@ import { supprimerVille, transfererVillePartage } from '../../engine/villes'
 import { couleurRessource, fondRessource, type Cfg } from '../../engine/gameData'
 import { villeDevientCiteLibre } from '../../engine/citesLibres'
 import { compterClassesSociales } from '../../engine/statutSocial'
+import { detailConversionVille } from '../../engine/culture'
 import { NumberInput, Select, TextInput, Button, fmt, TAX_OPTIONS } from '../ui'
 import { ChoicePicker } from '../Picker'
 import { faireConstruire, faireBatParFamille } from './Constructions'
@@ -127,6 +128,9 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
     const culturesTriees = Object.entries(cultures).sort(
       (a, b) => (a[0] === ville.culture ? -1 : b[0] === ville.culture ? 1 : b[1] - a[1]),
     )
+    // V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14) :
+    //  balance du duel de conversion, mêmes nombres que le moteur.
+    const detailConv = detailConversionVille(state, p, ville, C)
     return (
       <div key={idx} className="mini">
         {/* Ligne de tête densifiée (retour Thibaut 2026-10-14) :
@@ -424,6 +428,63 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                           <td className="num"><strong>{nbVivants}</strong></td>
                           <td className="num muted">{nbVivants > 0 ? '100 %' : '—'}</td>
                         </tr>
+                      </tbody>
+                    </table>
+                  )}
+                </div>
+                {/* ── BALANCE CULTURELLE (V2 « Pression/Ancrage »,
+                    arbitrage Thibaut 2026-11-14) : les forces du
+                    duel de conversion, exactement ce que le
+                    prochain fin de tour appliquera — source unique
+                    detailConversionVille (engine/culture.ts).
+                    Colonnes : culture · force (pression + présence
+                    démographique) ; puis les conversions prévues
+                    ce tour, ou la cause d'immobilité (ancrage /
+                    plancher des villes homogènes). */}
+                <div>
+                  <div
+                    className="ville-duo-titre"
+                    title="V2 « Pression/Ancrage » (2026-11-14) : force d'une culture = pression touristique mondiale + poids démographique local (par vivant de la culture dans la ville) ; la culture dominante convertit ce tour les habitants dont l'ancrage (force de leur propre culture ici + noblesse) est dépassé, au plus le cap par ville et par tour. Le Dirigeant est immunisé. Une ville 100 % homogène tente un plancher résiduel de 1 % par tour vers la culture étrangère la plus forte."
+                  >
+                    Balance culturelle : <strong>{detailConv.dominant}</strong> domine
+                  </div>
+                  {detailConv.vivants === 0 ? (
+                    <div className="muted small">aucun habitant</div>
+                  ) : (
+                    <table className="ville-table">
+                      <tbody>
+                        {Object.entries(detailConv.forces)
+                          .filter(([, f]) => f.presence > 0 || f.pression > 0.001)
+                          .sort((a, b) => b[1].force - a[1].force)
+                          .map(([cult, f]) => (
+                            <tr key={cult} className={cult === detailConv.dominant ? 'ligne-major' : ''}>
+                              <td>
+                                {cult === detailConv.dominant
+                                  ? <strong>{cult}</strong>
+                                  : <span className="muted">{cult}</span>}
+                              </td>
+                              <td className="num">{fmt(Math.round(f.force))}</td>
+                              <td className="num muted">
+                                {fmt(Math.round(f.pression))} + {fmt(Math.round(f.presence))}
+                              </td>
+                            </tr>
+                          ))}
+                        {detailConv.convertibles.map((c) => (
+                          <tr key={c.id}>
+                            <td className="small">{c.nom} <span className="muted">({c.culture})</span></td>
+                            <td className="num small">→ {c.vers}</td>
+                            <td className="num small muted">ancrage {fmt(Math.round(c.ancrage))}</td>
+                          </tr>
+                        ))}
+                        {detailConv.convertibles.length === 0 && (
+                          <tr>
+                            <td className="muted small" colSpan={3}>
+                              {detailConv.plancher
+                                ? `ville 100 % ${detailConv.dominant} — plancher ${Math.round(C.p.conversionPlancher * 100)} % vers ${detailConv.plancherVers}`
+                                : 'aucune conversion ce tour — ancrage suffisant'}
+                            </td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   )}

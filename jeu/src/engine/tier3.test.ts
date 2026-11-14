@@ -41,7 +41,7 @@ import { detailGainsVille, impotsVassaux } from './economie'
 import { effetsCommerceJoueur, maxRoutesJoueur, creerRouteCommerce } from './commerce'
 import { capMetierVille } from './metiers'
 import { transfererTributVassal } from './vassalite'
-import { applyCultureInfluence } from './culture'
+import { applyCultureInfluence, detailConversionVille } from './culture'
 import { constructionRef, resumeConstruction } from './constructions'
 import { normaliserEtat } from './villes'
 
@@ -327,7 +327,10 @@ test('Guilde des diplomates (tier 3) : +5 % de tribut vassal sur les DEUX chemin
 
 // ── Test 6 : Guilde des évangélistes — conversion locale DANS le tirage ───
 
-test('Guilde des évangélistes (tier 3) : +10 % de conversion vers la culture de la ville — DANS le tirage pondéré (pattern Nationalisme), PAS de jet séparé', () => {
+test('Guilde des évangélistes (tier 3) : +10 % de conversion vers la culture de la ville — DANS les forces du duel V2 (pattern Nationalisme), PAS de jet séparé', () => {
+  // (V2 « Pression/Ancrage », arbitrage Thibaut 2026-11-14 : le bonus
+  //  de la guilde vit dans les FORCES du duel par ville, lisibles via
+  //  detailConversionVille — la conversion elle-même est déterministe.)
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -336,7 +339,7 @@ test('Guilde des évangélistes (tier 3) : +10 % de conversion vers la culture d
   const habitant = perso('E1', 30, { ville: 'Capitale' })
   habitant.culture = 'Déisme'
   state.population[p.n] = [habitant]
-  // la culture d'accueil doit avoir du POIDS dans le tirage : on lui
+  // la culture d'accueil doit avoir du POIDS dans la pression : on lui
   //  donne du Tourisme général (hors villes)
   p.resources['Tourisme'] = { stock: 10, prod: 0 }
   // guilde de TEST INJECTÉE dans le référentiel de la config (patron
@@ -352,47 +355,32 @@ test('Guilde des évangélistes (tier 3) : +10 % de conversion vers la culture d
   assert.ok(constructionRef('Guilde test conversion', C.config, 'Château'),
     'la guilde de test est au référentiel injecté')
 
-  let poids: Record<string, number> = {}
-  const run = (retour: boolean) => {
-    habitant.culture = 'Déisme' // reset : le tirage précédent a pu convertir
-    let tirages = 0
-    applyCultureInfluence(state, p, fakeRng({
-      chance: () => { tirages++; return true }, // une SEULE tentative de conversion
-      pickWeighted: <T,>(items: T[], weight: (t: T) => number): T => {
-        poids = {}
-        for (const it of items as Array<[string, number]>) poids[it[0]] = weight(it as never)
-        const hote = (items as Array<[string, number]>).find((it) => it[0] === 'Culture Nordique')
-        if (retour && hote) return hote as unknown as T
-        return (items as Array<[string, number]>)[0] as unknown as T
-      },
-    }), emptyRecap())
-    return tirages
-  }
+  // sans la guilde dans la ville d'accueil : forces simples
+  const forcesSans = { ...detailConversionVille(state, p, p.villes[0]!, C).forces }
 
-  // sans la guilde dans la ville d'accueil : tirage simple
-  const tiragesSans = run(false)
-  const poidsSans = { ...poids }
-  assert.equal(tiragesSans, 1, 'sans guilde : un seul tirage de conversion par personnage')
-
-  // la guilde arrive dans la ville d'ACCUEIL : +0,1 × poids des autres
-  //  cultures pour la culture d'accueil — TOUJOURS un seul tirage
+  // la guilde arrive dans la ville d'ACCUEIL : +0,1 × force des autres
+  //  cultures pour la culture d'accueil
   p.villes[0] = chateau(p, ['Guilde test conversion'])
-  const tiragesAvec = run(true)
-  assert.equal(tiragesAvec, 1,
-    'avec la guilde : TOUJOURS un seul tirage — le bonus est DANS le tirage, pas un jet séparé')
-  const autres = Object.entries(poids).filter(([cult]) => cult !== 'Culture Nordique')
-    .reduce((acc, [, w]) => acc + w, 0)
-  const attendu = (poidsSans['Culture Nordique'] ?? 0) + 0.1 * autres
-  assert.ok(Math.abs((poids['Culture Nordique'] ?? 0) - attendu) < 1e-9,
-    'la culture d accueil gagne +0,1 × le poids total des autres cultures')
-  // les autres poids ne bougent pas
-  for (const [cult, w] of Object.entries(poidsSans)) {
+  const detailAvec = detailConversionVille(state, p, p.villes[0]!, C)
+  const autres = Object.entries(forcesSans).filter(([cult]) => cult !== 'Culture Nordique')
+    .reduce((acc, [, f]) => acc + f.force, 0)
+  const attendu = (forcesSans['Culture Nordique']?.force ?? 0) + 0.1 * autres
+  assert.ok(Math.abs((detailAvec.forces['Culture Nordique']?.force ?? 0) - attendu) < 1e-9,
+    'la culture d accueil gagne +0,1 × la force totale des autres cultures')
+  // les autres forces ne bougent pas
+  for (const [cult, f] of Object.entries(forcesSans)) {
     if (cult !== 'Culture Nordique') {
-      assert.ok(Math.abs((poids[cult] ?? 0) - w) < 1e-9, `le poids de ${cult} est inchangé`)
+      assert.ok(Math.abs((detailAvec.forces[cult]?.force ?? 0) - f.force) < 1e-9,
+        `la force de ${cult} est inchangée`)
     }
   }
+  // la conversion est DÉTERMINISTE : l habitant peu ancré bascule vers
+  //  la culture d accueil, SANS aucun jet rng
+  let jets = 0
+  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return true } }), emptyRecap())
+  assert.equal(jets, 0, 'aucun jet rng en ville mixte — la conversion est déterministe')
   assert.equal(habitant.culture, 'Culture Nordique',
-    'converti vers la culture d accueil par le tirage normal dopé')
+    'converti vers la culture d accueil par le duel déterministe dopé')
 })
 
 // ── Référentiel : libellés des guildes tier 3 (picker + wiki) ────────────
