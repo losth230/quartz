@@ -6442,64 +6442,94 @@ différemment d'avant ce correctif (changement de forme voulu) ; les
 autres types sont inchangés. Ctrl+F5 pour vider le cache (le bundle
 jeu référence maintenant `?v=13`).
 
-## Conversion culturelle V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, base c3035943)
+## Labo générateur : masses plus petites et plus nombreuses, fin de l'anneau d'eau forcé (5e retour Thibaut 2026-11-14, base 867c801)
 
-**Retour.** « Est-ce que tu pourrais me proposer autre chose pour la
-conversion culturelle, qui soit plus cohérente et plus jouable de
-manière technique ? » — l'ancien moteur tirait au hasard une
-tentative à 10 % par habitant puis une culture dans un tirage
-pondéré ; Thibaut a tranché la V2 déterministe « Pression/Ancrage »
-sur proposition (3 variantes), avec : plancher minuscule CONSERVÉ
-(une ville homogène n'est pas immunisée), conversion personnage par
-personnage SANS les familles, cap 1 par ville-tour en PARAMÈTRE
-réglable (conversionMax, équilibrage explicite différé en second
-temps).
+**Retour.** « Tu as fait l'inverse de ce que je voulais, je voulais
+des masses terrestres plus petites, pas des anneaux d'eau. » — le
+4e retour avait produit 3-10 masses de 70-100 tuiles (jusqu'à 40 %
+de la terre en une masse) et forcé un anneau d'eau au bord pour
+détacher ces masses trop grosses. Le but est depuis le début des
+masses PLUS PETITES (~15-45 tuiles), PLUS NOMBREUSES, avec un océan
+du pourtour statistique, pas sculpté.
 
-**Commit jeu :** e3ede969 (feat) — engine/culture.ts réécrit (duel
-par ville : Force = pression touristique + poids démographique
-local ×(1+évangile), bonus d'accueil Nationalisme + Guilde des
-évangélistes ; ancrage = compatriotes × poids + noblesse ;
-conversion des moins ancrés sous la force dominante, cap
-conversionMax ; plancher rng 1 % des villes 100 % homogènes ;
-Dirigeant immunisé), bloc « Balance culturelle » dans
-components/pays/VilleCarte.tsx (source unique detailConversionVille
-— la vue et le moteur calculent les mêmes nombres), params.ts
-(conversionMax 1 PROVISOIRE, conversionPlancher 0,01,
-conversionAncrageNoble 15 ; conversionProba et conversionMemeCulture
-retirés), defaultConfig.ts (migration ciblée conversionDeterministe2026,
-patron taxes25 : les 2 clés mortes dépouillées, les 3 nouvelles
-venues de mergeParams), tests : conversion.test.ts NOUVEAU (8 tests :
-ville homogène + plancher, minorité fond à 1/tour, conversionMax=3,
-renversement par tourisme massif, isolé avant communauté, noble
-résiste, Dirigeant immunisé, majorité des villes) et réécriture des
-tests Évangile/Nationalisme (dogmes.test.ts) et Guilde des
-évangélistes (tier3.test.ts) sur le détail exact des forces.
-**Commit règles :** e8161862 (docs/ia/regles-et-arbitrages.md —
-section « Conversion culturelle V2 « Pression/Ancrage » »).
-**Présent commit : journal seul.**
+**Diagnostic.** Chaîne établie par mesures au harnais (grilles 8
+seeds × r=15) :
 
-**Leçon de design.** Le scénario « 25/25 ville mixte stable » imaginé
-en amont était faux en pratique : les cultures du référentiel portent
-une pression de base 0,001 qui départage toute égalité démographique
-parfaite (la culture du référentiel l'emporte de 0,001 et fond l'autre
-à cap/tour). Repéré À L'ANALYSE avant d'écrire les tests — aucun run
-raté, le harnais est passé 360/360 du premier coup. Comportement
-accepté (knife-edge d'égalité parfaite, rarement durable) et
-l'immobilité verrouillée autrement : le test d'ancrage utilise
-un noble (ancrage +15) contre une force juste au-dessus du roturier.
+1. **Le curseur de mer ne fait pas la taille d'île** : le seuil est
+   un QUANTILE qui se cale au plancher du fond aplati (squeeze
+   ×0,08/×0,35). Monter la mer pour réduire une île descend le seuil
+   dans le fond → miettes percolantes. C'est le BUDGET
+   (count, σ, sepFact) qui fixe la taille, le curseur ne gère que la
+   part totale de terre.
+2. **Soudure au point médian warpé** : à sep 3,1-3,5σ, le point
+   médian entre deux voisines (distant de sep/2σ ≈ 1,55-1,75σ du
+   centre de chacune) reste porté par le fond + le warp : îles
+   soudées par paires (top1 55-63 tuiles sur 8/8 seeds). Condition
+   mesurée : gap/2σ − 0,35 ≥ x_e(≈1,4-1,5) → **sepFact 3,6-4,0**.
+3. **Jitter de taille 0,9+0,25** : écarts d'aires ×1,6 → une île
+   dominante à 44 % de la terre. Resserré à 0,95+0,12.
+4. **Placement 2-anneaux fixes (60 %/40 %)** : à count élevé le
+   rejet aligne les essais en arcs soudés (96-155 tuiles).
+   REMPLACÉ par des **couronnes adaptatives** : de l'extérieur vers
+   le centre, chaque couronne porte n = ⌊π/asin(sep/2r)⌋ bosses,
+   écart radial sep, couronne suivante seulement si
+   rNext ≥ 0,75·sep, centre seulement si la couronne précédente est
+   à ≥ sep ; **le count est un PLAFOND** (le report d'excédent sur
+   l'extérieur a été essayé : soudures en chaîne, abandonné).
+5. **Warp de dentelle fixe 1,2 px** : trop fort pour des bosses de
+   σ 1,4-1,7 px (0,31-0,55σ) → ponts d'UNE tuile au point médian,
+   îles soudées par paires. Rendu **adaptatif** :
+   wAmp = clamp(0,35·σpx, 0,5, 1,2).
 
-**Effets pour l'arbitre.** La conversion devient LISIBLE : chaque
-ville affiche ses forces culturelles (pression + présence), sa
-culture dominante et les conversions prévues du tour. Une minorité
-fond au rythme du cap (les isolés d'abord, les nobles en dernier) ;
-un tourisme culturel massif renverse une ville pure (pression >
-démographie locale) ; une faible pression étrangère ne tient pas
-face à une masse locale. L'équilibrage du cap reste à régler en
-second temps (conversionMax). Diag régénéré : seuls les compteurs de
-simulation bougent (log 459 → 497, commandants J1 6 → 4 — le moteur
-ne consomme plus un rng par habitant, le flux des événements aval
-est décalé) ; AUCUNE autre ligne ne diffère. 360/360 tests natifs
-(352 + 8), 36 fichiers ; tsc = baseline stub @supabase seule ;
-diff vs base c3035943 exactement 7 fichiers src + diag-out.txt.
-Ctrl+F5 pour vider le cache (nouveau bundle à l'URL
-losth230.github.io/quartz/jeu/).
+**Ce qui a été fait.** Helper re-conçu (jitter resserré, couronnes
+adaptatives à plafond, warp adaptatif) ; fenêtre périphérique :
+**creux −0,42 SUPPRIMÉ** (fin de l'anneau d'eau forcé), l'essorage
+du biais réduit à un garde-fou 92-98 % du rayon (les bosses posées
+à ≤ 0,75 + 1,6σ ne sont jamais amputées). Presets recalibrés :
+
+- **continents** : `islandArchipel(6, 0.18, 0.50, 0.30, 0.62, 0,
+  3.6, 0.05, 0.16)`, sealevel 60 → 68 : 6 masses équilibrées de
+  33-45 tuiles ;
+- **grandes îles** : `islandArchipel(11, 0.125, 0.50, 0.16, 0.75,
+  0, 4.0, 0, 0.12)`, sealevel 60 → 66 : 9-14 îles de 25-32 tuiles ;
+- **archipel** : `islandArchipel(18, 0.09, 0.45, 0.14, 0.75, 0,
+  3.6, 0, 0)`, sealevel 73 → 72, couronnes adaptatives : 15-18
+  îles de 11-24 tuiles.
+
+Harnais : C6 testait les types à sea 45 (55 % de terre) SANS
+appliquer les presets — à ce régime le bord se remplit
+statistiquement et seul le creux (supprimé) pouvait le vider.
+Corrigé : `presetParams` applique MAP_PRESETS pour C6 ; C2 garde
+son test de quantile à sea 45 sans preset.
+
+**Validation.** r=15, 8 seeds : **continents** terre 32 %, 6
+composantes, masse max 19 %, 39 tuiles moy, diam 8 ; **grandes
+îles** terre 34 %, 9-14 composantes, masse max 13 %, 27 tuiles
+moy, diam 9 ; **archipel** terre 28 %, 15-18 îles, masse max 18 %,
+satellites 7 %, diam 11. **Bord 0 %, coupées 0** sur les trois
+types. Stabilité r=12/18/24 : formes tenues, aucune soudure (à
+r=12 l'archipel produit plus de miettes, prévu ; continents à
+r=12 : une île à 33 % de la terre = 50 tuiles unitaires, composa-
+ntes 5,8 ≈ 6 : pas une soudure). Harnais 11/11, dont C6 vert sur
+les presets réels SANS anneau sculpté. Diff complet vs base
+867c801 : seuls les 3 presets, les commentaires, le helper et la
+fenêtre périphérique sont touchés — les six autres types rejouent
+à l'identique à params égaux. Intégrité post-push vérifiée par cmp
+au sha.
+
+**Commits** (2 sur `v4` depuis 867c801) :
+
+- `b660f08` feat(wargame) : labo — masses plus petites et plus
+  nombreuses, couronnes adaptatives, fin de l'anneau d'eau, C6 sur
+  presets réels, cache-buster ?v=14 ;
+- présent commit : journal seul.
+
+**Effet pour l'arbitre.** « Continents » montre 6 masses de 33-45
+tuiles, « grandes îles » une douzaine d'îles de 25-32 tuiles,
+« archipel » ~16 îles de 11-24 tuiles — chaque masse tient dans
+8-11 tuiles de diamètre sur le plateau r=15. Plus d'anneau d'eau
+sculpté au bord : l'océan du pourtour redevient statistique et
+aucune masse n'est coupée. Les graines des trois types rejouent
+différemment d'avant ce correctif (changement de forme voulu) ;
+les autres types sont inchangés. Ctrl+F5 pour vider le cache (le
+bundle jeu référence maintenant `?v=14`).
