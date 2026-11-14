@@ -2902,3 +2902,70 @@ valides. **360/360 tests natifs**, tsc = baseline stub @supabase
 seule. Diag régénéré : seuls les compteurs de simulation bougent
 (log 513 → 427, commandants J1 5 → 4 — moins de départs, suites
 aléatoires aval décalées).
+
+## Merveilles mondiales (arbitrage Thibaut 2026-11-15, base 01ca3a40)
+
+Retour des merveilles (les 4 du référentiel historique avaient été
+retirées le 2026-10-27) : **11 merveilles mondiales** fournies par
+Thibaut, bâtiments de famille « Merveille », constructibles dans
+**n'importe quelle habitation** (Ville OU Château) selon le **tier**
+de la fiche (= rangMinHabitation 1/2/3 : Hameau→Cité→Grande Cité /
+Motte→Donjon→Forteresse). Coûts et effets des fiches :
+
+| Merveille | Tier | Coût | Effets |
+| --- | --- | --- | --- |
+| Sanctuaire de Salmodiva | 1 | 20 Or + 20 Bois | +5 Soie/tour ; Fermiers de la ville +2 Nourriture/tour **en été** ; +4 emplacements de Fermier |
+| Musée d'Archéologie | 1 | 40 Or + 10 Pierres + 10 Soie | +30 Tourisme |
+| Jardins d'Alexandrie | 1 | 40 Or + 10 Bétail + 10 Bois | +30 Maisons |
+| Tour de Crystal | 1 | 40 Or + 10 Charbon | à la construction, le constructeur choisit un dogme **hors palier** pour sa culture ; ancrage des habitants de la ville ×1,1 (conversion réduite) |
+| Temple de Bahamutt | 2 | 40 Or + 20 Fer | +30 Tourisme ; +4 emplacements de Garde |
+| Ordre des chevaliers du Notan | 2 | 70 Or + 40 Fer + 10 Charbon | levée d'armée −50 Or dans cette ville ; « attaquer une habitation réduit sa garnison de 50 » (effet de plateau) |
+| Antre de la déesse araignée | 3 | 80 Or + 30 Soie + 20 Charbon | +5 émissaires tant que construite ; +2 Soie/tour |
+| Laboratoire de Falheim | 3 | 90 Or + 30 Pierres + 30 Fer | Science des Professeurs de la ville +10 % ; +12 emplacements de Scientifique |
+| Palais des empereurs de Lun | 3 | 100 Or + 30 Bois + 30 Pierres | +80 Tourisme |
+| Pyramide des Xoltans | 3 | 100 Or + 60 Bois + 30 Pierres | production des Bourgeois de la ville ×2 ; +40 Maisons |
+| Antichambre d'Alexandrie | 3 | 120 Or + 50 Pierres | +1 route commerciale ; aménagements octroyés par les routes ×2 |
+
+**Arbitrages actés avec Thibaut :**
+
+1. **Uniques au monde** : chaque merveille n'existe qu'en UN
+   exemplaire dans le monde — le premier construit gagne. Le
+   mutateur de construction REFUSE (seul garde-fou bloquant) si la
+   merveille est déjà construite dans une autre ville, du même
+   joueur ou d'un autre ; le picker l'annonce en rouge.
+2. **Ordre des chevaliers du Notan**, « attaquer une habitation
+   réduit sa garnison de 50 » : effet de PLATEAU, affiché en
+   italique sur la fiche, résolu à la main — aucun effet moteur.
+3. **Tour de Crystal** : le choix de dogme est HORS palier de
+   Tourisme (palier 0), pour la culture du CONSTRUCTEUR, choisi par
+   lui (pas le pontife), à consommer dans l'onglet Dogmes ; il ne
+   consomme pas les paliers de Tourisme de la culture.
+4. **Tour de Crystal**, « chances de conversion réduites de 10 % » :
+   l'ANCRAGE des habitants de cette ville est multiplié ×1,1 dans le
+   duel Pression/Ancrage (résistance à la conversion) — la Balance
+   culturelle affiche l'effet réel.
+5. « Chercheurs » = métier **Scientifique** (renommé Professeur le
+   2026-10-21) ; le Laboratoire de Falheim monte la part de taxe
+   Science des Professeurs de la ville +10 % (additive, cumul Guilde
+   des savants).
+6. **Pyramide des Xoltans**, « production doublée » : ×2 **EN PLUS**
+   du multiplicateur de rang social (bourgeois ×1,5 de rang ×2 =
+   ×3), même sémantique que la Guilde des bourgeois mais PAR VILLE.
+7. **Antichambre d'Alexandrie**, « aménagements octroyés par les
+   routes doublés » : les FLUX copiés des routes sont doublés (même
+   canal que la Guilde des marchands, cumul multiplicatif) ; les
+   EMPLACEMENTS copiés restent au nominal.
+8. Les effets « de la ville » (Pyramide, Sanctuaire, Laboratoire,
+   Tour de Crystal) ne portent QUE sur l'habitation qui accueille la
+   merveille ; Antre, Antichambre et Temple portent au niveau du
+   joueur (émissaires, routes, tourisme).
+
+Vieilles parties : la convergence purge les 4 anciennes merveilles
+(deux homonymes des nouvelles) et réintègre les 11 nouvelles
+automatiquement — aucune migration manuelle. **371/371 tests natifs**
+(360 + 11 nouveaux : référentiel, convergence, unicité mondiale,
+Pyramide ×2, Sanctuaire été, Laboratoire +10 %/+12, Antre +5,
+Antichambre routes ×2/flux ×2, ancrage ×1,1, dogme hors palier,
+libellés), tsc = baseline stub @supabase seule. Diag régénéré :
+110 → 119 règles (les 11 merveilles), compteurs de simulation
+inchangés.
