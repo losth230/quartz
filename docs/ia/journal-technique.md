@@ -7066,3 +7066,18 @@ barre corrigée.
 (src/engine touché — critique pour L2 : sans redéploiement, l’Edge
 live continuerait de créditer le bonus). Vérifier le bundle live après
 build Pages + Ctrl+F5.
+
+## 2026-11-14 (suite 2) — Fix typecheck du test bétail + déploiement final
+
+Le run CI jeu du feat 41d6c52f échouait sur le typecheck du nouveau
+test (2 annotations tsc) : `.at(-1)` indisponible (lib ES2020) et
+`Object.values` sur `ApportsTour` à champs optionnels → `unknown`.
+Fix 98f53ef4 : index direct `rows[rows.length-1]` et somme itérée
+explicitement sur les 15 canaux typés (`canal['Nourriture'] ?? 0`).
+
+ÉTAT FINAL sur 98f53ef4 : CI jeu success (376/376), Deploy Edge
+Function success (l’Edge vit SANS le bonus Bétail — critique pour
+L2 : le récap « autres » de J2 ne créditera plus les ~+51 Nourriture
+fantômes), Pages success — bundle live index-DBgNSTIy.js,
+`nourritureBetail` absent du bundle (vérifié). Tête : feat 41d6c52f
+→ règles 49878e91 → journal 87cdc44d → fix 98f53ef4 → ce journal.
