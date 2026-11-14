@@ -2829,3 +2829,37 @@ baseline stub @supabase seule. Diag régénéré : seuls les compteurs
 de simulation bougent (log 459 → 497 entrées, commandants J1 6 → 4
 — le moteur ne consomme plus un rng par habitant, le flux aléatoire
 des événements aval est décalé ; RIEN d'autre ne diffère).
+
+## Cap de conversion proportionnel — 10 % des habitants (arbitrage Thibaut 2026-11-15)
+
+**Arbitrage.** « Le cap de conversion passe à 10 % des habitants de
+la ville » — le cap FIXE de la V2 (conversionMax 1 par ville-tour,
+posé provisoirement le 2026-11-14) devient un TAUX : la culture
+dominante convertit au plus 10 % des VIVANTS de la ville par tour
+(arrondi à l'inférieur, minimum 1 conversion). Le duel
+« Pression/Ancrage » est inchangé par ailleurs (forces, ancrage,
+plancher 1 %, Dirigeant immunisé, nobles en dernier).
+
+**Effet.** Une minorité fond à vitesse démographique : 10 Déistes
+parmi 50 habitants = 5 conversions/tour (2 tours pour disparaître),
+au lieu d'1/tour ; le paramètre reste réglable (conversionTaux,
+départ 0,10) pour l'équilibrage. La ligne « cap de conversion »
+s'affiche dans le bloc « Balance culturelle » de la carte de ville.
+
+**Paramètre.** conversionTaux (0,10) REMPLACE conversionMax (1) —
+changement d'UNITÉ (un « 1 » sauvegardé voudrait dire 100 %) : la
+clé conversionMax est retirée par migration ciblée
+conversionTaux2026 (patron taxes25, sans bump de tampon) ; une
+éventuelle personnalisation de conversionMax retombe sur le défaut
+10 %.
+
+**Verrous.** engine/conversion.test.ts mis à jour : cap 5 sur 50
+vivants (minorité fond en 2 tours), conversionTaux 0,3 → cap 15
+(toute la minorité en un tour), cap 5 sur ville pure renversée par
+tourisme massif, cap 4 sur 43 vivants (isolé avant communauté,
+taux 0,05 → cap 2), noble protégé PAR LA FORCE (ancrage 110 > force
+100) alors que les roturiers remplissent le cap. **360/360 tests
+natifs**, tsc = baseline stub @supabase seule. Diag régénéré :
+seuls les compteurs de simulation bougent (log 497 → 513,
+commandants J1 4 → 5 — plus de conversions par tour, suites
+aléatoires aval décalées).
