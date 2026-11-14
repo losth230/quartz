@@ -3001,3 +3001,52 @@ automatique de siège).
 
 Aucune mécanique de jeu n'est modifiée ; en mode local (sans salon),
 le badge ne s'affiche pas (le siège n'y pilote rien).
+
+
+## Conversion culturelle AVANT la migration (retour Thibaut 2026-11-14 « un habitant qui arrive dans une nouvelle ville garde sa culture d'origine »)
+
+Incident déclencheur (salon chasse-pecheL2, tours 5-7) : « J1 attire
+les habitants de J2, qui sont zélotes, mais pourtant il n'y a que des
+culturalistes dans sa ville ». Diagnostic : l'attraction est RÉELLE —
+le flux de migration par bonheur (arbitrage 2026-10-28) amène bien
+des zélotes chez J1 (journal : Florine « quitte Capitale pour
+Capitale chez Joueur 1 » au tour 6, puis Guillemette, Charlemagne et
+Horu au tour 7) — mais l'ordre du tour faisait jouer la conversion
+culturelle (rework « Pression/Ancrage » du 2026-11-14) APRÈS la
+migration : un arrivant isolé n'a aucun compatriote dans sa ville
+d'accueil, son ancrage vaut 0 (formule arbitrée : poids local ×
+compatriotes de sa culture dans la ville), la culture dominante le
+convertit donc SYSTÉMATIQUEMENT le tour même de son arrivée (cap
+minimum 1 conversion par ville et par tour). La minorité zélote était
+retournée avant même la publication du tour : elle n'a jamais été
+visible dans la composition de la ville.
+
+Arbitrage : la conversion culturelle se joue DÉSORMAIS AVANT la
+migration dans l'ordre du tour (elle devient l'étape 4bis, la
+migration passe 4ter, la phase des naissances 4quater). Séquence
+finale : morts (phase A) → conversions (4bis) → départs/migrations
+(4ter) → naissances (phase B). Un habitant qui arrive garde sa
+culture d'origine le tour de son arrivée ; il n'est éligible à une
+conversion qu'au tour suivant — un isolé d'ancrage 0 bascule alors
+(le rework « un isolé bascule avant une communauté » reste la règle,
+l'assimilation est différée, pas supprimée).
+
+Conséquences : l'arbitrage 2026-11-11 « les morts et départs avant
+les naissances » est conservé ; les majorités culturelles des villes
+restent recomptées après les naissances (un nouveau-né porte la
+culture de sa mère — la minorité d'un arrivant peut croître par les
+naissances) ; le plancher des villes 100 % pures (1 %) est inchangé ;
+le registre du wiki « Ordre du tour » reflète la nouvelle séquence
+(21 étapes : « Moteur de population — phase A », « Conversions
+culturelles », « Migration par bonheur »).
+
+Vérifications : 372/372 tests natifs (371 + 1 nouveau : un arrivant
+garde sa culture le tour de son arrivée, l'assimilation reprend au
+tour suivant — test rouge sur l'ancien ordre, vert sur le nouveau).
+Le test de déterminisme du moteur a été corrigé au passage : newId
+(shared.ts) embarque Date.now() (voulu pour l'unicité des ids en
+partie réelle) et la comparaison au bit près ne passait que parce
+qu'aucune naissance ne survenait au premier tour de la graine du
+test ; les ids « c… » des nouveau-nés (et leurs références) sont
+désormais réécrits déterministiquement avant la comparaison, le flux
+rng reste comparé au bit près.
