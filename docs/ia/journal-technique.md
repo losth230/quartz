@@ -6800,3 +6800,57 @@ continents / grandes îles / archipel produisent désormais les
 constellations validées au labo — Ctrl+F5 nécessaire pour
 l'iframe. Le labo (bouton 🧪) reste l'outil d'expérimentation et
 sert la même génération que l'officiel jusqu'au prochain fork.
+
+## Labo générateur : le cap océan par défaut soudait les presets en un seul bloc de 65 % de terre (7e retour Thibaut 2026-11-14, base 2501fef1)
+
+**Retour.** Capture « ceci est censé être un archipel » : une seule
+masse allongée, sans baies ; puis « j'ai testé en navigation privée,
+l'état est le même ». La navigation privée écarte le cache : le live
+servait ça avec le NOUVEAU code — le diagnostic « ancien officiel
+caché » du tour précédent était FAUX (la « signature 45 % » venait de
+ma propre liste de choix dans la question posée à l'analyse d'image ;
+la première estimation, « 60-70 % de terre », était la bonne).
+
+**Diagnostic.** Angle mort du harnais : `refParams` posait TOUS les
+caps à 0, or les défauts DOM de l'UI ont les caps ACTIFS (retour
+Thibaut 2026-11-13 « caps ACTIFS par défaut »), dont `cap-ocean` 250.
+Mécanisme (feat 138b0d88) : océan > cap → le seuil de mer est
+ABAISSÉ GLOBALEMENT au quantile exact du cap
+(`seaLevel = sortedElev[cap]`). Sur 721 tuiles (r=15) : archipel
+vise 519 océan > 250 → seuil au quantile 250 → 65 % de terre ; les
+hauts-fonds qui remontent PARTOUT sur les côtes soudent les îles en
+UNE SEULE masse. Mesuré (8 seeds × 3 presets, chemin UI avec caps
+réels) : 65 % de terre, masse unique de 96-99 % sur TOUTES les
+cartes, TOUS les presets — continents compris (la validation
+« continents très bien » du 5e retour ne tenait qu'aux caps à 0 du
+harnais, jamais au chemin UI réel).
+
+**Correctif (feat 2501fef1).** (1) chaque preset pose
+`'cap-ocean': 0` (un type de carte EST son budget de mer, un cap
+résiduel le contredit) ; (2) défaut cap-ocean 250 → 0 (input HTML +
+DEFAULTS de la partie pure, titre explicatif) — les caps des biomes
+de TERRE restent actifs par défaut, retour 2026-11-13 respecté ;
+(3) harnais : contrat C7 anti-récidive — `presetParams(ex, name,
+uiCaps)` accepte les caps réels de l'UI, contrat terre 24-40 %,
+≥ 6 masses, masse principale ≤ 25 % (3 presets × 5 seeds, r=15) ;
+vérifié qu'il ÉCHOUE sur le live d'avant correctif (« terre 65 % »)
+et PASSE après ; (4) cache-busters : page Wargame ?v=5, composant
+jeu ?v=17, boutons labo de l'officiel ?v=17, lien retour labo ?v=5.
+
+**Validation.** Mesure du chemin UI avec caps réels, 8 seeds :
+continents 6 masses, top 40-45, masse ≤ 19 % ; grandes îles 9-14
+îles, top 27-32, masse ≤ 13 % ; archipel 15-20 îles, masse ≤ 18 %,
+terre 28-34 %. Harnais C1-C7 (12 OK) sur les DEUX générateurs.
+
+**Règles dérivées.** (1) Le harnais doit rejouer le chemin UI avec
+les DÉFAUTS COMPLETS de l'UI (caps inclus), pas des paramètres
+aseptisés — deuxième fois que la calibration vivait dans un monde
+aseptisé (cf. écrêtage des sliders, 6e retour). (2) « État identique
+en navigation privée » = tuer l'hypothèse cache et chercher un
+défaut du chemin UI réel. (3) Analyse d'image : croiser la première
+estimation avec des mesures chiffrées avant de conclure.
+
+**Effet pour l'arbitre.** URLs ?v=5 / ?v=17 neuves (pas de cache
+possible). NB : une session labo dont l'URL (hash) date d'avant le
+correctif restaure cap-ocean 250 encodé — re-sélectionner le type
+de carte une fois après rechargement (le preset repose le cap à 0).
