@@ -211,12 +211,19 @@ test('bétail en stock : AUCUNE Nourriture produite (retrait arbitrage 2026-11-1
   p.resources['Bétail']!.stock = 10
   const nAvant = p.resources['Nourriture']!.stock
   runTurn(state)
-  const row = state.history.filter((r) => r.joueur === p.n).at(-1)!
+  const rowsHisto = state.history.filter((r) => r.joueur === p.n)
+  const row = rowsHisto[rowsHisto.length - 1]!
   assert.ok(row.apports, 'apports présents dans la ligne d\u2019history')
   assert.equal(row.apports!.autres?.['Nourriture'] ?? 0, 0,
     'le canal autres ne crédite aucune Nourriture (plus de bonus Bétail × 4)')
+  const ap = row.apports!
   let somme = 0
-  for (const v of Object.values(row.apports!)) somme += v['Nourriture'] ?? 0
+  for (const canal of [ap.production, ap.batiments, ap.amenagements, ap.nourrEte,
+    ap.autres, ap.population, ap.vassalite, ap.loisCultures, ap.regimesCultures,
+    ap.progres, ap.citesLibres, ap.commerce, ap.proximite, ap.pelerinage, ap.terreAccueil]) {
+    if (!canal) continue
+    somme += canal['Nourriture'] ?? 0
+  }
   assert.ok(Math.abs(p.resources['Nourriture']!.stock - nAvant - somme) < 1e-6,
     'réconciliation au centime : delta Nourriture == somme des apports du récap')
 })
