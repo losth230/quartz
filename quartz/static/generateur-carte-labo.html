@@ -747,10 +747,15 @@ const MAP_PRESETS = {
   // (compact abaissé : à 70, la bosse lisse du canal « continent » dominait
   //  le masque de forme angulaire et reliait les deux masses en une seule)
   'continents': {
-    sealevel: 50,
+    sealevel: 60,
     'e-cont':    6,
-    'e-scale':   16,
-    'e-compact': 50,
+    // (4e retour 2026-11-13 : compact 50→15, scale 16→20 — avec les bosses
+    //  localisées, le canal BF du blend est l'ennemi : ses rubans comblent
+    //  le gap sous le seuil en PLAQUES CONTINUES qui soudent les continents
+    //  (mesuré : masse 99 %). Le fond doit rester PLAT, seul le détail HF
+    //  dentelle les côtes et fournit les satellites.)
+    'e-scale':   20,
+    'e-compact': 15,
     'e-edge':    5,
     'e-pers':    50
   },
@@ -771,10 +776,12 @@ const MAP_PRESETS = {
   //  retour par défaut (2e retour Thibaut 2026-11-13) — valeurs d'origine
   //  validées au harnais)
   'islands-large': {
-    sealevel: 45,
+    sealevel: 60,
     'e-cont':    8,
-    'e-scale':   18,
-    'e-compact': 35,
+    // (4e retour 2026-11-13 : compact 35→15, scale 18→22 — cf. continents :
+    //  fond plat HF, la structure vient des bosses.)
+    'e-scale':   22,
+    'e-compact': 15,
     'e-edge':    25,
     'e-pers':    55
   },
@@ -787,10 +794,12 @@ const MAP_PRESETS = {
   //  retour par défaut, 2e retour Thibaut 2026-11-13 — valeurs d'origine
   //  validées au harnais)
   'archipelago': {
-    sealevel: 45,
+    sealevel: 73,
     'e-cont':    11,
-    'e-scale':   24,
-    'e-compact': 18,
+    // (4e retour 2026-11-13 : compact 18→12, scale 24→26 — cf. continents :
+    //  fond plat HF, îles portées par les bosses, mottes-îlots du détail.)
+    'e-scale':   26,
+    'e-compact': 12,
     'e-edge':    25,
     'e-pers':    60
   },
@@ -1321,61 +1330,200 @@ function generateMap(N, seedStr, params) {
   //  « continent » et « pangea » gardent leurs masses au bord — c'est
   //  leur contrat documenté.)
   let periphOcean = false;
+  // (4e retour Thibaut 2026-11-13 : « tu n'as pas changé la forme des
+  //  îles, tu as simplement ajouté un anneau d'eau à l'extérieur du
+  //  plateau ». JUSTE : les masques en SECTEURS (cos kθ × dc) créent des
+  //  masses qui s'étirent radialement du centre au bord — des BANDES, pas
+  //  des îles ; la fenêtre périphérique ne pouvait que les recadrer.
+  //  NOUVEAU DESIGN pour « continents » / « grandes îles » / « archipel » :
+  //  bosses gaussiennes LOCALISÉES — des masses compactes de taille
+  //  contrôlée (σ RELATIF au rayon : look stable de r=10 à r=18),
+  //  centres tirés par le PRNG dédié (déterminisme par seed) en
+  //  alternant proche/loin pour garantir l'espacement angulaire-rayon,
+  //  fond légèrement négatif pour que la terre se pose SUR les bosses
+  //  (le seuil de mer étant un QUANTILE, un fond neutre laisserait la
+  //  terre « remonter » partout entre elles et resouder les masses).
+  //  Les satellites du bruit de détail autour des bosses sont VOULUS
+  //  (surtout archipel) ; le calibrage borne leur part. Les côtes des
+  //  bosses sont ondulées par le domain warping positionnel (px/py
+  //  décalés par le même bruit que le reste des masques).)
+  //  GÉOMÉTRIE : les centres sont répartis sur UN ANNEAU (rayon relatif
+  //  au rayon de la carte, angles équirépartis + jitter borné) —
+  //  l'espacement inter-centres est garanti PAR CONSTRUCTION : dist =
+  //  2·ring·N·sin(π/count), et σ est calibré pour que 2·1.4σ < dist
+  //  (aucune paire de bosses ne s'interpénètre, le centre de la carte
+  //  reste océan). Premier essai du 4e retour avec centres libres
+  //  (rMin 0.30) : les queues des bosses se soudaient toutes au centre
+  //  (masse principale 90-96 % mesurée) — c'est le symptôme exact du
+  //  retour « tu n'as pas changé la forme des îles ».
+  //  GÉOMÉTRIE : placement avec REJET déterministe des collisions — le
+  //  rayon effectif d'une bosse au niveau du seuil vaut ~2.1σ (pas 1.4σ :
+  //  premier essai du 4e retour, bosses trop larges pour leur espacement,
+  //  masses soudées à 90 %). Chaque centre est tiré dans son secteur
+  //  angulaire (équirépartition + jitter) et REJETTÉ s'il est à moins de
+  //  2.35σ d'un centre déjà posé : l'espacement est garanti par
+  //  construction, sans anneaux réguliers visibles.
+  function islandArchipel(count, sigRel, amp, rMin, rMax, floorBias, sepFact, dipAmp, dipRRel) {
+    // dipAmp/dipRRel (4e retour) : creux central explicite. Sans lui, une
+    // bosse posée à rMin avec σ ~ rMin/1.3 déverse son PLATEAU sur le
+    // centre (contribution exp(−(1.3)⁴/2) ≈ 0.33·amp — mesuré : centre
+    // 100 % terre, disque géant de 20 tuiles de diamètre). Le creux
+    // garantit la mer centrale indépendamment du tirage des centres.
+    // sepFact : distance minimale INTER-CENTRES en unités de σ. Les queues
+    // gaussiennes S'ADDITIONNENT : deux bosses à 2.35σ l'une de l'autre
+    // apportent chacune amp·exp(−1.38) ≈ 0.5·amp au point médian — soudure
+    // garantie au seuil (fond + ~2ε). Il faut ~3.5σ+ pour que la somme des
+    // queues au milieu reste sous le seuil. (4e retour.)
+    const spots = [];
+    // (4e retour) ANNEAU AUTO-CALIBRÉ : l'espacement angulaire entre
+    // voisins vaut 2·r·sin(π/count) ; il doit couvrir la séparation
+    // requise (2× l'empreinte au seuil + gap), sinon le rejet échoue
+    // en cascade et plaque les bosses l'une sur l'autre. r_ring est
+    // donc calculé POUR tenir l'espacement, borné à [rMin, rMax].
+    // (4e retour) ÉCHELLE : les positions px/py sont ÉTIRÉES par
+    // axialToPixel (x = HEX·√3·(q+r/2), y = HEX·1.5·r) : le rayon px
+    // de l'hexagone vaut ~1.6·N, pas N. Les distances de ce helper
+    // (sep, rRing, σ, dip) doivent être exprimées dans CETTE échelle —
+    // avec N, les bosses étaient plaquées dans le quart central (à
+    // ~6 px du centre pour un plateau qui s'étend à 26 px) : masses
+    // compactes centrales et soudées, mesuré sur tous les essais.
+    const RPX = N * 1.6;
+    const sep = (sepFact || 2.75) * sigRel * RPX;
+    const a0 = randShape() * Math.PI * 2;
+    // Mode de placement : count ≤ 6 → ANNEAU équiréparti auto-calibré
+    // (r_ring = sep / 2·sin(π/count), l'espacement angulaire couvre la
+    // séparation requise) ; count > 6 → SPIRALE DE FERMAT (angle d'or
+    // 2.39996 rad, rayon √(k/count)) : répartition quasi-uniforme dans
+    // le disque, sans l'artefact d'anneau — un anneau de 14 îles à
+    // r=15 serait un collier soudé (l'espacement angulaire disponible
+    // vaut ~4 tuiles pour 6+ requises, mesuré : masse 97 % en anneau).
+    // (4e retour, it.5) MODE MULTI-ANNEAUX pour count > 6 : la spirale de
+    // Fermat place des voisins SUCCESSIFS à ~0.6-1 px radialement (contre
+    // sep ~ 8.5 px) : le rejet échoue en cascade et les bosses consécutives
+    // se soudent en arcs (mesuré : masse 58-98 % sur toutes les grilles
+    // 7-12 îles, chapelets de 3-4 bosses). Remède : anneaux EXPLICITES :
+    // extérieur nExt = 60 % des îles à 0.95·rMax (espacement angulaire
+    // 2·r·sin(pi/nExt)), intérieur nInt à rInt calibré pour tenir sep
+    // angulairement (clampé sous rExt - sep pour l'écart radial), angles
+    // décalés d'un demi-pas extérieur (maximise la distance entre
+    // anneaux), rejet commun contre TOUTES les bosses déjà posées.
+    const ringMode = count <= 6;
+    const targets = [];
+    if (ringMode) {
+      let rRing = sep / (2 * Math.sin(Math.PI / count));
+      rRing = Math.max(rMin * RPX, Math.min(rMax * RPX, rRing));
+      for (let k = 0; k < count; k++)
+        targets.push({ ang: a0 + k * Math.PI * 2 / count, rad: rRing, gap: 0.98 * 2 * rRing * Math.sin(Math.PI / count) });
+    } else {
+      const nExt = Math.ceil(count * 0.6);
+      const nInt = count - nExt;
+      const rExt = 0.95 * rMax * RPX;
+      const stepExt = Math.PI * 2 / nExt;
+      let rInt = sep / (2 * Math.sin(Math.PI / nInt));
+      rInt = Math.max(rMin * RPX, Math.min(rInt, rExt - sep));
+      for (let k = 0; k < nExt; k++)
+        targets.push({ ang: a0 + k * stepExt, rad: rExt, gap: 0.98 * 2 * rExt * Math.sin(Math.PI / nExt) });
+      for (let k = 0; k < nInt; k++)
+        targets.push({ ang: a0 + stepExt / 2 + k * Math.PI * 2 / nInt, rad: rInt, gap: 0.98 * 2 * rInt * Math.sin(Math.PI / nInt) });
+    }
+    for (let k = 0; k < count; k++) {
+      const t = targets[k];
+      const rejD = Math.min(sep, t.gap);
+      const rejD2 = rejD * rejD;
+      // jitter borné + rejet par collision en « MEILLEUR des essais » :
+      // si aucun essai n'est libre, on garde le plus éloigné des spots
+      // déjà posés (garder le DERNIER essai plaquait deux bosses l'une
+      // sur l'autre — mesuré : aire ÷ 3).
+      let bestX = 0, bestY = 0, ok = false;
+      let bestD2 = -1;
+      for (let tries = 0; tries < 24 && !ok; tries++) {
+        const ang = t.ang + 0.06 * (randShape() - 0.5) + tries * 0.09;
+        const bx = t.rad * Math.cos(ang);
+        const by = t.rad * Math.sin(ang);
+        let d2min = Infinity;
+        for (const s of spots) {
+          const d2 = (s.cx - bx) * (s.cx - bx) + (s.cy - by) * (s.cy - by);
+          if (d2 < d2min) d2min = d2;
+        }
+        if (d2min > bestD2) { bestD2 = d2min; bestX = bx; bestY = by; }
+        ok = d2min > rejD2;
+      }
+      spots.push({
+        cx: bestX, cy: bestY,
+        s: sigRel * RPX * (0.9 + 0.25 * randShape()),
+        a: amp * (0.9 + 0.2 * randShape())
+      });
+    }
+    return (dc, th, px, py) => {
+      let v = floorBias;
+      // Creux central : smoothstep sur la distance px-py (euclidienne,
+      // pas dc hexadist — le creux doit être rond).
+      if (dipAmp) {
+        const d = Math.hypot(px, py) / (dipRRel * RPX);
+        const s = Math.max(0, Math.min(1, 1 - d));
+        v -= dipAmp * s * s * (3 - 2 * s);
+      }
+      // Dentelle des côtes (4e retour) : warp positionnel LÉGER — ~0.9
+      // TUILE, 1 octave, fréquence 1.3 (features ≈ 0.8 tuile). Avec le
+      // fond squeezé à plat (cf. bloc periphOcean), les bosses seules
+      // donneraient des côtes de « patates » ; l'ancien warp du masque
+      // (0.55 RELATIF au rayon ≈ 8 tuiles à r=15) était, lui, une soupe
+      // pour des bosses de σ ~2-6. À 0.9 tuile il sculpte le contour
+      // sans déplacer les masses ni souder les voisines.
+      const wx = px + 1.2 * nWarp.fbm(px * 1.3, py * 1.3, 1, 0.5, 2.0);
+      const wy = py + 1.2 * nWarp.fbm(px * 1.3 + 47.7, py * 1.3 + 83.3, 1, 0.5, 2.0);
+      for (const sp of spots) {
+        const dx = wx - sp.cx, dy = wy - sp.cy;
+        // SUPER-GAUSSIENNE d'ordre 4 TRONQUÉE (4e retour) : profil plateau
+        // au sommet, flanc raide, puis COUPURE NETTE à 1.6σ — support
+        // COMPACT. Sans troncature, la queue résiduelle à 2σ (exp(−8) ≈
+        // 3·10⁻⁴·amp) paraît négligeable mais les queues de bosses VOISINES
+        // s'additionnent au point médian et soudent les masses à bas seuil
+        // (mesuré : ponts de queues partout dès que le quantile redescend
+        // vers le fond). La coupure garantit v = 0 au-delà de 1.6σ.
+        const dd = Math.sqrt(dx * dx + dy * dy) / sp.s;
+        if (dd < 1.35) {
+          v += sp.a * Math.exp(-(dd * dd * dd * dd) / 2);
+        } else if (dd < 1.6) {
+          v += sp.a * 0.189 * (1.6 - dd) / 0.25;
+        }
+      }
+      return v;
+    };
+  }
   if (mapType === 'continent') {
     shapeBias = (dc) => 0.20 * Math.pow(1 - dc, 2);
   } else if (mapType === 'continents') {
-    // Pattern ANGULAIRE à 2 lobes (cos 2θ) × distance + creux central : deux
-    // masses opposées séparées par deux bras de mer traversants ET une mer
-    // centrale — sans le creux, le disque central (toutes directions à petit
-    // rayon) relie les deux lobes en une seule composante. θ0 tiré par le
-    // PRNG dédié : même seed = mêmes continents.
-    // (3e retour Thibaut 2026-11-13, à r=15 : le creux passe −0.30 → −0.45 —
-    //  la fenêtre périphérique chasse la terre du bord vers le centre, le
-    //  quantile de mer descend et refermerait les bras de mer séparateurs.)
+    // (HISTORIQUE : pattern angulaire à 2 lobes cos 2θ + creux central,
+    //  calibré 2e/3e retours. 4e retour Thibaut 2026-11-13 : les lobes en
+    //  secteurs étiraient des BANDES du centre au bord ; REMPLACÉS par 3
+    //  bosses gaussiennes localisées — de vrais continents compacts,
+    //  séparés, détachés du bord, chaque masse vue en entier.)
     periphOcean = true;
-    const phase = randShape() * Math.PI;
-    shapeBias = (dc, th) =>
-      0.45 * Math.cos(2 * (th - phase)) * dc
-      - 0.45 * Math.pow(1 - dc, 2);
+    shapeBias = islandArchipel(3, 0.28, 0.50, 0.42, 0.52, 0, 3.1, 0.10, 0.22);
   } else if (mapType === 'pangea') {
     shapeBias = (dc) => 0.16 * Math.pow(1 - dc, 1.5);
   } else if (mapType === 'islands-large') {
-    // Pattern angulaire à 3 lobes (cos 3θ) × distance + creux central :
-    // trois grandes îles en anneau autour d'une mer centrale (même garantie
-    // topologique que « continents » — le disque central relie sinon tout).
-    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : lobes
-    //  0.36 → 0.48 et creux −0.30 → −0.38 — 3 îles équilibrées à 28-36 %
-    //  de la terre sur 8/8 seeds au harnais, aucune île dominante.)
-    // (3e retour Thibaut 2026-11-13, à r=15 : creux −0.38 → −0.60, en
-    //  compensation de la fenêtre périphérique — sinon la terre chassée
-    //  du bord recentre le quantile et soude les trois îles en une masse
-    //  unique de 75 %. Mesuré : masse 38 %, ~10 composantes, îles
-    //  détachées du bord, visibles en entier.)
+    // (HISTORIQUE : pattern angulaire à 3 lobes cos 3θ + creux central,
+    //  calibré 2e/3e retours — 3 îles en anneau autour d'une mer centrale.
+    //  4e retour Thibaut 2026-11-13 : les lobes en secteurs étiraient des
+    //  BANDES ; REMPLACÉS par 4 bosses gaussiennes localisées — de vraies
+    //  grandes îles, compactes, séparées par de l'océan, vues en entier.
+    //  (it.5 : 4 bosses σ 0.23, sepFact 3.5, sea 60 — 4 îles équilibrées
+    //  21-30 % de la terre chacune, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    const phase = (randShape() * Math.PI * 2) / 3;
-    shapeBias = (dc, th) =>
-      0.48 * Math.cos(3 * (th - phase)) * dc
-      - 0.60 * Math.pow(1 - dc, 2);
+    shapeBias = islandArchipel(4, 0.23, 0.50, 0.40, 0.55, 0, 3.5, 0.05, 0.24);
   } else if (mapType === 'archipelago') {
-    // Creux central modéré + 4 entailles angulaires traversantes : sans le
-    // creux, le détail forme au centre UNE masse géante ; creux trop fort,
-    // c'est l'anneau extérieur qui devient un bloc continu. Le compromis :
-    // le creux disperse les terres vers l'anneau, les entailles (cos 4θ,
-    // plus fortes à l'extérieur) découpent cet anneau en arcs d'îles.
-    // Le domain warping (ci-dessus) casse ensuite la régularité des arcs.
-    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : creux
-    //  −0.30 → −0.38, entailles −0.12 → −0.16 — 10-20 composantes, masse
-    //  principale ≤ 48 % sur 8/8 seeds au harnais.)
-    // (3e retour Thibaut 2026-11-13, à r=15 : creux −0.38 → −0.60 et
-    //  entailles −0.16 → −0.28, en compensation de la fenêtre
-    //  périphérique — sans cela la terre chassée du bord recentre le
-    //  quantile et soude l'archipel en une masse unique de 99 %. Mesuré
-    //  à r=15 : masse ~39 %, ~12 composantes, bord 0 % de terre.)
+    // (HISTORIQUE : creux central + 4 entailles angulaires cos 4θ, calibré
+    //  2e/3e retours. 4e retour Thibaut 2026-11-13 : les entailles
+    //  découpaient l'anneau en ARCS collés au bord ; REMPLACÉES par 14
+    //  bosses gaussiennes localisées — de vraies îles éparses, tailles
+    //  variées, satellites du bruit de détail autour d'elles.
+    //  (it.5 : placement MULTI-ANNEAUX via le helper — 9 ext + 5 int,
+    //  σ 0.125, sepFact 3.1, sea 73 : ~10 îles, principale 34-37 % de
+    //  la terre, diamètre ≤ 12, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    const phase4 = randShape() * Math.PI / 2;
-    shapeBias = (dc, th) =>
-      -0.60 * Math.pow(1 - dc, 2)
-      - 0.28 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
+    shapeBias = islandArchipel(14, 0.125, 0.45, 0.20, 0.62, 0, 3.1, 0, 0);
   } else if (mapType === 'fragmented') {
     // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
     // tirée par le PRNG dédié) : le seul creux laissait une masse unique à
@@ -1474,6 +1622,25 @@ function generateMap(N, seedStr, params) {
                : 1;
       if (sq < 1) e = 0.5 + (e - 0.5) * sq;
       if (periphOcean) {
+        // (4e retour Thibaut 2026-11-13) SQUEEZE DU FOND pour les types à
+        // bosses localisées. Le seuil de mer est un QUANTILE global : à
+        // ~50 % de terre, il tombe par construction DANS le bruit de fond
+        // (la moitié d'un fond symétrique autour de sa médiane dépasse
+        // le seuil) — mesuré au harnais : seaLevel 0.249, fond 0.19-0.30,
+        // bosses 0.4-0.77 : les plaques du fond au-dessus du seuil
+        // soudaient les bosses en masses de 84-96 % de la terre.
+        // Remède structurel : comprimer la variance du fond (×0.08 — dur :
+        // mesuré au harnais, le blend garde ±0.055 après un ×0.22 et ses
+        // rubans BF comblent le gap sous le seuil en plaques qui soudent
+        // les bosses en masses de 78-99 % de la terre) pour que les
+        // BOSSES portent TOUTE la structure ; le quantile se cale alors
+        // franchement au-dessus du fond et les côtes sont le bord des
+        // bosses dentelé par leur warp dédié (±0.9 tuile, cf. helper).
+        // La dentelle fine du fond survit en satellites autour des bosses.
+        // NB : à la différence du squeeze sq ci-dessus (2e retour) qui
+        // figeait les MASQUES EN SECTEURS, ici le masque EST la
+        // structure : c'est le bruit qu'il faut aplatir, pas lui.
+        e = 0.5 + (e - 0.5) * (mapType === 'archipelago' ? 0.35 : 0.08);
         // Fenêtre périphérique (cf. commentaire PERIPH_OCEAN ci-dessus) :
         // sur la distance VRAIE (le warp d'amplitude 0.55 peut fausser dcW
         // de ±0.55 — fenêtrer sur dcW rouvrirait la porte au bord réel).
@@ -1482,10 +1649,27 @@ function generateMap(N, seedStr, params) {
         // les creux des masques sont renforcés en compensation (le seuil
         // de mer étant un quantile GLOBAL, la terre chassée du bord se
         // redistribue au centre et souderait les îles sans cela).
-        const t1 = Math.max(0, Math.min(1, (dist - 0.85) / 0.13));
-        const w = 1 - t1 * t1 * (3 - 2 * t1); // 1 → 0 entre 85 % et 98 % du rayon
-        const t2 = Math.max(0, Math.min(1, (dist - 0.90) / 0.10));
-        e += shapeBias(dcW, thW) * w - 0.42 * t2 * t2 * (3 - 2 * t2);
+        // (4e retour : fenêtre périphérique MAINTENUE à 85-97 % du rayon.
+        //  Un durcissement (85→75 %, 98→92 %) pour vider la couronne 14
+        //  (« masses collées au bord ») a été essayé puis ANNULÉ : il
+        //  amputait les bosses posées à ~0.6N de leurs flancs extérieurs,
+        //  le seuil compensait en descendant vers le fond et ressoudait
+        //  les îles (spirale du seuil). Avec les bosses tronquées à 1.6σ
+        //  et le fond aplati, la couronne 14 reste vide : mesuré bord
+        //  0 %, coupées 0, sur 8 seeds × 3 presets × r=15.)
+        const t1 = Math.max(0, Math.min(1, (dist - 0.85) / 0.12));
+        const w = 1 - t1 * t1 * (3 - 2 * t1); // 1 → 0 entre 85 % et 97 % du rayon
+        const t2 = Math.max(0, Math.min(1, (dist - 0.87) / 0.11));
+        // NB : pas de warp positionnel du MASQUE (±0.55 sur dc, haute
+        // fréquence spatiale, calibré pour des masques en SECTEURS
+        // lisses) : sur une bosse étroite (σ ~ 0.2 N) il déplace
+        // l'évaluation de plus que le σ à CHAQUE tuile : la structure
+        // devient une soupe et soude les masses (mesuré : masse
+        // principale 92-96 %). La dentelle des côtes vient du warp
+        // DÉDIÉ du helper islandArchipel (~0.9 tuile, cf. helper) + la
+        // coupe au quantile.
+        e += shapeBias(dcW, thW, px, py) * w
+           - 0.42 * t2 * t2 * (3 - 2 * t2);
       } else {
         e += shapeBias(dcW, thW);
       }
