@@ -6441,3 +6441,65 @@ par de l'océan. Les graines de ces trois types rejouent
 différemment d'avant ce correctif (changement de forme voulu) ; les
 autres types sont inchangés. Ctrl+F5 pour vider le cache (le bundle
 jeu référence maintenant `?v=13`).
+
+## Conversion culturelle V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, base c3035943)
+
+**Retour.** « Est-ce que tu pourrais me proposer autre chose pour la
+conversion culturelle, qui soit plus cohérente et plus jouable de
+manière technique ? » — l'ancien moteur tirait au hasard une
+tentative à 10 % par habitant puis une culture dans un tirage
+pondéré ; Thibaut a tranché la V2 déterministe « Pression/Ancrage »
+sur proposition (3 variantes), avec : plancher minuscule CONSERVÉ
+(une ville homogène n'est pas immunisée), conversion personnage par
+personnage SANS les familles, cap 1 par ville-tour en PARAMÈTRE
+réglable (conversionMax, équilibrage explicite différé en second
+temps).
+
+**Commit jeu :** e3ede969 (feat) — engine/culture.ts réécrit (duel
+par ville : Force = pression touristique + poids démographique
+local ×(1+évangile), bonus d'accueil Nationalisme + Guilde des
+évangélistes ; ancrage = compatriotes × poids + noblesse ;
+conversion des moins ancrés sous la force dominante, cap
+conversionMax ; plancher rng 1 % des villes 100 % homogènes ;
+Dirigeant immunisé), bloc « Balance culturelle » dans
+components/pays/VilleCarte.tsx (source unique detailConversionVille
+— la vue et le moteur calculent les mêmes nombres), params.ts
+(conversionMax 1 PROVISOIRE, conversionPlancher 0,01,
+conversionAncrageNoble 15 ; conversionProba et conversionMemeCulture
+retirés), defaultConfig.ts (migration ciblée conversionDeterministe2026,
+patron taxes25 : les 2 clés mortes dépouillées, les 3 nouvelles
+venues de mergeParams), tests : conversion.test.ts NOUVEAU (8 tests :
+ville homogène + plancher, minorité fond à 1/tour, conversionMax=3,
+renversement par tourisme massif, isolé avant communauté, noble
+résiste, Dirigeant immunisé, majorité des villes) et réécriture des
+tests Évangile/Nationalisme (dogmes.test.ts) et Guilde des
+évangélistes (tier3.test.ts) sur le détail exact des forces.
+**Commit règles :** e8161862 (docs/ia/regles-et-arbitrages.md —
+section « Conversion culturelle V2 « Pression/Ancrage » »).
+**Présent commit : journal seul.**
+
+**Leçon de design.** Le scénario « 25/25 ville mixte stable » imaginé
+en amont était faux en pratique : les cultures du référentiel portent
+une pression de base 0,001 qui départage toute égalité démographique
+parfaite (la culture du référentiel l'emporte de 0,001 et fond l'autre
+à cap/tour). Repéré À L'ANALYSE avant d'écrire les tests — aucun run
+raté, le harnais est passé 360/360 du premier coup. Comportement
+accepté (knife-edge d'égalité parfaite, rarement durable) et
+l'immobilité verrouillée autrement : le test d'ancrage utilise
+un noble (ancrage +15) contre une force juste au-dessus du roturier.
+
+**Effets pour l'arbitre.** La conversion devient LISIBLE : chaque
+ville affiche ses forces culturelles (pression + présence), sa
+culture dominante et les conversions prévues du tour. Une minorité
+fond au rythme du cap (les isolés d'abord, les nobles en dernier) ;
+un tourisme culturel massif renverse une ville pure (pression >
+démographie locale) ; une faible pression étrangère ne tient pas
+face à une masse locale. L'équilibrage du cap reste à régler en
+second temps (conversionMax). Diag régénéré : seuls les compteurs de
+simulation bougent (log 459 → 497, commandants J1 6 → 4 — le moteur
+ne consomme plus un rng par habitant, le flux des événements aval
+est décalé) ; AUCUNE autre ligne ne diffère. 360/360 tests natifs
+(352 + 8), 36 fichiers ; tsc = baseline stub @supabase seule ;
+diff vs base c3035943 exactement 7 fichiers src + diag-out.txt.
+Ctrl+F5 pour vider le cache (nouveau bundle à l'URL
+losth230.github.io/quartz/jeu/).
