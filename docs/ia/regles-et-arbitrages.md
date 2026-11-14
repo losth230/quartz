@@ -3050,3 +3050,45 @@ qu'aucune naissance ne survenait au premier tour de la graine du
 test ; les ids « c… » des nouveau-nés (et leurs références) sont
 désormais réécrits déterministiquement avant la comparaison, le flux
 rng reste comparé au bit près.
+
+## Canal d’apports « Terre d’accueil » + crises de pure narration (arbitrages Thibaut 2026-11-14)
+
+Incident déclencheur (salon chasse-pecheL2) : « l’Or du J1 semble
+buggé, il gagne beaucoup plus d’Or que ce qui est affiché (+1.3) ».
+Diagnostic : l’Or est CORRECT — c’est la loi Socialisme « Terre
+d’accueil » (+1 Or par migrant arrivé, refonte « 8 lois » des régimes
+2026-10-29) : J1 attire 23 à 73 migrants par tour (bonheur fort
+contre la crise de J2). Mais l’Or de la loi était crédité
+DIRECTEMENT au stock (rs.stock += orParMig, engine/migrationBonheur)
+avec un log individuel « 🌍 Terre d’accueil — Joueur 1 reçoit 1 Or »
+et AUCUN canal d’apports : le « +1,3 » du récap ne montrait que le
+canal « population ». Réconciliation vérifiée au centime sur tous
+les tours publiés (T27 : +24,32 = 1,32 + 23 ; T29 : +53,08 = 3,08 +
+50 − 40 ; T31 : +34,32 ; T32 : +64,32 = 1,32 + 73 − 48 de
+constructions).
+
+Arbitrage 1 (canal d’apports) : le flux de migration RETOURNE
+l’Or perçu par destinataire ; l’étape 4ter de tour.ts le trace au
+snapshot comme canal « Terre d’accueil » (ApportsTour.terreAccueil,
+compté au Total du récap ressources du dernier tour, colonne
+dédiée). L’Or de la loi est désormais visible et compté dans le
+récap — les historiques d’avant le canal retombent à vide par repli.
+
+Arbitrage 2 (crises) : les 6 crises de succession du référentiel
+(Sécession, Famine, Grèves, Abandon Divin, Incroyance, Fuite de
+capitaux) promettaient des effets mécaniques « dans 3 tours… » qui
+n’ont JAMAIS existé dans le moteur (vérifié : seul sante.ts tire le
+texte pour le log de succession, victory.ts le mentionne pour les
+Lauriers — aucun effet n’est appliqué). Les textes sont reformulés
+en PURE NARRATION — plus aucune promesse d’effet ; l’onglet Crises
+du référentiel en ligne le dit explicitement. (Une Grève T29 côté
+J1 et une T33 côté J2 étaient déjà tombées — aucun effet ne se
+serait produit, ni avant ni après.)
+
+Note enquête (écart T33) : J1 −24,14 Or / J2 +24,48 Or sans canal
+visible au tour 33 — élucidé : c’est du commerce (arbitrage Thibaut
+2026-11-14), pas un bug du moteur ; aucune garde de fusion ajoutée.
+
+Vérifications : 374/374 tests natifs (372 + 2 nouveaux : le retour
+du flux porte l’Or exact par destinataire ; le canal du snapshot
+égale le nombre exact de migrants reçus après runTurn).
