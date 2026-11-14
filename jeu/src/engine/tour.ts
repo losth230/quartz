@@ -52,6 +52,7 @@ import { transfererTributVassal } from './vassalite'
 import { preleverPelerinage } from './pelerinage'
 import { appliquerBonusProximite } from './villes'
 import { populationTourA, populationTourB } from './population'
+import { applyCultureInfluence } from './culture'
 import { migrationBonheur } from './migrationBonheur'
 import { recruitForArmies } from './armees'
 import { snapshotRessources } from './journal'
@@ -175,13 +176,18 @@ export const ETAPES_TOUR: EtapeTour[] = [
   },
   {
     numero: '4',
-    nom: 'Moteur de population',
-    description: 'Pour chaque joueur : vieillissement, métiers, mariages, santé, fécondité et naissances, conversions culturelles, culture des villes (modules population, metiers, sante, naissances, culture).',
+    nom: 'Moteur de population — phase A',
+    description: 'Pour chaque joueur : mariages, vieillissement, métiers, santé, décès (modules population, metiers, sante) — les morts avant les départs et les naissances (arbitrage 2026-11-11).',
   },
   {
     numero: '4bis',
+    nom: 'Conversions culturelles',
+    description: 'Pour chaque joueur, chaque ville : la culture dominante convertit ses habitants les moins ancrés (pression contre ancrage, cap par tour, plancher des villes pures). AVANT la migration (arbitrage Thibaut 2026-11-14) : un habitant qui arrive garde sa culture d\u2019origine le tour de son arrivée.',
+  },
+  {
+    numero: '4ter',
     nom: 'Migration par bonheur',
-    description: 'Chaque habitant vivant peut quitter sa ville (proba croissante à mesure que le bonheur baisse) pour une ville du monde tirée au hasard pondéré (culture, même joueur, emploi, logement, bonheur). APRÈS les moteurs de population : un migrant n\u2019est pas retraité deux fois.',
+    description: 'Chaque habitant vivant peut quitter sa ville (proba croissante à mesure que le bonheur baisse) pour une ville du monde tirée au hasard pondéré (culture, même joueur, emploi, logement, bonheur). APRÈS la conversion culturelle (arbitrage 2026-11-14) : un arrivant garde sa culture d\u2019origine le tour de son arrivée et n\u2019est éligible à une conversion qu\u2019au tour suivant.',
   },
   {
     numero: '5',
@@ -437,21 +443,37 @@ export function runTurn(state: GameState): GameState {
     recapsPopulation[p.n] = populationTourA(state, p, rng)
   }
 
-  // 4bis. Migration par bonheur (arbitrage Thibaut 2026-10-28) : plus
+  // 4bis. CONVERSION CULTURELLE (V2 « Pression/Ancrage », rework
+  //  2026-11-14) — AVANT la migration (arbitrage Thibaut 2026-11-14,
+  //  incident salon L2 : « un habitant qui arrive dans une nouvelle
+  //  ville garde sa culture d'origine » — jouée APRÈS le flux, la
+  //  conversion retournait chaque arrivant isolé (ancrage 0) à la
+  //  culture dominante le tour MÊME de son arrivée, aucune minorité
+  //  culturelle n'était jamais visible). La conversion se joue donc
+  //  sur la population d'AVANT le flux : les arrivants ne sont
+  //  éligibles qu'au tour suivant.
+  for (const p of state.players) {
+    applyCultureInfluence(state, p, rng, recapsPopulation[p.n])
+  }
+
+  // 4ter. Migration par bonheur (arbitrage Thibaut 2026-10-28) : plus
   //  le bonheur d'une ville est bas, plus ses habitants ont de chances
   //  de la quitter (linéaire : 0 % à 100 de bonheur, 10 % à 0) pour
   //  une ville du monde tirée au hasard PONDÉRÉ (culture du migrant,
   //  bonheur de la candidate — engine/migrationBonheur.ts). Les
   //  DÉPARTS se jouent entre les morts et les naissances (arbitrage
-  //  2026-11-11) : un migrant n'est pas retraité (vieillissement,
+  //  2026-11-11) et APRÈS la conversion culturelle (arbitrage
+  //  2026-11-14) : un arrivant garde sa culture d'origine le tour
+  //  de son arrivée. Un migrant n'est pas retraité (vieillissement,
   //  maladie) au même tour chez son nouveau porteur — sa phase A
   //  est déjà faite chez son ancien porteur, sa phase B (naissances,
   //  domiciles, prestige) se joue chez le nouveau.
   migrationBonheur(state, rng)
 
-  // 4ter. Moteur de population — PHASE B (les NAISSANCES) :
-  //    grossesses/naissances, influence culturelle, domiciles,
-  //    statut social.
+  // 4quater. Moteur de population — PHASE B (les NAISSANCES) :
+  //    grossesses/naissances, majorités culturelles recomptées
+  //    après les naissances (un nouveau-né porte la culture de sa
+  //    mère), domiciles, statut social.
   for (const p of state.players) {
     populationTourB(state, p, rng, recapsPopulation[p.n])
   }

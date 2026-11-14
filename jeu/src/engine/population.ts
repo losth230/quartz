@@ -12,7 +12,7 @@ import { emptyRecap } from './shared'
 import { maybeAssignProfesseurs, gestionMariages, assignAdultMetier } from './metiers'
 import { maladieStep } from './sante'
 import { computeFecondite, conceptionEtNaissances } from './naissances'
-import { applyCultureInfluence, updateCityCultures } from './culture'
+import { updateCityCultures } from './culture'
 import { writeRecap } from './journal'
 import { evaluerFamilles } from './statutSocial'
 import { attribuerDomicilesVille } from './domiciles'
@@ -99,8 +99,18 @@ export function populationTourB(state: GameState, p: Player, rng: Rng, recap?: P
   // 3.4 Grossesses et naissances
   conceptionEtNaissances(state, p, rng, monRecap)
 
-  // 3.6 Influence culturelle
-  applyCultureInfluence(state, p, rng, monRecap)
+  // 3.4 Grossesses et naissances
+  conceptionEtNaissances(state, p, rng, monRecap)
+
+  // 3.6 MAJORITÉS CULTURELLES des villes — la conversion culturelle
+  //  (l'ancien 3.6) est DÉPLACÉE en étape 4bis de runTurn, AVANT la
+  //  migration par bonheur (arbitrage Thibaut 2026-11-14 : un
+  //  habitant qui arrive garde sa culture d'origine le tour de son
+  //  arrivée). SEUL le recompte des majorités reste ici, APRÈS les
+  //  naissances : un nouveau-né porte la culture de sa mère
+  //  (cf. accoucher), l'invariant « ville.culture = majorité des
+  //  vivants » doit tenir sur la population de fin de tour
+  //  (arrivants compris — le flux migration les a recomptés aussi).
   updateCityCultures(state, p)
 
   // (RETRAIT 2026-10-28, arbitrage Thibaut : l'étape 3.6bis

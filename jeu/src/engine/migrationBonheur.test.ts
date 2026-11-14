@@ -41,6 +41,7 @@ import {
   probaDepartBonheur, poidsDestination, migrationBonheur,
   facteurEmploi, facteurLogement,
 } from './migrationBonheur'
+import { runTurn } from './tour'
 import type { Character, City, GameState } from './types'
 
 function partie(seed = 20261028): { state: GameState; C: ReturnType<typeof cfgOf> } {
@@ -380,4 +381,45 @@ test("flux : les autres régimes ne reçoivent RIEN à l'arrivée de migrants", 
   assert.equal(mig.ville, p2.villes[0].nom, 'le migrant est bien arrivé chez p2')
   assert.equal(state.log.filter((e) => e.texte.includes("Terre d'accueil")).length, 0, 'aucune ligne « Terre d\'accueil »')
   assert.equal(p2.resources['Or'].stock, orAvant, 'aucun Or crédité')
+})
+
+// ── Ordre du tour : la conversion AVANT la migration ──────────────────
+// (arbitrage Thibaut 2026-11-14, incident salon L2 : « J1 attire les
+//  habitants de J2, zélotes, mais il n'y a que des culturalistes dans
+//  sa ville » — jouée APRÈS le flux, la conversion retournait chaque
+//  arrivant isolé (ancrage 0) à la culture dominante le tour MÊME de
+//  son arrivée : aucune minorité culturelle n'était jamais visible.)
+
+test('ordre (arbitrage 2026-11-14) : la conversion se joue AVANT la migration — un arrivant garde sa culture d\u2019origine le tour de son arrivée', () => {
+  const { state, C } = partie(20261114)
+  // Chaque joueur n'a qu'UNE ville : tout départ est inter-joueurs.
+  C.p.migrationBonheurMax = 0.15 // quelques départs ciblés, pas un raz-de-marée
+  // Photographie avant : id → { joueur, culture }
+  const avant = new Map<string, { joueur: number; culture: string }>()
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) avant.set(c.id, { joueur: Number(nStr), culture: c.culture })
+  }
+  runTurn(state)
+  // Les migrés INTER-JOUEURS (changement de porteur)
+  const migres = new Map<string, { avant: { joueur: number; culture: string }; apres: Character }>()
+  for (const [nStr, liste] of Object.entries(state.population)) {
+    for (const c of liste ?? []) {
+      const b = avant.get(c.id)
+      if (b && b.joueur !== Number(nStr)) migres.set(c.id, { avant: b, apres: c })
+    }
+  }
+  assert.ok(migres.size > 0, `le flux a joué à cette graine (${migres.size} migrés inter-joueurs)`)
+  // INVARIANT DE L'ARBITRAGE : aucun migré n'a changé de culture le
+  // tour de son arrivée (l'incident L2 : arrivés isolés, ancrage 0,
+  // ils étaient convertis par la culture dominante avant publication)
+  for (const [id, m] of migres) {
+    assert.equal(m.apres.culture, m.avant.culture,
+      `${id} garde sa culture d'origine (${m.avant.culture}) le tour de son arrivée`)
+  }
+  // Le tour SUIVANT, l'assimilation reprend : les arrivants isolés
+  // (ancrage 0 < force dominante, cap ≥ 1 par ville) redeviennent
+  // éligibles à la conversion.
+  runTurn(state)
+  const assimiles = [...migres.values()].filter((m) => m.avant.culture !== m.apres.culture).length
+  assert.ok(assimiles > 0, `l'assimilation reprend au tour suivant (${assimiles} migrés convertis)`)
 })

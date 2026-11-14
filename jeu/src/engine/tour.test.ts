@@ -14,12 +14,12 @@ import assert from 'node:assert/strict'
 import { ETAPES_TOUR } from './tour'
 
 test('ETAPES_TOUR : le registre du wiki « Ordre du tour » suit runTurn pas à pas (numéros + noms exacts)', () => {
-  assert.equal(ETAPES_TOUR.length, 20, '20 étapes actives — toute évolution de runTurn DOIT mettre à jour ce registre')
+  assert.equal(ETAPES_TOUR.length, 21, '21 étapes actives — toute évolution de runTurn DOIT mettre à jour ce registre')
   assert.deepEqual(
     ETAPES_TOUR.map((e) => e.numero),
     ['1', '2bis', '2ter', '3', '3bis', '3ter', '3quater', '3quinquies', '3quinquies-bis',
       '3sexies', '3septies', '3decies', '3quaterdecies', '3terdecies', '3quindecies',
-      '4', '4bis', '5', '6', '7'],
+      '4', '4bis', '4ter', '5', '6', '7'],
     'numéros historiques : les trous sont des étapes retirées (historique dans git)',
   )
   assert.deepEqual(
@@ -28,7 +28,7 @@ test('ETAPES_TOUR : le registre du wiki « Ordre du tour » suit runTurn pas à 
       'Gains d\u2019habitants + production de base', 'Vassalité — tribut', 'Crédit des gains au stock',
       'Bâtiments', 'Aménagements (hors été)', 'Nourr — été', 'Autres', 'Lois des cultures + Tourisme',
       'Cités libres', 'Proximité des villes', 'Commerce + Tourisme', 'Pèlerinage — dîme du pontife',
-      'Moteur de population', 'Migration par bonheur', 'Armées — recrutement',
+      'Moteur de population — phase A', 'Conversions culturelles', 'Migration par bonheur', 'Armées — recrutement',
       'Snapshot + apports du tour', 'Tour suivant'],
     'noms des étapes (affichés tels quels dans le wiki)',
   )

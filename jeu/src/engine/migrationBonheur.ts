@@ -73,12 +73,20 @@
 //     retour Sans-emploi jusqu'à la réaffectation du tour suivant) ;
 //     entrée de journal type « Système » avec le motif « cherche
 //     meilleure vie ».
-//   · PLACEMENT — étape 4bis du tour, APRÈS tous les moteurs de
-//     population (étape 4) : un migrant n'est PAS retraité au même
-//     tour (vieillissement, maladie, fécondité) chez son nouveau
-//     porteur — l'ancienne migration scolaire vivait DANS
-//     populationTurn et cumulait ces effets sur les migrants
-//     inter-joueurs.
+//   · PLACEMENT — étape 4ter du tour, ENTRE les phases A et B du
+//     moteur de population (arbitrage 2026-11-11 « les morts et
+//     départs avant les naissances ») et APRÈS la conversion
+//     culturelle (arbitrage Thibaut 2026-11-14 : « un habitant qui
+//     arrive dans une nouvelle ville garde sa culture d'origine » —
+//     incident salon L2 : jouée après le flux, la conversion
+//     retournait chaque arrivant isolé, d'ancrage 0, à la culture
+//     dominante le tour même de son arrivée, aucune minorité
+//     culturelle n'était jamais visible). Un migrant n'est PAS
+//     retraité au même tour (vieillissement, maladie) chez son
+//     nouveau porteur — sa phase A est jouée chez l'ancien, sa
+//     phase B (fécondité, domiciles, prestige) chez le nouveau ;
+//     l'ancienne migration scolaire vivait DANS populationTurn et
+//     cumulait ces effets sur les migrants inter-joueurs.
 //   · Pas de plafond par ville (retour Thibaut : linéaire 0-10 %,
 //     sans cap) ; un habitant ne migre qu'UNE fois par tour
 //     (ensemble des déplacés de l'appel).
@@ -181,7 +189,7 @@ interface FicheVille {
   logementsLibres: boolean
 }
 
-/** Flux de migration par bonheur — étape 4bis du tour (tour.ts).
+/** Flux de migration par bonheur — étape 4ter du tour (tour.ts).
  *  Parcourt les villes de chaque joueur, calcule le bonheur UNE fois
  *  par ville et par tour, tire chaque habitant éligible au départ,
  *  puis la destination pondérée parmi toutes les autres villes du

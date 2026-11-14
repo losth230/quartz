@@ -128,6 +128,43 @@ test('moteur : 20 tours complets à 8 joueurs sans crash ni incohérence', () =>
   assert.ok(popTotale > 100, `population totale attendue (>100), obtenu ${popTotale}`)
 })
 
+/** Réécrit les ids « c… » en ids DÉTERMINISTES pour la comparaison au
+ *  bit près. newId (shared.ts) embarque Date.now() et un compteur
+ *  global — voulu pour l'unicité des ids en partie réelle, mais hors
+ *  du périmètre du déterminisme du moteur. Réordonnancement du
+ *  2026-11-14 (la conversion culturelle se joue désormais AVANT la
+ *  migration : ses tirages « plancher » sont consommés avant les
+ *  naissances) : le tour 1 produit des naissances, l'égalité au bit
+ *  près exige de neutraliser ces segments horodatés. Le parcours est
+ *  identique sur deux états de même structure, donc les ids réécrits
+ *  et leurs références (mariageId, mereId, pereId, pereBioId)
+ *  s'alignent entre les deux parties. */
+function determiniserIds(state: GameState): void {
+  const map = new Map<string, string>()
+  const persos: (Character[] | undefined)[] = [
+    ...Object.values(state.population ?? {}),
+    ...(state.citesLibres ?? []).map((cl) => cl.population),
+  ]
+  for (const liste of persos) {
+    for (const c of liste ?? []) {
+      if (typeof c.id === 'string' && c.id.startsWith('c') && !map.has(c.id)) {
+        map.set(c.id, `cdet${map.size}`)
+      }
+    }
+  }
+  const remap = (id: string | null | undefined): string | null | undefined =>
+    id == null ? id : map.get(id) ?? id
+  for (const liste of persos) {
+    for (const c of liste ?? []) {
+      c.id = remap(c.id) as string
+      c.mariageId = remap(c.mariageId) as string | null
+      c.mereId = remap(c.mereId) as string | null
+      c.pereId = remap(c.pereId) as string | null
+      c.pereBioId = remap(c.pereBioId) as string | null
+    }
+  }
+}
+
 test('moteur : déterminisme — même graine, même partie (2 tours comparés au bit près)', () => {
   const a = partieHuitJoueurs()
   const b = partieHuitJoueurs()
@@ -135,6 +172,11 @@ test('moteur : déterminisme — même graine, même partie (2 tours comparés a
   normaliserEtat(b)
   runTurn(a)
   runTurn(b)
+  // Les ids de nouveau-nés embarquent Date.now() (newId, shared.ts) :
+  //  neutralisés ci-dessus — le déterminisme du moteur porte sur le
+  //  flux rng, pas sur l'horodatage des ids.
+  determiniserIds(a)
+  determiniserIds(b)
   // Le rngState diverge s'il n'est pas correctement persisté/sérialisé :
   //  comparer l'état SANS config (les configs sont identiques par
   //  construction) garantit le déterminisme du moteur.
