@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=9" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=10" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -906,7 +906,9 @@ const DEFAULTS = {
 //  absent de ~70 % des cartes malgré le taux honnête. 120 ‰ = ~1 geyser
 //  par carte avec déserts suffisants, ressource rare mais présente.)
 const RES_DEFAULTS = {
-  'Bétail':   { density: 35, prox: 65, size: 4 },
+  // (12e retour Thibaut 2026-11-14) densité par défaut 4.5 %
+  //  (demande : « non pas à 3.5 % mais à 4.5 % de densité »)
+  'Bétail':   { density: 45, prox: 65, size: 4 },
   'Baleines': { density: 35, prox: 65, size: 3 },
   'Poissons': { density: 35, prox: 65, size: 4 },
   'Or':       { density: 35, prox: 65, size: 3 },
@@ -1437,14 +1439,16 @@ function generateMap(N, seedStr, params) {
   //  angulaire (équirépartition + jitter) et REJETTÉ s'il est à moins de
   //  2.35σ d'un centre déjà posé : l'espacement est garanti par
   //  construction, sans anneaux réguliers visibles.
-  function islandArchipel(count, sigRel, amp, rMin, rMax, floorBias, sepFact, dipAmp, dipRRel, edgeL, isletAmp) {
+  function islandArchipel(count, sigRel, amp, rMin, rMax, floorBias, sepFact, dipAmp, dipRRel, edgeL, isletAmp, landFrac) {
     // (11e retour Thibaut 2026-11-14 : « la distance entre les masses
     //  semble figée ») — COUNT tiré par graine (×0.80-×1.00) : 5-6
-    //  continents, 9-11 grandes îles, 14-18 îles d'archipel, des
+    //  continents, 7-9 grandes îles, 13-16 îles d'archipel (12e :
+    //  bases 9/16, bornées par la capacité du semis à la corde
+    //  3.5σ), des
     //  STRUCTURES différentes d'une carte à l'autre. Le facteur est
     //  tiré par APPEL : le curseur « Taille masses » (count × m) reste
     //  monotone en m à graine fixée (harnais C8).
-    count = Math.max(2, Math.round(count * (0.80 + 0.20 * randShape())));
+    count = Math.max(2, Math.round(count * (0.85 + 0.15 * randShape())));
     // dipAmp/dipRRel (4e retour) : creux central explicite. Sans lui, une
     // bosse posée à rMin avec σ ~ rMin/1.3 déverse son PLATEAU sur le
     // centre (contribution exp(−(1.3)⁴/2) ≈ 0.33·amp — mesuré : centre
@@ -1469,169 +1473,179 @@ function generateMap(N, seedStr, params) {
     // ~6 px du centre pour un plateau qui s'étend à 26 px) : masses
     // compactes centrales et soudées, mesuré sur tous les essais.
     const RPX = N * 1.6;
-    // (11e retour) SEP tiré par graine (×0.95-×1.30) : le rayon de
-    //  l'anneau (continents, count 5 : 12.6-14.9 px) et les capacités
-    //  des couronnes varient d'une carte à l'autre (grandes îles :
-    //  6-9 bosses par couronne extérieure) — des cartes resserrées,
-    //  d'autres aérées.
-    const sepMul = 0.95 + 0.35 * randShape();
-    const sep = (sepFact || 2.75) * sepMul * sigRel * RPX;
-    // CORDE ANTI-SOUDURE (3.25σ) : sous cette distance entre centres,
-    //  les queues super-gaussiennes se somment au point médian et
-    //  franchissent le seuil (mesuré à 2.6σ : paires soudées de 80-92
-    //  tuiles ; le calibrage historique tenait 3.3σ sans soudure sur
-    //  8 seeds). Sert de plancher à l'anneau et de référence au jitter.
-    const weldC = 3.25 * sigRel * RPX;
-    const a0 = randShape() * Math.PI * 2;
-    // Mode de placement : count ≤ 6 → ANNEAU équiréparti auto-calibré
-    // (r_ring = sep / 2·sin(π/count), l'espacement angulaire couvre la
-    // séparation requise) ; count > 6 → SPIRALE DE FERMAT (angle d'or
-    // 2.39996 rad, rayon √(k/count)) : répartition quasi-uniforme dans
-    // le disque, sans l'artefact d'anneau — un anneau de 14 îles à
-    // r=15 serait un collier soudé (l'espacement angulaire disponible
-    // vaut ~4 tuiles pour 6+ requises, mesuré : masse 97 % en anneau).
-    // (4e retour, it.5) MODE MULTI-ANNEAUX pour count > 6 : la spirale de
-    // Fermat place des voisins SUCCESSIFS à ~0.6-1 px radialement (contre
-    // sep ~ 8.5 px) : le rejet échoue en cascade et les bosses consécutives
-    // se soudent en arcs (mesuré : masse 58-98 % sur toutes les grilles
-    // 7-12 îles, chapelets de 3-4 bosses). Remède : anneaux EXPLICITES :
-    // extérieur nExt = 60 % des îles à 0.95·rMax (espacement angulaire
-    // 2·r·sin(pi/nExt)), intérieur nInt à rInt calibré pour tenir sep
-    // angulairement (clampé sous rExt - sep pour l'écart radial), angles
-    // décalés d'un demi-pas extérieur (maximise la distance entre
-    // anneaux), rejet commun contre TOUTES les bosses déjà posées.
-    const ringMode = count <= 6;
-    const targets = [];
-    if (ringMode) {
-      let rRing = sep / (2 * Math.sin(Math.PI / count));
-      // (11e) à count réduit l'anneau peut rétrécir (variété) mais
-      //  JAMAIS sous la corde anti-soudure 3.25σ (marge 5 % pour le
-      //  jitter de σ et le warp de dentelle).
-      rRing = Math.max(rRing, weldC * 1.05 / (2 * Math.sin(Math.PI / count)));
-      rRing = Math.max(rMin * RPX, Math.min(rMax * RPX, rRing));
-      for (let k = 0; k < count; k++)
-        targets.push({ ang: a0 + k * Math.PI * 2 / count, rad: rRing, gap: 0.98 * 2 * rRing * Math.sin(Math.PI / count) });
-    } else {
-      // (5e retour) COURONNES ADAPTATIVES, de l'extérieur vers le centre :
-      // chaque couronne porte autant de bosses que son périmètre admet à
-      // l'espacement sep (n = floor(pi/asin(sep/2r))), puis on descend
-      // d'un cran radial de sep. Les DEUX anneaux fixes (60 % ext / 40 %
-      // int) écrasaient l'anneau intérieur dès que sigma grandissait :
-      // rInt clampé au plancher, bosses int fusionnées en masse centrale.
-      // Validité : une couronne n'est posée que si l'écart radial à la
-      // précédente couvre sep ; le centre n'est utilisé que si la
-      // dernière couronne en est à au moins sep (sinon bosses fusionnées :
-      // mesuré, île centrale de 55-63 tuiles sur 8/8 seeds quand la
-      // 12e bosse était plaquée à moins d'un sigma de ses voisines).
-      // L'excédent est reporté sur la couronne extérieure (gap légèrement
-      // sous sep, le rejet min(sep, 0.98*gap) s'adapte).
-      let r = 0.95 * rMax * RPX;
-      const cour = [];
-      while (r > 0) {
-        const half = Math.max(r, sep / 2);
-        let n = Math.max(1, Math.floor(Math.PI / Math.asin(Math.min(1, sep / (2 * half)))));
-        cour.push({ rad: r, n: n });
-        const rNext = r - sep;
-        if (rNext < sep * 0.75) {
-          if (r >= sep) cour.push({ rad: 0, n: 1 });
-          break;
+    // (12e retour Thibaut 2026-11-14 : « quelque chose de vraiment
+    //  dépendant du bruit, que ce soit pour la disposition,
+    //  l'éloignement ou la taille ») — LANCÉS DE FLÉCHETTES
+    //  (best-candidate de Mitchell) : l'anneau équiréparti (4e) et
+    //  les couronnes adaptatives (5e, affinées 9e-11e) sont REMPLACÉS
+    //  par un semis aléatoire sur tout le disque [rMin ; rMax],
+    //  rayon tiré en racine (couverture de SURFACE uniforme — le
+    //  centre est atteignable sur les continents depuis le retrait du
+    //  creux central). Le SEP par graine et la phase a0 disparaissent
+    //  AVEC l'anneau : l'éloignement émerge du semis lui-même.
+    //  SÉCURITÉS HÉRITÉES DES 4e-11e RETOURS :
+    //  (1) CORDE ANTI-SOUDURE par paire, sur la TAILLE RÉELLE : un
+    //      essai n'est retenu que s'il reste à ≥ 3.5·(σi+σj)/2 de
+    //      TOUTE bosse posée (3.3σ calibré SUFFIT pour les queues seules,
+    //      mais à 3.3 la selle reste à portée d'une crête de fond :
+    //      solkast 12e, chaîne soudée de 44 tuiles à ratio 1.02-1.05 ;
+    //      les queues soudent
+    //      à 2.6σ — le rapport échelle/dérive du même premier essai :
+    //      masses de 84-106 tuiles, dominance 46 %). Jamais de repli
+    //      en collision : sans position valide, la masse est
+    //      ABANDONNÉE (essais libres du 11e : 80-231 tuiles soudées).
+    //  (2) BEST-CANDIDATE : 24 essais pour la première bosse,
+    //      120 pour la dernière (les créneaux se rétrécissent —
+    //      à 40 essais constants l'archipel perdait 4-6 bosses en
+    //      fin de semis) ; parmi les positions valides, la plus
+    //      éloignée du tissu posé. Semis régulier SANS structure
+    //      déterministe : les distances varient d'une carte à l'autre.
+    //  (3) BUDGET AVANT NOMBRE : si le semis manque de place, on
+    //      RESSERRE tous les σ (√posés/count) et on REJOUE — jusqu'à
+    //      un PLANCHER calculé sur le budget : la couverture
+    //      MAXIMALE des bosses (troncature 1.6σ) doit rester
+    //      ≥ 1.15× le budget de terre, sinon le seuil plonge dans le
+    //      FOND et des crêtes de fond PONTENT les masses (mesuré,
+    //      premier essai : shrink 0.64-0.85 → masses soudées de 84
+    //      tuiles ; cf. aussi le 11e : pont de 78). Au plancher,
+    //      les masses restantes sont abandonnées et les posées
+    //      croissent de ≤ ×1.08 (marges ≥ 3.06σ, au-dessus du
+    //      plancher empirique 2.95σ).
+    //  (4) TAILLE par le bruit : σ tiré ±0.10 (count ≤ 6 : chaque
+    //      masse pèse lourd dans le budget, l'écart ×1.3 du 5e
+    //      retour faisait dominer à 44 %) ou ±0.12 (grandes îles,
+    //      archipel) ; amp 0.9-1.1 ; E[σ²] = σ̂² : budget tenu.
+    const rLo = rMin * RPX;
+    const rHi = rMax * RPX;
+    const jit = count <= 6 ? 0.03 : 0.12;
+    const nTiles = 3 * N * (N + 1) + 1;
+    const budget = Math.max(0.15, +landFrac || 0.32) * nTiles * 2.45;
+    // (12l) cible 1.65× : à 1.5× il laissait le retrait descendre à 0.87-0.91
+    //  aux grands counts d'archipel — flanc ~0.09, et à îlots coupés
+    //  (seuil abaissé d'environ 0.015) la crête de fond + queues au col
+    //  franchissaient (pyrgorn, masse soudée 28 %).
+    // (12d-f) E[σ] = σ̂ (jitter symétrique) : le plancher est calculé en
+    //  ESPÉRANCE de couverture. CIBLE 1.5× : c'est le RATIO
+    //  PLATEAU/BUDGET qui tient le seuil au-dessus des crêtes de fond.
+    //  La SÉCURITÉ D'UNE PAIRE = (hauteur du flanc au seuil) − (crête
+    //  de fond + queues au col) : le flanc des masses de ~38-46 t à
+    //  σ 4.2+ chevauche à ~+0.11-0.13, une crête +0.06 avec les queues
+    //  à corde 3.3 plafonne à ~0.085 — la marge tient. À σ ~3.9-4.0
+    //  (retrait 0.92, cible 1.35) le flanc tombe à ~0.08 : SOUDURE
+    //  mesurée (6 bosses posées → 4 composantes). À ~1.0-1.15× le
+    //  seuil chevauche les crêtes et soude MÊME À CORDE RESPECTÉE
+    //  (12c, îlots coupés : chaînes de 116-168 tuiles ; le 11e à 6
+    //  anneaux tenait grâce à 1.6×).
+    const sFloor = Math.sqrt(Math.min(1, Math.max(0.55, 1.65 * budget /
+      (count * Math.PI * Math.pow(1.6 * sigRel * RPX, 2)))));
+    let shrink = 1;
+    if (sigRel >= 0.15) {
+      // (12h) STRATIFIÉ pour les GRANDES masses (sigRel ≥ 0.15, i.e.
+      //  continents à curseur standard) : le semis libre ne peut pas
+      //  garantir 5-6 masses dans le disque à corde fixe — le
+      //  best-candidate optimise CHAQUE point (4 masses en carré ~90°)
+      //  et le pentagone de bord est une cible de mesure nulle ; le
+      //  biais de bord (12g) ne faisait qu'approcher le carré. On
+      //  stratifie la seule chose qui doit l'être — les ANGLES — sur
+      //  une grille jitterée, et TOUT le reste reste dans le bruit :
+      //  count par graine, MASSE CENTRALE tirée (42 % : retour « mer
+      //  centrale retirée » — elle existe quand le bruit la pose),
+      //  phase, jitter angulaire ±18°, rayons 0.86-1.00·rHi, σ, amp.
+      //  Chaque créneau est tiré jusqu'à 12 fois jusqu'à validité à
+      //  la corde ; un créneau impossible est SAUTÉ (le repli de
+      //  croissance compense). Grandes îles et archipel (capacité
+      //  libre) gardent le semis de fléchettes ci-dessous.
+      // (12n) le centre n'est posé qu'à count ≥ 6 : à count 5 les masses
+      //  de ~46 t ont un flanc au seuil trop bas (~0.08) et la paire
+      //  centre-bord soude par crête de fond aux îlots coupés
+      //  (grimoire, masse 26 %). À count 6 les masses de ~38 t
+      //  montent à ~0.16 : marge large. Posé EN DERNIER, contre le
+      //  bord déjà en place : posé premier, il se glissait sous la
+      //  corde du bord à venir (curseur ×0.5 : 1 masse centrale +
+      //  bord impossible = 55 % de terre, C8). Le repli de
+      //  croissance compense si le centre échoue à la corde.
+      const centerDraw = count >= 6 && 3.3 * sigRel * RPX < rHi;
+      const phase0 = randShape() * Math.PI * 2;
+      const nRim = Math.max(2, count - (centerDraw ? 1 : 0));
+      for (let k = 0; k < nRim; k++) {
+        let okK = false;
+        // (12m) 40 essais : à 24, un créneau du pentagone échouait parfois
+        //  (p valide ~0.4/essai) → count perdu → repli ×1.08 → paires
+        //  soudées (ratios 0.97 mesurés). À 40, p échec ~1e-9 : le repli
+        //  ne se déclenche plus, les masses restent au budget/count.
+        for (let tries = 0; tries < 40 && !okK; tries++) {
+          const ang = phase0 + (k + (randShape() - 0.5) * 0.5) * 2 * Math.PI / nRim;
+          const rad = rHi * ((centerDraw ? 0.965 : 0.86) + (centerDraw ? 0.035 : 0.14) * randShape());
+          const bx = rad * Math.cos(ang), by = rad * Math.sin(ang);
+          const sNom = sigRel * RPX * (1 - jit + 2 * jit * randShape());
+          const aNom = amp * (0.9 + 0.2 * randShape());
+          let margin = Infinity;
+          for (const s of spots) {
+            const d = Math.hypot(bx - s.cx, by - s.cy) - 3.3 * (sNom + s.s) / 2;
+            if (d < margin) margin = d;
+          }
+          if (margin >= 0) { spots.push({ cx: bx, cy: by, s: sNom, a: aNom }); okK = true; }
         }
-        r = rNext;
       }
-      // Le count demandé est un PLAFOND : si le disque ne tient que cap
-      // places légitimes, on en pose cap — JAMAIS de report d'excédent sur
-      // la couronne extérieure (essayé : gap sous sep -> soudures en
-      // chaîne le long de l'anneau, mesuré 96-155 tuiles).
-      // (10e retour Thibaut 2026-11-14 : « pas toutes les îles au bord,
-      //  du bruit, des îles par ci et par là ») — le mécanisme de couronne
-      //  du bord du 9e retour est RÉVERSÉ : les bosses restent AU
-      //  CALIBRAGE, couronnes inchangées. Les îles éparses sont des
-      //  BOSSES D'ÎLOTS dédiées (cf. ci-dessous), pas un déplacement
-      //  des masses.
-      let cap = 0;
-      for (const c of cour) cap += c.n;
-      let restant = Math.min(count, cap);
-      let dec = 0;
-      for (const c of cour) {
-        const n = Math.min(c.n, restant);
-        if (n <= 0) break;
-        const gap = n === 1 ? sep : 0.98 * 2 * c.rad * Math.sin(Math.PI / n);
-        for (let k = 0; k < n; k++)
-          targets.push({ ang: a0 + dec + k * Math.PI * 2 / n, rad: c.rad, gap: gap });
-        restant -= n;
-        dec += 0.35;
+      if (centerDraw) {
+        // (12o) σ RÉDUIT (×0.88) : à σ̂ plein, la corde 3.3·(σc+σr)/2 ≈ 14.65
+        //  dépasse TOUTE distance centre-bord possible (bord à 0.965-1.0·rHi
+        //  = 14.4-14.9 px, offset du centre ±0.85 px) : le centre échouait
+        //  ses 12 essais sur toutes les graines de count 6 (5 masses sans
+        //  centre, C10). La corde passe à ~13.8 px et le plateau
+        //  π(1.6·0.88σ̂)² ≈ 97 u² couvre quand même le budget (~94 u²) :
+        //  masse centrale ~38 t préservée, paire effective 3.12σ.
+        let okC = false;
+        for (let tries = 0; tries < 12 && !okC; tries++) {
+          const sNom = sigRel * RPX * 0.88 * (1 - jit + 2 * jit * randShape());
+          const aNom = amp * (0.9 + 0.2 * randShape());
+          const bx = 1.2 * (randShape() - 0.5), by = 1.2 * (randShape() - 0.5);
+          let margin = Infinity;
+          for (const s of spots) {
+            const d = Math.hypot(bx - s.cx, by - s.cy) - 3.3 * (sNom + s.s) / 2;
+            if (d < margin) margin = d;
+          }
+          if (margin >= 0) { spots.push({ cx: bx, cy: by, s: sNom, a: aNom }); okC = true; }
+        }
       }
+    } else for (let pass = 0; pass < 6; pass++) {
+      spots.length = 0;
+      for (let k = 0; k < count; k++) {
+        const sNom = sigRel * RPX * shrink * (1 - jit + 2 * jit * randShape());
+        const aNom = amp * (0.9 + 0.2 * randShape());
+        const nTries = 24 + Math.floor(96 * (k + 1) / count);
+        let bestMargin = -Infinity, bestX = 0, bestY = 0;
+        for (let tries = 0; tries < nTries; tries++) {
+          // (12g) BIAIS DE BORD pour les grandes masses (sigRel ≥ 0.15,
+          //  i.e. continents à curseur standard) : le semis uniforme ne
+          //  peut pas découvrir un pentagone de bord (config de mesure
+          //  nulle) — 4 masses sur-spacées, puis plus rien. Les
+          //  candidats sont poussés vers le bord (u^(1/5)) : le
+          //  best-candidate en tire un pentagone IRRÉGULIER (angles et
+          //  rayons jitterés par graine), et la 6e masse, quand le
+          //  tirage la réclame, tombe AU CENTRE (sommet-centre 14.88 ≥
+          //  corde) — retour « mer centrale retirée » réalisé par le
+          //  bruit, pas par construction. Les types à capacité libre
+          //  (grandes îles, archipel) gardent le semis √-uniforme.
+          const rad = sigRel >= 0.15 ? rHi * Math.pow(randShape(), 0.2) :
+            Math.sqrt(rLo * rLo + (rHi * rHi - rLo * rLo) * randShape());
+          const ang = randShape() * Math.PI * 2;
+          const bx = rad * Math.cos(ang);
+          const by = rad * Math.sin(ang);
+          let margin = Infinity;
+          for (const s of spots) {
+            const d = Math.hypot(bx - s.cx, by - s.cy) - 3.3 * (sNom + s.s) / 2;
+            if (d < margin) margin = d;
+          }
+          if (margin > bestMargin) { bestMargin = margin; bestX = bx; bestY = by; }
+        }
+        if (bestMargin >= 0) spots.push({ cx: bestX, cy: bestY, s: sNom, a: aNom });
+      }
+      if (spots.length === count || pass === 5 || spots.length === 0) break;
+      shrink = Math.max(sFloor, shrink * Math.sqrt(spots.length / count));
     }
-    for (let k = 0; k < targets.length; k++) {
-      const t = targets[k];
-      const rejD = Math.min(sep, t.gap);
-      const rejD2 = rejD * rejD;
-      // (11e retour) GROS BRUIT positionnel ADAPTATIF : le rejet de
-      //  collision reste le plancher dur, et le jitter est borné par
-      //  le MOU réel (gap − corde anti-soudure weldC) — à
-      //  configuration saturée (6 continents : mou ~0.5 px) il
-      //  retombe au niveau du calibrage historique ; à count réduit
-      //  ou couronne lâche il monte à ±5-13° et les distances
-      //  VARIENT réellement. SÉCURITÉ ANTI-SOUDURE (leçon du 4e
-      //  retour, rejouée aux deux premiers essais de ce 11e : un
-      //  repli « au hasard des essais » ou « cible exacte contre un
-      //  voisin jitteré » pose des bosses à 2.6σ dont les queues se
-      //  soudent — 80 à 231 tuiles mesurées) : le repli prend le
-      //  PLUS ÉLOIGNÉ du tissu posé entre la CIBLE EXACTE et le
-      //  meilleur essai — tous deux dans le budget de jitter, donc
-      //  à ≥ weldC : au pire un détroit étroit, jamais une soudure.
-      let ok = false;
-      let bestX = t.rad * Math.cos(t.ang), bestY = t.rad * Math.sin(t.ang);
-      let bestD2 = Infinity;
-      for (const s of spots) {
-        const dd = (s.cx - bestX) * (s.cx - bestX) + (s.cy - bestY) * (s.cy - bestY);
-        if (dd < bestD2) bestD2 = dd;
-      }
-      const slack = Math.max(0, t.gap - weldC);
-      const jitA = t.rad > 0 ? Math.min(0.25, 0.7 * slack / t.rad) : 0;
-      const jitR = t.rad > 0 ? Math.min(0.10, 0.3 * slack / t.rad) : 0;
-      for (let tries = 0; tries < 24 && !ok; tries++) {
-        const ang = t.ang + jitA * (randShape() - 0.5);
-        let radTry = t.rad;
-        if (jitR > 0) {
-          radTry = t.rad * (1 + jitR * (randShape() - 0.5));
-          radTry = Math.max(rMin * RPX, Math.min(rMax * RPX, radTry));
-        }
-        const bx = radTry * Math.cos(ang);
-        const by = radTry * Math.sin(ang);
-        let d2min = Infinity;
-        for (const s of spots) {
-          const d2 = (s.cx - bx) * (s.cx - bx) + (s.cy - by) * (s.cy - by);
-          if (d2 < d2min) d2min = d2;
-        }
-        if (d2min > bestD2) { bestD2 = d2min; bestX = bx; bestY = by; }
-        ok = d2min > rejD2;
-      }
-      spots.push({
-        cx: bestX, cy: bestY,
-        // (5e retour) jitter de taille resserré : 0.9+0.25 faisait des aires
-        //  ×1.6 d’écart — la plus grosse île dominait à 44 % de la terre
-        //  dans l’archipel. 0.95+0.12 : écart d’aire ×1.1, la variété
-        //  reste par amp (0.9-1.1) et par le nombre de bosses.
-        s: sigRel * RPX * (0.95 + 0.12 * randShape()),
-        a: amp * (0.9 + 0.2 * randShape())
-      });
-    }
-    // (11e retour) COMPENSATION DES MASSES ABANDONNÉES : quand la
-    //  structure (capacité des couronnes au rayon/sep tirés par
-    //  graine) pose MOINS de masses que le count demandé, les
-    //  bosses restent dimensionnées pour le count complet alors que
-    //  le seuil de terre est un QUANTILE GLOBAL : il descend
-    //  chercher son budget dans le FOND de bruit, et les plaques du
-    //  fond soudent les masses entre elles (mesuré : Grandes
-    //  îles/grimoire, 7 bosses posées au lieu de 9 → pont centre →
-    //  bord de 78 tuiles, masse 32 %). On élargit les bosses posées
-    //  du ratio d'aire (√count/posés, borné ×1.35) : la couverture
-    //  des bosses absorbe le budget, le seuil remonte au-dessus du
-    //  fond. À count respecté (anneau des continents, couronnes
-    //  non saturées) : facteur 1, no-op exact.
     if (spots.length < count) {
-      const grow = Math.min(1.35, Math.sqrt(count / spots.length));
+      const grow = Math.min(1.08, Math.sqrt(count / spots.length));
       for (const s of spots) s.s *= grow;
     }
     // (10e retour Thibaut 2026-11-14 : « pas toutes les îles au bord — du
@@ -1765,7 +1779,21 @@ function generateMap(N, seedStr, params) {
     //  d'eau » — 6 bosses σ 0.18, sepFact 3.6, sea 68 : 6 masses
     //  équilibrées de 33-45 tuiles, terre 32 %, 8/8 seeds.)
     periphOcean = true;
-    shapeBias = islandArchipel(Math.max(2, Math.round(6 * massPct)), 0.18 / Math.sqrt(massPct), 0.50, 0.30, 0.62, 0, 3.6, 0.05, 0.16, edgeLand, 0.24);
+    // (12e retour Thibaut 2026-11-14 : « j'aimerais que la mer centrale
+    //  par défaut soit retirée sur les continents ») : le creux central
+    //  explicite (4e retour) disparaît (dipAmp 0) et le rayon plancher
+    //  des masses passe à 0 : le centre est atteignable par le semis.
+    //  La mer centrale n'est plus garantie par construction — elle
+    //  existe seulement quand le bruit n'y pose rien.
+    // (12e2-f) base 6 (tirage 5-6) : la capacité du disque à corde
+    //  3.3σ̂ vaut 5 au bord (pentagone, mou ~3 px) + 1 AU CENTRE
+    //  (sommet-centre 14.88 ≥ corde 13.6-15.0) : le best-candidate
+    //  place les 5 premières au bord (marge maximale) et la 6e au
+    //  centre — c'est le retour « mer centrale retirée » qui se
+    //  réalise : selon la graine, le centre est une masse ou de la
+    //  mer. Le retrait au plancher 1.5× est interdit (flancs sous les
+    //  crêtes de fond : soudure mesurée à 0.92).
+    shapeBias = islandArchipel(Math.max(2, Math.round(6 * massPct)), 0.185 / Math.sqrt(massPct), 0.50, 0, 0.62, 0, 3.6, 0, 0.16, edgeLand, 0.24, 1 - (+params.sea || 0.45));
   } else if (mapType === 'pangea') {
     shapeBias = (dc) => 0.16 * Math.pow(1 - dc, 1.5);
   } else if (mapType === 'islands-large') {
@@ -1779,7 +1807,16 @@ function generateMap(N, seedStr, params) {
     //  l'île, pas le curseur de mer) : 9-14 îles équilibrées de 25-32
     //  tuiles, terre 34 %, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    shapeBias = islandArchipel(Math.max(2, Math.round(11 * massPct)), 0.125 / Math.sqrt(massPct), 0.50, 0.16, 0.75, 0, 4.0, 0, 0.12, edgeLand, 0.2);
+    // (12e) base 11 → 9 : la capacité du semis aléatoire à la corde
+    //  3.5σ vaut ~9-10 bosses dans le disque — à 11, le retrait
+    //  compensateur était bloqué par le budget (les masses courent
+    //  déjà à la troncature 1.6σ) et le fond pontait.
+    // (12n) base 7, σ̂ 0.175 : en semis libre, les paires serrées à la
+    //  corde + repli de croissance soudaient par crête de fond aux
+    //  îlots coupés (grimoire : masse 30 %). Passées en STRATIFIÉ
+    //  (sigRel ≥ 0.15) : hexagone de bord + masse centrale tirée par
+    //  le count, plateau ~1.6× le budget, flancs hauts (~0.16).
+    shapeBias = islandArchipel(Math.max(2, Math.round(7 * massPct)), 0.175 / Math.sqrt(massPct), 0.50, 0.16, 0.75, 0, 4.0, 0, 0.12, edgeLand, 0.2, 1 - (+params.sea || 0.45));
   } else if (mapType === 'archipelago') {
     // (HISTORIQUE : creux central + 4 entailles angulaires cos 4θ, calibré
     //  2e/3e retours. 4e retour Thibaut 2026-11-13 : les entailles
@@ -1790,7 +1827,9 @@ function generateMap(N, seedStr, params) {
     //  COURONNES ADAPTATIVES (cf. helper) : 15-18 îles de 11-24 tuiles,
     //  terre 28 %, satellites 7 %, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    shapeBias = islandArchipel(Math.max(2, Math.round(18 * massPct)), 0.09 / Math.sqrt(massPct), 0.45, 0.14, 0.75, 0, 3.6, 0, 0, edgeLand, 0.26);
+    // (12e) base 18 → 16 : même raison — la capacité du semis à la
+    //  corde vaut ~15-17 bosses dans le disque (16 tirées au max).
+    shapeBias = islandArchipel(Math.max(2, Math.round(16 * massPct)), 0.11 / Math.sqrt(massPct), 0.45, 0.14, 0.75, 0, 3.6, 0, 0, edgeLand, 0.26, 1 - (+params.sea || 0.45));
   } else if (mapType === 'fragmented') {
     // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
     // tirée par le PRNG dédié) : le seul creux laissait une masse unique à

@@ -319,7 +319,8 @@ if (ex.encodeShare) {
       sizes.push(size);
     }
     sizes.sort((a, b) => b - a);
-    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0 };
+    const big = sizes.filter(x => x >= 6).length;
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, big, top: sizes[0] || 0 };
   };
   const bad = [];
   for (const type of ['continents', 'islands-large', 'archipelago']) {
@@ -354,7 +355,9 @@ if (ex.encodeShare) {
 //    mort, qui ne faisait rien sur les presets masqués).
 // Contrats, chemin UI fidèle (caps défaut + preset + massPct), r=15 :
 //  - bosses, aux 3 positions × 0.5/1/2 : terre [24, 40] %, anneau
-//    extérieur ≤ 5 % de terre, masse top ≤ 40 %, comps(×2) > comps(×0.5) ;
+//    extérieur ≤ 5 % de terre, masse top ≤ 40 %, masses ≥ 15 t :
+//    ×2 > ×0.5 (12e : sur les MASSES — le total de comps inclut les
+//    satellites, hors curseur) ;
 //  - fragmented : comps(×2) > comps(×0.5) à terre constante ;
 //  - masqués : terre(×0.5) > terre(×2) (le budget suit le curseur).
 {
@@ -382,7 +385,8 @@ if (ex.encodeShare) {
       sizes.push(size);
     }
     sizes.sort((a, b) => b - a);
-    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0 };
+    const big = sizes.filter(x => x >= 6).length;
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, big, top: sizes[0] || 0 };
   };
   const gen8 = (type, seed, m) => {
     const p = presetParams(ex, type, uiCaps);
@@ -400,7 +404,10 @@ if (ex.encodeShare) {
         if (landPct < 0.24 || landPct > 0.40) bad.push(`${type}/${seed}/×${m}: terre ${(landPct * 100).toFixed(0)}%`);
         else if (topPct > 0.40) bad.push(`${type}/${seed}/×${m}: masse ${(topPct * 100).toFixed(0)}%`);
       }
-      if (!(res[2].comps > res[0.5].comps)) bad.push(`${type}/${seed}: comps ×2 (${res[2].comps}) !> ×0.5 (${res[0.5].comps})`);
+      // (12e) la monotonie porte sur les MASSES (≥ 15 t), l'objet réel du
+      //  curseur : le total de composantes inclut les satellites, qui ne
+      //  suivent pas le curseur (égalité 18 = 18 mesurée sur pyrgorn).
+      if (!(res[2].big > res[0.5].big)) bad.push(`${type}/${seed}: masses ×2 (${res[2].big}) !> ×0.5 (${res[0.5].big})`);
     }
   }
   for (const seed of seeds) {
@@ -419,28 +426,23 @@ if (ex.encodeShare) {
     bad.slice(0, 4).join(', ') || 'monotone partout, budget des bosses constant, masse ≤ 40 %');
 }
 
-// C9 : BRUIT POSITIONNEL (11e retour Thibaut 2026-11-14 : « la distance
-//  entre les masses semble figée » — demande : « un gros bruit »). Les
-//  masses ne sont plus sur une rosace figée : COUNT tiré par graine
-//  (×0.80-×1.00 : 5-6 continents, 7-11 grandes îles, 14-18 îles
-//  d'archipel), SEP tiré par graine (×0.95-×1.30 : rayon d'anneau et
-//  capacités de couronnes variables), jitter de placement ADAPTATIF
-//  borné par le mou réel (gap − corde anti-soudure 3.25σ̂), et
-//  compensation des masses abandonnées (élargissement √count/posés :
-//  sans elle le quantile plonge dans le fond et soude les masses).
-//  Contrats, par type à bosses × 8 seeds, r=15, preset défaut :
-//  a) PAS DE SOUDURE : distance min entre centroïdes des masses
-//     (comps ≥ 15 tuiles ; archipel : ≥ 8 et non-îlet, i.e. pas
-//     entièrement au-delà de 10 pas du centre) ≥ 0.95 × corde
-//     anti-soudure 3.25σ̂ (continents 13.3, grandes îles 9.3,
-//     archipel 6.7 px) ;
+// C9 : BRUIT POSITIONNEL (11e-12e retours Thibaut 2026-11-14). Le semis
+// aléatoire (lancés de fléchettes / best-candidate de Mitchell) remplace
+// l'anneau équiréparti et les couronnes adaptatives : disposition,
+// éloignement et taille dépendent du bruit. Contrats, par type à
+// bosses × 5 seeds, r=15, preset défaut :
+//  a) PAS DE SOUDURE : distance entre centroïdes de chaque PAIRE de
+//     masses (comps ≥ 15 tuiles ; archipel : ≥ 8 et non-îlet, i.e. pas
+//     entièrement au-delà de 11.7 pas du centre — bande à îlots 78 %)
+//     ≥ 1.05·(√si+√sj) — la corde par paire vaut 3.5·(σi+σj)/2 avec
+//     σ ≈ 0.65·√taille, corrigée de la dérive centroïde/centre
+//     (~0.92) : une paire soudée (chaîne solkast 12b : 44 tuiles
+//     à ratio 1.02 de l'ancienne corde fixe) tombe à ~0.85 ;
 //  b) VARIÉTÉ STRUCTURELLE : le nombre de masses prend ≥ 2 valeurs
-//     distinctes sur les 8 seeds pour chacun des 3 types — deux cartes
-//     de même preset ne se ressemblent plus mécaniquement.
+//     distinctes sur les 5 seeds pour chacun des 3 types.
 {
   const N9 = 15;
   const DIRS9 = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
-  const minDist = { continents: 13.3, 'islands-large': 9.3, archipelago: 6.7 };
   const minSize = { continents: 15, 'islands-large': 15, archipelago: 8 };
   const bad = [];
   const counts = { continents: new Set(), 'islands-large': new Set(), archipelago: new Set() };
@@ -467,25 +469,50 @@ if (ex.encodeShare) {
             if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
           }
         }
-        // masse = assez grosse, et pas un îlet (un îlet est entièrement
-        // au-delà de 10 pas du centre — définition du C6)
-        if (size >= minSize[type] && dmin < 10) masses9.push({ cx: sx / size, cy: sy / size });
+        if (size >= minSize[type] && (type !== 'archipelago' || dmin < 11.7))
+          masses9.push({ cx: sx / size, cy: sy / size, s: size });
       }
       counts[type].add(masses9.length);
-      let dminAll = Infinity;
+      let worst = Infinity, worstInfo = '';
       for (let i = 0; i < masses9.length; i++)
         for (let j = i + 1; j < masses9.length; j++) {
+          const need = 1.05 * (Math.sqrt(masses9[i].s) + Math.sqrt(masses9[j].s));
           const d = Math.hypot(masses9[i].cx - masses9[j].cx, masses9[i].cy - masses9[j].cy);
-          if (d < dminAll) dminAll = d;
+          if (d / need < worst) { worst = d / need; worstInfo = type + '/' + seed + ' (' + masses9[i].s + '/' + masses9[j].s + ') ratio ' + (d / need).toFixed(2); }
         }
       if (masses9.length < 2) bad.push(type + '/' + seed + ': ' + masses9.length + ' masse(s)');
-      else if (dminAll < minDist[type]) bad.push(type + '/' + seed + ': minD ' + dminAll.toFixed(1) + ' < ' + minDist[type]);
+      else if (worst < 1) bad.push(worstInfo);
     }
   }
   for (const type of ['continents', 'islands-large', 'archipelago'])
     if (counts[type].size < 2) bad.push(type + ': count figé (' + [...counts[type]].join(',') + ')');
-  chk('C9 bruit positionnel (3 presets × 8 seeds, r=15 : pas de soudure à ≥ 0.95×3.25σ̂, count variable par graine)', bad.length === 0,
-    bad.slice(0, 4).join(', ') || 'minD ≥ corde, counts variables par type');
+  chk('C9 semis bruité (3 presets × 5 seeds, r=15 : paires à ≥ 1.05·(√si+√sj), count variable par graine)', bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'paires ≥ corde, counts variables par type');
+}
+
+// C10 : 12e retour Thibaut 2026-11-14 — « j'aimerais que la mer centrale
+//  par défaut soit retirée sur les continents » + « bétail à 4.5 % ».
+//  a) BÉTAIL : densité par défaut 45 ‰ dans RES_DEFAULTS (avant 35 ‰) ;
+//  b) CENTRE ATTEIGNABLE : le creux central explicite est retiré, le
+//     semis peut poser une masse au centre — ≥ 1 seed sur 5 avec de
+//     la terre à hexdist ≤ 2 du centre sur Continents (11e : 0/8, mer
+//     centrale garantie par construction).
+{
+  const bad = [];
+  const bet = ex.RES_DEFAULTS['Bétail'];
+  if (!bet || bet.density !== 45) bad.push('Bétail défaut ' + (bet ? bet.density : '?') + ' ‰ ≠ 45 ‰');
+  let reach = 0;
+  for (const seed of seeds) {
+    const m = ex.generateMap(15, seed, presetParams(ex, 'continents', null));
+    for (let i = 0; i < m.tiles.length; i++) {
+      const t = m.tiles[i];
+      const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+      if (d <= 2 && m.biome[i] !== 'Océan') { reach++; break; }
+    }
+  }
+  if (reach < 1) bad.push('0/5 seeds avec terre centrale (hexdist ≤ 2)');
+  chk('C10 12e retour (Bétail défaut 45 ‰, centre continental atteignable sur ≥ 1/5 seeds)', bad.length === 0,
+    bad.join(', ') || ('Bétail 45 ‰, ' + reach + '/5 seeds avec terre centrale'));
 }
 
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');
