@@ -6680,3 +6680,26 @@ d'autre ne diffère). Journal re-synchronisé depuis la tête
 e21d4d1c avant append (règle anti-écrasement externe, aucune
 divergence constatée : V2 et cap 10 % toujours présentes). Ctrl+F5
 requis (nouveau bundle).
+
+## Merveilles mondiales (arbitrage Thibaut 2026-11-15, base 01ca3a40)
+
+Retour des merveilles, 11 fiches de Thibaut. Famille « Merveille »,
+constructible dans TOUTE habitation selon le tier (rangMinHabitation
+1/2/3), UNIQUES AU MONDE (1er construit gagne, mutateur REFUSANT +
+alerte rouge du picker). Canaux dédiés du référentiel :
+multProductionBourgeoisVille (Pyramide ×2 EN PLUS du rang, PAR
+VILLE), bonusMetierParHabitantVille (Sanctuaire Fermiers +2
+Nourriture en été), scienceProfesseurPlusVille (Laboratoire +10 %,
++12 Scientifiques), ancrageConversionMult (Tour de Crystal ×1,1 dans
+le duel Pression/Ancrage), multAmenagementsRoutes + routesApportees
+(Antichambre : flux copiés ×2, +1 route), emissairesApportes (Antre
++5), reductionLeveeArmee + effetPlateau (Ordre : attaque = plateau).
+Tour de Crystal : accordeDogme → state.dogmesBonus, dogme HORS
+PALIER (palier 0) au CONSTRUCTEUR (choisirDogmeMerveille, onglet
+Dogmes), sans consommer les paliers de Tourisme. Catégorie
+« Merveilles » par rang dans le picker (bypass de groupe),
+badge-fam-merv (déjà en CSS), colonne wiki, convergence automatique
+des vieilles configs (purge des 4 anciennes, réinjection des 11).
+371/371 tests natifs (11 nouveaux : merveilles.test.ts), tsc
+baseline stub @supabase, diag 110 → 119 règles (simulation
+inchangée). feat b32d3dca · règles 3768a792 · journal (ce commit).
