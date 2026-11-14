@@ -1,0 +1,4308 @@
+<!DOCTYPE html>
+<title>Générateur de carte — LABO (expérimental)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root, body.dark {
+    --bg: #0f0b08;
+    --map-bg: #0a0704;
+    --text: #e8dcc0;
+    --text-muted: #b8a880;
+    --text-dim: #8a7a60;
+    --accent: #f4d58b;
+    --accent-soft: #c8b896;
+    --panel-bg: rgba(20, 14, 8, 0.92);
+    --panel-border: #4a3a26;
+    --field-bg: #0f0b08;
+    --field-border: #4a3a26;
+    --separator: #2a1e10;
+    --btn-bg: #3a2a16;
+    --btn-border: #6a4a26;
+    --btn-hover: #4a3520;
+    --btn-active: #2a1e10;
+    --btn-small-bg: #2a1e10;
+    --highlight-bg: #1a1208;
+    --highlight-border: #3a2a16;
+    --accent-bg: #2a1e10;
+  }
+  body.light {
+    --bg: #f4ecd8;
+    --map-bg: #ebe0c4;
+    --text: #2a1e10;
+    --text-muted: #5a4a30;
+    --text-dim: #8a7a60;
+    --accent: #7a4a18;
+    --accent-soft: #4a3520;
+    --panel-bg: rgba(250, 242, 220, 0.94);
+    --panel-border: #c8b890;
+    --field-bg: #fffaec;
+    --field-border: #c8b890;
+    --separator: #d0c0a0;
+    --btn-bg: #e0d0a8;
+    --btn-border: #a88858;
+    --btn-hover: #d0bc90;
+    --btn-active: #b89a68;
+    --btn-small-bg: #ece0c0;
+    --highlight-bg: #eee0b8;
+    --highlight-border: #c8b890;
+    --accent-bg: #d8c498;
+  }
+  html, body {
+    width: 100%; height: 100%;
+    background: var(--bg);
+    color: var(--text);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+    overflow: hidden;
+    overscroll-behavior: none;
+    user-select: none; -webkit-user-select: none;
+    transition: background 0.25s, color 0.25s;
+  }
+  #map {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    background: var(--map-bg);
+    touch-action: none;
+  }
+  .panel {
+    position: absolute;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    border-radius: 6px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  #info {
+    top: env(safe-area-inset-top, 10px);
+    left: 10px;
+    padding: 10px 12px;
+    min-width: 170px; max-width: 260px;
+    font-size: 12px; line-height: 1.5;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  #info.visible { opacity: 1; }
+  #info .biome { font-weight: bold; color: var(--accent); margin-bottom: 4px; font-size: 13px; }
+  #info .row { display: flex; justify-content: space-between; gap: 8px; }
+  #info .row span:last-child { color: var(--text-muted); }
+  #info .res { margin-top: 4px; color: var(--accent); font-weight: bold; }
+  #info .river { margin-top: 2px; color: #6eb5ff; }
+
+  #controls {
+    right: 10px; top: env(safe-area-inset-top, 10px);
+    padding: 8px;
+    display: flex; flex-direction: column; gap: 6px;
+    max-width: 250px;
+    max-height: calc(100vh - env(safe-area-inset-top, 10px) - env(safe-area-inset-bottom, 10px) - 20px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  #controls::-webkit-scrollbar { width: 6px; }
+  #controls::-webkit-scrollbar-track { background: transparent; }
+  #controls::-webkit-scrollbar-thumb { background: var(--panel-border); border-radius: 3px; }
+  #controls.collapsed .body { display: none; }
+  #controls .head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px; cursor: pointer; padding: 2px 4px;
+    position: sticky; top: -8px;
+    background: var(--panel-bg);
+    margin: -8px -8px 0; padding: 10px 12px 6px;
+    border-bottom: 1px solid var(--separator);
+    z-index: 1;
+  }
+  #controls .head span:first-child { font-weight: bold; color: var(--accent); letter-spacing: 0.5px; }
+  #controls .body { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+
+  .field { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+  .field label { flex: 1; color: var(--accent-soft); }
+  .field input[type="text"], .field select, .field input[type="number"] {
+    width: 90px; padding: 4px 6px;
+    background: var(--field-bg); color: var(--text);
+    border: 1px solid var(--field-border); border-radius: 3px;
+    font-family: inherit; font-size: 12px;
+  }
+  .field input[type="number"] { width: 70px; }
+  .field input[type="range"] { flex: 1; accent-color: #a86a30; min-width: 60px; }
+  .field input[type="checkbox"] { accent-color: #a86a30; width: 16px; height: 16px; }
+  .value { color: var(--text-muted); min-width: 40px; text-align: right; font-size: 11px; }
+
+  .subgroup {
+    border-top: 1px solid var(--separator);
+    padding-top: 5px; margin-top: 3px;
+  }
+  .subgroup .subhead {
+    cursor: pointer;
+    color: var(--accent-soft);
+    font-size: 11px;
+    font-weight: bold;
+    padding: 3px 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    letter-spacing: 0.5px;
+  }
+  .subgroup .subhead:hover { color: var(--accent); }
+  .subgroup.collapsed .sub-body { display: none; }
+  .subgroup .sub-body {
+    display: flex; flex-direction: column; gap: 4px;
+    padding: 4px 2px 4px 4px;
+  }
+  .subgroup .sub-body .field label { font-size: 11px; color: var(--text-muted); }
+
+  /* Sous-sections imbriquées (par ressource) */
+  .subgroup.nested {
+    border-top: 1px dashed var(--separator);
+    margin-top: 2px; padding-top: 2px;
+  }
+
+  /* Section Voisinages : paires compactes */
+  #adjacency-container .field {
+    font-size: 11px;
+    gap: 4px;
+  }
+  #adjacency-container .field label {
+    flex: 1; min-width: 0;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  #adjacency-container select {
+    flex-shrink: 0;
+  }
+  .subgroup.nested .subhead {
+    font-size: 10px; padding: 2px 2px;
+  }
+  .subgroup.nested .sub-body {
+    padding-left: 10px; padding-right: 2px;
+  }
+  .subhead .res-icon {
+    display: inline-block; width: 10px; height: 10px;
+    vertical-align: middle; margin-right: 4px;
+  }
+  .reset-btn {
+    background: none; border: none;
+    color: var(--text-dim); font-size: 11px;
+    padding: 0 4px; cursor: pointer;
+    font-family: inherit;
+  }
+  .reset-btn:hover { color: var(--text-muted); }
+
+  #size-preview {
+    padding: 4px 8px;
+    background: var(--highlight-bg);
+    border: 1px solid var(--highlight-border);
+    border-radius: 3px;
+    font-size: 11px; color: var(--text-muted);
+    text-align: center;
+    font-weight: bold;
+  }
+  #size-preview b { color: var(--accent); }
+
+  button.primary {
+    padding: 8px 10px;
+    background: var(--btn-bg); color: var(--accent);
+    border: 1px solid var(--btn-border); border-radius: 4px;
+    font-family: inherit; font-size: 12px; font-weight: bold;
+    cursor: pointer; letter-spacing: 0.5px;
+  }
+  button.primary:hover { background: var(--btn-hover); }
+  button.primary:active { background: var(--btn-active); }
+  button.small {
+    padding: 4px 8px; font-size: 11px; font-weight: normal;
+    background: var(--btn-small-bg); color: var(--accent-soft);
+    border: 1px solid var(--field-border); border-radius: 3px;
+    font-family: inherit; cursor: pointer;
+  }
+
+  #hint {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 8px);
+    left: 50%; transform: translateX(-50%);
+    padding: 6px 12px;
+    font-size: 11px; color: var(--text-dim);
+    background: var(--panel-bg);
+    border-radius: 10px;
+    pointer-events: none;
+    transition: opacity 1s;
+  }
+
+  #legend {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 36px);
+    left: 10px;
+    padding: 8px;
+    max-width: 200px;
+    font-size: 10px;
+    display: none;
+  }
+  #legend.visible { display: block; }
+  #legend .title { font-weight: bold; color: var(--accent); margin-bottom: 4px; font-size: 11px; letter-spacing: 0.5px; }
+  #legend .sep { margin: 5px 0 3px; color: var(--text-dim); font-size: 10px; letter-spacing: 0.5px; }
+  #legend .sw {
+    display: inline-block; width: 12px; height: 12px;
+    margin-right: 5px; vertical-align: middle;
+    border: 1px solid #000;
+  }
+  #legend .shape {
+    display: inline-block; width: 12px; height: 12px;
+    margin-right: 5px; vertical-align: middle;
+  }
+  #legend .item { display: flex; align-items: center; padding: 1px 0; }
+
+  @media (max-width: 500px) {
+    #controls { max-width: 220px; font-size: 11px; }
+    .field input[type="text"], .field select { width: 70px; }
+  }
+
+  /* Avertissement (placement joueurs impossible, etc.) */
+  #warning {
+    padding: 6px 8px;
+    background: rgba(180, 60, 30, 0.18);
+    border: 1px solid rgba(200, 80, 40, 0.5);
+    border-radius: 3px;
+    font-size: 11px;
+    color: #f0a880;
+    margin-top: 4px;
+    display: none;
+  }
+  #warning.visible { display: block; }
+
+  /* Bouton thème : discret, en bas à droite */
+  #theme-toggle {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    right: 10px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--accent);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    z-index: 10;
+  }
+  #theme-toggle:hover { transform: scale(1.08); }
+  #theme-toggle:active { transform: scale(0.95); }
+  /* LABO : bouton plein écran, calqué sur le bouton thème (juste au-dessus) */
+  #fs-toggle {
+    position: absolute;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 52px);
+    right: 10px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--panel-bg);
+    border: 1px solid var(--panel-border);
+    color: var(--accent);
+    font-size: 15px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    transition: background 0.25s, border-color 0.25s, transform 0.15s;
+    z-index: 10;
+  }
+  #fs-toggle:hover { transform: scale(1.08); }
+  #fs-toggle:active { transform: scale(0.95); }
+
+  /* Bandeau LABO : en bas à gauche, impossible à confondre avec l'officiel */
+  #labo-banner {
+    position: absolute;
+    left: 10px;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 10px);
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: var(--panel-bg);
+    border: 1px solid #b07020;
+    color: #f0c060;
+    font-size: 12px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+    z-index: 10;
+    pointer-events: auto;
+  }
+  #labo-banner a { color: #f0c060; font-weight: bold; }
+  #labo-banner .labo-tag {
+    background: #b07020; color: #1a0e02; font-weight: bold;
+    border-radius: 4px; padding: 1px 6px; letter-spacing: 0.5px;
+  }
+</style>
+<canvas id="map"></canvas>
+
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=1" title="Revenir à la version officielle">↩ officiel</a></div>
+
+<div id="info" class="panel"></div>
+
+<div id="legend" class="panel visible"></div>
+
+<div id="controls" class="panel">
+  <div class="head" id="toggle-controls">
+    <span>⚙ GÉNÉRATION</span>
+    <span id="chevron">▾</span>
+  </div>
+  <div class="body">
+    <div class="field" style="background:var(--accent-bg);border:1px solid var(--btn-border);border-radius:4px;padding:6px 10px;margin-bottom:4px;">
+      <label style="color:var(--accent);font-weight:bold;letter-spacing:0.5px;">TYPE</label>
+      <select id="map-type" style="width:110px;" title="Le type ne change pas seulement les curseurs : il applique un MASQUE DE FORME à l'élévation (bosse centrale pour un continent, lobes séparés, excavation centrale pour une mer intérieure…), puis PERTURBE les frontières par un bruit dédié (domain warping) : côtes découpées, formes irrégulières — pas de cercles parfaits ni d'anneaux de biomes. Le masque s'applique PAR-DESSUS les curseurs : après génération, on peut tout affiner sans perdre le type. « Personnalisé » = aucun masque.">
+        <option value="continent">Continent</option>
+        <option value="continents">Continents</option>
+        <option value="pangea">Pangée</option>
+        <option value="islands-large">Grandes îles</option>
+        <option value="archipelago">Archipel</option>
+        <option value="fragmented">Fragmenté</option>
+        <option value="inland-sea">Mer intérieure</option>
+        <option value="lakes">Terres + lacs</option>
+        <option value="custom" selected>Personnalisé</option>
+      </select>
+    </div>
+    <div class="field" title="Rajoute de la terre dans la bande où les joueurs peuvent apparaître : STRICTEMENT entre « Marge centre » et « Marge bord » (section Joueurs — exactement les mêmes bornes que le placement, coupure franche : RIEN ne change en dehors de la bande, ni plus au centre que la marge centre, ni plus au bord que la marge bord ; à « Marge centre » 0, la bande couvre toute la carte). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie, peu profond d'abord : 25 % = un quart, 100 % = tout l'océan de la bande. Les nouvelles terres sont classées au relief inversé de la profondeur (fosses → montagnes, baies comblées → climat continental, déserts possibles) et respectent les caps max de chaque biome, sans jamais toucher la carte de base. S'applique à TOUS les types de carte, « Personnalisé » compris.">
+      <label>Anneau</label>
+      <input type="range" id="ring-intensity" min="0" max="100" value="0" step="5">
+      <span class="value" id="ring-intensity-v">0%</span>
+    </div>
+    <div class="field">
+      <label>Joueurs</label>
+      <input type="number" id="players" min="0" max="12" value="0" step="1">
+      <button class="small" id="reroll-players" title="Replacer les joueurs">🎲</button>
+    </div>
+    <div class="field">
+      <label>Sites</label>
+      <select id="player-spread">
+        <option value="close">Rapprochés (2-4)</option>
+        <option value="medium">Moyenne (4-8)</option>
+        <option value="far" selected>Éloignés (libre)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Dist. min</label>
+      <input type="range" id="player-dist" min="3" max="8" value="5">
+      <span class="value" id="player-dist-v">5</span>
+    </div>
+    <div class="field">
+      <label>Marge bord</label>
+      <input type="range" id="player-edge" min="0" max="4" value="1">
+      <span class="value" id="player-edge-v">1</span>
+    </div>
+    <div class="field">
+      <label>Marge centre</label>
+      <input type="range" id="player-center" min="0" max="8" value="0">
+      <span class="value" id="player-center-v">0</span>
+    </div>
+    <div style="font-size:10px;color:var(--text-dim);padding:0 4px 2px;">Viabilité (autour de chaque tuile de départ)</div>
+    <div class="field">
+      <label>Continent ≥</label>
+      <input type="range" id="player-cont" min="0" max="50" value="0" step="1">
+      <span class="value" id="player-cont-v">0</span>
+    </div>
+    <div class="field">
+      <label>Rayon insp.</label>
+      <input type="range" id="player-inspect" min="1" max="6" value="3">
+      <span class="value" id="player-inspect-v">3</span>
+    </div>
+    <div class="field" style="gap:4px;">
+      <label>Requis</label>
+      <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="req-foret"> Forêt</label>
+      <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="req-montagne"> Mont.</label>
+      <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="req-desert"> Dés.</label>
+    </div>
+    <div class="field">
+      <label>Seed</label>
+      <input type="text" id="seed" value="grimoire">
+    </div>
+    <div class="field">
+      <label>Bruit</label>
+      <select id="noise-type" title="Bruit de base de la génération. Perlin (défaut, retour Thibaut 2026-11-13) : reliefs lisses et classiques ; Simplex : variations plus vives. Les versions « v2 » ajoutent une redistribution des valeurs (continents plus contrastés, côtes plus découpées) ; « Mixte » = Perlin v2 pour les masses, Simplex v2 pour le détail.">
+        <option value="perlin" selected>Perlin</option>
+        <option value="simplex">Simplex</option>
+        <option value="perlin2">Perlin v2</option>
+        <option value="simplex2">Simplex v2</option>
+        <option value="mixed">Mixte</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Rayon</label>
+      <input type="range" id="radius" min="10" max="18" value="15">
+      <span class="value" id="radius-v">15</span>
+    </div>
+    <div id="size-preview">→ <b id="tile-count">721</b> tuiles</div>
+    <div id="biome-counts" style="font-size:10px;color:var(--text-muted);padding:4px 6px;line-height:1.6;display:none;"></div>
+    <div class="field">
+      <label>Mer</label>
+      <input type="range" id="sealevel" min="25" max="65" value="45">
+      <span class="value" id="sealevel-v">45%</span>
+    </div>
+    <div class="field" title="Décalage FIN du seuil de la mer, en unités d'élévation — INDEPENDANT du curseur « Mer » (qui fixe la PART de tuiles en océan, en quantile : une carte à 45 % a toujours exactement 45 % d'océan quoi qu'il arrive). « Élévation de la mer » déplace le seuil ABSOLU : négatif = mer globalement plus basse, les hauts-fonds juste sous le seuil deviennent des côtes PARTOUT sur la carte (pas seulement dans un coin) ; positif = mer globalement plus haute (transgression, golfes et baies s'élargissent). 0 = quantile pur, comportement d'origine. Ex. : −0,10 sur une carte à 45 % découvre toutes les zones peu profondes. C'est aussi le mécanisme du cap Océan : quand le plafond est atteint, le seuil baisse GLOBALEMENT au lieu de supprimer des tuiles précises (fini la zone lisse dans un seul coin).">
+      <label>Élévation de la mer</label>
+      <input type="range" id="sea-elev" min="-10" max="10" value="0" step="1">
+      <span class="value" id="sea-elev-v">0.00</span>
+    </div>
+    <div class="field">
+      <label>Montagnes</label>
+      <input type="range" id="mountains" min="5" max="30" value="14">
+      <span class="value" id="mountains-v">14%</span>
+    </div>
+    <div class="field" title="Parts garanties des biomes sur la TERRE (retour Thibaut 2026-11-13 « 5 points »). Le paradigme du labo : un curseur = une part CONTRACTUELLE, pas une suggestion. Ces trois curseurs + « Montagnes » fixent la composition finale, recalée APRÈS le lissage anti-encerclement (qui érodait un tiers des montagnes promises : 14 % visés, 9,6 % réels) : les tuiles reconverties sont les plus MÉRITANTES climatiquement pour leur biome (les plus hautes pour la Montagne, les plus humides pour la Forêt, les plus sèches-chaudes pour le Désert, humides-chaudes pour le Marais). La Plaine prend le reste (complément). Déterminisme total : même seed = même carte. Limites : l'ADJACENCE et les CAPS restent des contraintes dures appliquées APRÈS et peuvent rogner la part ; l'ANNEAU et le cap Océan ajoutent de la terre hors contrat ; si la somme des parts dépasse 100 % de la terre, elles sont réduites au prorata.">
+      <label>Forêt</label>
+      <input type="range" id="p-foret" min="0" max="70" value="50">
+      <span class="value" id="p-foret-v">50%</span>
+    </div>
+    <div class="field" title="Part garantie de Désert sur la terre (cf. Forêt). 0 % = aucune ; si le climat ne permet pas d'atteindre la cible, on s'en approche avec les tuiles les plus sèches et chaudes disponibles.">
+      <label>Désert</label>
+      <input type="range" id="p-desert" min="0" max="25" value="3">
+      <span class="value" id="p-desert-v">3%</span>
+    </div>
+    <div class="field" title="Part garantie de Marais sur la terre (cf. Forêt). Les tuiles reconverties sont les plus humides et chaudes disponibles — jamais de marais en zone gelée.">
+      <label>Marais</label>
+      <input type="range" id="p-marais" min="0" max="25" value="5">
+      <span class="value" id="p-marais-v">5%</span>
+    </div>
+    <div class="field" title="Case « 🎲 Variété » (retour Thibaut 2026-11-13 : « toutes les cartes se ressemblent »). Cochée, chaque clic sur « Générer » tire en plus de la graine les curseurs de TEXTURE : taille des continents, découpe des côtes, compacité, réduction des bords et orientation des pôles (Nord/Sud, Est/Ouest ou Centre). Le tirage est calé sur la graine (même seed = même carte), les curseurs bougent et restent modifiables à la main. Le TYPE de carte sélectionné reste actif (son masque s'applique par-dessus le tirage) ; le bruit, la mer, les montagnes, l'élévation de la mer et les caps ne sont PAS tirés. Décochée : comportement d'origine exact.">
+      <label>Variété</label>
+      <label style="flex:0;font-size:10px;color:var(--text-muted);"><input type="checkbox" id="variete-toggle"> 🎲 tirer la texture</label>
+    </div>
+    <button class="primary" id="regen">⟳ Générer</button>
+    <div id="warning"></div>
+
+    <!-- Élévation -->
+    <div class="subgroup collapsed" id="sub-elev">
+      <div class="subhead" data-toggle="sub-elev">
+        <span>▸ TERRAIN</span>
+        <button class="reset-btn" data-reset="elev">↺</button>
+      </div>
+      <div class="sub-body">
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Forme et texture du relief.</div>
+        <div class="field" title="Quel critère détermine le biome en priorité ? Exemple : si Élévation est 1er, l'altitude définit océans/terres/montagnes en premier ; si Humidité est 1er, ce sont les zones humides/sèches qui dominent quitte à laisser apparaître des marais en altitude.">
+          <label>Priorité</label>
+          <select id="biome-order">
+            <option value="ETH" selected>Élév › Temp › Humid</option>
+            <option value="EHT">Élév › Humid › Temp</option>
+            <option value="THE">Temp › Humid › Élév</option>
+            <option value="HET">Humid › Élév › Temp</option>
+            <option value="HTE">Humid › Temp › Élév</option>
+          </select>
+        </div>
+        <div class="field" title="Plus c'est BAS, plus les continents sont LARGES (un ou deux gros continents). Haut = nombreuses petites masses éparpillées.">
+          <label>Taille continents</label>
+          <input type="range" id="e-cont" min="2" max="15" value="5">
+          <span class="value" id="e-cont-v">5</span>
+        </div>
+        <div class="field" title="Plus c'est haut, plus les côtes sont DÉCOUPÉES (péninsules, golfes, presqu'îles). Bas = côtes lisses et rondes.">
+          <label>Côtes irrégul.</label>
+          <input type="range" id="e-scale" min="5" max="30" value="18">
+          <span class="value" id="e-scale-v">18</span>
+        </div>
+        <div class="field" title="Compacité des terres. Haut = continents d'un seul tenant, océans bien dégagés. Bas = archipels, beaucoup de petites îles.">
+          <label>Compacité</label>
+          <input type="range" id="e-compact" min="0" max="100" value="65">
+          <span class="value" id="e-compact-v">65%</span>
+        </div>
+        <div class="field" title="Niveau de détail du relief. Haut = nombreuses collines et vallées, terrain accidenté. Bas = relief plat et uniforme.">
+          <label>Variabilité</label>
+          <input type="range" id="e-oct" min="1" max="6" value="4">
+          <span class="value" id="e-oct-v">4</span>
+        </div>
+        <div class="field" title="Rugosité du terrain. Haut = relief tourmenté avec contrastes forts (pics et fosses). Bas = relief doux, transitions graduelles.">
+          <label>Rugosité</label>
+          <input type="range" id="e-pers" min="20" max="80" value="50">
+          <span class="value" id="e-pers-v">0.50</span>
+        </div>
+        <div class="field" title="Force du masque qui éloigne la terre des bords de la carte. Haut = océan tout autour des terres. Bas = continents qui peuvent toucher le bord.">
+          <label>Réduction bords</label>
+          <input type="range" id="e-edge" min="0" max="60" value="10">
+          <span class="value" id="e-edge-v">10%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Humidité -->
+    <div class="subgroup collapsed" id="sub-humid">
+      <div class="subhead" data-toggle="sub-humid">
+        <span>▸ CLIMAT — HUMIDITÉ</span>
+        <button class="reset-btn" data-reset="humid">↺</button>
+      </div>
+      <div class="sub-body">
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Influence forêts, déserts et marais.</div>
+        <div class="field" title="Taille des zones climatiques humides ou sèches. Haut = patchwork de petites zones. Bas = grandes régions homogènes (un grand désert, une grande forêt).">
+          <label>Taille zones</label>
+          <input type="range" id="h-scale" min="3" max="30" value="14">
+          <span class="value" id="h-scale-v">14</span>
+        </div>
+        <div class="field" title="Variabilité interne d'une zone climatique. Haut = chaque zone a sous-zones et nuances. Bas = zones très uniformes.">
+          <label>Variabilité</label>
+          <input type="range" id="h-oct" min="1" max="6" value="3">
+          <span class="value" id="h-oct-v">3</span>
+        </div>
+        <div class="field" title="Force des transitions entre humide et sec. Haut = transitions abruptes (frontière nette désert/forêt). Bas = transitions douces.">
+          <label>Contraste</label>
+          <input type="range" id="h-pers" min="20" max="80" value="55">
+          <span class="value" id="h-pers-v">0.55</span>
+        </div>
+        <div class="field" title="Effet de continentalité : tuiles proches d'un océan = humides, cœur des continents = sec. Haut = grands déserts continentaux réalistes. Bas = humidité libre (placement plus aléatoire).">
+          <label>Continentalité</label>
+          <input type="range" id="h-cont" min="0" max="100" value="40">
+          <span class="value" id="h-cont-v">40%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Température -->
+    <div class="subgroup collapsed" id="sub-temp">
+      <div class="subhead" data-toggle="sub-temp">
+        <span>▸ CLIMAT — TEMPÉRATURE</span>
+        <button class="reset-btn" data-reset="temp">↺</button>
+      </div>
+      <div class="sub-body">
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Influence forêts froides et déserts chauds.</div>
+        <div class="field" title="Position des pôles : Nord/Sud (haut/bas), Est/Ouest (gauche/droite), Centre (un seul pôle au milieu) ou Aucun (climat uniforme).">
+          <label>Pôles</label>
+          <select id="t-poles">
+            <option value="ns" selected>Nord / Sud</option>
+            <option value="ew">Est / Ouest</option>
+            <option value="center">Centre</option>
+            <option value="none">Aucun</option>
+          </select>
+        </div>
+        <div class="field" title="Force du gradient entre l'équateur et les pôles. Haut = pôles très petits, équateur très large. Bas = transitions douces, climat plus uniforme.">
+          <label>Force pôles</label>
+          <input type="range" id="t-lat" min="50" max="300" value="140">
+          <span class="value" id="t-lat-v">1.40</span>
+        </div>
+        <div class="field" title="Intensité des perturbations climatiques aléatoires. Haut = climat chaotique, ne suit plus la latitude. Bas = climat purement zonal (équateur chaud, pôles froids).">
+          <label>Désordre</label>
+          <input type="range" id="t-noise" min="0" max="40" value="12">
+          <span class="value" id="t-noise-v">0.12</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contraintes géographiques -->
+    <div class="subgroup collapsed" id="sub-constraints">
+      <div class="subhead" data-toggle="sub-constraints">
+        <span>▸ CONTRAINTES</span>
+        <button class="reset-btn" data-reset="constraints">↺</button>
+      </div>
+      <div class="sub-body">
+        <div class="field">
+          <label>Même biome</label>
+          <select id="c-surround-same">
+            <option value="0">Désactivé</option>
+            <option value="4">Max 4 voisins</option>
+            <option value="5" selected>Max 5 voisins</option>
+            <option value="6">Max 6 voisins</option>
+          </select>
+        </div>
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 2px;">≥ N voisins du même biome → mute un voisin</div>
+        <div style="font-size:10px;color:var(--text-dim);padding:2px 4px 4px;">Cap par biome (0 = illimité)</div>
+        <div class="field">
+          <label>Plaine</label>
+          <input type="number" id="cap-plaine" min="0" max="1000" value="200" step="10">
+        </div>
+        <div class="field">
+          <label>Forêt</label>
+          <input type="number" id="cap-foret" min="0" max="1000" value="200" step="10">
+        </div>
+        <div class="field">
+          <label>Désert</label>
+          <input type="number" id="cap-desert" min="0" max="1000" value="50" step="10">
+        </div>
+        <div class="field">
+          <label>Marais</label>
+          <input type="number" id="cap-marais" min="0" max="1000" value="80" step="10">
+        </div>
+        <div class="field">
+          <label>Montagne</label>
+          <input type="number" id="cap-montagne" min="0" max="1000" value="80" step="10">
+        </div>
+        <div class="field">
+          <label>Océan</label>
+          <input type="number" id="cap-ocean" min="0" max="1000" value="250" step="10">
+        </div>
+        <div class="field">
+          <label>Volcan</label>
+          <input type="number" id="cap-volcan" min="0" max="1000" value="15" step="1">
+        </div>
+      </div>
+    </div>
+
+    <!-- Voisinages : règles d'adjacence entre biomes -->
+    <div class="subgroup collapsed" id="sub-adjacency">
+      <div class="subhead" data-toggle="sub-adjacency">
+        <span>▸ VOISINAGES</span>
+        <button class="reset-btn" data-reset="adjacency">↺</button>
+      </div>
+      <div class="sub-body">
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Règles d'adjacence entre biomes. <b>Libre</b> = peut se toucher, <b>Tampon</b> = passe par une plaine entre les deux, <b>Interdit</b> = jamais voisins.</div>
+        <div class="field">
+          <input type="checkbox" id="adj-enabled">
+          <label>Activer les règles</label>
+        </div>
+        <div id="adjacency-container">
+          <!-- peuplé dynamiquement -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Ressources (une sous-section par type) -->
+    <div class="subgroup" id="sub-res">
+      <div class="subhead" data-toggle="sub-res">
+        <span>▾ RESSOURCES</span>
+        <button class="reset-btn" data-reset="res">↺</button>
+      </div>
+      <div class="field" style="background:var(--accent-bg);border:1px solid var(--btn-border);border-radius:4px;padding:6px 10px;margin-bottom:4px;">
+        <label style="color:var(--accent);font-weight:bold;letter-spacing:0.5px;">MODE RESSOURCES</label>
+        <select id="res-mode" style="width:135px;" title="Quantile v2 (officiel depuis le retour « 5 points » du 2026-11-13) : la densité en ‰ est le VRAI taux de tuiles éligibles — les k meilleures tuiles au score de bruit sont retenues (k = densité × éligibles, arrondi stochastique), puis écrêtage par amas (curseur Taille). Toutes les ressources, y compris Baleines/Geyser, atteignent leur densité. Bruit v1 (legacy) : seuil sur le bruit de Perlin — la densité ne correspondait PAS au taux réel (cloche du Perlin : seuils > 0,85 quasi inatteignables, d'où Baleines/Geyser absents de ~80 % des cartes) ; conservé pour rejouer les anciennes cartes.">
+          <option value="quantile" selected>Quantile v2 (officiel)</option>
+          <option value="bruit">Bruit v1 (legacy)</option>
+        </select>
+      </div>
+      <div class="sub-body" id="res-container">
+        <!-- peuplé dynamiquement -->
+      </div>
+    </div>
+
+    <!-- Événements (nouveau) -->
+    <div class="subgroup collapsed" id="sub-evt">
+      <div class="subhead" data-toggle="sub-evt">
+        <span>▸ ÉVÉNEMENTS</span>
+        <button class="reset-btn" data-reset="evt">↺</button>
+      </div>
+      <div class="sub-body">
+        <div class="field">
+          <label>Volcans</label>
+          <input type="range" id="evt-volcan" min="0" max="30" value="20">
+          <span class="value" id="evt-volcan-v">20%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rivières : section dédiée -->
+    <div class="subgroup collapsed" id="sub-rivers">
+      <div class="subhead" data-toggle="sub-rivers">
+        <span>▸ RIVIÈRES</span>
+        <button class="reset-btn" data-reset="rivers">↺</button>
+      </div>
+      <div class="sub-body">
+        <div style="font-size:10px;color:var(--text-dim);padding:0 4px 4px;line-height:1.4;">Cours d'eau entre les tuiles (flux hydrologique).</div>
+        <div class="field" title="Densité du réseau hydrographique. Haut = beaucoup de cours d'eau (ruisseaux inclus). Bas = seuls les grands fleuves.">
+          <label>Densité</label>
+          <input type="range" id="evt-river" min="0" max="25" value="8">
+          <span class="value" id="evt-river-v">8%</span>
+        </div>
+        <div class="field" title="Longueur minimale d'une rivière en arêtes. Les rivières plus courtes sont supprimées (élimine les petits segments isolés en bord de mer).">
+          <label>Long. min</label>
+          <input type="range" id="evt-riverlen" min="1" max="8" value="3">
+          <span class="value" id="evt-riverlen-v">3</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calques -->
+    <div class="subgroup" style="border-top: 1px solid #2a1e10;">
+      <div class="sub-body" style="padding-top: 4px;">
+        <div class="field"><input type="checkbox" id="lay-rivers" checked><label>Rivières</label></div>
+        <div class="field"><input type="checkbox" id="lay-resources" checked><label>Ressources</label></div>
+        <div class="field"><input type="checkbox" id="lay-grid" checked><label>Grille</label></div>
+        <div class="field"><input type="checkbox" id="lay-legend" checked><label>Légende</label></div>
+      </div>
+    </div>
+
+    <button class="small" id="export">📷 Export PNG</button>
+    <button class="small" id="copy-link" title="Copie l'URL complète de la carte en cours (graine + tous les curseurs + placement joueurs). N'importe qui ouvre ce lien et voit EXACTEMENT la même carte, sans rien régler.">🔗 Copier le lien</button>
+    <button class="small" id="export-json" title="Exporte la carte en JSON : graine, paramètres, tuiles (position, biome, élévation, humidité, température), ressources, rivières, joueurs, seuils. Pour rejouer la carte ou l'analyser hors du labo (PNG = image, JSON = données).">💾 Export JSON</button>
+    <button class="small" id="pick-tile">🎯 Tirer une case</button>
+  </div>
+</div>
+
+<div id="hint">Pan · Pinch · Tap pour inspecter</div>
+
+<button id="theme-toggle" title="Changer de thème" aria-label="Changer de thème">☾</button>
+<button id="fs-toggle" title="Plein écran" aria-label="Plein écran">⛶</button>
+
+<script>
+"use strict";
+
+// ============================================================
+// Valeurs par défaut des paramètres
+// ============================================================
+// ============================================================
+// Presets de type de carte
+// Chaque preset pousse un sous-ensemble des paramètres liés à la géographie.
+// Ce qui n'est pas listé reste inchangé (climat, ressources, événements...).
+// ============================================================
+const MAP_PRESETS = {
+  // Un gros continent unique, qui touche presque les bords
+  'continent': {
+    sealevel: 35,
+    'e-cont':    4,   // continents très larges
+    'e-scale':   14,
+    'e-compact': 80,
+    'e-edge':    5,
+    'e-pers':    45
+  },
+  // Deux ou trois continents séparés par de la mer
+  // (compact abaissé : à 70, la bosse lisse du canal « continent » dominait
+  //  le masque de forme angulaire et reliait les deux masses en une seule)
+  'continents': {
+    sealevel: 68,
+    'e-cont':    6,
+    // (4e retour 2026-11-13 : compact 50→15, scale 16→20 — avec les bosses
+    //  localisées, le canal BF du blend est l'ennemi : ses rubans comblent
+    //  le gap sous le seuil en PLAQUES CONTINUES qui soudent les continents
+    //  (mesuré : masse 99 %). Le fond doit rester PLAT, seul le détail HF
+    //  dentelle les côtes et fournit les satellites.)
+    'e-scale':   20,
+    'e-compact': 15,
+    'e-edge':    5,
+    'e-pers':    50
+  },
+  // Une seule masse qui couvre quasiment toute la carte (comme la Pangée)
+  'pangea': {
+    sealevel: 25,
+    'e-cont':    3,   // très basse fréquence = une seule bosse centrale
+    'e-scale':   12,
+    'e-compact': 90,
+    'e-edge':    0,
+    'e-pers':    40
+  },
+  // Quelques grandes îles bien distinctes
+  // (compact abaissé : le canal « continent » basse fréquence reliait les îles
+  //  en une seule masse ; le masque de forme angulaire fait le reste)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50
+  //  essayé avec le Simplex par défaut puis REVENU à 45 : le Perlin est de
+  //  retour par défaut (2e retour Thibaut 2026-11-13) — valeurs d'origine
+  //  validées au harnais)
+  'islands-large': {
+    sealevel: 66,
+    'e-cont':    8,
+    // (4e retour 2026-11-13 : compact 35→15, scale 18→22 — cf. continents :
+    //  fond plat HF, la structure vient des bosses.)
+    'e-scale':   22,
+    'e-compact': 15,
+    'e-edge':    25,
+    'e-pers':    55
+  },
+  // Beaucoup de petites îles
+  // (compact 35→18 et scale 22→24 : le canal basse fréquence produisait UNE
+  //  masse dominante de 85-95 % de la terre ; edge 15→25 : les bords
+  //  océaniques détachent les îles côtières)
+  // (sealevel 55 → 45, retour Thibaut 2026-11-13 : trop d'eau ; 45 → 50
+  //  essayé avec le Simplex par défaut puis REVENU à 45 avec le Perlin de
+  //  retour par défaut, 2e retour Thibaut 2026-11-13 — valeurs d'origine
+  //  validées au harnais)
+  'archipelago': {
+    sealevel: 72,
+    'e-cont':    11,
+    // (4e retour 2026-11-13 : compact 18→12, scale 24→26 — cf. continents :
+    //  fond plat HF, îles portées par les bosses, mottes-îlots du détail.)
+    'e-scale':   26,
+    'e-compact': 12,
+    'e-edge':    25,
+    'e-pers':    60
+  },
+  // Miettes de terre éparpillées dans un océan
+  // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : sealevel
+  //  50 → 60, scale 26 → 38, compact 15 → 8 — accompagnent les entailles
+  //  traversantes cos 6θ du masque ; 15-19 composantes jouables, masse
+  //  principale ≤ 40 % sur 8/8 seeds au harnais)
+  'fragmented': {
+    sealevel: 60,
+    'e-cont':    13,
+    'e-scale':   38,
+    'e-compact': 8,
+    'e-edge':    35,
+    'e-pers':    65
+  },
+  // Un grand continent avec une mer intérieure au milieu
+  // (edge abaissé 55 → 10 : le masque de bord élevé envoyait la mer au BORD,
+  //  l'inverse du but ; l'excavation centrale du masque de forme attire
+  //  désormais le quantile de mer au centre)
+  'inland-sea': {
+    sealevel: 40,
+    'e-cont':    4,
+    'e-scale':   14,
+    'e-compact': 70,
+    'e-edge':    10,
+    'e-pers':    45
+  },
+  // Grand continent criblé de petits lacs et golfes
+  'lakes': {
+    sealevel: 38,
+    'e-cont':    5,
+    'e-scale':   22,
+    'e-compact': 55,  // détail fort → beaucoup de petites dépressions
+    'e-edge':    10,
+    'e-pers':    60
+  }
+};
+
+const DEFAULTS = {
+  elev:  { cont: 5, scale: 18, compact: 65, oct: 4, pers: 50, edge: 10 },
+  humid: { scale: 14, oct: 3, pers: 55, cont: 40 },
+  temp:  { lat: 140, noise: 12 },
+  evt:   { volcan: 20, river: 8, riverlen: 3 },
+  constraints: {
+    surroundSame: 5,
+    // (Nouveau retour Thibaut 2026-11-13 : caps ACTIFS par défaut — 0 = illimité)
+    'cap-plaine': 200, 'cap-foret': 200, 'cap-desert': 50, 'cap-marais': 80,
+    'cap-montagne': 80, 'cap-ocean': 250, 'cap-volcan': 15
+  }
+};
+
+// Défauts par ressource (density en ‰, prox et size en pourcentage ou valeur entière)
+// Retour Thibaut 2026-11-13 : TOUTES les ressources à density 30 ‰ (= 3,0 %
+// affiché). En mode Quantile v2, 3 % = le VRAI taux de tuiles éligibles par
+// ressource ; en mode Bruit v1, seuil = 1 − 0,03×8 = 0,76 (atteignable).
+// (Nouveau retour Thibaut 2026-11-13 : densité de base 40 ‰ = 4,0 % et
+//  proximité 65 % partout — amas moyens ; SEULES les Ruines échappent à la
+//  règle : densité 60 ‰ = 6,0 % et proximité 0 % → fréquence maximale du
+//  bruit (freq = 0,46) : des ruines ÉPARPILLÉES une par une, jamais en
+//  amas contigus.)
+// (Retour du soir 2026-11-13 : densité de base 40 → 35 ‰ = 3,5 %. En mode
+//  Bruit, seuil = 1 − densité×8 : 0,72 à 3,5 % (atteignable).)
+// (Retour « 5 points » 2026-11-13 : Geyser à 120 ‰ — en mode Quantile la
+//  densité est le VRAI taux mais l'éligible de Geyser est le SEUL biome
+//  Désert, minuscule (~8 tuiles à 3 % de terre) : à 3,5 ‰, k = 0,28 →
+//  absent de ~70 % des cartes malgré le taux honnête. 120 ‰ = ~1 geyser
+//  par carte avec déserts suffisants, ressource rare mais présente.)
+const RES_DEFAULTS = {
+  'Bétail':   { density: 35, prox: 65, size: 4 },
+  'Baleines': { density: 35, prox: 65, size: 3 },
+  'Poissons': { density: 35, prox: 65, size: 4 },
+  'Or':       { density: 35, prox: 65, size: 3 },
+  'Fer':      { density: 35, prox: 65, size: 4 },
+  'Charbon':  { density: 35, prox: 65, size: 4 },
+  'Ruines':   { density: 60, prox: 0,  size: 2 },
+  'Geyser':   { density: 120, prox: 65, size: 2 },
+  'Soie':     { density: 35, prox: 65, size: 3 }
+};
+
+// ============================================================
+// PRNG (mulberry32)
+// ============================================================
+function hashString(s) {
+  let h = 1779033703 ^ s.length;
+  for (let i = 0; i < s.length; i++) {
+    h = Math.imul(h ^ s.charCodeAt(i), 3432918353);
+    h = (h << 13) | (h >>> 19);
+  }
+  return (h ^= h >>> 16) >>> 0;
+}
+function mulberry32(seed) {
+  let s = seed >>> 0;
+  return function() {
+    s = (s + 0x6D2B79F5) >>> 0;
+    let t = s;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+// ============================================================
+// Bruit de Perlin 2D
+// ============================================================
+class PerlinNoise {
+  constructor(rand) {
+    const perm = new Uint8Array(256);
+    for (let i = 0; i < 256; i++) perm[i] = i;
+    for (let i = 255; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [perm[i], perm[j]] = [perm[j], perm[i]];
+    }
+    this.p = new Uint8Array(512);
+    for (let i = 0; i < 512; i++) this.p[i] = perm[i & 255];
+  }
+  fade(t) { return t * t * t * (t * (t * 6 - 15) + 10); }
+  lerp(a, b, t) { return a + t * (b - a); }
+  grad(hash, x, y) {
+    const h = hash & 3;
+    const u = h < 2 ? x : y;
+    const v = h < 2 ? y : x;
+    return ((h & 1) ? -u : u) + ((h & 2) ? -v : v);
+  }
+  noise2D(x, y) {
+    const X = Math.floor(x) & 255;
+    const Y = Math.floor(y) & 255;
+    const xf = x - Math.floor(x);
+    const yf = y - Math.floor(y);
+    const u = this.fade(xf);
+    const v = this.fade(yf);
+    const aa = this.p[this.p[X] + Y];
+    const ab = this.p[this.p[X] + Y + 1];
+    const ba = this.p[this.p[X + 1] + Y];
+    const bb = this.p[this.p[X + 1] + Y + 1];
+    const x1 = this.lerp(this.grad(aa, xf, yf),     this.grad(ba, xf - 1, yf),     u);
+    const x2 = this.lerp(this.grad(ab, xf, yf - 1), this.grad(bb, xf - 1, yf - 1), u);
+    return this.lerp(x1, x2, v);
+  }
+  fbm(x, y, oct, pers, lac) {
+    let sum = 0, amp = 1, freq = 1, norm = 0;
+    for (let i = 0; i < oct; i++) {
+      sum += amp * this.noise2D(x * freq, y * freq);
+      norm += amp;
+      amp *= pers;
+      freq *= lac;
+    }
+    return sum / norm;
+  }
+}
+
+// ============================================================
+// Bruit Simplex 2D
+// ============================================================
+class SimplexNoise {
+  constructor(rand) {
+    const p = new Uint8Array(256);
+    for (let i = 0; i < 256; i++) p[i] = i;
+    for (let i = 255; i > 0; i--) {
+      const j = Math.floor(rand() * (i + 1));
+      [p[i], p[j]] = [p[j], p[i]];
+    }
+    this.p = new Uint8Array(512);
+    for (let i = 0; i < 512; i++) this.p[i] = p[i & 255];
+    this.grad = [[1,1],[-1,1],[1,-1],[-1,-1],[1,0],[-1,0],[1,0],[-1,0],[0,1],[0,-1],[0,1],[0,-1]];
+  }
+  noise2D(x, y) {
+    const F2 = 0.5 * (Math.sqrt(3) - 1);
+    const G2 = (3 - Math.sqrt(3)) / 6;
+    const s = (x + y) * F2;
+    const i = Math.floor(x + s);
+    const j = Math.floor(y + s);
+    const t = (i + j) * G2;
+    const x0 = x - (i - t);
+    const y0 = y - (j - t);
+    const i1 = x0 > y0 ? 1 : 0;
+    const j1 = x0 > y0 ? 0 : 1;
+    const x1 = x0 - i1 + G2;
+    const y1 = y0 - j1 + G2;
+    const x2 = x0 - 1 + 2 * G2;
+    const y2 = y0 - 1 + 2 * G2;
+    const ii = i & 255, jj = j & 255;
+    const gi0 = this.p[ii + this.p[jj]] % 12;
+    const gi1 = this.p[ii + i1 + this.p[jj + j1]] % 12;
+    const gi2 = this.p[ii + 1 + this.p[jj + 1]] % 12;
+    let n0 = 0, n1 = 0, n2 = 0;
+    let t0 = 0.5 - x0*x0 - y0*y0;
+    if (t0 > 0) { t0 *= t0; n0 = t0 * t0 * (this.grad[gi0][0]*x0 + this.grad[gi0][1]*y0); }
+    let t1 = 0.5 - x1*x1 - y1*y1;
+    if (t1 > 0) { t1 *= t1; n1 = t1 * t1 * (this.grad[gi1][0]*x1 + this.grad[gi1][1]*y1); }
+    let t2 = 0.5 - x2*x2 - y2*y2;
+    if (t2 > 0) { t2 *= t2; n2 = t2 * t2 * (this.grad[gi2][0]*x2 + this.grad[gi2][1]*y2); }
+    return 70 * (n0 + n1 + n2);
+  }
+  fbm(x, y, oct, pers, lac) {
+    let sum = 0, amp = 1, freq = 1, norm = 0;
+    for (let i = 0; i < oct; i++) {
+      sum += amp * this.noise2D(x * freq, y * freq);
+      norm += amp;
+      amp *= pers;
+      freq *= lac;
+    }
+    return sum / norm;
+  }
+}
+
+// ============================================================
+// Hex axial (pointy-top)
+// ============================================================
+const SQRT3 = Math.sqrt(3);
+let HEX = 20;
+const AXIAL_DIRS = [
+  [ 1,  0], [ 1, -1], [ 0, -1],
+  [-1,  0], [-1,  1], [ 0,  1]
+];
+function axialToPixel(q, r) {
+  return { x: HEX * SQRT3 * (q + r / 2), y: HEX * 1.5 * r };
+}
+function pixelToAxial(x, y) {
+  const qF = (x * SQRT3 / 3 - y / 3) / HEX;
+  const rF = (y * 2 / 3) / HEX;
+  const xc = qF, zc = rF, yc = -xc - zc;
+  let rx = Math.round(xc), ry = Math.round(yc), rz = Math.round(zc);
+  const dx = Math.abs(rx - xc), dy = Math.abs(ry - yc), dz = Math.abs(rz - zc);
+  if (dx > dy && dx > dz)      rx = -ry - rz;
+  else if (dy > dz)             ry = -rx - rz;
+  else                          rz = -rx - ry;
+  return { q: rx, r: rz };
+}
+
+// Distance hexagonale entre deux tuiles axiales (en nombre de hex)
+function axialDistance(aq, ar, bq, br) {
+  return (Math.abs(aq - bq) + Math.abs(aq + ar - bq - br) + Math.abs(ar - br)) / 2;
+}
+
+// ============================================================
+// BIOMES et RESSOURCES
+// ============================================================
+const BIOMES = {
+  'Océan':    { color: '#1c4a7a', border: '#0a2e52' },
+  'Plaine':   { color: '#aec95b', border: '#6e8a30' },
+  'Forêt':    { color: '#2e5a28', border: '#153008' },
+  'Désert':   { color: '#e0c470', border: '#a48030' },
+  'Marais':   { color: '#6a4828', border: '#3a2814' },
+  'Montagne': { color: '#808088', border: '#404048' },
+  'Volcan':   { color: '#4a2018', border: '#1a0808' }
+};
+
+// =============================================================
+// CLASSIFICATION DES BIOMES
+// L'ordre des trois critères (E=élévation, T=température, H=humidité)
+// est paramétrable. On garde toujours certains invariants :
+//   - Océan : si dessous niveau de la mer (toujours, peu importe l'ordre)
+//   - Volcan : ajouté après classification (cas particulier)
+// L'ordre influence le reste : qui domine la décision finale.
+// =============================================================
+
+// Catégories normalisées de chaque axe
+function tempZone(t) {
+  if (t < 0.30) return 'froid';
+  if (t > 0.60) return 'chaud';
+  return 'tempere';
+}
+function humidZone(h) {
+  // LABO (retour Thibaut 2026-11-13) : seuils rééquilibrés — avec le bonus
+  // côtier devenu additif, h garde la variance du bruit ; humide 0.60 → 0.66
+  // (les marais ne prennent que les côtes déjà humides, en patches, pas en
+  // auréole) et sec 0.30 → 0.35 (quelques déserts en patches au lieu de
+  // quasi-zéro : variété de formes).
+  if (h < 0.38) return 'sec';
+  if (h > 0.68) return 'humide';
+  return 'modere';
+}
+
+function classifyBiome(e, t, h, seaLevel, mountainLevel, order) {
+  // Invariants
+  if (e < seaLevel) return 'Océan';
+
+  order = order || 'ETH';
+  const tZ = tempZone(t);
+  const hZ = humidZone(h);
+  const isHigh = e > mountainLevel;
+
+  // -------------------------------------------------
+  // Élévation EN PREMIER : montagnes priment sur le climat
+  // -------------------------------------------------
+  if (order[0] === 'E') {
+    if (isHigh) return 'Montagne';
+    // En second : T ou H
+    if (order[1] === 'T') return _byTempThenHumid(tZ, hZ, t, h);
+    return _byHumidThenTemp(tZ, hZ, t, h);
+  }
+
+  // -------------------------------------------------
+  // Température EN PREMIER : climat domine, montagne 2e ou 3e
+  // -------------------------------------------------
+  if (order[0] === 'T') {
+    // Montagne possible si on l'autorise (ordre[1] ou [2])
+    if (order[1] === 'E') {
+      if (isHigh) return 'Montagne';
+      return _humidByTemp(tZ, hZ, h);
+    }
+    // T › H › E : humidité 2e, élévation 3e (montagne reste possible mais
+    // les marais/déserts peuvent apparaître en altitude)
+    if (isHigh && hZ === 'modere') return 'Montagne';
+    return _humidByTemp(tZ, hZ, h);
+  }
+
+  // -------------------------------------------------
+  // Humidité EN PREMIER : zones humides/sèches dominent
+  // -------------------------------------------------
+  if (order[0] === 'H') {
+    // Zones très humides en climat tempéré/chaud → marais (même en altitude)
+    if (hZ === 'humide' && (tZ === 'tempere' || tZ === 'chaud')) return 'Marais';
+    // Zones très sèches en climat tempéré/chaud → désert (même en altitude)
+    if (hZ === 'sec' && (tZ === 'tempere' || tZ === 'chaud')) return 'Désert';
+    // Sinon : T ou E pour décider
+    if (order[1] === 'E') {
+      if (isHigh) return 'Montagne';
+      return _humidByTemp(tZ, hZ, h);
+    }
+    // H › T › E : température 2e, élévation 3e
+    if (tZ === 'froid') {
+      if (h > 0.55) return 'Forêt';
+      return 'Plaine';
+    }
+    if (isHigh) return 'Montagne';
+    return _humidByTemp(tZ, hZ, h);
+  }
+
+  return 'Plaine';
+}
+
+// Helpers : déclinaison standard climat (ordre H par défaut dans la zone T)
+function _humidByTemp(tZ, hZ, h) {
+  // LABO (retour Thibaut 2026-11-13) : seuils relevés — le bonus côtier est
+  // devenu additif (variance du bruit préservée) ; avec les anciens seuils
+  // (marais à 0.58/0.65), la moitié des côtes chaudes devenaient marécageuses
+  // → auréoles. Marais plus sélectif, désert un peu plus présent (patches).
+  if (tZ === 'froid') {
+    if (h > 0.55) return 'Forêt';
+    return 'Plaine';
+  }
+  if (tZ === 'chaud') {
+    if (h > 0.68) return 'Marais';
+    if (h < 0.40) return 'Désert';
+    if (h > 0.44) return 'Forêt';
+    return 'Plaine';
+  }
+  // tempéré
+  if (h > 0.70) return 'Marais';
+  if (h < 0.32) return 'Désert';
+  if (h > 0.50) return 'Forêt';
+  return 'Plaine';
+}
+
+// E › T › H : élévation déjà gérée, on délègue à humidByTemp
+function _byTempThenHumid(tZ, hZ, t, h) {
+  return _humidByTemp(tZ, hZ, h);
+}
+
+// E › H › T : élévation déjà gérée, humidité prend le pas sur le climat
+function _byHumidThenTemp(tZ, hZ, t, h) {
+  // Zones très humides forment des marais quel que soit le climat (sauf gel)
+  if (hZ === 'humide') {
+    if (tZ === 'froid') return 'Forêt';
+    return 'Marais';
+  }
+  // Zones très sèches : désert si pas froid, sinon toundra (Plaine)
+  if (hZ === 'sec') {
+    if (tZ === 'froid') return 'Plaine';
+    return 'Désert';
+  }
+  // Modéré : selon climat
+  if (tZ === 'froid') return 'Forêt';
+  if (tZ === 'chaud' && h < 0.42) return 'Plaine';
+  return 'Forêt';
+}
+
+const RES_BY_BIOME = {
+  'Plaine':   ['Bétail', 'Ruines'],
+  'Marais':   ['Ruines'],
+  'Désert':   ['Fer', 'Or', 'Charbon', 'Geyser'],
+  'Océan':    ['Baleines', 'Poissons'],
+  'Montagne': ['Fer', 'Or', 'Charbon'],
+  'Forêt':    ['Soie', 'Ruines'],
+  'Volcan':   []
+};
+
+const RES_STYLE = {
+  'Bétail':   { shape: 'circle',   color: '#8a5028' },
+  'Baleines': { shape: 'circle',   color: '#1e3250' },
+  'Poissons': { shape: 'circle',   color: '#7ec4ea' },
+  'Or':       { shape: 'square',   color: '#ffd040' },
+  'Fer':      { shape: 'square',   color: '#b4b4bc' },
+  'Charbon':  { shape: 'square',   color: '#1a1a1a' },
+  'Ruines':   { shape: 'triangle', color: '#c8b890' },
+  'Geyser':   { shape: 'triangle', color: '#80d8e8' },
+  'Soie':     { shape: 'triangle', color: '#e890b0' }
+};
+
+// Palette joueurs : 12 couleurs distinctes, contrastantes sur tous les biomes
+const PLAYER_COLORS = [
+  '#ff3030', // rouge vif
+  '#3070ff', // bleu vif
+  '#30c850', // vert vif
+  '#ffea00', // jaune
+  '#c040d8', // violet
+  '#ff9020', // orange
+  '#00d8c0', // cyan
+  '#ff60c0', // rose
+  '#a07840', // bronze
+  '#80ff60', // vert lime
+  '#6040ff', // indigo
+  '#d8d8d8'  // blanc cassé
+];
+
+// ============================================================
+// GÉNÉRATION
+// ============================================================
+function generateMap(N, seedStr, params) {
+  const baseHash = hashString(seedStr);
+  // PRNG principal pour les bruits (ordre fixe : les noises ne bougent jamais)
+  const rand = mulberry32(baseHash);
+  // PRNG dédiés, indépendants — chaque étape stochastique a le sien.
+  // Ainsi, changer un paramètre d'une étape ne décale pas les tirages des autres.
+  const randVolcan = mulberry32(baseHash ^ 0x9E3779B1);
+  const randRiver  = mulberry32(baseHash ^ 0x85EBCA77);
+  const randRes    = mulberry32(baseHash ^ 0xC2B2AE3D);
+  const noiseMode = params.noiseType || 'perlin';
+  // 5 modes :
+  //  - 'perlin'   / 'simplex'   : versions originales sans redistribution
+  //  - 'perlin2'  / 'simplex2'  : avec redistribution (continents plus contrastés)
+  //  - 'mixed'    : Perlin v2 pour continents + Simplex v2 pour détail
+  const isV2 = noiseMode === 'perlin2' || noiseMode === 'simplex2' || noiseMode === 'mixed';
+  let NoiseSlow, NoiseFast;
+  if (noiseMode === 'mixed') {
+    NoiseSlow = PerlinNoise;   // continents = Perlin (formes massives lisses)
+    NoiseFast = SimplexNoise;  // détail     = Simplex (variations vives)
+  } else if (noiseMode === 'simplex' || noiseMode === 'simplex2') {
+    NoiseSlow = NoiseFast = SimplexNoise;
+  } else {
+    // perlin / perlin2
+    NoiseSlow = NoiseFast = PerlinNoise;
+  }
+  const nCont  = new NoiseSlow(rand);  // continents (basse fréquence)
+  const nDet   = new NoiseFast(rand);  // détail (haute fréquence)
+  const nHumid = new NoiseSlow(rand);  // humidité (lisse pour grandes zones climatiques)
+  const nTemp  = new NoiseFast(rand);  // température
+
+  // Hexagone géant
+  const tiles = [];
+  const indexOf = new Map();
+  for (let q = -N; q <= N; q++) {
+    const rMin = Math.max(-N, -q - N);
+    const rMax = Math.min( N, -q + N);
+    for (let r = rMin; r <= rMax; r++) {
+      const i = tiles.length;
+      tiles.push({ q, r, i });
+      indexOf.set(q + ',' + r, i);
+    }
+  }
+  const size = tiles.length;
+  const neighborsOf = (i) => {
+    const t = tiles[i];
+    const out = [];
+    for (const [dq, dr] of AXIAL_DIRS) {
+      const ni = indexOf.get((t.q + dq) + ',' + (t.r + dr));
+      if (ni !== undefined) out.push(ni);
+    }
+    return out;
+  };
+
+  const pE = params.elev, pH = params.humid, pT = params.temp;
+  const pV = params.evt;
+
+  // --- LABO : MASQUE DE FORME par type de carte (retour Thibaut 2026-11-13) -
+  // Les presets du sélecteur TYPE ne changeaient que des SLIDERS : toutes les
+  // cartes gardaient la même morphologie de bruit (le masque de bord existant
+  // est symétrique et uniforme). Pour avoir de RÉELS types de cartes, chaque
+  // type ajoute un biais DÉPENDANT DE LA POSITION à l'élévation :
+  //   - continent  : bosse centrale → UN continent massé au centre, océan au bord ;
+  //   - continents  : deux lobes gaussiens opposés → DEUX masses séparées par l'océan ;
+  //   - pangea      : biais central doux + réglages compacts → une masse quasi totale ;
+  //   - islands-large : trois lobes → quelques grandes îles bien distinctes ;
+  //   - archipelago/fragmented : creuse le CENTRE → pas de masse dominante,
+  //     la terre vient du détail → une myriade d'îlots ;
+  //   - inland-sea : excavation centrale → un anneau de terres autour d'une mer intérieure ;
+  //   - lakes      : léger biais terre global.
+  // Les positions des lobes sont tirées par un PRNG DÉDIÉ (indépendant des
+  // autres étapes) : déterminisme par seed préservé, même seed = mêmes formes.
+  // 'custom' : AUCUN masque — comportement strictement identique à avant.
+  const mapType = params.mapType || 'custom';
+  const randShape = mulberry32(baseHash ^ 0x27D4EB2F);
+  // LABO (retour Thibaut 2026-11-13 : « formes trop linéaires, transitions
+  // trop fluides — eau → marais → forêts → plaines → déserts en gradient ») :
+  // DOMAIN WARPING du masque de forme. Les masques sont des fonctions LISSES
+  // de la position (polynômes en dc, cosinus en θ) : seuls, ils donnent des
+  // côtes en arcs parfaits et des biomes en anneaux concentriques. On perturbe
+  // donc les coordonnées (dc, θ) par un bruit dédié AVANT de les passer au
+  // masque : les frontières s'ondulent, les lobes deviennent irréguliers, et
+  // la distance à l'océan (base de la continentalité/humidité) cesse d'être
+  // radiale. Bruit dérivé de la seed → déterminisme par seed préservé.
+  const nWarp = new NoiseSlow(mulberry32(baseHash ^ 0x2545F491));
+  const WARP_FREQ = 6;      // fréquence des ondulations de frontière
+  const WARP_AMP_DC = 0.55; // amplitude sur la distance au centre (0→1)
+  const WARP_AMP_TH = 1.0;  // amplitude sur l'angle (radians)
+  let shapeBias = null; // (dc, θ) → ajout à l'élévation ; dc = dist centre 0→1
+  const pxRadius = 1.2 * N; // rayon approximatif de la carte en unités-tuiles
+  const gauss = (px, py, ax, ay, s) =>
+    Math.exp(-(((px - ax) * (px - ax) + (py - ay) * (py - ay)) / (2 * s * s)));
+  // (3e retour Thibaut 2026-11-13, à r=15 = 721 tuiles, la taille réelle de
+  //  campagne : « les presets continents / grandes îles / archipel font
+  //  apparaître des masses trop importantes — on ne voit jamais les
+  //  continents, ni même les îles en entier ». Mesuré à r=15 : 56 % de
+  //  l'anneau extérieur en terre, 4 à 6 masses coupées par le bord sur
+  //  chaque carte. CAUSE : les lobes angulaires cos kθ × dc culminent à
+  //  dc=1 (le bord), et le masque de bord (« e-edge ») atténue le BRUIT
+  //  AVANT l'ajout du biais de forme — il ne peut donc rien contre eux.
+  //  CORRECTIF : fenêtre périphérique PERIPH_OCEAN sur ces trois types :
+  //  le biais de forme s'essouffle de 85 % à 98 % du rayon (fenêtre sur
+  //  la distance VRAIE, pas la warpée — le warp, d'amplitude 0.55, peut
+  //  sinon rouvrir la porte au bord), puis un creux océanique au-delà de
+  //  90 % du rayon garantit l'anneau d'eau. Le seuil de mer étant un
+  //  QUANTILE GLOBAL, la terre chassée du bord se redistribue au centre
+  //  et souderait les îles : les creux séparateurs des trois masques
+  //  sont donc renforcés en compensation (calibré à r=15 sur 8 seeds).
+  //  « continent » et « pangea » gardent leurs masses au bord — c'est
+  //  leur contrat documenté.)
+  // (5e retour Thibaut 2026-11-14 : l'anneau d'eau forcé est SUPPRIMÉ —
+  //  « je voulais des masses terrestres plus petites, pas des anneaux
+  //  d'eau ». Les masses étant devenues compactes et espacées, le bord
+  //  reste de l'océan sans le sculpter : la fenêtre ne garde qu'un
+  //  essorage au-delà de 92 % du rayon. Le contrat C6 (anneau
+  //  extérieur ≤ 5 % de terre) reste vert SANS creux.)
+  let periphOcean = false;
+  // (4e retour Thibaut 2026-11-13 : « tu n'as pas changé la forme des
+  //  îles, tu as simplement ajouté un anneau d'eau à l'extérieur du
+  //  plateau ». JUSTE : les masques en SECTEURS (cos kθ × dc) créent des
+  //  masses qui s'étirent radialement du centre au bord — des BANDES, pas
+  //  des îles ; la fenêtre périphérique ne pouvait que les recadrer.
+  //  NOUVEAU DESIGN pour « continents » / « grandes îles » / « archipel » :
+  //  bosses gaussiennes LOCALISÉES — des masses compactes de taille
+  //  contrôlée (σ RELATIF au rayon : look stable de r=10 à r=18),
+  //  centres tirés par le PRNG dédié (déterminisme par seed) en
+  //  alternant proche/loin pour garantir l'espacement angulaire-rayon,
+  //  fond légèrement négatif pour que la terre se pose SUR les bosses
+  //  (le seuil de mer étant un QUANTILE, un fond neutre laisserait la
+  //  terre « remonter » partout entre elles et resouder les masses).
+  //  Les satellites du bruit de détail autour des bosses sont VOULUS
+  //  (surtout archipel) ; le calibrage borne leur part. Les côtes des
+  //  bosses sont ondulées par le domain warping positionnel (px/py
+  //  décalés par le même bruit que le reste des masques).)
+  //  GÉOMÉTRIE : les centres sont répartis sur UN ANNEAU (rayon relatif
+  //  au rayon de la carte, angles équirépartis + jitter borné) —
+  //  l'espacement inter-centres est garanti PAR CONSTRUCTION : dist =
+  //  2·ring·N·sin(π/count), et σ est calibré pour que 2·1.4σ < dist
+  //  (aucune paire de bosses ne s'interpénètre, le centre de la carte
+  //  reste océan). Premier essai du 4e retour avec centres libres
+  //  (rMin 0.30) : les queues des bosses se soudaient toutes au centre
+  //  (masse principale 90-96 % mesurée) — c'est le symptôme exact du
+  //  retour « tu n'as pas changé la forme des îles ».
+  //  GÉOMÉTRIE : placement avec REJET déterministe des collisions — le
+  //  rayon effectif d'une bosse au niveau du seuil vaut ~2.1σ (pas 1.4σ :
+  //  premier essai du 4e retour, bosses trop larges pour leur espacement,
+  //  masses soudées à 90 %). Chaque centre est tiré dans son secteur
+  //  angulaire (équirépartition + jitter) et REJETTÉ s'il est à moins de
+  //  2.35σ d'un centre déjà posé : l'espacement est garanti par
+  //  construction, sans anneaux réguliers visibles.
+  function islandArchipel(count, sigRel, amp, rMin, rMax, floorBias, sepFact, dipAmp, dipRRel) {
+    // dipAmp/dipRRel (4e retour) : creux central explicite. Sans lui, une
+    // bosse posée à rMin avec σ ~ rMin/1.3 déverse son PLATEAU sur le
+    // centre (contribution exp(−(1.3)⁴/2) ≈ 0.33·amp — mesuré : centre
+    // 100 % terre, disque géant de 20 tuiles de diamètre). Le creux
+    // garantit la mer centrale indépendamment du tirage des centres.
+    // sepFact : distance minimale INTER-CENTRES en unités de σ. Les queues
+    // gaussiennes S'ADDITIONNENT : deux bosses à 2.35σ l'une de l'autre
+    // apportent chacune amp·exp(−1.38) ≈ 0.5·amp au point médian — soudure
+    // garantie au seuil (fond + ~2ε). Il faut ~3.5σ+ pour que la somme des
+    // queues au milieu reste sous le seuil. (4e retour.)
+    const spots = [];
+    // (4e retour) ANNEAU AUTO-CALIBRÉ : l'espacement angulaire entre
+    // voisins vaut 2·r·sin(π/count) ; il doit couvrir la séparation
+    // requise (2× l'empreinte au seuil + gap), sinon le rejet échoue
+    // en cascade et plaque les bosses l'une sur l'autre. r_ring est
+    // donc calculé POUR tenir l'espacement, borné à [rMin, rMax].
+    // (4e retour) ÉCHELLE : les positions px/py sont ÉTIRÉES par
+    // axialToPixel (x = HEX·√3·(q+r/2), y = HEX·1.5·r) : le rayon px
+    // de l'hexagone vaut ~1.6·N, pas N. Les distances de ce helper
+    // (sep, rRing, σ, dip) doivent être exprimées dans CETTE échelle —
+    // avec N, les bosses étaient plaquées dans le quart central (à
+    // ~6 px du centre pour un plateau qui s'étend à 26 px) : masses
+    // compactes centrales et soudées, mesuré sur tous les essais.
+    const RPX = N * 1.6;
+    const sep = (sepFact || 2.75) * sigRel * RPX;
+    const a0 = randShape() * Math.PI * 2;
+    // Mode de placement : count ≤ 6 → ANNEAU équiréparti auto-calibré
+    // (r_ring = sep / 2·sin(π/count), l'espacement angulaire couvre la
+    // séparation requise) ; count > 6 → SPIRALE DE FERMAT (angle d'or
+    // 2.39996 rad, rayon √(k/count)) : répartition quasi-uniforme dans
+    // le disque, sans l'artefact d'anneau — un anneau de 14 îles à
+    // r=15 serait un collier soudé (l'espacement angulaire disponible
+    // vaut ~4 tuiles pour 6+ requises, mesuré : masse 97 % en anneau).
+    // (4e retour, it.5) MODE MULTI-ANNEAUX pour count > 6 : la spirale de
+    // Fermat place des voisins SUCCESSIFS à ~0.6-1 px radialement (contre
+    // sep ~ 8.5 px) : le rejet échoue en cascade et les bosses consécutives
+    // se soudent en arcs (mesuré : masse 58-98 % sur toutes les grilles
+    // 7-12 îles, chapelets de 3-4 bosses). Remède : anneaux EXPLICITES :
+    // extérieur nExt = 60 % des îles à 0.95·rMax (espacement angulaire
+    // 2·r·sin(pi/nExt)), intérieur nInt à rInt calibré pour tenir sep
+    // angulairement (clampé sous rExt - sep pour l'écart radial), angles
+    // décalés d'un demi-pas extérieur (maximise la distance entre
+    // anneaux), rejet commun contre TOUTES les bosses déjà posées.
+    const ringMode = count <= 6;
+    const targets = [];
+    if (ringMode) {
+      let rRing = sep / (2 * Math.sin(Math.PI / count));
+      rRing = Math.max(rMin * RPX, Math.min(rMax * RPX, rRing));
+      for (let k = 0; k < count; k++)
+        targets.push({ ang: a0 + k * Math.PI * 2 / count, rad: rRing, gap: 0.98 * 2 * rRing * Math.sin(Math.PI / count) });
+    } else {
+      // (5e retour) COURONNES ADAPTATIVES, de l'extérieur vers le centre :
+      // chaque couronne porte autant de bosses que son périmètre admet à
+      // l'espacement sep (n = floor(pi/asin(sep/2r))), puis on descend
+      // d'un cran radial de sep. Les DEUX anneaux fixes (60 % ext / 40 %
+      // int) écrasaient l'anneau intérieur dès que sigma grandissait :
+      // rInt clampé au plancher, bosses int fusionnées en masse centrale.
+      // Validité : une couronne n'est posée que si l'écart radial à la
+      // précédente couvre sep ; le centre n'est utilisé que si la
+      // dernière couronne en est à au moins sep (sinon bosses fusionnées :
+      // mesuré, île centrale de 55-63 tuiles sur 8/8 seeds quand la
+      // 12e bosse était plaquée à moins d'un sigma de ses voisines).
+      // L'excédent est reporté sur la couronne extérieure (gap légèrement
+      // sous sep, le rejet min(sep, 0.98*gap) s'adapte).
+      let r = 0.95 * rMax * RPX;
+      const cour = [];
+      while (r > 0) {
+        const half = Math.max(r, sep / 2);
+        let n = Math.max(1, Math.floor(Math.PI / Math.asin(Math.min(1, sep / (2 * half)))));
+        cour.push({ rad: r, n: n });
+        const rNext = r - sep;
+        if (rNext < sep * 0.75) {
+          if (r >= sep) cour.push({ rad: 0, n: 1 });
+          break;
+        }
+        r = rNext;
+      }
+      // Le count demandé est un PLAFOND : si le disque ne tient que cap
+      // places légitimes, on en pose cap — JAMAIS de report d'excédent sur
+      // la couronne extérieure (essayé : gap sous sep -> soudures en
+      // chaîne le long de l'anneau, mesuré 96-155 tuiles).
+      let cap = 0;
+      for (const c of cour) cap += c.n;
+      let restant = Math.min(count, cap);
+      let dec = 0;
+      for (const c of cour) {
+        const n = Math.min(c.n, restant);
+        if (n <= 0) break;
+        const gap = n === 1 ? sep : 0.98 * 2 * c.rad * Math.sin(Math.PI / n);
+        for (let k = 0; k < n; k++)
+          targets.push({ ang: a0 + dec + k * Math.PI * 2 / n, rad: c.rad, gap: gap });
+        restant -= n;
+        dec += 0.35;
+      }
+    }
+    for (let k = 0; k < targets.length; k++) {
+      const t = targets[k];
+      const rejD = Math.min(sep, t.gap);
+      const rejD2 = rejD * rejD;
+      // jitter borné + rejet par collision en « MEILLEUR des essais » :
+      // si aucun essai n'est libre, on garde le plus éloigné des spots
+      // déjà posés (garder le DERNIER essai plaquait deux bosses l'une
+      // sur l'autre — mesuré : aire ÷ 3).
+      let bestX = 0, bestY = 0, ok = false;
+      let bestD2 = -1;
+      for (let tries = 0; tries < 24 && !ok; tries++) {
+        const ang = t.ang + 0.06 * (randShape() - 0.5) + tries * 0.09;
+        const bx = t.rad * Math.cos(ang);
+        const by = t.rad * Math.sin(ang);
+        let d2min = Infinity;
+        for (const s of spots) {
+          const d2 = (s.cx - bx) * (s.cx - bx) + (s.cy - by) * (s.cy - by);
+          if (d2 < d2min) d2min = d2;
+        }
+        if (d2min > bestD2) { bestD2 = d2min; bestX = bx; bestY = by; }
+        ok = d2min > rejD2;
+      }
+      spots.push({
+        cx: bestX, cy: bestY,
+        // (5e retour) jitter de taille resserré : 0.9+0.25 faisait des aires
+        //  ×1.6 d’écart — la plus grosse île dominait à 44 % de la terre
+        //  dans l’archipel. 0.95+0.12 : écart d’aire ×1.1, la variété
+        //  reste par amp (0.9-1.1) et par le nombre de bosses.
+        s: sigRel * RPX * (0.95 + 0.12 * randShape()),
+        a: amp * (0.9 + 0.2 * randShape())
+      });
+    }
+    return (dc, th, px, py) => {
+      let v = floorBias;
+      // Creux central : smoothstep sur la distance px-py (euclidienne,
+      // pas dc hexadist — le creux doit être rond).
+      if (dipAmp) {
+        const d = Math.hypot(px, py) / (dipRRel * RPX);
+        const s = Math.max(0, Math.min(1, 1 - d));
+        v -= dipAmp * s * s * (3 - 2 * s);
+      }
+      // Dentelle des côtes (4e retour) : warp positionnel LÉGER — ~0.9
+      // TUILE, 1 octave, fréquence 1.3 (features ≈ 0.8 tuile). Avec le
+      // fond squeezé à plat (cf. bloc periphOcean), les bosses seules
+      // donneraient des côtes de « patates » ; l'ancien warp du masque
+      // (0.55 RELATIF au rayon ≈ 8 tuiles à r=15) était, lui, une soupe
+      // pour des bosses de σ ~2-6. À 0.9 tuile il sculpte le contour
+      // sans déplacer les masses ni souder les voisines.
+      // (5e retour) amplitude ADAPTATIVE : 1.2 px fixe faisait 0.31-0.55
+      // sigma sur les petites bosses (archipel) : le point median entre
+      // deux iles voisines sautait sur un flanc a +0.1 au-dessus du
+      // fond, au-dessus du seuil calé au plancher du fond : PONT d'une
+      // tuile, iles soudées par paires. A 0.35 sigma le decalage
+      // d'evaluation reste proportionné : dentelle sans pont.
+      const wAmp = Math.min(1.2, Math.max(0.5, 0.35 * sigRel * RPX));
+      const wx = px + wAmp * nWarp.fbm(px * 1.3, py * 1.3, 1, 0.5, 2.0);
+      const wy = py + wAmp * nWarp.fbm(px * 1.3 + 47.7, py * 1.3 + 83.3, 1, 0.5, 2.0);
+      for (const sp of spots) {
+        const dx = wx - sp.cx, dy = wy - sp.cy;
+        // SUPER-GAUSSIENNE d'ordre 4 TRONQUÉE (4e retour) : profil plateau
+        // au sommet, flanc raide, puis COUPURE NETTE à 1.6σ — support
+        // COMPACT. Sans troncature, la queue résiduelle à 2σ (exp(−8) ≈
+        // 3·10⁻⁴·amp) paraît négligeable mais les queues de bosses VOISINES
+        // s'additionnent au point médian et soudent les masses à bas seuil
+        // (mesuré : ponts de queues partout dès que le quantile redescend
+        // vers le fond). La coupure garantit v = 0 au-delà de 1.6σ.
+        const dd = Math.sqrt(dx * dx + dy * dy) / sp.s;
+        if (dd < 1.35) {
+          v += sp.a * Math.exp(-(dd * dd * dd * dd) / 2);
+        } else if (dd < 1.6) {
+          v += sp.a * 0.189 * (1.6 - dd) / 0.25;
+        }
+      }
+      return v;
+    };
+  }
+  if (mapType === 'continent') {
+    shapeBias = (dc) => 0.20 * Math.pow(1 - dc, 2);
+  } else if (mapType === 'continents') {
+    // (HISTORIQUE : pattern angulaire à 2 lobes cos 2θ + creux central,
+    //  calibré 2e/3e retours. 4e retour Thibaut 2026-11-13 : les lobes en
+    //  secteurs étiraient des BANDES du centre au bord ; REMPLACÉS par
+    //  bosses gaussiennes localisées. 5e retour Thibaut 2026-11-14 :
+    //  « je voulais des masses terrestres plus petites, pas des anneaux
+    //  d'eau » — 6 bosses σ 0.18, sepFact 3.6, sea 68 : 6 masses
+    //  équilibrées de 33-45 tuiles, terre 32 %, 8/8 seeds.)
+    periphOcean = true;
+    shapeBias = islandArchipel(6, 0.18, 0.50, 0.30, 0.62, 0, 3.6, 0.05, 0.16);
+  } else if (mapType === 'pangea') {
+    shapeBias = (dc) => 0.16 * Math.pow(1 - dc, 1.5);
+  } else if (mapType === 'islands-large') {
+    // (HISTORIQUE : pattern angulaire à 3 lobes cos 3θ + creux central,
+    //  calibré 2e/3e retours — 3 îles en anneau autour d'une mer centrale.
+    //  4e retour Thibaut 2026-11-13 : les lobes en secteurs étiraient des
+    //  BANDES ; REMPLACÉS par bosses gaussiennes localisées. 5e retour
+    //  Thibaut 2026-11-14 : « je voulais des masses terrestres plus
+    //  petites, pas des anneaux d'eau » — 11 bosses σ 0.125, sepFact
+    //  4.0, sea 66 (c'est le budget d'espacement qui fixe la taille de
+    //  l'île, pas le curseur de mer) : 9-14 îles équilibrées de 25-32
+    //  tuiles, terre 34 %, 8/8 seeds, aucune soudure.)
+    periphOcean = true;
+    shapeBias = islandArchipel(11, 0.125, 0.50, 0.16, 0.75, 0, 4.0, 0, 0.12);
+  } else if (mapType === 'archipelago') {
+    // (HISTORIQUE : creux central + 4 entailles angulaires cos 4θ, calibré
+    //  2e/3e retours. 4e retour Thibaut 2026-11-13 : les entailles
+    //  découpaient l'anneau en ARCS collés au bord ; REMPLACÉES par
+    //  bosses gaussiennes localisées. 5e retour Thibaut 2026-11-14 :
+    //  « je voulais des masses terrestres plus petites, pas des anneaux
+    //  d'eau » — 18 bosses σ 0.09, sepFact 3.6, sea 72, placement par
+    //  COURONNES ADAPTATIVES (cf. helper) : 15-18 îles de 11-24 tuiles,
+    //  terre 28 %, satellites 7 %, 8/8 seeds, aucune soudure.)
+    periphOcean = true;
+    shapeBias = islandArchipel(18, 0.09, 0.45, 0.14, 0.75, 0, 3.6, 0, 0);
+  } else if (mapType === 'fragmented') {
+    // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
+    // tirée par le PRNG dédié) : le seul creux laissait une masse unique à
+    // 94-97 % de la terre (le Perlin détail percole) ; les entailles
+    // traversantes coupent la pâte en vraies miettes équilibrées.
+    // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : 15-19
+    //  composantes jouables, masse principale ≤ 40 % sur 8/8 seeds au
+    //  harnais ; preset sealevel 60 / scale 38 / compact 8 assorti.)
+    const phase6 = randShape() * Math.PI / 3;
+    shapeBias = (dc, th) =>
+      -0.10 * Math.pow(1 - dc, 2)
+      - 0.34 * Math.cos(6 * (th - phase6)) * (0.3 + 0.7 * dc);
+  } else if (mapType === 'inland-sea') {
+    // Excavation centrale profonde et large : le quantile de mer suit le
+    // creux → la mer se concentre au centre, l'anneau reste terrestre
+    // (le preset abaisse le masque de bord pour ne PAS y envoyer la mer).
+    shapeBias = (dc) => -0.50 * Math.pow(Math.max(0, 1 - dc * 1.75), 2);
+  } else if (mapType === 'lakes') {
+    shapeBias = (dc) => 0.04 * (1 - dc);
+  }
+
+  // LABO (retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — rajoute de la
+  // terre dans la bande où les joueurs peuvent apparaître. Mêmes bornes
+  // ENTIÈRES que placePlayers : distance hex de playerCenter (marge centre)
+  // à N - playerEdge (marge bord). IMPORTANT (2e retour Thibaut 2026-11-13) :
+  // le biais est appliqué en TOUT DERNIER post-traitement (voir la passe
+  // finale avant le return) — il ne participe NI au quantile NI au squeeze :
+  // la carte de base est exactement celle d'un anneau à 0, et seules des
+  // cases océan de la bande deviennent terre. L'intensité est la FRACTION de
+  // l'océan de la bande convertie (25 % = un quart, 100 % = tout l'océan de
+  // la bande). 0 par défaut.
+  // (3e retour Thibaut 2026-11-13 : bande STRICTE — coupure franche aux
+  //  marges, distance VRAIE (pas warpée) : RIEN ne peut changer en dehors
+  //  de [marge centre, marge bord], ni côté centre ni côté bord. À « Marge
+  //  centre » 0, la bande couvre toute la carte — comportement voulu,
+  //  confirmé par Thibaut.)
+  const ringFrac = Math.max(0, Math.min(1, params.ring || 0));
+  const ringInDist  = Math.max(0, Math.min(N, (params.playerCenter | 0) || 0));
+  const ringOutDist = Math.max(0, Math.min(N, N - (params.playerEdge | 0)));
+
+  const elev = new Float32Array(size);
+  const humid = new Float32Array(size);
+  const temp = new Float32Array(size);
+
+  for (let i = 0; i < size; i++) {
+    const t = tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    const px = x / HEX, py = y / HEX;
+
+    // --- Élévation = blend(continent, détail)
+    // Continent : basse fréquence, peu d'octaves → formes massives et lisses
+    let cont = nCont.fbm(px * pE.cont, py * pE.cont, 2, 0.5, 2.0);
+    cont = (cont + 1) * 0.5;
+    // Redistribution (modes v2 et mixte uniquement) : étire vers les extrêmes
+    // pour avoir plus de variations près du seuil de mer → plus de côtes
+    // découpées et de petites îles. Sur 'perlin' / 'simplex' (v1), on garde
+    // la distribution originale du bruit pour préserver le look classique.
+    if (isV2) {
+      cont = cont < 0.5
+        ? 0.5 * Math.pow(cont * 2, 1.4)
+        : 1 - 0.5 * Math.pow((1 - cont) * 2, 1.4);
+    }
+    // Détail : haute fréquence, plus d'octaves → côtes irrégulières, petites îles
+    let detail = nDet.fbm(px * pE.scale, py * pE.scale, pE.oct, pE.pers, 2.0);
+    detail = (detail + 1) * 0.5;
+    // Mélange : compacité élevée → continent dominant → océans d'un seul tenant
+    let e = cont * pE.compact + detail * (1 - pE.compact);
+    // Masque de bord (léger par défaut : permet calanques et terres côtières)
+    const dist = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r)) / N;
+    e = e * (1 - dist * dist * pE.edge);
+    // LABO : masque de forme par type de carte (voir plus haut) — ajout
+    // positionnel APRÈS le blend bruit + le masque de bord, avant le clamp.
+    // Les coordonnées (dc, θ) sont PERTURBÉES par le bruit dédié (domain
+    // warping) : c'est lui qui casse la régularité des masques lisses.
+    const wDc = nWarp.fbm(px * WARP_FREQ, py * WARP_FREQ, 3, 0.5, 2.0);
+    const wTh = nWarp.fbm(px * WARP_FREQ + 31.4, py * WARP_FREQ + 96.1, 3, 0.5, 2.0);
+    const dcW = Math.max(0, Math.min(1, dist + WARP_AMP_DC * wDc));
+    const thW = Math.atan2(py, px) + WARP_AMP_TH * wTh;
+    if (shapeBias) {
+      // Le masque de forme (type de carte) doit DOMINER le bruit : on comprime
+      // la variance du bruit autour de sa médiane (le seuil de mer étant un
+      // QUANTILE, la translation par 0.5 ne change rien — seule la variance
+      // relative bruit/masque compte). Le facteur dépend du BRUIT choisi :
+      //  - Simplex (fbm ±0.7-0.9, plus vif que le Perlin) : ×0.42 — sans cela,
+      //    les bosses percent les creux des masques et soudent les îles en
+      //    masses géantes (mesuré : 95 % de la terre en une composante) ;
+      //  - Mixte (détail Simplex) : ×0.55 ;
+      //  - Perlin (±0.5-0.7) : ×1, aucun squeeze — le Perlin a une variance
+      //    naturellement compatible des masques (calibrage historique validé
+      //    au harnais, 2e retour Thibaut 2026-11-13 : un squeeze uniforme
+      //    ×0.42 figeait les formes du masque et soudait les lobes/îles).
+      // NB : l'anneau N'active PAS ce squeeze — il ne doit rien changer à la
+      // carte de base, seulement rajouter des cases (passe finale).
+      const sq = (noiseMode === 'simplex' || noiseMode === 'simplex2') ? 0.42
+               : (noiseMode === 'mixed') ? 0.55
+               : 1;
+      if (sq < 1) e = 0.5 + (e - 0.5) * sq;
+      if (periphOcean) {
+        // (4e retour Thibaut 2026-11-13) SQUEEZE DU FOND pour les types à
+        // bosses localisées. Le seuil de mer est un QUANTILE global : à
+        // ~50 % de terre, il tombe par construction DANS le bruit de fond
+        // (la moitié d'un fond symétrique autour de sa médiane dépasse
+        // le seuil) — mesuré au harnais : seaLevel 0.249, fond 0.19-0.30,
+        // bosses 0.4-0.77 : les plaques du fond au-dessus du seuil
+        // soudaient les bosses en masses de 84-96 % de la terre.
+        // Remède structurel : comprimer la variance du fond (×0.08 — dur :
+        // mesuré au harnais, le blend garde ±0.055 après un ×0.22 et ses
+        // rubans BF comblent le gap sous le seuil en plaques qui soudent
+        // les bosses en masses de 78-99 % de la terre) pour que les
+        // BOSSES portent TOUTE la structure ; le quantile se cale alors
+        // franchement au-dessus du fond et les côtes sont le bord des
+        // bosses dentelé par leur warp dédié (±0.9 tuile, cf. helper).
+        // La dentelle fine du fond survit en satellites autour des bosses.
+        // NB : à la différence du squeeze sq ci-dessus (2e retour) qui
+        // figeait les MASQUES EN SECTEURS, ici le masque EST la
+        // structure : c'est le bruit qu'il faut aplatir, pas lui.
+        e = 0.5 + (e - 0.5) * (mapType === 'archipelago' ? 0.35 : 0.08);
+        // Fenêtre périphérique (cf. commentaire PERIPH_OCEAN ci-dessus) :
+        // sur la distance VRAIE (le warp d'amplitude 0.55 peut fausser dcW
+        // de ±0.55 — fenêtrer sur dcW rouvrirait la porte au bord réel).
+        // Calibré à r=15 sur 8 seeds : fenêtre 85 %→98 %, creux 90 %→100 %
+        // (profondeur 0.42) — terre au bord 56 % → 0 %, 0 masse coupée ;
+        // les creux des masques sont renforcés en compensation (le seuil
+        // de mer étant un quantile GLOBAL, la terre chassée du bord se
+        // redistribue au centre et souderait les îles sans cela).
+        // (5e retour : FIN DE L'ANNEAU D'EAU FORCÉ — le creux −0.42 au
+        //  bord (87-98 % du rayon) est SUPPRIMÉ : les masses sont
+        //  désormais assez petites et espacées pour occuper le plateau
+        //  sans toucher le bord ; l'océan du pourtour redevient
+        //  statistique, pas sculpté. L'essorage du biais ne garde que
+        //  son rôle de garde-fou : au-delà de 92 % du rayon (les bosses
+        //  sont posées à rMax ≤ 0.75, +1.6σ < 92 % : jamais amputées ;
+        //  il empêche seulement le warp de dentelle de déposer de la
+        //  terre sur la couronne extrême). Mesuré : bord 0 %, coupées
+        //  0, sur 8 seeds × 3 presets × r=15/12/18/24.)
+        const t1 = Math.max(0, Math.min(1, (dist - 0.92) / 0.06));
+        const w = 1 - t1 * t1 * (3 - 2 * t1); // 1 → 0 entre 92 % et 98 % du rayon
+        // NB : pas de warp positionnel du MASQUE (±0.55 sur dc, haute
+        // fréquence spatiale, calibré pour des masques en SECTEURS
+        // lisses) : sur une bosse étroite (σ ~ 0.2 N) il déplace
+        // l'évaluation de plus que le σ à CHAQUE tuile : la structure
+        // devient une soupe et soude les masses (mesuré : masse
+        // principale 92-96 %). La dentelle des côtes vient du warp
+        // DÉDIÉ du helper islandArchipel (~0.9 tuile, cf. helper) + la
+        // coupe au quantile.
+        e += shapeBias(dcW, thW, px, py) * w;
+      } else {
+        e += shapeBias(dcW, thW);
+      }
+    }
+
+    elev[i] = Math.max(0, Math.min(1, e));
+    // (humidité et température calculées après le niveau de la mer)
+
+    // --- Température : latitude + bruit + altitude
+    // La "latitude" dépend de l'orientation des pôles :
+    //  - 'ns' (nord/sud) : pôles haut/bas, équateur au centre   → |r|/N
+    //  - 'ew' (est/ouest) : pôles gauche/droite, équateur vert. → |q + r/2| / N
+    //  - 'center' : pôle au centre, équateur sur les bords      → 1 - dist/N
+    //  - 'none' : pas de gradient, climat uniforme              → 0
+    let lat;
+    const polesMode = params.poles || 'ns';
+    if (polesMode === 'ew') {
+      lat = Math.min(1, Math.abs(t.q + t.r / 2) / N);
+    } else if (polesMode === 'center') {
+      const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+      lat = 1 - d / N;
+    } else if (polesMode === 'none') {
+      lat = 0;
+    } else {
+      lat = Math.abs(t.r) / N;
+    }
+    let te = 1 - Math.pow(lat, pT.lat);
+    // Fréquence des perturbations fixée à 0.10 (l'ancien slider associé
+    // n'avait pas d'effet mesurable, il a été retiré ; "Désordre" garde
+    // son effet via l'amplitude pT.noise).
+    te += pT.noise * nTemp.noise2D(px * 0.10 + 50, py * 0.10 + 50);
+    temp[i] = Math.max(0, Math.min(1, te));
+  }
+
+  // Quantiles : seaLevel puis mountainLevel
+  const elevSorted = new Float32Array(elev);
+  elevSorted.sort();
+  // (Retour Thibaut 2026-11-13 : « Élévation de la mer » — décalage FIN du
+  //  seuil ABSOLU, indépendant du quantile « Mer » qui fixe la PART de
+  //  tuiles océanes. Négatif = mer globalement plus basse (les hauts-fonds
+  //  deviennent des côtes PARTOUT) ; positif = transgression. À 0 :
+  //  quantile pur, comportement d'origine inchangé. C'est aussi le
+  //  mécanisme du cap Océan : plafond atteint → le seuil BAISSSE
+  //  globalement au lieu de sacrifier des tuiles précises.)
+  let seaLevel = elevSorted[Math.floor(size * params.sea)];
+  const seaOffset = +params.seaElev || 0;
+  if (seaOffset !== 0) seaLevel = Math.max(0.001, Math.min(0.999, seaLevel + seaOffset));
+  const landElevs = [];
+  for (let i = 0; i < size; i++) if (elev[i] >= seaLevel) landElevs.push(elev[i]);
+  landElevs.sort((a, b) => a - b);
+  const mountainLevel = landElevs.length > 0
+    ? (landElevs[Math.floor(landElevs.length * (1 - params.mountains))] || 1)
+    : 1;
+
+  // --- Humidité (calculée APRÈS le niveau de la mer pour pouvoir tenir
+  // compte de la distance à l'océan = effet de continentalité).
+  // Pipeline :
+  //   1) BFS depuis chaque tuile océan : oceanDist[i] = distance hex à
+  //      l'océan le plus proche
+  //   2) humidité = bruit Perlin + bonus côtier proportionnel à pH.cont
+  //
+  // Effet de la continentalité (slider 0-100%) :
+  //   - 0   : humidité libre, comme avant (déserts un peu aléatoires)
+  //   - 50  : équilibre bruit + côtier (recommandé)
+  //   - 100 : humidité dictée par la distance à l'océan (déserts au cœur
+  //           des continents, côtes humides)
+  const oceanDist = new Float32Array(size);
+  {
+    const queue = [];
+    for (let i = 0; i < size; i++) {
+      if (elev[i] < seaLevel) {
+        oceanDist[i] = 0;
+        queue.push(i);
+      } else {
+        oceanDist[i] = -1; // non visité
+      }
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const t = queue[head++];
+      const d = oceanDist[t];
+      for (const n of neighborsOf(t)) {
+        if (oceanDist[n] === -1) {
+          oceanDist[n] = d + 1;
+          queue.push(n);
+        }
+      }
+    }
+    // Normaliser : 0 = sur l'océan, 1 = le plus loin de l'océan
+    let maxD = 1;
+    for (let i = 0; i < size; i++) if (oceanDist[i] > maxD) maxD = oceanDist[i];
+    for (let i = 0; i < size; i++) {
+      oceanDist[i] = Math.max(0, oceanDist[i]) / maxD;
+    }
+  }
+  // Calcul humidité
+  for (let i = 0; i < size; i++) {
+    const t = tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    const px = x / HEX, py = y / HEX;
+    let h = nHumid.fbm(px * pH.scale + 100, py * pH.scale + 100, pH.oct, pH.pers, 2.0);
+    h = (h + 1) * 0.5;
+    // LABO (retour Thibaut 2026-11-13 : « eau → marais → forêts → plaines →
+    // déserts de manière très fluide ») : l'ancien blend additif
+    // (1-cont)·bruit + cont·côtier ÉCRASAIT la variance du bruit — sur la
+    // côte, h ≈ 0.6·bruit + 0.4 dépassait presque toujours le seuil marais
+    // (0.60) → marais en auréole systématique ; au cœur des terres,
+    // h ≈ 0.6·bruit tombait presque toujours sous le seuil désert (0.30) →
+    // anneau de désert. Le bonus côtier est désormais ADDITIF et plafonné :
+    // les côtes restent plus humides en moyenne, mais seules celles où le
+    // bruit est déjà humide deviennent marécageuses → marais en patches le
+    // long des côtes, déserts où le bruit est sec (pas en anneau).
+    h = Math.min(1, h + pH.cont * 0.25 * (1 - oceanDist[i]));
+    // Légère pénalité de continentalité (cœur des terres plus sec, comme une
+    // ombre pluviométrique) : elle fait vivre les déserts INTÉRIEURS en
+    // patches là où le bruit est sec. Avec les côtes découpées du domain
+    // warping, la distance à l'océan n'est plus radiale → pas d'anneau de
+    // désert régulier, des taches à la forme du bruit.
+    h -= pH.cont * 0.15 * oceanDist[i];
+    humid[i] = Math.max(0, Math.min(1, h));
+  }
+
+  // Biomes
+  const biome = new Array(size);
+  for (let i = 0; i < size; i++) {
+    biome[i] = classifyBiome(elev[i], temp[i], humid[i], seaLevel, mountainLevel, params.biomeOrder);
+  }
+
+  // --- Lissage des déserts ---
+  // Le classificateur produit souvent des taches désertiques de 1-3 tuiles
+  // car l'humidité varie à haute fréquence. On applique un automate cellulaire
+  // simple : on supprime les déserts isolés et on étend les amas existants.
+  // Résultat : amas plus grands et plus naturels, moins de bruit visuel.
+  // Deux passes pour la stabilité.
+  for (let pass = 0; pass < 2; pass++) {
+    const newBiome = biome.slice();
+    for (let i = 0; i < size; i++) {
+      const b = biome[i];
+      const ns = neighborsOf(i);
+      // Compter les voisins désert
+      let desertNs = 0;
+      for (const n of ns) if (biome[n] === 'Désert') desertNs++;
+
+      if (b === 'Désert') {
+        // Désert isolé (0 voisin désert) → convertir en biome adjacent au climat
+        // (Plaine en zone chaude = savane, Plaine en tempéré, etc.)
+        if (desertNs === 0) {
+          newBiome[i] = 'Plaine';
+        }
+      } else if (b === 'Plaine') {
+        // Plaine sèche-chaude entourée de désert → cristallise en désert
+        // (étend les amas, sans envahir les zones humides ni les forêts)
+        if (desertNs >= 3 && humid[i] < 0.42 && temp[i] > 0.40 && elev[i] >= seaLevel && elev[i] <= mountainLevel) {
+          newBiome[i] = 'Désert';
+        }
+      }
+    }
+    for (let i = 0; i < size; i++) biome[i] = newBiome[i];
+  }
+
+  // --- Anti-encerclement ---
+  // Pour chaque tuile non-océan, si elle a ≥ surround voisins du même biome,
+  // on la convertit vers un biome alternatif cohérent avec son climat local.
+  // L'océan est exclu comme demandé (on veut des grandes masses d'eau).
+  const randConstraints = mulberry32(baseHash ^ 0x27D4EB2D);
+  const CONV = params.constraints;
+
+  // Biomes "alternatifs" cohérents, par ordre de préférence selon climat.
+  // On évite de créer un alt qui violerait l'esprit climatique de la tuile.
+  function altCandidates(i) {
+    const t = temp[i], h = humid[i], e = elev[i];
+    if (e > mountainLevel * 0.92) {
+      // Presque montagneux : privilégier Forêt/Plaine
+      return ['Plaine', 'Forêt', 'Désert', 'Marais'];
+    } else if (t < 0.30) {
+      return ['Plaine', 'Forêt'];
+    } else if (t > 0.60) {
+      if (h < 0.4) return ['Désert', 'Plaine', 'Forêt'];
+      else         return ['Forêt', 'Plaine', 'Marais'];
+    } else {
+      if (h < 0.35) return ['Plaine', 'Désert', 'Forêt'];
+      else if (h > 0.60) return ['Forêt', 'Marais', 'Plaine'];
+      else return ['Plaine', 'Forêt'];
+    }
+  }
+  function alternativeBiome(i, forbidden) {
+    for (const c of altCandidates(i)) {
+      if (c !== forbidden) return c;
+    }
+    return 'Plaine';
+  }
+
+  if (CONV.surroundSame > 0) {
+    // Ordre de parcours déterministe non-directionnel
+    const order = [];
+    for (let i = 0; i < size; i++) order.push(i);
+    order.sort((a, b) => {
+      const ha = Math.imul((a + 1) * 2654435761, baseHash ^ 0x9E3779B1) >>> 0;
+      const hb = Math.imul((b + 1) * 2654435761, baseHash ^ 0x9E3779B1) >>> 0;
+      return ha - hb;
+    });
+
+    // Score de "marginalité" : plus bas = cœur de biome (à préserver),
+    // plus haut = marge (à convertir en priorité)
+    const marginScore = (i) => {
+      const b = biome[i];
+      const t = temp[i], h = humid[i];
+      if (b === 'Forêt')    return h;
+      if (b === 'Marais')   return h + t * 0.5;
+      if (b === 'Désert')   return (1 - h) + t * 0.5;
+      if (b === 'Montagne') return elev[i];
+      if (b === 'Plaine')   return 0.5 - Math.abs(h - 0.4);
+      return 0;
+    };
+
+    // --- Règle : "même biome" (mute UN VOISIN)
+    // Si une tuile a ≥ surroundSame voisins du même biome, on mute un voisin
+    // marginal pour briser la masse. Préserve le cœur.
+    function applyRuleSame(threshold) {
+      for (const i of order) {
+        const b = biome[i];
+        // Océan exempté (grandes masses uniformes autorisées)
+        if (b === 'Océan') continue;
+        const ns = neighborsOf(i);
+        const sameNs = [];
+        for (const n of ns) if (biome[n] === b) sameNs.push(n);
+        if (sameNs.length < threshold) continue;
+        // Éviter les voisins qui sont eux-mêmes des cœurs (≥ threshold voisins identiques)
+        const candidates = sameNs.filter(n => {
+          const nNs = neighborsOf(n);
+          let ns2 = 0;
+          for (const nn of nNs) if (biome[nn] === b) ns2++;
+          return ns2 < threshold;
+        });
+        const pool = candidates.length > 0 ? candidates : sameNs;
+        pool.sort((a, b) => marginScore(a) - marginScore(b));
+        biome[pool[0]] = alternativeBiome(pool[0], b);
+      }
+    }
+
+    // Deux passes pour la convergence.
+    for (let pass = 0; pass < 2; pass++) {
+      applyRuleSame(CONV.surroundSame);
+    }
+  }
+
+  // --- Parts garanties des biomes (retour Thibaut 2026-11-13 « 5 points ») ---
+  // Paradigme du labo : UN CURSEUR = UNE PART CONTRACTUELLE. La mer tient sa
+  // promesse (quantile exact) ; les montagnes non : le quantile vise
+  // params.mountains mais le lissage anti-encerclement ci-dessus en érode un
+  // tiers (14 % visés, 9,6 % mesurés), et Forêt/Désert/Marais émergent au
+  // gré des seuils climatiques et de la graine. Cette passe RAMÈNE
+  // l'histogramme final aux cibles, APRÈS le lissage (les masses cassées
+  // restent cassées : on reconvertit les tuiles les plus MÉRITANTES pour
+  // chaque biome — scores de cohérence climatique ci-dessous — pas
+  // nécessairement celles que le lissage a sacrifiées), AVANT l'adjacence,
+  // les caps et les événements (contraintes dures > part statistique ;
+  // l'adjacence peut donc rogner la part, documenté dans les tooltips).
+  // Ordre de grandeur des défauts : calés sur l'émergent mesuré avant la
+  // passe (Forêt ~51 %, Désert ~2 %, Marais ~5 %, Plaine complément) —
+  // les cartes gardent leur physionomie d'hier, mais la composition devient
+  // EXACTE au lieu d'émergente, et les montagnes remontent de 9,6 % à la
+  // valeur du curseur (changement de comportement arbitré ce tour).
+  // Le Volcan est tiré APRÈS cette passe, DANS les Montagnes →
+  // Montagne + Volcan = cible exacte (chaque Volcan était une Montagne).
+  // Déterminisme total : aucun tirage, tri par score puis index.
+  {
+    const parts = params.parts || {};
+    const fM = Math.max(0, Math.min(0.99, +params.mountains || 0));
+    const fF = Math.max(0, Math.min(0.85, +parts.foret  || 0));
+    const fD = Math.max(0, Math.min(0.50, +parts.desert || 0));
+    const fX = Math.max(0, Math.min(0.50, +parts.marais || 0));
+    // Somme > 100 % de la terre : réduction au prorata (la Plaine garde
+    // le reste, jamais négatif).
+    const tot = fM + fF + fD + fX;
+    const k = tot > 0.99 ? 0.99 / tot : 1;
+    const landIdx = [];
+    for (let i = 0; i < size; i++) if (biome[i] !== 'Océan') landIdx.push(i);
+    const L = landIdx.length;
+    if (L > 0) {
+      const target = {
+        'Montagne': Math.floor(L * (fM * k) + 0.5),
+        'Forêt':    Math.floor(L * (fF * k) + 0.5),
+        'Désert':   Math.floor(L * (fD * k) + 0.5),
+        'Marais':   Math.floor(L * (fX * k) + 0.5)
+      };
+      let sumT = 0;
+      for (const b in target) sumT += target[b];
+      target['Plaine'] = Math.max(0, L - sumT);
+      // Affinités (mêmes scores que margin/biomeScore) : la tuile la plus
+      // MÉRITANTE pour un biome est celle dont le climat local colle le
+      // mieux à son profil.
+      const affin = {
+        'Montagne': i => elev[i],
+        'Forêt':    i => humid[i],
+        'Désert':   i => (1 - humid[i]) + temp[i] * 0.5,
+        'Marais':   i => humid[i] + temp[i] * 0.5,
+        'Plaine':   i => 0.5 - Math.abs(humid[i] - 0.4)
+      };
+      const counts = {};
+      for (const b in target) counts[b] = 0;
+      for (const i of landIdx) if (counts[biome[i]] !== undefined) counts[biome[i]]++;
+      const countNow = (b) => {
+        let n = 0;
+        for (const i of landIdx) if (biome[i] === b) n++;
+        return n;
+      };
+      // Donneurs : chaque biome en excès cède ses tuiles les moins
+      // méritantes (affinité croissante, index en départage).
+      let pool = [];
+      for (const b in target) {
+        const excess = counts[b] - target[b];
+        if (excess <= 0) continue;
+        const mine = landIdx.filter(i => biome[i] === b);
+        mine.sort((a, c) => affin[b](a) - affin[b](c) || a - c);
+        for (let z = 0; z < excess && z < mine.length; z++) pool.push(mine[z]);
+      }
+      // Receveurs, par priorité : structure (Montagne) puis climat
+      // (Forêt, Désert, Marais) puis fourre-tout (Plaine). Chacun prend
+      // dans le pool les tuiles de MEILLEURE affinité pour lui. Somme des
+      // cibles = terre exactement → le pool se vide.
+      const ORDER = ['Montagne', 'Forêt', 'Désert', 'Marais', 'Plaine'];
+      for (const b of ORDER) {
+        const deficit = target[b] - countNow(b);
+        if (deficit <= 0 || pool.length === 0) continue;
+        pool.sort((a, c) => affin[b](c) - affin[b](a) || a - c);
+        const take = Math.min(deficit, pool.length);
+        for (let z = 0; z < take; z++) biome[pool[z]] = b;
+        pool = pool.slice(take);
+      }
+      // Résidu d'arrondi (cible imprenable) : vers la Plaine, jamais perdu.
+      for (const i of pool) biome[i] = 'Plaine';
+    }
+  }
+
+  // --- Cohérence des voisinages (post-traitement type WFC simplifié) ---
+  // L'utilisateur définit pour chaque paire de biomes terrestres l'une de :
+  //   'libre'    : peut se toucher
+  //   'tampon'   : doit y avoir une plaine entre les deux
+  //   'interdit' : ne doit jamais se toucher
+  // L'algorithme : 3 passes successives, à chaque passe on parcourt les
+  // tuiles dans un ordre déterministe non-directionnel. Pour toute tuile
+  // qui viole une règle avec un voisin, on convertit la tuile la plus
+  // marginale climatiquement en Plaine. Cas particuliers :
+  //  - Océan, Volcan : exemptés (jamais modifiés ni causes de violation)
+  //  - 'tampon' et 'interdit' sont traités identiquement (la tampon est
+  //    obtenue en convertissant la tuile en Plaine, ce qui crée le tampon)
+  if (params.adjacency && params.adjacency.enabled) {
+    const rules = params.adjacency.rules || {};
+    // Score de marginalité (réutilisé de l'anti-encerclement)
+    const margin = (i) => {
+      const b = biome[i];
+      if (b === 'Forêt')    return humid[i];
+      if (b === 'Marais')   return humid[i] + temp[i] * 0.5;
+      if (b === 'Désert')   return (1 - humid[i]) + temp[i] * 0.5;
+      if (b === 'Montagne') return elev[i];
+      if (b === 'Plaine')   return 0.5 - Math.abs(humid[i] - 0.4);
+      return 0;
+    };
+    // Ordre déterministe non-directionnel
+    const adjOrder = [];
+    for (let i = 0; i < size; i++) adjOrder.push(i);
+    adjOrder.sort((a, b) => {
+      const ha = Math.imul((a + 1) * 2654435761, baseHash ^ 0x6789ABCD) >>> 0;
+      const hb = Math.imul((b + 1) * 2654435761, baseHash ^ 0x6789ABCD) >>> 0;
+      return ha - hb;
+    });
+    const isExempt = (b) => b === 'Océan' || b === 'Volcan';
+    for (let pass = 0; pass < 3; pass++) {
+      let conversions = 0;
+      for (const i of adjOrder) {
+        const bi = biome[i];
+        if (isExempt(bi)) continue;
+        for (const n of neighborsOf(i)) {
+          const bn = biome[n];
+          if (isExempt(bn)) continue;
+          if (bi === bn) continue;
+          const key = adjKey(bi, bn);
+          if (!key) continue;
+          const rule = rules[key] || 'libre';
+          if (rule === 'libre') continue;
+          // tampon ou interdit : il faut casser ce contact direct
+          // → convertir la tuile la plus marginale en Plaine
+          const mi = margin(i), mn = margin(n);
+          // Si une des deux est déjà Plaine, on convertit l'autre
+          let victim;
+          if (bi === 'Plaine') victim = n;
+          else if (bn === 'Plaine') victim = i;
+          else victim = (mi < mn) ? i : n;
+          biome[victim] = 'Plaine';
+          conversions++;
+          // Si on a converti i, sa nouvelle valeur est Plaine donc inutile de
+          // continuer à examiner ses autres voisins
+          if (victim === i) break;
+        }
+      }
+      // Si rien n'a changé à cette passe, on a convergé
+      if (conversions === 0) break;
+    }
+  }
+
+  // --- Cap par biome ---
+  // Si le nombre de tuiles d'un biome dépasse son cap, on convertit les
+  // tuiles excédentaires. On choisit les tuiles à convertir par score :
+  // celles qui ont le moins de "cohérence climatique" (les plus atypiques)
+  // partent en premier, les tuiles centrales du biome restent.
+  // (Retour du soir Thibaut 2026-11-13 : les caps de TOUTES les tuiles
+  //  doivent être préservés — plafonner la mer ne doit PAS faire exploser
+  //  la Plaine, et l'application des caps BOUCLE jusqu'à stabilité : un
+  //  cap ne peut plus en gonfler un autre.)
+  // (2e retour du soir 2026-11-13 : « si le maximum de mer est atteint, ce
+  //  sont toujours les mers en bas à gauche qui disparaissent » — le cap
+  //  Océan ne CONVERTIT plus de tuiles précises : il BAISSSE le seuil de
+  //  mer GLOBAL au quantile exact du cap, la mer rétrécit sur toutes les
+  //  côtes à la fois, naturellement.)
+  const biomeScore = new Float32Array(size);
+  for (let i = 0; i < size; i++) {
+    const b = biome[i];
+    if (b === 'Océan' || b === 'Montagne') continue;
+    // Score = humidité pour forêt/marais (plus humide = plus central),
+    // inverse pour désert, etc.
+    if (b === 'Forêt')  biomeScore[i] = humid[i];
+    else if (b === 'Marais') biomeScore[i] = humid[i] + temp[i] * 0.5;
+    else if (b === 'Désert') biomeScore[i] = (1 - humid[i]) + temp[i] * 0.5;
+    else biomeScore[i] = 0.5; // Plaine : score neutre
+  }
+  // Distance à l'océan recalculée à la demande (le champ de base date
+  // d'avant les conversions) — même BFS normalisé que pour l'humidité.
+  function oceanDistField() {
+    const od = new Float32Array(size);
+    const queue = [];
+    for (let i = 0; i < size; i++) {
+      if (elev[i] < seaLevel) { od[i] = 0; queue.push(i); }
+      else od[i] = -1;
+    }
+    let head = 0;
+    while (head < queue.length) {
+      const t = queue[head++];
+      const d = od[t];
+      for (const n of neighborsOf(t)) if (od[n] === -1) { od[n] = d + 1; queue.push(n); }
+    }
+    let maxD = 1;
+    for (let i = 0; i < size; i++) if (od[i] > maxD) maxD = od[i];
+    for (let i = 0; i < size; i++) od[i] = Math.max(0, od[i]) / maxD;
+    return od;
+  }
+  // Convertit des tuiles océan en terre NATURELLE, pour les DEUX clients :
+  //  - l'ANNEAU (mirror = true) : la profondeur devient de l'altitude
+  //    (hauts-fonds → côtes basses, fosses → sommets), l'humidité est
+  //    recalculée avec la distance à l'océan de la carte en cours, puis le
+  //    classificateur habituel s'applique — déserts possibles là où le
+  //    climat est sec, montagnes sur les fosses ;
+  //  - le CAP OCÉAN (mirror = false) : le seuil de mer a BAISSÉ
+  //    globalement, les tuiles qui remontent gardent leur élévation
+  //    légitime (hauts-fonds juste au-dessus du nouveau seuil, PARTOUT sur
+  //    les côtes) — on ne recalcule QUE l'humidité et le biome.
+  // Dans les deux cas, aucune ressource océanique ne survit à
+  // l'atterrissage : le cap passe AVANT le tirage des ressources (elles ne
+  // seront posées que sur la carte finale), l'anneau purge explicitement
+  // les siennes. Les ex-océans gardent le score 0 : si leur nouveau
+  // biome est lui aussi plafonné, ce sont elles qui repartent en premier
+  // (jamais les tuiles de la carte de base).
+  function convertOceanToLand(victims, mirror) {
+    // 1. Relief (anneau uniquement) : la profondeur devient de l'altitude.
+    //    D'ABORD l'élévation, pour que le champ de distance océan soit
+    //    calculé sur la carte FINALE : une baie comblée devient
+    //    « continentale » (sèche), une tuile qui reste côtière reste humide.
+    if (mirror) {
+      for (const i of victims) {
+        const depth = seaLevel - elev[i];
+        elev[i] = Math.min(0.99, seaLevel + (depth / Math.max(1e-9, seaLevel)) * (1 - seaLevel));
+      }
+    }
+    // 2. Humidité sur la carte finale (victimes déjà en terre)
+    const od = oceanDistField();
+    for (const i of victims) {
+      const t = tiles[i];
+      const { x, y } = axialToPixel(t.q, t.r);
+      const px = x / HEX, py = y / HEX;
+      let h = nHumid.fbm(px * pH.scale + 100, py * pH.scale + 100, pH.oct, pH.pers, 2.0);
+      h = (h + 1) * 0.5;
+      h = Math.min(1, h + pH.cont * 0.25 * (1 - od[i]));
+      h -= pH.cont * 0.15 * od[i];
+      humid[i] = Math.max(0, Math.min(1, h));
+      biome[i] = classifyBiome(elev[i], temp[i], humid[i], seaLevel, mountainLevel, params.biomeOrder);
+      // Désert isolé (même règle que le lissage de la carte de base)
+      if (biome[i] === 'Désert') {
+        let dn = 0;
+        for (const n of neighborsOf(i)) if (biome[n] === 'Désert') dn++;
+        if (dn === 0) biome[i] = 'Plaine';
+      }
+    }
+  }
+  // Comptage et réclassement "avec de la place" : la cible doit être sous
+  // son cap, sinon on déborde d'un cap vers un autre (ping-pong).
+  function countBiome(b) { let n = 0; for (let i = 0; i < size; i++) if (biome[i] === b) n++; return n; }
+  function capOf(b) { return (CONV.caps && CONV.caps[b]) | 0; }
+  function reclassWithRoom(i, forbidden) {
+    for (const c of altCandidates(i)) if (c !== forbidden && (capOf(c) <= 0 || countBiome(c) < capOf(c))) { biome[i] = c; return; }
+    for (const c of ['Forêt', 'Plaine', 'Marais', 'Désert']) if (c !== forbidden && (capOf(c) <= 0 || countBiome(c) < capOf(c))) { biome[i] = c; return; }
+    biome[i] = 'Plaine';
+  }
+  // Boucle de stabilité : chaque tour, tout biome plafonné (hors Volcan,
+  // cap appliqué après le tirage) ramène son compte sous son cap. Les
+  // conversions d'un tour peuvent faire déborder un autre biome → le tour
+  // suivant le ramène. 12 tours max (convergence observée : ≤ 3).
+  // (Retour Thibaut 2026-11-13 : « si le maximum de mer est atteint, ce
+  //  sont toujours les mers en bas à gauche qui disparaissent, zone lisse »
+  //  — l'ancien cap Océan piochait ses victimes par index (score égal 0,
+  //  départage par index) donc toujours le même coin. Nouveau mécanisme :
+  //  le seuil de mer BAISSSE GLOBALEMENT au quantile exact du cap — ce
+  //  sont les hauts-fonds juste sous le seuil, PARTOUT sur les côtes, qui
+  //  deviennent terre : la mer rétrécit naturellement, aucun coin
+  //  sacrifié, pas de zone lisse.)
+  for (let round = 0; round < 12; round++) {
+    let changed = false;
+    for (const bname of Object.keys(CONV.caps)) {
+      const cap = CONV.caps[bname];
+      if (!cap || cap <= 0 || bname === 'Volcan') continue;
+      const n = countBiome(bname);
+      if (n <= cap) continue;
+      if (bname === 'Océan') {
+        // Baisse GLOBALE du seuil : seaLevel devient la valeur du quantile
+        // « cap » (au plus cap tuiles strictement sous le seuil, même avec
+        // des égalités d'élévation). Les tuiles qui remontent gardent leur
+        // élévation légitime (hauts-fonds), on ne reclasse qu'humidité +
+        // biome.
+        const sortedElev = new Float32Array(elev);
+        sortedElev.sort();
+        seaLevel = sortedElev[Math.min(size - 1, cap)];
+        const risen = [];
+        for (let i = 0; i < size; i++) if (biome[i] === 'Océan' && elev[i] >= seaLevel) risen.push(i);
+        convertOceanToLand(risen, false);
+      } else {
+        const tilesOfBiome = [];
+        for (let i = 0; i < size; i++) if (biome[i] === bname) tilesOfBiome.push(i);
+        // Trier par score croissant (ex-océans à 0 en premier), index en
+        // départage : déterministe.
+        tilesOfBiome.sort((a, b) => biomeScore[a] - biomeScore[b] || a - b);
+        const victims = tilesOfBiome.slice(0, n - cap);
+        for (const i of victims) reclassWithRoom(i, bname);
+      }
+      changed = true;
+    }
+    if (!changed) break;
+  }
+
+  // Volcans
+  // (Nouveau retour Thibaut 2026-11-13 : cap Volcan — le cap générique ci-
+  //  dessus ne peut pas s'appliquer puisque les volcans n'existent pas
+  //  encore à ce stade ; on plaque le cap juste après le tirage, les
+  //  excédentaires redeviennent Montagne dans l'ordre du tirage.)
+  {
+    const volcanIdx = [];
+    for (let i = 0; i < size; i++) {
+      if (biome[i] === 'Montagne' && randVolcan() < pV.volcan) biome[i] = 'Volcan';
+      if (biome[i] === 'Volcan') volcanIdx.push(i);
+    }
+    const capV = (CONV.caps && CONV.caps['Volcan']) | 0;
+    if (capV > 0 && volcanIdx.length > capV) {
+      for (let k = capV; k < volcanIdx.length; k++) biome[volcanIdx[k]] = 'Montagne';
+    }
+  }
+
+  // Rivières — modèle de SOMMETS (corners).
+  // L'eau coule LE LONG des arêtes entre tuiles, de sommet en sommet
+  // (comme dans Civ 5). Chaque sommet d'hexagone touche jusqu'à 3 tuiles ;
+  // chaque arête relie 2 sommets voisins et sépare 2 tuiles. Une rivière
+  // est un chemin CONNECTÉ d'arêtes : les segments se suivent bout à bout.
+  //
+  // Pipeline hydrologique sur le graphe des sommets :
+  //   1) Construction du graphe (sommets uniques, adjacences, élévation
+  //      = moyenne des tuiles adjacentes, exutoire si touche mer/marais)
+  //   2) Remplissage des dépressions (Priority-Flood)
+  //   3) Receveur = sommet voisin le plus bas
+  //   4) Accumulation de flux (pluie ∝ humidité moyenne locale)
+  //   5) Seuil par percentile + tracé complet jusqu'à l'exutoire
+  //   6) Filtre de longueur minimale (supprime les segments isolés)
+  const isLand = i => elev[i] >= seaLevel;
+
+  // --- (1) Graphe des sommets ---
+  const cornerKeyOf = (x, y) => Math.round(x * 10) + ',' + Math.round(y * 10);
+  const corners = new Map(); // key -> {x, y, tiles:[], nbrs:Set, elev, sink}
+  for (let i = 0; i < size; i++) {
+    const t = tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    const pts = [];
+    for (let k = 0; k < 6; k++) {
+      const a = Math.PI / 180 * (60 * k - 30);
+      const cx = x + HEX * Math.cos(a);
+      const cy = y + HEX * Math.sin(a);
+      pts.push({ cx, cy, key: cornerKeyOf(cx, cy) });
+    }
+    for (let k = 0; k < 6; k++) {
+      const p = pts[k];
+      let c = corners.get(p.key);
+      if (!c) { c = { x: p.cx, y: p.cy, tiles: [], nbrs: new Set() }; corners.set(p.key, c); }
+      c.tiles.push(i);
+    }
+    // Les 6 côtés relient les sommets consécutifs
+    for (let k = 0; k < 6; k++) {
+      const a = pts[k], b = pts[(k + 1) % 6];
+      corners.get(a.key).nbrs.add(b.key);
+      corners.get(b.key).nbrs.add(a.key);
+    }
+  }
+  // Élévation / humidité moyennes + statut exutoire par sommet
+  for (const c of corners.values()) {
+    let e = 0, h = 0, sink = false;
+    for (const ti of c.tiles) {
+      e += elev[ti];
+      h += humid[ti];
+      if (elev[ti] < seaLevel || biome[ti] === 'Marais') sink = true;
+    }
+    c.elev = e / c.tiles.length;
+    c.humid = h / c.tiles.length;
+    c.sink = sink;
+  }
+
+  // --- (2) Remplissage des dépressions (Priority-Flood sur sommets) ---
+  const EPS = 1e-4;
+  {
+    const heap = []; // {e, key}
+    const hpush = (e, key) => {
+      heap.push({ e, key });
+      let c = heap.length - 1;
+      while (c > 0) {
+        const p = (c - 1) >> 1;
+        if (heap[p].e <= heap[c].e) break;
+        [heap[p], heap[c]] = [heap[c], heap[p]];
+        c = p;
+      }
+    };
+    const hpop = () => {
+      const top = heap[0];
+      const last = heap.pop();
+      if (heap.length > 0) {
+        heap[0] = last;
+        let c = 0;
+        while (true) {
+          let l = 2 * c + 1, r = 2 * c + 2, s = c;
+          if (l < heap.length && heap[l].e < heap[s].e) s = l;
+          if (r < heap.length && heap[r].e < heap[s].e) s = r;
+          if (s === c) break;
+          [heap[s], heap[c]] = [heap[c], heap[s]];
+          c = s;
+        }
+      }
+      return top;
+    };
+    for (const [key, c] of corners) {
+      if (c.sink) { c.filled = c.elev; hpush(c.elev, key); }
+      else c.filled = Infinity;
+    }
+    while (heap.length > 0) {
+      const { e, key } = hpop();
+      const c = corners.get(key);
+      if (e > c.filled + 1e-9) continue;
+      for (const nk of c.nbrs) {
+        const n = corners.get(nk);
+        if (n.filled !== Infinity) continue;
+        n.filled = Math.max(n.elev, c.filled + EPS);
+        hpush(n.filled, nk);
+      }
+    }
+    for (const c of corners.values()) if (c.filled === Infinity) c.filled = c.elev;
+  }
+
+  // --- (3) Receveur par sommet ---
+  for (const [key, c] of corners) {
+    c.receiver = null;
+    if (c.sink) continue;
+    let bestE = c.filled;
+    for (const nk of c.nbrs) {
+      const n = corners.get(nk);
+      if (n.filled < bestE) { bestE = n.filled; c.receiver = nk; }
+    }
+  }
+
+  // --- (4) Accumulation de flux ---
+  for (const c of corners.values()) {
+    c.flux = c.sink ? 0 : (0.4 + c.humid);
+  }
+  const cornerOrder = [...corners.entries()]
+    .filter(([k, c]) => !c.sink)
+    .sort((a, b) => b[1].filled - a[1].filled);
+  for (const [key, c] of cornerOrder) {
+    if (c.receiver) corners.get(c.receiver).flux += c.flux;
+  }
+
+  // --- (5) Seuil + tracé complet jusqu'à l'exutoire ---
+  // riverSegments : tableau de segments {x1,y1,x2,y2, tileA, tileB}
+  // tileA/tileB = les deux tuiles que l'arête sépare (pour rivers[] et infos)
+  const riverSegments = [];
+  const drawnEdges = new Set(); // "keyA>keyB" canonique
+  const cEdgeKey = (a, b) => (a < b ? a + '>' + b : b + '>' + a);
+  {
+    const fluxVals = cornerOrder.map(([k, c]) => c.flux).filter(f => f > 0).sort((a, b) => a - b);
+    const riverParam = Math.max(0, Math.min(1, pV.river));
+    const pct = 0.92 - riverParam * 0.37;
+    const idx = Math.min(fluxVals.length - 1, Math.max(0, Math.floor(fluxVals.length * pct)));
+    const threshold = fluxVals.length > 0 ? fluxVals[idx] : Infinity;
+
+    for (const [key, c] of cornerOrder) {
+      if (c.flux < threshold) continue;
+      // Tracer la chaîne aval depuis ce sommet jusqu'à un exutoire
+      let curKey = key;
+      let guard = 0;
+      while (guard++ < 2000) {
+        const cur = corners.get(curKey);
+        if (cur.sink || !cur.receiver) break;
+        const nextKey = cur.receiver;
+        const ek = cEdgeKey(curKey, nextKey);
+        if (!drawnEdges.has(ek)) {
+          drawnEdges.add(ek);
+          const next = corners.get(nextKey);
+          // Tuiles bordant cette arête = intersection des tuiles des 2 sommets
+          const setNext = new Set(next.tiles);
+          const shared = cur.tiles.filter(t => setNext.has(t));
+          riverSegments.push({
+            x1: cur.x, y1: cur.y, x2: next.x, y2: next.y,
+            tiles: shared,
+            ek
+          });
+        }
+        curKey = nextKey;
+      }
+    }
+  }
+
+  // --- (6) Filtre de longueur minimale (composantes connexes de sommets) ---
+  {
+    const minLen = Math.max(1, (pV.riverLen | 0) || 3);
+    if (minLen > 1 && riverSegments.length > 0) {
+      // Adjacence : sommet -> indices de segments
+      const bySommet = new Map();
+      riverSegments.forEach((s, idx) => {
+        const k1 = cornerKeyOf(s.x1, s.y1), k2 = cornerKeyOf(s.x2, s.y2);
+        if (!bySommet.has(k1)) bySommet.set(k1, []);
+        if (!bySommet.has(k2)) bySommet.set(k2, []);
+        bySommet.get(k1).push(idx);
+        bySommet.get(k2).push(idx);
+        s._k1 = k1; s._k2 = k2;
+      });
+      const seen = new Set();
+      const toRemove = new Set();
+      for (let i = 0; i < riverSegments.length; i++) {
+        if (seen.has(i)) continue;
+        const comp = [];
+        const stack = [i];
+        seen.add(i);
+        while (stack.length) {
+          const si = stack.pop();
+          comp.push(si);
+          const s = riverSegments[si];
+          for (const k of [s._k1, s._k2]) {
+            for (const ni of bySommet.get(k)) {
+              if (!seen.has(ni)) { seen.add(ni); stack.push(ni); }
+            }
+          }
+        }
+        if (comp.length < minLen) for (const si of comp) toRemove.add(si);
+      }
+      if (toRemove.size > 0) {
+        for (let i = riverSegments.length - 1; i >= 0; i--) {
+          if (toRemove.has(i)) riverSegments.splice(i, 1);
+        }
+      }
+    }
+  }
+
+  // Compatibilité : tableau par tuile (rivière borde la tuile ?)
+  const rivers = new Uint8Array(size);
+  for (const s of riverSegments) {
+    for (const t of s.tiles) rivers[t] = 1;
+  }
+
+  // Ressources — placement INDÉPENDANT par ressource.
+  // Chaque ressource est évaluée dans sa propre passe avec son propre bruit.
+  // Modifier les paramètres d'une ressource n'affecte PAS le placement des
+  // autres ressources déjà posées (priorité selon l'ordre de RES_DEFAULTS).
+  const resource = new Array(size).fill(null);
+
+  // Bruit déterministe par ressource (dérivé du seed XOR hash du nom)
+  const resNoises = {};
+  for (const resName of Object.keys(params.res)) {
+    const seedForRes = (baseHash ^ hashString('res:' + resName)) >>> 0;
+    resNoises[resName] = new NoiseFast(mulberry32(seedForRes));
+  }
+
+  // Pré-calcule positions normalisées
+  const tilePx = new Float32Array(size);
+  const tilePy = new Float32Array(size);
+  for (let i = 0; i < size; i++) {
+    const t = tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    tilePx[i] = x / HEX;
+    tilePy[i] = y / HEX;
+  }
+
+  // Tuiles éligibles pour une ressource (selon biome + statut rivière)
+  const eligibleFor = (i, res) => {
+    // Les rivières étant désormais des arêtes (entre les tuiles), une tuile
+    // terrestre bordée par une rivière garde les ressources de son biome.
+    // Les Poissons restent réservés à l'Océan (via RES_BY_BIOME).
+    const list = RES_BY_BIOME[biome[i]] || [];
+    return list.includes(res);
+  };
+
+  // Une passe par ressource, dans l'ordre de RES_DEFAULTS (priorité fixe).
+  // Chaque passe ne regarde que ses propres paramètres, son propre bruit,
+  // et les tuiles encore libres. Le résultat d'une ressource ne dépend donc
+  // QUE de ses propres paramètres et des ressources de plus haute priorité.
+  for (const resName of Object.keys(params.res)) {
+    const p = params.res[resName];
+    if (!p || p.density <= 0) continue;
+    const noise = resNoises[resName];
+    // proximité haute → basse fréquence → gros amas contigus
+    const freq = 0.06 + 0.40 * (1 - p.prox);
+    // densité haute → seuil bas → ressource plus fréquente
+    const threshold = 1 - p.density * 8;
+
+    // A. Tuiles candidates (éligibles + bruit au-dessus du seuil)
+    //    MODE LABO « quantile » : la densité en ‰ devient le VRAI taux de
+    //    tuiles éligibles qui reçoivent la ressource. On retient les k
+    //    meilleures tuiles au score de bruit (k = densité × éligibles,
+    //    arrondi stochastique via le PRNG dédié aux ressources) au lieu
+    //    d'un seuil : le Perlin, en cloche, rendait les seuils hauts
+    //    quasi inatteignables (Baleines/Geyser jamais générés).
+    const scores = new Float32Array(size);
+    const candidates = [];
+    if (params.resMode === 'quantile') {
+      const free = [];
+      for (let i = 0; i < size; i++) {
+        if (resource[i]) continue; // tuile déjà prise par une ressource prioritaire
+        if (!eligibleFor(i, resName)) continue;
+        free.push(i);
+      }
+      if (free.length) {
+        const exact = p.density * free.length;
+        let k = Math.floor(exact);
+        if (randRes() < exact - k) k += 1; // arrondi stochastique (déterministe par seed)
+        if (k > 0) {
+          const scored = free.map(i => [i, (noise.noise2D(tilePx[i] * freq, tilePy[i] * freq) + 1) * 0.5]);
+          scored.sort((a, b) => b[1] - a[1]);
+          const keep = Math.min(k, scored.length);
+          for (let t = 0; t < keep; t++) {
+            scores[scored[t][0]] = scored[t][1];
+            candidates.push(scored[t][0]);
+          }
+        }
+      }
+    } else {
+      for (let i = 0; i < size; i++) {
+        if (resource[i]) continue; // tuile déjà prise par une ressource prioritaire
+        if (!eligibleFor(i, resName)) continue;
+        const n = (noise.noise2D(tilePx[i] * freq, tilePy[i] * freq) + 1) * 0.5;
+        const s = n - threshold;
+        if (s > 0) {
+          scores[i] = s;
+          candidates.push(i);
+        }
+      }
+    }
+
+    // B. Cap par taille de composante connexe — on ne garde que les `size`
+    // meilleures tuiles de chaque amas.
+    const visited = new Uint8Array(size);
+    const accepted = new Uint8Array(size);
+    for (const start of candidates) {
+      if (visited[start]) continue;
+      const comp = [];
+      const queue = [start];
+      visited[start] = 1;
+      while (queue.length) {
+        const t = queue.shift();
+        comp.push(t);
+        for (const n of neighborsOf(t)) {
+          if (!visited[n] && scores[n] > 0) {
+            visited[n] = 1;
+            queue.push(n);
+          }
+        }
+      }
+      comp.sort((a, b) => scores[b] - scores[a]);
+      const keep = Math.min(p.size, comp.length);
+      for (let k = 0; k < keep; k++) accepted[comp[k]] = 1;
+    }
+
+    // C. Poser la ressource sur les tuiles acceptées
+    for (let i = 0; i < size; i++) {
+      if (accepted[i]) resource[i] = resName;
+    }
+  }
+
+  // ============================================================
+  // LABO (2e retour Thibaut 2026-11-13) : INTENSITÉ D'ANNEAU — passe
+  // TOUT À LA FIN, sur la carte déjà complète. La carte de base (côtes,
+  // biomes, montagnes, rivières, ressources) est EXACTEMENT celle d'une
+  // génération avec anneau à 0 : l'anneau ne fait qu'AJOUTER des cases
+  // océan → terre dans la bande, et classe ces nouvelles terres
+  // après coup. Intensité = FRACTION de l'océan de la bande convertie
+  // (25 % = un quart, 100 % = tout l'océan de la bande).
+  // (3e retour Thibaut 2026-11-13 : bande STRICTE — exactement les cases
+  //  entre « Marge centre » et « Marge bord », distance VRAIE, coupure
+  //  franche. Plus de rampe douce (fuite jusqu'à 1,4 hex côté centre), plus
+  //  de queue à 35 % au-delà de la marge bord, plus de flou du domain
+  //  warping sur les bornes : une case hors bande ne bouge JAMAIS. Le
+  //  domain warping ne règle plus que les masques de forme.)
+  // ============================================================
+  if (ringFrac > 0) {
+    // 1. Bande STRICTE : distance hex VRAIE de ringInDist (marge centre,
+    //    comprise) à ringOutDist (marge bord, comprise) — exactement
+    //    l'ensemble où placePlayers peut poser des joueurs. À « Marge
+    //    centre » 0, la bande couvre toute la carte (voulu).
+    const oceanIdx = [];
+    for (let i = 0; i < size; i++) {
+      if (elev[i] >= seaLevel) continue;
+      const t = tiles[i];
+      const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+      if (d < ringInDist || d > ringOutDist) continue;
+      oceanIdx.push(i);
+    }
+    // 2. Budget = intensité × océan de la bande ; ordre = profondeur
+    // croissante : les hauts-fonds passent d'abord — la terre progresse
+    // depuis les côtes existantes en suivant les irrégularités du bruit,
+    // pas en front de remblai. Conversion d'un PRÉFIXE strict → monotone
+    // en l'intensité (à X %, exactement les X premiers pour cent de l'océan
+    // de la bande, jamais de perte).
+    const budget = Math.floor(ringFrac * oceanIdx.length + 1e-9);
+    oceanIdx.sort((a, b) => (seaLevel - elev[a]) - (seaLevel - elev[b]));
+    const newLand = [];
+    for (let k = 0; k < budget && k < oceanIdx.length; k++) {
+      const i = oceanIdx[k];
+      resource[i] = null; // les ressources océaniques (pêche…) disparaissent
+      newLand.push(i);
+    }
+    // 3. Atterrissage avec le MÊME moteur que le cap Océan (retour du soir
+    //    2026-11-13 : « il n'y a jamais de désert ou de montagne, pourquoi
+    //    ? ») — en mode anneau (mirror), la profondeur est inversée en
+    //    altitude : hauts-fonds → côtes basses, fosses → sommets — et
+    //    l'humidité est recalculée sur la carte FINALE : une baie comblée
+    //    devient continentale donc sèche (déserts possibles), les grandes
+    //    fosses passent le seuil montagne (montagnes possibles). Plus
+    //    d'élévation plate épinglée sous le seuil de montagne.
+    if (newLand.length > 0) {
+      convertOceanToLand(newLand, true);
+      // 4. Caps respectés dans l'anneau AUSSI (retour du soir 2026-11-13 :
+      //    « les caps de toutes les tuiles doivent être préservés, idem
+      //    lors des anneaux ») : si les terres ajoutées font déborder un
+      //    cap, on ne reclasse que des tuiles AJOUTÉES — la carte de base
+      //    ne bouge jamais. Elle respecte déjà les caps (boucle de
+      //    stabilité du cap par biome), donc tout débordement vient de
+      //    l'anneau.
+      for (let round = 0; round < 12; round++) {
+        let changed = false;
+        for (const bname of ['Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne']) {
+          const cap = capOf(bname);
+          if (cap <= 0) continue;
+          let excess = countBiome(bname) - cap;
+          if (excess <= 0) continue;
+          for (const i of newLand) {
+            if (excess <= 0) break;
+            if (biome[i] === bname) {
+              reclassWithRoom(i, bname);
+              excess--;
+              changed = true;
+            }
+          }
+        }
+        if (!changed) break;
+      }
+    }
+  }
+
+  return {
+    N, tiles, indexOf, neighborsOf,
+    elev, temp, humid, biome, resource, rivers, riverSegments,
+    seaLevel, mountainLevel,
+    players: [], playerWarning: null   // remplis par placePlayers() séparément
+  };
+}
+
+// ============================================================
+// VARIÉTÉ — tirage des curseurs de texture calé sur la graine
+// (retour Thibaut 2026-11-13 : « toutes les cartes se ressemblent »)
+// Le générateur est param-driven : à seed égal, la recette est
+// identique (quantiles mer/montagnes, spectre du bruit fixe,
+// gabarit climatique fixe), seule l'arrangement change. Ce tirage
+// fait varier la MORPHOLOGIE d'une génération à l'autre.
+// Mesuré (N=12, terre 55 %) : au-dessus du seuil de percolation
+// du réseau hexagonal, une masse dominante est quasi inévitable ;
+// les curseurs ne la cassent que CORRÉLÉS : compacité basse +
+// côtes fines + petites masses = archipels ; compacité haute +
+// côtes lisses + masses larges = continent unique. D'où le CADRAN
+// u ∈ [0,1] (0 = morcelé, 1 = continent unique) qui FIXE les
+// corrélations, avec un JITTER indépendant par curseur pour
+// garder des textures inédites à u égal :
+//   - e-compact : 10 + 85·u   (10 = archipels, 95 = continent unique) ;
+//   - e-scale   : 30 − 22·u ± 6 (côtes finement découpées → lisses) ;
+//   - e-cont    : 13 − 11·u ± 3 (petites masses → très larges) ;
+//   - e-edge    : 0..30 indépendant (terre au bord → océan périphérique) ;
+//   - t-poles   : orientation des pôles (ns / ew / center).
+// Le TYPE de carte, le bruit, la mer, les montagnes et les caps ne
+// sont PAS tirés. PRNG DÉDIÉ dérivé du hash de la graine (patron
+// des autres étapes stochastiques) : déterminisme par seed
+// préservé, même seed = même tirage = même carte.
+// ============================================================
+function drawVariety(seedStr) {
+  const rand = mulberry32(hashString('variete:' + seedStr) ^ 0x2545F491);
+  const ri = (min, max) => min + Math.floor(rand() * (max - min + 1));
+  const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
+  const u = rand(); // cadran de morphologie : 0 = morcelé, 1 = continent unique
+  return {
+    'e-cont':    clamp(Math.round(13 - 11 * u) + ri(-3, 3), 2, 15),
+    'e-scale':   clamp(Math.round(30 - 22 * u) + ri(-6, 6), 5, 30),
+    'e-compact': Math.round(10 + 85 * u),
+    'e-edge':    ri(0, 30),
+    't-poles':   ['ns', 'ew', 'center'][Math.floor(rand() * 3)]
+  };
+}
+
+// ============================================================
+// PLACEMENT DES JOUEURS — fonction séparée
+// On ne touche PAS à la carte (biomes, ressources, etc.) : on lit seulement.
+// Appelé manuellement (bouton 🎲 ou changement du nombre de joueurs),
+// pas à chaque slider.
+// ============================================================
+function placePlayers(mapObj, opts) {
+  const { tiles, biome, rivers, elev, seaLevel, N, neighborsOf } = mapObj;
+  const size = tiles.length;
+  const playerCount = Math.max(0, Math.min(12, opts.count | 0));
+  const spread = opts.spread || 'far';
+  const seedStr = opts.seedStr || 'players';
+  const MIN_DIST       = Math.max(1, opts.minDist | 0 || 5);
+  const EDGE           = Math.max(0, opts.edgeMargin | 0);
+  const CENTER         = Math.max(0, opts.centerMargin | 0);
+  const MIN_CONTINENT  = Math.max(0, opts.minContinent | 0);
+  const INSPECT        = Math.max(1, opts.inspectRadius | 0 || 3);
+  const REQUIRED       = opts.required || [];
+
+  mapObj.players = [];
+  mapObj.playerWarning = null;
+  if (playerCount === 0) return;
+
+  // Bornes pour la 2e tuile selon le mode "Sites"
+  let COMPANION_MIN, COMPANION_MAX;
+  if (spread === 'close') {
+    COMPANION_MIN = 2;
+    COMPANION_MAX = 4;
+  } else if (spread === 'medium') {
+    COMPANION_MIN = 4;
+    COMPANION_MAX = 8;
+  } else {
+    COMPANION_MIN = MIN_DIST;
+    COMPANION_MAX = Infinity;
+  }
+
+  // Pré-calcul : taille de la composante connexe terrestre pour chaque tuile.
+  // Composante = ensemble de tuiles non-Océan reliées par voisinage.
+  // Coût : O(size). On ne le fait qu'une fois par appel.
+  const componentId = new Int32Array(size).fill(-1);
+  const componentSize = []; // index → taille
+  if (MIN_CONTINENT > 0) {
+    let cid = 0;
+    for (let i = 0; i < size; i++) {
+      if (componentId[i] !== -1 || biome[i] === 'Océan') continue;
+      // BFS
+      const queue = [i];
+      componentId[i] = cid;
+      let count = 0;
+      while (queue.length) {
+        const t = queue.shift();
+        count++;
+        for (const n of neighborsOf(t)) {
+          if (componentId[n] === -1 && biome[n] !== 'Océan') {
+            componentId[n] = cid;
+            queue.push(n);
+          }
+        }
+      }
+      componentSize.push(count);
+      cid++;
+    }
+  }
+
+  // Distance hex
+  const distAxial = (a, b) => axialDistance(a.q, a.r, b.q, b.r);
+
+  // Test "biomes requis dans rayon d'inspection autour de tile i"
+  // Collecte tous les voisins jusqu'à distance INSPECT, vérifie présence
+  // de chaque biome requis.
+  function biomesInRadius(i) {
+    if (REQUIRED.length === 0) return null; // pas de check à faire
+    const center = tiles[i];
+    const found = new Set();
+    // BFS à profondeur INSPECT
+    const visited = new Set([i]);
+    let frontier = [i];
+    for (let depth = 0; depth <= INSPECT; depth++) {
+      for (const t of frontier) {
+        found.add(biome[t]);
+      }
+      if (depth === INSPECT) break;
+      const next = [];
+      for (const t of frontier) {
+        for (const n of neighborsOf(t)) {
+          if (!visited.has(n)) {
+            visited.add(n);
+            next.push(n);
+          }
+        }
+      }
+      frontier = next;
+    }
+    return found;
+  }
+
+  // Tuiles candidates : terre, biome jouable, pas de rivière,
+  // dans la zone autorisée (entre couronnes centre et bord),
+  // sur un continent assez grand,
+  // avec les biomes requis dans le rayon d'inspection.
+  const PLAYABLE = new Set(['Plaine', 'Forêt', 'Désert', 'Marais']);
+  const innerEdge   = N - EDGE;     // distance > innerEdge → exclue (bord)
+  const innerCenter = CENTER - 1;   // distance ≤ innerCenter → exclue (centre)
+  const candidates = [];
+  let stats = { biome: 0, river: 0, edge: 0, center: 0, continent: 0, required: 0 };
+  for (let i = 0; i < size; i++) {
+    if (!PLAYABLE.has(biome[i])) { stats.biome++; continue; }
+    if (rivers[i] > 0)            { stats.river++; continue; }
+    const t = tiles[i];
+    const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+    if (d > innerEdge)   { stats.edge++; continue; }
+    if (d <= innerCenter){ stats.center++; continue; }
+    if (MIN_CONTINENT > 0) {
+      const cid = componentId[i];
+      if (cid === -1 || componentSize[cid] < MIN_CONTINENT) {
+        stats.continent++;
+        continue;
+      }
+    }
+    if (REQUIRED.length > 0) {
+      const found = biomesInRadius(i);
+      let ok = true;
+      for (const r of REQUIRED) if (!found.has(r)) { ok = false; break; }
+      if (!ok) { stats.required++; continue; }
+    }
+    candidates.push(i);
+  }
+
+  if (candidates.length === 0) {
+    // Diagnostic plus précis selon la cause majeure du rejet
+    const causes = [];
+    if (stats.continent > 0)
+      causes.push(`${stats.continent} hors de continent assez grand`);
+    if (stats.required > 0)
+      causes.push(`${stats.required} sans biomes requis`);
+    if (stats.center > 0)
+      causes.push(`${stats.center} en zone centrale`);
+    if (stats.edge > 0)
+      causes.push(`${stats.edge} en bord`);
+    const detail = causes.length > 0 ? ' (' + causes.join(', ') + ')' : '';
+    mapObj.playerWarning = `Aucune tuile jouable${detail}. Assouplir les contraintes.`;
+    return;
+  }
+
+  const rand = mulberry32(hashString('players:' + seedStr) ^ 0x4F1BBCDC);
+  const distIdx = (i, j) => distAxial(tiles[i], tiles[j]);
+
+  // Étape 1 : capitales (farthest-first)
+  const primaries = [];
+  primaries.push(candidates[Math.floor(rand() * candidates.length)]);
+  while (primaries.length < playerCount) {
+    let bestTile = -1, bestMinDist = -1;
+    for (const c of candidates) {
+      let minD = Infinity;
+      for (const p of primaries) {
+        const d = distIdx(c, p);
+        if (d < minD) minD = d;
+      }
+      if (minD < MIN_DIST) continue;
+      if (minD > bestMinDist) {
+        bestMinDist = minD;
+        bestTile = c;
+      }
+    }
+    if (bestTile === -1) {
+      mapObj.playerWarning = `Impossible de placer ${playerCount} joueur(s) (distance min ${MIN_DIST}). ${primaries.length} placé(s). Réduire dist. min, augmenter le rayon, ou changer de seed.`;
+      break;
+    }
+    primaries.push(bestTile);
+  }
+
+  // Étape 2 : seconds sites — préférence pour le MÊME biome que la primaire
+  const secondaries = [];
+  const allPlaced = [...primaries];
+  for (let pi = 0; pi < primaries.length; pi++) {
+    const primary = primaries[pi];
+    const primaryBiome = biome[primary];
+    const candComp = [];
+    for (const c of candidates) {
+      if (c === primary) continue;
+      const dToPrimary = distIdx(c, primary);
+      if (dToPrimary < COMPANION_MIN || dToPrimary > COMPANION_MAX) continue;
+      let ok = true;
+      for (const p of allPlaced) {
+        if (p === primary) continue;
+        if (distIdx(c, p) < MIN_DIST) { ok = false; break; }
+      }
+      if (ok) candComp.push(c);
+    }
+    if (candComp.length === 0) {
+      secondaries.push(null);
+      continue;
+    }
+    const biomePriority = b =>
+      b === 'Plaine' ? 4 :
+      b === 'Forêt'  ? 3 :
+      b === 'Désert' ? 2 :
+      b === 'Marais' ? 1 : 0;
+    candComp.sort((a, b) => {
+      const sameA = biome[a] === primaryBiome ? 1 : 0;
+      const sameB = biome[b] === primaryBiome ? 1 : 0;
+      if (sameA !== sameB) return sameB - sameA;
+      const pa = biomePriority(biome[a]);
+      const pb = biomePriority(biome[b]);
+      if (pa !== pb) return pb - pa;
+      if (spread === 'far') return distIdx(b, primary) - distIdx(a, primary);
+      return rand() - 0.5;
+    });
+    const chosen = candComp[0];
+    secondaries.push(chosen);
+    allPlaced.push(chosen);
+  }
+
+  const missingComp = secondaries.filter(s => s === null).length;
+  if (missingComp > 0 && !mapObj.playerWarning) {
+    mapObj.playerWarning = `${missingComp} joueur(s) sans 2e tuile (contraintes trop strictes).`;
+  }
+  for (let pi = 0; pi < primaries.length; pi++) {
+    mapObj.players.push({
+      index: pi,
+      color: PLAYER_COLORS[pi % PLAYER_COLORS.length],
+      primary: primaries[pi],
+      secondary: secondaries[pi]
+    });
+  }
+}
+
+// ============================================================
+// PARTAGE (retour Thibaut 2026-11-13 « 5 points ») — codec URL.
+// Pures et testées par le harnais (round-trip). L'état complet de la
+// carte (graine + tous les curseurs + placement joueurs) tient dans le
+// hash de l'URL : un lien = une carte rejouable à l'identique, sans
+// base de données ni fichier.
+// ============================================================
+function encodeShare(state) {
+  // Canonique : clés triées pour que deux états égaux produisent le
+  // même hash, quelle que soit l'ordre de construction.
+  const canon = (v) => {
+    if (Array.isArray(v)) return v.map(canon);
+    if (v && typeof v === 'object') {
+      const o = {};
+      for (const k of Object.keys(v).sort()) o[k] = canon(v[k]);
+      return o;
+    }
+    return v;
+  };
+  return encodeURIComponent(JSON.stringify(canon(state)));
+}
+
+function decodeShare(str) {
+  try {
+    const st = JSON.parse(decodeURIComponent(str));
+    return (st && typeof st === 'object') ? st : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// ===== FIN DE LA PARTIE PURE (harnais : couper ici) =====
+
+// ============================================================
+// RENDU
+// ============================================================
+const canvas = document.getElementById('map');
+const ctx = canvas.getContext('2d', { alpha: false });
+
+let view = { x: 0, y: 0, scale: 1 };
+let map = null;
+let layers = { rivers: true, resources: true, grid: true };
+let selected = null;
+
+function resizeCanvas() {
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const cssW = window.innerWidth;
+  const cssH = window.innerHeight;
+  canvas.width = cssW * dpr;
+  canvas.height = cssH * dpr;
+  canvas.style.width = cssW + 'px';
+  canvas.style.height = cssH + 'px';
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.imageSmoothingEnabled = true;
+}
+
+function mapBounds() {
+  const N = map.N;
+  const w = 1.5 * N * SQRT3 * HEX + HEX * SQRT3 / 2;
+  const h = 1.5 * N * HEX + HEX;
+  return { minX: -w, maxX: w, minY: -h, maxY: h, w: 2*w, h: 2*h };
+}
+
+function fitView() {
+  if (!map) return;
+  const b = mapBounds();
+  const cw = window.innerWidth - 40;
+  const ch = window.innerHeight - 40;
+  view.scale = Math.min(cw / b.w, ch / b.h);
+  view.x = window.innerWidth / 2 - (b.minX + b.w/2) * view.scale;
+  view.y = window.innerHeight / 2 - (b.minY + b.h/2) * view.scale;
+}
+
+function drawHexPath(c, cx, cy, size) {
+  c.beginPath();
+  for (let i = 0; i < 6; i++) {
+    const a = Math.PI / 180 * (60 * i - 30);
+    const px = cx + size * Math.cos(a);
+    const py = cy + size * Math.sin(a);
+    if (i === 0) c.moveTo(px, py);
+    else c.lineTo(px, py);
+  }
+  c.closePath();
+}
+
+function drawShape(c, cx, cy, shape, color, size) {
+  c.fillStyle = color;
+  c.strokeStyle = 'rgba(0,0,0,0.7)';
+  c.lineWidth = Math.max(0.8, size * 0.09);
+  if (shape === 'circle') {
+    c.beginPath();
+    c.arc(cx, cy, size / 2, 0, Math.PI * 2);
+    c.fill();
+    c.stroke();
+  } else if (shape === 'square') {
+    const half = size / 2;
+    c.beginPath();
+    c.rect(cx - half, cy - half, size, size);
+    c.fill();
+    c.stroke();
+  } else if (shape === 'triangle') {
+    const h = size * SQRT3 / 2;
+    c.beginPath();
+    c.moveTo(cx, cy - h * 2 / 3);
+    c.lineTo(cx - size / 2, cy + h / 3);
+    c.lineTo(cx + size / 2, cy + h / 3);
+    c.closePath();
+    c.fill();
+    c.stroke();
+  }
+}
+
+function shade(hex, amt) {
+  const r = parseInt(hex.slice(1,3), 16);
+  const g = parseInt(hex.slice(3,5), 16);
+  const b = parseInt(hex.slice(5,7), 16);
+  const f = v => Math.max(0, Math.min(255, Math.round(v + amt * 255)));
+  return `rgb(${f(r)},${f(g)},${f(b)})`;
+}
+
+function renderToContext(c) {
+  for (let i = 0; i < map.tiles.length; i++) {
+    const t = map.tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    const b = map.biome[i];
+    const def = BIOMES[b];
+    let tint;
+    if (b === 'Océan') {
+      const depth = Math.max(0, (map.seaLevel - map.elev[i]) / Math.max(0.01, map.seaLevel));
+      tint = shade(def.color, -depth * 0.18);
+    } else if (b === 'Montagne' || b === 'Volcan') {
+      const rel = (map.elev[i] - map.mountainLevel) / Math.max(0.01, 1 - map.mountainLevel);
+      tint = shade(def.color, rel * 0.10 - 0.02);
+    } else {
+      const rel = (map.elev[i] - map.seaLevel) / Math.max(0.01, map.mountainLevel - map.seaLevel);
+      tint = shade(def.color, (rel - 0.5) * 0.10);
+    }
+    c.fillStyle = tint;
+    drawHexPath(c, x, y, HEX + 0.5);
+    c.fill();
+  }
+
+  // Volcan
+  for (let i = 0; i < map.tiles.length; i++) {
+    if (map.biome[i] !== 'Volcan') continue;
+    const t = map.tiles[i];
+    const { x, y } = axialToPixel(t.q, t.r);
+    const s = HEX * 0.45;
+    c.fillStyle = '#ff5020';
+    c.beginPath();
+    c.moveTo(x, y - s * 0.6);
+    c.lineTo(x - s * 0.7, y + s * 0.5);
+    c.lineTo(x + s * 0.7, y + s * 0.5);
+    c.closePath();
+    c.fill();
+    c.fillStyle = '#ffdc40';
+    c.beginPath();
+    c.arc(x, y - s * 0.15, s * 0.18, 0, Math.PI * 2);
+    c.fill();
+  }
+
+  // Rivières — segments le long des arêtes, de sommet en sommet.
+  // Les segments successifs partagent leurs extrémités : le tracé est
+  // naturellement continu (lineCap round soude visuellement les jonctions).
+  if (layers.rivers && map.riverSegments) {
+    c.strokeStyle = '#3a86c8';
+    c.lineWidth = Math.max(1.5, HEX * 0.16);
+    c.lineCap = 'round';
+    c.lineJoin = 'round';
+    for (const s of map.riverSegments) {
+      c.beginPath();
+      c.moveTo(s.x1, s.y1);
+      c.lineTo(s.x2, s.y2);
+      c.stroke();
+    }
+  }
+
+  // Grille
+  if (layers.grid) {
+    c.strokeStyle = 'rgba(0,0,0,0.30)';
+    c.lineWidth = 0.6;
+    for (const t of map.tiles) {
+      const { x, y } = axialToPixel(t.q, t.r);
+      drawHexPath(c, x, y, HEX);
+      c.stroke();
+    }
+  }
+
+  // Ressources
+  if (layers.resources) {
+    const shapeSize = HEX * 0.55;
+    for (let i = 0; i < map.tiles.length; i++) {
+      const r = map.resource[i];
+      if (!r) continue;
+      const t = map.tiles[i];
+      const { x, y } = axialToPixel(t.q, t.r);
+      const st = RES_STYLE[r];
+      drawShape(c, x, y, st.shape, st.color, shapeSize);
+    }
+  }
+
+  // Tuiles de départ joueurs : les deux tuiles d'un même joueur sont
+  // rendues à l'identique (bordure pleine épaisse + numéro central),
+  // pour qu'elles soient visuellement reconnaissables comme appartenant
+  // au même joueur.
+  if (map.players && map.players.length > 0) {
+    const drawPlayerTile = (idx, color, label) => {
+      if (idx === null || idx === undefined) return;
+      const t = map.tiles[idx];
+      const { x, y } = axialToPixel(t.q, t.r);
+      c.save();
+      c.lineWidth = Math.max(2.5, HEX * 0.18);
+      c.strokeStyle = color;
+      c.lineCap = 'round';
+      c.lineJoin = 'round';
+      drawHexPath(c, x, y, HEX - c.lineWidth * 0.5);
+      c.stroke();
+      // Numéro du joueur au centre
+      c.fillStyle = color;
+      c.font = `bold ${Math.round(HEX * 0.7)}px ui-monospace, monospace`;
+      c.textAlign = 'center';
+      c.textBaseline = 'middle';
+      c.lineWidth = Math.max(2, HEX * 0.10);
+      c.strokeStyle = 'rgba(0,0,0,0.85)';
+      c.strokeText(label, x, y);
+      c.fillText(label, x, y);
+      c.restore();
+    };
+    for (const p of map.players) {
+      const label = String(p.index + 1);
+      drawPlayerTile(p.primary,   p.color, label);
+      drawPlayerTile(p.secondary, p.color, label);
+    }
+  }
+}
+
+function render() {
+  if (!map) return;
+  // Le fond suit le thème (lu dynamiquement depuis les variables CSS)
+  const bgColor = getComputedStyle(document.body).getPropertyValue('--map-bg').trim() || '#0a0704';
+  ctx.fillStyle = bgColor;
+  ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
+  ctx.save();
+  ctx.translate(view.x, view.y);
+  ctx.scale(view.scale, view.scale);
+  renderToContext(ctx);
+
+  if (selected !== null && map.tiles[selected]) {
+    const t = map.tiles[selected];
+    const { x, y } = axialToPixel(t.q, t.r);
+    ctx.strokeStyle = '#ffe080';
+    ctx.lineWidth = Math.max(1.5, HEX * 0.15);
+    drawHexPath(ctx, x, y, HEX - 1);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
+// ============================================================
+// INTERACTIONS
+// ============================================================
+const infoEl = document.getElementById('info');
+function showInfo(i) {
+  if (!map || i === undefined || i === null || i < 0) {
+    infoEl.classList.remove('visible');
+    return;
+  }
+  const b = map.biome[i];
+  const r = map.resource[i];
+  const hasRiver = map.rivers[i] > 0 && map.elev[i] >= map.seaLevel;
+  // Tuile de départ d'un joueur ?
+  let playerInfo = '';
+  if (map.players) {
+    for (const p of map.players) {
+      if (p.primary === i || p.secondary === i) {
+        playerInfo = `<div style="margin-top:4px;color:${p.color};font-weight:bold;">⌂ Joueur ${p.index + 1} — départ</div>`;
+        break;
+      }
+    }
+  }
+  infoEl.innerHTML = `
+    <div class="biome">${b}</div>
+    <div class="row"><span>Élévation</span><span>${Math.round(map.elev[i] * 100)}%</span></div>
+    <div class="row"><span>Température</span><span>${Math.round(map.temp[i] * 100)}%</span></div>
+    <div class="row"><span>Humidité</span><span>${Math.round(map.humid[i] * 100)}%</span></div>
+    ${hasRiver ? '<div class="river">~ bordée par une rivière</div>' : ''}
+    ${r ? `<div class="res">◆ ${r}</div>` : ''}
+    ${playerInfo}
+  `;
+  infoEl.classList.add('visible');
+}
+
+let pointers = new Map();
+let panStart = null;
+let pinchStart = null;
+let didMove = false;
+
+canvas.addEventListener('pointerdown', e => {
+  canvas.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  didMove = false;
+  if (pointers.size === 1) {
+    panStart = { x: e.clientX, y: e.clientY, vx: view.x, vy: view.y };
+  } else if (pointers.size === 2) {
+    const [a, b] = [...pointers.values()];
+    pinchStart = {
+      dist: Math.hypot(a.x - b.x, a.y - b.y),
+      cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2,
+      vx: view.x, vy: view.y, vs: view.scale
+    };
+    panStart = null;
+  }
+});
+canvas.addEventListener('pointermove', e => {
+  if (!pointers.has(e.pointerId)) return;
+  pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  if (pointers.size === 1 && panStart) {
+    const dx = e.clientX - panStart.x;
+    const dy = e.clientY - panStart.y;
+    if (Math.hypot(dx, dy) > 6) didMove = true;
+    view.x = panStart.vx + dx;
+    view.y = panStart.vy + dy;
+    render();
+  } else if (pointers.size === 2 && pinchStart) {
+    const [a, b] = [...pointers.values()];
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    const newScale = Math.max(0.2, Math.min(8, pinchStart.vs * (d / pinchStart.dist)));
+    const cx = (a.x + b.x) / 2;
+    const cy = (a.y + b.y) / 2;
+    const k = newScale / pinchStart.vs;
+    view.x = pinchStart.cx - (pinchStart.cx - pinchStart.vx) * k + (cx - pinchStart.cx);
+    view.y = pinchStart.cy - (pinchStart.cy - pinchStart.vy) * k + (cy - pinchStart.cy);
+    view.scale = newScale;
+    didMove = true;
+    render();
+  }
+});
+function endPointer(e) {
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinchStart = null;
+  if (pointers.size === 0) {
+    if (!didMove && panStart) {
+      const sx = (e.clientX - view.x) / view.scale;
+      const sy = (e.clientY - view.y) / view.scale;
+      const { q, r } = pixelToAxial(sx, sy);
+      const idx = map.indexOf.get(q + ',' + r);
+      if (idx !== undefined) {
+        selected = idx;
+        showInfo(idx);
+      } else {
+        selected = null;
+        infoEl.classList.remove('visible');
+      }
+      render();
+    }
+    panStart = null;
+  } else if (pointers.size === 1) {
+    const [p] = [...pointers.values()];
+    panStart = { x: p.x, y: p.y, vx: view.x, vy: view.y };
+  }
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+
+canvas.addEventListener('wheel', e => {
+  e.preventDefault();
+  const factor = Math.exp(-e.deltaY * 0.001);
+  const newScale = Math.max(0.2, Math.min(8, view.scale * factor));
+  const k = newScale / view.scale;
+  view.x = e.clientX - (e.clientX - view.x) * k;
+  view.y = e.clientY - (e.clientY - view.y) * k;
+  view.scale = newScale;
+  render();
+}, { passive: false });
+
+// ============================================================
+// LÉGENDE
+// ============================================================
+function renderLegend() {
+  const el = document.getElementById('legend');
+  let html = '<div class="title">BIOMES</div>';
+  for (const k of Object.keys(BIOMES)) {
+    html += `<div class="item"><span class="sw" style="background:${BIOMES[k].color}"></span>${k}</div>`;
+  }
+  html += '<div class="sep">── RESSOURCES</div>';
+  for (const k of Object.keys(RES_STYLE)) {
+    const s = RES_STYLE[k];
+    let svg;
+    if (s.shape === 'circle') {
+      svg = `<svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="${s.color}" stroke="#000" stroke-width="1"/></svg>`;
+    } else if (s.shape === 'square') {
+      svg = `<svg width="12" height="12" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" fill="${s.color}" stroke="#000" stroke-width="1"/></svg>`;
+    } else {
+      svg = `<svg width="12" height="12" viewBox="0 0 12 12"><polygon points="6,1 11,11 1,11" fill="${s.color}" stroke="#000" stroke-width="1"/></svg>`;
+    }
+    html += `<div class="item"><span class="shape">${svg}</span>${k}</div>`;
+  }
+  el.innerHTML = html;
+}
+
+// Construit dynamiquement les sous-sections par-ressource
+function resShapeSvg(style, sz = 10) {
+  if (style.shape === 'circle') {
+    return `<svg class="res-icon" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" fill="${style.color}" stroke="#000" stroke-width="1"/></svg>`;
+  } else if (style.shape === 'square') {
+    return `<svg class="res-icon" viewBox="0 0 12 12"><rect x="1" y="1" width="10" height="10" fill="${style.color}" stroke="#000" stroke-width="1"/></svg>`;
+  } else {
+    return `<svg class="res-icon" viewBox="0 0 12 12"><polygon points="6,1 11,11 1,11" fill="${style.color}" stroke="#000" stroke-width="1"/></svg>`;
+  }
+}
+
+// =============================================================
+// RÈGLES D'ADJACENCE DES BIOMES
+// 5 biomes terrestres → 10 paires distinctes (biome-à-soi-même est
+// toujours libre, on ne l'expose pas).
+// 3 valeurs : 'libre' (✅) | 'tampon' (⚠) | 'interdit' (❌)
+// =============================================================
+const ADJ_BIOMES = ['Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne'];
+
+// Défauts (issus de la discussion préalable)
+const ADJ_DEFAULTS = {
+  'Plaine|Forêt':      'libre',
+  'Plaine|Désert':     'libre',
+  'Plaine|Marais':     'libre',
+  'Plaine|Montagne':   'libre',
+  'Forêt|Désert':      'tampon',
+  'Forêt|Marais':      'libre',
+  'Forêt|Montagne':    'libre',
+  'Désert|Marais':     'interdit',
+  'Désert|Montagne':   'libre',
+  'Marais|Montagne':   'tampon'
+};
+
+// Clé canonique pour une paire (biome ordonnés alphabétiquement)
+function adjKey(a, b) {
+  if (a === b) return null;
+  return [a, b].sort().join('|');
+}
+
+function biomeSwatch(biome) {
+  const c = BIOMES[biome].color;
+  return `<span style="display:inline-block;width:10px;height:10px;background:${c};border:1px solid #000;vertical-align:middle;margin-right:3px;"></span>`;
+}
+
+function buildAdjacencyControls() {
+  const container = document.getElementById('adjacency-container');
+  let html = '';
+  for (let i = 0; i < ADJ_BIOMES.length; i++) {
+    for (let j = i + 1; j < ADJ_BIOMES.length; j++) {
+      const a = ADJ_BIOMES[i], b = ADJ_BIOMES[j];
+      const key = adjKey(a, b);
+      const slug = key.replace('|', '-').toLowerCase()
+                      .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const def = ADJ_DEFAULTS[key] || 'libre';
+      html += `
+        <div class="field" style="font-size:11px;">
+          <label style="white-space:nowrap;">${biomeSwatch(a)}${a} ↔ ${biomeSwatch(b)}${b}</label>
+          <select id="adj-${slug}" data-pair="${key}" style="width:80px;">
+            <option value="libre"${def === 'libre' ? ' selected' : ''}>Libre</option>
+            <option value="tampon"${def === 'tampon' ? ' selected' : ''}>Tampon</option>
+            <option value="interdit"${def === 'interdit' ? ' selected' : ''}>Interdit</option>
+          </select>
+        </div>
+      `;
+    }
+  }
+  container.innerHTML = html;
+}
+
+function getAdjacencyRules() {
+  const rules = {};
+  document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+    rules[el.dataset.pair] = el.value;
+  });
+  return rules;
+}
+
+function resetAdjacency() {
+  document.getElementById('adj-enabled').checked = false;
+  document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+    el.value = ADJ_DEFAULTS[el.dataset.pair] || 'libre';
+  });
+}
+
+function buildResourceControls() {
+  const container = document.getElementById('res-container');
+  let html = '';
+  for (const [res, defs] of Object.entries(RES_DEFAULTS)) {
+    const slug = slugify(res);
+    const icon = resShapeSvg(RES_STYLE[res]);
+    // Sous-sections déjà OUVERTES par défaut : les 3 sliders sont visibles
+    // sans avoir besoin de cliquer. L'utilisateur peut toujours les replier.
+    html += `
+      <div class="subgroup nested" id="sub-res-${slug}">
+        <div class="subhead" data-toggle="sub-res-${slug}">
+          <span>▾ ${icon} <b>${res}</b></span>
+          <button class="reset-btn" data-reset-res="${res}">↺</button>
+        </div>
+        <div class="sub-body">
+          <div class="field">
+            <label>Densité</label>
+            <input type="range" id="res-${slug}-density" min="${RES_PARAM_SPECS.density.min}" max="${RES_PARAM_SPECS.density.max}" value="${defs.density}">
+            <span class="value" id="res-${slug}-density-v">${RES_PARAM_SPECS.density.fmt(defs.density)}</span>
+          </div>
+          <div class="field">
+            <label>Proximité</label>
+            <input type="range" id="res-${slug}-prox" min="${RES_PARAM_SPECS.prox.min}" max="${RES_PARAM_SPECS.prox.max}" value="${defs.prox}">
+            <span class="value" id="res-${slug}-prox-v">${RES_PARAM_SPECS.prox.fmt(defs.prox)}</span>
+          </div>
+          <div class="field">
+            <label>Taille</label>
+            <input type="range" id="res-${slug}-size" min="${RES_PARAM_SPECS.size.min}" max="${RES_PARAM_SPECS.size.max}" value="${defs.size}">
+            <span class="value" id="res-${slug}-size-v">${RES_PARAM_SPECS.size.fmt(defs.size)}</span>
+          </div>
+        </div>
+      </div>
+    `;
+    // Enregistrer les specs pour ces 3 sliders
+    for (const pkey of ['density', 'prox', 'size']) {
+      const id = `res-${slug}-${pkey}`;
+      PARAM_SPECS[id] = { fmt: RES_PARAM_SPECS[pkey].fmt, conv: RES_PARAM_SPECS[pkey].conv, resKey: res, pKey: pkey };
+    }
+  }
+  container.innerHTML = html;
+}
+
+// ============================================================
+// PARAMÈTRES — affichage et conversion
+// ============================================================
+const PARAM_SPECS = {
+  // élévation de la mer (retour Thibaut 2026-11-13 : décalage FIN du seuil
+  // global, indépendant du quantile « Mer »)
+  'sea-elev':  { fmt: v => (v > 0 ? '+' : '') + (v / 100).toFixed(2), conv: v => v / 100 },
+  // élévation
+  'e-cont':    { fmt: v => v,                     conv: v => v / 100 },
+  'e-scale':   { fmt: v => v,                     conv: v => v / 100 },
+  'e-compact': { fmt: v => v + '%',               conv: v => v / 100 },
+  'e-oct':     { fmt: v => v,                     conv: v => v       },
+  'e-pers':    { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  'e-edge':    { fmt: v => v + '%',               conv: v => v / 100 },
+  // humidité
+  'h-scale':   { fmt: v => v,                     conv: v => v / 100 },
+  'h-oct':     { fmt: v => v,                     conv: v => v       },
+  'h-pers':    { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  'h-cont':    { fmt: v => v + '%',               conv: v => v / 100 },
+  // température
+  't-lat':     { fmt: v => (v / 100).toFixed(2), conv: v => v / 100 },
+  't-noise':   { fmt: v => (v / 100).toFixed(2),  conv: v => v / 100 },
+  // événements
+  'evt-volcan':  { fmt: v => v + '%', conv: v => v / 100 },
+  'evt-river':   { fmt: v => v + '%', conv: v => v / 100 },
+  'evt-riverlen': { fmt: v => v, conv: v => v },
+  // forme (LABO, retour Thibaut 2026-11-13 : anneau de terre sur le pourtour)
+  'ring-intensity': { fmt: v => v + '%', conv: v => v / 100 },
+  // parts des biomes (retour « 5 points » 2026-11-13) : part garantie de
+  // la terre par biome climatique, Plaine = complément
+  'p-foret':  { fmt: v => v + '%', conv: v => v / 100 },
+  'p-desert': { fmt: v => v + '%', conv: v => v / 100 },
+  'p-marais': { fmt: v => v + '%', conv: v => v / 100 }
+  // Les paramètres par-ressource ('res-<slug>-*') sont ajoutés dynamiquement
+  // par buildResourceControls() ci-dessous.
+};
+
+// Formatters pour les paramètres de ressources (tous identiques)
+const RES_PARAM_SPECS = {
+  density: { fmt: v => (v / 10).toFixed(1) + '%', conv: v => v / 1000, min: 0,  max: 80, def: 30 },
+  prox:    { fmt: v => v + '%',                    conv: v => v / 100,  min: 0,  max: 95, def: 55 },
+  size:    { fmt: v => v,                          conv: v => v,        min: 1,  max: 12, def: 5  }
+};
+
+// Slugify : 'Bétail' → 'betail'
+function slugify(s) {
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+function getParams() {
+  const read = (id) => PARAM_SPECS[id].conv(+document.getElementById(id).value);
+  const res = {};
+  for (const resName of Object.keys(RES_DEFAULTS)) {
+    const slug = slugify(resName);
+    res[resName] = {
+      density: read(`res-${slug}-density`),
+      prox:    read(`res-${slug}-prox`),
+      size:    read(`res-${slug}-size`)
+    };
+  }
+  const readInt = (id) => parseInt(document.getElementById(id).value, 10) || 0;
+  const caps = {
+    'Plaine':   readInt('cap-plaine'),
+    'Forêt':    readInt('cap-foret'),
+    'Désert':   readInt('cap-desert'),
+    'Marais':   readInt('cap-marais'),
+    'Montagne': readInt('cap-montagne'),
+    'Océan':    readInt('cap-ocean'),
+    'Volcan':   readInt('cap-volcan')
+  };
+  const surroundSame = parseInt(document.getElementById('c-surround-same').value, 10) || 0;
+  return {
+    elev: {
+      cont: read('e-cont'), scale: read('e-scale'), compact: read('e-compact'),
+      oct: read('e-oct'), pers: read('e-pers'),
+      edge: read('e-edge')
+    },
+    humid: {
+      scale: read('h-scale'), oct: read('h-oct'),
+      pers: read('h-pers'), cont: read('h-cont')
+    },
+    temp: {
+      lat: read('t-lat'),
+      noise: read('t-noise')
+    },
+    poles: document.getElementById('t-poles').value || 'ns',
+    biomeOrder: document.getElementById('biome-order').value || 'ETH',
+    adjacency: {
+      enabled: document.getElementById('adj-enabled').checked,
+      rules: getAdjacencyRules()
+    },
+    res,
+    resMode: (document.getElementById('res-mode') || {}).value || 'quantile',
+    mapType: (document.getElementById('map-type') || {}).value || 'custom',
+    seaElev: read('sea-elev'),
+    ring: read('ring-intensity'),
+    parts: {
+      foret:  read('p-foret'),
+      desert: read('p-desert'),
+      marais: read('p-marais')
+    },
+    playerEdge: readInt('player-edge'),
+    playerCenter: readInt('player-center'),
+    evt: {
+      volcan: read('evt-volcan'),
+      river:  read('evt-river'),
+      riverLen: read('evt-riverlen')
+    },
+    constraints: { caps, surroundSame }
+  };
+}
+
+function updateParamLabels() {
+  for (const id in PARAM_SPECS) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    const lbl = document.getElementById(id + '-v');
+    if (lbl) lbl.textContent = PARAM_SPECS[id].fmt(+el.value);
+  }
+}
+
+// Mapping groupe → préfixe d'id (sauf 'res' qui est géré à part)
+const GROUP_PREFIX = {
+  elev:  'e-',
+  humid: 'h-',
+  temp:  't-',
+  evt:   'evt-'
+};
+
+function resetGroup(group) {
+  if (group === 'res') {
+    for (const resName of Object.keys(RES_DEFAULTS)) resetResource(resName);
+    return;
+  }
+  if (group === 'adjacency') {
+    resetAdjacency();
+    return;
+  }
+  if (group === 'rivers') {
+    document.getElementById('evt-river').value = DEFAULTS.evt.river;
+    document.getElementById('evt-riverlen').value = DEFAULTS.evt.riverlen;
+    updateParamLabels();
+    return;
+  }
+  if (group === 'constraints') {
+    const d = DEFAULTS.constraints;
+    document.getElementById('c-surround-same').value = d.surroundSame;
+    document.getElementById('cap-plaine').value   = d['cap-plaine'];
+    document.getElementById('cap-foret').value    = d['cap-foret'];
+    document.getElementById('cap-desert').value   = d['cap-desert'];
+    document.getElementById('cap-marais').value   = d['cap-marais'];
+    document.getElementById('cap-montagne').value = d['cap-montagne'];
+    document.getElementById('cap-ocean').value    = d['cap-ocean'];
+    document.getElementById('cap-volcan').value   = d['cap-volcan'];
+    return;
+  }
+  const g = DEFAULTS[group];
+  const prefix = GROUP_PREFIX[group];
+  for (const key of Object.keys(g)) {
+    const id = prefix + key;
+    const el = document.getElementById(id);
+    if (el) el.value = g[key];
+  }
+  updateParamLabels();
+}
+
+function resetResource(resName) {
+  const slug = slugify(resName);
+  const defs = RES_DEFAULTS[resName];
+  for (const pkey of ['density', 'prox', 'size']) {
+    const el = document.getElementById(`res-${slug}-${pkey}`);
+    if (el) el.value = defs[pkey];
+  }
+  updateParamLabels();
+}
+
+// ============================================================
+// UI
+// ============================================================
+function updateTileCount() {
+  const N = +document.getElementById('radius').value;
+  const total = 3 * N * N + 3 * N + 1;
+  document.getElementById('tile-count').textContent = total;
+  document.getElementById('radius-v').textContent = N;
+}
+
+function computeHex(N) {
+  const maxW = window.innerWidth - 40;
+  const maxH = window.innerHeight - 40;
+  const sizeByW = maxW / (3 * N * SQRT3);
+  const sizeByH = maxH / (3 * N);
+  return Math.max(10, Math.min(32, Math.floor(Math.min(sizeByW, sizeByH) * 1.4)));
+}
+
+function regenerate(resetView = true) {
+  const seed = document.getElementById('seed').value || 'grimoire';
+  const N = Math.max(10, Math.min(18, +document.getElementById('radius').value));
+  const sea = +document.getElementById('sealevel').value / 100;
+  const mountains = +document.getElementById('mountains').value / 100;
+  const noiseType = document.getElementById('noise-type').value;
+  HEX = computeHex(N);
+  const all = getParams();
+  map = generateMap(N, seed, { sea, mountains, noiseType, ...all });
+  // Réappliquer le placement joueurs sur la nouvelle carte
+  applyPlayers();
+  // Mettre à jour le compteur de biomes
+  updateBiomeCounts();
+  if (resetView) fitView();
+  selected = null;
+  infoEl.classList.remove('visible');
+  syncHash();
+  render();
+}
+
+// Compteur de biomes visible sous le total de tuiles, mis à jour après
+// chaque régénération.
+function updateBiomeCounts() {
+  const el = document.getElementById('biome-counts');
+  if (!map || !map.biome) {
+    el.style.display = 'none';
+    return;
+  }
+  const counts = {};
+  for (const b of map.biome) counts[b] = (counts[b] || 0) + 1;
+  // Ordre fixe : Océan en premier, puis terrestres dans l'ordre Plaine → ...
+  const order = ['Océan', 'Plaine', 'Forêt', 'Désert', 'Marais', 'Montagne', 'Volcan'];
+  let html = '';
+  for (const b of order) {
+    const c = counts[b] || 0;
+    if (c === 0) continue;
+    const color = BIOMES[b].color;
+    html += `<div style="display:flex;justify-content:space-between;gap:8px;">
+      <span><span style="display:inline-block;width:9px;height:9px;background:${color};border:1px solid #000;vertical-align:middle;margin-right:4px;"></span>${b}</span>
+      <span style="color:var(--accent);font-weight:bold;">${c}</span>
+    </div>`;
+  }
+  el.innerHTML = html;
+  el.style.display = 'block';
+}
+
+// Seed dédiée au placement joueurs : ne change qu'en cas de clic 🎲
+// (initialisée à une valeur aléatoire au chargement).
+let playerSeed = 'p' + Math.floor(Math.random() * 1000000);
+
+function applyPlayers() {
+  if (!map) return;
+  const count = parseInt(document.getElementById('players').value, 10) || 0;
+  const spread = document.getElementById('player-spread').value || 'far';
+  const minDist     = parseInt(document.getElementById('player-dist').value, 10)    || 5;
+  const edgeMargin  = parseInt(document.getElementById('player-edge').value, 10)    || 0;
+  const centerMargin= parseInt(document.getElementById('player-center').value, 10)  || 0;
+  const minContinent= parseInt(document.getElementById('player-cont').value, 10)    || 0;
+  const inspectRadius = parseInt(document.getElementById('player-inspect').value, 10) || 3;
+  const required = [];
+  if (document.getElementById('req-foret').checked)    required.push('Forêt');
+  if (document.getElementById('req-montagne').checked) required.push('Montagne');
+  if (document.getElementById('req-desert').checked)   required.push('Désert');
+  placePlayers(map, {
+    count, spread, seedStr: playerSeed,
+    minDist, edgeMargin, centerMargin,
+    minContinent, inspectRadius, required
+  });
+  // Afficher / masquer l'avertissement
+  const warnEl = document.getElementById('warning');
+  if (map.playerWarning) {
+    warnEl.textContent = '⚠ ' + map.playerWarning;
+    warnEl.classList.add('visible');
+  } else {
+    warnEl.classList.remove('visible');
+  }
+}
+
+// ============================================================
+// PARTAGE — capture / restauration de l'état complet via l'URL.
+// (retour Thibaut 2026-11-13 « 5 points ») : un lien = une carte.
+// captureState() photographie TOUT ce qui détermine la partie :
+// graine, rayon, tous les curseurs (dont parts et ressources) et le
+// placement joueurs (seed dédiée incluse — sinon les emplacements
+// flotteraient d'une ouverture à l'autre).
+// ============================================================
+function captureState() {
+  const req = [];
+  if (document.getElementById('req-foret').checked)    req.push('Forêt');
+  if (document.getElementById('req-montagne').checked) req.push('Montagne');
+  if (document.getElementById('req-desert').checked)   req.push('Désert');
+  return {
+    v: 1,
+    n: Math.max(10, Math.min(18, +document.getElementById('radius').value)),
+    seed: document.getElementById('seed').value || 'grimoire',
+    sea: +document.getElementById('sealevel').value / 100,
+    mountains: +document.getElementById('mountains').value / 100,
+    noiseType: document.getElementById('noise-type').value,
+    p: getParams(),
+    pl: {
+      playerSeed,
+      count: parseInt(document.getElementById('players').value, 10) || 0,
+      spread: document.getElementById('player-spread').value || 'far',
+      minDist: parseInt(document.getElementById('player-dist').value, 10) || 5,
+      edge: parseInt(document.getElementById('player-edge').value, 10) || 0,
+      center: parseInt(document.getElementById('player-center').value, 10) || 0,
+      cont: parseInt(document.getElementById('player-cont').value, 10) || 0,
+      inspect: parseInt(document.getElementById('player-inspect').value, 10) || 3,
+      required: req
+    }
+  };
+}
+
+// Miroir de applyPlayers() : état placement en clair (pour captureState).
+function applyPlayerState(pl) {
+  if (!pl) return;
+  if (pl.playerSeed) playerSeed = String(pl.playerSeed);
+  const setI = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined) el.value = v; };
+  setI('players', pl.count);
+  if (pl.spread) setI('player-spread', pl.spread);
+  setI('player-dist', pl.minDist);
+  setI('player-edge', pl.edge);
+  setI('player-center', pl.center);
+  setI('player-cont', pl.cont);
+  setI('player-inspect', pl.inspect);
+  const req = Array.isArray(pl.required) ? pl.required : [];
+  const rq = document.getElementById('req-foret');
+  if (rq) rq.checked = req.includes('Forêt');
+  const rm = document.getElementById('req-montagne');
+  if (rm) rm.checked = req.includes('Montagne');
+  const rd = document.getElementById('req-desert');
+  if (rd) rd.checked = req.includes('Désert');
+}
+
+// Miroir de getParams() : remet les contrôles UI dans l'état capturé.
+// Ce que le hash ne mentionne pas garde sa valeur courante.
+function applyParamsToUI(p) {
+  if (!p) return;
+  const setV = (id, v) => { const el = document.getElementById(id); if (el) el.value = v; };
+  const setPct = (id, v) => setV(id, Math.round((+v || 0) * 100));
+  const setInt = (id, v) => setV(id, Math.round(+v || 0));
+  // groupes scalaires (miroir exact des conv de PARAM_SPECS)
+  if (p.elev) {
+    setPct('e-cont', p.elev.cont);   setPct('e-scale', p.elev.scale);
+    setPct('e-compact', p.elev.compact); setInt('e-oct', p.elev.oct);
+    setPct('e-pers', p.elev.pers);   setPct('e-edge', p.elev.edge);
+  }
+  if (p.humid) {
+    setPct('h-scale', p.humid.scale); setInt('h-oct', p.humid.oct);
+    setPct('h-pers', p.humid.pers);   setPct('h-cont', p.humid.cont);
+  }
+  if (p.temp) {
+    setPct('t-lat', p.temp.lat); setPct('t-noise', p.temp.noise);
+  }
+  if (p.evt) {
+    setPct('evt-volcan', p.evt.volcan); setPct('evt-river', p.evt.river);
+    setInt('evt-riverlen', p.evt.riverLen);
+  }
+  if (p.seaElev !== undefined) setInt('sea-elev', p.seaElev);
+  if (p.ring !== undefined) setPct('ring-intensity', p.ring);
+  if (p.parts) {
+    setPct('p-foret', p.parts.foret);
+    setPct('p-desert', p.parts.desert);
+    setPct('p-marais', p.parts.marais);
+  }
+  // ressources (miroir des RES_PARAM_SPECS)
+  if (p.res) {
+    for (const resName of Object.keys(RES_DEFAULTS)) {
+      const r = p.res[resName];
+      if (!r) continue;
+      const slug = slugify(resName);
+      setV(`res-${slug}-density`, Math.round((+r.density || 0) * 1000));
+      setV(`res-${slug}-prox`, Math.round((+r.prox || 0) * 100));
+      setV(`res-${slug}-size`, Math.round(+r.size || 0));
+    }
+  }
+  // contraintes
+  if (p.constraints) {
+    if (p.constraints.surroundSame !== undefined) setInt('c-surround-same', p.constraints.surroundSame);
+    if (p.constraints.caps) {
+      setInt('cap-plaine', p.constraints.caps['Plaine']);
+      setInt('cap-foret', p.constraints.caps['Forêt']);
+      setInt('cap-desert', p.constraints.caps['Désert']);
+      setInt('cap-marais', p.constraints.caps['Marais']);
+      setInt('cap-montagne', p.constraints.caps['Montagne']);
+      setInt('cap-ocean', p.constraints.caps['Océan']);
+      setInt('cap-volcan', p.constraints.caps['Volcan']);
+    }
+  }
+  // sélecteurs
+  if (p.poles) setV('t-poles', p.poles);
+  if (p.biomeOrder) setV('biome-order', p.biomeOrder);
+  if (p.resMode) setV('res-mode', p.resMode);
+  if (p.mapType) setV('map-type', p.mapType);
+  // adjacence (règles par paire)
+  if (p.adjacency) {
+    const en = document.getElementById('adj-enabled');
+    if (en) en.checked = !!p.adjacency.enabled;
+    document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+      const v = (p.adjacency.rules || {})[el.dataset.pair];
+      if (v) el.value = v;
+    });
+  }
+  updateParamLabels();
+}
+
+// Restauration depuis le hash : #c=<encodeShare(...)>.
+function applySharedState() {
+  const st = decodeShare(location.hash.slice(3));
+  if (!st || !st.p) return false;
+  document.getElementById('radius').value = st.n || 12;
+  document.getElementById('seed').value = st.seed || 'grimoire';
+  document.getElementById('sealevel').value = Math.round((+st.sea || 0.45) * 100);
+  document.getElementById('mountains').value = Math.round((+st.mountains || 0.14) * 100);
+  if (st.noiseType) document.getElementById('noise-type').value = st.noiseType;
+  applyParamsToUI(st.p);
+  applyPlayerState(st.pl || null);
+  updateTileCount();
+  regenerate(true);
+  return true;
+}
+
+// L'URL EST la carte : chaque régénération réécrit le hash (sans polluer
+// l'historique — replaceState, pas pushState).
+function syncHash() {
+  try {
+    history.replaceState(null, '', '#c=' + encodeShare(captureState()));
+  } catch (e) { /* contexte sans history : on ignore */ }
+}
+
+let regenTimer = null;
+function scheduleRegen() {
+  clearTimeout(regenTimer);
+  regenTimer = setTimeout(() => regenerate(false), 80);
+}
+
+// Génération d'une graine aléatoire lisible (mots évoquant un grimoire médiéval)
+function randomSeed() {
+  const prefixes = ['aer', 'bel', 'cor', 'dra', 'eld', 'fer', 'gol', 'har', 'ith', 'jor',
+                    'kar', 'lun', 'mor', 'nar', 'ost', 'pyr', 'quer', 'ryn', 'sol', 'tor',
+                    'umb', 'val', 'wyr', 'xar', 'yth', 'zel', 'bran', 'cal', 'dun', 'ever'];
+  const suffixes = ['arn', 'beth', 'dell', 'faen', 'gorn', 'heim', 'iril', 'kast', 'lain',
+                    'mere', 'nord', 'olin', 'peth', 'quel', 'raven', 'stan', 'thir', 'ulm',
+                    'varn', 'weald', 'ynth', 'zur', 'moor', 'fell', 'vale', 'wyn', 'dor'];
+  const rand = Math.random;
+  const a = prefixes[Math.floor(rand() * prefixes.length)];
+  const b = suffixes[Math.floor(rand() * suffixes.length)];
+  return a + b;
+}
+
+// Construction des sliders par ressource (doit être fait avant d'attacher
+// les event listeners sur ces éléments)
+buildResourceControls();
+// Construction des règles d'adjacence (idem)
+buildAdjacencyControls();
+
+// Bouton Générer : nouvelle graine aléatoire + régénération complète.
+// Case « 🎲 Variété » cochée : tire EN PLUS les curseurs de texture
+// calés sur la NOUVELLE graine (cf. drawVariety) — écriture directe
+// dans les sliders AVANT la lecture des params : carte, libellés et
+// UI restent cohérents, et tout reste ajustable à la main ensuite
+// (rejouer une carte = graine + curseurs affichés). Aucun event
+// n'est déclenché : le type de carte sélectionné reste actif, son
+// masque s'applique par-dessus le tirage.
+document.getElementById('regen').addEventListener('click', () => {
+  const seed = randomSeed();
+  document.getElementById('seed').value = seed;
+  if (document.getElementById('variete-toggle').checked) {
+    const d = drawVariety(seed);
+    for (const id of ['e-cont', 'e-scale', 'e-compact', 'e-edge']) {
+      document.getElementById(id).value = d[id];
+    }
+    document.getElementById('t-poles').value = d['t-poles'];
+    updateParamLabels();
+  }
+  regenerate(true);
+});
+// Entrée dans le champ seed : régénère avec la graine saisie (sans la modifier)
+document.getElementById('seed').addEventListener('keydown', e => { if (e.key === 'Enter') regenerate(true); });
+document.getElementById('noise-type').addEventListener('change', () => regenerate(true));
+document.getElementById('radius').addEventListener('input', updateTileCount);
+document.getElementById('radius').addEventListener('change', () => regenerate(true));
+
+// --- Sélecteur de type de carte (presets)
+// Ignore les events déclenchés par le preset lui-même (sinon on basculerait
+// immédiatement sur "Personnalisé")
+let applyingPreset = false;
+
+function applyPreset(name) {
+  const preset = MAP_PRESETS[name];
+  if (!preset) return;
+  applyingPreset = true;
+  try {
+    for (const [id, value] of Object.entries(preset)) {
+      const el = document.getElementById(id);
+      if (el) el.value = value;
+    }
+    updateParamLabels();
+    // Rafraîchir les libellés des sliders classiques (non-PARAM_SPECS)
+    document.getElementById('sealevel-v').textContent =
+      document.getElementById('sealevel').value + '%';
+    document.getElementById('mountains-v').textContent =
+      document.getElementById('mountains').value + '%';
+  } finally {
+    applyingPreset = false;
+  }
+  scheduleRegen();
+}
+
+document.getElementById('map-type').addEventListener('change', e => {
+  if (e.target.value === 'custom') return; // juste marquer comme personnalisé
+  applyPreset(e.target.value);
+});
+
+// LABO (retour Thibaut 2026-11-13) : les curseurs de géographie ne
+// rebasculent PLUS automatiquement sur « Personnalisé ». Le type reste
+// actif et son masque de forme s'applique PAR-DESSUS les curseurs : on
+// choisit un type (Archipel…), la carte se génère, puis on affine avec
+// les curseurs sans le perdre. « Personnalisé » reste sélectionnable
+// manuellement dans le sélecteur pour désactiver tout masque.
+
+['sealevel', 'mountains'].forEach(id => {
+  const el = document.getElementById(id);
+  el.addEventListener('input', e => {
+    document.getElementById(id + '-v').textContent = e.target.value + '%';
+    scheduleRegen();
+  });
+});
+
+Object.keys(PARAM_SPECS).forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', () => {
+    updateParamLabels();
+    scheduleRegen();
+  });
+});
+
+// Sélecteur Pôles (climat)
+document.getElementById('t-poles').addEventListener('change', scheduleRegen);
+// Sélecteur d'ordre des critères de biomes
+document.getElementById('biome-order').addEventListener('change', scheduleRegen);
+
+// Règles d'adjacence : checkbox et tous les selects
+document.getElementById('adj-enabled').addEventListener('change', scheduleRegen);
+document.querySelectorAll('[id^="adj-"][data-pair]').forEach(el => {
+  el.addEventListener('change', scheduleRegen);
+});
+
+// Contrôles de contraintes (select + inputs number)
+['c-surround-same', 'cap-plaine', 'cap-foret', 'cap-desert', 'cap-marais', 'cap-montagne', 'cap-ocean', 'cap-volcan'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('input', scheduleRegen);
+  el.addEventListener('change', scheduleRegen);
+});
+
+// Champ joueurs : pas besoin de régénérer la carte, juste replacer les joueurs
+function rerollPlayersAndRender() {
+  applyPlayers();
+  syncHash();
+  render();
+}
+document.getElementById('players').addEventListener('input', rerollPlayersAndRender);
+document.getElementById('players').addEventListener('change', rerollPlayersAndRender);
+document.getElementById('player-spread').addEventListener('change', rerollPlayersAndRender);
+
+// Sliders joueurs : mettre à jour libellé puis re-placer
+function bindPlayerSlider(id, fmt, ringAware) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const lbl = document.getElementById(id + '-v');
+  el.addEventListener('input', () => {
+    if (lbl) lbl.textContent = fmt(+el.value);
+    // LABO : si l'intensité d'anneau est active, « Marge bord » et
+    // « Marge centre » définissent la bande de terre → la carte doit être
+    // régénérée (sinon, simple replacement des joueurs).
+    if (ringAware && +document.getElementById('ring-intensity').value > 0) {
+      scheduleRegen();
+    } else {
+      rerollPlayersAndRender();
+    }
+  });
+}
+bindPlayerSlider('player-dist',    v => v);
+bindPlayerSlider('player-edge',    v => v, true);
+bindPlayerSlider('player-center', v => v, true);
+bindPlayerSlider('player-cont',    v => v);
+bindPlayerSlider('player-inspect', v => v);
+
+['req-foret', 'req-montagne', 'req-desert'].forEach(id => {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.addEventListener('change', rerollPlayersAndRender);
+});
+
+// Bouton 🎲 : nouvelle seed de placement → nouveau tirage
+document.getElementById('reroll-players').addEventListener('click', () => {
+  playerSeed = randomSeed();
+  rerollPlayersAndRender();
+});
+
+document.getElementById('lay-rivers').addEventListener('change', e => { layers.rivers = e.target.checked; render(); });
+document.getElementById('lay-resources').addEventListener('change', e => { layers.resources = e.target.checked; render(); });
+document.getElementById('lay-grid').addEventListener('change', e => { layers.grid = e.target.checked; render(); });
+document.getElementById('lay-legend').addEventListener('change', e => {
+  document.getElementById('legend').classList.toggle('visible', e.target.checked);
+});
+
+document.getElementById('toggle-controls').addEventListener('click', () => {
+  const c = document.getElementById('controls');
+  c.classList.toggle('collapsed');
+  document.getElementById('chevron').textContent = c.classList.contains('collapsed') ? '▸' : '▾';
+});
+
+document.querySelectorAll('.subhead[data-toggle]').forEach(h => {
+  h.addEventListener('click', (e) => {
+    if (e.target.classList.contains('reset-btn')) return;
+    const id = h.dataset.toggle;
+    const g = document.getElementById(id);
+    const collapsed = g.classList.toggle('collapsed');
+    const arrow = collapsed ? '▸' : '▾';
+    const span = h.querySelector('span');
+    span.textContent = arrow + ' ' + span.textContent.replace(/^[▸▾]\s*/, '');
+  });
+});
+
+document.querySelectorAll('.reset-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (btn.dataset.resetRes) {
+      resetResource(btn.dataset.resetRes);
+    } else {
+      resetGroup(btn.dataset.reset);
+    }
+    scheduleRegen();
+  });
+});
+
+document.getElementById('export').addEventListener('click', () => {
+  if (!map) return;
+  const savedHex = HEX;
+  HEX = 28;
+  const b = mapBounds();
+  const padding = 24;
+  const off = document.createElement('canvas');
+  off.width = Math.ceil(b.w + padding * 2);
+  off.height = Math.ceil(b.h + padding * 2);
+  const oc = off.getContext('2d');
+  const bgColor = getComputedStyle(document.body).getPropertyValue('--map-bg').trim() || '#0a0704';
+  oc.fillStyle = bgColor;
+  oc.fillRect(0, 0, off.width, off.height);
+  oc.translate(padding - b.minX, padding - b.minY);
+  renderToContext(oc);
+  HEX = savedHex;
+  off.toBlob(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `carte-${document.getElementById('seed').value || 'grimoire'}-r${map.N}.png`;
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+  }, 'image/png');
+});
+
+// --- 🔗 Copier le lien (retour « 5 points ») : l'URL courante EST la
+// carte (hash synchronisé à chaque génération). Le seed joueurs ayant pu
+// changer, on resynchronise avant de copier.
+document.getElementById('copy-link').addEventListener('click', async () => {
+  syncHash();
+  const btn = document.getElementById('copy-link');
+  try {
+    await navigator.clipboard.writeText(location.href);
+    const old = btn.textContent;
+    btn.textContent = '✓ Lien copié !';
+    setTimeout(() => { btn.textContent = old; }, 1600);
+  } catch (e) {
+    // Contexte sans Clipboard API (http non sécurisé) : repli manuel.
+    prompt('Copiez ce lien :', location.href);
+  }
+});
+
+// --- 💾 Export JSON (retour « 5 points ») : la carte en DONNÉES.
+// PNG = l'image pour l'arbitre, JSON = la matière brute pour rejouer ou
+// analyser hors du labo : graine + paramètres complets (rejeu exact),
+// tuiles (position, biome, élévation, humidité, température, ressource),
+// rivières, joueurs, seuils.
+document.getElementById('export-json').addEventListener('click', () => {
+  if (!map) return;
+  const seed = document.getElementById('seed').value || 'grimoire';
+  const st = captureState();
+  const r4 = a => Array.from(a, v => Math.round(v * 10000) / 10000);
+  const counts = {};
+  for (const b of map.biome) counts[b] = (counts[b] || 0) + 1;
+  const doc = {
+    format: 'chasse-et-peche/carte-labo',
+    version: 1,
+    n: map.N,
+    seed,
+    replay: { sea: st.sea, mountains: st.mountains, noiseType: st.noiseType, params: st.p, players: st.pl },
+    seaLevel: Math.round(map.seaLevel * 10000) / 10000,
+    mountainLevel: Math.round(map.mountainLevel * 10000) / 10000,
+    counts,
+    tiles: map.tiles.map(t => ({ q: t.q, r: t.r })),
+    biome: Array.from(map.biome),
+    elev: r4(map.elev),
+    humid: r4(map.humid),
+    temp: r4(map.temp),
+    resources: Array.from(map.resource),
+    rivers: map.rivers ? Array.from(map.rivers) : [],
+    riverSegments: (map.riverSegments || []).map(s => ({
+      from: { q: map.tiles[s.tiles[0]].q, r: map.tiles[s.tiles[0]].r },
+      to:   { q: map.tiles[s.tiles[1]].q, r: map.tiles[s.tiles[1]].r }
+    })),
+    players: (map.players || []).map(p => ({
+      index: p.index,
+      color: p.color,
+      primary: { q: map.tiles[p.primary].q, r: map.tiles[p.primary].r },
+      secondary: { q: map.tiles[p.secondary].q, r: map.tiles[p.secondary].r }
+    }))
+  };
+  const blob = new Blob([JSON.stringify(doc)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `carte-${seed}-r${map.N}.json`;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+});
+
+window.addEventListener('resize', () => {
+  resizeCanvas();
+  fitView();
+  render();
+});
+
+resizeCanvas();
+renderLegend();
+updateTileCount();
+updateParamLabels();
+
+// --- Thème clair/sombre (persistant via localStorage)
+function applyTheme(theme) {
+  document.body.classList.remove('dark', 'light');
+  document.body.classList.add(theme);
+  const btn = document.getElementById('theme-toggle');
+  // ☾ lune = on est en sombre et on peut passer en clair ; ☀ soleil = l'inverse
+  btn.textContent = (theme === 'dark') ? '☀' : '☾';
+  btn.title = (theme === 'dark') ? 'Passer en thème clair' : 'Passer en thème sombre';
+  try { localStorage.setItem('grimoire-theme', theme); } catch (_) {}
+}
+let currentTheme = 'dark';
+try {
+  const saved = localStorage.getItem('grimoire-theme');
+  if (saved === 'light' || saved === 'dark') currentTheme = saved;
+} catch (_) {}
+applyTheme(currentTheme);
+document.getElementById('theme-toggle').addEventListener('click', () => {
+  currentTheme = (currentTheme === 'dark') ? 'light' : 'dark';
+  applyTheme(currentTheme);
+});
+
+// --- LABO : plein écran (retour Thibaut 2026-11-13) -----------------------
+// Fonctionne aussi DANS l'iframe de l'onglet « 🧪 Carte labo » du gestionnaire
+// de campagne : l'élément <iframe> de CarteLaboView porte allowFullScreen,
+// c'est ce qui autorise le passage en plein écran depuis le document embarqué.
+(function () {
+  const btn = document.getElementById('fs-toggle');
+  const doc = document;
+  const root = doc.documentElement;
+  const rq = root.requestFullscreen || root.webkitRequestFullscreen;
+  const ex = doc.exitFullscreen || doc.webkitExitFullscreen;
+  if (!rq || !ex) { btn.style.display = 'none'; return; }
+  const sync = () => {
+    const on = !!(doc.fullscreenElement || doc.webkitFullscreenElement);
+    btn.title = on ? 'Quitter le plein écran' : 'Plein écran';
+    btn.setAttribute('aria-label', btn.title);
+  };
+  btn.addEventListener('click', () => {
+    if (doc.fullscreenElement || doc.webkitFullscreenElement) ex.call(doc);
+    else rq.call(root);
+  });
+  doc.addEventListener('fullscreenchange', sync);
+  doc.addEventListener('webkitfullscreenchange', sync);
+})();
+
+// (retour Thibaut 2026-11-13 « 5 points ») : si l'URL porte une carte
+// (#c=...), on la rejoue à l'identique — graine, curseurs ET placement
+// joueurs compris. Sinon, comportement d'origine.
+if (!(location.hash && location.hash.startsWith('#c=') && applySharedState())) {
+  regenerate(true);
+}
+
+setTimeout(() => {
+  document.getElementById('hint').style.opacity = '0';
+}, 5000);
+
+
+ // Tire une case au hasard : sélection + infos + recentrage de la vue.
+function pickRandomTile() {
+  if (!map || !map.tiles.length) return;
+  const idx = Math.floor(Math.random() * map.tiles.length);
+  selected = idx;
+  const t = map.tiles[idx];
+  const { x, y } = axialToPixel(t.q, t.r);
+  view.x = window.innerWidth / 2 - x * view.scale;
+  view.y = window.innerHeight / 2 - y * view.scale;
+  showInfo(idx);
+  render();
+}
+document.getElementById('pick-tile').addEventListener('click', pickRandomTile);
+ 
+</script>

@@ -92,6 +92,20 @@ function refParams(ex, over) {
   return Object.assign(p, over || {});
 }
 
+// Params d'un PRESET tel que le labo l'utilise réellement (MAP_PRESETS
+// appliqué : sea + elev). C2 teste volontairement le quantile à sea 45
+// SANS preset ; C6 teste les presets réels.
+function presetParams(ex, name) {
+  const p = refParams(ex, { mapType: name });
+  const preset = ex.MAP_PRESETS[name];
+  if (preset) {
+    if (preset.sealevel !== undefined) p.sea = preset.sealevel / 100;
+    const m = { 'e-cont': 'cont', 'e-scale': 'scale', 'e-compact': 'compact', 'e-edge': 'edge', 'e-pers': 'pers' };
+    for (const k in m) if (preset[k] !== undefined) p.elev[m[k]] = preset[k] / 100;
+  }
+  return p;
+}
+
 function shares(map) {
   const size = map.tiles.length;
   const c = {};
@@ -182,12 +196,16 @@ if (ex.encodeShare) {
 // du masque collent les masses au bord et le bord les coupe. Contrat :
 // ≤ 5 % de terre sur l'anneau r=15, par seed. (« continent » et
 // « pangea » touchent volontairement le bord : contrat documenté.)
+// (5e retour 2026-11-14 : l'anneau d'eau forcé est SUPPRIMÉ à la demande
+// de Thibaut — C6 teste désormais les presets RÉELS (sea 68/66/72) ;
+// à sea 45 (55 % de terre) le bord se remplit statistiquement, ce
+// n'est plus un creux sculpté qui doit l'en empêcher.)
 {
   const N6 = 15;
   const bad = [];
   for (const type of ['continents', 'islands-large', 'archipelago']) {
     for (const seed of seeds) {
-      const m = ex.generateMap(N6, seed, refParams(ex, { mapType: type }));
+      const m = ex.generateMap(N6, seed, presetParams(ex, type));
       let ringLand = 0, ringTot = 0;
       for (let i = 0; i < m.tiles.length; i++) {
         const t = m.tiles[i];
