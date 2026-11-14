@@ -6643,3 +6643,40 @@ régénéré LÉGITIME : log 497 → 513 entrées, commandants J1 4 → 5
 (plus de conversions par tour au cap 10 %, suites aléatoires aval
 décalées — RIEN d'autre ne diffère). Ctrl+F5 requis (nouveau
 bundle).
+## Migration par bonheur divisée par deux (arbitrage Thibaut 2026-11-15, base 7c034a04)
+
+**Arbitrage.** « Pour les mouvements de population liés au bonheur,
+au lieu de faire 0-10 % entre 100 et 0 de bonheur, j'aimerais
+descendre à 0-5 % de migration » — l'échelle LINÉAIRE du
+2026-10-28 est divisée par deux : migrationBonheurMax défaut
+0,10 → 0,05, soit 0 % à 100 de bonheur, 2,5 % à 50, 5 % à 0.
+Formule p = migrationBonheurMax × (100 − bonheur)/100 et reste du
+flux inchangés (tirage par habitant, destinations pondérées v3
+additive, multiplicateur de régime).
+
+**Commit jeu :** 09ded5a4 (feat) — params.ts (défaut 0,05, docblock
+interface AMENDÉ 2026-11-15, PARAM_META : « Défaut 5 % à 0 de
+bonheur — l'échelle historique 0-10 % du 2026-10-28 est divisée par
+deux »), defaultConfig.ts (migration ciblée migrationBonheurDemi2026,
+patron taxes25 sans bump de tampon : SEULE une valeur encore à
+l'ancien défaut 0,10 est ramenée à 0,05 — une PERSONNALISATION est
+conservée), migrationBonheur.ts (docblocks d'en-tête et
+probaDepartBonheur amendés), migrationBonheur.test.ts (linéarité
+assertée sur le nouveau défaut : 0,05 à 0, 0,025 à 50, 0,0125 à 75 ;
+flux réel étendu de 3 à 8 tours aux nouveaux défauts, graine fixe,
+≥ 1 départ « cherche meilleure vie » ; les autres tests utilisent
+des valeurs explicites 0/1/10 et restent valides), diag-out.txt
+régénéré.
+**Commit règles :** e21d4d1c (docs/ia/regles-et-arbitrages.md,
+section « Migration par bonheur — échelle divisée par deux »).
+**Présent commit : journal seul.**
+
+**Validation.** **360/360 tests natifs**, 41 fichiers ; tsc =
+baseline 3 erreurs stub @supabase seule ; diff vs base (tarball
+tête 7c034a04) = 4 fichiers src + diag-out.txt exactement ; diag
+régénéré LÉGITIME : log 513 → 427 entrées, commandants J1 5 → 4
+(moins de départs par tour, suites aléatoires aval décalées — RIEN
+d'autre ne diffère). Journal re-synchronisé depuis la tête
+e21d4d1c avant append (règle anti-écrasement externe, aucune
+divergence constatée : V2 et cap 10 % toujours présentes). Ctrl+F5
+requis (nouveau bundle).
