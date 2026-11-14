@@ -414,7 +414,9 @@ test("récap (arbitrage Thibaut 2026-11-14) : l'Or de la Terre d'accueil appara�
   // Or de la loi ce tour, compté depuis le journal (1 ligne = 1 migrant crédité)
   const orParJoueur: Record<number, number> = {}
   for (const e of state.log) {
-    if (e.type === 'Système' && e.texte.includes("Terre d'accueil") && e.texte.includes('reçoit 1 Or')) {
+    // (LogEntry.joueur est `number | null` — le garde évite
+    //  l'indexation nullable, erreur de typecheck strict.)
+    if (e.type === 'Système' && e.joueur != null && e.texte.includes("Terre d'accueil") && e.texte.includes('reçoit 1 Or')) {
       orParJoueur[e.joueur] = (orParJoueur[e.joueur] ?? 0) + 1
     }
   }
