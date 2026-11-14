@@ -7020,3 +7020,49 @@ CI jeu success (375/375), Pages success — bundle live
 index-DO4qfapD.js, marqueurs vérifiés (terreAccueil ×2, loi
 « migrant d’un autre joueur arrive »). Tête : feat 312982a9 →
 règles c6b796fc → journal 74ccafbe → fix 1845a58d → ce journal.
+
+## 2026-11-14 (suite) — Enquête Nourriture « barre vs réel » + retrait du bonus Bétail
+
+**Signalement** : « les changements de nourriture ne sont jamais ceux
+affichés dans la barre des ressources ».
+
+**Diagnostic** (sur l’état réel L2, 42 tours d’historique + simulation
+runTurn sur copie de l’état) :
+1. Le moteur créditait depuis la revue 2026-10-16 un bonus caché
+   « Bétail en stock × 4 Nourriture/tour » dans le canal « autres »
+   (autres.ts appliquerEffetsAutres → nourritureBetail), que la barre
+   (productionDetaillee) ne calcule PAS : barre n’affiche que les
+   lignes « Autres » des villes. Vérifié tour par tour : autres(Nourr)
+   = Bétail de fin de tour × 4 à CHAQUE tour (J2 jusqu’à +161/tour en
+   T31, +51,36 en T42 avec 12,84 Bétail).
+2. Timing : le bonus était calculé sur le Bétail de FIN de tour (gains
+   d’habitants crédités à l’étape 3bis, avant « autres » à 3quater) —
+   écart résiduel +4×(Bétail gagné dans le tour).
+3. Démo chiffres (T42→43 simulé) : J2 barre −1054,13 vs réel −997,81
+   (écart +56,31) ; J1 barre −1466,75 = réel EXACT (Bétail J1 négatif,
+   aucun bonus).
+4. Écarts historiques résiduels (J1 T6-T27 −10 à −30,70, J2 T5-T17) :
+   dépenses/trades client (commerce, constructions) jamais tracés —
+   même pattern que l’Or. Sacres de rang de pays exclus (Baronnie
+   tous les deux). L’écart Or T33 restant avait été clos par Thibaut
+   (« c’est du commerce »).
+
+**Arbitrage** (Thibaut) : « le bétail ne produit pas de nourriture,
+ça n’a jamais été demandé » → le bonus est RETIRÉ du moteur, pas la
+barre corrigée.
+
+**Correctifs** :
+- feat(jeu) 41d6c52f : retrait du bloc Bétail×4 d’appliquerEffetsAutres
+  (autres.ts, note RETRAIT 2026-11-14), suppression de nourritureBetail
+  (economie.ts, note de retrait), test de non-régression dans
+  regression.test.ts (« bétail en stock : AUCUNE Nourriture produite » :
+  canal autres = 0, réconciliation delta Nourriture == somme des
+  apports au centime). Suite complète : 376/376 verts. diag-out.txt
+  régénéré : 0 diff avec la tête (pas de commit diag).
+- docs(ia) 49878e91 : règles — arbitrage 2026-11-14 (retrait + règle
+  « le Bétail en stock ne produit rien par tour » + note d’enquête).
+
+**À surveiller** : Deploy Edge Function DOIT repartir sur 41d6c52f
+(src/engine touché — critique pour L2 : sans redéploiement, l’Edge
+live continuerait de créditer le bonus). Vérifier le bundle live après
+build Pages + Ctrl+F5.
