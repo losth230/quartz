@@ -3092,3 +3092,31 @@ visible au tour 33 — élucidé : c’est du commerce (arbitrage Thibaut
 Vérifications : 374/374 tests natifs (372 + 2 nouveaux : le retour
 du flux porte l’Or exact par destinataire ; le canal du snapshot
 égale le nombre exact de migrants reçus après runTurn).
+
+## Terre d’accueil — l’Or n’est octroyé que pour les arrivants d’un AUTRE joueur (arbitrage Thibaut 2026-11-14 « il faudrait que l’or ne soit octroyé que par les étrangers, donc d’un joueur différent, qui arrivent »)
+
+La loi Socialisme « Terre d’accueil » (+1 Or par migrant arrivé,
+refonte « 8 lois » 2026-10-29) créditait l’Or pour TOUTE arrivée,
+y compris les déménagements INTERNES (un habitant qui passe d’une
+ville à l’autre du MÊME joueur — l’arbitrage d’origine disait
+« la loi récompense l’ARRIVÉE, pas le franchissement d’une
+frontière »).
+
+Arbitrage : seuls les arrivants d’un joueur DIFFÉRENT rapportent
+désormais l’Or au destinataire — un déménagement interne (rester
+chez le même joueur) ne rapporte PLUS rien. La loi récompense le
+franchissement d’une frontière, ce qui remplace l’arbitrage
+2026-10-29 « déménagements internes inclus ». Le foyer entier
+(conjoint, enfants) compte toujours, tant qu’il vient d’un autre
+joueur ; le canal d’apports « Terre d’accueil » du récap (arbitrage
+du même jour) ne trace donc que l’Or inter-joueurs. Le texte de la
+loi du référentiel est aligné : « chaque fois qu’un migrant d’un
+autre joueur arrive dans une de vos villes, recevez 1 Or (un
+déménagement interne ne compte pas) ».
+
+Vérifications : 375/375 tests natifs (374 + 1 nouveau : un
+déménagement interne à destination d’une ville du même joueur ne
+crédite AUCUN Or — ni stock, ni log, ni canal ; le setup du test
+neutralise les 8 joueurs par défaut du setup standard par des
+soldats, la seule destination aux lits libres est la seconde ville
+du joueur Socialisme).
