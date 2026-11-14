@@ -147,7 +147,10 @@ export function paliersDogmesEnAttente(
   const cultures = new Set<string>()
   for (const q of state.players) for (const v of q.villes) cultures.add(v.culture)
   for (const culture of cultures) {
-    const pris = dogmesCulture(state, culture).length
+    // (Merveilles mondiales 2026-11-15 : les dogmes HORS PALIER
+    //  (palier 0, Tour de Crystal) ne CONSOMMENT pas un palier de
+    //  Tourisme — ils ne comptent pas dans les paliers pris.)
+    const pris = dogmesCulture(state, culture).filter((d) => d.palier > 0).length
     const atteints = nbPaliersDogmes(tourismeCulture(state, culture, C), C)
     for (let i = pris + 1; i <= atteints; i++) {
       out.push({
@@ -257,6 +260,78 @@ export function choisirDogme(
     type: 'Culture',
     joueur: pontife.joueur.n,
     texte: `${pontife.joueur.nom} choisit le dogme « ${nom} » pour la culture ${culture} (palier ${palier} de Tourisme).`,
+  })
+  return null
+}
+
+// ── MERVEILLES MONDIALES — DOME HORS PALIER DE LA TOUR DE CRYSTAL ────
+// (Fiches Thibaut 2026-11-15, arbitrage : « Lorsque vous construisez
+//  cette merveille, vous pouvez choisir un nouveau dogme pour votre
+//  culture » — c'est le CONSTRUCTEUR qui choisit, pas le pontife, et
+//  le choix est HORS palier de Tourisme : palier 0, cumulable avec
+//  les paliers franchis. choisirDogme / paliersDogmesEnAttente ne
+//  sont PAS touchés.) ────────────────────────────────────────────────
+
+/** ACCORDER un choix de dogme bonus (mutateur, appelé par le
+ *  mutateur de construction après un push réussi d'une Tour de
+ *  Crystal) : une entrée {culture, joueur} par Tour construite.
+ *  Le joueur peut la consommer plus tard ; une partie perdue ne
+ *  rend pas le grant (il vit sur l'état, comme le reste). */
+export function accorderDogmeMerveille(state: GameState, joueur: number, culture: string): void {
+  state.dogmesBonus = [...(state.dogmesBonus ?? []), { culture, joueur }]
+  const p = state.players.find((q) => q.n === joueur)
+  state.log.push({
+    turn: state.turn,
+    type: 'Culture',
+    joueur,
+    texte: `${p?.nom ?? `Joueur ${joueur}`} construit la Tour de Crystal — un choix de dogme hors palier s'ouvre pour la culture ${culture}.`,
+  })
+}
+
+/** Choix de dogme bonus EN ATTENTE pour un joueur donné (grants de
+ *  Tour de Crystal moins les dogmes hors palier déjà pris par CE
+ *  joueur pour cette culture). Lu par les vues Dogmes (carte joueur
+ *  et panneau pays) pour afficher les boutons de choix. */
+export function dogmesBonusEnAttente(state: GameState, culture: string, joueur: number): number {
+  const grants = (state.dogmesBonus ?? []).filter((g) => g.culture === culture && g.joueur === joueur).length
+  const pris = dogmesCulture(state, culture).filter(
+    (d) => d.palier === 0 && d.choisiPar === joueur,
+  ).length
+  return Math.max(0, grants - pris)
+}
+
+/** CHOISIR le dogme bonus de la Tour de Crystal (mutateur, appelé
+ *  par le CONSTRUCTEUR via l'UI des dogmes) : valide que le dogme
+ *  existe au référentiel pour cette culture, qu'il est unique par
+ *  culture et qu'un grant non consommé est disponible. Enregistre
+ *  le dogme au PALIER 0 (hors palier) au nom du constructeur.
+ *  Retourne null si succès, sinon le message d'erreur. */
+export function choisirDogmeMerveille(
+  state: GameState, culture: string, nom: string, joueur: number,
+): string | null {
+  const C = cfgOf(state.config)
+  const ref = (C.config.dogmes ?? []).find(
+    (d) => (d.culture === culture || d.culture === '*') && d.nom === nom,
+  )
+  if (!ref) {
+    return `Dogme « ${nom} » introuvable dans le référentiel pour la culture ${culture}.`
+  }
+  if (dogmesCulture(state, culture).some((d) => d.nom === nom)) {
+    return `Le dogme « ${nom} » est déjà pris par la culture ${culture} — un dogme est unique par culture.`
+  }
+  if (dogmesBonusEnAttente(state, culture, joueur) <= 0) {
+    return `Aucun choix de dogme (Tour de Crystal) en attente pour la culture ${culture}.`
+  }
+  const p = state.players.find((q) => q.n === joueur)
+  state.dogmes = [
+    ...(state.dogmes ?? []),
+    { culture, palier: 0, nom, choisiPar: joueur, choisiAuTour: state.turn },
+  ]
+  state.log.push({
+    turn: state.turn,
+    type: 'Culture',
+    joueur,
+    texte: `${p?.nom ?? `Joueur ${joueur}`} choisit le dogme « ${nom} » pour la culture ${culture} (Tour de Crystal, hors palier).`,
   })
   return null
 }

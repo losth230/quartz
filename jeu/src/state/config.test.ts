@@ -217,15 +217,17 @@ test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plu
   ], 'coût en données du référentiel')
   assert.equal(
     C.config.constructions.filter((x) => (x.famille ?? '') === 'Merveille').length,
-    0, 'les 4 merveilles sont purgées à l ouverture')
+    // (Merveilles mondiales, fiches Thibaut 2026-11-15 : les 4
+    //  ANCIENNES merveilles (dont deux homonymes des nouvelles) sont
+    //  purgées, puis les 11 NOUVELLES du référentiel sont
+    //  réintégrées par la complétion.)
+    11, 'les 4 vieilles merveilles sont purgées, les 11 nouvelles du référentiel sont là')
   assert.equal(
     C.config.constructions.filter((x) => x.categorie === 'Bâtiment').length,
-    // 72 = 71 bâtiments du référentiel (51 + les 20 tier 3 de la vague
-    // 2026-11-03 : Barraquements, Responsable des voies, Banlieue,
-    // Complexe d'exploitation maritime, Usine, Plateforme commerciale,
-    // Commanderie, Ecole supérieure, Institut de recherche, Hôpital et
-    // les 6 guildes) + le perso, ni perdus ni doublés
-    74, '73 bâtiments du référentiel (+ Guilde des médecins ×2, 2026-11-13) + le perso, ni perdus ni doublés')
+    // 85 = 84 bâtiments du référentiel (73 + les 11 MERVEILLES
+    //  MONDIALES des fiches Thibaut 2026-11-15) + le perso, ni
+    //  perdus ni doublés
+    85, '84 bâtiments du référentiel (73 + 11 merveilles mondiales 2026-11-15) + le perso, ni perdus ni doublés')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
     'un bâtiment perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
@@ -403,8 +405,13 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
   //  tous) → 45.
   //  Arbitrage Thibaut 2026-11-13 : + la Guilde des médecins Ville
   //  et Château (rang 4) → 47.
+  //  Merveilles mondiales 2026-11-15 (fiches Thibaut) : + les 7
+  //  merveilles de tier 2/3 (Temple de Bahamutt, Ordre des
+  //  chevaliers du Notan, Antre de la déesse araignée, Laboratoire
+  //  de Falheim, Palais des empereurs de Lun, Pyramide des Xoltans,
+  //  Antichambre d'Alexandrie) → 54.
   const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
-  assert.equal(rang2defs.length, 47, `47 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
+  assert.equal(rang2defs.length, 54, `54 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
   // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
   //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
   //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL

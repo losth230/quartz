@@ -204,7 +204,15 @@ export function effetsCommerceJoueur(
   //  de commerce, ICI, source unique du stock et du récap
   //  (appliquerEffetsCommerce et detailCommerceJoueur y passent).
   //  Bâtiment REMPLACÉ exclu par modificateursPaysJoueur.)
-  const mult = modificateursPaysJoueur(p, C).multRevenusCommerce
+  const mods = modificateursPaysJoueur(p, C)
+  const mult = mods.multRevenusCommerce * mods.multAmenagementsRoutes
+  // (Merveilles mondiales 2026-11-15 : l'Antichambre d'Alexandrie —
+  //  « les aménagements octroyés par les routes commerciales sont
+  //  doublés » — multiplie les FLUX copiés ×2, même canal que la
+  //  Guilde des marchands. Les EMPLACEMENTS copiés restent au
+  //  NOMINAL : ils vivent dans emplacementsRoutesVille
+  //  (engine/metiers.ts), jamais ici. Cumul multiplicatif avec la
+  //  guilde.)
   if (mult > 1) {
     for (const res of Object.keys(out)) out[res] *= mult
   }
@@ -224,9 +232,15 @@ export function detailCommerceJoueur(
   state: GameState, p: Player, saison: Saison, C: Cfg = cfgOf(state.config),
 ): DetailCommerce[] {
   const out: DetailCommerce[] = []
+  // (Merveilles mondiales 2026-11-15 : l'Antichambre d'Alexandrie
+  //  double les flux copiés — l'affichage suit le MOTEUR, la ligne
+  //  par route est multipliée par le même multAmenagementsRoutes
+  //  que effetsCommerceJoueur. Emplacements au nominal.)
+  const multAmenagements = modificateursPaysJoueur(p, C).multAmenagementsRoutes
   for (const route of routesCommerceDe(state, p.n)) {
     const nomCible = nomCibleRoute(state, route)
     const effets = effetsRouteProprietaire(route, saison, C)
+    for (const res of Object.keys(effets)) effets[res] *= multAmenagements
     if (Object.keys(effets).length === 0 && !route.amenagement) {
       out.push({
         origine: `route ${route.villeOrigine} ↔ ${nomCible} (+1 émissaire auprès de la cité tant que la route est active)`,

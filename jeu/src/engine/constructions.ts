@@ -227,6 +227,40 @@ export function scienceProfesseurPlusRef(ref: ConstructionRef | undefined): numb
   return ref?.scienceProfesseurPlus ?? 0
 }
 
+// ── Lecteurs des canaux des MERVEILLES MONDIALES (fiches Thibaut
+//  2026-11-15) — mêmes patrons que les tier 3 ; l'agrégation PAR
+//  VILLE vit dans batiments.ts, le garde-fou d'unicité mondiale
+//  aussi (merveilleConstruiteAilleurs).
+
+/** Production des Bourgeois de LA VILLE ×N (Pyramide des Xoltans). */
+export function multProductionBourgeoisVilleRef(ref: ConstructionRef | undefined): number {
+  return ref?.multProductionBourgeoisVille ?? 1
+}
+
+/** Bonus PAR HABITANT d'un métier dans LA VILLE (Sanctuaire de
+ *  Salmodiva : Fermiers +2 Nourriture en été). */
+export function bonusMetierParHabitantVilleRef(ref: ConstructionRef | undefined): Array<{ metier: string; ressource: string; valeur: number; ete?: boolean }> {
+  return ref?.bonusMetierParHabitantVille ?? []
+}
+
+/** Part de taxe Science du Professeur +v dans LA VILLE
+ *  (Laboratoire de Falheim). */
+export function scienceProfesseurPlusVilleRef(ref: ConstructionRef | undefined): number {
+  return ref?.scienceProfesseurPlusVille ?? 0
+}
+
+/** Ancrage de conversion des habitants de LA VILLE ×N (Tour de
+ *  Crystal — arbitrage : « chances réduites de 10 % » = ×1,1). */
+export function ancrageConversionMultRef(ref: ConstructionRef | undefined): number {
+  return ref?.ancrageConversionMult ?? 1
+}
+
+/** Aménagements octroyés par les routes ×N, flux copiés seulement
+ *  (Antichambre d'Alexandrie — emplacements au nominal). */
+export function multAmenagementsRoutesRef(ref: ConstructionRef | undefined): number {
+  return ref?.multAmenagementsRoutes ?? 1
+}
+
 /** Valeur d'ÉTAT d'une construction : la Garnison (défense tant que la
  *  construction tient). Le Tourisme n'y figure PLUS : flux normal depuis
  *  le retour Thibaut 2026-10-16 (voir la sémantique en tête de section). */
@@ -397,6 +431,22 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   if (convLocale > 0) parts.push(`+${Math.round(convLocale * 100)} % conversion vers la culture de la ville`)
   const sciProf = scienceProfesseurPlusRef(ref)
   if (sciProf > 0) parts.push(`Science des Professeurs +${Math.round(sciProf * 100)} %`)
+  // (Merveilles mondiales, fiches Thibaut 2026-11-15 : les canaux
+  //  dédiés s'affichent pareil — l'effet vit dans le référentiel
+  //  (champs dédiés), il doit être visible dans le picker « +
+  //  Construire », les badges de la carte et le wiki Référentiels.)
+  const multBourgeoisVille = multProductionBourgeoisVilleRef(ref)
+  if (multBourgeoisVille > 1) parts.push(`production des Bourgeois de la ville ×${multBourgeoisVille}`)
+  for (const bm of bonusMetierParHabitantVilleRef(ref)) {
+    parts.push(`${bm.metier.toLowerCase()} +${bm.valeur} ${bm.ressource} / habitant${bm.ete ? ' en été' : ''}`)
+  }
+  const sciProfVille = scienceProfesseurPlusVilleRef(ref)
+  if (sciProfVille > 0) parts.push(`Science des Professeurs de la ville +${Math.round(sciProfVille * 100)} %`)
+  const ancrageMult = ancrageConversionMultRef(ref)
+  if (ancrageMult > 1) parts.push(`ancrage des habitants ×${ancrageMult}`)
+  const multAmenag = multAmenagementsRoutesRef(ref)
+  if (multAmenag > 1) parts.push(`aménagements des routes ×${multAmenag}`)
+  if (ref.accordeDogme) parts.push(`1 choix de dogme hors palier à la construction`)
   // Effets de PLATEAU (Responsable des voies, Guilde des marchands) :
   //  texte du référentiel affiché tel quel — la portée se règle à la
   //  main. (Convention 2026-11-04, retour Thibaut : ce qui n'est PAS

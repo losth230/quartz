@@ -407,6 +407,57 @@ export interface ConstructionRef {
    *  du Professeur 0,10 → 0,15 (additive sur la part, detailGainsVille
    *  economie.ts). */
   scienceProfesseurPlus?: number
+  // ── MERVEILLES MONDIALES (fiches Thibaut 2026-11-15, uniques au
+  //  monde — arbitrage « 1 seule, 1er construit »). Bâtiments de la
+  //  famille « Merveille » (groupe Ville, mais constructibles dans
+  //  TOUT type d'habitation — le garde-fou de groupe les EXEMPE
+  //  depuis l'origine), rangMinHabitation = tier de la fiche.
+  //  Canaux spécifiques PAR VILLE (le bâtiment ne porte que sur la
+  //  ville qui l'accueille — différence avec les modificateurs de
+  //  PAYS des guildes tier 3), lus sur les bâtiments ACTIFS :
+  //  lecteurs centralisés dans engine/batiments.ts, libellés dans
+  //  resumeConstruction (engine/constructions.ts).
+  /** PYRAMIDE DES XOLTANS (tier 3) : « les bourgeois dans cette
+   *  ville ont une production doublée » — multiplicateur ×N EN PLUS
+   *  du multiplicateur de rang social (même sémantique que la
+   *  Guilde des bourgeois : ×1,5 de rang ×2 = ×3), lu PAR VILLE
+   *  dans detailGainsVille (economie.ts), AVANT les taxes. */
+  multProductionBourgeoisVille?: number
+  /** SANCTUAIRE DE SALMODIVA (tier 1) : « les fermiers produisent
+   *  +2 Nourriture par tour en été » — bonus PAR HABITANT
+   *  titulaire du métier DANS CETTE VILLE, AVANT les taxes, ×
+   *  multiplicateur de rang ; l'entrée porte un drapeau `ete`
+   *  optionnel (crédité uniquement en été, canal « été » de la
+   *  ville). Champ { metier, ressource, valeur, ete? }
+   *  répétable. */
+  bonusMetierParHabitantVille?: Array<{ metier: string; ressource: string; valeur: number; ete?: boolean }>
+  /** LABORATOIRE DE FALHEIM (tier 3) : « tous les professeurs de la
+   *  ville augmentent la production de science de 10 %
+   *  supplémentaires » — part de taxe Science du Professeur
+   *  ADDITIVE (0,10 → 0,20), PAR VILLE, cumulée à la Guilde des
+   *  savants (detailGainsVille, economie.ts). */
+  scienceProfesseurPlusVille?: number
+  /** TOUR DE CRYSTAL (tier 1) : « chances de conversion des
+   *  habitants de cette habitation réduites de 10 % » — arbitrage
+   *  Thibaut 2026-11-15 : ANCRAGE de chaque habitant de la ville
+   *  ×N (résistance, duel Pression/Ancrage V2, culture.ts),
+   *  multiplicatif par bâtiment actif. */
+  ancrageConversionMult?: number
+  /** ANTICHAMBRE D'ALEXANDRIE (tier 3) : « les aménagements octroyés
+   *  par les routes commerciales sont doublés » — multiplicateur
+   *  PAYS (toutes les routes du joueur) appliqué dans
+   *  effetsCommerceJoueur (commerce.ts) aux SEULS flux copiés des
+   *  aménagements des routes ; les EMPLACEMENTS copiés restent au
+   *  nominal (arbitrage documenté). */
+  multAmenagementsRoutes?: number
+  /** TOUR DE CRYSTAL (tier 1) : « lorsque vous construisez cette
+   *  merveille, vous pouvez choisir un nouveau dogme pour votre
+   *  culture » — drapeau lu par le mutateur de construction
+   *  (components/pays/Constructions.ts) : à la construction, UN
+   *  choix de dogme HORS PALIER est accordé au CONSTRUCTEUR pour SA
+   *  culture (state.dogmesBonus, engine/dogmes.ts — panneau
+   *  Dogmes/Culture, arbitrage Thibaut 2026-11-15). */
+  accordeDogme?: boolean
   /** EFFET DE PLATEAU (vague tier 3, arbitrage Thibaut 2026-11-03 :
    *  « Responsable des voies : les cases à 3 cases ou moins ne
    *  coûtent qu'un PM » ; « Guilde des marchands : portée des routes

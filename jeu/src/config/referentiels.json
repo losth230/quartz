@@ -5819,6 +5819,337 @@
       ],
       "merveilleNaturelle": true,
       "reductionLeveeArmee": 15
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Sanctuaire de Salmodiva",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Soie",
+          "quantite": 5
+        }
+      ],
+      "rangMinHabitation": 1,
+      "bonusMetierParHabitantVille": [
+        {
+          "metier": "Fermier",
+          "ressource": "Nourriture",
+          "valeur": 2,
+          "ete": true
+        }
+      ],
+      "emplacements": [
+        {
+          "metier": "Fermier",
+          "places": 4
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 20
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Musée d’Archéologie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Tourisme",
+          "quantite": 30
+        }
+      ],
+      "rangMinHabitation": 1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 10
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Jardins d’Alexandrie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 30
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Bétail",
+          "valeur": 10
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Tour de Crystal",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "accordeDogme": true,
+      "ancrageConversionMult": 1.1,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Temple de Bahamutt",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Tourisme",
+          "quantite": 30
+        }
+      ],
+      "rangMinHabitation": 2,
+      "emplacements": [
+        {
+          "metier": "Garde",
+          "places": 4
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 40
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Ordre des chevaliers du Notan",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 2,
+      "reductionLeveeArmee": 50,
+      "effetPlateau": "Attaquer une habitation réduit sa garnison de 50 (résolution au plateau).",
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 70
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 40
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 10
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Antre de la déesse araignée",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Soie",
+          "quantite": 2
+        }
+      ],
+      "rangMinHabitation": 3,
+      "emissairesApportes": 5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 80
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 30
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Laboratoire de Falheim",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "scienceProfesseurPlusVille": 0.1,
+      "emplacements": [
+        {
+          "metier": "Scientifique",
+          "places": 12
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 90
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 30
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 30
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Palais des empereurs de Lun",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Tourisme",
+          "quantite": 80
+        }
+      ],
+      "rangMinHabitation": 3,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 100
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 30
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 30
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Pyramide des Xoltans",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "multProductionBourgeoisVille": 2,
+      "domicilesApportes": [
+        {
+          "domicile": "Maison",
+          "nombre": 40
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 100
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 60
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 30
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Antichambre d’Alexandrie",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 3,
+      "routesApportees": 1,
+      "multAmenagementsRoutes": 2,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 120
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 50
+        }
+      ]
     }
   ],
   "typesHabitation": [

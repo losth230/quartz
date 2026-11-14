@@ -41,7 +41,7 @@ import type { Character, City, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { bump, fullName } from './shared'
-import { productionTourismeBatiment, conversionLocaleBatimentsVille } from './batiments'
+import { productionTourismeBatiment, conversionLocaleBatimentsVille, ancrageConversionMultVille } from './batiments'
 import { detailGainsVille } from './economie'
 import { effetsDogmeCulture } from './dogmes'
 import { rangDe } from './statutSocial'
@@ -211,8 +211,14 @@ function conversionDetailVille(
   //  nombreuse protège ses membres tant que la force dominante ne
   //  dépasse pas le poids de ses compatriotes (+ noblesse).
   const ancrage = (c: Character): number =>
-    C.p.conversionPoidsLocal * (nb[c.culture] ?? 0)
-    + (rangDe(c, C) === 'noble' ? C.p.conversionAncrageNoble : 0)
+    (C.p.conversionPoidsLocal * (nb[c.culture] ?? 0)
+    + (rangDe(c, C) === 'noble' ? C.p.conversionAncrageNoble : 0))
+    // (Merveilles mondiales 2026-11-15 : la Tour de Crystal —
+    //  « chances de conversion des habitants de cette habitation
+    //  réduites de 10 % » = ANCRAGE ×1,1, arbitrage Thibaut. Appliqué
+    //  DANS ancrage() : le bloc « Balance culturelle » affiche les
+    //  mêmes nombres, le helper reste la source de vérité.)
+    * ancrageConversionMultVille(ville, C)
   const forceDominante = forces[dominant]?.force ?? 0
   // conversions prévues : éligibles dont l'ancrage < Force(D), ancrage
   // croissant (ex æquo → ordre de recensement : sort V8 est stable),

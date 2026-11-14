@@ -29,6 +29,7 @@ import type { GameState } from '../engine/types'
 import { cfgOf } from '../engine/gameData'
 import {
   tourismeCulture, nbPaliersDogmes, dogmesCulture, joueurPontifeCulture, choisirDogme,
+  dogmesBonusEnAttente, choisirDogmeMerveille,
 } from '../engine/dogmes'
 import { Badge, Card, fmt } from './ui'
 
@@ -46,6 +47,23 @@ export function DogmesView({ joueur }: { joueur: number }) {
       const t = s.players.find((x) => x.n === joueur)
       if (!t) return
       const err = choisirDogme(s, culture, palier, nom)
+      if (err) {
+        s.log.push({
+          turn: s.turn, type: 'Système', joueur: t.n,
+          texte: `⚠ ${err}`,
+        })
+      }
+    })
+
+  // (Merveilles mondiales 2026-11-15, arbitrage Thibaut : le
+  //  CONSTRUCTEUR d'une Tour de Crystal choisit un dogme HORS PALIER
+  //  pour sa culture — pas le pontife. Même journalisation, un
+  //  refus part au journal « Système ».)
+  const choisirDogmeMerveilleJoueur = (culture: string, nom: string) =>
+    update((s: GameState) => {
+      const t = s.players.find((x) => x.n === joueur)
+      if (!t) return
+      const err = choisirDogmeMerveille(s, culture, nom, t.n)
       if (err) {
         s.log.push({
           turn: s.turn, type: 'Système', joueur: t.n,
@@ -100,8 +118,11 @@ export function DogmesView({ joueur }: { joueur: number }) {
         const tCult = tourismeCulture(state, culture, C)
         const paliersFranchis = nbPaliersDogmes(tCult, C)
         const pris = dogmesCulture(state, culture)
-        const enAttente = paliersFranchis - pris.length
-        const prochainPalier = (pris.length + 1) * pas
+        // (Merveilles mondiales : un dogme HORS PALIER (palier 0,
+        //  Tour de Crystal) ne consomme PAS un palier de Tourisme.)
+        const prisPaliers = pris.filter((d) => d.palier > 0).length
+        const enAttente = paliersFranchis - prisPaliers
+        const prochainPalier = (prisPaliers + 1) * pas
         const pontife = joueurPontifeCulture(state, culture, C)
         // (7e retour) TOUS les dogmes du référentiel pour cette
         //  culture (entrées génériques '*' ou propres à elle) +
@@ -111,7 +132,12 @@ export function DogmesView({ joueur }: { joueur: number }) {
           (d) => d.culture === '*' || d.culture === culture,
         )
         const orphelins = pris.filter((x) => !duReferentiel.some((d) => d.nom === x.nom))
+        // (Merveilles mondiales : choix bonus Tour de Crystal du joueur
+        //  SÉLECTIONNÉ — indépendant du pontife, HORS palier.)
+        const bonusMoi = dogmesBonusEnAttente(state, culture, joueur)
+        const enAttenteTotal = enAttente + bonusMoi
         const jeChoisis = enAttente > 0 && !!pontife && pontife.joueur.n === joueur
+        const jeChoisisBonus = bonusMoi > 0
         return (
           <Card key={culture} title={`🛕 ${culture}`}>
             <div className="stack">
@@ -119,8 +145,8 @@ export function DogmesView({ joueur }: { joueur: number }) {
                 <Badge tone={enAttente > 0 ? 'warn' : 'neutral'}>
                   {fmt(tCult)} Tourisme · palier {prochainPalier}
                 </Badge>{' '}
-                {enAttente > 0
-                  ? <Badge tone="warn">{enAttente} dogme(s) à choisir</Badge>
+                {enAttenteTotal > 0
+                  ? <Badge tone="warn">{enAttenteTotal} dogme(s) à choisir</Badge>
                   : <Badge tone="good">{pris.length} dogme(s) choisi(s)</Badge>}
               </div>
               <div className="muted small">
@@ -150,6 +176,16 @@ export function DogmesView({ joueur }: { joueur: number }) {
                   </div>
                 )
               )}
+              {bonusMoi > 0 && (
+                <div>
+                  <Badge tone="warn">Tour de Crystal</Badge>{' '}
+                  <span className="small">
+                    {bonusMoi > 1 ? `${bonusMoi} dogmes` : 'un dogme'} hors palier à choisir pour la
+                    culture {culture} — c'est à <strong>toi</strong>, constructeur de la Tour, de
+                    choisir (pas le pontife).
+                  </span>
+                </div>
+              )}
               {/* (7e retour) TOUS les dogmes de la culture, TOUJOURS
                   visibles, plusieurs par ligne (grille grid-3) :
                   pris (palier + par qui) ou disponibles ; le bouton
@@ -170,12 +206,21 @@ export function DogmesView({ joueur }: { joueur: number }) {
                         <div className="small">{d.description}</div>
                         {p ? (
                           <div>
-                            <Badge tone="good">Pris — palier {p.palier}</Badge>{' '}
+                            <Badge tone="good">
+                              Pris — {p.palier === 0 ? 'hors palier (Tour de Crystal)' : `palier ${p.palier}`}
+                            </Badge>{' '}
                             <span className="muted small">
                               choisi par {nomJoueur(p.choisiPar)} (tour {p.choisiAuTour}).
                               Jamais remplaçable.
                             </span>
                           </div>
+                        ) : jeChoisisBonus ? (
+                          <button
+                            className="btn btn-small"
+                            onClick={() => choisirDogmeMerveilleJoueur(culture, d.nom)}
+                          >
+                            Choisir « {d.nom} » (Tour de Crystal, hors palier)
+                          </button>
                         ) : jeChoisis ? (
                           <button
                             className="btn btn-small"
@@ -185,7 +230,7 @@ export function DogmesView({ joueur }: { joueur: number }) {
                           </button>
                         ) : (
                           <div className="muted small">
-                            Disponible{enAttente > 0 ? ' — choix du pontife.' : '.'}
+                            Disponible{enAttenteTotal > 0 ? ' — choix du pontife ou du constructeur de la Tour de Crystal.' : '.'}
                           </div>
                         )}
                       </div>

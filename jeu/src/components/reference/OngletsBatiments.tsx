@@ -22,7 +22,8 @@ export function OngletBatiments({ C }: { C: Cfg }) {
           (effets de plateau, arbitrés à la main au plateau) s'affichent en
           italique. Deux colonnes — VILLE et CHÂTEAU ; tri par RANG
           d'habitation puis par FAMILLE (Militaire, Économique, Guilde,
-          Capitale).
+          Capitale, Merveilles — les merveilles mondiales se construisent
+          dans toute habitation, uniques au monde).
         </p>
         <div className="refbat-grid">
           {[['Ville', 'VILLES'], ['Château', 'CHÂTEAUX']].map(([groupe, label]) => (
@@ -38,6 +39,10 @@ export function OngletBatiments({ C }: { C: Cfg }) {
                 const familles: Array<[string, string]> = [
                   ['Militaire', 'Militaire'], ['Economique', 'Économique'],
                   ['Guilde', 'Guilde'], ['Capitale', 'Capitale'],
+                  // (Merveilles mondiales 2026-11-15 : catégorie dédiée —
+                  //  constructibles dans TOUTE habitation selon le tier ;
+                  //  groupe « Ville » → colonne VILLES du wiki.)
+                  ['Merveille', 'Merveilles'],
                 ]
                 return [1, 2, 3].map((rang) => {
                   const duRang = bats.filter((b) => (b.rangMinHabitation ?? 1) === rang)

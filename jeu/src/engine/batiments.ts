@@ -21,7 +21,7 @@
 //  Découpage SOLID du moteur : un module = une responsabilité de domaine.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { City, Player } from './types'
+import type { City, GameState, Player } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import type { Cfg } from './gameData'
 import {
@@ -230,6 +230,7 @@ export interface ModificateursPays {
   tributVassalPlus: number           // +0 par défaut, +0,05 par Guilde des diplomates
   conversionLocalePlus: number       // +0 par défaut, +0,10 par Guilde des évangélistes
   scienceProfesseurPlus: number      // +0 par défaut, +0,05 par Guilde des savants
+  multAmenagementsRoutes: number      // ×1 par défaut, ×2 par Antichambre d'Alexandrie (merveille)
 }
 
 /** Agrégat des modificateurs de pays portés par les bâtiments ACTIFS
@@ -243,6 +244,7 @@ export function modificateursPaysJoueur(p: Player, C: Cfg): ModificateursPays {
     tributVassalPlus: 0,
     conversionLocalePlus: 0,
     scienceProfesseurPlus: 0,
+    multAmenagementsRoutes: 1,
   }
   for (const ville of p.villes) {
     const ignores = batimentsRemplaces(ville, C)
@@ -255,10 +257,96 @@ export function modificateursPaysJoueur(p: Player, C: Cfg): ModificateursPays {
       out.tributVassalPlus += (ref.tributVassalPlus ?? 0)
       out.conversionLocalePlus += (ref.conversionLocalePlus ?? 0)
       out.scienceProfesseurPlus += (ref.scienceProfesseurPlus ?? 0)
+      // (Merveilles mondiales 2026-11-15 : l'Antichambre d'Alexandrie
+      //  double les aménagements octroyés par les routes — PAYS-level,
+      //  même agrégation que la Guilde des marchands.)
+      out.multAmenagementsRoutes *= (ref.multAmenagementsRoutes ?? 1)
       for (const bm of ref.bonusMetierParHabitant ?? []) out.bonusMetierParHabitant.push(bm)
     }
   }
   return out
+}
+
+// ── MERVEILLES MONDIALES — canaux PAR VILLE (fiches Thibaut
+//  2026-11-15) : contrairement aux modificateurs de PAYS des
+//  guildes tier 3, l'effet ne porte QUE sur la ville qui accueille
+//  la merveille. Même patron que conversionLocaleBatimentsVille :
+//  lecture sur les bâtiments ACTIFS (batimentsActifsVille — la règle
+//  « le remplacé ne compte plus » vaut ici aussi). ────────────────
+
+/** Multiplicateur de production des BOURGEOIS de la ville (Pyramide
+ *  des Xoltans ×2 — « EN PLUS » du multiplicateur de rang social,
+ *  même sémantique que la Guilde des bourgeois, cumul
+ *  multiplicatif par merveille active). */
+export function multProductionBourgeoisVille(ville: City, C: Cfg): number {
+  let out = 1
+  for (const nom of batimentsActifsVille(ville, C)) {
+    out *= (constructionRef(nom, C.config, ville.type)?.multProductionBourgeoisVille ?? 1)
+  }
+  return out
+}
+
+/** Bonus PAR HABITANT d'un métier accordés dans CETTE ville
+ *  (Sanctuaire de Salmodiva : Fermiers +2 Nourriture en été —
+ *  drapeau `ete` crédité uniquement en été par l'appelant). */
+export function bonusMetierParHabitantVille(
+  ville: City, C: Cfg,
+): Array<{ metier: string; ressource: string; valeur: number; ete?: boolean }> {
+  const out: Array<{ metier: string; ressource: string; valeur: number; ete?: boolean }> = []
+  for (const nom of batimentsActifsVille(ville, C)) {
+    for (const bm of constructionRef(nom, C.config, ville.type)?.bonusMetierParHabitantVille ?? []) {
+      out.push(bm)
+    }
+  }
+  return out
+}
+
+/** Part de taxe Science du Professeur ADDITIVE dans CETTE ville
+ *  (Laboratoire de Falheim +0,10 : 0,10 → 0,20 — cumulée à la
+ *  Guilde des savants pays). */
+export function scienceProfesseurPlusVille(ville: City, C: Cfg): number {
+  let total = 0
+  for (const nom of batimentsActifsVille(ville, C)) {
+    total += (constructionRef(nom, C.config, ville.type)?.scienceProfesseurPlusVille ?? 0)
+  }
+  return total
+}
+
+/** Multiplicateur d'ANCRAGE de conversion des habitants de la ville
+ *  (Tour de Crystal ×1,1 — arbitrage Thibaut 2026-11-15 : « chances
+ *  de conversion réduites de 10 % » = résistance ×N, cumul
+ *  multiplicatif par merveille active, lu dans le duel
+ *  Pression/Ancrage, culture.ts). */
+export function ancrageConversionMultVille(ville: City, C: Cfg): number {
+  let out = 1
+  for (const nom of batimentsActifsVille(ville, C)) {
+    out *= (constructionRef(nom, C.config, ville.type)?.ancrageConversionMult ?? 1)
+  }
+  return out
+}
+
+/** (Merveilles UNIQUES AU MONDE, arbitrage Thibaut 2026-11-15 « 1
+ *  seule, 1er construit ») : une merveille de famille « Merveille »
+ *  déjà construite dans une habitation d'AUTRE joueur (ou d'une
+ *  autre ville du même joueur) ? Retourne { joueur, villeNom } si
+ *  oui, null sinon — lu par le garde-fou REFUSANT du mutateur de
+ *  construction et par l'alerte du picker. Pure. */
+export function merveilleConstruiteAilleurs(
+  state: GameState, nom: string, saufJoueur?: number, saufVille?: string,
+): { joueur: number; villeNom: string } | null {
+  for (const q of state.players) {
+    for (const v of q.villes) {
+      if (q.n === saufJoueur && v.nom === saufVille) continue
+      if (!(v.batiments ?? []).includes(nom)) continue
+      // Référentiel CANONIQUE (cfg absent = table par défaut) : seul le
+      // champ `famille` est lu, il vit dans referentiels.json, pas dans
+      // la config de la partie — une vieille sauvegarde portant un
+      // homonyme non-merveille n'est donc pas bloquée à tort.
+      if ((constructionRef(nom, undefined, v.type)?.famille ?? '') !== 'Merveille') continue
+      return { joueur: q.n, villeNom: v.nom }
+    }
+  }
+  return null
 }
 
 /** Conversion locale vers la culture de la VILLE d'accueil portée par

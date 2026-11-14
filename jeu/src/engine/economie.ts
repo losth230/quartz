@@ -15,7 +15,7 @@ import { villeCotiere } from './geographie'
 import { constructionRef, estCotiereRef } from './constructions'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
-import { modificateursPaysJoueur } from './batiments'
+import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille } from './batiments'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -210,10 +210,29 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     if (modsTier3.multProductionBourgeois > 1 && rangDe(c, C) === 'bourgeois') {
       mult *= modsTier3.multProductionBourgeois
     }
+    // (Merveilles mondiales 2026-11-15 : la Pyramide des Xoltans —
+    //  « les bourgeois dans cette ville ont une production doublée »
+    //  — ×2 EN PLUS du multiplicateur de rang social, même
+    //  sémantique que la Guilde des bourgeois mais PAR VILLE, cumul
+    //  multiplicatif avec elle.)
+    const multBourgeoisVille = multProductionBourgeoisVille(ville, C)
+    if (multBourgeoisVille > 1 && rangDe(c, C) === 'bourgeois') {
+      mult *= multBourgeoisVille
+    }
     // (Vague tier 3 : bonus PAR HABITANT de la Guilde des marins —
     //  +0,5 Or par Commerçant du pays, avant taxes, × mult de rang.)
     for (const bm of modsTier3.bonusMetierParHabitant) {
       if (c.metier === bm.metier) {
+        metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
+      }
+    }
+    // (Merveilles mondiales 2026-11-15 : bonus PAR HABITANT de la
+    //  ville — Sanctuaire de Salmodiva « les fermiers produisent +2
+    //  Nourriture par tour en été », drapeau `ete` crédité
+    //  uniquement en été, × mult de rang comme la Guilde des
+    //  marins et champsNourriciers.)
+    for (const bm of bonusMetierParHabitantVille(ville, C)) {
+      if (c.metier === bm.metier && (!bm.ete || state.saison === 'Été')) {
         metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
       }
     }
@@ -256,7 +275,13 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   if (C.p.metierProfesseur && vivants.some((c) => c.metier === C.p.metierProfesseur) && metiers['Science'] !== undefined) {
     // (Vague tier 3 : la Guilde des savants monte la part du
     //  Professeur +5 % — 0,10 → 0,15, additive sur la part.)
-    ajouteBonus('Science', 0.1 + modsTier3.scienceProfesseurPlus)
+    // (Merveilles mondiales 2026-11-15 : le Laboratoire de Falheim —
+    //  « tous les professeurs de la ville augmentent la production
+    //  de science de 10 % supplémentaires » — +0,10 PAR VILLE,
+    //  additive : guilde + laboratoire = 0,25 de part. Arbitrage :
+    //  « chercheurs » = métier Scientifique, renommé Professeur le
+    //  2026-10-21.)
+    ajouteBonus('Science', 0.1 + modsTier3.scienceProfesseurPlus + scienceProfesseurPlusVille(ville, C))
   }
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers['Tourisme'] !== undefined) ajouteBonus('Tourisme', 0.1)
   const taxes: Record<string, number> = {}

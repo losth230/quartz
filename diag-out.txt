@@ -7,8 +7,8 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 110 règles — sources : batiment 63, amenagement 47
-── canal placesMetier : 86 règles ──
+total : 119 règles — sources : batiment 72, amenagement 47
+── canal placesMetier : 89 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
   batiment.camp-de-mineur@ville — Camp de mineur (Ville) : Mineur +2
@@ -65,6 +65,7 @@ total : 110 règles — sources : batiment 63, amenagement 47
   amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5
   amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4
   amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7
+  batiment.sanctuaire-de-salmodiva@ville — Sanctuaire de Salmodiva (Ville) : Soie +5 · Fermier +4
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.camp-de-travailleurs@ville — Camp de travailleurs (Ville) : Bûcheron +2 · Mineur +2
@@ -95,12 +96,15 @@ total : 110 règles — sources : batiment 63, amenagement 47
   batiment.hopital@chateau — Hôpital (Château) : Guérisseur +10
   batiment.guilde-des-medecins@chateau — Guilde des médecins (Château) : Guérisseur +10
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
-── canal logements : 16 règles ──
+  batiment.temple-de-bahamutt@ville — Temple de Bahamutt (Ville) : Tourisme +30 · Garde +4
+  batiment.laboratoire-de-falheim@ville — Laboratoire de Falheim (Ville) : Scientifique +12
+── canal logements : 18 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.bas-quartier@ville — Bas quartier (Ville) : Taudis +20
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
   batiment.bas-quartier@chateau — Bas quartier (Château) : Taudis +20
   amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10
+  batiment.jardins-d-alexandrie@ville — Jardins d’Alexandrie (Ville) : Maison +30
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.quartier-intermediaire@ville — Quartier intermédiaire (Ville) : Maison +20
@@ -112,13 +116,15 @@ total : 110 règles — sources : batiment 63, amenagement 47
   batiment.haut-quartier@chateau — Haut quartier (Château) : Maison de notable +20
   batiment.banlieue@chateau — Banlieue (Château) : Maison +40
   batiment.guilde-des-bourgeois@chateau — Guilde des bourgeois (Château) : Maison de notable +20
-── canal reductionLeveeArmee : 5 règles ──
+  batiment.pyramide-des-xoltans@ville — Pyramide des Xoltans (Ville) : Maison +40
+── canal reductionLeveeArmee : 6 règles ──
   batiment.terrain-d-entrainement@chateau — Terrain d'entrainement (Château) : levée d'armée −10 Or
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
   amenagement.antre-de-magmadon@merveille-naturelle — Antre de Magmadon (Merveille naturelle) : levée d'armée −15 Or
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
-── canal fluxVille : 18 règles ──
+  batiment.ordre-des-chevaliers-du-notan@ville — Ordre des chevaliers du Notan (Ville) : levée d'armée −50 Or
+── canal fluxVille : 23 règles ──
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.banque-centrale@capitale — Banque centrale (Capitale) : Or +8
@@ -127,6 +133,8 @@ total : 110 règles — sources : batiment 63, amenagement 47
   amenagement.pic-ascendant@merveille-naturelle — Pic Ascendant (Merveille naturelle) : Science +1
   amenagement.ruines-de-seth@merveille-naturelle — Ruines de Seth (Merveille naturelle) : Or +2 · Tourisme +10
   amenagement.echine-du-dragon@merveille-naturelle — Echine du dragon (Merveille naturelle) : Charbon +1 · Fer +1
+  batiment.sanctuaire-de-salmodiva@ville — Sanctuaire de Salmodiva (Ville) : Soie +5 · Fermier +4
+  batiment.musee-d-archeologie@ville — Musée d’Archéologie (Ville) : Tourisme +30
   batiment.moulin-a-vent@ville — Moulin à vent (Ville) : Charbon -1 · Éleveur +4 · Fermier +15
   batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
   batiment.guilde-des-marchands@ville — Guilde des marchands (Ville) : Charbon -1
@@ -137,6 +145,9 @@ total : 110 règles — sources : batiment 63, amenagement 47
   batiment.guilde-des-diplomates@chateau — Guilde des diplomates (Château) : Charbon -1
   batiment.guilde-des-evangelistes@chateau — Guilde des évangélistes (Château) : Charbon -1 · Tourisme +70
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
+  batiment.temple-de-bahamutt@ville — Temple de Bahamutt (Ville) : Tourisme +30 · Garde +4
+  batiment.antre-de-la-deesse-araignee@ville — Antre de la déesse araignée (Ville) : Soie +2
+  batiment.palais-des-empereurs-de-lun@ville — Palais des empereurs de Lun (Ville) : Tourisme +80
 ── canal garnisonVille : 2 règles ──
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
   amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10

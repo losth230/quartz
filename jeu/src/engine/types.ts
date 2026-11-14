@@ -566,7 +566,11 @@ export interface Dogme {
    *  villes de cette culture, tous joueurs confondus. */
   culture: string
   /** Palier de Tourisme qui a ouvert le choix (palierTourismeDogme
-   *  × N : 50, 100, 150…). */
+   *  × N : 50, 100, 150…). PALIER 0 = choix HORS PALIER accordé par
+   *  la merveille Tour de Crystal (fiches 2026-11-15, arbitrage
+   *  Thibaut : à la construction, le constructeur choisit un dogme
+   *  pour sa culture — engine/dogmes.ts choisirDogmeMerveille,
+   *  pas de palier de Tourisme requis). */
   palier: number
   /** Nom du dogme choisi — doit exister dans la table `dogmes` du
    *  référentiel (DogmeDef, encore vide à ce stade). */
@@ -628,6 +632,16 @@ export interface GameState {
    *  absent des sauvegardes antérieures au 30/10/2026 → complété
    *  en liste vide par normaliserEtat. */
   dogmes?: Dogme[]
+  /** CHOIX DE DOGME HORS PALIER accordés par la Tour de Crystal
+   *  (merveilles mondiales, fiches Thibaut 2026-11-15, arbitrage
+   *  « à la construction, un choix en attente s'ajoute pour ta
+   *  culture ») : une entrée par Tour de Crystal construite —
+   *  { culture, joueur } : la culture du CONSTRUCTEUR et son n° de
+   *  joueur (le choix lui revient, pas au pontife). Consommé quand
+   *  le joueur choisit (choisirDogmeMerveille, engine/dogmes.ts —
+   *  le dogme pris porte palier 0 dans state.dogmes). Champ
+   *  optionnel : absent des vieilles sauvegardes → liste vide. */
+  dogmesBonus?: Array<{ culture: string; joueur: number }>
   log: LogEntry[]
   history: HistoryRow[]
 }

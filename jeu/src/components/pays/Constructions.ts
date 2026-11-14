@@ -11,17 +11,21 @@
 //     (amélioration, pas construction en plus) ;
 //   · faireBatParFamille : les catégories du sélecteur « + Construire »
 //     d'une ville (familles × rangs, alertes rouges des limites —
-//     marqueur (y)). (RETRAIT 2026-10-27, audit : plus de Merveilles.)
+//     marqueur (y)). (RETOUR DES MERVEILLES 2026-11-15, fiches Thibaut :
+//     11 merveilles mondiales constructibles dans TOUTE habitation
+//     selon son tier — catégorie « Merveilles » par rang, uniques au
+//     monde, REFUS du mutateur si déjà construite ailleurs.)
 //  Fonctions pures de fabrique : PlayerView/VilleCarte fournit l'état,
 //  ces fabriques referment les closures.
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from '../../engine/types'
-import { coutBatiment, batimentsConstructionsRefs } from '../../engine/batiments'
+import { coutBatiment, batimentsConstructionsRefs, merveilleConstruiteAilleurs } from '../../engine/batiments'
 import { coutAmenagement } from '../../engine/amenagements'
 import { constructionRef, prerequisConstruction, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { rangNiveau } from '../../engine/regimes'
 import { batimentsCapitale, capitaleDe } from '../../engine/factions'
+import { accorderDogmeMerveille } from '../../engine/dogmes'
 import { type Cfg } from '../../engine/gameData'
 import { villeCotiere } from '../../engine/villes'
 import { resynchroniserTourisme } from '../../engine/regimes'
@@ -146,6 +150,24 @@ export function faireConstruire(o: {
           })
         }
       }
+      // (MERVEILLES MONDIALES, fiches Thibaut 2026-11-15, arbitrage
+      //  « uniques au monde » : 1 seule, 1er construit gagne) : une
+      //  merveille déjà construite dans une AUTRE ville — du même
+      //  joueur ou d'un autre — est REFUSÉE. Seul garde-fou
+      //  BLOQUANT du mutateur : le coût n'est pas débité, rien
+      //  n'est poussé (les autres garde-fous restent des ⚠ non
+      //  bloquants, revue 2026-10-16).
+      if ((ref?.famille ?? '') === 'Merveille') {
+        const ailleurs = merveilleConstruiteAilleurs(s, nom, t.n, ville.nom)
+        if (ailleurs) {
+          const proprietaire = s.players.find((q) => q.n === ailleurs.joueur)
+          s.log.push({
+            turn: s.turn, type: 'Système', joueur: t.n,
+            texte: `⚠ ${nom} est déjà construite à ${ailleurs.villeNom} (${proprietaire?.nom ?? `Joueur ${ailleurs.joueur}`}) — une merveille est unique au monde. Construction REFUSÉE.`,
+          })
+          return
+        }
+      }
       const cout = type === 'batiment'
         ? coutBatiment(nom, C, groupe)
         : coutAmenagement(t, C.config, nom)
@@ -218,6 +240,12 @@ export function faireConstruire(o: {
         turn: s.turn, type: 'Système', joueur: t.n,
         texte: `🏗 ${amelioreDe ? `${amelioreDe} amélioré(e) en ${nom}` : `${nom} construit(e)`} à ${ville.nom} — coût déduit du stock : ${parts.length ? parts.join(' + ') : 'gratuit'}.`,
       })
+      // (Merveilles mondiales, arbitrage Thibaut 2026-11-15 : la Tour
+      //  de Crystal accorde à son CONSTRUCTEUR un choix de dogme HORS
+      //  PALIER pour SA culture — pas le pontife. Le grant vit dans
+      //  state.dogmesBonus, consommé par l'UI des dogmes
+      //  (choisirDogmeMerveille).)
+      if (ref?.accordeDogme) accorderDogmeMerveille(s, t.n, t.culture)
     })
   return construire
 }
@@ -225,7 +253,7 @@ export function faireConstruire(o: {
 /** Fabrique les catégories du sélecteur « + Construire » d'une ville
  *  (marqueur (y) : un bouton par famille, une catégorie par rang). */
 export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): (ville: City) => PickerCategorie[] {
-  const { p, C } = o
+  const { state, p, C } = o
   const batRefs = batimentsConstructionsRefs(C)
   // Bâtiments de capitale du référentiel (catégorie « Capitale » des
   //  cadres ville). (RETRAIT 2026-10-19, retour arbitre : les bâtiments
@@ -273,12 +301,24 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
         const maxGui = 1
         if (nbGui >= maxGui) warns.push(`Limite Guilde atteinte (${nbGui}/${maxGui} par ville).`)
       }
+      // (Merveilles mondiales 2026-11-15 : UNIQUE AU MONDE — une
+      //  merveille construite dans une autre ville du monde est
+      //  signalée en rouge ; le mutateur REFUSE.)
+      if (fam === 'Merveille') {
+        const ailleurs = merveilleConstruiteAilleurs(state, b.nom, p.n, ville.nom)
+        if (ailleurs) warns.push(`Déjà construite à ${ailleurs.villeNom} (Joueur ${ailleurs.joueur}) — unique au monde.`)
+      }
       return warns.join(' ')
     }
     // Les bâtiments de CAPITALE sont ajoutés explicitement plus bas (une
     //  seule fois) — okGroupe les EXCLUT pour éviter le doublon.
+    // (Merveilles mondiales 2026-11-15 : BYPASS du groupe pour la
+    //  famille « Merveille » — une merveille se construit dans
+    //  N'IMPORTE QUELLE habitation, Ville comme Château, selon son
+    //  rangMinHabitation (= tier de la fiche).)
     const okGroupe = (b: { groupe: string; famille?: string }) =>
-      b.groupe === 'Capitale' ? false
+      (b.famille ?? '') === 'Merveille' ? true
+      : b.groupe === 'Capitale' ? false
       : b.groupe.toLowerCase() === type
     const eligibles = [
       ...batRefs.filter((b) => okGroupe(b)).map((b) => ({ b, groupe: b.groupe })),
@@ -293,6 +333,7 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
       ['Militaire', 'Militaire'],
       ['Economique', 'Économique'],
       ['Guilde', 'Guilde'],
+      ['Merveille', 'Merveilles'],
     ]
     for (const [fam, label] of famillesRangees) {
       // regrouper les bâtiments de la famille par rang

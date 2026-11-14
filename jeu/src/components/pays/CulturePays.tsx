@@ -34,7 +34,7 @@ import type { GameState, Player } from '../../engine/types'
 import { cultureDef, type Cfg } from '../../engine/gameData'
 import { detailLoisHabitants } from '../../engine/regimes'
 import {
-  tourismeCulture, nbPaliersDogmes, dogmesCulture,
+  tourismeCulture, nbPaliersDogmes, dogmesCulture, dogmesBonusEnAttente,
 } from '../../engine/dogmes'
 import { Badge, Card, fmt } from '../ui'
 
@@ -58,8 +58,15 @@ export function CulturePays({
         const tCult = tourismeCulture(state, p.culture, C)
         const paliersFranchis = nbPaliersDogmes(tCult, C)
         const pris = dogmesCulture(state, p.culture)
-        const enAttente = paliersFranchis - pris.length
-        const prochainPalier = (pris.length + 1) * pas
+        // (Merveilles mondiales : un dogme HORS PALIER (palier 0,
+        //  Tour de Crystal) ne consomme pas un palier de Tourisme.)
+        const prisPaliers = pris.filter((d) => d.palier > 0).length
+        const enAttente = paliersFranchis - prisPaliers
+        // (Merveilles mondiales 2026-11-15 : choix HORS PALIER de la
+        //  Tour de Crystal — lu pour le pointeur vers l'onglet 🕯
+        //  Dogmes ; le choix interactif vit là (8e retour).)
+        const bonusMoi = dogmesBonusEnAttente(state, p.culture, p.n)
+        const prochainPalier = (prisPaliers + 1) * pas
         const nomJoueur = (n: number) => state.players.find((q) => q.n === n)?.nom ?? `Joueur ${n}`
         return (
           <div className="stack">
@@ -100,7 +107,9 @@ export function CulturePays({
               const ref = (C.config.dogmes ?? []).find((r) => r.nom === d.nom)
               return (
                 <div key={`${d.culture}-${d.palier}`}>
-                  <Badge tone="good">Palier {d.palier}</Badge>{' '}
+                  <Badge tone="good">
+                    {d.palier === 0 ? 'Hors palier (Tour de Crystal)' : `Palier ${d.palier}`}
+                  </Badge>{' '}
                   <span className="small">
                     dogme « {d.nom} » — choisi par {nomJoueur(d.choisiPar)} (tour {d.choisiAuTour})
                     {ref?.description ? <span className="muted"> — {ref.description}</span> : null}
@@ -113,8 +122,14 @@ export function CulturePays({
                 l'onglet 🕯 Dogmes quand un palier attend. */}
             {enAttente > 0 && (
               <div className="muted small">
-                {enAttente > 1 ? `${enAttente} paliers franchis` : 'Palier franchi'} — le choix
+                {enAttente > 1 ? `${enAttente} paliers franchis` : 'Palier franchis'} — le choix
                 du dogme se fait dans l'onglet <strong>🕯 Dogmes</strong>.
+              </div>
+            )}
+            {bonusMoi > 0 && (
+              <div className="muted small">
+                Tour de Crystal construite — {bonusMoi > 1 ? `${bonusMoi} dogmes` : 'un dogme'} hors
+                palier à choisir (par toi, constructeur) dans l'onglet <strong>🕯 Dogmes</strong>.
               </div>
             )}
             <div className="muted small">
