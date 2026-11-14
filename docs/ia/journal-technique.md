@@ -7077,3 +7077,78 @@ les partages #c= restent valides) sème par défaut une couronne
 d'îlots au-delà de 78 % du rayon — Continents ~5 îlots de 2-10
 tuiles, Archipel ~6, Grandes îles ~4 par-dessus ses masses ; 0 % =
 l'océan périphérique d'avant, masses seules.
+
+## Labo générateur : bruit positionnel — les distances entre masses ne sont plus figées (11e retour Thibaut 2026-11-14, base 2a7f4840)
+
+Demande : « la distance entre les masses de terre semble figée, comment ça se
+fait ? » puis « oui, je veux un gros bruit ». Diagnostic : le placement était
+SATURÉ à capacité — 6 continents à 60° sur l'anneau 14.88 px n'ont que ~1.3°
+de mou angulaire, et 8 grandes îles sur la couronne extérieure sont posées
+à capacité exacte : la rosace est déterministe, seuls phase et σ varient.
+C'est voulu (anti-soudure) mais figé visuellement.
+
+Trois versions testées dans la même session, leçons à retenir :
+
+1. **v1 — jitter libre + repli « meilleur des essais »** : à capacité
+   saturée le repli pose des masses EN COLLISION et les queues
+   super-gaussiennes se soudent (eldmere : bloc unique de 231 tuiles, les
+   6 bosses d'un seul tenant).
+2. **v2 — repli « cible exacte »** : la cible exacte peut croiser un
+   voisin JITTERÉ — 11.7 px mesurés = 2.6σ → paires soudées de 80-92
+   tuiles (corvane/pyrgorn/thalos/vharoun). La sécurité du calibrage
+   historique ne vaut que si TOUT le monde est à la cible exacte.
+3. **v3 — retenue** : jitter ADAPTATIF borné par le MOU RÉEL
+   `slack = gap − weldC` (weldC = corde anti-soudure 3.25σ̂, calée sur
+   l'empirique du calibrage : 2.95σ tenait, 2.6σ soudait), amplitude
+   `0.7·slack/r` en angle et `0.3·slack/r` en rayon, sans dérive
+   systématique des essais ; repli = PLUS ÉLOIGNÉ du tissu posé entre
+   la cible exacte et le meilleur essai — tous dans le budget, donc à
+   ≥ weldC : au pire un détroit étroit, jamais une soudure. À count 6
+   saturé le jitter retombe tout seul au niveau historique (~±1°), à
+   count 5 ou couronne lâche il monte à ±5-13°.
+
+Variété structurelle (ce qui varie DÉSORMAIS d'une graine à l'autre) :
+- COUNT tiré par appel (×0.80-×1.00) : 5-6 continents, 7-11 grandes
+  îles, 14-18 îles d'archipel ; monotone en « Taille masses » car le
+  facteur est tiré par appel avant la multiplication (C8 tient).
+- SEP tiré par appel (×0.95-×1.30) : rayon d'anneau 12.6-14.9 px à
+  count 5, capacités de couronnes 6-9 pour les grandes îles — cartes
+  resserrées ou aérées.
+- Plancher d'anneau `weldC·1.05/(2·sin(π/count))` : l'anneau peut
+  rétrécir pour la variété mais JAMAIS sous la corde anti-soudure.
+- COMPENSATION DES ABANDONS : quand la structure pose moins de masses
+  que le count demandé (capacité de couronne), les bosses restaient
+  dimensionnées pour le count complet et le QUANTILE GLOBAL allait
+  chercher le budget dans le FOND de bruit : crêtes de fond qui PONTENT
+  les masses (mesuré : Grandes îles/grimoire, 7 bosses posées au lieu
+  de 9 → pont centre-bord de 78 tuiles, masse 32 %, C6 en échec).
+  Remède : élargir les bosses posées du ratio d'aire
+  `√(count/posés)` (borné ×1.35) — la couverture absorbe le budget, le
+  seuil remonte au-dessus du fond. Grimoire : 78 → 7 masses propres de
+  32-38 tuiles. No-op à count respecté (continents).
+
+Mesures (r=15, 8 seeds, preset défaut) : continents 5-6 masses de
+29-45 tuiles, distances adjacentes 14.5-17.1 px (vs 13.0-14.7 figées
+au 10e retour), rayons d'anneau 13.9-14.9 ; grandes îles 7-8 masses de
+20-33 tuiles, couronnes 6-8 bosses, distances 11.9-16.2 px ; archipel
+21-23 composantes. Harnais C9 ajouté : (a) distance min inter-masses
+≥ 0.95×3.25σ̂ par type (13.3 / 9.3 / 6.7 px), masses = comps ≥ 15
+tuiles (archipel ≥ 8, îlets exclus), (b) le nombre de masses prend ≥ 2
+valeurs distinctes sur 8 seeds par type. C1-C9 tous verts sur les deux
+générateurs (JS pur identique).
+
+RÈGLES DURABLES : (1) un placement saturé à capacité NE PEUT PAS être
+bruité librement : le jitter doit être borné par le mou (gap − corde
+anti-soudure) ou il rejoue le 4e retour ; (2) tout repli doit être
+SÛR par construction (le plus éloigné parmi des candidats bornés), pas
+« le dernier essai » ni « la cible » d'un système où les autres bougent ;
+(3) quand une structure pose MOINS d'éléments que prévu à budget
+(quantile) constant, le déficit se paie DANS LE FOND — toujours
+compenser le sizing (ratio d'aire) au lieu de laisser le seuil plonger ;
+(4) mesurer la distance ENTRE CENTRES DE BOSSES (sonde) en plus des
+composantes finales : une soudure par pont de fond ne se voit pas dans
+les distances mais dans une composante géante hexdist 0-13.
+
+Cache-busters : page Wargame ?v=9 (officiel), composant jeu et liens
+officiel→labo ?v=21, lien retour labo→officiel ?v=9. Harnais
+scripts/harnais-labo.cjs poussé avec C9 (v6).
