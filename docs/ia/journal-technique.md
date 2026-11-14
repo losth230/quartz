@@ -6955,3 +6955,21 @@ résolveur cherche index.js) ; diag régénéré, 0 diff avec la tête
 (non inclu au feat) ; 7 fichiers du feat vérifiés par curl
 raw.githubusercontent + cmp, identiques au bit près ; règles
 appendées puis vérifiées identiques.
+
+SUITE (fix typecheck, même session) : le job CI « jeu » (npx tsc
+--noEmit, strict) échouait sur 32e36836 — annotation du check-run :
+« Type null cannot be used as an index type » (ligne 418, deux
+occurrences). CAUSE : LogEntry.joueur est number | null (les lignes
+de journal peuvent être anonymes) et le test du canal indexait
+orParJoueur[e.joueur] sans garde. Fix 30cc575f (convention ap!
+après assert.ok, cf. pelerinage.test.ts) puis 20300b57 (garde
+e.joueur != null) ; l’API publique des annotations des check-runs
+(GET /repos/…/check-runs/{id}/annotations) donne l’erreur tsc sans
+logs authentifiés — il n’existe pas de lecteur de logs dans le
+connecteur GitHub. ÉTAT FINAL sur 20300b57 : CI jeu success
+(typecheck + 374/374), Deploy Edge Function resoudre-tour success
+(l’Edge vit avec le canal Terre d’accueil — critique pour L2),
+Deploy Pages success — bundle live index-ClRiSKYM.js, marqueurs
+vérifiés : terreAccueil ×2, « PURE NARRATION » ×1, colonnes du récap
+présentes. Tête : feat 32e36836 → règles 0907493c → journal e30dd8f7
+→ fix 30cc575f → fix 20300b57 → ce journal.
