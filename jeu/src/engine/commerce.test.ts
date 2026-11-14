@@ -263,16 +263,19 @@ test('maxRoutesJoueur : les routes viennent du RÉFÉRENTIEL (routesApportees), 
   // UNE Échoppe : +1 route (champ routesApportees du référentiel)
   p.villes[0].batiments.push('Echoppe')
   assert.equal(maxRoutesJoueur(p, C), base + 1, 'Échoppe → +1 route')
-  // + la Place du marché (version Ville — sa description promet aussi
-  //  1 route ; l'ancien comptage en dur la MANQUAIT) : +1
+  // + la Place du marché (sa description promet aussi 1 route) : RÈGLE
+  //  PRÉREQUIS 2026-11-14 — elle EXIGE l'Échoppe, donc elle la REMPLACE
+  //  (effets neutralisés + retrait de la liste) : le cumul retombe à +1
+  //  au lieu de +2 comme avant, où les deux comptaient chacun leur
+  //  routesApportees.
   p.villes[0].batiments.push('Place du marché')
-  assert.equal(maxRoutesJoueur(p, C), base + 2, 'Place du marché → +1 route de plus')
+  assert.equal(maxRoutesJoueur(p, C), base + 1, 'Place du marché remplace l Échoppe → toujours +1 route')
   // bâtiment sans routesApportées : rien
   p.villes[0].batiments.push('Poste de garde')
-  assert.equal(maxRoutesJoueur(p, C), base + 2, 'Poste de garde → +0 route')
+  assert.equal(maxRoutesJoueur(p, C), base + 1, 'Poste de garde → +0 route')
   // bâtiment HORS référentiel : n'apporte rien (convention banque)
   p.villes[0].batiments.push('Bâtiment inventé')
-  assert.equal(maxRoutesJoueur(p, C), base + 2, 'bâtiment hors référentiel → +0 route')
+  assert.equal(maxRoutesJoueur(p, C), base + 1, 'bâtiment hors référentiel → +0 route')
 })
 
 test('resumeConstruction : l Échoppe AFFICHE sa route commerciale dans le résumé (retour Thibaut 2026-10-27)', () => {

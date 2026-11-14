@@ -20,7 +20,7 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from '../../engine/types'
-import { coutBatiment, batimentsConstructionsRefs, merveilleConstruiteAilleurs } from '../../engine/batiments'
+import { coutBatiment, batimentsConstructionsRefs, merveilleConstruiteAilleurs, remplaceBatimentRef } from '../../engine/batiments'
 import { coutAmenagement } from '../../engine/amenagements'
 import { constructionRef, prerequisConstruction, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { rangNiveau } from '../../engine/regimes'
@@ -217,6 +217,31 @@ export function faireConstruire(o: {
         }
       }
       if (!amelioreDe) cible.push(nom)
+      // (RÈGLE PRÉREQUIS 2026-11-14, retour Thibaut « les bâtiments de
+      //  prérequis doivent remplacer le bâtiment de tier précédent ») :
+      //  construire un bâtiment RETIRE de la ville les bâtiments
+      //  qu'il remplace — son PRÉREQUIS (Caserne ← Poste de garde,
+      //  Place du marché ← Echoppe) et les remplacements explicites
+      //  du référentiel (remplaceBatiment — Camp de travailleurs ←
+      //  Camp de bûcheron ET Camp de mineur) — MÊME mécanique que
+      //  les tiers d'aménagements ci-dessus (l'exemplaire du tier
+      //  inférieur disparaît). Garde-fou non bloquant, calibre des
+      //  autres : un remplacé absent ne bloque rien (le ⚠ de
+      //  prérequis manquant s'affiche déjà plus haut). Le moteur
+      //  (remplaceBatimentRef → batimentsRemplaces) neutralisait
+      //  déjà les EFFETS du remplacé ; ce retrait rend la liste de
+      //  la ville cohérente avec ce que le moteur compte.
+      if (type === 'batiment') {
+        for (const b of remplaceBatimentRef(nom, C.config, groupe)) {
+          const iB = cible.indexOf(b)
+          if (iB < 0) continue
+          cible.splice(iB, 1)
+          s.log.push({
+            turn: s.turn, type: 'Système', joueur: t.n,
+            texte: `⟳ ${nom} remplace « ${b} » à ${ville.nom} (règle des prérequis : le bâtiment exigé devient le nouveau tier).`,
+          })
+        }
+      }
       const parts: string[] = []
       for (const [res, v] of Object.entries(cout)) {
         const rs = t.resources[res]

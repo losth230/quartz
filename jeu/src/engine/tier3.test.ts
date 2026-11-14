@@ -182,17 +182,52 @@ test('batimentsActifsVille (tier 3) : le remplacé ne compte plus pour les CAPS 
   assert.equal(capMetierVille('Scientifique', p.villes[0], C) - capSciInt, 1,
     'Ecole supérieure : delta Scientifique +1 (2 − 1), pas +2')
 
-  // maxRoutesJoueur : Place du marché (+1) + Plateforme (+2) = +3 ;
-  //  Place + Guilde des marchands (remplace la Plateforme) = +3 AUSSI
+  // maxRoutesJoueur : (RÈGLE PRÉREQUIS 2026-11-14) la Plateforme
+  //  commerciale REMPLACE la Place du marché → +2 routes seul ;
+  //  Place + Guilde des marchands = +3 (la Place reste active : la
+  //  guilde remplace la Plateforme, pas la Place)
   const base = { ...p, villes: [villeTest(p, [])] } as unknown as Player
   const capRoutesBase = maxRoutesJoueur(base, C)
   p.villes[0] = villeTest(p, ['Place du marché', 'Plateforme commerciale'])
   const capRoutesPlateforme = maxRoutesJoueur(p, C)
-  assert.equal(capRoutesPlateforme - capRoutesBase, 3, 'Place du marché + Plateforme : +3 routes')
+  assert.equal(capRoutesPlateforme - capRoutesBase, 2,
+    'Place du marché + Plateforme : +2 routes (la Plateforme remplace son prérequis, le +1 de la Place ne compte plus)')
   p.villes[0] = villeTest(p, ['Place du marché', 'Guilde des marchands'])
   const capRoutesGuilde = maxRoutesJoueur(p, C)
   assert.equal(capRoutesGuilde - capRoutesBase, 3,
     'Place du marché + Guilde des marchands : +3 routes (le +2 de la Plateforme neutralisée ne compte pas, pas +5)')
+})
+
+// ── Test 2bis (règle prérequis 2026-11-14) : le PRÉREQUIS est
+//    remplacé par le bâtiment qui l'exige ────────────────────────────────
+
+test('batimentsActifsVille (règle prérequis 2026-11-14) : le bâtiment exigé (champ requis) est REMPLACÉ par son successeur — Caserne ← Poste de garde, chaîne Echoppe → Guilde des marchands, deux branches Ponton coexistent', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  // Caserne (requis « Poste de garde ») : le prérequis neutralisé ne
+  //  compte plus — retour Thibaut « les bâtiments de prérequis
+  //  doivent remplacer le bâtiment de tier précédent »
+  p.villes[0] = villeTest(p, ['Poste de garde', 'Caserne'])
+  assert.equal(batimentsActifsVille(p.villes[0], C).join(), 'Caserne',
+    'Caserne remplace son prérequis Poste de garde (les effets ne se cumulent pas)')
+  // chaîne complète Echoppe → Place du marché → Plateforme
+  //  commerciale → Guilde des marchands : seul le dernier maillon
+  //  compte (chaque prérequis remplacé par son successeur, le
+  //  remplacement explicite de la guilde en plus)
+  p.villes[0] = villeTest(p, ['Echoppe', 'Place du marché', 'Plateforme commerciale', 'Guilde des marchands'])
+  assert.equal(batimentsActifsVille(p.villes[0], C).join(), 'Guilde des marchands',
+    'chaîne de prérequis : seuls les maillons non remplacés comptent')
+  // deux successeurs du MÊME prérequis coexistent : Port de pêche
+  //  et Port de commerce remplacent chacun le Ponton, pas l'un
+  //  l'autre
+  p.villes[0] = villeTest(p, ['Ponton', 'Port de pêche', 'Port de commerce'])
+  assert.deepEqual(batimentsActifsVille(p.villes[0], C).sort(), ['Port de commerce', 'Port de pêche'],
+    'le Ponton est neutralisé par ses deux successeurs, qui restent actifs tous les deux')
+  // côté CHÂTEAU : même règle (Caserne [Château] requiert Poste de garde)
+  p.villes[0] = chateau(p, ['Poste de garde', 'Caserne'])
+  assert.equal(batimentsActifsVille(p.villes[0], C).join(), 'Caserne',
+    'version Château : la Caserne remplace aussi son prérequis')
 })
 
 // ── Test 3 : detailGainsVille — production et taxes des guildes ──────────

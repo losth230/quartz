@@ -26,7 +26,7 @@ import type { GameConfig } from '../config/defaultConfig'
 import type { Cfg } from './gameData'
 import {
   constructionRef, coutBatimentRef, effetsConstructionRef, garnisonConstructionRef,
-  batimentsRefs, type ConstructionRef,
+  batimentsRefs, prerequisConstruction, type ConstructionRef,
 } from './constructions'
 
 /** Toutes les références de bâtiments du référentiel canonique. */
@@ -52,10 +52,23 @@ export function batimentsConstructionsRefs(C?: Cfg): ConstructionRef[] {
 //  règle 9.)
 
 /** Bâtiments neutralisés par `remplaceBatiment` de la construction
- *  donnée (lecture du référentiel, groupe optionnel). */
+ *  donnée (lecture du référentiel, groupe optionnel).
+ *  (RÈGLE PRÉREQUIS 2026-11-14, retour Thibaut « les bâtiments de
+ *  prérequis doivent remplacer le bâtiment de tier précédent ») :
+ *  le PRÉREQUIS (`requis` — Poste de garde pour la Caserne, Echoppe
+ *  pour la Place du marché, Ponton pour les Ports…) est TOUJOURS
+ *  remplacé par le bâtiment qui l'exige, en plus des remplacements
+ *  EXPLICITES du champ `remplaceBatiment` (union dédupliquée).
+ *  AVANT : seules les chaînes explicites du référentiel
+ *  remplaçaient (Guilde des marchands → Plateforme commerciale)
+ *  — la Caserne laissait le Poste de garde compter double (effets,
+ *  Taudis, garnison, caps). Aucun aménagement ne porte `requis` :
+ *  la règle ne touche que les bâtiments. */
 export function remplaceBatimentRef(nom: string, cfg?: GameConfig, groupe?: string): string[] {
   const ref = constructionRef(nom, cfg, groupe)
-  return ref?.remplaceBatiment ?? []
+  if (!ref) return []
+  const pre = prerequisConstruction(ref)
+  return [...new Set([...(ref.remplaceBatiment ?? []), ...(pre ? [pre] : [])])]
 }
 
 /** Effets par tour d'un bâtiment : production EXACTE du référentiel,

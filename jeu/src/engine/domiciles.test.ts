@@ -399,9 +399,12 @@ test('fiche bâtiments : Taudis apportés par les BÂTIMENTS (Poste de garde + B
   const { ville, C } = partieTemoin()
   ville.batiments = ['Poste de garde', 'Bas quartier']
   assert.equal(taudisApportesVille(ville, C), 30, '10 + 20')
-  // rang 2 : la Caserne cumule pareil
+  // (RÈGLE PRÉREQUIS 2026-11-14 : la Caserne REMPLACE son prérequis
+  //  Poste de garde — le Poste de garde neutralisé ne cumule plus
+  //  ses +10 Taudis, seule la Caserne compte)
   ville.batiments = ['Poste de garde', 'Caserne']
-  assert.equal(taudisApportesVille(ville, C), 20, '10 + 10')
+  assert.equal(taudisApportesVille(ville, C), 10,
+    'Caserne remplace Poste de garde : +10 (le prérequis neutralisé ne compte plus)')
 })
 
 test('fiche bâtiments : domicilesApportesVille — Maisons et Maisons de notable', () => {
