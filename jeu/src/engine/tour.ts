@@ -534,8 +534,10 @@ export function runTurn(state: GameState): GameState {
       pelerinage: pelerinageParJoueur[p.n] ?? {},
       // (Terre d'accueil, arbitrage Thibaut 2026-11-14 : Or perçu via
       //  la loi Socialisme du régime du DESTINATAIRE, +1 par migrant
-      //  arrivé — déjà crédité au stock à l'étape 4ter, ici seul le
-      //  tracé récap. Vide pour les joueurs sans la loi.)
+      //  d'un AUTRE joueur arrivé (les déménagements internes ne
+      //  comptent pas — retour Thibaut 2026-11-14) — déjà crédité au
+      //  stock à l'étape 4ter, ici seul le tracé récap. Vide pour
+      //  les joueurs sans la loi.)
       terreAccueil: orAccueil[p.n] ? { Or: orAccueil[p.n] } : {},
     }
   }
