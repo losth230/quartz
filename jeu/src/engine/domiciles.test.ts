@@ -249,6 +249,41 @@ test('attribuerDomicilesVille : stock insuffisant → habitants sans domicile, p
   }
 })
 
+test('attribuerDomicilesVille : les logements des BÂTIMENTS abritent la population (retour Thibaut 2026-11-14)', () => {
+  // « Les bâtiments et autres qui produisent du logement créent des
+  //  logements jamais utilisés par la population » — SUPERSEDÉ la
+  //  convention du 2026-10-29 « apports de constructions non
+  //  attribuables » : les +20 Taudis du Bas quartier entrent dans
+  //  le stock de service au même titre que le rang.
+  const { state, p, ville, C } = partieTemoin()
+  const vivants = vivantsVille(state, p.n, ville)
+  for (const c of vivants) {
+    c.domicile = null
+    c.prestige = 0
+    c.dynastie = C.p.dynastieRoturier
+  }
+  ville.domiciles = [{ domicile: 'Maison', nombre: 2 }]
+  ville.batiments = ['Bas quartier']
+  const loges = attribuerDomicilesVille(state, p, ville, C)
+  assert.equal(loges, Math.min(22, vivants.length),
+    '2 Maisons du rang + 20 Taudis du Bas quartier = 22 logés (pas 2)')
+  assert.ok(vivants.filter((c) => c.domicile === 'Taudis').length > 0,
+    'des Taudis du bâtiment sont habités')
+  // réserve noble : les Maisons de notable apportées par un
+  //  bâtiment (Haut quartier +20) ne logent QUE des nobles, comme
+  //  celles du stock du rang
+  ville.batiments = ['Haut quartier']
+  vivants[0].prestige = 300
+  for (const c of vivants) c.domicile = null
+  attribuerDomicilesVille(state, p, ville, C)
+  const enNotable = vivants.filter((c) => c.domicile === 'Maison de notable')
+  assert.deepEqual(enNotable.map((c) => c.prestige), [300],
+    'seul le noble (300) reçoit une Maison de notable du bâtiment')
+  for (const c of enNotable) {
+    assert.ok(rangDe(c, C) === 'noble', 'une Maison de notable (même d un bâtiment) ne loge qu un noble')
+  }
+})
+
 test('attribuerDomicilesVille : idempotent — un habitant logé garde son domicile', () => {
   const { state, p, ville, C } = partieTemoin()
   initStockVille(ville, C)

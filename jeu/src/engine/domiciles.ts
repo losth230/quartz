@@ -138,9 +138,12 @@ export function taudisApportesVille(ville: City, C: Cfg): number {
  *  ATTRIBUTABLES — attribuerDomicilesVille les ajoute au stock de
  *  service, au même titre que le stock du rang (historisé :
  *  convention initiale calquée sur les apports, non attribuables).
- *  Les apports de CONSTRUCTIONS restent du parc non attribuable
- *  (convention inchangée, non visée par le retour) ; les Palais
- *  issus de la loi passent par la réserve noble commune
+ *  (SUPERSEDÉ 2026-11-14, retour Thibaut « les bâtiments et autres
+ *  qui produisent du logement créent des logements jamais utilisés
+ *  par la population » : les apports de CONSTRUCTIONS sont
+ *  désormais ATTRIBUTABLES AUSSI, par le même chemin — plus AUCUN
+ *  canal de logements ne reste du parc mort) ; les Palais issus
+ *  de la loi passent par la réserve noble commune
  *  (reserveNobleDomicile, retour 2026-10-28). */
 export function domicilesCultureVille(
   ville: City, C: Cfg, state?: GameState,
@@ -217,7 +220,10 @@ export function vivantsVille(state: GameState, nJoueur: number, ville: City): Ch
  *  sinon ça ne sert à rien ») : domicilesCultureVille (loi de ville
  *  de la culture — Communautarisme +5 Taudis, Lunisme +2 Palais)
  *  ENTRE dans le stock de service au même titre que le stock du
- *  rang ; les apports de constructions restent hors attribution. */
+ *  rang ; les APPORTS DE CONSTRUCTIONS (retour Thibaut 2026-11-14 :
+ *  « les bâtiments et autres qui produisent du logement créent des
+ *  logements jamais utilisés par la population ») y entrent AUSSI,
+ *  par le même chemin — tout lit du parc est attribuable. */
 export function attribuerDomicilesVille(state: GameState, p: Player, ville: City, C: Cfg): number {
   // DÉFENSE EN PROFONDEUR (audit de merge 2026-10-24) : une partie
   //  existante dont les villes n'ont pas de stock (sauvegardées avant
@@ -232,11 +238,22 @@ export function attribuerDomicilesVille(state: GameState, p: Player, ville: City
   //  les lits des lois puissent abriter des habitants, sinon ça ne
   //  sert à rien ») — les lits de la LOI DE VILLE de la culture
   //  ENTRENT dans le stock d'attribution, au même titre que le
-  //  stock du rang ; les apports de constructions
-  //  (domicilesApportesVille) restent hors attribution, convention
-  //  inchangée. Les Palais issus de la loi passent par la même
+  //  stock du rang. Les Palais issus de la loi passent par la même
   //  réserve noble que les autres (reserveNobleDomicile).
   for (const e of domicilesCultureVille(ville, C, state)) {
+    stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
+  }
+  // (retour Thibaut 2026-11-14 : « les bâtiments et autres qui
+  //  produisent du logement créent des logements jamais utilisés
+  //  par la population » — SUPERSEDÉ la convention du 2026-10-29
+  //  « apports de constructions non attribuables » : les domiciles
+  //  apportés par les constructions de la ville (bâtiments, canal
+  //  `logements` — domicilesApportesVille) ENTRENT AUSSI dans le
+  //  stock de service. Mêmes règles pour tous les lits : réserve
+  //  noble (Maison de notable / Palais) et plancher noble
+  //  (qualité >= 3) s'appliquent aux apports comme au stock du
+  //  rang et aux lits des lois.)
+  for (const e of domicilesApportesVille(ville, C)) {
     stock.set(e.domicile, (stock.get(e.domicile) ?? 0) + e.nombre)
   }
   // ordre de service : prestige décroissant (haut rang d'abord),
