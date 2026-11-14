@@ -6854,3 +6854,76 @@ estimation avec des mesures chiffrées avant de conclure.
 possible). NB : une session labo dont l'URL (hash) date d'avant le
 correctif restaure cap-ocean 250 encodé — re-sélectionner le type
 de carte une fois après rechargement (le preset repose le cap à 0).
+
+## Labo générateur : nouveau curseur « Taille masses » remplaçant le « Taille continents » muet (8e retour Thibaut 2026-11-14, base 267b480c)
+
+**Retour de Thibaut.** « Est-ce qu'il serait possible d'ajouter un
+slider de taille des masses terrestres ? (qui remplacerait le slider
+continent, qui semble mort). »
+
+**Diagnostic.** L'ancien curseur « Taille continents » (e-cont, la
+fréquence du canal de bruit basse fréquence) était VRAIMENT muet sur
+les presets : depuis le 4e retour, les trois types à îles portent
+leurs masses par des BOSSES gaussiennes localisées (`islandArchipel`)
+posées sur un fond volontairement PLAT (compact 12-15 : le canal BF
+soudait les masses, mesuré 99 % à l'époque). Changer la fréquence de
+ce bruit de fond ne changeait donc RIEN de visible — le slider était
+sans objet depuis deux refontes.
+
+**Correctif (feat 267b480c).** Nouveau curseur « Taille masses »
+(id `mass-size`, ×0,50 à ×2,00, défaut ×1,00), placé en tête de
+panneau juste après le champ Type ; `e-cont` devient un champ caché
+(le canal BF reste interne, les presets continuent de le régler).
+Sémantique PAR FAMILLE, avec compensation anti-percolation :
+- **Types à bosses** (Continents 6, Grandes îles 11, Archipel 18) :
+  le curseur multiplie le NOMBRE de bosses (count × m, plancher 2)
+  et divise σ par √m — la capacité totale (count × σ²) et donc le
+  seuil du quantile restent AU CALIBRAGE du preset. Sans la
+  compensation σ, la capacité tombait à m du calibrage, le seuil
+  plongeait SOUS les bosses dans le bruit de fond, qui percolait et
+  soudait les îles : mesuré à ×0,5 grandes îles masse unique 84 %
+  (v1) ; avec compensation, 6 îles, masse 18 % (v2). Mesures 8 seeds
+  × 3 positions : continents 3/6/10 masses (terre 32 % constante),
+  grandes îles 6/12/18 (34 %), archipel 11/17/21 (28 %) — masse
+  top ≤ 35 % partout, anneau extérieur 0 % de terre.
+- **Fragmenté** : le nombre d'entailles traversantes suit le
+  curseur (6 × m, borné 3-14), budget de terre constant :
+  13/29/44 composantes.
+- **Types masqués à masse(s) fixée(s)** (Continent, Pangée, Mer
+  intérieure, Terres + lacs) : le nombre de masses y est imposé par
+  le masque analytique, le curseur déplace le BUDGET DE TERRE
+  (quantile de mer ± 10 pts) : terre mesurée 70/65/55 % (continent),
+  80/75/65 % (pangée), 65/60/50 % (mer intérieure), 67/62/52 %
+  (lacs) — ×0,5 = masse plus large, ×2 = masse plus confinée.
+- **Personnalisé** : fréquence du canal continent (le nouvel
+  héritier du « Taille continents » historique, valable sur bruit
+  libre : 6/4/3 composantes à ×0,5/×1/×2 sur le défaut).
+- Chaque preset pose `'mass-size': 100` : choisir un type REPOSE le
+  curseur au calibrage du type (l'oubli sur 7 des 8 presets a été
+  attrapé par la mesure : le preset écrasait le sweep).
+- Le générateur « Variété » tire mass-size (200 − 150·u ± 15) au
+  lieu de e-cont ; applyParamsToUI et le partage par URL (#c=)
+  transportent le nouveau champ.
+
+**Harnais.** Contrat C8 : par type × seed (r=15, chemin UI fidèle
+caps défaut + preset + massPct), bosses à terre 24-40 % aux trois
+positions, anneau ≤ 5 %, masse top ≤ 40 %, comps(×2) > comps(×0,5) ;
+fragmented comps(×2) > comps(×0,5) ; masqués terre(×0,5) > terre(×2).
+C1-C7 inchangés et au vert ; C6/C7 vérifient le calibrage préservé
+à ×1. Harnais 13 OK sur le labo, JS pur identique entre officiel
+et labo (106 925 unités).
+
+**Règles dérivées.** (1) Un slider ne peut agir que sur le canal qui
+PORTE la caractéristique qu'il annonce : sur les presets à bosses,
+la taille des masses vit dans les bosses, pas dans le bruit — tout
+curseur doit être vérifié sur CHAQUE famille de types avant d'être
+annoncé. (2) Quand un paramètre multiplie un budget (count), les
+autres dimensions doivent compenser (σ ÷ √m) pour ne pas déplacer
+le seuil du quantile. (3) Les presets doivent reposer TOUS les
+champs d'UI qu'ils ne réglent pas, sinon le type choisi hérite des
+curseurs du type précédent.
+
+**Effet pour l'arbitre.** Page Wargame ?v=6, composant jeu ?v=18,
+liens croisés officiel→labo ?v=18 et labo→officiel ?v=6 (neufs, pas
+de cache possible). Le curseur est en haut du panneau, juste sous
+le champ Type ; ×1 = comportement des retours précédents.
