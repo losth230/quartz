@@ -2035,12 +2035,12 @@
     }
   ],
   "crises": [
-    "Sécession : marquez une de vos habitations aléatoire (sauf capitale), dans 3 tours elle rejoint les cités libres à moins que vous la transfériez à un joueur qui vous a prêté serment.",
-    "Famine :  dans 3 tours, perdez 30 Nourriture par rang de votre pays (vous pouvez tomber en négatif).",
-    "Grèves : dans trois tours, perdez 6 de chaque ressource de base par rang de votre pays (vous pouvez tomber en négatif).",
-    "Abandon Divin : dans 3 tours, tous vos vassaux reçoivent 10 science par rang de votre pays.",
-    "Incroyance : dans 3 tours perdez définitivement 10 tourisme par rang de votre pays.",
-    "Fuite de capitaux : dans 3 tours vous perdez 15 or par rang de votre pays et chaque autre joueur en gagne autant."
+    "Sécession : des murmures séparatistes agitent une de vos habitations (sauf capitale), les esprits s’échauffent.",
+    "Famine : les greniers sont bas et le peuple redoute la disette, l’inquiétude gagne les rues.",
+    "Grèves : les corporations boudent les ateliers, l’humeur est à l’aigre dans vos villes.",
+    "Abandon Divin : les oracles prêtent à vos vassaux des faveurs divines, votre prestige religieux vacille.",
+    "Incroyance : la ferveur retombe, les pèlerinages vers vos sanctuaires se raréfient.",
+    "Fuite de capitaux : on murmure que vos trésors cherchent des rivages plus cléments, les marchands s’inquiètent."
   ],
   "rappelsRegles": [
     "début de partie : Chaque joueur prend 80 Or, 15 Bois et 60 Nourritures",

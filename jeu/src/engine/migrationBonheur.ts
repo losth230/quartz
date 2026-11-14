@@ -195,7 +195,7 @@ interface FicheVille {
  *  puis la destination pondérée parmi toutes les autres villes du
  *  monde (fiche source exclue par IDENTITÉ, pas par nom : plusieurs
  *  joueurs peuvent avoir une ville homonyme, ex. « Capitale »). */
-export function migrationBonheur(state: GameState, rng: Rng): void {
+export function migrationBonheur(state: GameState, rng: Rng): Record<number, number> {
   const C = cfgOf(state.config)
   const fiches: FicheVille[] = state.players.flatMap((p) =>
     p.villes.map((v) => {
@@ -217,9 +217,14 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
     }),
   )
   // Une seule ville au monde : nulle part où aller.
-  if (fiches.length < 2) return
+  if (fiches.length < 2) return {}
   /** ids déjà déplacés CET appel (pas de double migration). */
   const deplaces = new Set<string>()
+  /** Or perçu via la loi « Terre d'accueil », par n° de joueur
+   *  destinataire (arbitrage Thibaut 2026-11-14 : l'Or de la loi
+   *  apparaît désormais dans le canal d'apports du récap — RETOURNÉ
+   *  à l'étape 4ter de tour.ts pour le snapshot des apports). */
+  const orAccueil: Record<number, number> = {}
 
   for (const p of state.players) {
     // Habitants éligibles par ville — PHOTO AVANT tout déplacement :
@@ -324,6 +329,7 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
           for (const m of foyer) {
             const rs = dest.joueur.resources['Or']
             if (rs) rs.stock += orParMig
+            orAccueil[dest.joueur.n] = (orAccueil[dest.joueur.n] ?? 0) + orParMig
             state.log.push({
               turn: state.turn + 1, type: 'Système', joueur: dest.joueur.n,
               texte: `🌍 Terre d'accueil — ${dest.joueur.nom} reçoit ${orParMig} Or (1 migrant(s) arrivé(s) : ${fullName(m)}).`,
@@ -338,4 +344,5 @@ export function migrationBonheur(state: GameState, rng: Rng): void {
   //  la majorité — l'invariant « ville.culture = majorité des vivants »
   //  (populationTurn étape 3.6) doit tenir aussi après le flux.
   for (const p of state.players) updateCityCultures(state, p)
+  return orAccueil
 }

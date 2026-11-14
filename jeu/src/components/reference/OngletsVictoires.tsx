@@ -45,6 +45,11 @@ export function OngletCrises({ C }: { C: Cfg }) {
   const cfg = C.config
   return (
     <Card title="Crises">
+      <p className="muted small">
+        (Arbitrage Thibaut 2026-11-14 : les crises sont de PURE NARRATION —
+        les effets mécaniques autrefois annoncés n’ont jamais existé dans le
+        moteur et ne s’appliquent pas.)
+      </p>
       <ul className="small">
         {cfg.crises.map((c, i) => <li key={i}>{c}</li>)}
       </ul>

@@ -383,6 +383,51 @@ test("flux : les autres régimes ne reçoivent RIEN à l'arrivée de migrants", 
   assert.equal(p2.resources['Or'].stock, orAvant, 'aucun Or crédité')
 })
 
+// ── Canal d'apports « Terre d'accueil » (arbitrage Thibaut 2026-11-14) ──
+// (Incident salon L2 : « J1 gagne beaucoup plus d'Or que le +1,3
+//  affiché » — l'Or de la loi était crédité au stock DIRECTEMENT,
+//  sans passer par le moindre canal du récap ressources. Le flux
+//  RETOURNE désormais l'Or par destinataire, tracé au snapshot.)
+
+test("flux : le RETOUR de migrationBonheur porte l'Or exact de la Terre d'accueil, par destinataire", () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10
+  C.p.migrationBonheurLogement = 1e9
+  const [p0, , p2] = state.players
+  const mig = hab('ta-3', 30, { ville: p0.villes[0].nom, metier: 'Employé' })
+  mondeReduit(state, mig)
+  p2.regime = 'Socialisme'
+  const orAvant = p2.resources['Or'].stock
+  const orAccueil = migrationBonheur(state, makeRng(8))
+  const lignesTA = state.log.filter((e) => e.texte.includes("Terre d'accueil"))
+  assert.ok(lignesTA.length >= 1, 'au moins une ligne « Terre d\'accueil »')
+  assert.equal(orAccueil[p2.n], lignesTA.length, 'le retour porte l\'Or EXACT reçu par le destinataire')
+  assert.equal(p2.resources['Or'].stock, orAvant + (orAccueil[p2.n] ?? 0), 'stock crédité du montant retourné')
+  assert.equal(orAccueil[p0.n] ?? 0, 0, 'le joueur qui PERD un habitant ne reçoit rien')
+})
+
+test("récap (arbitrage Thibaut 2026-11-14) : l'Or de la Terre d'accueil apparaît dans le canal d'apports du snapshot", () => {
+  const { state, C } = partie(20261114)
+  C.p.migrationBonheurMax = 0.15 // quelques départs ciblés (même grain que le test d'ordre)
+  for (const p of state.players) p.regime = 'Socialisme'
+  runTurn(state)
+  // Or de la loi ce tour, compté depuis le journal (1 ligne = 1 migrant crédité)
+  const orParJoueur: Record<number, number> = {}
+  for (const e of state.log) {
+    if (e.type === 'Système' && e.texte.includes("Terre d'accueil") && e.texte.includes('reçoit 1 Or')) {
+      orParJoueur[e.joueur] = (orParJoueur[e.joueur] ?? 0) + 1
+    }
+  }
+  const totalOr = Object.values(orParJoueur).reduce((a, b) => a + b, 0)
+  assert.ok(totalOr > 0, `le flux a rapporté de l'Or à cette graine (${totalOr} lignes)`)
+  for (const p of state.players) {
+    const row = [...state.history].reverse().find((h) => h.joueur === p.n && h.apports)
+    assert.ok(row?.apports, `le snapshot du tour porte les apports de ${p.nom}`)
+    assert.equal(row.apports!.terreAccueil?.['Or'] ?? 0, orParJoueur[p.n] ?? 0,
+      `canal « Terre d\'accueil » de ${p.nom} = nombre EXACT de migrants reçus ce tour`)
+  }
+})
+
 // ── Ordre du tour : la conversion AVANT la migration ──────────────────
 // (arbitrage Thibaut 2026-11-14, incident salon L2 : « J1 attire les
 //  habitants de J2, zélotes, mais il n'y a que des culturalistes dans

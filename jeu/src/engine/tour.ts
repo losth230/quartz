@@ -468,7 +468,12 @@ export function runTurn(state: GameState): GameState {
   //  maladie) au même tour chez son nouveau porteur — sa phase A
   //  est déjà faite chez son ancien porteur, sa phase B (naissances,
   //  domiciles, prestige) se joue chez le nouveau.
-  migrationBonheur(state, rng)
+  // (Canal d'apports, arbitrage Thibaut 2026-11-14 : la loi Socialisme
+  //  « Terre d'accueil » crédite le stock directement mais n'apparaissait
+  //  dans AUCUN canal du récap — le « +1,3 » affiché ne reflétait que
+  //  les habitants. Le flux RETOURNE l'Or par destinataire, tracé au
+  //  snapshot comme canal « Terre d'accueil ».)
+  const orAccueil = migrationBonheur(state, rng)
 
   // 4quater. Moteur de population — PHASE B (les NAISSANCES) :
   //    grossesses/naissances, majorités culturelles recomptées
@@ -527,6 +532,11 @@ export function runTurn(state: GameState): GameState {
       //  solde net de la dîme du pontife, négatif = payée, positif
       //  = reçue. Le pontife payeur porte les DEUX dans son solde.)
       pelerinage: pelerinageParJoueur[p.n] ?? {},
+      // (Terre d'accueil, arbitrage Thibaut 2026-11-14 : Or perçu via
+      //  la loi Socialisme du régime du DESTINATAIRE, +1 par migrant
+      //  arrivé — déjà crédité au stock à l'étape 4ter, ici seul le
+      //  tracé récap. Vide pour les joueurs sans la loi.)
+      terreAccueil: orAccueil[p.n] ? { Or: orAccueil[p.n] } : {},
     }
   }
   snapshotRessources(state, turnBefore + 1, apportsParJoueur)

@@ -28,7 +28,7 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
             </p>
           )
         }
-        const { production, batiments, amenagements, nourrEte, autres, population, vassalite, loisCultures, regimesCultures, citesLibres, commerce, proximite, pelerinage } = row.apports
+        const { production, batiments, amenagements, nourrEte, autres, population, vassalite, loisCultures, regimesCultures, citesLibres, commerce, proximite, pelerinage, terreAccueil } = row.apports
         const amen = amenagements ?? {}
         const nEte = nourrEte ?? {}
         const aut = autres ?? {}
@@ -47,6 +47,10 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
         //  3quindecies : solde net de la dîme du pontife ; absent des
         //  historiques d'avant le canal → vide par repli.)
         const pel = pelerinage ?? {}
+        // (Terre d'accueil, arbitrage Thibaut 2026-11-14 : Or de la
+        //  loi Socialisme du régime, +1 par migrant arrivé ; absent
+        //  des historiques d'avant le canal → vide par repli.)
+        const ter = terreAccueil ?? {}
         const val = (d: Record<string, number> | undefined, r: string) => (d ?? {})[r] ?? 0
         // Retour Thibaut (marqueur (r)) : toutes les ressources,
         // même à apport 0.
@@ -68,7 +72,7 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
                 <tr>
                   <th>Ressource</th><th>Production</th><th>Bâtiments</th>
                   <th>Aménagements</th><th>Autres</th>
-                  <th>Habitants</th><th>Lois des cultures</th><th>Cités libres</th><th>Commerce</th><th>Proximité</th><th>Vassalité</th><th>Pèlerinage</th><th>Total</th>
+                  <th>Habitants</th><th>Lois des cultures</th><th>Cités libres</th><th>Commerce</th><th>Proximité</th><th>Vassalité</th><th>Pèlerinage</th><th>Terre d’accueil</th><th>Total</th>
                 </tr>
               </thead>
               <tbody>
@@ -82,11 +86,14 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
                     //  colonne Proximité ramène les colonnes de
                     //  données à 11 : les « — » existants sont
                     //  désormais ALIGNÉS, aucun retrait effectué.)
+                    // (Canal « Terre d’accueil », arbitrage Thibaut
+                    //  2026-11-14 : la ligne porte désormais 12 « — »
+                    //  pour les 12 colonnes de données.)
                     return (
                       <tr key="nourr-ete" className="muted" style={{ background: fondRessource('Nourr - été', C) }}>
                         <td><strong>Nourr - été</strong></td>
                         <td>—</td><td>—</td><td>—</td><td>—</td>
-                        <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
+                        <td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>
                         <td><strong>{fmtNum(vEte)}</strong>{' '}
                           <span className="muted small">(créditée en été seulement)</span></td>
                       </tr>
@@ -98,7 +105,7 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
                   //  qui est réellement crédité au stock ce tour-là.)
                   const total = val(production, r) + val(batiments, r) + val(amen, r)
                     + val(nEte, r) + val(aut, r) + val(population, r) + val(vassalite, r) + val(reg, r)
-                    + val(cl, r) + val(com, r) + val(prox, r) + val(pel, r)
+                    + val(cl, r) + val(com, r) + val(prox, r) + val(pel, r) + val(ter, r)
                   return (
                     <tr key={r} style={{ background: fondRessource(r, C) }}>
                       <td>
@@ -116,6 +123,7 @@ export function RecapDernierTour({ p, C }: { p: Player; C: Cfg }) {
                       <td>{fmtNum(val(prox, r))}</td>
                       <td>{fmtNum(val(vassalite, r))}</td>
                       <td className={val(pel, r) < 0 ? 'neg' : ''}>{fmtNum(val(pel, r))}</td>
+                      <td>{fmtNum(val(ter, r))}</td>
                       <td className={total < 0 ? 'neg' : ''}><strong>{fmtNum(total)}</strong></td>
                     </tr>
                   )
