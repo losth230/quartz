@@ -2740,3 +2740,92 @@ suppression). **352/352 tests natifs**, tsc = baseline stub
 @supabase seule. Diag BYTE-IDENTIQUE (le scénario diag n'exerce
 AUCUNE cité libre sous suzeraineté : zéro ligne « Cités libres »
 dans le log — identité légitime).
+
+## Conversion culturelle V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, base c3035943)
+
+**Demande.** « Est-ce que tu pourrais me proposer autre chose pour la
+conversion culturelle, qui soit plus cohérente et plus jouable de
+manière technique ? » — l'ancien moteur tirait au hasard, pour chaque
+habitant, une tentative à 10 % (conversionProba) puis une culture au
+hasard dans un tirage pondéré (pression + poids de sa propre culture
+×5 + voisins de même culture ×5) : peu lisible, peu pilotable, et une
+ville 100 % homogène restait convertissable en bloc par un seul tirage
+de plus-value « +5 par voisin de même culture » local.
+
+**Arbitrages actés (Thibaut, séance du 14/11).** V2 déterministe
+« Pression/Ancrage » retenue ; plancher minuscule CONSERVÉ (une ville
+homogène n'est pas immunisée, conversion résiduelle rare) ;
+conversion personnage par personnage, les FAMILLES N'INTERVIENNENT
+PAS (pas de bascule familiale, pas de facteur conjoint/enfants) ;
+cap « 1 par ville et par tour » retenu mais en PARAMÈTRE réglable
+(conversionMax, équilibrage explicite différé en second temps —
+« seulement 2 par tour est trop léger »).
+
+**Règle câblée.** Le calcul de PRESSION par culture est conservé
+tel quel (tourisme général par culture + tourisme rattaché aux
+habitations, crédité à la culture de la ville). Nouveau moteur, par
+ville :
+
+- **Force(culture)** = pression(culture) + conversionPoidsLocal ×
+  vivants de la culture dans la ville, le tout ×(1 + évangile
+  pressionCulture) ; bonus d'accueil cumulé pour la culture de la
+  ville : +(Nationalisme conversionLocale + Guilde des évangélistes
+  conversionLocalePlus) × force totale des AUTRES cultures (remap
+  exact des dogmes/Guilde, pas de jet séparé).
+- **Culture dominante D** = force maximale (ex æquo : ordre du
+  référentiel).
+- **Ancrage(habitant)** = conversionPoidsLocal × compatriotes de sa
+  culture dans la ville + noblesse (rang noble :
+  conversionAncrageNoble 15). C'est la RÉSISTANCE ; un isolé bascule
+  avant une communauté, un roturier avant un noble.
+- **Conversions déterministes** : parmi les éligibles (vivants de
+  culture ≠ D, Dirigeant immunisé), D convertit ceux dont l'ancrage
+  < Force(D), les moins ancrés d'abord (ex æquo : ordre de
+  recensement), au plus conversionMax par ville et par tour (défaut
+  1). Ville mixte où tout le monde résiste : ZÉRO conversion,
+  l'ancrage protège totalement, aucun rng.
+- **Plancher minuscule** : une ville 100 % dominante tente
+  rng.chance(conversionPlancher, 1 %) → 1 habitant (premier au
+  recensement) bascule vers la culture étrangère la plus forte.
+  Sous pression touristique massive (pression > démographie locale),
+  la culture étrangère devient dominante et la ville se retourne
+  tour après tour ; sous faible pression, le converti isolé est
+  ré-assimilé au tour suivant (l'ancrage majoritaire reprend le
+  dessus) — la ville homogène résiste.
+
+**Effets attendus (scénarios validés)** : minorité fond à
+conversionMax par tour (les colons isolés d'abord, une colonie
+nombreuse tient plus longtemps mais fond sauf renfort continu) ; un
+tourisme ~250 (≈ 7 Chapelles) renverse une ville pure de 50
+habitants ; une ville homogène résiste à une pression de 7 ;
+l'Évangile ×1,1 et le Nationalisme +0,15 restent des leviers
+d'accélération lisibles dans les forces.
+
+**Transparence.** Bloc « Balance culturelle » dans la carte de
+ville (VilleCarte) : force par culture (pression + présence),
+dominante, conversions prévues ce tour ou cause d'immobilité
+(ancrage suffisant / plancher X % vers Y). Source unique :
+detailConversionVille (engine/culture.ts) — la vue et le moteur
+calculent les mêmes nombres.
+
+**Paramètres.** REUTILISÉ : conversionPoidsLocal (5 — double face :
+poids démographique dans la Force, ancrage par compatriote).
+NOUVEAUX : conversionMax (1, PROVISOIRE — équilibrage en second
+temps), conversionPlancher (0,01), conversionAncrageNoble (15).
+Retirés : conversionProba (0,1) et conversionMemeCulture (5) —
+plus de tirage au hasard. Migration ciblée conversionDeterministe2026
+(patron taxes25, sans bump de tampon) : les 2 clés mortes sont
+dépouillées, les 3 nouvelles viennent de mergeParams.
+
+**Verrous.** Nouveau engine/conversion.test.ts (8 tests : ville
+homogène + plancher, minorité fond à 1/tour, conversionMax=3,
+renversement par tourisme, ordre isolé-avant-communauté, noble
+résiste, Dirigeant immunisé, majorité des villes) ;
+dogmes.test.ts (Évangile force ×1,1 exact, Nationalisme
++0,15 × Σ autres exact, conversion déterministe sans rng) et
+tier3.test.ts (Guilde +0,1 × Σ autres exact) réécrits sur le
+détail. **360/360 tests natifs** (352 + 8), 36 fichiers ; tsc =
+baseline stub @supabase seule. Diag régénéré : seuls les compteurs
+de simulation bougent (log 459 → 497 entrées, commandants J1 6 → 4
+— le moteur ne consomme plus un rng par habitant, le flux aléatoire
+des événements aval est décalé ; RIEN d'autre ne diffère).
