@@ -2969,3 +2969,35 @@ Antichambre routes ×2/flux ×2, ancrage ×1,1, dogme hors palier,
 libellés), tsc = baseline stub @supabase seule. Diag régénéré :
 110 → 119 règles (les 11 merveilles), compteurs de simulation
 inchangés.
+
+
+## Siège affiché dans la barre de tour (retour Thibaut 2026-11-14 « il faudrait ajouter un petit symbole avec le numéro du joueur en haut pour pas que les joueurs se perdent »)
+
+Incident déclencheur (salon chasse-pecheL1, 2026-11-14) : la fin de
+tour « semblait planter et bloquer en permanence » à 1/2 joueur
+prêt. Diagnostic complet : le numéro de joueur se choisit À LA MAIN
+à l'écran de connexion (« Mon n° de joueur », défaut 1, AUCUNE
+unicité vérifiée) et les deux navigateurs étaient sur le MÊME siège
+(Joueur 1). La poussée de section est un upsert (clé unique salon /
+tour / joueur / type) : la fin de tour du second navigateur REMPLACE
+la section du premier au lieu d'ajouter la sienne — la barrière ne
+voit jamais 2/2 et le tour ne se résout jamais. Le serveur (Edge
+Function resoudre-tour) était sain — vérifié de bout en bout sur un
+clone des données réelles (fusion + tour + publication en 1,5 s) —
+et le moteur innocent (18 ms sur l'état réel, aucune régression
+mesurable du tour des merveilles).
+
+Arbitrage : le siège devient VISIBLE en permanence, sans toucher à
+l'attribution (le choix manuel reste la règle — pas de réservation
+automatique de siège).
+
+1. Badge « 👤 Vous êtes Joueur N » dans la barre de tour (mode
+   multijoueur uniquement), avec info-bulle rappelant que deux
+   navigateurs sur le même siège s'écrasent leur fin de tour et
+   bloquent la barrière.
+2. Bandeau d'attente de fin de tour : chaque siège reste listé
+   (« ✅ J1 ⏳ J2 ») et le vôtre est marqué « (vous) » — qui attend
+   qui se lit en un coup d'œil, et un siège dupliqué saute aux yeux.
+
+Aucune mécanique de jeu n'est modifiée ; en mode local (sans salon),
+le badge ne s'affiche pas (le siège n'y pilote rien).
