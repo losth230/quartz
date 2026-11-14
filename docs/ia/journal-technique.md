@@ -6973,3 +6973,36 @@ Deploy Pages success — bundle live index-ClRiSKYM.js, marqueurs
 vérifiés : terreAccueil ×2, « PURE NARRATION » ×1, colonnes du récap
 présentes. Tête : feat 32e36836 → règles 0907493c → journal e30dd8f7
 → fix 30cc575f → fix 20300b57 → ce journal.
+
+## Terre d’accueil : l’Or n’est octroyé que pour les arrivants d’un AUTRE joueur (arbitrage Thibaut 2026-11-14 « il faudrait que l’or ne soit octroyé que par les étrangers, donc d’un joueur différent, qui arrivent », base 3320e572, feat 312982a9, règles c6b796fc)
+
+RETOUR THIBAUT (même journée que le canal d’apports) : la loi
+Socialisme « Terre d’accueil » créditait l’Or pour TOUTE arrivée —
+déménagements INTERNES compris (arbitrage 2026-10-29 « la loi
+récompense l’ARRIVÉE, pas le franchissement d’une frontière »).
+Thibaut inverse : seul un arrivant d’un joueur DIFFÉRENT rapporte
+l’Or ; rester chez le même joueur ne rapporte plus rien.
+
+FIX : la garde dest.joueur.n !== p.n conditionne l’orParMig dans
+migrationBonheur.ts (le foyer entier suit, mais l’Or ne tombe que
+si le foyer CHANGE de joueur) ; texte de la loi du référentiel
+aligné (« chaque fois qu’un migrant d’un autre joueur arrive…
+un déménagement interne ne compte pas ») ; doc du canal
+ApportsTour.terreAccueil mise à jour.
+
+PIÈGE DE TEST (noté pour les prochains scénarios de flux) : le
+setup standard (defaultSetups) crée HUIT joueurs de 50 habitants
+dont les villes s’appellent toutes « Capitale » — neutraliser
+seulement p0/p1 (comme mondeReduit) laisse les joueurs 4 à 8
+libres de fuir vers la ville aux lits libres (50 arrivées
+parasites constatées, 50 Or crédités au Socialisme du test). Le
+nouveau test neutralise TOUS les autres joueurs par des soldats
+(armee — jamais tirés au départ, villes sans lits libres), la
+seule destination aux lits libres est la seconde ville du joueur
+Socialisme : déménagement interne déterministe à la graine 8,
+AUCUN Or (ni stock, ni log, ni retour du flux, ni canal).
+
+VÉRIFICATIONS : 375/375 tests natifs (374 + 1 nouveau) ; diag
+régénéré, 0 diff avec la tête (non inclu au feat) ; 4 fichiers du
+feat vérifiés par curl raw.githubusercontent + cmp, identiques au
+bit près ; règles appendées puis vérifiées identiques.
