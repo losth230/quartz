@@ -3185,3 +3185,41 @@ mort.
 Capitale J1 passe de 134 à 184 logés (+50, exactement ses lits de
 constructions) dès le prochain tour résolu par l’Edge ; le J2 est
 inchangé (aucun de ses bâtiments n’apporte de logements).
+
+## 2026-11-14 (suite 2) — Une seule passe de conception par tour (fix doublon)
+
+**Contexte** (signalement « il y a beaucoup trop de naissances —
+est-ce qu’une femme peut enfanter et tomber enceinte au même
+tour ? ») : un DOUBLON d’appel de `conceptionEtNaissances` dans
+`populationTourB` (le bloc « 3.4 Grossesses et naissances » était
+dupliqué mot pour mot) exécutait DEUX passes de conception par
+tour. La 2e passait après la 1re dans le même tour : les femmes qui
+venaient de concevoir à la 1re passe accouchaient à la 2e — une
+GROSSESSE DE 0 TOUR, en violation directe de l’arbitrage du
+2026-11-13 (« une femme ne peut pas accoucher et concevoir au même
+tour ») que le doublon rendait inopérant dans les deux sens : grossesse
+instantanée ET doublement du jet de conception (les femmes non
+enceintes passaient deux fois au tirage).
+
+**Réponse à la question posée** : NON — depuis l’arbitrage du
+2026-11-13, une mère qui vient d’accoucher ne peut pas concevoir au
+même tour (exclusion d’un tour, pas de cooldown persistant) ; et
+depuis ce fix, une femme qui conçoit au tour T accouche au tour T+1
+au plus tôt — jamais dans le même tour.
+
+**Règle (inchangée, désormais effective)** : la fécondité est
+résolue en UNE passe par tour — 1. accouchements des Enceintes du
+tour précédent, 2. un seul jet de conception par femme éligible.
+Cycle minimal par femme : conception T, naissance T+1, conception
+possible T+2 — soit au maximum un enfant tous les deux tours.
+
+**Chiffres sur l’état réel L2** (simulation T42→43) : J1 naissances
+227 → 129, conceptions 217 → 92, croissance +230 → +132 vivants/tour ;
+J2 naissances 119 → 84, conceptions 112 → 32, croissance +99 →
++64. Le diag moteur passe de 647 à 408 entrées de log sur 4 tours.
+
+**Paramètre remains** : fertBaseRate = 1 (arbitrage 2026-11-02) —
+une femme mariée de 16-25 ans avec un mari jeune conçoit à chaque
+tour éligible. Si le taux de naissances reste trop élevé après ce
+fix, le levier est la baisse de fertBaseRate (paramètre « Fécondité
+de base », onglet Paramètres — pas d’arbitrage pris ce jour).
