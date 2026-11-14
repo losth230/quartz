@@ -7,7 +7,7 @@ import { useGame } from '../state/store'
 import { Button } from './ui'
 
 export function TurnBar() {
-  const { state, mode, salon, saving, conflit, saveLocaleEchec, calculTour, nextTurn, exportState, importState, reset, barriere, forceNextTurn } = useGame()
+  const { state, mode, salon, saving, conflit, saveLocaleEchec, calculTour, nextTurn, exportState, importState, reset, barriere, forceNextTurn, monNumero } = useGame()
   const fileRef = useRef<HTMLInputElement>(null)
   // (RETRAIT 2026-10-19, brûlage audit R5) : la bascule de protocole
   //  v1/v2 (state « proto2 » + toggleProto2) a été retirée — le
@@ -35,6 +35,22 @@ export function TurnBar() {
         <span className="badge badge-info">
           {mode === 'supabase' ? `Multijoueur${salon ? ` · salon « ${salon} »` : ''}` : 'Local'}
         </span>
+        {/* SIÈGE (retour Thibaut 2026-11-14 « ajoute un petit symbole
+            avec le numéro du joueur en haut pour pas que les joueurs se
+            perdent » — incident du salon bloqué à 1/2 : deux
+            navigateurs sur le MÊME siège s'écrasent mutuellement leur
+            fin de tour — l'upsert cp_events remplace la section du
+            siège, la barrière ne voit jamais 2/2 et le tour ne se
+            résout jamais. Le badge rend le siège VISIBLE en
+            permanence ; le bandeau d'attente marque « (vous) ». */}
+        {mode === 'supabase' && (
+          <span
+            className="badge badge-info"
+            title="Votre siège dans ce salon. Chacun choisit le sien à l'écran de connexion (« Mon n° de joueur ») — deux navigateurs sur le même siège s'écrasent leur fin de tour et bloquent la barrière."
+          >
+            👤 Vous êtes Joueur {monNumero}
+          </span>
+        )}
         {saving && <span className="muted">sauvegarde…</span>}
       </div>
       {/* F4 (audit 2026-10-27) : runTurn local en cours — le calcul
@@ -61,7 +77,7 @@ export function TurnBar() {
         {mode === 'supabase' && barriere.prets.size > 0 && (
           <div className="banner-info" style={{ padding: '4px 12px' }}>
             ⏳ Fin de tour : {barriere.prets.size}/{state.players.length} joueur(s) prêt(s)
-            {' '}· {state.players.map((q) => barriere.prets.has(q.n) ? `✅ J${q.n}` : `⏳ J${q.n}`).join(' ')}
+            {' '}· {state.players.map((q) => `${barriere.prets.has(q.n) ? '✅' : '⏳'} J${q.n}${q.n === monNumero ? ' (vous)' : ''}`).join(' ')}
             {barriere.monTourPousse && ' — en attente des autres joueurs…'}
           </div>
         )}
