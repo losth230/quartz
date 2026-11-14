@@ -7081,3 +7081,44 @@ L2 : le récap « autres » de J2 ne créditera plus les ~+51 Nourriture
 fantômes), Pages success — bundle live index-DBgNSTIy.js,
 `nourritureBetail` absent du bundle (vérifié). Tête : feat 41d6c52f
 → règles 49878e91 → journal 87cdc44d → fix 98f53ef4 → ce journal.
+
+## 2026-11-14 (suite 3) — Logements des constructions enfin attribués
+
+**Signalement** : « les logements ne fonctionnent pas, les bâtiments
+et autres qui produisent de logement créent des logements mais qui
+ne sont jamais utilisés par la population ».
+
+**Diagnostic** (code + état réel L2) : les domiciles apportés par les
+constructions (canal `logements`, domicilesApportesVille) comptaient
+dans le PARC — axe Logement du bonheur (logementsVille), magnét
+migratoire « lits libres », détail VilleCarte — mais restaient hors
+attribution nominative (convention 2026-10-29 « apports non
+attribuables », calquée sur les lois AVANT le 6e retour du jour qui
+rendait les lits des lois attribuables). Chiffres L2 (T42) : J1
+Capitale 856 vivants, 134 logés, 722 SANS domicile, avec +50 lits de
+constructions vides (Bas quartier +20 Taudis, +30 Maisons) ; J1
+Ville 2 : 579 sans ; J2 Capitale : 755 sans (aucun lit de
+construction). Consommateurs de Character.domicile : statut social
+(−2 sans domicile), facteurLogement (migration), rien d’autre —
+impact du fix circonscrit.
+
+**Correctif** (feat 5d7ed075) : attribuerDomicilesVille agrège dans
+le stock de service rang + lits des lois + APPORTS DE CONSTRUCTIONS
+(domicilesApportesVille). Réserve noble et plancher noble
+s’appliquent à l’origine des lits indifféremment. Commentaires
+SUPERSEDÉ aux trois endroits qui énonçaient l’ancienne convention.
+Test de non-régression dans domiciles.test.ts (« les logements des
+BÂTIMENTS abritent la population ») : Bas quartier → min(22, vivants)
+logés dont des Taudis ; Haut quartier → seule une Maison de notable
+au noble (prestige 300), jamais aux roturiers. Suite : 377/377
+verts. diag-out.txt régénéré : 0 diff (pas de commit diag).
+
+**Effet vérifié sur l’état réel L2** (runTurn simulé avec le fix) :
+J1 Capitale 134 → 184 logés (+50, exactement ses lits de
+constructions) ; Ville 2 et J2 inchangés. Le prochain tour résolu
+par l’Edge (redéploiement requis — src/engine touché) loge les 50.
+
+**Règles** (5ea29885) : règle « tout lit du parc est attribuable »,
+supersede la convention 2026-10-29.
+
+Tête : feat 5d7ed075 → règles 5ea29885 → ce journal.
