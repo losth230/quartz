@@ -421,9 +421,9 @@ test("récap (arbitrage Thibaut 2026-11-14) : l'Or de la Terre d'accueil appara�
   const totalOr = Object.values(orParJoueur).reduce((a, b) => a + b, 0)
   assert.ok(totalOr > 0, `le flux a rapporté de l'Or à cette graine (${totalOr} lignes)`)
   for (const p of state.players) {
-    const row = [...state.history].reverse().find((h) => h.joueur === p.n && h.apports)
-    assert.ok(row?.apports, `le snapshot du tour porte les apports de ${p.nom}`)
-    assert.equal(row.apports!.terreAccueil?.['Or'] ?? 0, orParJoueur[p.n] ?? 0,
+    const ap = [...state.history].reverse().find((h) => h.joueur === p.n && h.apports)?.apports
+    assert.ok(ap, `le snapshot du tour porte les apports de ${p.nom}`)
+    assert.equal(ap!.terreAccueil?.['Or'] ?? 0, orParJoueur[p.n] ?? 0,
       `canal « Terre d\'accueil » de ${p.nom} = nombre EXACT de migrants reçus ce tour`)
   }
 })
