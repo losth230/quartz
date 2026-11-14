@@ -6999,3 +6999,81 @@ liens croisés officiel→labo ?v=19 et labo→officiel ?v=7. Les types
 Continents / Grandes îles / Archipel posent des demi-îles au bord
 PAR DÉFAUT (curseur « Terre au bord » à 75 %, juste sous « Taille
 masses ») ; 0 % = l'océan périphérique d'avant.
+
+## Labo générateur : curseur « Îles éparses » — du bruit, des îles par ci et par là (10e retour Thibaut 2026-11-14, base 69c1dc55)
+
+**Retour.** « Non, je ne dis pas qu'il faut toutes les îles au
+bord. Ce que je demande c'est du bruit, avec des îles par ci et
+par là. » CORRECTION du 9e retour, quelques heures plus tard : les
+demi-îles en anneau au cadre n'étaient pas la demande — la demande
+était du MORCELLEMENT ÉPARS dans la périphérie, les masses restant
+au calibrage.
+
+**Réversion complète du 9e.** rMaxE, glisse d'anneau, couronne du
+bord détachée (nRim), boost σ +45 %/amp +25 % des bosses du bord,
+essorage reculé (0.92+0.13·e) et compensation du fond : TOUT
+retiré. Les masses reviennent AU CALIBRAGE du 8e retour (couronnes
+adaptatives, essorage 0.92→0.98 intact).
+
+**Premier essai (abandonné) : restitution du fond en bande.**
+kEff = kFond + (1−kFond)·e·bande (lisse 0.72→1.0). Mesuré au
+harnais : le fond de bande (médianes 0.46/0.39/0.38 selon le type)
+ne franchit le seuil (0.618/0.508/0.551) qu'en des points d'UNE
+TUILE — îlots 1.6 par carte sur Continents, ZÉRO sur Grandes îles
+et Archipel. La restitution seule ne suffit pas : le seuil est
+trop haut pour le fond.
+
+**Mécanisme retenu : bosses d'îlots DÉDIÉES.** islandArchipel
+prend deux paramètres de plus (edgeL, isletAmp) et sème
+nIslets = round(9·e·N²/225·(0.8+0.4·rand)) petites bosses dans la
+bande hexdist 78 %→97 % : tir par tuile (40 essais, meilleur des
+essais), rejet STRICT des empreintes des masses (1.8σ + 0.95σI +
+0.7 px) et des autres îlots (1.4·(s+sI)) — un îlet sans position
+libre est ABANDONNÉ (le repli « meilleur des essais » collait des
+îlets entre deux îles voisines : composantes soudées de 53-60
+tuiles mesurées sur Grandes îles). Profils super-gaussiens
+tronqués identiques aux masses, warp de dentelle léger (0.7 px),
+apport AJOUTÉ HORS essorage (propriété .islets de la closure, la
+fenêtre w des masses reste intacte : certains îlets touchent le
+cadre). Amplitudes calibrées sur les seuils MESURÉS au calibrage
+(0.618/0.508/0.551) moins le fond de bande : +0.24 (Continents),
++0.20 (Grandes îles), +0.26 (Archipel) — empreinte au seuil
+~0.94σI, îles de 2 à 10 tuiles ; σI = (0.055+0.065·rand)·RPX.
+
+**Budget.** Le quantile global ne change pas : les îlots prennent
+quelques tuiles aux côtes (Continents : masses 44→37 tuiles à
+e=100), terre 32/34/28 % constante, masse top ≤ 18 % mesurée.
+
+**Validation.** 8 seeds × 3 types, r=15 : îlots 4-8 (Continents),
+1-6 (Grandes îles, bande déjà dense : ses masses portent le
+bruit), 4-8 (Archipel) ; anneau habité (2 à 18 tuiles de terre au
+bord selon seed) ; r=12 : îlots 1.3-2.9, r=18 : 5.4-8.8, masse
+top ≤ 20 %. NO-OP PARFAIT à 0 : 72 cartes (9 types × 8 seeds)
+byte-identiques au 9e retour ; les 6 familles non ciblées ignorent
+le curseur (vérifié biomes identiques e=0 vs e=1).
+
+**Harnais.** C6 réécrit (v5) : (a) slider 0 → calibrage historique
+intact (anneau ≤ 5 %, masse ≤ 25 %) ; (b) preset défaut (100 %) →
+îlots périphériques (composantes entièrement à ≥ 10 pas hex du
+centre, taille ≤ 12) ≥ 3 sur Continents/Archipel, ≥ 1 sur Grandes
+îles, anneau habité, terre 24-40 %, masse ≤ 25 %. C1-C5, C7, C8 au
+vert sans changement (C7/C8 tournent désormais îlets actifs).
+
+**Règles dérivées.** (1) Un retour peut CORRIGER le précédent à
+quelques heures d'écart : garder les mécanismes RÉVERSIBLES (la
+réversion du 9e est un patch pur depuis le live, aucune
+archéologie de version). (2) « Du bruit par ci et par là » ≠ « des
+masses au bord » : mesurer la sémantique AVANT de déplacer les
+masses — le fond restauré ne franchit pas le seuil, seules des
+bosses dédiées le franchissent. (3) Le rejet des îlots doit être
+STRICT (abandon) là où celui des masses peut replier sur le
+meilleur des essais : un îlet en collision PONTE deux îles, une
+masse en collision chevauche seulement.
+
+**Effet pour l'arbitre.** Page Wargame ?v=8, composant jeu ?v=20,
+liens croisés officiel→labo ?v=20 et labo→officiel ?v=8. Le curseur
+« Îles éparses » (ancien « Terre au bord », même champ edge-land :
+les partages #c= restent valides) sème par défaut une couronne
+d'îlots au-delà de 78 % du rayon — Continents ~5 îlots de 2-10
+tuiles, Archipel ~6, Grandes îles ~4 par-dessus ses masses ; 0 % =
+l'océan périphérique d'avant, masses seules.
