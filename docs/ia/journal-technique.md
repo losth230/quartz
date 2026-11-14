@@ -6242,3 +6242,79 @@ commit rejouent différemment, la passe parts recalant
 l'histogramme ; les graines elles-mêmes produisent des cartes
 voisines mais pas identiques). Ctrl+F5 pour vider le cache du
 navigateur (le bundle jeu référence maintenant `?v=11`).
+
+
+## Labo générateur : fenêtre périphérique — continents / grandes îles / archipel enfin visibles en entier à r=15 (retour Thibaut 2026-11-13, base 764df23)
+
+**Retour.** « Pour l'instant j'aime bien, mis à part les presets
+continents, grandes îles et archipel qui font apparaître des masses de
+terres trop importantes. On ne voit jamais les continents, ni même les
+îles en entier. Rappel, la taille par défaut est un rayon de 15 tuiles,
+soit 721 tuiles total. »
+
+**Diagnostic.** Reproduit et chiffré au harnais à r=15 (8 seeds,
+params de preset complets) : **56 % de l'anneau extérieur était de la
+terre** sur les trois types, et chaque carte portait **4 à 6 masses
+coupées par le bord**. Cause structurelle, pas un simple réglage : les
+lobes angulaires des masques de forme (`cos 2θ`, `cos 3θ` × dc)
+culminent à dc = 1 (le bord de la carte), et le masque de bord
+(`e-edge`) est appliqué au BRUIT AVANT l'ajout du biais de forme — il
+ne peut donc rien contre eux. Le défaut existait aussi à r=12 (2,5 à
+6,4 masses coupées), simplement moins visible. Noter le piège du
+domain warping : dc est warpé d'une amplitude de 0,55, toute fenêtre
+sur la distance warpée laisserait le bord réel rouvert.
+
+**Ce qui a été fait.**
+
+1. **Fenêtre périphérique `PERIPH_OCEAN`** (continents, grandes îles,
+   archipel uniquement) : le biais de forme s'essouffle de 85 % à 98 %
+   du rayon (fenêtre sur la distance VRAIE, pas la warpée), puis un
+   creux océanique (90 % → 100 % du rayon, profondeur 0,42) garantit
+   l'anneau d'eau au pourtour. « continent » et « pangea » gardent
+   leurs masses au bord : c'est leur contrat documenté.
+2. **Compensation des creux séparateurs** — le piège du quantile
+   global : le seuil de mer étant un QUANTILE, vider l'anneau
+   extérieur redistribue la terre au centre et le seuil descend —
+   première mesure (fenêtre seule) : les trois îles de « grandes
+   îles » se soudaient en une masse de 75 %, l'archipel en 99 % ! Les
+   creux séparateurs des trois masques sont donc renforcés en
+   compensation, calibrés par grille d'essais sur 8 seeds à r=15 :
+   continents −0,30 → −0,45, grandes îles −0,38 → −0,60, archipel
+   creux −0,38 → −0,60 et entailles −0,16 → −0,28.
+3. **Rayon par défaut du labo 12 → 15** (721 tuiles) : le labo
+   s'aligne sur la taille réelle de la campagne, celle à laquelle le
+   retour a été fait.
+4. **Contrat C6 au harnais committé** : pour les trois types, à
+   r=15, chaque seed doit garder l'anneau extérieur ≤ 5 % de terre
+   (15 combinaisons type × seed). Premier calibrage (creux de bord
+   0,35) échouait sur islands-large/corvane à 6 % — creux porté à
+   0,42, contrat vert.
+
+**Validation.** Harnais 11/11 (C1-C5 inchangés + C6). Morphologie
+mesurée à r=15 (8 seeds, avant → après) : continents masse principale
+50 → 51 % de la terre, 8,5 composantes, bord 56 → 0 %, coupées 4,4 →
+0 ; grandes îles 34 → 38 %, ~10 composantes, bord 56 → 0 %, coupées
+5,1 → 0 ; archipel 28 → 39 %, ~12 composantes, bord 56 → 0 %, coupées
+6,3 → 0 (la masse principale remonte un peu : la terre chassée du
+bord se concentre au centre, c'est le prix du « visible en entier » ;
+les composantes restent nombreuses et équilibrées). **Caractérisation
+à params égaux : les six autres types (custom, continent, pangea,
+fragmented, mer intérieure, lacs) sont inchangés à 0 tuile près** ;
+les trois types corrigés changent sur 27-31 % des tuiles (le
+recentrage voulu). Intégrité post-push vérifiée par cmp sur les 3
+fichiers.
+
+**Commits** (2 sur `v4` depuis 764df23) :
+
+- `213f129` feat(wargame) : labo — fenêtre périphérique + rayon
+  par défaut 15 + contrat C6 (+ cache-buster ?v=12) ;
+- présent commit : journal seul.
+
+**Effet pour l'arbitre.** À r=15, choisir « continents », « grandes
+îles » ou « archipel » montre désormais chaque masse EN ENTIER,
+détachée du bord par un anneau d'océan — plus de continent tronqué par
+le bord de la carte. Le labo s'ouvre à la taille de campagne (r=15 =
+721 tuiles). Les graines de ces trois types rejouent différemment
+d'avant ce correctif (recentrage voulu) ; les autres types rejouent à
+l'identique, byte pour byte à params égaux. Ctrl+F5 pour vider le
+cache (le bundle jeu référence maintenant `?v=12`).
