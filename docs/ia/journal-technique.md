@@ -6318,3 +6318,126 @@ le bord de la carte. Le labo s'ouvre à la taille de campagne (r=15 =
 d'avant ce correctif (recentrage voulu) ; les autres types rejouent à
 l'identique, byte pour byte à params égaux. Ctrl+F5 pour vider le
 cache (le bundle jeu référence maintenant `?v=12`).
+
+## Labo générateur : vraies îles — bosses localisées tronquées, archipel en multi-anneaux, quantile calé dans les bosses (4e retour Thibaut 2026-11-13, base 382f74e)
+
+**Retour.** « Attention, tu n'as pas changé la forme des îles, tu as
+simplement ajouté un anneau d'eau à l'extérieur du plateau... » —
+appréciation exacte : le tour précédent avait détaché les masses du
+bord (contrat C6 vert) mais elles restaient des SOUPES centripètes :
+continents 3 masses soudées 51 %, grandes îles 38 %, archipel 39 % en
+~12 composantes collées. Le fond du problème n'était pas la fenêtre
+périphérique, c'était la FORME des masses elles-mêmes.
+
+**Diagnostic.** La chaîne complète a été démontée cause par cause,
+chaque étape chiffrée au harnais (8 seeds, r=15, params de preset) :
+
+1. **Masques en secteurs** (`cos 2θ/3θ/4θ` × dc) : ils étirent des
+   BANDES du centre au bord — une « île » n'est pas un secteur.
+   Remplacés par des bosses gaussiennes localisées (helper
+   `islandArchipel`).
+2. **Le piège du quantile** : le seuil de mer étant un QUANTILE
+   global, à ~50 % de terre il tombe par construction DANS le bruit de
+   fond (la moitié d'un fond symétrique dépasse). Mesuré : seaLevel
+   0,249, fond 0,19-0,30, bosses 0,4-0,77 — les plaques du fond
+   au-dessus du seuil soudaient les bosses en masses de 84-96 % de la
+   terre. Remède structurel : aplatir la variance du fond (×0,08,
+   ×0,35 pour l'archipel) pour que les BOSSES portent toute la
+   structure ; le quantile se cale alors franchement au-dessus du
+   fond (mesuré 0,63 vs fond ~0,5).
+3. **Queues gaussiennes additives** : deux bosses à 2,35σ l'une de
+   l'autre apportent chacune ~0,5·amp au point médian — soudure
+   garantie au seuil. Passé à la super-gaussienne d'ordre 4 (profil
+   plateau, flanc raide) PUIS troncature nette à 1,6σ : support
+   compact, contribution nulle au-delà.
+4. **Rejet « dernier essai »** : quand aucun essai n'était libre, la
+   position était plaquée sur une voisine (aire ÷3 mesurée) —
+   remplacé par le MEILLEUR des essais, et l'anneau devient
+   auto-calibré : r_ring = sep/(2·sin(π/count)), l'espacement
+   angulaire couvre par construction la séparation requise.
+5. **floorBias négatif** (−0,25, reste des masques en secteurs) :
+   il abritait le champ du cœur sous le seuil ; mis à 0 partout.
+6. **BUG D'ÉCHELLE axialToPixel** : la grille étire l'espace
+   (x = √3·(q+r/2), y = 1,5·r), le rayon en pixels du plateau vaut
+   ~1,6·N, pas N. Toutes les distances du helper étant exprimées en
+   unités « fausses », les bosses étaient plaquées dans le quart
+   central — soupes centrales sur tous les essais. Correctif :
+   RPX = N·1,6 dans tout le helper (sep, rRing, σ, dip).
+7. **Percolation du fond** : le fond haute fréquence, même peu
+   variancé, percole en réseau traversant dès ~30 % de terre portée
+   par lui (masse 80-90 %, diamètre 26) — le squeeze doit être dur ;
+   les miettes du fond ne peuvent PAS être la source principale des
+   masses, seulement des satellites de dentelle.
+8. **Chapelets** : un rejet plus exigeant que l'espacement angulaire
+   garanti échoue en cascade et aligne les bosses en ARC (mesuré : 5
+   îles en diagonale, masse 98 %). Rejet assoupli à min(sep,
+   0,98·gap), jitters angulaire/radial réduits.
+9. **Fenêtre périphérique durcie (75-92 %)** : essayée pour vider la
+   couronne 14, elle AMPUTAIT les bosses posées à ~0,6N de leurs
+   flancs ; le quantile compensait en descendant vers le fond et
+   ressoudait les îles (spirale du seuil). MAINTENUE à 85-97 % : avec
+   le fond aplati et des bosses tronquées, la couronne 14 reste vide
+   seule.
+10. **Warp du masque (±0,55 sur dc)** : sur une bosse étroite
+    (σ ~ 0,2N) il déplace l'évaluation de plus que le σ à CHAQUE
+    tuile — la structure devient une soupe (masse 92-96 %). Supprimé
+    sur les bosses ; la dentelle des côtes vient d'un warp DÉDIÉ dans
+    le helper (~0,9 tuile, 1 octave, fréquence 1,3).
+11. **Spirale de Fermat (count > 6)** : elle place des voisins
+    SUCCESSIFS à 0,6-1 px radialement (contre sep ~ 8,5 px) : rejet en
+    cascade, arcs soudés systématiques (masse 58-98 % sur toutes les
+    grilles 7-12 îles). REMPLACÉE par des anneaux EXPLICITES :
+    extérieur nExt = 60 % des îles à 0,95·rMax, intérieur à rInt
+    calibré pour tenir sep angulairement (clampé sous rExt − sep),
+    angles décalés d'un demi-pas extérieur, rejet croisé contre
+    TOUTES les bosses déjà posées.
+
+**Ce qui a été fait.** Helper `islandArchipel(count, sigRel, amp,
+rMin, rMax, floorBias, sepFact, dipAmp, dipRRel)` : anneau
+auto-calibré (count ≤ 6) ou multi-anneaux (count > 6), bosses
+super-gaussiennes d⁴ tronquées à 1,6σ, rejet meilleur-des-essais,
+creux central explicite (garantit la mer centrale), warp de dentelle
+1,2 px. Squeeze du fond par type dans le blend. Trois presets
+recalibrés sur grille d'essais (8 seeds × r=15) :
+
+- **continents** : 3 bosses σ 0,28, sepFact 3,1, creux 0,10/0,22,
+  sealevel 55 → 60 ;
+- **grandes îles** : 4 bosses σ 0,23, sepFact 3,5, creux 0,05/0,24,
+  sealevel 50 → 60 ;
+- **archipel** : 14 bosses σ 0,125, sepFact 3,1, multi-anneaux
+  9 ext + 5 int, sealevel 60 → 73.
+
+Commentaire de la fenêtre périphérique réécrit (il annonçait le
+durcissement 75-92 % depuis ANNULÉ, et niait le warp de dentelle du
+helper).
+
+**Validation.** Harnais 11/11 (C1-C6, dont C6 anneau extérieur ≤ 5 %).
+Morphologie r=15, 8 seeds : **continents** terre 40 %, 3 composantes,
+masse principale 41 %, diamètre max 13,5 ; **grandes îles** terre
+40 %, 4 composantes, 4 îles ÉQUILIBRÉES 21-30 % chacune (8/8 seeds,
+aucune soudure), diamètre max 10,5 ; **archipel** terre 27 %, ~10
+composantes, masse principale 34-37 %, diamètre max 12. Bord 0 %,
+coupées 0, sur les trois types et les 8 seeds. Stabilité vérifiée à
+r=12/18/24 (les diamètres croissent avec le plateau, les formes
+tiennent ; à r=12 l'archipel produit 25 % de petites îles < 10
+tuiles, normal à cette échelle). Diff complet du labo vs base : seuls
+les 3 presets, les 3 branches, le bloc fenêtre/squeeze et le helper
+sont touchés — **les six autres types rejouent à l'identique à params
+égaux** (le helper n'est appelé que par les 3 types corrigés).
+Intégrité post-push vérifiée par cmp au sha.
+
+**Commits** (2 sur `v4` depuis 382f74e) :
+
+- `c303594` feat(wargame) : labo — vraies formes d'îles + presets
+  recalibrés + cache-buster ?v=13 ;
+- présent commit : journal seul.
+
+**Effet pour l'arbitre.** « Continents » montre 3 masses compactes de
+~13 tuiles de diamètre, « grandes îles » 4 îles équilibrées ~75 tuiles
+chacune, « archipel » une dizaine d'îles dont la plus grande tient
+dans ~10 tuiles de diamètre — sur un plateau de rayon 15, CHAQUE
+masse est vue en entier, détachée du bord et séparée de ses voisines
+par de l'océan. Les graines de ces trois types rejouent
+différemment d'avant ce correctif (changement de forme voulu) ; les
+autres types sont inchangés. Ctrl+F5 pour vider le cache (le bundle
+jeu référence maintenant `?v=13`).
