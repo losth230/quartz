@@ -3154,3 +3154,34 @@ sacres de rang de pays (40/60/100/200 Nourriture) ne sont pas en cause
 (les deux joueurs sont Baronnie). Le détail de timing « le bonus était
 calculé sur le Bétail de FIN de tour » devient sans objet après le
 retrait.
+
+## 2026-11-14 (suite) — Les logements des constructions abritent la population (retour Thibaut)
+
+**Contexte** : « les bâtiments et autres qui produisent du logement
+créent des logements mais qui ne sont jamais utilisés par la
+population ». Les domiciles apportés par les constructions
+(bâtiments, canal `logements` — domicilesApportesVille : Bas quartier
++20 Taudis, Poste de garde/Caserne +10 Taudis, Quartier
+intermédiaire +20 Maisons, Haut quartier +20 Maisons de notable…)
+comptaient dans le PARC (axe Logement du bonheur, magnét migratoire,
+affichage VilleCarte) mais restaient HORS attribution nominative par
+la convention du 2026-10-29 (« apports de constructions non
+attribuables »). En partie réelle L2 : la Capitale du J1 comptait
+50 logements de constructions vides (20 Taudis + 30 Maisons) avec
+722 habitants sans domicile.
+
+**Règle (SUPERSÈDE la convention du 2026-10-29)** : TOUT lit du parc
+est ATTRIBUTABLE — le stock de service d’attribuerDomicilesVille
+agrège désormais le stock du rang, les lits des lois de ville de la
+culture (déjà attribuables depuis le 2026-10-29) ET les apports de
+constructions. Les mêmes règles s’appliquent indifféremment à
+l’origine des lits : ordre de service par prestige décroissant,
+1 logement = 1 habitant, réserve noble (Maison de notable / Palais
+réservés aux nobles) et plancher noble (un noble ne reçoit jamais
+sous la qualité 3). Plus aucun canal de logements ne reste du parc
+mort.
+
+**Effet en partie réelle L2** (simulation vérifiée sur l’état T42) :
+Capitale J1 passe de 134 à 184 logés (+50, exactement ses lits de
+constructions) dès le prochain tour résolu par l’Edge ; le J2 est
+inchangé (aucun de ses bâtiments n’apporte de logements).
