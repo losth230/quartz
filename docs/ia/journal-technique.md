@@ -4029,475 +4029,6 @@ Base a79d6d5. Retour Thibaut : « attention, un noble de naissance doit avoir 30
 - **UI + params** : `ArmiesPanel.tsx` (titre de carte et paragraphes DYNAMIQUES dérivés des fiches métier, commentaires fantômes « Autel eud Guer' » / « Grand écuyer » nettoyés, 3 appels prixArmee à la nouvelle signature, consommation du flag remplacée par note RETRAIT) ; `params/ConstructionsParams.tsx` (colonne « Réduc. levée (Or) ») ; `reference/OngletsMetiers.tsx` (colonne « Armée ») ; `config/params.ts` (4 entrées PARAM_META retirées → notes RETRAIT, docblocks REPLI sur les 4 paramètres historiques).
 - **Tests** : `engine/armees.test.ts` NOUVEAU ×8 (défauts fiches 15/45/16-30 ; ligne éditée prime ; repli param ; bornes d'âge au recrutement dont ageMax édité ; prixArmee 45/0/37 Or + fiche éditée ; règle + canal de banque ; résumé « levée d'armée −10 Or » ; flag résiduel ignoré) ; `config/params.test.ts` +1 migration `armeesBanque2026` (semis depuis paramètres personnalisés, valeurs préservées, idempotence, drapeau) ; `ArmiesPanel.test.ts` adapté à la nouvelle signature ; contrat banque/registre étendu au canal.
 - **diag.ts** : canal `reductionLeveeArmee` ajouté à CANAUX_CONNUS + rendu lisible « levée d'armée −N Or » — le diag CHANGE légitimement : 86 → **87 règles** (le Terrain d'entrainement, effets vides hier, porte désormais sa règle), 3 règles gagnent l'effet en suffixe, nouvelle vue par canal (4 règles). `diag-out.txt` régénéré localement à l'identique de ce que le workflow committera.
-- **Découverte d'implémentation (actée)** : `cloneDefaultConfig()` ne porte PAS de `schemaVersion` → la conversion v2→v5 rejoue et `realignerConstructions` REMPLACE toute fiche connue du référentiel par celle du défaut (« donnée de référence, pas de personnalisation », v5 2026-10-27) — le test de migration tamponne donc `schemaVersion` au courant pour simuler la vraie sauvegarde convergée.
-- Incident d'environnement : reset du sandbox mi-tour (working copies et harnais disparus) — cp-audit/cp-base re-téléchargés (codeload tar.gz), loader.mjs/register.mjs/check-jsx.mjs reconstruits et re-validés (55/55 .tsx base BALANCED, test négatif OK).
-- Validation : **213/213 tests natifs** (204 + 9), diag diff EXACTEMENT le changement de registre attendu (rien d'autre ne bouge : scénario du diag sans armée, villes Moyenne), diff vs base limité aux 17 fichiers src voulus + scripts/diag.ts + diag-out.txt, JSX BALANCED (ArmiesPanel/ConstructionsParams/OngletsMetiers), `--check` OK sur les 12 .ts touchés, JSON re-validé par json.load.
-
-## Pertes des armées non suivies, renfort, retrait de la cible (retours arbitre, 2026-10-28)
-
-- **Reproduits puis corrigés** (3 retours arbitre) : (1) BUG « les pertes réduisent l'armée à 45 à chaque fois » — reproduit en isolation (armée 200 pts, `soldats: []`, commandant vivant → pertes 2 → 45) : `recomputeArmy` dérive `soldats × 15 + commandant` et écrase la puissance stockée d'une armée NON SUIVIE à son seul commandant ; le moteur était correct pour les armées suivies (75/15/90 vérifiés) et le défaut existait déjà à 325ab8e (pas une régression du rework banque). (2) RENFORT manquant. (3) case « cible » inutile.
-- **Moteur** (`engine/armees.ts`) : le branchement SUIVIE/NON SUIVIE vit dans les mutateurs — `infligerPertes` / `libererSoldats` capturent `soldats.length > 0` AVANT les kills : armée non suivie → pertes et fin de service **SOUSTRACTIVES** (nb × pts Soldat, + pts Commandant si coché ; commandant réel tué/libéré, veuvage par id géré) ; armée suivie → comportement inchangé (kills réels + dérivation, retombée juste à 0/commandant si tous tombent). `recruitForArmies` : base = puissance STOCKÉE pour une non suivie (plus d'écrasement à 45 ; le commandant vivant n'est PAS ajouté — pas de double comptage), commandant mort entre deux tours → détaché + −pts sur la stockée ; les recrues d'un renfort font passer l'armée en dérivation (migration vers le suivi). `recomputeArmy` : comportement inchangé (dérivation pure) + CONTRAT documenté (ne l'appeler que sur une armée suivie). `prixArmee` : docblock renfort.
-- **Type** : `engine/types.ts` — champ `cible: string | null` RETIRÉ de `Army` (note RETRAIT in situ ; clé résiduelle des vieilles sauvegardes ignorée).
-- **UI** (`ArmiesPanel.tsx`) : Select « cible » et state supprimés (grid-2 → Select commandant seul, notes RETRAIT) ; nouvelle rangée **Renfort** par armée : delta (NumberInput pas 15, 15-300), ville de renfort (Select, réductions via `prixArmee(delta, C, ville)`), bouton « ⚔ Renforcer +N pts (M Or) » — Or débité, `puissanceCible += N`, log type Armée, disabled si Or insuffisant ; dialog des pertes reformulé (couvre le cas non suivie) ; paragraphe bas mentionne le renfort. JSX BALANCED.
-- **Tests** (`engine/armees.test.ts`) : +5 (213 → 218) — pertes armée suivie (60 puis 0 avec commandant) ; pertes non suivie (200→170→110, PAS 45, personne tué) ; fin de service non suivie (commandant redevient Chasseur) ; recruitForArmies non suivie (stockée conservée ; renfort +30 → 2 recrues réelles, devient suivie, dérivation 75) ; commandant mort entre tours (−45 sur la stockée). Littéraux Army sans `cible`.
-- **Diag** : IDENTIQUE (aucune règle ne bouge — le scénario diag n'a pas d'armée).
-- Incident d'environnement : resets du sandbox entre les messages (working copies + harnais disparus) — cp-audit/cp-base re-téléchargés à la tête via rebuild.sh, register.mjs/loader.mjs/check-jsx.mjs reconstruits, 55/55 .tsx base BALANCED + tests négatifs OK.
-- Validation : **218/218 tests natifs**, diag diff IDENTIQUE, diff vs base limité aux 4 fichiers src voulus (armees.ts, types.ts, ArmiesPanel.tsx, armees.test.ts), JSX BALANCED, `--check` OK.
-
-## La puissance stockée fait foi ; les pertes abaissent la cible (2e retour arbitre, 2026-10-28)
-
-- **Reproduit puis corrigé** (retour « le renforcement fonctionne, mais infliger des pertes ou libérer en fin de service baisse la puissance de l'armée à 45 ») : repro exacte — armée de plateau 200 pts + renfort +30 → 2 recrues réelles (migration vers le suivi) → pertes 2 → les recrues meurent → `recomputeArmy` dérive 0 soldat + commandant = 45. La migration « suivi » du matin était le piège : les recrues réelles ne couvriront jamais les points de plateau, et toute dérivation écrase la stockée.
-- **Arbitrage Thibaut (2e retour, acté)** : (1) PLUS AUCUNE DÉRIVATION — la puissance stockée fait foi pour toute armée ; (2) pertes et fin de service = SOUSTRACTIVES sur la puissance ET la puissance CIBLE (pas de remplissage automatique — retour explicite « infliger des pertes ou libérer doit diminuer la puissance cible »).
-- **Moteur** (`engine/armees.ts`) : `recomputeArmy` RETIRÉ (note RETRAIT in situ avec historique) ; `infligerPertes` / `libererSoldats` UNIFIÉS (plus de branche suivie/non suivie) : kills/libérations réels jusqu'à nb + `perte = nb × pts soldat + (commandant ? pts)` soustraite à puissance ET puissanceCible (plancher 0), log « −N pts sur la puissance et la cible, puissance restante (cible X) » ; `recruitForArmies` : base = stockée pour TOUTE armée (commandant vivant = pas de double comptage ; commandant mort = détaché + −pts, cible intacte, recrutement comble la vacance).
-- **UI** (`ArmiesPanel.tsx`) : dialogs pertes/fin de service reformulés (−N × pts sur puissance ET cible, pas de remplissage) ; commentaire renfort amendé (les recrues n'entraînent plus aucune re-dérivation) ; paragraphe explicatif complété.
-- **Tests** (`engine/armees.test.ts`) : section réécrite — 13 tests dont le test de RÉGRESSION exact du bug du soir (200 + 2 recrues → pertes 2 → 200, PAS 45, cible 200, aucun re-remplissage au tour suivant), pertes/fin de service suivie et non suivie (puissance ET cible), ligne de métier éditée prime (soldat 20 pts), commandant mort (155 puis comblement 200). Test recomputeArmy retiré (note RETRAIT).
-- Incident d'environnement : reset du sandbox entre les messages — cp-audit/cp-base re-téléchargés à la tête db836cb, harnais reconstruit ; check-jsx RÉÉCRIT avec un comptage par NOM de balise (les auto-fermées décrémentent, les fermetures tronquent la pile) — 55/55 .tsx BALANCED, suppressions de `</div>`/`</strong>`/`</p>` détectées ; loader.mjs corrigé (hook `load` : JSON nu en shortCircuit AVEC `source`, sinon ERR_IMPORT_ATTRIBUTE_MISSING / ERR_INVALID_RETURN_PROPERTY_VALUE).
-- Validation : **218/218 tests natifs**, diag IDENTIQUE, diff vs base limité aux 3 fichiers src voulus (armees.ts, armees.test.ts, ArmiesPanel.tsx), JSX BALANCED, `--check` OK, repro corrigée (200 → 200, cible 200).
-
-## L'armée est liée à la population ; menus déroulants (3e retour arbitre, 2026-10-28)
-
-- **Arbitrage Thibaut (3e retour, acté)** : (1) « l'armée est liée à la population, donc des pertes dans une armée doit tuer des habitants » ; (2) « plutôt que des champs textes pour pertes, ajouts et levée d'armées, affiche un menu déroulant, ce sera plus simple ».
-- **Moteur** (`engine/armees.ts`) : `infligerPertes` et `libererSoldats` prennent le COMPLÉMENT des pertes/libérations parmi les candidats RECRUTABLES (vivants, âges de la ligne Soldat, sans armée, métier libre ou Chasseur — mêmes filtres que `recruitForArmies`), dans l'ordre du recensement ; pertes → `tuer` (statut « Décédé », veuvage M1, retiré des suivis), fin de service → `liberer` (re-titré Chasseur, vivant). Pool épuisé → les points seuls baissent (plancher 0 inchangé). Docblocks amendés in situ, logs enrichis : « — tombés : noms » / « — libérés : noms ».
-- **UI** (`ArmiesPanel.tsx`) : les 3 `NumberInput` (pertes, renfort, puissance de levée) deviennent des `Select` — pertes 1-20 (« N pertes (−N × pts) »), renfort +15 à +300 (« +N pts (P Or) », prix de levée avec réductions de la ville de renfort), levée 45-300 (« N pts (P Or) »). Import `NumberInput` retiré du panneau.
-- **Tests** (`engine/armees.test.ts`) : test « non suivie pure » RÉÉCRIT en « liée à la population » (j1/j2 tuées par ordre du recensement, Dirigeant et 35 ans épargnés, pool épuisé → points seuls, commandant en plus) ; NOUVEAU test « suivie au-delà des soldats suivis » (s1 + j1 + j2 tués, 90 → 45) ; « fin de service » amendée (le complément libère s1, `liberes2` = commandant + s1) — 219 tests.
-- Validation : **219/219 tests natifs**, diag IDENTIQUE, diff vs base limité aux 3 fichiers src voulus, JSX BALANCED, `--check` OK.
-
-## Retrait de la migration par scolarité (arbitrage Thibaut, 2026-10-28)
-
-- **Arbitrage Thibaut (acté)** : « commence par retirer la migration par scolarité » — seul système de migration automatique restant (l'attrait touristique était déjà retiré le 2026-10-19).
-- **Moteur** (`engine/population.ts`) : `migrerPopulation`, le cache `villesAvecProfesseur` (et son invalidation par état), l'interface `CibleVille` et l'appel étape 3.6bis du tour SUPPRIMÉS ; banner de section réécrit en mémoire RETRAIT (historique VBA conservé : 10 %/2 %/1 %, Obstinés exclus) ; imports morts retirés (`City`, `fullName`, `perteDemenagement` — ne servaient qu'à la migration).
-- **Paramètres** (`config/params.ts`) : `migrationEcole/Suzerain/Monde` quittent PARAM_META (plus éditables) et restent en REFLIS de compatibilité dans l'interface et DEFAULT_PARAMS — patron du retrait armées (puissanceGeneral & co).
-- **Tests** (`engine/population.test.ts` NOUVEAU, ×2) : 20 tours avec Professeur chez un autre joueur → aucun enfant ne bouge, aucune entrée « scolarité » au journal ; REFLIS aux valeurs historiques.
-- Validation : **221/221 tests natifs** (219 + 2), diag IDENTIQUE, diff vs base limité aux 3 fichiers voulus (population.ts, params.ts, population.test.ts NOUVEAU), `--check` OK. Aucun .tsx touché.
-
-## Flux de migration par bonheur (2e arbitrage du jour, 2026-10-28)
-
-- **Arbitrage Thibaut (acté)** : flux de migration par bonheur — « plus le bonheur est bas, plus un habitant a de chances de quitter sa ville, pour une autre ville aléatoire, pondérée par la culture similaire et le bonheur de chacune des villes » ; arbitrages complémentaires par interview : linéaire 0-10 % (0 % à 100, 10 % à 0), toutes les villes du monde, tous les vivants sauf Dirigeant/Héritier.
-- **Moteur** (`engine/migrationBonheur.ts` NOUVEAU) : `probaDepartBonheur` (pure, linéaire), `poidsDestination` (pure, culture ×N × (1 + b/100)), `migrationBonheur` (étape 4bis du tour, APRÈS tous les populationTurn — un migrant inter-joueurs n'est pas retraité au même tour) ; bonheur calculé UNE fois par ville et par tour (fiches) ; exclusion de la source PAR IDENTITÉ (villes homonymes « Capitale » chez 8 joueurs) ; photo des habitants avant déplacement + set des déplacés (pas de double migration, pas de re-tir des arrivants).
-- **Branchement** : `tour.ts` étape 4bis + `params.ts` (`migrationBonheurMax` 0,10 / `migrationBonheurCulture` 4, PARAM_META groupe Population).
-- **Tests** (`engine/migrationBonheur.test.ts` NOUVEAU, ×6) : formules pures (linéarité, pondération, ville sans culture) ; conservation exacte de la population mondiale (aucune perte, aucun doublon, une entrée de journal par migration, métier+domicile perdus) ; interrupteur proba 0 ; Dirigeant/Héritier ancrés même à proba max 1 (NB : ne pas compter les ARRIVANTS dans la longueur du tableau) ; départs dès les premiers tours aux défauts (graine fixe).
-- **Amendement** `engine/population.test.ts` : le contrat « plus AUCUN déplacement automatique » du retrait scolaire est CADUC — flux coupé (max = 0) pour isoler le contrat scolaire ; invariant recentré sur « aucune entrée scolarité ».
-- Validation : **227/227 tests natifs** (221 + 6), `--check` OK, aucun .tsx touché. Diag CHANGE LÉGITIMEMENT (patron armées-par-la-banque) : « log 579 → 687 entrées » (≈108 migrations sur 4 tours) et « commandants disponibles 4 → 5 » — les 14 lignes [ÉCHEC] des scénarios de dégradation sont IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré (même taille par coïncidence de largeur de chiffres).
-- **⚠ INCIDENT CI « CI jeu » ROUGE sur le push v1 (npm test, exit 1 en 7 s — annotations génériques, logs 403 sans admin)** : les 13 fichiers de TESTS DE RENDU (src/components) tournent EN CI (tsx --test src/**/*.test.ts) mais PAS dans le harnais local (react introuvable, npm install interdit par le sandbox, Node 22 ne charge pas .tsx, symlink realpath par l'ESM) — l'échec exact est resté INVISIBLE. Forensique locale : reproduction de partieRendu (graine 20261019, 2 tours) → le flux v1 SÉPARAIT 32 COUPLES entre porteurs (mariageId croisé = conjoint introuvable dans le tableau du porteur). **Correctif (amendement, même arbitrage)** : (1) COUPLES INSÉPARABLES — un marié ne part qu'avec son conjoint de la même ville (le foyer suit, une entrée de journal par membre) ; conjoint ancré (Dirigeant/Héritier/en armée) → le foyer ne part pas ; conjoint absent → il part seul ; (2) les SOLDATS/COMMANDANTS EN ARMÉE ne déménagent plus (l'armée lie l'habitant) ; (3) `updateCityCultures` rappelé pour tous les joueurs en fin de flux (les arrivées peuvent renverser la majorité). Invariant vérifié en sim : 0 mariage croisé après correctif. **229/229 natifs** (227 + 2 : « le conjoint suit » et « conjoint ancré/soldat → foyer reste »), diag régénéré (log 579→728, ÉCHEC identiques). RÈGLE À RETENIR : les tests de RENDU ne passent que par la CI — prévenir Thibaut qu'un push peut rougir la CI pour le seul périmètre rendu.
-
-## Flux de migration par bonheur — pondération v2 (3e arbitrage du jour, 2026-10-28)
-
-- **Arbitrage Thibaut (acté)** : retour sur la PONDÉRATION de destination — « pour les facteurs, les habitations du même joueur ×1,5, et les habitations de la même culture que le personnage qui migre ×1,25 » ; précision : « un personnage peut migrer vers la ville d'où il vient, ce n'est pas un bug ».
-- **Moteur** : `poidsDestination` prend un 5e argument `memeJoueur` — `poids = (même joueur ? migrationBonheurMemeJoueur : 1) × (culture identique ? migrationBonheurCulture : 1) × (1 + bonheur/100)` ; le tirage passe `f.joueur.n === p.n` ; le RETOUR vers une ville d'origine reste légitime (aucune exclusion d'anciennes résidences, seule la ville source courante est exclue par identité).
-- **Params** : `migrationBonheurCulture` 4 → **1,25** (note REMPLACÉ dans le docblock, le ×4 du matin est historisé) ; `migrationBonheurMemeJoueur` **1,5** NOUVEAU (interface + DEFAULT_PARAMS + PARAM_META groupe Population, avec le NB du retour légitime).
-- **Tests** : pondération réécrite en v2 (×1,25 culture, ×1,5 même joueur, produit ×1,5×1,25×2 = 3,75, ville sans culture garde le facteur seul) ; défauts verrouillés 0,10/1,25/1,5.
-- Validation : **232/232 tests natifs**, `--check` OK, aucun .tsx touché. Diag CHANGE LÉGITIMEMENT (patron RNG) : « log 728 → 724 entrées » et « Armée 2 : 6 → 3 soldats » au recrutement — les 14 lignes [ÉCHEC] IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré. Diff vs base 3 fichiers (migrationBonheur.ts, migrationBonheur.test.ts, params.ts).
-
-## Flux de migration par bonheur — FOYER COMPLET (4e arbitrage du jour, 2026-10-28)
-
-- **Arbitrage Thibaut (acté)** : « lorsqu'un personnage déménage, il déménage avec son/sa conjoint.e et leurs enfants non mariés. »
-- **Moteur** (`engine/migrationBonheur.ts`) : le foyer du départ = le migrant + son conjoint de la même ville + leurs ENFANTS NON MARIÉS de la ville (mereId OU pereId d'un membre du couple, sans mariageId — la majorité n'exclut pas). Enfant marié = foyer PROPRE (il part avec SON conjoint à son propre tirage, jamais emporté par ses parents). Enfant ancré (Héritier) ou en armée RESTE — il ne déménage jamais et n'entrave pas le départ du reste du foyer. Conjoint ancré → le foyer NE PART PAS (y compris les enfants). Conjoint absent (défunt/ailleurs) → l'habitant part avec ses enfants non mariés. Tous les membres du foyer partent sans tirage propre, à la destination du tirage du foyer, chacun avec son entrée de journal (« suit X — quitte »).
-- **Tests** : test « couples inséparables » RÉÉCRIT en « foyer complet » (couple + 2 enfants non mariés dont un adulte → même destination ; enfant marié part avec SON conjoint et AUCUNE entrée « suit Pers-cp1/cp2 » pour lui ; enfant Héritier et enfant soldat RESTENT ; 4 entrées de journal pour les 4 partants) ; test « conjoint ancré » étendu (l'enfant du foyer d'un Dirigeant ne part pas non plus, aucune entrée journalisée).
-- Validation : **232/232 tests natifs**, `--check` OK, aucun .tsx touché. Diag CHANGE LÉGITIMEMENT (patron RNG : log 724 → 730, commandants, soldats du recrutement) — les 14 lignes [ÉCHEC] IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré. Diff vs base 2 fichiers (migrationBonheur.ts, migrationBonheur.test.ts).
-
-
-## Flux de migration par bonheur — FACTEURS EMPLOI & LOGEMENT (5e arbitrage, 2026-10-29)
-
-- **Arbitrage Thibaut (acté)** : « pour les migrations, j'aimerais appliquer des facteurs : un habitant sans métier qui migre sans emploi a davantage d'intérêt à rejoindre une habitation avec des emplois disponibles, idem pour le logement. »
-- **Moteur** (`engine/migrationBonheur.ts`) : `FicheVille` étendue de `emploisLibres` (postes offerts > adultes en poste) et `logementsLibres` (stock de logements > vivants), photographiés UNE fois par ville et par tour au début du flux (les arrivées du flux n'occupent ni poste ni lit — réaffectation au tour suivant) ; deux fonctions pures `facteurEmploi` / `facteurLogement` (ne parlent QUE pour qui manque et là où c'est libre) composées dans le `pickWeighted` avec la pondération v2 : poids = v2 × facteurEmploi(sans métier ?) × facteurLogement(sans domicile ?). Le statut regardé est celui du TIRÉ avant départ (à l'arrivée, perteDemenagement laisse TOUS les migrants sans métier ni domicile) ; le foyer (conjoint, enfants) suit le statut de son chef sans influer.
-- **Params** : `migrationBonheurEmploi` **1,5** et `migrationBonheurLogement` **1,5** NOUVEAUX (interface + DEFAULT_PARAMS + PARAM_META groupe Population, aide complète du retour).
-- **Tests** (×3 NOUVEAUX, 232 → 235) : facteurs purs (4 cas chacun + défauts verrouillés 1,5/1,5) ; deux tests de flux sur un « monde réduit déterministe » (3 joueurs : ville de p1 SATURÉE — 60 adultes en poste > 44 postes offerts, 60 vivants > 58 lits ; ville de p2 LIBRE (vide) ; migrant chez p0 à bonheur 23/100 → départ certain à proba max 10) : le SANS-MÉTIER (logé) rejoint la ville qui embauche à facteur 1e9, le SANS-DOMICILE (pourvu) rejoint la ville qui loge. Scénario sondé par probe AVANT écriture (graines 20261029/7/8), probe supprimée après coup.
-- Validation : **235/235 tests natifs**, aucun .tsx touché ; pas de tsc local (node_modules absent du tarball, npm install interdit par le sandbox) → contrôle de types reporté sur la CI (tsc && vite build), comme les tests de rendu. Diag IDENTIQUE base↔nouveau — LÉGITIME : au setup toutes les villes ont postes et lits libres, les facteurs pèsent uniformément sur toutes les candidates (aucun changement de tirage) ; `diag-out.txt` INCHANGÉ. Diff vs base : 3 fichiers (params.ts, migrationBonheur.ts, migrationBonheur.test.ts) + les 2 docs.
-
-
-## Flux de migration par bonheur — PONDÉRATION v3 ADDITIVE (6e arbitrage, 2026-10-29)
-
-- **Arbitrage Thibaut (acté)** : « il faudrait que la formule se base sur le bonheur et que tous les autres modificateurs soient additifs, par exemple bonheur × (culture identique + joueur), donc bonheur × 1,75. On peut mettre facteur emploi et facteur logement à ×2 je pense. » — le multiplicatif v2 creusait trop l'écart entre candidates (max ×3,75 d'attrait, jusqu'à ×8,44 avec les facteurs ×1,5 du 5e arbitrage).
-- **Moteur** (`engine/migrationBonheur.ts`) : `poidsDestination` prend un 6e argument `bonusAdditifs` — `poids = attrait × (1 + même joueur + culture + bonusAdditifs)`, l'attrait `1 + bonheur/100` (×[1 ; 2]) restant la seule base multiplicative ; `facteurEmploi`/`facteurLogement` deviennent des BONUS (renvoient le paramètre si applicable, **0** sinon) additionnés au call site du `pickWeighted`. Exemple arbitre verrouillé en test : culture + même joueur = attrait × 1,75. La photographie des disponibilités et le statut du TIRÉ avant départ (5e arbitrage) sont conservés tels quels.
-- **Params** : `migrationBonheurCulture` 1,25 → **0,25** ; `migrationBonheurMemeJoueur` 1,5 → **0,5** ; `migrationBonheurEmploi` 1,5 → **1** ; `migrationBonheurLogement` 1,5 → **1** — docblocks d'interface, DEFAULT_PARAMS et PARAM_META amendés en v3 ADDITIVE (notes REMPLACÉ/historisé sur le multiplicatif v2 et le ×1,5 du 5e arbitrage).
-- **Tests** : test pur v2 RÉÉCRIT en v3 additive (base 1, +0,25 culture, +0,5 joueur, exemple arbitre 1,75, attrait ×2, bonus additifs 1 et 2 → 2,5 et 7,5, ville sans culture) ; test facteurs RÉÉCRIT (bonus +1 ou 0, défauts verrouillés 1/1) ; défauts verrouillés 0,10/0,25/0,5/1/1. Les tests de flux « monde réduit » (bonus 1e9 écrasant) restent valides tels quels : le bonus additionné domine de la même façon.
-- Validation : **235/235 tests natifs**, `--check` OK, aucun .tsx touché, contrôle de types reporté sur la CI (npm install interdit par le sandbox). Diag CHANGE LÉGITIMEMENT (patron RNG : « log 730 → 762 entrées », « commandants disponibles 5 → 3 » — les ratios additifs changent les tirages aux graines fixes) — les 14 lignes [ÉCHEC] IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré. Diff vs base : 3 fichiers src (params.ts, migrationBonheur.ts, migrationBonheur.test.ts) + diag-out.txt + les 2 docs.
-
-
-## Refonte des cultures — 12 LOIS (2026-10-29)
-
-- **Arbitrage Thibaut (acté)** : proposition des 12 lois des 6 cultures (« voici ce que je pensais faire des cultures ») + 4 arbitrages complémentaires via questions : Ferveur martiale = malus mondial une seule fois par habitation avec plancher 0 ; Corps de fer +10 Garnison SE CUMULE au défaut garnisonParGarde (Garde zélotiste = 20) et le +0,2 Or/tour est le seul flux ; Caravanes = +1 au cap du JOUEUR par ville sethiste qualifiée (le cap maxRoutesJoueur étant par joueur) ; toutes les anciennes lois REMPLACÉES (partent à l'historique git).
-- **Périmètre** : loi de VILLE = culture majoritaire (`ville.culture`) ; loi d'HABITANT = culture propre du personnage où qu'il vive ; régimes non touchés ; 6 noms conservés.
-- **Config** (`config/defaultConfig.ts` + `referentiels.json`) : `CultureDef` réécrit — `regleVille`/`regleHabitant` (anciens reglePays/reglePerso RENOMMÉS) + 13 champs chiffrés optionnels ; anciens champs `capital*ParHabMonde`/`scienceParConstruction` SUPPRIMÉS (notes REMPLACÉ/historisé). `migrerCultures` : construction EXPLICITE (supprime les clés mortes des configs sauvegardées) + patron taxes25 pour `fertFactor` (la valeur 1 de l'ancien défaut ne bloque pas le nouveau défaut Walpurgis 1,1). PAS de bump de SCHEMA_VERSION_CONFIG.
-- **Moteur** : `domicilesCultureVille` (+5 Taudis / +2 Palais, même convention que les apports — comptés, non attribuables) ; `logementsVille` l'inclut ; Déisme = emplacements de Scientifique par bâtiment (`emplacementsMetierVille`) + `maladieContractMod` dans `maladieStep` ; Naturalisme = bonus Fermier d'été dans `detailGainsVille` (pattern Ponton) + fertFactor 1,1 ; Sethisme = cap routes (`maxRoutesJoueur`) + `scienceParNoble` ; Zélotisme = `garnisonParGardeCulture` cumulé + `orParGarde` + `malusFerveurMartiale` (plancher 0, une fois, joueurs seulement) dans `garnisons.ts` ; Communautarisme = `seuilBourgeoisCulture` → `rangDe` partout (conso/prod, mariage même rang, lois nobles).
-- **Banque** : la source 'culture' est RETIRÉE — `reglesCultures`, l'effet `fluxParVilleCultureMonde`, la condition `culture` et le canal diag partent avec (notes RETRAIT, historique git). `regimes.ts` : `effetsCulturePays`/`detailCulturePays`/`nbVillesCultureMonde` REMPLACÉS par `loisHabitants`/`detailLoisHabitants` (nobles et gardes de la population vivante) ; détail de garnison enrichi (lignes 'métier' Corps de fer et 'culture' Ferveur martiale) ; `tourismeCourant` et l'étape 3septies (`appliquerEffetsRegimesCultures`) suivent. `production.ts` : canal « Régimes & cultures » = régime + lois d'habitants.
-- **UI** : OngletsCultures (wiki → colonnes Culture/Hérédité/Homo/Fécondité/Loi ville/Loi habitant) ; ParamsPanel (table d'édition : 13 colonnes chiffrées + 2 textuelles) ; CulturePays réécrit (textes des lois + badges `detailLoisHabitants`) ; CarteRoyaume ; VilleCarte (parc logements + plancher garnison « Ferveur martiale : maintenue à 0 ») ; Constructions (RETRAIT du crédit Science à la construction).
-- **Tests** (235 → **242**) : NOUVEAU `engine/cultures.test.ts` (défauts des 12 lois verrouillés, migration des vieilles configs, chaque loi testée moteur : parc, emplacements, seuil 80, −2 % contraction, fermiers d'été, cap routes, lois d'habitants, Corps de fer cumulé, Ferveur martiale une fois/plancher/levée) ; `rules/regimes-cultures.test.ts` réécrit (registre régime seul, ABSENCE de règles culture dans la banque) ; `rules/registre.test.ts` (contrat sans `fluxParVilleCultureMonde`) ; 2 tests de `statutSocial.test.ts` adaptés (culture à seuil 100 et dynastie roturière — `rangDe` traite une dynastie noble comme noble).
-- Validation : **242/242 tests natifs** ; .tsx touchés (6 fichiers UI) → contrôle de types reporté sur la CI (npm install interdit par le sandbox). Diag CHANGE LÉGITIMEMENT (patron RNG : Walpurgis 1,1 change les naissances, +5 lits communautaristes change le bonheur — « log 762 → 749 entrées », « commandants 3 → 4 » ; registre 87 → 84 règles, canal `fluxParVilleCultureMonde` retiré) — les 14 lignes [ÉCHEC] IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré. Diff vs base : 25 fichiers modifiés + `engine/cultures.test.ts` + `diag-out.txt`.
-- **Rattrapage CI (3 commits, tête finale `daee1a05`)** : la CI `npx tsc --noEmit` puis `tsx --test src/**/*.test.ts` (tests de COMPOSANTS exécutés seulement en CI — react indisponible en local) ont demandé trois correctifs après le feat : (1) `b6454d33` — rétrécissement `assert.ok(ville)` ×7 dans `engine/cultures.test.ts` (la ville du mock `ContexteEffet` est `City | undefined`) + cast `(r.source as string) !== 'culture'` (SourceRegle ne contient plus 'culture') ; (2) `16871227` — reste `${sci > 0 …}` dans le journal de construction (`components/pays/Constructions.ts`), orphelin du crédit Science retiré (aurait été ReferenceError à la première construction — attrapé par le typecheck strict) ; (3) `daee1a05` — `components/PlayerView.test.ts` : le parc logements attendu doit inclure `domicilesCultureVille` (la fixture partieRendu donne Communautarisme au joueur 1 → +5 Taudis, 63 ≠ 58). CI verte intégrale (jeu + build + deploy + diag), bundle live `index-ClioWiBj.js`.
-
-## Monuments pieux sur les BÂTIMENTS DE FACTION (retour arbitre Thibaut, 2026-10-29)
-
-- **Retour Thibaut** (après le déploiement des 12 lois) : « les bâtiments de faction vont revenir, donc non, laisse le monument pieux sur le bâtiment de faction ». Le **Monuments pieux** du Déisme ne compte plus TOUS les bâtiments : uniquement les **bâtiments de faction**, identifiés par le marqueur `batimentDeFaction` (champ optionnel de `ConstructionRef`). Marqueur **dormant** : les 19 constructions de faction sont retirées du référentiel depuis le 2026-10-19 (« à refaire ») — aucune entrée ne le porte aujourd'hui, la loi DORT à 0 emplacement jusqu'à leur retour. Rien de codé en dur : le marqueur vit dans le référentiel, le montant (`scientifiqueParBatiment`) dans le panneau Paramètres.
-- Moteur : `emplacementsMetierVille` (metiers.ts) filtre `constructionRef(b)?.batimentDeFaction === true` (docblock REMPLACÉ/RETRAIT en cascade) ; texte du référentiel (« bâtiments de faction offrent +1 emplacement ») ; colonne ParamsPanel « Scient./bât. faction » ; section 12 lois des docs AMENDÉE (tableau, arbitrage 2 REMPLACÉ, note Science) ; test `cultures.test.ts` RÉÉCRIT (deux constructions de faction INJECTÉES dans la config, même patron que les tiers 2/3 de pays/Constructions.test.ts : +1 par bâtiment de faction sur 3, loi DORT à 0 sans marqueur, aménagements exclus).
-- (NB attributions, même retour : les lits des lois de logement — +5 Taudis / +2 Palais — suivent la convention des apports de constructions : comptés dans le parc pour l'axe Logement du bonheur et le magnét migratoire, NON attribuables nommément. Convention maintenue.)
-
-
-## Lits des lois ATTRIBUTABLES (6e retour arbitre Thibaut, 2026-10-29)
-
-- **Retour Thibaut** : « il faut que les lits des lois puissent abriter des habitants, sinon ça ne sert à rien. » — les +5 Taudis du Communautarisme « Logements élargis » et les +2 Palais du Lunisme « Villes Saintes » deviennent **ATTRIBUTABLES nommément** : `attribuerDomicilesVille` (engine/domiciles.ts) ajoute `domicilesCultureVille` au stock de service, en plus du stock du rang — un sans-abri d'une ville communautariste reçoit un Taudis de la loi, un noble luniste un Palais. Les Palais issus de la loi passent par la même RÉSERVE NOBLE que les autres (`reserveNobleDomicile`, retour 2026-10-28). ASYMÉTRIE assumée avec les apports de constructions (`domicilesApportesVille`), qui restent du parc non attribuable — non visés par le retour.
-- Consommateurs vérifiés SANS changement moteur : `logementsVille` (bonheur) et le magnét migratoire v3 `logementsLibres` comptaient déjà les lits dans le parc — le score Logement reste cohérent (l'occupation monte, la capacité ne change pas) ; VilleCarte reflète l'occupation (`occLog`) automatiquement, les sans-abri chutent. Docblocks amendés en REMPLACÉ (`domicilesCultureVille`, `attribuerDomicilesVille`, commentaire parc de `bonheur.ts`, commentaire `capLog` de `VilleCarte.tsx`).
-- Tests : `engine/cultures.test.ts` étendu d'un test d'attribution nominative (parc vide + habitants sans domicile : sans loi personne n'est logé ; Communautarisme → exactement 5 Taudis de la loi attribués, au-delà sans-abri ; Lunisme sans noble → Palais de la loi vides ; un noble à 300 → Palais de la loi, les non-nobles n'y touchent pas). `engine/domiciles.test.ts` : la ville témoin du setup étant COMMUNAUTARISTE, `partieTemoin` passe en culture SANS loi de logement — les tests de MÉCANIQUE d'attribution (1 lit = 1 habitant, qualité d'abord, réserve noble, pas de surbooking) restent des contrats sur le STOCK DU RANG SEUL.
-- Validation : **243/243 tests natifs** (242 + 1 nouveau) ; diag RE-LANCÉ : les 14 lignes [ÉCHEC] IDENTIQUES et `diag-out.txt` BYTE-IDENTIQUE (aucun sans-abri dans les villes à loi de la fixture — l'attribution n'y change rien, diff légitime nul) ; diff vs tête `92514428` : 5 fichiers src. Contrôle de types reporté sur la CI (npm install interdit par le sandbox, seul `VilleCarte.tsx` est touché côté .tsx — commentaires seuls).
-## Refonte des régimes — 8 LOIS (2026-10-29)
-
-- **Arbitrage Thibaut (acté)** : proposition des 8 lois des 4 régimes politiques (Autoritarisme, Socialisme, Démocratie, Monarchie). Principe directeur réaffirmé en séance : bonus de VILLE → joueur qui contrôle la ville ; bonus d'HABITANT → habitant porteur (donc son joueur) — ex. Sethisme : Caravanes au propriétaire de la ville, Science des nobles sethistes au possesseur du noble. Élections (sante.ts fDemocratie) et Droit Divin (tour.ts bonusMonarchie) déjà codées ; Conscription existait en TEXTE depuis l'origine mais n'avait jamais été codée.
-- **Config** (`referentiels.json` bloc régimes réécrit : 4 régimes × loi textuelle + 7 champs chiffrés) : `leveeOrParRangPays` 10, `departHabitantsMult` 0,8, `orParMigrant` 1, `consoNourrBourgeoisRegime` 1, `consoNourrNobleRegime` 2, `bonheurParHabitation` 5, `tributVassalMult` 1,05. `defaultConfig` : `RegimeDef` + `migrerRegimes` EXPLICITE (purge les champs morts `garnisonParRang`/`nourrEteChampRiziere` des configs sauvegardées — PAS de bump de SCHEMA_VERSION_CONFIG). `rules/types.ts` : source `regime` et `fluxParAmenagement` retirés.
-- **Moteur** : `rangs.ts` (`rangPaysNiveau` : Baronnie 1 → Empire 5, hors échelle 0) ; `armees.ts` (prixArmee 4e arg `{ regime?, rang? }` — Conscription −10 × rang du PAYS, cumulée à la réduction de ville, plancher 0) ; `economie.ts` (Redistribution : `consoNourrHabitant(c, C, regime?)` bourgeois 1 / nobles 2, chemin `detailGainsVille` inclus) ; `bonheur.ts` (`bonusBonheurRegime` +5 par habitation, `bonheurVilleComplete` plafonne à 100) ; `migrationBonheur.ts` (`multDepartRegime` pur ×0,8 au tirage de départ ; Terre d'accueil +1 Or par migrant ARRIVANT — foyers entiers, déménagements internes inclus, joueur DESTINATAIRE, 1 ligne de log par migrant) ; `vassalite.ts` (tribut REÇU ×1,05, le vassal paie sa part, la différence est créée) ; `garnisons.ts` (bonus de régime retiré du détail) ; `regimes.ts` (docblocks REMPLACÉ/RETRAIT, `effetsRegime`/`reglesRegimes` supprimés, `appliquerEffetsRegimesCultures` SANS saison, étape 3septies = lois d'habitant seules) ; `tour.ts` (clé `loisCultures`, l'ancienne `regimesCultures` orpheline pour les vieux historiques) ; `production.ts` (canal « Lois des cultures » : lois d'habitant seules ; RETRAIT du DERNIER appel `effetsRegime` dans `provenancesApports` — symbole supprimé non importé, attrapé AVANT le push : il aurait fail `npx tsc --noEmit` en CI, les tests natifs ne l'exercent pas).
-- **RETRAIT banque** : source `regime` retirée — `reglesRegimes`/`effetsRegime` supprimés, registre 84 → 83 règles (canal diag `fluxParAmenagement` parti avec). Anciennes lois « garnison +15/rang d'habitation » et « nourriture d'été champs/rizières » REMPLACÉES/historisées (git).
-- **UI** : `RecapParTour`/`RecapDernierTour` (colonne « Lois des cultures », repli `loisCultures ?? regimesCultures ?? {}`) ; `OngletsCultures` (wiki 7 colonnes + note) ; `CarteRoyaume` (`loiChiffree` 7 champs + badge) ; `ParamsPanel` (7 NumberInput, step 0,05 pour les multiplicateurs) ; `ArmiesPanel` (6 call sites `prixArmee` avec p/target/x) ; `VilleCarte` (bonus Bonheur + title + marqueur `({p.regime} +{bonus})`).
-- **Tests** (243 → **254**) : NOUVEAU `engine/regimes.test.ts` (12 tests : Conscription prix/cumul/plancher, `rangPaysNiveau`, montants verrou des 7 champs, Frontières closes ×0,8, Redistribution conso + chemin `detailGainsVille` −7/−14/−4/−8, Pouvoir du peuple ×2, Vassaux ×2, lois structurelles Élections/Droit Divin) ; `rules/regimes-cultures.test.ts` RÉÉCRIT (3 tests) ; `rules/banque.test.ts` (source 'batiment' pour le test saison) + `rules/registre.test.ts` (contrat sans `fluxParAmenagement`) adaptés ; `engine/migrationBonheur.test.ts` (`partie()` neutralise `pl.regime` — le défaut Autoritarisme des 8 joueurs faussait le tirage — + 2 tests Terre d'accueil, seed 20261029).
-- Validation : **254/254 tests natifs** ; diag CHANGE LÉGITIMEMENT (log 749 → 726 entrées — les lois changement les tirages aux graines fixes ; registre 84 → 83 règles ; canal `fluxParAmenagement` retiré) — les 14 lignes [ÉCHEC] IDENTIQUES base↔nouveau ; `diag-out.txt` régénéré. Diff vs base `997f3870` : 28 fichiers modifiés + `engine/regimes.test.ts` (nouveau) + `diag-out.txt` + les 2 docs.
-
-## Sync v4 de rattrapage + audit du 30/10 (2026-10-30)
-
-- **SYNC v4** : constat d'ouverture — le miroir `v4` avait **123 commits de retard** (dernier sync `1d8d590`, miroir de `700895e` du 2026-10-25) ; `v4` restant la branche qui construit le SITE Quartz (le jeu, lui, se déploie depuis `chasse-et-peche-web`). Périmètre du miroir vérifié par tarballs des deux têtes : **`src/` + `supabase/` uniquement** (les configs racine de v4 = site Quartz ; `docs/ia` et `AGENTS.md` hors miroir). Baseline PROPRE avant sync : `v4/src` et `v4/supabase` byte-identiques à `700895e` — aucun édit manuel à fusionner (la règle inventaire-blob avant sync a été respectée : rien à merger côté v4). **93 fichiers poussés en 9 commits thématiques** (`14b1cbf2` config → `c5319494` UI+SQL, messages `sync(jeu) : rattrapage 25→29 oct — lot N/9`, cf. tête web `849d64c2`) **+ 2 suppressions** : `13e16d25` (`src/engine/merveilles.ts`) puis tête v4 `e03a6deb` (`src/engine/statutAuto.ts`) — retraits de l'audit du 27/10 absents du miroir. Intégrité vérifiée par RE-TARBALL de la tête v4 : `diff -rq` NUL sur `src/` ET `supabase/` (158/158 fichiers identiques entre branches — round-trip push_files UTF-8/accents/emojis sans perte). CI : runs intermédiaires #1578-1584 cancelled (concurrence Pages, normal), run **#1585 sur la tête `e03a6deb` SUCCESS** (1m24s) ; site + jeu live répondent 200 (contenu inchangé — le jeu se construit depuis la tête web, identique).
-- **AUDIT 2026-10-30** (rapport complet : [audit-code-2026-10-30.md](audit-code-2026-10-30.md)) : base `fed35f5e` (27/10) → tête `849d64c2` (29/10), 69 fichiers modifiés + 9 nouveaux dans `src/`. Constats : **A1** 🟠 `normaliserEtat` ne complète pas `p.armees` → crash fin de tour (« p.armees is not iterable ») sur un état ingéré antérieur aux armées (2026-10-17) — **REPRODUIT** au harnais ; correctif d'UNE ligne + test proposés, **à arbitrer** ; **A2** 🟡 perf 16k habitants : 3,2-4,3 s/tour (1,7-3,2 s le 27/10), dont `migrationBonheur` ≈ 0,21 s isolés — surveillance (bandeau F4 tient, partie live très en dessous) ; **a1** `malusFerveurMartiale` = première culture martiale du référentiel seulement (conforme à l'arbitrage actuel — une seule : Zélotisme) ; **a2** le dernier recrutement peut dépasser la puissance cible (soldat indivisible, sans action) ; **a3** compteurs AGENTS.md périmés → **corrigés ce jour** (254 natifs / 12 fichiers 21 tests de rendu, 2e dérive — les compteurs devraient suivre chaque vague de tests). Points forts relevés : refonte « 8 lois » sans double comptage banque/moteur (source `regime` fermée, repli `loisCultures ?? regimesCultures`), docblocks-arbitrages intacts y compris sur les abandons de modèle (dérivation armée → stockée fait foi ; pondération multiplicative → additive v3), m1/m2 multijoueur appliqués et testés, migrations de config à drapeaux ciblés sans bump de SCHEMA_VERSION_CONFIG.
-- **Validation du jour** : **254/254 tests natifs** rejoués en local (engine + rules + config + state + supabase, harnais `node --experimental-strip-types` + loader du dépôt ; tests de rendu UI couverts par la CI verte de la tête) ; `scripts/diag.ts` rejoué **IDENTIQUE** à `diag-out.txt` (14 lignes [ÉCHEC] informatives) ; bench 16k cf. A2 ; repro A1 ancrée au rapport.
-- **Poussé ce jour (docs seuls — bundle live inchangé attendu)** : `docs(ia)` audit-code-2026-10-30.md + compteurs AGENTS.md + la présente entrée.
-- **INCIDENT CI « jeu » ROUGE — découvert à l'audit, corrigé le jour même** : le check « jeu » était en ÉCHEC sur la tête `849d64c2` **depuis `2f253c09`** (29/10, refonte 8 lois — le « fix CI » `849d64c2` n'a pas suffi) ; les commits docs de l'audit en héritaient. **Le live n'a jamais été impacté** (`deploy.yaml` tourne indépendamment de la CI jeu — déployé SUCCESS, site + jeu 200). Cause : `ArmiesPanel.test.ts` calculait `prixArmee(90, C)` SANS le joueur alors que la refonte 8 lois fait passer le JOUEUR au panneau — le joueur 1 de la fixture est Autoritarisme, sa loi « Conscription » (−10 Or × rang) rend **35 Or** quand le test attendait **45 Or** ; test de rendu joué uniquement en CI (React indisponible en local jusqu'ici) → rouge invisible hors CI. **Correctif `a1523107`** (réparation d'urgence, la convention interdit une CI rouge) : le test calcule le prix COMME LE PANNEAU — `prixArmee(90, C, undefined, p1)` (sans ville de levée : valeur effective `''` du Select en cascade → `villeLeveeObj` undefined, AVEC le joueur) + commentaire in situ. Validation locale après correctif : **254/254 natifs + 21/21 rendus, diag IDENTIQUE**. Rapport d'audit amendé (constat **A0** ajouté).
-- **OUTILLAGE : harnais de rendu LOCAL reconstruit (fin du « rouge invisible hors CI »)** : npm restant bloqué dans l'environnement, les **tarballs npmjs passent par curl** — react 18.3.1 + react-dom + scheduler 0.23.2 extraits dans `node_modules/`, stub `@supabase/supabase-js` (createClient inerte), binaire esbuild 0.23.1 ; les 12 fichiers de tests de rendu sont bundlés (`esbuild X.test.ts --bundle --jsx=automatic --packages=external --loader:.json=json --format=esm`) vers `.tmp-rendu/` puis joués par `node --test`. Les tests de rendu sont donc désormais rejouables EN LOCAL à chaque session — à régénérer après tout changement de `src/`.
-- **ARBITRAGE Thibaut (30/10, constat A1)** : PAS de correctif — les vieilles sauvegardes locales antérieures aux armées (2026-10-17) sont OBSOLÈTES, il les supprime de son côté (localStorage navigateur) ; aucun état créé par `createGame` n'est concerné. Rapport d'audit mis à jour (A1 arbitré/refusé, constat et reproduction conservés pour mémoire).
-- **CORRECTIFS a1 + a2 (arbitrage Thibaut 30/10 « corrige les mineurs a1 et a2 »)** : a1 `2dc36c6e` — `malusFerveurMartiale` applique TOUTES les lois `garnisonHorsCultureParRang` présentes dans le monde (la boucle historique s'arrêtait à la première culture martiale du référentiel) : une fois par habitation ET PAR CULTURE, une habitation de culture martiale protégée de SA loi mais subissant celle des autres cultures martiales présentes ; test avec une 2e culture martiale (Marsisme, loi −10 × rang) injectée au référentiel ; à une seule culture (Zélotisme, l'état actuel du jeu) le comportement est INCHANGÉ. a2 `d59383f9` — `recruitForArmies` n'engage une recrue que si ses points TIENNENT dans la puissance cible (`while (puissance + puissanceSoldat <= armee.puissanceCible)`) : plus de dernier recrutement au-delà de la cible (ex. 40 → 55 pour une cible à 50) ; le Soldat étant indivisible, une armée peut rester juste SOUS la cible si l'écart restant est inférieur aux points du Soldat ; à écart multiple des points du Soldat (levée, renfort, pertes — alignés par construction), comportement inchangé. Miroir v4 `9ee2e0bc`. Validation : **256/256 natifs** (254 + 2 nouveaux tests) + **21/21 rendus** (harnais local reconstruit après reset : tarballs react/esbuild via curl, les 12 fichiers de rendu y compris `components/pays/Constructions.test.ts`), diag IDENTIQUE (byte-identique), diff vs base limité aux 4 fichiers voulus.
-
-## Carte de ville : tableau des CLASSES SOCIALES (6e retour Thibaut du 28/10, séance du 30/10 — base c2be6c81)
-
-- **Retour Thibaut** : « Dans les villes, dans les tableaux, ajoute sous le tableau des métiers un tableau avec les classes sociales présentes dans la ville (roturier, bourgeois, noble) ». Le tableau vit dans la colonne DROITE de la carte (celle des métiers), empilé SOUS celui-ci — la colonne gauche (cultures, logements, garnison) ne change pas.
-- **Moteur** : nouveau helper `compterClassesSociales(habitants, C)` dans `engine/statutSocial.ts` (sous `rangDe`) — comptage des vivants par `rangDe`, ordre hiérarchique noble → bourgeois → roturier, classes PRÉSENTES seulement (> 0). Comme il s'appuie sur `rangDe`, il hérite GRATUITEMENT de la refonte 12 lois : la loi « Bourgeoisie facile » du Communautarisme (seuil bourgeois 80) se reflète dans le tableau sans code supplémentaire.
-- **UI** (`VilleCarte.tsx`) : la colonne droite passe sous le wrapper `ville-col-stack` (même empilement + filets que la colonne gauche) — métiers PUIS « Classes sociales », mêmes colonnes que Cultures présentes (label · nombre · part en % des vivants), label Noble en gras, ville vide → « aucun habitant ». Tooltip du titre : rappel de la règle du rang (naissance/250/100). `styles.css` : commentaire seul — le wrapper existant sert aux deux colonnes, zéro CSS structurel nouveau.
-- **Tests** : `engine/statutSocial.test.ts` +1 test moteur (hiérarchie noble 3 / bourgeois 1 / roturier 1, classe unique, ville vide → []) ; `components/PlayerView.test.ts` : titre présent, position APRÈS « Métiers : », lignes dérivées du MÊME helper (fixture capitale : nobles + roturiers, PAS de bourgeois → négatif sur la ligne absente). **256 → 257 natifs**, 21 rendus.
-- **REBASE** : la branche avait avancé entre les séances (sync v4 + audit du 30/10, base locale `f36fc388` → tête `c2be6c81`, correctifs a1/a2 + refonte 12 lois touchant `statutSocial.ts`/`VilleCarte.tsx`/`PlayerView.test.ts`) — bac resynchronisé par tarball codeload à `c2be6c81`, modifications ré-appliquées SANS conflit (zones disjointes : seuil bourgeois culturel, bonus bonheur régime, lits des lois).
-- Validation : `tsc --noEmit` OK ; **257/257 natifs + 21/21 rendus** (harnais esbuild local) ; `diag-out.txt` BYTE-IDENTIQUE ; bundle fonction rejoué OK. Diff vs base : 5 fichiers (statutSocial.ts, statutSocial.test.ts, VilleCarte.tsx, styles.css, PlayerView.test.ts).
-
-## Dogmes de culture — MISE EN FORME (arbitrages Thibaut du 30/10, 2e séance)
-
-- **Arbitrages Thibaut (actés ce jour)** : quand une CULTURE (pas un joueur) franchit un palier de Tourisme (50, 100, 150… — paramètre `palierTourismeDogme`, défaut 50, groupe Culture), le joueur ayant le plus de Tourisme dans cette culture choisit un DOGME affectant les habitants ou les villes de cette culture. (1) Un dogme à CHAQUE palier, cumul à l'infini ; (2) Tourisme de culture = somme des valeurs de Tourisme des villes de la culture, TOUS JOUEURS confondus, SANS les cités libres ; (3) le dominant peut changer d'un palier à l'autre, un dogme n'est PAS remplaçable ; (4) dogmes, lois et effets de culture se CUMULENT. Retour d'implémentation : « code la mise en forme sans dogme réellement créé, les dogmes définitifs viendront plus tard » → fondations complètes, table `dogmes` du référentiel VOLONTAIREMENT VIDE, AUCUN effet moteur, PAS d'UI de choix interactif. Candidats dogmes ébauchés par Thibaut (Travail, Famille, Patrie, Solidarité, Liberté, Santé… + Egalité/Fraternité à définir) : À VENIR au référentiel avec les effets chiffrés (champ `effets` de DogmeDef, non lu pour l'instant).
-- **Retour des dogmes** : l'ANCIEN système (effets d'AFFICHAGE Pontife/Fidèles en texte libre, jamais branché moteur) retiré le 2026-10-24 avec la promesse « un éventuel retour des dogmes repartira de zéro » — c'est ce retour. La purge cfgOf est AMENDÉE : elle ne supprime plus la table entière (delete) mais FILTRE les entrées ANCIEN format (sans champ `culture`) et POSE la table. Subtilité découverte en validation : `gardeFous` ne passe que dans la branche « déjà convergée » de cfgOf (les configs sans `schemaVersion` à jour prennent la branche migration) — la purge doit donc POSER la clé elle-même (table filtrée, possiblement vide) pour qu'elle soit bien typée dans les DEUX branches. Deux incidents d'outil edit rattrapés au diff : `citesLibres: ref.citesLibres` un instant supprimé de DEFAULT_CONFIG (rétabli) ; clé `dogmes` en DOUBLON dans le littéral (tsc l'aurait refusé — esbuild l'a signalé en warning au bundle, clé unique gardée à l'emplacement historique, sous `tourismeSeuils`).
-- **Moteur** (`engine/dogmes.ts`, NOUVEAU — 7 fichiers au total : types.ts, villes.ts, params.ts, defaultConfig.ts, dogmes.ts, dogmes.test.ts, CulturePays.tsx) : `tourismeVille` (= `productionVille` canal « total » — la valeur affichée en bas du cadre ville) ; `tourismeCulture` (tous joueurs, cités libres exclues PAR CONSTRUCTION — n'itère que `state.players`) ; `nbPaliersDogmes` (floor, plancher 1 sur le pas) ; `dogmesCulture` (tri palier croissant) ; `joueurDominantCulture` (le plus de Tourisme dans SES villes de la culture, égalité → plus petit n°, undefined si personne) ; `paliersDogmesEnAttente` (franchis moins consommés, toutes cultures, dominant évalué à la LECTURE) ; `choisirDogme` (mutateur : palier multiple du pas / non consommé (« un dogme n'est pas remplaçable ») / franchi / dogme au référentiel POUR la culture ; inscrit `{culture, palier, nom, choisiPar: dominant, choisiAuTour}` au nom du DOMINANT + entrée de journal « Culture » ; retourne null ou message d'erreur). `GameState.dogmes?: Dogme[]` optionnel complété par `normaliserEtat` (contrat routesCommerce/citesLibres — l'arbitrage A1 du 30/10 ne concernait QUE les sauvegardes antérieures aux armées, déclarées obsolètes). Distinction documentée : `tourismeSeuils` = PONTIFICATS par JOUEUR (Rang I/II/III), mécanisme DIFFÉRENT des dogmes (par CULTURE, cumul infini).
-- **UI** (`CulturePays.tsx`) : section « Dogmes de la culture » dans la carte — Badge tourisme total + prochain palier, paliers franchis vs dogmes pris, liste des dogmes pris, palier en attente en Badge warn avec dominant (« c'est à toi » si c'est le joueur affiché), note « aucun dogme encore défini » tant que la table référentiel est vide pour la culture, ligne de règle. Carte de LECTURE : le choix interactif viendra avec les dogmes définitifs. Aucune annonce de palier au journal de fin de tour à ce stade (une annonce répétée tant que le choix pend serait du bruit — l'entrée part du CHOISIR).
-- **INCIDENT CI (rattrapé en 2e push)** : la CI « jeu » est passée ROUGE sur `3fbfcb27` — `npx tsc --noEmit` refusait `dogmes.test.ts` alors que les tests PASSAIENT : `assert.equal(state.dogmes, undefined, …)` (strictEqual typé « asserts actual is T ») rétrécissait `state.dogmes` à undefined pour tout le reste du flux → accès `never` (choisiPar, palier, length…) ; + 2 déstructurations non lues (noUnusedLocals). Correctif `5583313d` : capture dans une const AVANT l'assert (le rétrécissement s'applique à la capture, pas au champ) + déstructurations élaguées. Le live n'a pas été impacté (deploy/diag SUCCESS sur le même sha, workflows indépendants).
-- **OUTILLAGE (nouveau)** : `tsc` est désormais rejouable EN LOCAL — tarball npm typescript 5.6.3 + @types/react, react-dom, node via curl (même contournement que react/esbuild), `node tools/typescript/lib/tsc.js --noEmit -p tsconfig.json` validé AVANT le push (zéro erreur hors stub @supabase local). Fin du « typage visible uniquement en CI » : les trois niveaux (natifs, rendus, tsc) sont désormais locaux.
-- **Poussé** : `1d8632be` (config) + `3fbfcb27` (moteur+UI+tests) sur chasse-et-peche-web, correctif `5583313d` ; miroir v4 `4f690f78` + `1abda870` + `62661ce1` (compare GitHub : exactement les 7 fichiers, 2+1 commits). Validation : **265/265 natifs** (257 + 8 nouveaux dogmes) + **21/21 rendus** + tsc --noEmit OK + diag IDENTIQUE (byte-identique).
-- **À VENIR (dogmes définitifs)** : entrées réelles au référentiel avec `effets` chiffrés, branchement moteur des effets (cumul lois/effets de culture, arbitrage n°4), UI de CHOIX interactif pour le dominant (câblée sur `paliersDogmesEnAttente`/`choisirDogme` déjà en place), annonce de palier au journal de fin de tour.
-
-## Dogmes de culture — RETOUR DES DOGMES DÉFINITIFS (3e séance du 30/10, base 018e6aef)
-
-- **Retour Thibaut** : « voici les dogmes que j'ai retenus et que tu peux mettre en place » — les 12 dogmes définitifs (Travail, Famille, Patrie, Égalité, Solidarité, Fraternité, Liberté, Santé, Évangile, Mère Patrie, Guerres Saintes, Nationalisme) entrent au référentiel avec leurs effets chiffrés, branchés au moteur, + UI de choix interactif. La Fraternité est explicitement « non implémenté » (révoltes) : au référentiel, AUCUN effet moteur.
-- **Design (2e séance)** : tous GÉNÉRIQUES (`DogmeDef.culture = '*'` — proposés à toute culture) ; un dogme est UNIQUE par culture (le cumul à l'infini porte sur des dogmes DIFFÉRENTS — `choisirDogme` refuse le doublon) ; les chiffres vivent dans `DogmeDef.effets`, lus PAR TYPE par `effetsDogmeCulture(state, culture, type, C)` (somme des dogmes pris par la culture — le référentiel est la source de vérité, éditer une valeur change l'effet des dogmes déjà pris, même philosophie que les lois de culture). 11 types d'effet documentés au docblock de DogmeDef.
-- **Interprétations à faire valider par l'arbitre** (section « Dogmes de culture » de regles-et-arbitrages.md, docblocks moteur) : Travail/Famille/Égalité/Santé = culture PROPRE du personnage (loi d'habitant) ; Patrie/Solidarité/Liberté/Évangile/Nationalisme = culture de la VILLE ; l'Égalité FIXE la consommation (l'emporte sur régime et défaut — `consoNourrHabitant` 4e arg optionnel `state`, non consulté pour les cités libres) ; la Famille agit sur la proba de CONCEPTION (côté femme, ×1,1) ; la Mère Patrie porte sur la culture du SUZERAIN (×1,05 les DEUX chemins : `impotsVassaux` impôt manuel + `transfererTributVassal` fin de tour, le vassal paie sa part, différence créée) ; les Guerres Saintes = malus FIXE −40 une fois PAR culture porteuse, villes porteuses protégées, plancher 0 (nouvelle fn exportée `malusGuerresSaintes`, même famille que la Ferveur martiale à montant fixe) ; l'Évangile multiplie le poids FINAL de la culture (×1,1, présence locale incluse) ; le Nationalisme = jet SUPPLÉMENTAIRE dédié vers la culture d'accueil APRÈS la tentative normale (log « (dogme du Nationalisme) ») ; la Fraternité = zéro effet moteur.
-- **Branchement moteur (12 fichiers)** : `economie.ts` (Travail : sans-emploi → +v Nourriture par le canal `metiers` de `detailGainsVille`, avant taxes, sans multiplicateur de rang — culture propre du personnage ; Égalité dans `consoNourrHabitant` ; Mère Patrie dans `impotsVassaux`) ; `vassalite.ts` (Mère Patrie fin de tour) ; `naissances.ts` (Famille ×(1+v) dans `computeFecondite`) ; `metiers.ts` (Patrie : `capMetierVille` +v Garde, ctx optionnel — ajouté aux DEUX branches de cap finie) ; `domiciles.ts` (Solidarité : entrée Taudis SÉPARÉE de la loi dans `domicilesCultureVille`, `state` optionnel) ; `bonheur.ts` (Liberté : `logementsVille`/`bonheurVilleComplete` +10 avant plafond 100) ; `migrationBonheur.ts` (call site `logementsVille`) ; `sante.ts` (Santé : `contractMod` additif dans `maladieStep`) ; `garnisons.ts` (Guerres Saintes : `malusGuerresSaintes` + branchement dans `garnisonHabitationVille`, plancher 0 conservé) ; `culture.ts` (Évangile poids ×(1+v) ; Nationalisme : `culteAccueil` capturé AVANT conversion, `if (rng.chance(...))` au lieu du `continue`, jet dédié ensuite).
-- **UI (3 fichiers)** : `CulturePays.tsx` — dogmes pris affichés avec la description du référentiel + CHOIX INTERACTIF pour le dominant (bouton par dogme disponible, prop `choisir?: (palier, nom) => void` — absente : carte de lecture, tests de rendu inchangés) ; `PlayerView.tsx` — mutateur `choisirDogmeJoueur` (le joueur résolu DANS `update` comme `faireConstruire` ; `choisirDogme` valide tout seul et journalise « Culture », un refus part au journal « Système ») ; `OngletsCultures.tsx` — retour de la carte « Dogmes de culture » dans l'onglet Tourisme du wiki (table nom/culture/description/effets du moteur — retour de la carte retirée le 24/10). Pas d'annonce de palier au journal fin de tour (choix maintenu : bruit répétitif tant que le choix pend).
-- **Tests (`dogmes.test.ts` 8 → 20)** : intégrité du référentiel verrouillée (12 dogmes génériques, effets EXACTS par type — la table est la source de vérité du moteur) ; choisirDogme générique accepté + doublon refusé + `dogmesDisponiblesCulture` filtré ; UN test PAR EFFET avec le dogme injecté directement dans `state.dogmes` (rng factice pour `maladieStep`/`applyCultureInfluence` : le tirage de contraction reçoit exactement −0,05 plancher 0 compris ; poids Évangile ×1,1 exact ; Nationalisme : 1 tirage sans dogme, 2 avec, conversion par le jet dédié) ; Mère Patrie aux DEUX chemins (ratio ×1,05, le vassal paie sa part) ; tests de la 1re séance adaptés au référentiel non vide (« Dogme Inconnu » pour le refus, défaut 12 hérité par clé absente — NB : `cfgOf` fusionne `{...DEFAULT_CONFIG, ...c}`, une config sans la clé `dogmes` hérite maintenant du DÉFAUT, comme toute clé absente).
-- **INCIDENT CI (intermédiaire, tête VERTE)** : mauvais découpage de mes lots — le lot 1 (`141c3d89` : référentiel + module + tests) est arrivé AVANT le lot 2 des hooks : la CI « jeu » de `141c3d89` est ROUGE (tsc : `malusGuerresSaintes` inexistant, signatures 3/4 arguments) alors que la TÊTE `2c574409` est VERTE (jeu + diag + deploy success — annotations vérifiées : uniquement le séquençage). Leçon notée : les tests d'un effet vont avec SON hook, pas avec la table. Miroir v4 : `d68b6ed7` + `03c70062` (deploy success).
-- **Validation** : **277/277 natifs** (265 + 12 nouveaux) ; **21/21 rendus** (12 fichiers re-bundlés esbuild — le stub local @supabase/supabase-js reconstruit après reset avait une accolade non fermée, réparée) ; `tsc --noEmit` OK (zéro erreur hors stub supabase local) ; diag BYTE-IDENTIQUE (aucun dogme pris dans la fixture, hooks inertes — attendu). Diff vs base : 16 fichiers src exactement, chaque suppression relue au diff (aucune ligne perdue).
-
-## Dogmes — correctifs Famille et Nationalisme (4e retour arbitre Thibaut du 30/10, base 0d4b9da8)
-
-- **Retour Thibaut** (2 correctifs, + confirmation du périmètre) : « pour la famille, le multiplicateur est côté homme et femme » ; « tous ces dogmes n'affectent que les habitants de cette culture ou les villes de la culture, et n'ont aucun effet sur les personnages des autres cultures » (déjà le cas — périmètre confirmé, verrouillé aux tests) ; « pour le nationalisme, ce n'est pas un nouveau jet, mais pris en compte dans le test de conversion culturelle déjà présent ».
-- **Famille** (`naissances.ts`, `computeFecondite`) : le ×(1+v) passe sur les TROIS voies du facteur — le return masculin (affichage de la fécondité d'un homme porteur), le facteur de l'ÉPOUX (`factorMari` — un mari porteur multiplie SA part : une femme d'une autre culture mariée à un porteur conçoit ×1,1) et le côté femme (inchangé). Description du référentiel amendée (« côté homme et côté femme… chaque époux porteur multiplie sa part »).
-- **Nationalisme** (`culture.ts`, `applyCultureInfluence`) : le jet dédié d'après-tentative est RETIRÉ (ainsi que le log « (dogme du Nationalisme) ») — le bonus est intégré AU TIRAGE pondéré existant : la culture d'ACCUEIL (celle de la ville du personnage, si elle porte le dogme et qu'il est d'une autre culture) gagne +v × le poids TOTAL des autres cultures. Les chances en plus ne mènent QUE vers la culture d'accueil, jamais vers une tierce culture ; les autres poids ne bougent pas ; un seul `rng.chance` par personnage. Description du référentiel amendée (« dans le tirage de conversion culturelle… pas de jet séparé »).
-- **Tests** (`dogmes.test.ts`, 2 réécrits, total inchangé à 20) : Famille — les trois voies vérifiées par ratio exact ×1,1 (femme seule, homme, femme d'une autre culture mariée à un porteur via `mariageId` + `indexPopulationMonde`), un personnage d'une autre culture non marié inchangé ; Évangile/Nationalisme — part (b) réécrite : UN seul tirage avec ou sans dogme, poids d'accueil = poids sans dogme + 0,15 × Σ des autres poids (exact à 1e-9), autres poids inchangés, conversion par le log NORMAL (plus de mention dédiée).
-- **Validation** : **277/277 natifs**, **21/21 rendus**, `tsc --noEmit` OK (zéro erreur hors stub supabase local), diag BYTE-IDENTIQUE (aucun dogme pris dans la fixture). Diff vs base : 4 fichiers exactement (naissances.ts, culture.ts, defaultConfig.ts, dogmes.test.ts), chaque suppression relue au diff.
-
-## Dogmes — correctif Famille (jet vs affichage) + onglet Dogmes (5e retour arbitre Thibaut du 30/10, base ab6a5391)
-
-- **Retour Thibaut** (2 demandes) : « il faudrait un onglet Dogmes, au même titre qu'un onglet royaume et Pays » ; « pour la fécondité regarde bien, le calcul de la conception prend en compte la fécondité homme et la fécondité femme. Une femme n'a pas à gagner en fécondité si son mari est d'une culture féconde ».
-- **Diagnostic au code** : le correctif du 4e retour avait une lacune RÉELLE — le jet de conception (`conceptionEtNaissances`, qui duplique la formule de `computeFecondite`) ne portait AUCUN effet dogme : le ×1,1 de la Famille ne multipliait que la valeur AFFICHÉE, jamais les conceptions réelles. Et la fécondité affichée d'une épouse incluait le dogme de SON MARI (via `factorMari`) — exactement ce que l'arbitre conteste.
-- **Famille (5e retour)** : chaque personnage porte la fécondité de SA culture propre (côté homme : return masculin ; côté femme : sa part). Le JET de conception prend en compte la fécondité homme ET la fécondité femme : `factorMari` du jet porte ×(1+v) de la culture PROPRE de l'époux (un mari porteur multiplie SA part — une épouse non porteuse conçoit ×1,1 avec lui ; un couple porteur des deux côtés ×1,21), et la part de la mère porte ×(1+v) de SA culture propre. La fécondité AFFICHÉE de l'épouse (`computeFecondite`) ne porte PLUS le dogme du mari : « une femme n'a pas à gagner en fécondité si son mari est d'une culture féconde ». Amendement documenté du docblock du retour 2026-10-15 (affichage = proba réelle) : le champ affiché est désormais la proba SANS la part de dogme de l'époux. Description du référentiel amendée.
-- **Onglet « 🕯 Dogmes »** (`DogmesView.tsx`, NOUVEAU) : section de premier niveau de la nav (entre Pays et Population), barre J1..J8 affichée — vue TOUTES CULTURES PRÉSENTES : carte par culture (Tourisme moteur `tourismeCulture`, paliers franchis, dominant, dogmes pris avec descriptions du référentiel, paliers en attente et CHOIX INTERACTIF quand le joueur sélectionné est le dominant — mutateur `choisirDogmeJoueur` généralisé à toute culture, `choisirDogme` valide/journalise comme toujours) + table du référentiel (12 dogmes, effets moteur, colonne « Pris par »). `App.tsx` : Section 'dogmes', label, joueursBars, rendu. La carte « Culture du pays » (page Pays) reste inchangée.
-- **Tests** : `dogmes.test.ts` — test Famille RÉÉCRIT (total 20 inchangé) : rng ENREGISTREUR sur `conceptionEtNaissances` (chance → false : aucune grossesse, aucune autre consommation d'aléa) capture la proba de conception de chaque femme éligible — 7 personnages : femme porteuse célibataire ×1,1 (jet et affichage), mari porteur ×1,1 (affichage), épouse NON porteuse d'un porteur : affichage INCHANGÉ (5e retour) mais jet ×1,1 (la part de LUI), épouse porteuse d'un non-porteur ×1,1 (jet et affichage), couple porteur ×1,21 (jet, chaque époux multiplie sa part) et ×1,1 seul à l'affichage. NOUVEAU `DogmesView.test.ts` (13e fichier de rendu) : page sans crash, carte par culture présente avec le Tourisme du VRAI MOTEUR et le compte de paliers, table des 12 dogmes du référentiel.
-- **Validation** : **277/277 natifs** (total inchangé), **22/22 rendus** (13 fichiers, +1), `tsc --noEmit` OK (zéro erreur hors stub supabase local), diag BYTE-IDENTIQUE. Diff vs base : 4 fichiers modifiés (App.tsx, naissances.ts, defaultConfig.ts, dogmes.test.ts) + 2 nouveaux (DogmesView.tsx, DogmesView.test.ts), chaque suppression relue au diff.
-
-## Dogmes — correctif table vide + « pontife » (6e retour arbitre Thibaut du 30/10, base 1c6ee5c4)
-
-- **Retour Thibaut** (2 points) : « je n'arrive pas à choisir de dogme, soit-disant la table de référentiel est vide » ; « remplace dominant par pontife ».
-- **Incident (table vide)** : DIAGNOSTIC au code + repro scriptée — les configs sauvegardées AVANT le retrait du 24/10 portent la table `dogmes` à l'ANCIEN format (affichage, sans champ `culture`) ; la purge de cfgOf (introduite avec le retour des dogmes, 3e séance) filtrait la table FUSIONNÉE `{...DEFAULT_CONFIG, ...c}` : la vieille table écrasait les 12 dogmes du défaut par la fusion, puis était purgée → `[]` — convergée et RE-SAUVEGARDÉE (convergerConfig aux points d'entrée : chargement, nouvelle partie…), le `[]` masquait les défauts à CHAQUE relecture (fusion : le `[]` de la config gagne). Repro : config ancien format → convergence → 0 dogme ; relecture → 0 pour toujours. C'est le scénario réel : la config MONDIALE du navigateur de Thibaut est antérieure au 24/10.
-- **Correctif (`defaultConfig.ts`, cfgOf)** : la table SAUVEGARDÉE (c.dogmes, pas la fusionnée) ne masque les défauts QUE si elle contient des entrées du NOUVEAU format (table personnalisée) ; absente, VIDE (`[]`), ou tout ANCIEN format (config d'avant le 30/10) → on retombe sur les DÉFAUTS (les 12) — les vieilles sauvegardes récupèrent le référentiel d'elles-mêmes, y compris les configs DÉJÀ estampillées `[]` par le code du 5e retour. Amendement documenté (docblock) : la propriété « une table explicitement vidée par l'arbitre reste vide » est RETIRÉE — pour vider le référentiel, on retire les entrées du défaut. Les entrées anciennes supprimées ne reviennent jamais (règle (x)).
-- **« Pontife »** : le rôle « joueur dominant de la culture » (le plus de Tourisme, arbitrage n°3 du 30/10) est rebaptisé PONTIFE — arbitrage Thibaut. Renommé PARTOUT, identifiants compris : `joueurPontifeCulture` (ex-joueurDominantCulture), champ `PalierDogmeEnAttente.pontife`, variables, libellés UI (« Pontife : », « le pontife », « pontife de la culture »), docblocks (amendés avec la mention du 6e retour), tests. La logique est inchangée ; le terme « dominant » subsiste uniquement dans les CITATIONS des arbitrages historiques et ce journal (append-only). NB : « Pontife » était déjà le vocabulaire de l'ancien système de dogmes retiré le 24/10 (bonus « Pontife/Fidèles ») — cohérent.
-- **Tests** : `dogmes.test.ts` garde-fou RÉÉCRIT (table vide `[]` → 12 défauts, ancien format → 12 défauts sans retour des entrées anciennes, nouveau format conservé, clé absente → défaut — l'assertion « table vidée par l'arbitre reste vide » est retirée avec la propriété) ; NOUVEAU test dans `state/config.test.ts` (incident de bout en bout : config mondiale d'avant le 24/10 → convergence → 12, relecture → 12, idempotent) — **278/278 natifs** (+1), **22/22 rendus** (13 fichiers), tsc OK (zéro erreur hors stub supabase local), diag BYTE-IDENTIQUE. Diff vs base relu au complet : 10 fichiers src exactement (defaultConfig.ts, dogmes.ts, dogmes.test.ts, types.ts, config.test.ts, DogmesView.tsx, CulturePays.tsx, PlayerView.tsx, OngletsCultures.tsx, App.tsx) + AGENTS.md (compteurs 277→278) + docs.
-
-## Dogmes — les dogmes dans chaque culture, en grille (7e retour arbitre Thibaut du 31/10, base b89d7159)
-
-- **Retour Thibaut** : « il faudrait que les dogmes à choisir soient dans l'onglet Dogmes et plusieurs dogmes par ligne. En fait, il faudrait qu'il y ait les dogmes dans chaque culture de la page Dogmes ».
-- **Rendu (`DogmesView.tsx`, SEUL fichier src touché avec son test)** : la carte de chaque culture liste TOUS les dogmes du référentiel pour elle (`culture === '*' || culture === culture`), TOUJOURS visibles — plus de bloc conditionnel « pris listés + choix seulement si pontife sélectionné ». Grille `grid-3` (plusieurs par ligne), tuiles `mini` : nom (`mini-title`), description, état PRIS (badge palier + choisi par qui + jamais remplaçable) ou DISPONIBLE ; le bouton « Choisir » n'apparaît que pour le pontife avec palier en attente (`jeChoisis`), les tuiles restent visibles sans bouton pour les autres joueurs — on voit les dogmes de CHAQUE culture sans changer de sélection. Cas de bord : un dogme PRIS retiré du référentiel entre-temps reste affiché (tuile « plus au référentiel. Jamais remplaçable ») — un dogme pris ne disparaît jamais. Le hint « palier franchi — à toi / à choisir par X » est conservé, déplacé au-dessus de la grille. Intro de la carte mécanisme amendée. `dogmesDisponiblesCulture` n'est plus importé par la vue (le filtre référentiel se fait en place, l'« orphelin » couvre le reste) ; moteur et mutateurs INCHANGÉS — `choisirDogme` revalide toujours côté mutateur.
-- **Tests** : `DogmesView.test.ts` étendu (même test, total 22 inchangé) : grille `grid-3` présente, nombre de tuiles ≥ Σ (cultures × dogmes référentiels de chaque culture) recalculé contre la config (R3, pas codé en dur), chaque nom de dogme apparaît ≥ nb cultures + 1 fois (une tuile par carte culture + la table), statut « Disponible » rendu. **278/278 natifs** (inchangé), **22/22 rendus** (13 fichiers, inchangé), `tsc --noEmit` OK (zéro erreur hors stub supabase local), diag BYTE-IDENTIQUE. Diff vs base : 2 fichiers src exactement (DogmesView.tsx, DogmesView.test.ts), relu au complet avant push.
-
-## Dogmes — le choix retiré de l'onglet Pays (8e retour arbitre Thibaut du 1/11, base c33b7ce2)
-
-- **Retour Thibaut** : « retire le choix des dogmes de l'onglet pays » — le choix interactif vit désormais UNIQUEMENT dans l'onglet 🕯 Dogmes (grille du 7e retour).
-- **Rendu (2 fichiers src exactement)** : `CulturePays.tsx` — carte « Culture du pays » redevenue LECTURE SEULE : prop `choisir` et sa doc RETIRÉES, bloc de choix interactif (« c'est à toi de choisir » + boutons « Choisir » + « dogme à choisir par X ») REMPLACÉ par un pointeur d'une ligne (« le choix du dogme se fait dans l'onglet 🕯 Dogmes ») quand un palier attend ; imports `joueurPontifeCulture`/`dogmesDisponiblesCulture` retirés de la vue (Tourisme, paliers, dogmes pris restent affichés). `PlayerView.tsx` — import `choisirDogme`, mutateur `choisirDogmeJoueur` et prop `choisir` RETIRÉS ; docblocks amendés (8e retour), l'ancienne doc du mutateur reste comme mémoire de l'arbitrage. Le mutateur moteur `choisirDogme` (engine/dogmes.ts) est INCHANGÉ — DogmesView l'utilise toujours ; aucune règle de fond ne change, aucun test moteur touché.
-- **Validation** : **278/278 natifs** (inchangé), **22/22 rendus** (13 fichiers, inchangé — aucun test ne référençait l'UI de choix de CulturePays, vérifié par grep), `tsc --noEmit` OK (zéro erreur hors stub supabase local), diag BYTE-IDENTIQUE. Diff vs base : 2 fichiers src exactement (PlayerView.tsx, CulturePays.tsx), relu au complet avant push.
-
-## Pèlerinage du pontife + table « Ordre du tour » (2026-11-01, base a672405a)
-
-- **Retour Thibaut** (2 demandes) : « dans la page du référentiel, ajoute une table qui précise l'ordre de calcul des effets de tour, et met en place les bonus du pontife » ; suite à la discussion sur les bonus : « j'aime bien l'idée des pèlerinages, les habitations de la culture renvoie 5% de leur production au pontife, comme pour les taxes ».
-- **Pèlerinage (`engine/pelerinage.ts`, NOUVEAU)** : étape **3quindecies** de FinDeTour (après toutes les productions, avant le moteur de population). Chaque culture ayant AU MOINS un dogme prélève `pelerinageTaux` (NOUVEAU paramètre, défaut 0,05, groupe Culture, PARAM_META avec l'arbitrage complet) de la production Or+Nourriture+Science de TOUTES ses habitations, tous joueurs — y compris celles du pontife — vers le pontife (`joueurPontifeCulture`, évalué au moment du prélèvement). PRÉLÈVEMENT RÉEL (pattern vassalité, pas de création) ; part positive seulement (une ressource déficitaire n'est pas dimée) ; un log « 🕯 Pèlerinage » par versement ; canal `pelerinage` des `ApportsTour` (optionnel, solde net) + canal de `ProductionDetail` COMPTÉ DANS LE TOTAL (l'affichage = le réel crédité) + provenances payé/reçu + colonnes « Pèlerinage » des deux récaps de la page Pays + mention de la dîme dans la carte mécanisme de l'onglet Dogmes. C'est une DÎME, PAS une taxe : aucun multiplicateur de taxes (Grand Chambellan) ni effet tributVassal (Mère Patrie) ne s'y applique — verrouillé par test (montant EXACT taux × production). Un seul flux par culture (des dogmes multiples n'ouvrent pas la dîme plusieurs fois) ; culture avec dogme mais sans pontife (Tourisme retombé à 0) : pas de destinataire, pas de dîme ce tour.
-- **Table « Ordre du tour » (wiki Référentiels)** : onglet NOUVEAU « Ordre du tour » (entre « Cités libres » et « Victoires ») rendant le registre **`ETAPES_TOUR`** exporté de `engine/tour.ts` — 20 étapes actives de FinDeTour (numéro historique, nom, description), R3 : la table est LUE DEPUIS LE MOTEUR, pas du texte statique ; verrouillé par `engine/tour.test.ts` (longueur, numéros, noms exacts, position du pèlerinage après les productions et avant la population) et le test de rendu (chaque étape rendue, compte exact dans le titre, taux vassal + dîme en valeur LIVE). `components/reference/OngletOrdreTour.tsx` NOUVEAU ; `logiqueReference.ts` (ONGLETS) et `ReferenceDataPanel.tsx` (aiguillage) complétés.
-- **Tests** : NOUVEAU `pelerinage.test.ts` (10 tests : pas de culte sans dogme ; prélèvement réel exact 5 % Or+Nourr+Science + log par versement + pontife payeur ; taux paramétrable ×2 ; changement de pontife au prélèvement ; ville déficitaire non dimée ; vue `pelerinageJoueur` solde net sans mutation ; canal de `productionDetaillee` compté au total ; intégration `runTurn` stocks+log+apports (ressources dimées = Or/Nourriture/Science exactement) ; deux dogmes = toujours un seul flux ; état dégradé ressources-absentes sans crash, villes-absentes crash documenté comme le diag `[ÉCHEC]`). NOUVEAU `tour.test.ts` (2 tests : registre verrouillé, position 3quindecies). Test de rendu R3 ajouté à `ReferenceDataPanel.test.ts`. **290/290 natifs** (278 + 12), **23/23 rendus** (13 fichiers, +1 test), `tsc --noEmit` OK (zéro erreur hors stub supabase local), diag **BYTE-IDENTIQUE** (aucun dogme dans la fixture du diag → dîme inerte, garde-fou constaté).
-- **Au passage (outillage du bac)** : le tarball npm `react` s'extrayait à la RACINE de node_modules (`--strip-components=1` sans dossier cible) — « Cannot find package 'react' » au premier `node --test .tmp-rendu` ; reconstruit proprement dans `node_modules/react/`.
-- Diff vs base relu au complet avant push : 10 fichiers modifiés (tour.ts, production.ts, types.ts, params.ts, DogmesView.tsx, ReferenceDataPanel.tsx, ReferenceDataPanel.test.ts, RecapParTour.tsx, RecapDernierTour.tsx, logiqueReference.ts) + 4 nouveaux (pelerinage.ts, pelerinage.test.ts, tour.test.ts, OngletOrdreTour.tsx) + docs (règles, journal) + AGENTS.md (compteurs).
-
-## Bonheur sans tourisme + correctifs du récap dernier tour (2026-11-01, base a94476cd)
-
-- **Retour Thibaut** : « corrige les deux défauts, et surtout, retire le tourisme du bonheur » — les deux défauts étant ceux signalés par l'audit de cohérence post-pèlerinage (lecture du code poussé au dépôt).
-- **Tourisme RETIRÉ du bonheur (`engine/bonheur.ts`)** : le bonheur des villes passe de 5 à **4 facteurs** — Emploi, Logement, Sécurité, Santé (moyenne simple inchangée). L'axe Tourisme (v3 du 2026-10-24 : part du joueur dans le tourisme MONDIAL, plafonnée à 100) est supprimé : `scoreTourisme` retirée, `ScoresVille` sans champ `tourisme`, `scoresVille` ne lit plus `tourismeCourant` (l'import moteur tombe avec). Le Tourisme reste une ressource et une course entre joueurs (dogmes de culture, paliers, pèlerinage du pontife) mais n'entre PLUS dans le bonheur. Conséquence moteur : le départ de migration `p = migrationBonheurMax × (100 − bonheur)/100` change (un axe à 0 disparaît de la moyenne → bonheur plus élevé → moins de départs) — diag régénéré. UI : les mini-jauges de `VilleCarte` n'affichent plus que les 4 axes (info-bulle amendée) ; `scripts/sim-bonheur.ts` FIGÉ en simulation historique v3 (note en tête, hors tsc — pour la formule courante, lire bonheur.ts). Docblocks amendés (mémoire des arbitrages : l'historique 5 facteurs est consigné, jamais effacé).
-- **Correctif récap dernier tour n°1 — ligne « Nourr - été » décalée** : elle portait UNE cellule « — » de trop depuis son origine (11 pour 10 colonnes de données) — le total de la ligne s'affichait une colonne trop à droite (visible seulement l'été). Le correctif n°2 ramenant les colonnes de données à 11, les « — » existants sont désormais ALIGNÉS (aucun retrait effectué, note en commentaire).
-- **Correctif récap dernier tour n°2 — canal Proximité absent** : le récap du DERNIER tour n'avait PAS de colonne Proximité (contrairement au récap par tour) et sa formule de Total l'OMETTAIT — le Total ne comptait pas le bonus rivière/mer (+12/+7 Nourriture). Colonne « Proximité » ajoutée entre Commerce et Vassalité (même position que le récap par tour), `val(prox, r)` ajouté au Total, repli `?? {}` pour les historiques d'avant le canal. Le Total affiche désormais TOUT ce qui est réellement crédité au stock ce tour-là.
-- **Tests** : `bonheur.test.ts` — le test « tourisme : part du mondial » REMPLACÉ par « tourisme : RETIRÉ du bonheur » (verrou du retrait : plus d'axe dans `ScoresVille`, exactement 4 clés) ; « moyenne simple des 5 facteurs » réécrit en 4 facteurs ; le test du témoin verrouille aussi l'absence d'axe. Test de rendu `PlayerView.test.ts` réécrit : 4 mini-jauges + assertion que le libellé d'axe Tourisme n'est PLUS rendu. **290/290 natifs** (compteur inchangé), **23/23 rendus**, `tsc --noEmit` OK (0 erreur hors stub supabase local), diag CHANGE LÉGITIMEMENT (log 726 → 681 entrées, RNG migration) — les 14 lignes [ÉCHEC] IDENTIQUES, `diag-out.txt` régénéré (round-trip byte-identique vérifié).
-- Diff vs base relu au complet : 6 fichiers src modifiés (bonheur.ts, bonheur.test.ts, PlayerView.test.ts, RecapDernierTour.tsx, VilleCarte.tsx — + scripts/sim-bonheur.ts note d'en-tête) + diag-out.txt + docs (règles, journal). Aucun test ajouté/retiré au compteur.
-
-## Le Fermier (marqueur ete) appliqué aux cités libres + badge « (été) » (2026-11-01, base 56646423)
-
-- **Retour Thibaut** : « Attention, normalement les fermiers ne produisent qu'en été » (relance sur la réponse production Fermier 5 Nourriture / Éleveur 0,5 Bétail + 2 Nourriture / Chasseur 1,5 Nourriture).
-- **Côté VILLES déjà correct et testé** : champ référentiel `ete: true` sur le Fermier + gate `if (td.ete && state.saison !== 'Été') continue` dans `detailGainsVille` (economie.ts), verrouillé par metiers.test.ts.
-- **BUG trouvé et corrigé — `detailCiteLibre` (citesLibres.ts) ne respectait NI le champ `ete` NI la saison** : les fermiers des cités libres produisaient 5 Nourriture toute l'année. La fonction prend désormais l'état (`state?: GameState`) et applique la même gate `if (td.ete && state && state.saison !== 'Été') continue` ; 2 appelants internes passent l'état, les 2 appelants de production.ts (canal citesLibres + provenances) et CarteCite.tsx (prop state existante) mis à jour. Sans état (usage consultatif), comportement inchangé. Docblock arbitrage 2026-11-01.
-- **UI** : `resumeMetier` (PopulationTable.tsx) ajoute « (été) » au badge des métiers portant le marqueur — le wiki métiers l'affichait déjà via le champ référentiel.
-- **Tests** : `taxes.test.ts` — NOUVEAU test « detailCiteLibre (arbitrage Thibaut 2026-11-01) : le Fermier (métier ete) ne produit qu en ÉTÉ » (été 5+1,5×1,1 ; hiver 1,5×1,1 ; sans état = inchangé). **291/291 natifs** (290 + 1), **23/23 rendus**, `tsc --noEmit` OK (0 erreur hors stub supabase local), diag BYTE-IDENTIQUE (fixture sans fermier en cité libre).
-- Diff vs base relu au complet : exactement 5 fichiers src (citesLibres.ts, production.ts, CarteCite.tsx, PopulationTable.tsx, taxes.test.ts) + docs (règles, journal, AGENTS.md compteurs).
-
-## Fermier +15 Nourriture (été) & Chasseur +2 Nourriture (arbitrage 2026-11-01, base f4a9002f)
-
-- **Retour Thibaut** : « change maintenant les fermiers à +15 nourriture en été, et les chasseurs à +2 nourriture toute l'année ».
-- **Référentiel** (`config/referentiels.json`, table `metiers`) : Chasseur `valeur1` 1,5 → **2** Nourriture ; Fermier `valeur1` 5 → **15** Nourriture (`ete: true` inchangé — été seulement, appliqué partout depuis le correctif du même jour). Docblock du champ `ete` amendé (mémoire : +5 historisé, +15 courant).
-- **MIGRATION CIBLÉE cfgOf** (patron « Ministre » / « mise à jour des conditions », SANS bump de SCHEMA_VERSION_CONFIG) : les configs SAUVEGARDÉES — la config MONDIALE du salon EN COURS comprises — embarquent la table métiers ENTIÈRE (fusion `{...DEFAULT_CONFIG, ...c}` : la table sauvegardée gagne). Un bloc idempotent actualise une entrée qui vaut ENCORE l'ANCIEN défaut exact (Chasseur 1,5 Nourriture ; Fermier 5 Nourriture + `ete`) vers le défaut courant ; une entrée PERSONNALISÉE par l'arbitre est conservée. La partie en cours reçoit donc les nouveaux gains SANS republication de config.
-- **Tests** : metiers.test.ts « Fermier +5 » → « +15 » (été 15+2, hiver 2) ; taxes.test.ts cité libre réaligné (été 15+2×1,1 ; hiver 2×1,1 ; sans état idem) ; config.test.ts NOUVEAU verrou « gains actualisés dans une config sauvegardée à l'ancien défaut » (référentiel 15/2, ancien défaut exact → actualisé, personnalisé conservé, idempotence). **292/292 natifs** (291 + 1), **23/23 rendus**, tsc baseline identique (3 erreurs stub), diag BYTE-IDENTIQUE (légitime : le scénario diag n'imprime AUCUN gain de métier — la seule ligne Nourriture est le Jardin intérieur, bâtiment).
-- Diff vs base relu au complet : referentiels.json + defaultConfig.ts (docblock ete + bloc migration) + metiers.test.ts + taxes.test.ts + config.test.ts + docs (règles gains, journal, AGENTS.md 292/23).
-
-## Fermier réduit à +10 Nourriture (été) (relance arbitre 2026-11-02, base 6ab4b8f5)
-
-- **Retour Thibaut** : « peux-tu réduire les fermiers à +10 nourriture en été » (relance du jour même sur le +15 du 2026-11-01).
-- **Référentiel** (`jeu/src/config/referentiels.json`, table `metiers`) : Fermier `valeur1` 15 → **10** Nourriture (`ete: true` inchangé). Chasseur +2 inchangé.
-- **MIGRATION cfgOf AMENDÉE** : le bloc ciblé du 2026-11-01 accepte désormais les DEUX anciens défauts successifs du Fermier (5, puis 15 — une config convergée entre les deux arbitrages porte 15) ; les deux migrent vers le défaut courant 10. Une valeur personnalisée reste conservée. Docblocks amendés (mémoire : +5 → +15 → +10 le même jour).
-- **Tests** : metiers.test.ts (été 10+2, hiver 2) ; taxes.test.ts cité libre (été 10+2×1,1 = 12,2) ; config.test.ts étendu — NOUVEAU cas du défaut intermédiaire (+15 → migré vers +10), aucun nouveau test au compteur. **302/302 natifs** (compteur du jour — la session du 2026-11-02 avait porté 292 → 302 avec les arbitrages domiciles/natalité/mariages, cf. PRs #20-21), **23/23 rendus**, tsc baseline identique (3 erreurs stub), diag BYTE-IDENTIQUE (le scénario diag n'imprime aucun gain de métier, cf. entrée du 2026-11-01).
-- ⚠ NB TOPOLOGIE (constatée à ce tour, unification 2026-11-02 actée par la session du jour) : plus de branche `chasse-et-peche-web` ni de miroir — le jeu vit dans `jeu/` sur la branche unique `v4` (devenue défaut), workflows déclenchés sur `push: branches: [v4]` + `paths: jeu/**` ; diag-out.txt committé à la RACINE par le workflow diag ; cette entrée est la première poussée directement sur v4. AGENTS.md compteurs réalignés 292 → 302 (les 302 natifs incluent les +10 du jour).
-- Diff vs base relu au complet : 5 fichiers src (referentiels.json, defaultConfig.ts, metiers.test.ts, taxes.test.ts, config.test.ts) + docs (règles gains, journal, AGENTS.md compteurs).
-
-## Délégation / Chancellerie / Ambassade — émissaires des bâtiments du château (arbitrage Thibaut 2026-11-03, base 6ab4b8f5)
-
-- **Retour Thibaut** : « Voici 3 nouveaux batiments » — Délégation (Tier 1, château), 10 Or + 4 Soie, +1 émissaire tant que construit ; Chancellerie (Tier 2, château), délégation requise, 20 Or + 4 Pierres + 6 Soies, remplace la délégation, +2 émissaires tant que construit ; Ambassade (Tier 3, château), chancellerie requise, 40 Or + 4 Charbons + 10 Soies, remplace la chancellerie, +4 émissaires tant que construit.
-- **Référentiel** (`jeu/src/config/referentiels.json`) : 3 entrées insérées à la fin du bloc Château (avant « Banque centrale » Capitale) par script Node — JSON canonique, round-trip `JSON.stringify(o,null,2)+'\n'` byte-identique vérifié. Champs : catégorie Bâtiment, groupe Château, famille Economique (cohérente avec l'Échoppe), rangs minimums 1/2/3 (Motte / Donjon / Forteresse, convention des tiers), `couts` en paires ressource/valeur, `requis` sur les tiers 2/3, `remplaceBatiment` (Chancellerie → Délégation ; Ambassade → Chancellerie), `emissairesApportes` 1/2/4. Total constructions 93.
-- **Modélisation — valeur d'ÉTAT « tant que construit »** (patron `routesApportees` de l'Échoppe) : NOUVEAU champ `emissairesApportes?: number` sur `ConstructionRef` (defaultConfig.ts, docblock arbitrage 2026-11-03) ; lecteur `emissairesApportesConstructionRef` (constructions.ts) ; libellé `+N émissaire(s)` du résumé affichable (picker « + Construire », badges de la carte, wiki Référentiels). Comptage par joueur : NOUVEAU `emissairesBatimentsJoueur(p, C)` (batiments.ts) — somme le champ sur toutes les villes du joueur en réutilisant le PRIVÉ `batimentsRemplaces` : **le tier remplacé ne compte plus** (Chancellerie neutralise le +1, Ambassade le +2), les bonus se cumulent entre villes.
-- **Réserve MOBILISABLE** : `p.emissaires` (réserve MANUELLE, revue 2026-10-15) + le bonus bâtiments. `CitesLibresView.changerEmissaires` vérifie la limite sur cette réserve TOTALE — débit plafonné à 0 (le bonus absorbe, placement « à crédit » OK) ; un émissaire déjà PLACÉ dans une cité reste placé si le bâtiment disparaît. `CarteReservesEmissaires.tsx` réécrit : badge « N en réserve » inchangé (verrou du test de rendu) + si bonus : badge « +N (bâtiments) → M mobilisables » (`badge-warn`).
-- **Tests** : NOUVEAU `engine/emissaires.test.ts` (3 tests : Délégation +1 ; Chancellerie remplace → +2 seul ; Chancellerie seule +2 ; Ambassade remplace → +4 seul ; chaîne complète → +4 ; cumul multi-villes +2 et +5 ; Échoppe sans émissaires = 0 ; libellés « +1 émissaire » / « +2 émissaires » / « +4 émissaires », coûts, requis, remplaceBatiment). `state/config.test.ts` compteurs du référentiel AMENDÉS : 48→51 bâtiments (+ le perso : 49→52) et rang ≥ 2 : 23→25 (Chancellerie rang 2 + Ambassade rang 3), commentaire d'arbitrage 2026-11-03 dans le test. **305/305 natifs** (302 + 3), **23/23 rendus** (13 fichiers), tsc baseline identique (3 erreurs stub supabase local), diag BYTE-IDENTIQUE (fixture sans bâtiment émissaire).
-- Diff vs base relu au complet : 7 fichiers src modifiés (referentiels.json, defaultConfig.ts, constructions.ts, batiments.ts, CitesLibresView.tsx, CarteReservesEmissaires.tsx, config.test.ts) + 1 nouveau (emissaires.test.ts) + docs (règles, journal, AGENTS.md compteurs 302 → 305).
-
-## VAGUE TIER 3 — 20 bâtiments : Barraquements → Guildes (arbitrage Thibaut 2026-11-03, base 6718741a)
-
-- **Retour Thibaut** (2e retour du jour) : « Voici les autres batiments de tier 3 » — Militaire (Barraquements les deux, requis Caserne, 25 Or + 4 Fer, +4 Garde ; Responsable des voies, 30 Or + 6 Soie, cases à ≤3 cases : 1 PM ; Banlieue les deux, Quartier intermédiaire requis, 40 Or + 10 Fer + 10 Fer — coquille — +40 Maisons), Économique (Complexe d'exploitation maritime +24 Commerçants, PAS cotier ; Usine +2×5 métiers ; Plateforme commerciale +2 routes ; Commanderie +10 Artistes ; Ecole supérieure ; Institut de recherche +8 Scientifiques ; Hôpital +10 Guérisseurs) et Guildes (bourgeois, marchands, marins, diplomates, évangélistes, savants).
-- **Arbitrages Thibaut demandés puis actés** : Banlieue **40 Or + 10 Fer + 10 Bois** (coquille « 10 Fer + 10 Fer ») ; Complexe d'exploitation maritime **50 Or + 10 Bois + 4 Fer** (aucun coût fourni) ; Ecole supérieure remplace l'Ecole **INTERMÉDIAIRE** (le texte disait « élémentaire » — la chaîne est élémentaire → intermédiaire → supérieure, `ecoleRang` 3). Effets de PLATEAU (PM du Responsable des voies, portée +6 cases de la Guilde des marchands) modélisés en `effetPlateau` : TEXTE D'AFFICHAGE uniquement, la portée se règle à la main — aucune lecture moteur.
-- **Référentiel** : 20 entrées (9 Ville, 11 Château) insérées par script Node — round-trip canonique vérifié AVANT (1er passage avorté : helper de test `effets` mal signé, réinséré proprement depuis la base) ; 93 → 113 constructions, 51 → 71 bâtiments, rangs minimums 3, familles Militaire / Economique / Guilde. Chaînes `requis`/`remplaceBatiment` : marchands ← Plateforme, marins ← Complexe, diplomates ← Ambassade, évangélistes ← Commanderie, savants ← Institut, Ecole supérieure ← Ecole intermédiaire. Toutes les guildes consomment 1 Charbon/tour (canal effets) ; évangélistes Tourisme +70.
-- **Moteur — règle « le remplacé ne compte plus » GÉNÉRALISÉE** : NOUVELLE primitive `batimentsActifsVille(ville, C)` (batiments.ts, réutilise le PRIVÉ `batimentsRemplaces`) branchée dans `emplacementsMetierVille` (metiers.ts — les aménagements restent hors remplacement), `maxRoutesJoueur` (commerce.ts) et `domicilesApportesVille` (domiciles.ts, garde-fou uniforme). Sans elle : Complexe + Guilde des marins = cap 64 au lieu de 40, Plateforme + Guilde des marchands = +4 routes au lieu de +2.
-- **Moteur — modificateurs de PAYS** : interface `ModificateursPays` + `modificateursPaysJoueur(p, C)` (batiments.ts) ; 6 nouveaux champs de `ConstructionRef` (defaultConfig.ts, docblocks arbitrage) + 6 lecteurs dans constructions.ts + libellés `resumeConstruction` (« production des Bourgeois ×1.5 », « commerçant +0.5 Or / habitant », « revenus du commerce ×1.5 », « +5 % tribut vassal », « +10 % conversion vers la culture de la ville », « Science des Professeurs +5 % », effetPlateau tel quel). Branchements : `detailGainsVille` (economie.ts — mult bourgeois EN PLUS du mult de rang, cumul multiplicatif ×2,25/instance ; bonus par habitant avant taxes × mult de rang, patron Ponton ; part Science Professeur 0,10 → 0,15), `effetsCommerceJoueur` (commerce.ts, ×N sur toutes les ressources, source unique stock + récap), `impotsVassaux` (economie.ts) + `transfererTributVassal` (vassalite.ts) — les DEUX chemins du tribut ×(1+v), le vassal paie SA part, la différence CRÉÉE, cumul aux multiplicateurs régime/dogme ; `applyCultureInfluence` (culture.ts — pattern EXACT du Nationalisme, +v × poids des autres cultures DANS le tirage, lu par ville d'accueil, cumulatif au dogme).
-- **Tests** : NOUVEAU `engine/tier3.test.ts` (7 tests : agrégat identités → guildes → ×2,25 → diplomates +7 avec l'Ambassade neutralisée → conversion +0,1 ; batimentsActifsVille caps +16 pas +40 / Ecoles +2 et +1 / routes +3 pas +5 ; detailGainsVille chasseurs 2/3/4,5 Nourriture + commerçant 1→1,5 Or + part Science 0,10→0,15 (flottants à 1e-9) ; commerce ×1,5 sur la fixture 2 joueurs du commerce.test.ts ; tribut vassal ×1,05 EXACT sur les DEUX chemins (gains indexés par `n` qui commence à 1) ; conversion DANS le tirage avec une guilde de TEST injectée dans `C.config.constructions` (patron cultures.test.ts — la vraie porte Tourisme +70 qui polluerait la pression) + `fakeRng` cast `as unknown as Rng` + `emptyRecap()` SANS argument ; libellés des 6 guildes + Responsable des voies + Ecole supérieure ecoleRang 3). `state/config.test.ts` compteurs AMENDÉS : 52 → 72 (71 bâtiments + perso), rang ≥ 2 : 25 → 45. **312/312 natifs** (305 + 7), **23/23 rendus** (13 fichiers), tsc baseline identique (3 erreurs stub supabase local, 4 lignes), diag LÉGITIMEMENT changé — `diag-out.txt` RÉGÉNÉRÉ (101 règles, +18 bâtiments : placesMetier 71→82, logements 47→51, fluxVille 9→15 ; rien d'autre ne bouge, diff relu).
-- ⚠ INCIDENT du tour : le bac a été WIPÉ en pleine session (après validation 311 natifs, avant rendus/tsc/diag finaux) — reconstruction complète depuis le tarball codeload v4 + tarballs npm. DEUX leçons outillage : (1) registry.npmjs.org renvoie « version not found » en GET depuis le sandbox (cache CDN incohérent, HEAD 200 mais GET 404) — les tarballs se prennent sur **registry.npmmirror.com** (parfois 2 essais, une réponse `{"error":"[INVALID_PARAM]"}` s'obtient avant le vrai tarball) ; (2) le stub `@supabase/supabase-js` DOIT être un module **ESM** (`"type":"module"` + `export function createClient`) : en CommonJS `module.exports={createClient:...}` les 13 tests de rendu tombaient en `SyntaxError: Named export 'createClient' not found` (12 échecs + le fichier qui cachait le compte réel) — c'était la cause des 12 échecs de rendu non diagnostiqués avant le crash, corrigée à la reconstruction.
-- Diff vs base relu au complet : 12 fichiers src modifiés (referentiels.json, defaultConfig.ts, constructions.ts, batiments.ts, economie.ts, commerce.ts, metiers.ts, domiciles.ts, culture.ts, vassalite.ts, config.test.ts — + AGENTS.md compteurs) + 1 nouveau (tier3.test.ts) + diag-out.txt + docs (règles, journal, AGENTS.md compteurs 305 → 312).
-
-## Italique = effet de plateau non calculé par le moteur (convention Thibaut 2026-11-04, base e7e986fe)
-
-- **Retour Thibaut** (2 messages) : « Effet décrit dans le texte, arbitré à la main au plateau (recommandé) » — confirmation du mode `effetPlateau` ; puis « Met les descriptions de ce qui n'est pas pris en compte par le moteur en italique et ajoute cette convention aux documents » — la convention devient VISIBLE à l'écran.
-- **Implémentation** : `resumeConstruction` (engine/constructions.ts) enveloppe le texte d'`effetPlateau` du marqueur `*…*` (docblock + commentaire du bloc amendés, mémoire des arbitrages) ; NOUVEAU composant `TexteAvecItalique` (components/ui.tsx — split sur `*…*`, segments marqués rendus en `<i>`) ; branché dans Picker.tsx (descriptions du picker « + Construire ») et reference/OngletsBatiments.tsx (wiki bâtiments + tableau aménagements, replis « — » conservés) ; phrase de convention ajoutée au paragraphe d'explication du wiki. Les TEXTES sont inchangés — seul le rendu change ; les marqueurs vivent aux extrémités du texte plateau, donc les asserts `includes(...)` de tier3.test.ts passent inchangés.
-- **Documents** : convention consignée dans AGENTS.md (nouveau point après « Automatique vs plateau ») + nouvelle section dans docs/ia/regles-et-arbitrages.md + docblocks moteur amendés.
-- ⚠ INCIDENT d'outillage : bac à sable natif INDISPONIBLE ce tour (upgrade impossible) — PAS de tests locaux. Découvertes : (1) `open_url` WRAP le texte des fichiers bruts (retours à la ligne insérés ~colonne 100, mots coupés) → JAMAIS reconstruire un fichier depuis un fetch web ; (2) l'API GitHub anonyme est rate-limitée. Contournement : lecture byte-exact via `github_app.get_file_contents` (texte intégral + SHA du blob git annoncé), VALIDÉE par un SHA-1 maison STREAMING recalculé (git blob `blob <len>\0<contenu>`) sur CHAQUE fetch — 7/7 vérifiés ; validation à distance par lecture croisée des tests concernés (aucun assert ne touche les extrémités des textes plateau, aucun compteur ne bouge) ; la CI (tsc strict + tests + build) sert de garde syntaxique. Validation locale complète à REJOUER au prochain tour (312 natifs / 23 rendus / tsc baseline / diag attendus INCHANGÉS — seul constructions.ts est touché côté moteur, aucune donnée du référentiel ne bouge).
-- Push en 3 commits : `0ff4cddf` feat(jeu) — constructions.ts + ui.tsx + Picker.tsx + OngletsBatiments.tsx ; `bd9fc2e6` docs(ia) — regles-et-arbitrages.md + AGENTS.md ; ce commit docs(ia) — journal seul.
-
-## Merveilles naturelles (fiches Thibaut 2026-10-25) — 10 aménagements spéciaux
-
-Tier SPÉCIAL des aménagements : aménageables comme un aménagement
-de base (12 Or + 5 Bois), jamais améliorables. Réalisé sur la
-structure consolidée v4 (jeu/), en réutilisant les canaux de la
-BANQUE D'EFFETS existants :
-- flux (effets[]) : Pic Ascendant Science+1, Ruines de Seth
-  Or+2/Tourisme+10, Echine du dragon Charbon+1/Fer+1 ;
-- garnison d'état (effets[Garnison]) : Sépulcre +20 —
-  garnisonHabitationVille lit désormais les AMÉNAGEMENTS en plus
-  des bâtiments ;
-- logements (domicilesApportes) : Sépulcre +10 Taudis ;
-- routes (routesApportees) : Trésor +1 — maxRoutesJoueur lit les
-  aménagements ;
-- réduction de levée (reductionLeveeArmee) : Antre de Magmadon
-  −15 — reductionLeveeBatiments lit les aménagements ;
-- émissaires (emissairesApportes) : Coeur Ancestral +1 (plateau) ;
-- effets de plateau en ITALIQUE (convention 2026-11-04,
-  effetPlateau) : Pic Ascendant (siège −30), Pilliers Célestes
-  (+1 PM).
-
-DEUX nouveaux champs données : `effetsParRang` (Caverne de la
-tisseuse : production × rangNiveau de la ville porteuse —
-Hameau 1, Cité 2, Grande Cité 3) et `bonheurApporte` (Jardins
-Flamboyants : +10, cumulable, plafonné min(100) du bonheur —
-lu par bonheurApportesVille, bâtiments ET aménagements).
-
-UI : catégorie « Merveilles naturelles » dédiée dans le picker
-« + Aménager une case… » (VilleCarte) — distincte des
-aménagements de base et des améliorations tier 2/3.
-
-Tests : merveillesNaturelles.test.ts (9) — les 10 présentes,
-coût uniforme, jamais améliorables, chaque effet moteur vérifié
-(Soie×rang 1/2/3, +10 bonheur, flux, +20 garnison, +10 Taudis,
-+1 route, −15 levée, +1 émissaire, italiques plateau).
-PIÈGE DE TEST consigné : la garnison se vérifie SANS state —
-les malus de lois culturelles (Ferveur martiale, Guerres
-saintes) de la partie témoin annulaient l'apport (+20 → 0).
-339/339 natifs verts, tsc strict 0, handler Deno 0, bundle OK,
-build vite OK, diag exit 0.
-
-## Correctif multijoueur : plus aucun chemin ne créait la ligne du salon (2026-11-11)
-
-**Symptôme** (retour arbitre) : « le multijoueur ne fonctionne
-plus » — les tours ne s'advancent plus, les joueurs re-poussent
-leurs sections sans effet.
-
-**Investigation en prod** (REST en lecture, clé publishable) :
-- projet Supabase VIVANT (pas en pause), table + Edge Function
-  opérationnelles ;
-- **dernière résolution serveur : 22 octobre** (chasse-peche3,
-  tour 5) — rien depuis, malgré des déploiements quotidiens ;
-- **preuve du bug** : le salon `chasse-peche5` (récent) a des
-  sections dans cp_events (tour 1, joueur 1 ×2 — il retente !)
-  mais AUCUNE ligne dans parties_chasse_peche.
-
-**Cause racine** : avant le 19/10, chaque mutation faisait un
-upsert d'état (~5 Mo) — c'est ce qui CRÉAIT la ligne du salon au
-premier save. Le retrait du protocole v1 (audit R5, 27a5173c) a
-supprimé l'upsert — et `publierEtatFusionne` ne fait qu'un
-UPDATE. Depuis : le créateur lance la partie (localStorage
-seul), les joueurs poussent leurs sections, l'Edge Function
-répond « salon introuvable » (404), le repli local publie via
-un UPDATE sur une ligne inexistante (0 ligne, silencieux) →
-le tour n'avance pour personne. Les salons du 22/10 avaient
-des lignes car créés avant/après via les restes du flux v1.
-
-**Correctif** : `creerSalonRemote` (client.ts) — appelé par
-newGame en mode supabase. INSERT idempotent
-`ON CONFLICT (id) DO NOTHING` : ne peut JAMAIS écraser une
-ligne existante (client périmé inoffensif), tour_publie 0
-compatible avec le trigger anti-rollback, payload via
-etatReseau (contrat egress : pas de cache config). La
-construction de ligne est une fonction PURE
-(`ligneCreationSalon`) verrouillée par salon.test.ts (3
-tests : payload réseau sans config, tour_publie 0, état
-joignable par loadRemote).
-
-**Reprise pour le salon cassé** : recréer la partie avec le
-même code de salon (l'INSERT créera la ligne) — ou un code
-frais pour éviter les sections orphelines du tour 1.
-
-342/342 natifs verts, tsc 0, handler 0, bundle OK, build OK.
-
-## Durcissement multijoueur : création de salon BLOQUANTE et vérifiée (2026-11-11)
-
-Retour arbitre après le correctif : « impossible de rejoindre une
-partie fraîchement créée ». Constat en prod : AUCUNE nouvelle ligne
-dans parties_chasse_peche — le fix n'a pas joué chez l'arbitre
-(cache navigateur du vieux bundle, Pages redéployé à 10:28). MAIS
-l'investigation révèle une faiblesse réelle du premier correctif :
-l'appel `void remote.creerSalonRemote(...)` JETAIT le résultat —
-un échec d'INSERT laissait le créateur croire au succès et
-partager un code de salon inexistant.
-
-Durcissement :
-- `creerPartie` (store) : création + INSERT ATTENDU, résultat
-  RETOURNÉ au bouton ;
-- SetupPanel : « ▶ Créer la partie » affiche « Salon créé et
-  publié — partagez ce code » ou « ⚠ Impossible de créer le
-  salon (table injoignable ?) » — plus d'échec silencieux ;
-- newGame redevient pur local (l'INSERT vit dans creerPartie).
-
-Note opérationnelle : index.html est servi par GitHub Pages avec
-un cache ~10 min — après un déploiement, un rechargement dur
-(Ctrl+Shift+R) est nécessaire pour charger le nouveau bundle.
-
-342/342 verts, tsc 0, build OK.
-
-## Incident « 0 Bétail avec 2 Éleveurs » (2026-11-11) — config mondiale v1
-
-**Symptômes** (retour arbitre) : « +1,1 Bois avec 2 Bûcherons ? »
-et « 0 Bétail avec 2 Éleveurs ? ».
-
-**Le +1,1 Bois est NORMAL** : 2 × 0,5 = 1,0 Bois, ×1,1 par la
-taxe du Gouverneur (+10 % toutes ressources) = +1,1.
-
-**Le 0 Bétail était un BUG de migration** : la config mondiale
-'__config__' de prod est une config v1 du 2026-10-19 (table
-titres). Ses métiers PRÉSENTS portent les anciennes fiches :
-Éleveur 2,4 Nourriture (PAS de Bétail — d'où 0), Chasseur
-1,2 N + 0,1 Or (le garde-fou exigeait valeur2 === 0 : jamais
-migré — 40 Chasseurs = +4 Or/tour parasite), Artiste 1,2
-Tourisme (courant : 5). Les métiers ABSENTS de la table v1
-(Bûcheron, Fermier, Pêcheur…) sont complétés depuis le
-référentiel courant — d'où le Bois correct.
-
-**Correctif** : garde-fou cfgOf étendu aux signatures v1
-réelles — Chasseur (1,2 N + 0,1 Or → 2 N, Or nettoyé),
-Éleveur (2,4 N → 0,5 Bétail + 4 N ; et fiche 2026-10-25
-0,5 Bétail + 2 N → 4 N), Artiste (1,2 → 5 Tourisme). Les
-fiches PERSONNALISÉES restent conservées. 2 tests de
-régression (la table titres v1 RÉELLE de prod, la fiche
-2026-10-25).
-
-**Effet immédiat** : la migration joue à chaque cfgOf — la
-partie en cours récupère les bonnes fiches au prochain tour,
-SANS republication de la config mondiale.
-
-344/344 verts, tsc 0, build OK, diag 0.
-
-## Réordonnancement des tours (arbitrage Thibaut 2026-11-11)
-
-Motivation (retour arbitre) : « les fins de tours et les revenus
-sont difficiles à anticiper à cause des mouvements dans les
-populations ». Nouvel ordre : les REVENUS se calculent sur la
-population vue en clôturant ; tout ce qui bouge la population
-se joue après le crédit.
-
-Changements :
-- réaffectation DÉCOUPÉE : purgerMetiersSurnombre (avant les
-  gains — un surnombre ne produit JAMAIS) + attribuerPlacesLibres
-  (après la démographie — un poste libéré par un décès est repris
-  DANS LE MÊME TOUR) ;
-- moteur de population DÉCOUPÉ en phases : populationTourA
-  (mariages, vieillissement, maladie/décès — les MORTS) puis,
-  après la migration, populationTourB (naissances, culture,
-  domiciles, prestige) — « les morts et départs avant les
-  naissances et les réattributions » ;
-- gouverneurs automatiques APRÈS la démographie (remplacement
-  même tour, bonus au tour suivant) ;
-- saison en FIN DE TOUR (les revenus se calculent dans la saison
-  affichée ; effets de saison au tour suivant la bascule ; le
-  snapshot porte la saison jouée).
-
-4 tests de verrouillage du NOUVEL ordre
-(reordonnancement.test.ts) : bascule de saison en fin de
-résolution, surnombre purgé avant les gains (3 Bûcherons/2
-places → 1,0 Bois max), gouverneur nommé en fin de tour, phases
-A/B de la population. 348/348 natifs verts (les 344 existants
-sont passés INTACTS — aucun ne verrouillait l'ordre), tsc 0,
-handler 0, bundle OK, build OK, diag 0.
-
-## Logements : plancher noble, 8 Palais de la capitale, retrait des logements des aménagements (arbitrage Thibaut 2026-11-12)
-
-Trois retours arbitre :
-1. « des nobles vivent en taudis alors que c'est minimum maison
-   de notable » → PLANCHER NOBLE : plancherNobleDomicile
-   (qualité ≥ 3), filtre à l'attribution + relogement des nobles
-   hérités d'un logement sous le plancher ; amendement au retour
-   « 1 logement = 1 habitant » (les non-logés d'une attribution
-   pleine sont désormais des NOBLES sans place noble) ;
-2. « lors de l'amélioration de la capitale, les palais
-   disparaissent » → initStockVille ajoute 8 Palais à la
-   CAPITALE (reconnue par nom, convention capitaleDe) à la
-   création ET à chaque changement de rang ;
-3. « les aménagements agissent davantage sur les logements que
-   sur l'emploi » → domicilesApportes retirés des 36 entrées
-   d'aménagements (tiers 1/2/3) ; bâtiments et merveilles
-   naturelles conservés. NOTE : ces Taudis étaient HORS
-   attribution (convention) — ils ne logeaient personne, ils ne
-   gonflaient que le facteur Logement du bonheur : le retrait
-   dégonfle le score logement des villes aménagées.
-
-Tests : 2 nouveaux (plancher noble, relogement hérité), 7
-réalignés (stock capitale 59/129, aménagements sans logements,
-résumés sans Taudis, banque, normalisation, attribution pleine
-amendée). 350/350 verts, tsc 0, handler 0, bundle OK, build OK,
 diag 0.
 
 ## Le texte des tables de référentiel fait foi au dépôt — régimes & rangs de pays (retour Thibaut 2026-11-12, base 2d1d9369)
@@ -7152,3 +6683,81 @@ les distances mais dans une composante géante hexdist 0-13.
 Cache-busters : page Wargame ?v=9 (officiel), composant jeu et liens
 officiel→labo ?v=21, lien retour labo→officiel ?v=9. Harnais
 scripts/harnais-labo.cjs poussé avec C9 (v6).
+
+## Labo générateur : bruit structurel — mer centrale retirée, tout tiré par le bruit, Bétail 4.5 % (12e retour Thibaut 2026-11-14, base 92ccb129)
+
+Demande : « pourquoi la zone au centre est-elle presque toujours dénuée de
+masse de terre ? J'aimerais que la mer centrale par défaut soit retirée sur
+les continents. En fait j'aimerais quelque chose de vraiment dépendant du
+bruit, que ce soit pour la disposition, l'éloignement ou la taille. Et
+j'aimerais que le bétail par défaut soit non pas à 3.5 % mais à 4.5 % de
+densité. » Diagnostic : la mer centrale était GARANTIE par le creux central
+(dipAmp, 4e retour) et par l'anneau périphérique des masses ; le centre
+n'était jamais une cible du placement.
+
+Réponses : (a) dipAmp 0 et rMin 0 partout — le creux central explicite est
+retiré, le centre est TERRE quand le bruit y pose une masse, mer sinon ;
+(b) count ×0.85-×1.00 par graine (5-6 continents, 6-7 grandes îles, 14-16
+îles d'archipel), tailles par jitter de σ et d'amplitude ; (c) RES_DEFAULTS
+Bétail density 35 → 45 ‰ (vérifié : 45 ‰ sur toutes les graines).
+
+Quatorze versions dans la même session (v12 → v12o), leçons à retenir :
+
+1. **Le plateau tient le seuil, pas la corde** : la sécurité anti-soudure
+   ne vient PAS de la corde seule mais du RATIO PLATEAU/BUDGET. Le seuil
+   de mer (quantile) doit chevaucher le FLANC des bosses (~+0.10-0.16
+   au-dessus des crêtes de fond ~+0.06). À plateau ≤ 1.2× le seuil
+   chevauche les crêtes et soude MÊME À CORDE RESPECTÉE (chaînes de
+   44-168 tuiles mesurées). Plancher de retrait en ESPÉRANCE E[σ] = σ̂
+   (le pessimiste −jit bloquait tout retrait archipel), cible 1.65×.
+2. **Le semis libre ne découvre pas le pentagone de bord** : le
+   best-candidate optimise CHAQUE point (4 masses en carré ~90°) et
+   sur-déploie ; une cible de mesure nulle ne sera jamais touchée. Les
+   types à grandes masses (sigRel ≥ 0.15 : continents, grandes îles)
+   passent en STRATIFIÉ : grille ANGULAIRE jitterée (±0.25 créneau,
+   40 essais), tout le reste dans le bruit. L'archipel (sigRel 0.11)
+   garde le semis de fléchettes libre.
+3. **Le centre est une contrainte, pas une case** : un count 6-sans-centre
+   est géométriquement impossible (hexagone de bord : corde 14.3 ≈ rayon
+   14.88, aucun mou). Le centre n'est posé qu'à count ≥ 6 (à count 5 les
+   masses de ~46 t ont un flanc ~0.08 : soudure centre-bord mesurée aux
+   îlots coupés, masse 26 %) et EN DERNIER, contre le bord déjà en place
+   (posé premier, il se glissait sous la corde du bord à venir : curseur
+   ×0.5, 1 masse + bord impossible = 55 % de terre).
+4. **La corde du centre dépasse le disque** : à σ̂ plein (continents,
+   4.44 px) la corde 3.3·(σc+σr)/2 ≈ 14.65 px dépasse TOUTE distance
+   centre-bord possible (bord 14.4-14.9, offset ±0.85) : le centre
+   échouait ses 12 essais sur toutes les graines de count 6. σ RÉDUIT
+   ×0.88 → corde ~13.8, plateau π(1.6·0.88σ̂)² ≈ 97 u² ≥ budget 94 :
+   masse ~38 t préservée, paire effective 3.12σ.
+5. **Le repli de croissance est un levier de dernier recours** : sans
+   lui le quantile plonge dans le fond et ponte (78 t mesurés), mais
+   chaque activation resserre les paires effectives (corde ÷ grow) :
+   préférer 40 essais par créneau (p échec ~1e-9) au repli.
+
+Mesures (r=15, 8 seeds, preset défaut) : continents 5-6 masses de 24-43
+tuiles selon graine (count par graine), centre TERRE sur les graines de
+count 6 (terre centrale 26-32 %), mer centrale garantie ailleurs (terre
+centrale 2-5 %, terre la plus proche hexdist 5) ; grandes îles 6-7 masses
+de 25-43 tuiles stratifiées hexagone/pentagone + centre, paires à ≥ 1.36×
+la corde ; archipel 10-14 composantes de 8-35 tuiles en semis libre ;
+distances adjacentes 13.7-17.1 px selon graine. Bétail 45 ‰ partout.
+Harnais : C8 v2 (monotonie sur masses ≥ 6 t), C9 v2 (paires ≥
+1.05·(√si+√sj), counts variables par type), C10 (Bétail 45 ‰ + centre
+continental atteignable ≥ 1/5 seeds). C1-C10 tous verts sur les deux
+générateurs (JS pur identique).
+
+RÈGLES DURABLES : (1) une zone « toujours vide » vient d'une GARANTIE
+analytique (creux, anneau) : pour la rendre bruit-dépendante, retirer la
+garantie et donner au placement la capacité de la remplir ; (2) corde
+anti-soudure sur les TAILLES RÉELLES 3.3·(σi+σj)/2, jamais sur σ̂ seul ;
+(3) le ratio plateau/budget ≥ 1.65× est le vrai gardien du seuil — la
+corde protège les paires, le plateau protège le fond ; (4) un point posé
+en premier a une marge infinie (spots vides) : les contraintes se
+vérifient CONTRE les points déjà posés, donc l'ordre de pose EST le
+design ; (5) la géométrie borne ce que le bruit peut découvrir : mesurer
+la corde vs le disque AVANT d'écrire la boucle d'essais.
+
+Cache-busters : page Wargame ?v=10 (officiel), composant jeu et liens
+officiel→labo ?v=22, lien retour labo→officiel ?v=10. Harnais
+scripts/harnais-labo.cjs poussé avec C8 v2/C9 v2/C10 (v7).
