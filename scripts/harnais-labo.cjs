@@ -203,19 +203,23 @@ if (ex.encodeShare) {
   chk('C5 codec présent', false, 'encodeShare absent de la partie pure');
 }
 
-// C6 : TERRE AU BORD (9e retour Thibaut 2026-11-14 : « masses toujours
-// 100 % visibles, pas de demi-îles, le bord est toujours de l'eau » —
-// INVERSE le contrat du 3e retour « masses visibles en entier » : le
-// bord d'eau forcé devient une OPTION du curseur « Terre au bord »,
-// et les presets à bosses posent des DEMI-ÎLES par défaut (75 % :
-// une fraction de la couronne extérieure des bosses dépasse le cadre).
-// Deux volets, par type × seed, r=15 :
-//  a) slider à 0 : la fenêtre périphérique historique est INTACTE —
-//     anneau extérieur ≤ 5 % de terre (le look « boîte » reste
-//     atteignable, sans régression) ;
-//  b) preset par défaut (75 %) : au moins 2 composantes de terre
-//     touchent l'anneau (demi-îles), terre [24, 40] % (le budget ne
-//     bouge pas), masse principale ≤ 25 % (pas de soudure).
+// C6 : ÎLES ÉPARSES (10e retour Thibaut 2026-11-14 : « non, pas toutes les
+//  îles au bord — du bruit, des îles par ci et par là ». CORRIGE le 9e
+//  retour « Terre au bord » : les masses ne vont PLUS au bord ; le curseur
+//  « Îles éparses » sème des ÎLETS (bosses dédiées de 2 à 10 tuiles) dans
+//  la bande périphérique (78 % → 97 % du rayon), hors empreinte des
+//  masses, NON essorés par la fenêtre — certains touchent le cadre.
+//  Deux volets, par type à bosses × seed, r=15 :
+//  a) slider à 0 : calibrage historique INTACT — anneau extérieur ≤ 5 %
+//     de terre, masse principale ≤ 25 % (no-op vérifié : 72 cartes
+//     byte-identiques au 9e retour à edge=0) ;
+//  b) preset par défaut (100 %) : îlots périphériques ≥ 3 (Continents,
+//     Archipel) / ≥ 1 (Grandes îles : bande déjà dense, les masses y
+//     portent le bruit — mesuré min 1), au moins une tuile de terre sur
+//     l'anneau, terre [24, 40] % (budget constant), masse ≤ 25 % (pas
+//     de soudure).
+//  Îlet = composante de terre ENTIÈREMENT au-delà de 10 pas hex du
+//  centre (2/3 du rayon), de taille ≤ 12 tuiles.
 {
   const N6 = 15;
   const DIRS6 = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
@@ -231,47 +235,54 @@ if (ex.encodeShare) {
       if (m.biome[i] !== 'Océan') land.push(i);
     }
     const inLand = new Set(land);
-    const seen = new Set(); const sizes = []; let edgeComps = 0;
+    const seen = new Set(); const sizes = []; let islets = 0;
     for (const st of land) {
       if (seen.has(st)) continue;
-      let size = 0, touch = false; const stack = [st]; seen.add(st);
+      let size = 0, minD = 99; const stack = [st]; seen.add(st);
       while (stack.length) {
         const c = stack.pop(); size++;
         const t = m.tiles[c];
         const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
-        if (d === N6) touch = true;
+        if (d < minD) minD = d;
         for (const [dq, dr] of DIRS6) {
           const j = key.get((t.q + dq) + ',' + (t.r + dr));
           if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
         }
       }
       sizes.push(size);
-      if (touch) edgeComps++;
+      // (10e retour) îlet : composante périphérique (rien de plus près que
+      //  2/3 du rayon) et petite — exclut les masses par construction
+      //  (leurs centres sont posés à ≤ 0.75 × RPX, tuiles centrales bien
+      //  plus près que 10 pas).
+      if (minD >= 10 && size <= 12) islets++;
     }
     sizes.sort((a, b) => b - a);
-    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0, ringLand, ringTot, edgeComps };
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0, ringLand, ringTot, islets };
   };
+  const minIslets = { continents: 3, 'islands-large': 1, archipelago: 3 };
   const bad = [];
   for (const type of ['continents', 'islands-large', 'archipelago']) {
     for (const seed of seeds) {
-      // a) slider « Terre au bord » à 0 : comportement historique intact
+      // a) slider « Îles éparses » à 0 : calibrage historique intact
       const p0 = presetParams(ex, type);
       p0.edgeLand = 0;
       const r0 = edgeStats(ex.generateMap(N6, seed, p0));
       const part0 = r0.ringTot ? r0.ringLand / r0.ringTot : 0;
       if (part0 > 0.05) bad.push('0%:' + type + '/' + seed + ' anneau ' + (part0 * 100).toFixed(0) + '%');
-      // b) preset par défaut (75 %) : demi-îles, budget et masse tenus
+      else if (r0.top / r0.land > 0.25) bad.push('0%:' + type + '/' + seed + ' masse ' + (r0.top / r0.land * 100).toFixed(0) + '%');
+      // b) preset par défaut (100 %) : îlots épars, budget et masse tenus
       const r1 = edgeStats(ex.generateMap(N6, seed, presetParams(ex, type)));
       const landPct = r1.land / r1.tot;
       const topPct = r1.top / r1.land;
-      if (landPct < 0.24 || landPct > 0.40) bad.push('75%:' + type + '/' + seed + ' terre ' + (landPct * 100).toFixed(0) + '%');
-      else if (topPct > 0.25) bad.push('75%:' + type + '/' + seed + ' masse ' + (topPct * 100).toFixed(0) + '%');
-      else if (r1.edgeComps < 2) bad.push('75%:' + type + '/' + seed + ' ' + r1.edgeComps + ' demi-\u00eele(s)');
+      if (landPct < 0.24 || landPct > 0.40) bad.push('100%:' + type + '/' + seed + ' terre ' + (landPct * 100).toFixed(0) + '%');
+      else if (topPct > 0.25) bad.push('100%:' + type + '/' + seed + ' masse ' + (topPct * 100).toFixed(0) + '%');
+      else if (r1.ringLand < 1) bad.push('100%:' + type + '/' + seed + ' anneau vide');
+      else if (r1.islets < minIslets[type]) bad.push('100%:' + type + '/' + seed + ' ' + r1.islets + ' îlet(s) < ' + minIslets[type]);
     }
   }
-  chk('C6 terre au bord (3 presets \u00d7 5 seeds, r=15 : \u00e0 0 anneau \u2264 5 %, au d\u00e9faut \u2265 2 demi-\u00eeles \u00e0 budget constant)',
+  chk('C6 îles éparses (3 presets × 5 seeds, r=15 : à 0 calibrage intact, au défaut îlots périphériques + terre au bord)',
     bad.length === 0,
-    bad.slice(0, 4).join(', ') || 'fen\u00eatre intacte \u00e0 0, demi-\u00eeles au d\u00e9faut, terre 24-40 %, masse \u2264 25 %');
+    bad.slice(0, 4).join(', ') || 'calibrage intact à 0, îlots au défaut, anneau habité, terre 24-40 %, masse ≤ 25 %');
 }
 
 // C7 : les CAPS DE L'UI PAR DÉFAUT ne doivent pas dérailler les presets
