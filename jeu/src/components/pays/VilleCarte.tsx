@@ -444,7 +444,7 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                 <div>
                   <div
                     className="ville-duo-titre"
-                    title="V2 « Pression/Ancrage » (2026-11-14) : force d'une culture = pression touristique mondiale + poids démographique local (par vivant de la culture dans la ville) ; la culture dominante convertit ce tour les habitants dont l'ancrage (force de leur propre culture ici + noblesse) est dépassé, au plus le cap par ville et par tour. Le Dirigeant est immunisé. Une ville 100 % homogène tente un plancher résiduel de 1 % par tour vers la culture étrangère la plus forte."
+                    title="V2 « Pression/Ancrage » (2026-11-14) : force d'une culture = pression touristique mondiale + poids démographique local (par vivant de la culture dans la ville) ; la culture dominante convertit ce tour les habitants dont l'ancrage (compatriotes ici + noblesse) est dépassé, au plus le cap : 10 % des habitants de la ville et par tour (minimum 1, réglable via conversionTaux). Le Dirigeant est immunisé. Une ville 100 % homogène tente un plancher résiduel de 1 % par tour vers la culture étrangère la plus forte."
                   >
                     Balance culturelle : <strong>{detailConv.dominant}</strong> domine
                   </div>
@@ -476,6 +476,13 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
                             <td className="num small muted">ancrage {fmt(Math.round(c.ancrage))}</td>
                           </tr>
                         ))}
+                        <tr className="ligne-total">
+                          <td className="muted small">cap de conversion</td>
+                          <td className="num small" colSpan={2}>
+                            <strong>{detailConv.cap}</strong>
+                            <span className="muted"> /tour ({Math.round(C.p.conversionTaux * 100)} % des vivants)</span>
+                          </td>
+                        </tr>
                         {detailConv.convertibles.length === 0 && (
                           <tr>
                             <td className="muted small" colSpan={3}>

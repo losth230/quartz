@@ -703,6 +703,15 @@ export interface GameConfig {
    *  de mergeParams. Marqueur (z) : migration ciblée (cfgOf)
    *  indépendante du tampon schemaVersion, patron taxes25. */
   conversionDeterministe2026?: boolean
+  /** Cap de conversion PROPORTIONNEL (arbitrage Thibaut
+   *  2026-11-15 « le cap de conversion passe à 10 % des habitants
+   *  de la ville ») : conversionMax (cap fixe 1 du 2026-11-14)
+   *  devient conversionTaux (part des vivants, défaut 0,10,
+   *  plancher d'au moins 1 conversion par ville-tour). La clé
+   *  conversionMax est morte (le moteur ne la lit plus) et est
+   *  dépouillée ; conversionTaux vient de mergeParams. Migration
+   *  ciblée (cfgOf), indépendante du tampon schemaVersion. */
+  conversionTaux2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -2197,6 +2206,21 @@ export function cfgOf(config?: GameConfig): Cfg {
     delete pm.conversionProba
     delete pm.conversionMemeCulture
     merged.conversionDeterministe2026 = true
+  }
+  // (Arbitrage Thibaut 2026-11-15 — « le cap de conversion passe à
+  //  10 % des habitants de la ville » : le cap FIXE conversionMax
+  //  (1) du 2026-11-14 devient le TAUX conversionTaux (0,10 des
+  //  vivants, plancher 1). Migration ciblée (patron taxes25, SANS
+  //  bump du tampon schemaVersion — règle (x)) : la clé
+  //  conversionMax est MORTE (changement d'unité : une valeur
+  //  sauvegardée « 1 » voudrait dire 100 % — aucun sens possible
+  //  à conserver, le moteur ne la lit plus) et est dépouillée ;
+  //  conversionTaux est semé par mergeParams. Une sauvegarde qui
+  //  avait PERSONNALISÉ conversionMax retombe sur le défaut 10 %.)
+  if (!merged.conversionTaux2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    delete pm.conversionMax
+    merged.conversionTaux2026 = true
   }
   // SUPPRESSION DE LA MARTIALITÉ (arbitrage Thibaut 2026-10-21) :
   //  l'hérédité est conservée, mais la martialité disparaît du jeu —

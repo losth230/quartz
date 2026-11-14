@@ -153,10 +153,12 @@ export interface GameParams {
    *  (par vivant de la culture dans la ville) ET dans l'ANCRAGE
    *  d'un habitant (par compatriote) — même constante, deux faces. */
   conversionPoidsLocal: number
-  /** Conversions max par ville et par tour — PROVISOIRE (arbitrage
-   *  Thibaut 2026-11-14 : « seulement 2 par tour est trop léger » →
-   *  cap par ville, équilibrage différé en second temps). */
-  conversionMax: number
+  /** Cap de conversions par ville et par tour, en PART des vivants
+   *  de la ville (arbitrage Thibaut 2026-11-15 : « le cap de
+   *  conversion passe à 10 % des habitants de la ville » ; succède
+   *  au cap fixe conversionMax 1 du 2026-11-14). Plancher d'au
+   *  moins 1 conversion par ville-tour. */
+  conversionTaux: number
   /** Plancher résiduel : proba qu'une ville 100 % homogène tente
    *  UNE conversion vers la culture étrangère la plus forte. */
   conversionPlancher: number
@@ -304,7 +306,7 @@ export const DEFAULT_PARAMS: GameParams = {
   traitTirageSlot: 0.3,
   // ── Conversion culturelle V2 « Pression/Ancrage » (2026-11-14) ──
   conversionPoidsLocal: 5,
-  conversionMax: 1,
+  conversionTaux: 0.1,
   conversionPlancher: 0.01,
   conversionAncrageNoble: 15,
   // ── Dogmes de culture (fondations 2026-10-30) ──
@@ -438,7 +440,7 @@ export const PARAM_META: {
   { key: 'traitHeriteEssais', label: 'Nombre d\'essais d\'héritage par trait', groupe: 'Traits' },
   { key: 'traitTirageSlot', label: 'Proba de tirage aléatoire par slot libre', groupe: 'Traits' },
   { key: 'conversionPoidsLocal', label: 'Poids démographique local (force et ancrage)', groupe: 'Culture', aide: 'V2 « Pression/Ancrage » (2026-11-14) : chaque habitant de la culture renforce la FORCE de sa culture dans sa ville (conversion des autres) et l\'ANCRAGE de ses compatriotes (résistance à la conversion). Une culture de force supérieure convertit les moins ancrés, jusqu\'au cap par ville.' },
-  { key: 'conversionMax', label: 'Conversions max par ville et par tour', groupe: 'Culture', aide: 'PROVISOIRE (équilibrage en second temps) : plafond de conversions par ville et par tour dans le duel « Pression/Ancrage ».' },
+  { key: 'conversionTaux', label: 'Cap de conversions — part des vivants (par ville-tour)', groupe: 'Culture', unite: 'proportion', aide: 'Plafond de conversions par ville et par tour dans le duel « Pression/Ancrage » : conversionTaux × vivants de la ville (arrondi à l\'inférieur, minimum 1). Défaut 10 % (arbitrage 2026-11-15).' },
   { key: 'conversionPlancher', label: 'Plancher — villes 100 % homogènes', groupe: 'Culture', unite: 'proba', aide: 'Une ville entièrement composée d\'une seule culture tente, avec cette proba par tour, UNE conversion vers la culture étrangère la plus forte (pression touristique). En ville mixte, l\'ancrage protège totalement.' },
   { key: 'conversionAncrageNoble', label: 'Ancrage bonus des nobles', groupe: 'Culture', aide: 'Les nobles (rang social) résistent davantage à la conversion culturelle : ils ne basculent qu\'en dernier, quand la force adverse dépasse leur ancrage de ce montant.' },
   { key: 'palierTourismeDogme', label: 'Dogmes — palier de Tourisme d\'une culture', groupe: 'Culture', unite: 'Tourisme', aide: 'Quand le Tourisme d\'une culture (somme des valeurs de Tourisme de ses villes, tous joueurs, SANS les cités libres) franchit un palier, le joueur ayant le plus de Tourisme dans cette culture choisit un dogme. Un dogme à chaque palier, cumul à l\'infini, jamais remplaçable ; dogmes, lois et effets de culture se cumulent. (Fondations 2026-10-30 : aucun dogme n\'est encore défini au référentiel.)' },

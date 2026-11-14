@@ -20,8 +20,9 @@
 //  ⚅ Conversions : la culture dominante D de la ville (Force max,
 //     ex æquo : ordre du référentiel) convertit les habitants les
 //     MOINS ancrés dont l'ancrage < Force(D) — au plus
-//     conversionMax par ville et par tour (défaut 1, PROVISOIRE —
-//     équilibrage en second temps, arbitrage Thibaut 2026-11-14).
+//     conversionTaux × vivants de la ville par tour (défaut 10 %,
+//     arbitrage Thibaut 2026-11-15 « le cap de conversion passe à
+//     10 % des habitants de la ville », plancher de 1 conversion).
 //     Le Dirigeant est immunisé (comportement conservé) ; les
 //     nobles résistent davantage (ancrage +15).
 //  ⚅ Plancher minuscule (arbitrage Thibaut 2026-11-14 : une ville
@@ -140,8 +141,11 @@ export interface DetailConversionVille {
   /** culture dominante (force max, ex æquo : ordre du référentiel). */
   dominant: string
   /** conversions prévues ce tour, plus faible ancrage d'abord,
-   *  plafonnées à conversionMax. Vide = personne ne bascule. */
+   *  plafonnées au cap : conversionTaux × vivants (min 1). Vide =
+   *  personne ne bascule. */
   convertibles: DetailConversion[]
+  /** cap effectif de la ville ce tour : max(1, conversionTaux × vivants). */
+  cap: number
   /** vrai si la ville est 100 % dominante : plancher résiduel 1 %. */
   plancher: boolean
   /** culture cible du plancher (étrangère la plus forte), si plancher. */
@@ -212,12 +216,14 @@ function conversionDetailVille(
   const forceDominante = forces[dominant]?.force ?? 0
   // conversions prévues : éligibles dont l'ancrage < Force(D), ancrage
   // croissant (ex æquo → ordre de recensement : sort V8 est stable),
-  // plafonnées à conversionMax (défaut 1, PROVISOIRE).
+  // plafonnées au cap PROPORTIONNEL (arbitrage Thibaut 2026-11-15 :
+  // 10 % des habitants de la ville, plancher d'au moins 1).
+  const cap = Math.max(1, Math.floor(C.p.conversionTaux * vivants.length))
   const convertibles = vivants
     .map((c) => ({ c, a: ancrage(c) }))
     .filter(({ c, a }) => c.culture !== dominant && c.metier !== C.p.metierDirigeant && a < forceDominante)
     .sort((x, y) => x.a - y.a)
-    .slice(0, Math.max(1, C.p.conversionMax))
+    .slice(0, cap)
     .map(({ c, a }) => ({ id: c.id, nom: fullName(c), culture: c.culture, vers: dominant, ancrage: a }))
   // Plancher minuscule : uniquement si la ville est 100 % dominante
   // (aucun vivant d'une autre culture, Dirigeant compris — une
@@ -239,6 +245,7 @@ function conversionDetailVille(
     forces,
     dominant,
     convertibles,
+    cap,
     plancher: pure && plancherVers !== null,
     plancherVers,
   }
