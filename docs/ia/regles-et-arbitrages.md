@@ -2863,3 +2863,42 @@ natifs**, tsc = baseline stub @supabase seule. Diag régénéré :
 seuls les compteurs de simulation bougent (log 497 → 513,
 commandants J1 4 → 5 — plus de conversions par tour, suites
 aléatoires aval décalées).
+
+## Migration par bonheur — échelle divisée par deux (arbitrage Thibaut 2026-11-15)
+
+**Arbitrage.** « Pour les mouvements de population liés au bonheur,
+au lieu de faire 0-10 % entre 100 et 0 de bonheur, j'aimerais
+descendre à 0-5 % de migration » — l'échelle LINÉAIRE posée le
+2026-10-28 est DIVISÉE PAR DEUX : la proba de départ par habitant
+p = migrationBonheurMax × (100 − bonheur) / 100 garde sa forme,
+mais le défaut passe de 0,10 à 0,05 — soit 0 % à 100 de bonheur,
+2,5 % à 50, 5 % à 0 (l'ancien 5 % à 50 devient le nouveau MAXIMUM à
+0). Le reste du flux est inchangé : tirage PAR HABITANT vivant à
+chaque fin de tour (Dirigeant/Héritier immunisés), destinations
+toutes villes du monde pondérées (bonheur ×[1 ; 2], +0,25 culture,
++0,5 même joueur, +1 emploi/logement manquants, ADDITIF v3),
+multiplicateur de régime (Autoritarisme ×0,8).
+
+**Effet.** Un mécontentement modéré ne saigne plus les villes : à
+50 de bonheur un habitant n'a plus que 2,5 % de partir par tour
+(~13 % en 6 tours) contre 5 % avant ; l'exode ne s'installe qu'aux
+bonheurs durablement effondrés, ce qui rend la migration par
+bonheur un signal d'alerte plutôt qu'une constante.
+
+**Paramètre.** migrationBonheurMax défaut 0,10 → 0,05 (AMENDÉ
+2026-11-15 dans l'interface, le défaut et PARAM_META). Migration
+ciblée migrationBonheurDemi2026 (patron taxes25, sans bump du
+tampon schemaVersion) : seule une valeur ENCORE à l'ancien défaut
+0,10 est ramenée à 0,05 — une PERSONNALISATION est conservée telle
+quelle. Le paramètre reste réglable dans le panneau de config
+(groupe Population).
+
+**Verrous.** engine/migrationBonheur.test.ts mis à jour : linéarité
+assertée sur le nouveau défaut (0,05 à 0, 0,025 à 50, 0,0125 à 75),
+flux réel étendu de 3 à 8 tours aux nouveaux défauts (graine fixe,
+≥ 1 départ « cherche meilleure vie »). Les autres tests utilisent
+des valeurs EXPLICITES (0, 1, 10 pour départ certain) et restent
+valides. **360/360 tests natifs**, tsc = baseline stub @supabase
+seule. Diag régénéré : seuls les compteurs de simulation bougent
+(log 513 → 427, commandants J1 5 → 4 — moins de départs, suites
+aléatoires aval décalées).
