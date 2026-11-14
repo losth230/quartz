@@ -6703,3 +6703,36 @@ des vieilles configs (purge des 4 anciennes, réinjection des 11).
 371/371 tests natifs (11 nouveaux : merveilles.test.ts), tsc
 baseline stub @supabase, diag 110 → 119 règles (simulation
 inchangée). feat b32d3dca · règles 3768a792 · journal (ce commit).
+
+## Labo générateur : correctif de chemin du 5e retour — le push était parti à static/ au lieu de quartz/static/ (addendum, 2026-11-14)
+
+**Incident.** Retour Thibaut : « je vois encore des couronnes d'eau, et la
+taille des continents n'a pas changée ». Diagnostic : le site live servait
+TOUJOURS la v13 (4e retour, bosses 3/4/14, anneau d'eau) — le push du 5e
+retour (`b660f08`) était parti vers `static/generateur-carte-labo.html`
+(RACINE du dépôt : fichier CRÉÉ par erreur) au lieu de
+`quartz/static/generateur-carte-labo.html` (le chemin réel, celui du 4e
+retour `c3035943`). Conséquences en chaîne : le nouveau labo n'a JAMAIS été
+déployé (Pages ne sert que `quartz/static/`, copié par `npx quartz
+build`) ; la « vérification d'intégrité » du 5e retour cmpait le fichier au
+mauvais chemin (identique par définition : c'était mon propre push) ; et le
+bundle jeu (?v=14, lui au bon chemin) référençait une URL ?v=14 servie
+avec le CONTENU v13 — l'arbitre voyait exactement le 4e retour, cache-buster
+inclus. Le harnais (`scripts/harnais-labo.cjs`) et le composant
+(`jeu/src/components/CarteLaboView.tsx`) étaient aux BONS chemins (vérifié :
+le harnais existait déjà au sha 867c801, `quartz/scripts/` n'existe pas).
+
+**Correctif.** `8105f76e` fix(wargame) : la v14 validée repoussée au BON
+chemin `quartz/static/generateur-carte-labo.html` (harnais re-joué avant
+push : 11/11, C6 sur presets réels) + cache-buster ?v=14 → ?v=15 (l'URL
+?v=14 a servi l'ancien contenu au navigateur, une URL neuve force le
+rechargement) ; `6be4fb6d` chore(wargame) : suppression du fichier
+parasite `static/generateur-carte-labo.html`.
+
+**Règles dérivées.** (1) Avant de pousser un fichier « existant », vérifier
+son chemin RÉEL par le dernier commit qui l'a touché, jamais un chemin
+résumé de session. (2) Une vérification raw+cmp ne vaut que sur le chemin
+DÉPLOYÉ : la preuve ultime d'un tour labo est le site live (curl github.io
++ grep des marqueurs de la nouvelle version). (3) Un cache-buster déjà
+servi avec l'ancien contenu est brûlé : bump d'un cran au correctif
+suivant.
