@@ -282,5 +282,87 @@ if (ex.encodeShare) {
     bad.slice(0, 4).join(', ') || 'terre 24-40 %, ≥ 6 masses, masse ≤ 25 % partout');
 }
 
+// C8 : CURSEUR « TAILLE MASSES » (8e retour Thibaut 2026-11-14 : « ajouter
+// un slider de taille des masses terrestres, qui remplacerait le slider
+// continent qui semble mort »). Sémantique par famille :
+//  - types à bosses (continents, islands-large, archipelago) : le curseur
+//    (×0.5 à ×2) joue sur le NOMBRE de bosses (6/11/18 × m), chacune
+//    compensée en σ (÷√m) pour que le BUDGET DE TERRE reste le calibrage
+//    du preset — sans compensation le seuil plongeait sous les bosses et
+//    le bruit percolait : masse soudée de 84 % mesurée à ×0.5 ;
+//  - fragmented : le nombre d'entailles traversantes suit le curseur
+//    (6 × m, borné 3-14) à budget de terre constant ;
+//  - types masqués à masse(s) FIXÉE(S) (continent, pangea, inland-sea,
+//    lakes) : impossible d'y changer le nombre de masses, le curseur y
+//    déplace le BUDGET DE TERRE (quantile de mer ± 10 pts) ;
+//  - custom : fréquence du canal continent (l'ancien rôle du slider
+//    mort, qui ne faisait rien sur les presets masqués).
+// Contrats, chemin UI fidèle (caps défaut + preset + massPct), r=15 :
+//  - bosses, aux 3 positions × 0.5/1/2 : terre [24, 40] %, anneau
+//    extérieur ≤ 5 % de terre, masse top ≤ 40 %, comps(×2) > comps(×0.5) ;
+//  - fragmented : comps(×2) > comps(×0.5) à terre constante ;
+//  - masqués : terre(×0.5) > terre(×2) (le budget suit le curseur).
+{
+  const N8 = 15;
+  const uiCaps = { 'Plaine': 200, 'Forêt': 200, 'Désert': 50, 'Marais': 80, 'Montagne': 80, 'Océan': 250, 'Volcan': 15 };
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
+  const masses = (m) => {
+    const key = new Map();
+    for (let i = 0; i < m.tiles.length; i++) key.set(m.tiles[i].q + ',' + m.tiles[i].r, i);
+    const land = [];
+    for (let i = 0; i < m.tiles.length; i++) if (m.biome[i] !== 'Océan') land.push(i);
+    const inLand = new Set(land);
+    const seen = new Set(); const sizes = [];
+    for (const st of land) {
+      if (seen.has(st)) continue;
+      let size = 0; const stack = [st]; seen.add(st);
+      while (stack.length) {
+        const c = stack.pop(); size++;
+        const t = m.tiles[c];
+        for (const [dq, dr] of DIRS) {
+          const j = key.get((t.q + dq) + ',' + (t.r + dr));
+          if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
+        }
+      }
+      sizes.push(size);
+    }
+    sizes.sort((a, b) => b - a);
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0 };
+  };
+  const gen8 = (type, seed, m) => {
+    const p = presetParams(ex, type, uiCaps);
+    p.massPct = m; // le slider est posé APRÈS le choix du type (chemin UI)
+    return ex.generateMap(N8, seed, p);
+  };
+  const bad = [];
+  for (const type of ['continents', 'islands-large', 'archipelago']) {
+    for (const seed of seeds) {
+      const res = {};
+      for (const m of [0.5, 1, 2]) {
+        res[m] = masses(gen8(type, seed, m));
+        const landPct = res[m].land / res[m].tot;
+        const topPct = res[m].top / res[m].land;
+        if (landPct < 0.24 || landPct > 0.40) bad.push(`${type}/${seed}/×${m}: terre ${(landPct * 100).toFixed(0)}%`);
+        else if (topPct > 0.40) bad.push(`${type}/${seed}/×${m}: masse ${(topPct * 100).toFixed(0)}%`);
+      }
+      if (!(res[2].comps > res[0.5].comps)) bad.push(`${type}/${seed}: comps ×2 (${res[2].comps}) !> ×0.5 (${res[0.5].comps})`);
+    }
+  }
+  for (const seed of seeds) {
+    const r05 = masses(gen8('fragmented', seed, 0.5));
+    const r2 = masses(gen8('fragmented', seed, 2));
+    if (!(r2.comps > r05.comps)) bad.push(`fragmented/${seed}: comps ×2 (${r2.comps}) !> ×0.5 (${r05.comps})`);
+  }
+  for (const type of ['continent', 'pangea', 'inland-sea', 'lakes']) {
+    for (const seed of seeds) {
+      const t05 = masses(gen8(type, seed, 0.5));
+      const t2 = masses(gen8(type, seed, 2));
+      if (!(t05.land > t2.land)) bad.push(`${type}/${seed}: terre ×0.5 (${t05.land}) !> ×2 (${t2.land})`);
+    }
+  }
+  chk('C8 curseur taille masses (3 bosses + fragmented + 4 masqués × 5 seeds, r=15)', bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'monotone partout, budget des bosses constant, masse ≤ 40 %');
+}
+
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');
 process.exit(failures ? 1 : 0);

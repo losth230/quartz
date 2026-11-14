@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=5" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=6" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -359,6 +359,12 @@
         <option value="custom" selected>Personnalisé</option>
       </select>
     </div>
+    <div class="field" title="TAILLE DES MASSES TERRESTRES (8e retour Thibaut 2026-11-14) — remplace l'ancien curseur « Taille continents », muet pour les types à îles : les masses y sont posées par un MASQUE de bosses localisées, le canal de bruit ne servait plus. Bas (×0,5) = à peine la moitié des masses, chacune plus GRANDE ; haut (×2) = environ deux fois plus de masses, plus PETITES ; ×1 = calibrage du type. Le budget de TERRE ne change pas (curseur Mer) : c'est le partage du même budget. Choisir un type repose le curseur à ×1. Plein effet sur Continents / Grandes îles / Archipel : le NOMBRE de masses (×2 = environ deux fois plus, plus petites). Sur Fragmenté : le nombre d'entailles. Sur Continent, Pangée, Mer intérieure, Terres + lacs : masses FIXÉES par un masque — le curseur y déplace le budget de terre (±10 pts de mer ; ×2 = masse plus petite dans un océan plus large). Sur Personnalisé : fréquence des masses du bruit libre (le nouveau « Taille continents »).">
+      <label>Taille masses</label>
+      <input type="range" id="mass-size" min="50" max="200" step="5" value="100">
+      <span class="value" id="mass-size-v">×1.00</span>
+    </div>
+
     <div class="field" title="Rajoute de la terre dans la bande où les joueurs peuvent apparaître : STRICTEMENT entre « Marge centre » et « Marge bord » (section Joueurs — exactement les mêmes bornes que le placement, coupure franche : RIEN ne change en dehors de la bande, ni plus au centre que la marge centre, ni plus au bord que la marge bord ; à « Marge centre » 0, la bande couvre toute la carte). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie, peu profond d'abord : 25 % = un quart, 100 % = tout l'océan de la bande. Les nouvelles terres sont classées au relief inversé de la profondeur (fosses → montagnes, baies comblées → climat continental, déserts possibles) et respectent les caps max de chaque biome, sans jamais toucher la carte de base. S'applique à TOUS les types de carte, « Personnalisé » compris.">
       <label>Anneau</label>
       <input type="range" id="ring-intensity" min="0" max="100" value="0" step="5">
@@ -485,11 +491,12 @@
             <option value="HTE">Humid › Temp › Élév</option>
           </select>
         </div>
-        <div class="field" title="Plus c'est BAS, plus les continents sont LARGES (un ou deux gros continents). Haut = nombreuses petites masses éparpillées.">
-          <label>Taille continents</label>
-          <input type="range" id="e-cont" min="2" max="15" value="5">
-          <span class="value" id="e-cont-v">5</span>
-        </div>
+        <!-- (8e retour) l'ancien curseur « Taille continents » est devenu MUET pour
+             les types à îles (le masque de bosses fixe les masses, le canal BF est
+             aplati) : remplacé en haut de panneau par « Taille masses ». Ce canal
+             reste interne : les presets le règlent, Personnalisé le pilote via le
+             nouveau curseur (fréquence du bruit libre). -->
+        <input type="hidden" id="e-cont" value="5">
         <div class="field" title="Plus c'est haut, plus les côtes sont DÉCOUPÉES (péninsules, golfes, presqu'îles). Bas = côtes lisses et rondes.">
           <label>Côtes irrégul.</label>
           <input type="range" id="e-scale" min="5" max="40" value="18">
@@ -737,6 +744,7 @@ const MAP_PRESETS = {
   // Un gros continent unique, qui touche presque les bords
   'continent': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
     sealevel: 35,
     'e-cont':    4,   // continents très larges
     'e-scale':   14,
@@ -749,7 +757,8 @@ const MAP_PRESETS = {
   //  le masque de forme angulaire et reliait les deux masses en une seule)
   'continents': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 68,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 68,
     'e-cont':    6,
     // (4e retour 2026-11-13 : compact 50→15, scale 16→20 — avec les bosses
     //  localisées, le canal BF du blend est l'ennemi : ses rubans comblent
@@ -764,7 +773,8 @@ const MAP_PRESETS = {
   // Une seule masse qui couvre quasiment toute la carte (comme la Pangée)
   'pangea': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 25,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 25,
     'e-cont':    3,   // très basse fréquence = une seule bosse centrale
     'e-scale':   12,
     'e-compact': 90,
@@ -780,7 +790,8 @@ const MAP_PRESETS = {
   //  validées au harnais)
   'islands-large': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 66,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 66,
     'e-cont':    8,
     // (4e retour 2026-11-13 : compact 35→15, scale 18→22 — cf. continents :
     //  fond plat HF, la structure vient des bosses.)
@@ -799,7 +810,8 @@ const MAP_PRESETS = {
   //  validées au harnais)
   'archipelago': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 72,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 72,
     'e-cont':    11,
     // (4e retour 2026-11-13 : compact 18→12, scale 24→26 — cf. continents :
     //  fond plat HF, îles portées par les bosses, mottes-îlots du détail.)
@@ -815,7 +827,8 @@ const MAP_PRESETS = {
   //  principale ≤ 40 % sur 8/8 seeds au harnais)
   'fragmented': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 60,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 60,
     'e-cont':    13,
     'e-scale':   38,
     'e-compact': 8,
@@ -828,7 +841,8 @@ const MAP_PRESETS = {
   //  désormais le quantile de mer au centre)
   'inland-sea': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 40,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 40,
     'e-cont':    4,
     'e-scale':   14,
     'e-compact': 70,
@@ -838,7 +852,8 @@ const MAP_PRESETS = {
   // Grand continent criblé de petits lacs et golfes
   'lakes': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
-    sealevel: 38,
+    'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+sealevel: 38,
     'e-cont':    5,
     'e-scale':   22,
     'e-compact': 55,  // détail fort → beaucoup de petites dépressions
@@ -1287,6 +1302,24 @@ function generateMap(N, seedStr, params) {
   };
 
   const pE = params.elev, pH = params.humid, pT = params.temp;
+  // (8e retour Thibaut 2026-11-14) TAILLE DES MASSES : multiplicateur du
+  // NOMBRE de bosses des types à îles (continents / grandes îles /
+  // archipel). Le budget de terre reste fixé par le quantile du curseur
+  // Mer : demander MOINS de masses les rend plus GRANDES (le seuil se
+  // recale dans les bosses), en demander PLUS les rend plus PETITES.
+  // Pour les autres types (masques analytiques ou bruit libre), le
+  // multiplicateur s'applique à la fréquence du canal continent —
+  // l'ancien rôle du curseur « Taille continents », désormais interne.
+  const massPct = Math.max(0.5, Math.min(2, +params.massPct || 1));
+  // Les types à îles portent leurs masses par les BOSSES : le curseur y joue
+  // sur le NOMBRE de bosses, chacune compensée en σ (× 1/√m) pour que la
+  // CAPACITÉ TOTALE (count × σ²) et donc le seuil du quantile restent AU
+  // CALIBRAGE du preset — sans compensation, le seuil plonge sous les
+  // bosses, le bruit résident percole et soudent les îles (mesuré :
+  // grandes îles à masse 84 %). Pour les autres types (masques analytiques,
+  // Personnalisé), c'est la fréquence du canal continent qui fait varier la
+  // taille des masses — l'ancien rôle du curseur « Taille continents ».
+  const contScale = ((params.mapType || 'custom') === 'continents' || (params.mapType || 'custom') === 'islands-large' || (params.mapType || 'custom') === 'archipelago') ? 1 : massPct;
   const pV = params.evt;
 
   // --- LABO : MASQUE DE FORME par type de carte (retour Thibaut 2026-11-13) -
@@ -1565,7 +1598,7 @@ function generateMap(N, seedStr, params) {
     //  d'eau » — 6 bosses σ 0.18, sepFact 3.6, sea 68 : 6 masses
     //  équilibrées de 33-45 tuiles, terre 32 %, 8/8 seeds.)
     periphOcean = true;
-    shapeBias = islandArchipel(6, 0.18, 0.50, 0.30, 0.62, 0, 3.6, 0.05, 0.16);
+    shapeBias = islandArchipel(Math.max(2, Math.round(6 * massPct)), 0.18 / Math.sqrt(massPct), 0.50, 0.30, 0.62, 0, 3.6, 0.05, 0.16);
   } else if (mapType === 'pangea') {
     shapeBias = (dc) => 0.16 * Math.pow(1 - dc, 1.5);
   } else if (mapType === 'islands-large') {
@@ -1579,7 +1612,7 @@ function generateMap(N, seedStr, params) {
     //  l'île, pas le curseur de mer) : 9-14 îles équilibrées de 25-32
     //  tuiles, terre 34 %, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    shapeBias = islandArchipel(11, 0.125, 0.50, 0.16, 0.75, 0, 4.0, 0, 0.12);
+    shapeBias = islandArchipel(Math.max(2, Math.round(11 * massPct)), 0.125 / Math.sqrt(massPct), 0.50, 0.16, 0.75, 0, 4.0, 0, 0.12);
   } else if (mapType === 'archipelago') {
     // (HISTORIQUE : creux central + 4 entailles angulaires cos 4θ, calibré
     //  2e/3e retours. 4e retour Thibaut 2026-11-13 : les entailles
@@ -1590,7 +1623,7 @@ function generateMap(N, seedStr, params) {
     //  COURONNES ADAPTATIVES (cf. helper) : 15-18 îles de 11-24 tuiles,
     //  terre 28 %, satellites 7 %, 8/8 seeds, aucune soudure.)
     periphOcean = true;
-    shapeBias = islandArchipel(18, 0.09, 0.45, 0.14, 0.75, 0, 3.6, 0, 0);
+    shapeBias = islandArchipel(Math.max(2, Math.round(18 * massPct)), 0.09 / Math.sqrt(massPct), 0.45, 0.14, 0.75, 0, 3.6, 0, 0);
   } else if (mapType === 'fragmented') {
     // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
     // tirée par le PRNG dédié) : le seul creux laissait une masse unique à
@@ -1599,10 +1632,15 @@ function generateMap(N, seedStr, params) {
     // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : 15-19
     //  composantes jouables, masse principale ≤ 40 % sur 8/8 seeds au
     //  harnais ; preset sealevel 60 / scale 38 / compact 8 assorti.)
+    // (8e retour Thibaut 2026-11-14 : les entailles portent le curseur
+    //  « Taille masses » — leur nombre suit massPct (6 → 3 à ×0.5 : grosses
+    //  miettes ; 6 → 12 à ×2 : miettes plus petites) ; le quantile de mer
+    //  fixe le budget, seul le morcellement change.)
+    const cuts6 = Math.max(3, Math.min(14, Math.round(6 * massPct)));
     const phase6 = randShape() * Math.PI / 3;
     shapeBias = (dc, th) =>
       -0.10 * Math.pow(1 - dc, 2)
-      - 0.34 * Math.cos(6 * (th - phase6)) * (0.3 + 0.7 * dc);
+      - 0.34 * Math.cos(cuts6 * (th - phase6)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'inland-sea') {
     // Excavation centrale profonde et large : le quantile de mer suit le
     // creux → la mer se concentre au centre, l'anneau reste terrestre
@@ -1642,7 +1680,7 @@ function generateMap(N, seedStr, params) {
 
     // --- Élévation = blend(continent, détail)
     // Continent : basse fréquence, peu d'octaves → formes massives et lisses
-    let cont = nCont.fbm(px * pE.cont, py * pE.cont, 2, 0.5, 2.0);
+    let cont = nCont.fbm(px * pE.cont * contScale, py * pE.cont * contScale, 2, 0.5, 2.0);
     cont = (cont + 1) * 0.5;
     // Redistribution (modes v2 et mixte uniquement) : étire vers les extrêmes
     // pour avoir plus de variations près du seuil de mer → plus de côtes
@@ -1781,7 +1819,19 @@ function generateMap(N, seedStr, params) {
   //  quantile pur, comportement d'origine inchangé. C'est aussi le
   //  mécanisme du cap Océan : plafond atteint → le seuil BAISSSE
   //  globalement au lieu de sacrifier des tuiles précises.)
-  let seaLevel = elevSorted[Math.floor(size * params.sea)];
+  // (8e retour Thibaut 2026-11-14) CURSEUR « TAILLE MASSES » — types dont
+  //  les masses sont FIXÉES par un masque analytique (continent, pangea,
+  //  inland-sea, lakes) : impossible d'y changer le nombre de masses, le
+  //  curseur y déplace le BUDGET DE TERRE via le quantile de mer — ×2 :
+  //  masse plus petite dans un océan plus large ; ×0.5 : la masse occupe
+  //  davantage la carte. Les autres familles ne passent pas ici (types à
+  //  bosses : count × m à budget fixe ; fragmented : entailles × m ;
+  //  custom : fréquence du bruit, cf. contScale).
+  let seaFrac = params.sea;
+  if ((params.mapType || 'custom') === 'continent' || (params.mapType || 'custom') === 'pangea' || (params.mapType || 'custom') === 'inland-sea' || (params.mapType || 'custom') === 'lakes') {
+    seaFrac = Math.max(0.15, Math.min(0.85, seaFrac + 0.10 * (massPct - 1)));
+  }
+  let seaLevel = elevSorted[Math.floor(size * seaFrac)];
   const seaOffset = +params.seaElev || 0;
   if (seaOffset !== 0) seaLevel = Math.max(0.001, Math.min(0.999, seaLevel + seaOffset));
   const landElevs = [];
@@ -2737,7 +2787,8 @@ function generateMap(N, seedStr, params) {
 // garder des textures inédites à u égal :
 //   - e-compact : 10 + 85·u   (10 = archipels, 95 = continent unique) ;
 //   - e-scale   : 30 − 22·u ± 6 (côtes finement découpées → lisses) ;
-//   - e-cont    : 13 − 11·u ± 3 (petites masses → très larges) ;
+//   - mass-size : 200 − 150·u ± 15 (8e retour : ×2 = nombreuses petites
+//     masses → ×0,5 = grandes masses ; tire le NOUVEAU curseur de taille) ;
 //   - e-edge    : 0..30 indépendant (terre au bord → océan périphérique) ;
 //   - t-poles   : orientation des pôles (ns / ew / center).
 // Le TYPE de carte, le bruit, la mer, les montagnes et les caps ne
@@ -2751,7 +2802,7 @@ function drawVariety(seedStr) {
   const clamp = (v, min, max) => Math.max(min, Math.min(max, v));
   const u = rand(); // cadran de morphologie : 0 = morcelé, 1 = continent unique
   return {
-    'e-cont':    clamp(Math.round(13 - 11 * u) + ri(-3, 3), 2, 15),
+    'mass-size': clamp(Math.round(200 - 150 * u) + ri(-15, 15), 50, 200),
     'e-scale':   clamp(Math.round(30 - 22 * u) + ri(-6, 6), 5, 30),
     'e-compact': Math.round(10 + 85 * u),
     'e-edge':    ri(0, 30),
@@ -3521,6 +3572,8 @@ const PARAM_SPECS = {
   'sea-elev':  { fmt: v => (v > 0 ? '+' : '') + (v / 100).toFixed(2), conv: v => v / 100 },
   // élévation
   'e-cont':    { fmt: v => v,                     conv: v => v / 100 },
+  // (8e retour) taille des masses : × le NOMBRE de bosses des types à îles
+  'mass-size': { fmt: v => '×' + (v / 100).toFixed(2),      conv: v => v / 100 },
   'e-scale':   { fmt: v => v,                     conv: v => v / 100 },
   'e-compact': { fmt: v => v + '%',               conv: v => v / 100 },
   'e-oct':     { fmt: v => v,                     conv: v => v       },
@@ -3609,6 +3662,7 @@ function getParams() {
     resMode: (document.getElementById('res-mode') || {}).value || 'quantile',
     mapType: (document.getElementById('map-type') || {}).value || 'custom',
     seaElev: read('sea-elev'),
+    massPct: read('mass-size'),
     ring: read('ring-intensity'),
     parts: {
       foret:  read('p-foret'),
@@ -3867,6 +3921,7 @@ function applyParamsToUI(p) {
     setInt('evt-riverlen', p.evt.riverLen);
   }
   if (p.seaElev !== undefined) setInt('sea-elev', p.seaElev);
+  if (p.massPct !== undefined) setV('mass-size', Math.round(p.massPct * 100));
   if (p.ring !== undefined) setPct('ring-intensity', p.ring);
   if (p.parts) {
     setPct('p-foret', p.parts.foret);
@@ -3977,7 +4032,7 @@ document.getElementById('regen').addEventListener('click', () => {
   document.getElementById('seed').value = seed;
   if (document.getElementById('variete-toggle').checked) {
     const d = drawVariety(seed);
-    for (const id of ['e-cont', 'e-scale', 'e-compact', 'e-edge']) {
+    for (const id of ['mass-size', 'e-scale', 'e-compact', 'e-edge']) {
       document.getElementById(id).value = d[id];
     }
     document.getElementById('t-poles').value = d['t-poles'];
