@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=6" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=7" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -363,6 +363,12 @@
       <label>Taille masses</label>
       <input type="range" id="mass-size" min="50" max="200" step="5" value="100">
       <span class="value" id="mass-size-v">×1.00</span>
+    </div>
+
+    <div class="field" title="TERRE AU BORD DU CADRE (9e retour Thibaut 2026-11-14) — les masses étaient systématiquement détachées du bord, 100 % visibles, jamais coupées. 0 % = comportement historique : la fenêtre périphérique maintient un océan autour du plateau, toutes les masses tiennent dans le cadre. 100 % = la couronne extérieure des bosses dépasse le cadre : des DEMI-ÎLES amputées par le bord de la carte, comme un fragment de monde plus grand. Le budget de terre NE CHANGE PAS (curseur Mer) : à 100 %, le visible des demi-îles compte dans le même budget. Plein effet sur Continents / Grandes îles / Archipel ; les autres types touchent déjà le bord (Continent, Pangée, Mer intérieure, Terres + lacs) ou l’ignorent (Fragmenté, Personnalisé). Choisir un type à bosses repose le curseur à 75 % (demi-îles par défaut).">
+      <label>Terre au bord</label>
+      <input type="range" id="edge-land" min="0" max="100" step="5" value="0">
+      <span class="value" id="edge-land-v">0%</span>
     </div>
 
     <div class="field" title="Rajoute de la terre dans la bande où les joueurs peuvent apparaître : STRICTEMENT entre « Marge centre » et « Marge bord » (section Joueurs — exactement les mêmes bornes que le placement, coupure franche : RIEN ne change en dehors de la bande, ni plus au centre que la marge centre, ni plus au bord que la marge bord ; à « Marge centre » 0, la bande couvre toute la carte). Ne CHANGE rien d'autre : le reste de la carte (côtes, biomes, ressources) est exactement celui d'une génération sans anneau ; seules des cases OCÉAN de la bande deviennent terre (jamais l'inverse). L'intensité est la part de l'océan de la bande convertie, peu profond d'abord : 25 % = un quart, 100 % = tout l'océan de la bande. Les nouvelles terres sont classées au relief inversé de la profondeur (fosses → montagnes, baies comblées → climat continental, déserts possibles) et respectent les caps max de chaque biome, sans jamais toucher la carte de base. S'applique à TOUS les types de carte, « Personnalisé » compris.">
@@ -758,6 +764,7 @@ const MAP_PRESETS = {
   'continents': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+    'edge-land': 75, // 9e retour : demi-îles au bord par défaut (0 = océan au pourtour, masses en boîte)
 sealevel: 68,
     'e-cont':    6,
     // (4e retour 2026-11-13 : compact 50→15, scale 16→20 — avec les bosses
@@ -791,6 +798,7 @@ sealevel: 25,
   'islands-large': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+    'edge-land': 75, // 9e retour : demi-îles au bord par défaut (0 = océan au pourtour, masses en boîte)
 sealevel: 66,
     'e-cont':    8,
     // (4e retour 2026-11-13 : compact 35→15, scale 18→22 — cf. continents :
@@ -811,6 +819,7 @@ sealevel: 66,
   'archipelago': {
     'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     'mass-size': 100, // 8e retour : choisir un type repose la taille des masses à ×1 (calibrage du type)
+    'edge-land': 75, // 9e retour : demi-îles au bord par défaut (0 = océan au pourtour, masses en boîte)
 sealevel: 72,
     'e-cont':    11,
     // (4e retour 2026-11-13 : compact 18→12, scale 24→26 — cf. continents :
@@ -1311,6 +1320,17 @@ function generateMap(N, seedStr, params) {
   // multiplicateur s'applique à la fréquence du canal continent —
   // l'ancien rôle du curseur « Taille continents », désormais interne.
   const massPct = Math.max(0.5, Math.min(2, +params.massPct || 1));
+  // (9e retour Thibaut 2026-11-14 : « le bord est toujours de l'eau, il
+  //  n'y a pas de demi-îles ») — TERRE AU BORD, curseur dédié aux types à
+  //  bosses (continents, grandes îles, archipel). 0 = comportement
+  //  historique (fenêtre périphérique, masses détachées, toutes visibles
+  //  en entier) ; 1 = la couronne extérieure dépasse le cadre et
+  //  l'essorage sort du plateau : demi-îles amputées par le bord de la
+  //  carte. Le budget de terre (quantile de mer) ne change pas. Sans
+  //  effet sur les autres familles : les masques de continent / pangée /
+  //  mer intérieure / lacs touchent DÉJÀ le bord, fragmented y dépose ses
+  //  miettes, custom est libre (bord ~50 % de terre).
+  const edgeLand = Math.max(0, Math.min(1, +params.edgeLand || 0));
   // Les types à îles portent leurs masses par les BOSSES : le curseur y joue
   // sur le NOMBRE de bosses, chacune compensée en σ (× 1/√m) pour que la
   // CAPACITÉ TOTALE (count × σ²) et donc le seuil du quantile restent AU
@@ -1440,6 +1460,10 @@ function generateMap(N, seedStr, params) {
     // ~6 px du centre pour un plateau qui s'étend à 26 px) : masses
     // compactes centrales et soudées, mesuré sur tous les essais.
     const RPX = N * 1.6;
+    // (9e retour) rayon extérieur étiré par « Terre au bord » : à 1, les
+    // centres de la couronne extérieure passent AU-DELÀ du cadre (1.12 ×
+    // RPX) — la moitié visible de la bosse est une DEMI-ÎLE.
+    const rMaxE = rMax + edgeLand * (1.12 - rMax);
     const sep = (sepFact || 2.75) * sigRel * RPX;
     const a0 = randShape() * Math.PI * 2;
     // Mode de placement : count ≤ 6 → ANNEAU équiréparti auto-calibré
@@ -1464,6 +1488,12 @@ function generateMap(N, seedStr, params) {
     if (ringMode) {
       let rRing = sep / (2 * Math.sin(Math.PI / count));
       rRing = Math.max(rMin * RPX, Math.min(rMax * RPX, rRing));
+      // (9e retour) : l'anneau glisse vers le bord avec « Terre au
+      //  bord » — les masses deviennent des demi-continents coupés par
+      //  le cadre ; l'espacement ANGULAIRE croît avec le rayon, le rejet
+      //  de collision reste donc satisfait (gap recalculé ci-dessous sur
+      //  le rayon final).
+      rRing = rRing + edgeLand * (0.95 * RPX - rRing);
       for (let k = 0; k < count; k++)
         targets.push({ ang: a0 + k * Math.PI * 2 / count, rad: rRing, gap: 0.98 * 2 * rRing * Math.sin(Math.PI / count) });
     } else {
@@ -1497,6 +1527,19 @@ function generateMap(N, seedStr, params) {
       // places légitimes, on en pose cap — JAMAIS de report d'excédent sur
       // la couronne extérieure (essayé : gap sous sep -> soudures en
       // chaîne le long de l'anneau, mesuré 96-155 tuiles).
+      // (9e retour Thibaut 2026-11-14, v2) — COURONNE DU BORD : une
+      //  FRACTION de l'ancienne couronne extérieure (la moitié à 100 %)
+      //  est détachée vers le cadre (centres à 0.94 × RPX) : ces bosses
+      //  deviennent des DEMI-ÎLES amputées par le bord, et leurs créneaux
+      //  sont retirés de l'ancienne couronne — couronnes intérieures et
+      //  calibrage INCHANGÉS. (v1 poussait la couronne ENTIÈRE : trop de
+      //  surface partait hors-cadre, le seuil du quantile plongeait sous
+      //  les bosses, le fond percolait et soudait — masse 39-42 %.)
+      if (edgeLand > 0 && cour.length) {
+        const nRim = Math.max(1, Math.min(cour[0].n - 1, Math.round(cour[0].n * 0.5 * edgeLand)));
+        cour[0].n -= nRim;
+        cour.unshift({ rad: 0.94 * RPX, n: nRim });
+      }
       let cap = 0;
       for (const c of cour) cap += c.n;
       let restant = Math.min(count, cap);
@@ -1539,8 +1582,15 @@ function generateMap(N, seedStr, params) {
         //  ×1.6 d’écart — la plus grosse île dominait à 44 % de la terre
         //  dans l’archipel. 0.95+0.12 : écart d’aire ×1.1, la variété
         //  reste par amp (0.9-1.1) et par le nombre de bosses.
-        s: sigRel * RPX * (0.95 + 0.12 * randShape()),
-        a: amp * (0.9 + 0.2 * randShape())
+        // (9e retour) bosses du bord : σ/amp majorés pour que la part
+        //  VISIBLE porte le budget d'une masse entière (le cadre
+        //  ampute l'autre part — sans cela le seuil du quantile
+        //  plongeait dans le fond et percolait : masse centrale 43 %
+        //  mesurée à masses ×2 + bord 75 %).
+        s: (edgeLand > 0 && bestX * bestX + bestY * bestY > 0.81 * RPX * RPX
+              ? sigRel * (1 + 0.45 * edgeLand) : sigRel) * RPX * (0.95 + 0.12 * randShape()),
+        a: (edgeLand > 0 && bestX * bestX + bestY * bestY > 0.81 * RPX * RPX
+              ? amp * (1 + 0.25 * edgeLand) : amp) * (0.9 + 0.2 * randShape())
       });
     }
     return (dc, th, px, py) => {
@@ -1745,7 +1795,14 @@ function generateMap(N, seedStr, params) {
         // NB : à la différence du squeeze sq ci-dessus (2e retour) qui
         // figeait les MASQUES EN SECTEURS, ici le masque EST la
         // structure : c'est le bruit qu'il faut aplatir, pas lui.
-        e = 0.5 + (e - 0.5) * (mapType === 'archipelago' ? 0.35 : 0.08);
+        // (9e retour) COMPENSATION DU FOND : à bord > 0, une part de la
+        //  surface des bosses part hors-cadre (demi-îles) ; le seuil du
+        //  quantile s'abaisse alors DANS le fond, dont les rubans
+        //  ressoudent les masses (mesuré à masses ×2 + bord 75 % :
+        //  masse principale 43 %). On aplatit le fond proportionnellement
+        //  au curseur : à 0 le calibrage historique est INCHANGÉ.
+        const fondK = (mapType === 'archipelago' ? 0.35 : 0.08) * (1 - 0.55 * edgeLand);
+        e = 0.5 + (e - 0.5) * fondK;
         // Fenêtre périphérique (cf. commentaire PERIPH_OCEAN ci-dessus) :
         // sur la distance VRAIE (le warp d'amplitude 0.55 peut fausser dcW
         // de ±0.55 — fenêtrer sur dcW rouvrirait la porte au bord réel).
@@ -1764,7 +1821,11 @@ function generateMap(N, seedStr, params) {
         //  il empêche seulement le warp de dentelle de déposer de la
         //  terre sur la couronne extrême). Mesuré : bord 0 %, coupées
         //  0, sur 8 seeds × 3 presets × r=15/12/18/24.)
-        const t1 = Math.max(0, Math.min(1, (dist - 0.92) / 0.06));
+        // (9e retour) : l'essorage recule avec « Terre au bord » — à 0 il
+        //  garde son rôle de garde-fou (fenêtre 92 % → 98 % du rayon) ; à
+        //  1 la fenêtre sort du plateau (105 % → 111 %) et les bosses se
+        //  dessinent jusqu'au bord, amputées par le cadre.
+        const t1 = Math.max(0, Math.min(1, (dist - (0.92 + 0.13 * edgeLand)) / 0.06));
         const w = 1 - t1 * t1 * (3 - 2 * t1); // 1 → 0 entre 92 % et 98 % du rayon
         // NB : pas de warp positionnel du MASQUE (±0.55 sur dc, haute
         // fréquence spatiale, calibré pour des masques en SECTEURS
@@ -2789,6 +2850,7 @@ function generateMap(N, seedStr, params) {
 //   - e-scale   : 30 − 22·u ± 6 (côtes finement découpées → lisses) ;
 //   - mass-size : 200 − 150·u ± 15 (8e retour : ×2 = nombreuses petites
 //     masses → ×0,5 = grandes masses ; tire le NOUVEAU curseur de taille) ;
+//   - edge-land : 0..100 % indépendant (9e retour : demi-îles au bord) ;
 //   - e-edge    : 0..30 indépendant (terre au bord → océan périphérique) ;
 //   - t-poles   : orientation des pôles (ns / ew / center).
 // Le TYPE de carte, le bruit, la mer, les montagnes et les caps ne
@@ -2803,6 +2865,7 @@ function drawVariety(seedStr) {
   const u = rand(); // cadran de morphologie : 0 = morcelé, 1 = continent unique
   return {
     'mass-size': clamp(Math.round(200 - 150 * u) + ri(-15, 15), 50, 200),
+    'edge-land': ri(0, 20) * 5,
     'e-scale':   clamp(Math.round(30 - 22 * u) + ri(-6, 6), 5, 30),
     'e-compact': Math.round(10 + 85 * u),
     'e-edge':    ri(0, 30),
@@ -3574,6 +3637,7 @@ const PARAM_SPECS = {
   'e-cont':    { fmt: v => v,                     conv: v => v / 100 },
   // (8e retour) taille des masses : × le NOMBRE de bosses des types à îles
   'mass-size': { fmt: v => '×' + (v / 100).toFixed(2),      conv: v => v / 100 },
+  'edge-land': { fmt: v => v + '%',                         conv: v => v / 100 },
   'e-scale':   { fmt: v => v,                     conv: v => v / 100 },
   'e-compact': { fmt: v => v + '%',               conv: v => v / 100 },
   'e-oct':     { fmt: v => v,                     conv: v => v       },
@@ -3663,6 +3727,7 @@ function getParams() {
     mapType: (document.getElementById('map-type') || {}).value || 'custom',
     seaElev: read('sea-elev'),
     massPct: read('mass-size'),
+    edgeLand: read('edge-land'),
     ring: read('ring-intensity'),
     parts: {
       foret:  read('p-foret'),
@@ -3922,6 +3987,7 @@ function applyParamsToUI(p) {
   }
   if (p.seaElev !== undefined) setInt('sea-elev', p.seaElev);
   if (p.massPct !== undefined) setV('mass-size', Math.round(p.massPct * 100));
+  if (p.edgeLand !== undefined) setV('edge-land', Math.round(p.edgeLand * 100));
   if (p.ring !== undefined) setPct('ring-intensity', p.ring);
   if (p.parts) {
     setPct('p-foret', p.parts.foret);
@@ -4032,7 +4098,7 @@ document.getElementById('regen').addEventListener('click', () => {
   document.getElementById('seed').value = seed;
   if (document.getElementById('variete-toggle').checked) {
     const d = drawVariety(seed);
-    for (const id of ['mass-size', 'e-scale', 'e-compact', 'e-edge']) {
+    for (const id of ['mass-size', 'edge-land', 'e-scale', 'e-compact', 'e-edge']) {
       document.getElementById(id).value = d[id];
     }
     document.getElementById('t-poles').value = d['t-poles'];

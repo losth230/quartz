@@ -110,6 +110,11 @@ function presetParams(ex, name, uiCaps) {
     //  océan résiduel dépassé abaissait le seuil GLOBAL et soudait les
     //  îles en un bloc de 65 % de terre. Incident navigation privée.)
     if (preset['cap-ocean'] !== undefined) p.constraints.caps['Océan'] = preset['cap-ocean'];
+    // (8e/9e retours 2026-11-14 : applyPreset pose AUSSI ces sliders —
+    //  les ignorer reviendrait à tester un chemin UI que l'arbitre ne
+    //  voit jamais.)
+    if (preset['mass-size'] !== undefined) p.massPct = preset['mass-size'] / 100;
+    if (preset['edge-land'] !== undefined) p.edgeLand = preset['edge-land'] / 100;
     const m = { 'e-cont': 'cont', 'e-scale': 'scale', 'e-compact': 'compact', 'e-edge': 'edge', 'e-pers': 'pers' };
     for (const k in m) if (preset[k] !== undefined) p.elev[m[k]] = preset[k] / 100;
   }
@@ -198,36 +203,75 @@ if (ex.encodeShare) {
   chk('C5 codec présent', false, 'encodeShare absent de la partie pure');
 }
 
-// C6 : masses visibles EN ENTIER (3e retour Thibaut 2026-11-13, à r=15
-// = 721 tuiles, la taille réelle de campagne : « on ne voit jamais les
-// continents, ni même les îles en entier »). Pour « continents »,
-// « grandes îles » et « archipel » : l'anneau extérieur de la carte
-// reste océanique (fenêtre périphérique PERIPH_OCEAN) — sinon les lobes
-// du masque collent les masses au bord et le bord les coupe. Contrat :
-// ≤ 5 % de terre sur l'anneau r=15, par seed. (« continent » et
-// « pangea » touchent volontairement le bord : contrat documenté.)
-// (5e retour 2026-11-14 : l'anneau d'eau forcé est SUPPRIMÉ à la demande
-// de Thibaut — C6 teste désormais les presets RÉELS (sea 68/66/72) ;
-// à sea 45 (55 % de terre) le bord se remplit statistiquement, ce
-// n'est plus un creux sculpté qui doit l'en empêcher.)
+// C6 : TERRE AU BORD (9e retour Thibaut 2026-11-14 : « masses toujours
+// 100 % visibles, pas de demi-îles, le bord est toujours de l'eau » —
+// INVERSE le contrat du 3e retour « masses visibles en entier » : le
+// bord d'eau forcé devient une OPTION du curseur « Terre au bord »,
+// et les presets à bosses posent des DEMI-ÎLES par défaut (75 % :
+// une fraction de la couronne extérieure des bosses dépasse le cadre).
+// Deux volets, par type × seed, r=15 :
+//  a) slider à 0 : la fenêtre périphérique historique est INTACTE —
+//     anneau extérieur ≤ 5 % de terre (le look « boîte » reste
+//     atteignable, sans régression) ;
+//  b) preset par défaut (75 %) : au moins 2 composantes de terre
+//     touchent l'anneau (demi-îles), terre [24, 40] % (le budget ne
+//     bouge pas), masse principale ≤ 25 % (pas de soudure).
 {
   const N6 = 15;
+  const DIRS6 = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
+  const edgeStats = (m) => {
+    const key = new Map();
+    for (let i = 0; i < m.tiles.length; i++) key.set(m.tiles[i].q + ',' + m.tiles[i].r, i);
+    const land = [];
+    let ringLand = 0, ringTot = 0;
+    for (let i = 0; i < m.tiles.length; i++) {
+      const t = m.tiles[i];
+      const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+      if (d === N6) { ringTot++; if (m.biome[i] !== 'Océan') ringLand++; }
+      if (m.biome[i] !== 'Océan') land.push(i);
+    }
+    const inLand = new Set(land);
+    const seen = new Set(); const sizes = []; let edgeComps = 0;
+    for (const st of land) {
+      if (seen.has(st)) continue;
+      let size = 0, touch = false; const stack = [st]; seen.add(st);
+      while (stack.length) {
+        const c = stack.pop(); size++;
+        const t = m.tiles[c];
+        const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+        if (d === N6) touch = true;
+        for (const [dq, dr] of DIRS6) {
+          const j = key.get((t.q + dq) + ',' + (t.r + dr));
+          if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
+        }
+      }
+      sizes.push(size);
+      if (touch) edgeComps++;
+    }
+    sizes.sort((a, b) => b - a);
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0, ringLand, ringTot, edgeComps };
+  };
   const bad = [];
   for (const type of ['continents', 'islands-large', 'archipelago']) {
     for (const seed of seeds) {
-      const m = ex.generateMap(N6, seed, presetParams(ex, type));
-      let ringLand = 0, ringTot = 0;
-      for (let i = 0; i < m.tiles.length; i++) {
-        const t = m.tiles[i];
-        const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
-        if (d === N6) { ringTot++; if (m.biome[i] !== 'Océan') ringLand++; }
-      }
-      const part = ringTot ? ringLand / ringTot : 0;
-      if (part > 0.05) bad.push(`${type}/${seed}=${(part * 100).toFixed(0)}%`);
+      // a) slider « Terre au bord » à 0 : comportement historique intact
+      const p0 = presetParams(ex, type);
+      p0.edgeLand = 0;
+      const r0 = edgeStats(ex.generateMap(N6, seed, p0));
+      const part0 = r0.ringTot ? r0.ringLand / r0.ringTot : 0;
+      if (part0 > 0.05) bad.push('0%:' + type + '/' + seed + ' anneau ' + (part0 * 100).toFixed(0) + '%');
+      // b) preset par défaut (75 %) : demi-îles, budget et masse tenus
+      const r1 = edgeStats(ex.generateMap(N6, seed, presetParams(ex, type)));
+      const landPct = r1.land / r1.tot;
+      const topPct = r1.top / r1.land;
+      if (landPct < 0.24 || landPct > 0.40) bad.push('75%:' + type + '/' + seed + ' terre ' + (landPct * 100).toFixed(0) + '%');
+      else if (topPct > 0.25) bad.push('75%:' + type + '/' + seed + ' masse ' + (topPct * 100).toFixed(0) + '%');
+      else if (r1.edgeComps < 2) bad.push('75%:' + type + '/' + seed + ' ' + r1.edgeComps + ' demi-\u00eele(s)');
     }
   }
-  chk('C6 masses détachées du bord (3 presets × 5 seeds, r=15)', bad.length === 0,
-    bad.slice(0, 4).join(', ') || 'anneau extérieur ≤ 5 % de terre partout');
+  chk('C6 terre au bord (3 presets \u00d7 5 seeds, r=15 : \u00e0 0 anneau \u2264 5 %, au d\u00e9faut \u2265 2 demi-\u00eeles \u00e0 budget constant)',
+    bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'fen\u00eatre intacte \u00e0 0, demi-\u00eeles au d\u00e9faut, terre 24-40 %, masse \u2264 25 %');
 }
 
 // C7 : les CAPS DE L'UI PAR DÉFAUT ne doivent pas dérailler les presets
