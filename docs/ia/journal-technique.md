@@ -6911,3 +6911,47 @@ aucun spam — la graine du diag change de trajectoire, rien de
 pathologique) ; tsc validé par le build du déploiement Pages
 (« tsc && vite build ») ; sandbox sans npm install (tsc local
 impossible, stub typescript).
+
+## L’Or de la « Terre d’accueil » invisible au récap + crises de pure narration (retour Thibaut 2026-11-14 « J1 gagne beaucoup plus d’Or que ce qui est affiché (+1.3) », base 524cfda7, feat 32e36836, règles 0907493c)
+
+SYMPTÔME (salon chasse-pecheL2, rapport Thibaut) : l’Or du J1
+semble buggé — il gagne beaucoup plus d’Or que le « +1,3 »
+affiché par le récap du tour.
+
+DIAGNOSTIC : l’Or est CORRECT. La loi Socialisme « Terre
+d’accueil » (+1 Or par migrant arrivé, foyer entier compris,
+arbitrage refonte « 8 lois » 2026-10-29) crédite le stock
+DIRECTEMENT (rs.stock += orParMig dans migrationBonheur.ts) avec
+un log individuel « 🌍 Terre d’accueil — Joueur 1 reçoit 1 Or »
+mais AUCUN canal d’apports : J1 attire 23 à 73 migrants/tour
+(bonheur fort contre la crise de J2), le « +1,3 » ne montrait que
+le canal « population ». Réconciliation vérifiée au centime sur
+tous les tours publiés : T27 +24,32 = 1,32 + 23 ; T29 +53,08 =
+3,08 + 50 − 40 ; T31 +34,32 ; T32 +64,32 = 1,32 + 73 − 48
+(constructions stamped). Anomalies connexes vues au passage : les
+6 crises du référentiel promettaient des effets « dans 3 tours… »
+jamais implémentés (une Grève T29 J1, une T33 J2 — aucun effet ne
+se serait produit) ; 557 entrées de journal dupliquées /2880
+(re-pousses de sections, cosmétique, non traité ce tour). L’écart
+T33 (J1 −24,14 Or / J2 +24,48 Or sans canal) a d’abord semblé
+provenir de sections autoritaires (Object.assign de
+fusionnerSections) — élucidé par Thibaut : c’est du commerce, pas
+un bug moteur ; aucune garde de fusion ajoutée.
+
+FIX (arbitrages Thibaut 2026-11-14) : 1) migrationBonheur RETOURNE
+l’Or par destinataire ; l’étape 4ter de tour.ts trace un canal
+« Terre d’accueil » (ApportsTour.terreAccueil) au snapshot —
+colonne dédiée, comptée au Total du récap du dernier tour, repli
+vide pour les historiques d’avant. 2) Les 6 textes de crises de
+referentiels.json reformulés en pure narration, plus aucune
+promesse d’effet ; onglet Crises annoté en conséquence.
+
+VÉRIFICATIONS : 374/374 tests natifs (372 + 2 nouveaux : le retour
+du flux porte l’Or exact par destinataire ; le canal du snapshot
+égale le nombre exact de migrants reçus après runTurn — node
+--experimental-strip-types, stub @supabase recréé dans le sandbox
+réinitialisé, un index.js est requis en plus de l’index.mjs : le
+résolveur cherche index.js) ; diag régénéré, 0 diff avec la tête
+(non inclu au feat) ; 7 fichiers du feat vérifiés par curl
+raw.githubusercontent + cmp, identiques au bit près ; règles
+appendées puis vérifiées identiques.
