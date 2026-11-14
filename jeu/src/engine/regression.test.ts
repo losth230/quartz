@@ -227,3 +227,32 @@ test('bétail en stock : AUCUNE Nourriture produite (retrait arbitrage 2026-11-1
   assert.ok(Math.abs(p.resources['Nourriture']!.stock - nAvant - somme) < 1e-6,
     'réconciliation au centime : delta Nourriture == somme des apports du récap')
 })
+
+test('naissances : UNE seule passe de conception par tour (régression doublon 2026-11-14)', () => {
+  // Signalement Thibaut « il y a beaucoup trop de naissances ». Le
+  // doublon d appel de conceptionEtNaissances dans populationTourB
+  // faisait concevoir à la 1re passe puis ACCOUCHER à la 2e passe du
+  // MÊME tour (grossesse de 0 tour) : les conceptions du récap
+  // dépassaient le nombre de femmes encore Enceinte en fin de tour.
+  // Invariant (arbitrage 2026-11-13) : chaque conception laisse la
+  // femme Enceinte à la fin du tour — elle accouchera au tour
+  // suivant, jamais plus tôt.
+  const state = partieHuitJoueurs()
+  let totalConceptions = 0
+  for (let tour = 0; tour < 2; tour++) {
+    const enceintesAvant = new Set(
+      state.players.flatMap((p) => (state.population[p.n] ?? [])
+        .filter((c) => c.statut === 'Enceinte').map((c) => c.id)),
+    )
+    runTurn(state)
+    for (const p of state.players) {
+      const nouvelles = (state.population[p.n] ?? [])
+        .filter((c) => c.statut === 'Enceinte' && !enceintesAvant.has(c.id))
+      const conceptions = Object.values(p.recap?.conceptions ?? {}).reduce((a, b) => a + b, 0)
+      totalConceptions += conceptions
+      assert.equal(conceptions, nouvelles.length,
+        `J${p.n} T${state.turn} : chaque conception laisse la femme Enceinte (conceptions ${conceptions} vs nouvelles enceintes ${nouvelles.length}) — une seule passe par tour, pas de grossesse de 0 tour`)
+    }
+  }
+  assert.ok(totalConceptions > 0, 'le témoin doit concevoir au moins une fois (test non vide)')
+})

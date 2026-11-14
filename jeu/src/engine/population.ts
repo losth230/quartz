@@ -96,10 +96,10 @@ export function populationTourB(state: GameState, p: Player, rng: Rng, recap?: P
   const monRecap = recap ?? emptyRecap()
   p.recap = monRecap
 
-  // 3.4 Grossesses et naissances
-  conceptionEtNaissances(state, p, rng, monRecap)
-
-  // 3.4 Grossesses et naissances
+  // 3.4 Grossesses et naissances (UNE SEULE passe par tour — le
+  //  doublon d'appel supprimé 2026-11-14 doublait le jet de
+  //  conception ET faisait accoucher au MÊME tour les femmes qui
+  //  venaient de concevoir à la première passe)
   conceptionEtNaissances(state, p, rng, monRecap)
 
   // 3.6 MAJORITÉS CULTURELLES des villes — la conversion culturelle
