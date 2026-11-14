@@ -7165,3 +7165,54 @@ commit (coquille « remains » → « restant » dans l’entrée règles du
 jour).
 
 Tête : fix 6d01c777 (+ diag-out.txt) → règles d15db2e4 → ce journal.
+
+## 2026-11-14 (soir) — Règle des prérequis : le bâtiment exigé est REMPLACÉ par son successeur
+
+**Signalement** : « pour les bâtiments : les bâtiments de prérequis
+doivent remplacer le bâtiment de tier précédent ».
+
+**Diagnostic** : avant ce fix, seules les chaînes EXPLICITES
+`remplaceBatiment` (Silo à grain ← Grange, Camp de travailleurs ←
+Camp de bûcheron et Camp de mineur, Ecole supérieure ← Ecole
+intermédiaire) remplaçaient le bâtiment inférieur. Le champ
+`requis` (17 paires prérequis/successeur non couvertes : Caserne ←
+Poste de garde, Place du marché ← Echoppe, Ponton → Port de pêche et
+Port de commerce, Hôpital ← Clinique, Barraquements ← Caserne,
+Usine ← Camp de travailleurs…) exigeait le prérequis SANS le
+remplacer : `faireConstruire` le laissait dans `ville.batiments` et
+le moteur cumulait les effets des deux tiers.
+
+**Fix (ed9bfc00)** : `remplaceBatimentRef` unionne désormais
+`remplaceBatiment` ET le prérequis (`prerequisConstruction`) →
+effets neutralisés ET retrait de la liste à la construction, avec
+log « ⟳ X remplace « Y » à <ville> ». La propagation est
+automatique via les consommateurs existants de `remplaceBatimentRef`
+: `batimentsRemplaces`/`batimentsActifsVille` (effets, caps de
+métiers, garnison, routes), `domicilesApportesVille`,
+`detailsBatimentsJoueur` (colonne « remplacé par »). Deux
+successeurs d’un même prérequis coexistent (Port de pêche et Port
+de commerce remplacent chacun le Ponton, pas l’un l’autre). Aucun
+aménagement ne porte `requis` — la règle ne touche que les
+bâtiments.
+
+**Tests** : commerce.test.ts mis au nouveau régime (la Place du
+marché remplace l’Echoppe → cap +1 route et non +2) ; domiciles.test
+(Poste de garde + Caserne → 10 domiciles et non 20) ; nouveau test
+tier3 (chaîne Echoppe → Place → Plateforme → Guilde des marchands :
+seule la Guilde active ; deux branches Ponton coexistent ; version
+Château). 379/379 verts, diag régénéré IDENTIQUE à la tête (aucun
+diff → diag-out.txt non commité).
+
+**Règles (f2276b6e)** : entrée « 2026-11-14 (suite 3) — les
+bâtiments de prérequis remplacent le tier précédent » + changement
+de régime des cumuls (Poste de garde + Caserne : 10 ; Place +
+Plateforme : +2 routes ; Place + Guilde des marchands : +3).
+
+**Effet sur l’état L2** : aucun couple prérequis/successeur en jeu
+en dehors de J2 « Grange » + « Silo à grain » (déjà neutralisé par
+le `remplaceBatiment` explicite ; l’entrée Grange restée dans la
+liste est purement cosmétique). Le fix ne modifie PAS les états
+sauvegardés existants : seules les constructions futures retirent
+le prérequis de la liste.
+
+Tête : fix ed9bfc00 → règles f2276b6e → ce journal.
