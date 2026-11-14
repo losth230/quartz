@@ -6927,3 +6927,75 @@ curseurs du type précédent.
 liens croisés officiel→labo ?v=18 et labo→officiel ?v=6 (neufs, pas
 de cache possible). Le curseur est en haut du panneau, juste sous
 le champ Type ; ×1 = comportement des retours précédents.
+
+## Labo générateur : curseur « Terre au bord » — demi-îles coupées par le cadre (9e retour Thibaut 2026-11-14, base 163ba03d)
+
+**Retour de Thibaut.** « Les masses de terre sont bien faites, mais
+toujours 100 % visibles, il n'y a pas de demi-îles, et le bord est
+toujours de l'eau, il faudrait améliorer ça. » — le contrat du 3e
+retour (« masses visibles en entier », fenêtre périphérique) est
+EXPLICITEMENT INVERSÉ.
+
+**Diagnostic.** Depuis le 4e retour, les types à bosses posent leurs
+masses sur des couronnes plafonnées à rMax 0.62-0.75 du rayon, et
+l'essorage périphérique (fenêtre 92 % → 98 % du rayon) efface tout
+biais au-delà : les masses ne peuvent MÉCANIQUEMENT pas toucher le
+bord. Les autres familles touchent déjà le bord (masques continent/
+pangée/mer intérieure/lacs : 51-67 % de terre d'anneau).
+
+**Correctif (feat 163ba03d).** Nouveau curseur « Terre au bord »
+(id `edge-land`, 0-100 %, pas 5), juste sous « Taille masses » ;
+sémantique dédiée aux 3 types à bosses, no-op vérifié sur les 6
+autres familles :
+- **Couronne du bord** : une FRACTION de la couronne extérieure
+  (moitié × curseur) est détachée vers le cadre (centres 0.94·RPX),
+  ses crêneaux retirés de l'ancienne couronne — le reste de la
+  distribution est inchangé. v1 poussait la couronne ENTIÈRE à
+  1.06-1.12·RPX : la capacité du bord aspirait tout le count et le
+  centre se vidait.
+- **Compensation σ/amp des bosses du bord** (+45 %/+25 % au
+  maximum) : la part HORS-cadre d'une demi-île ne doit pas faire
+  perdre son budget — sans compensation, le seuil du quantile
+  plongeait DANS le fond (seaLevel 0.503 mesuré, fond ~0.5 :
+  percolation, masse centrale de 43 % à masses ×2 + bord 75 %).
+  Avec compensation : seaLevel 0.55-0.60, masse ≤ 18 % partout.
+- **Essorage reculé** : fenêtre 0.92 → 0.92+0.13·e (à 1 : hors
+  plateau), le fond aplati proportionnellement (×(1−0.55·e)).
+- **Presets** : les 3 types à bosses posent `'edge-land': 75` —
+  demi-îles PAR DÉFAUT (le point du retour) ; 0 % restaure
+  exactement le comportement historique (vérifié CARTE PAR CARTE
+  identique au 8e retour : mêmes biomes, 3 types × 4 seeds).
+- `drawVariety` tire edge-land (0-100 % par pas de 5), le partage
+  par URL (#c=) transporte le champ, applyPreset repose le slider.
+
+**Validation.** 8 seeds × 3 positions, r=12/15/18 : au défaut 75 %,
+demi-îles 3-6 par carte (min 3/3/5/6 selon type, stable aux trois
+rayons), anneau 25-44 % de terre, budgets inchangés (terre 32/34/28
+%), masse ≤ 18 % ; à 100 % : demi 4-7, anneau 34-59 % ; à 0 :
+identique au calibrage. No-op vérifié (biomes identiques) sur
+continent, pangée, fragmented, inland-sea, lakes, custom.
+
+**Harnais.** C6 INVERSÉ : (a) slider 0 → anneau ≤ 5 % (fenêtre
+historique intacte, pas de régression) ; (b) preset défaut → ≥ 2
+demi-îles par seed, terre 24-40 %, masse ≤ 25 %. `presetParams`
+applique désormais mass-size ET edge-land (chemin UI fidèle :
+applyPreset pose ces sliders). C1-C8 au vert sur le labo (C7/C8
+repassés au défaut 75 %, masse max 25 % tenue après calibrage
+σ +60 % → +45 %, amp +30 % → +25 %).
+
+**Règles dérivées.** (1) Un retour peut INVERSER un contrat
+précédent : ne pas défendre l'ancien calibrage, l'historiser dans
+le harnais (les deux volets coexistent : l'ancien comportement
+reste une POSITION du curseur, testée comme telle). (2) Amputer des
+bosses au bord vole leur surface au quantile : compenser la part
+visible (σ/amp) sinon le seuil plonge dans le fond et percole —
+mesurer seaLevel vs fond, pas seulement les masses. (3) Quand une
+couronne change de rayon, sa CAPACITÉ change aussi : détacher des
+crêneaux au lieu de pousser la couronne entière, sinon la
+distribution entière migre.
+
+**Effet pour l'arbitre.** Page Wargame ?v=7, composant jeu ?v=19,
+liens croisés officiel→labo ?v=19 et labo→officiel ?v=7. Les types
+Continents / Grandes îles / Archipel posent des demi-îles au bord
+PAR DÉFAUT (curseur « Terre au bord » à 75 %, juste sous « Taille
+masses ») ; 0 % = l'océan périphérique d'avant.
