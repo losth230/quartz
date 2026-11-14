@@ -536,11 +536,14 @@ export interface ApportsTour {
    *  canal. */
   pelerinage?: Record<string, number>
   /** Or de la loi Socialisme « Terre d'accueil » : +1 Or par migrant
-   *  arrivé chez le joueur porteur du régime (crédité au stock à
-   *  l'étape 4ter de tour, engine/migrationBonheur.ts). Arbitrage
-   *  Thibaut 2026-11-14 : l'Or de la loi est tracé dans ce canal du
-   *  récap ressources (avant, il n'apparaissait nulle part). Champ
-   *  optionnel : absent des historiques d'avant le canal. */
+   *  d'un AUTRE joueur arrivé chez le joueur porteur du régime (les
+   *  déménagements INTERNES ne comptent pas — arbitrage Thibaut
+   *  2026-11-14, retour « l'or ne doit être octroyé que par les
+   *  étrangers » ; crédité au stock à l'étape 4ter de tour,
+   *  engine/migrationBonheur.ts). Arbitrage Thibaut 2026-11-14 :
+   *  l'Or de la loi est tracé dans ce canal du récap ressources
+   *  (avant, il n'apparaissait nulle part). Champ optionnel : absent
+   *  des historiques d'avant le canal. */
   terreAccueil?: Record<string, number>
 }
 

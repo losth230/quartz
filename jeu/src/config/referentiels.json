@@ -550,7 +550,7 @@
     },
     {
       "nom": "Socialisme",
-      "loi": "Terre d'accueil : chaque fois qu'un migrant arrive dans une de vos villes, recevez 1 Or. Redistribution : les bourgeois ne consomment que 1 nourriture par tour et les nobles que 2 nourriture par tour.",
+      "loi": "Terre d'accueil : chaque fois qu'un migrant d'un autre joueur arrive dans une de vos villes, recevez 1 Or (un déménagement interne ne compte pas). Redistribution : les bourgeois ne consomment que 1 nourriture par tour et les nobles que 2 nourriture par tour.",
       "orParMigrant": 1,
       "consoNourrBourgeoisRegime": 1,
       "consoNourrNobleRegime": 2

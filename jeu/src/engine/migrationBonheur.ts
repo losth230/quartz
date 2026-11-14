@@ -321,10 +321,17 @@ export function migrationBonheur(state: GameState, rng: Rng): Record<number, num
         // (Refonte « 8 lois » des régimes, 2026-10-29, Socialisme
         //  « Terre d'accueil ») : le joueur destinataire reçoit +N
         //  Or par MIGRANT ARRIVANT dans une de ses villes — le foyer
-        //  ENTIER compte (conjoint, enfants), déménagements
-        //  INTERNES inclus (arbitrage Thibaut : la loi récompense
-        //  l'ARRIVÉE, pas le franchissement d'une frontière).
-        const orParMig = regimeDef(dest.joueur.regime, C.config)?.orParMigrant ?? 0
+        //  ENTIER compte (conjoint, enfants).
+        //  (ARBITRAGE Thibaut 2026-11-14, retour « l'or ne devrait
+        //  être octroyé que par les étrangers » : seuls les arrivants
+        //  d'un joueur DIFFÉRENT rapportent l'Or — un déménagement
+        //  INTERNE (rester chez le même joueur) ne rapporte plus
+        //  RIEN. REMPLACE l'arbitrage du 2026-10-29 « déménagements
+        //  internes inclus » : la loi récompense désormais le
+        //  franchissement d'une frontière, pas la simple arrivée.)
+        const orParMig = dest.joueur.n !== p.n
+          ? (regimeDef(dest.joueur.regime, C.config)?.orParMigrant ?? 0)
+          : 0
         if (orParMig > 0) {
           for (const m of foyer) {
             const rs = dest.joueur.resources['Or']

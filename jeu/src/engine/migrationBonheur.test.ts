@@ -383,6 +383,34 @@ test("flux : les autres régimes ne reçoivent RIEN à l'arrivée de migrants", 
   assert.equal(p2.resources['Or'].stock, orAvant, 'aucun Or crédité')
 })
 
+test("flux (arbitrage Thibaut 2026-11-14) : un déménagement INTERNE ne rapporte PAS d'Or — seuls les arrivants d'un AUTRE joueur comptent", () => {
+  const { state, C } = partie(20261029)
+  C.p.migrationBonheurMax = 10
+  C.p.migrationBonheurLogement = 1e9 // le facteur logement écrase tout
+  const p2 = state.players[2]
+  p2.regime = 'Socialisme'
+  // p2 (Socialisme) gagne une 2e ville, VIDE : lits libres.
+  p2.villes.push(villeTest('Ville-B', 'Déisme'))
+  // Tous les AUTRES joueurs (le setup par défaut en compte 8) :
+  //  60 soldats chacun — jamais tirés au départ, leurs villes
+  //  n'ont AUCUN lit libre. La seule destination aux lits libres
+  //  du monde est donc la Ville-B de p2, et le migrant (sans
+  //  domicile) y déménage EN INTERNE, sans changer de joueur.
+  for (const p of state.players) {
+    if (p.n === p2.n) continue
+    state.population[p.n] = Array.from({ length: 60 }, (_, i) =>
+      hab(`sat-${p.n}-${i}`, 30, { ville: p.villes[0].nom, armee: `Armee-${p.n}` }))
+  }
+  const mig = hab('ta-4', 30, { ville: p2.villes[0].nom, metier: 'Employé' }) // pourvu… mais sans domicile
+  state.population[p2.n] = [mig]
+  const orAvant = p2.resources['Or'].stock
+  const orAccueil = migrationBonheur(state, makeRng(8))
+  assert.equal(mig.ville, 'Ville-B', 'le migrant a bien déménagé EN INTERNE (autre ville du MÊME joueur)')
+  assert.equal(state.log.filter((e) => e.texte.includes("Terre d'accueil")).length, 0, 'aucune ligne « Terre d\'accueil » pour un déménagement interne')
+  assert.equal(p2.resources['Or'].stock, orAvant, 'stock Or INCHANGÉ')
+  assert.deepEqual(orAccueil, {}, 'le retour du flux ne porte AUCUN Or interne')
+})
+
 // ── Canal d'apports « Terre d'accueil » (arbitrage Thibaut 2026-11-14) ──
 // (Incident salon L2 : « J1 gagne beaucoup plus d'Or que le +1,3
 //  affiché » — l'Or de la loi était crédité au stock DIRECTEMENT,
