@@ -174,5 +174,33 @@ if (ex.encodeShare) {
   chk('C5 codec présent', false, 'encodeShare absent de la partie pure');
 }
 
+// C6 : masses visibles EN ENTIER (3e retour Thibaut 2026-11-13, à r=15
+// = 721 tuiles, la taille réelle de campagne : « on ne voit jamais les
+// continents, ni même les îles en entier »). Pour « continents »,
+// « grandes îles » et « archipel » : l'anneau extérieur de la carte
+// reste océanique (fenêtre périphérique PERIPH_OCEAN) — sinon les lobes
+// du masque collent les masses au bord et le bord les coupe. Contrat :
+// ≤ 5 % de terre sur l'anneau r=15, par seed. (« continent » et
+// « pangea » touchent volontairement le bord : contrat documenté.)
+{
+  const N6 = 15;
+  const bad = [];
+  for (const type of ['continents', 'islands-large', 'archipelago']) {
+    for (const seed of seeds) {
+      const m = ex.generateMap(N6, seed, refParams(ex, { mapType: type }));
+      let ringLand = 0, ringTot = 0;
+      for (let i = 0; i < m.tiles.length; i++) {
+        const t = m.tiles[i];
+        const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+        if (d === N6) { ringTot++; if (m.biome[i] !== 'Océan') ringLand++; }
+      }
+      const part = ringTot ? ringLand / ringTot : 0;
+      if (part > 0.05) bad.push(`${type}/${seed}=${(part * 100).toFixed(0)}%`);
+    }
+  }
+  chk('C6 masses détachées du bord (3 presets × 5 seeds, r=15)', bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'anneau extérieur ≤ 5 % de terre partout');
+}
+
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');
 process.exit(failures ? 1 : 0);

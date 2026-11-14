@@ -425,10 +425,10 @@
     </div>
     <div class="field">
       <label>Rayon</label>
-      <input type="range" id="radius" min="10" max="18" value="12">
-      <span class="value" id="radius-v">12</span>
+      <input type="range" id="radius" min="10" max="18" value="15">
+      <span class="value" id="radius-v">15</span>
     </div>
-    <div id="size-preview">→ <b id="tile-count">469</b> tuiles</div>
+    <div id="size-preview">→ <b id="tile-count">721</b> tuiles</div>
     <div id="biome-counts" style="font-size:10px;color:var(--text-muted);padding:4px 6px;line-height:1.6;display:none;"></div>
     <div class="field">
       <label>Mer</label>
@@ -1302,6 +1302,25 @@ function generateMap(N, seedStr, params) {
   const pxRadius = 1.2 * N; // rayon approximatif de la carte en unités-tuiles
   const gauss = (px, py, ax, ay, s) =>
     Math.exp(-(((px - ax) * (px - ax) + (py - ay) * (py - ay)) / (2 * s * s)));
+  // (3e retour Thibaut 2026-11-13, à r=15 = 721 tuiles, la taille réelle de
+  //  campagne : « les presets continents / grandes îles / archipel font
+  //  apparaître des masses trop importantes — on ne voit jamais les
+  //  continents, ni même les îles en entier ». Mesuré à r=15 : 56 % de
+  //  l'anneau extérieur en terre, 4 à 6 masses coupées par le bord sur
+  //  chaque carte. CAUSE : les lobes angulaires cos kθ × dc culminent à
+  //  dc=1 (le bord), et le masque de bord (« e-edge ») atténue le BRUIT
+  //  AVANT l'ajout du biais de forme — il ne peut donc rien contre eux.
+  //  CORRECTIF : fenêtre périphérique PERIPH_OCEAN sur ces trois types :
+  //  le biais de forme s'essouffle de 85 % à 98 % du rayon (fenêtre sur
+  //  la distance VRAIE, pas la warpée — le warp, d'amplitude 0.55, peut
+  //  sinon rouvrir la porte au bord), puis un creux océanique au-delà de
+  //  90 % du rayon garantit l'anneau d'eau. Le seuil de mer étant un
+  //  QUANTILE GLOBAL, la terre chassée du bord se redistribue au centre
+  //  et souderait les îles : les creux séparateurs des trois masques
+  //  sont donc renforcés en compensation (calibré à r=15 sur 8 seeds).
+  //  « continent » et « pangea » gardent leurs masses au bord — c'est
+  //  leur contrat documenté.)
+  let periphOcean = false;
   if (mapType === 'continent') {
     shapeBias = (dc) => 0.20 * Math.pow(1 - dc, 2);
   } else if (mapType === 'continents') {
@@ -1310,10 +1329,14 @@ function generateMap(N, seedStr, params) {
     // centrale — sans le creux, le disque central (toutes directions à petit
     // rayon) relie les deux lobes en une seule composante. θ0 tiré par le
     // PRNG dédié : même seed = mêmes continents.
+    // (3e retour Thibaut 2026-11-13, à r=15 : le creux passe −0.30 → −0.45 —
+    //  la fenêtre périphérique chasse la terre du bord vers le centre, le
+    //  quantile de mer descend et refermerait les bras de mer séparateurs.)
+    periphOcean = true;
     const phase = randShape() * Math.PI;
     shapeBias = (dc, th) =>
       0.45 * Math.cos(2 * (th - phase)) * dc
-      - 0.30 * Math.pow(1 - dc, 2);
+      - 0.45 * Math.pow(1 - dc, 2);
   } else if (mapType === 'pangea') {
     shapeBias = (dc) => 0.16 * Math.pow(1 - dc, 1.5);
   } else if (mapType === 'islands-large') {
@@ -1323,10 +1346,16 @@ function generateMap(N, seedStr, params) {
     // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : lobes
     //  0.36 → 0.48 et creux −0.30 → −0.38 — 3 îles équilibrées à 28-36 %
     //  de la terre sur 8/8 seeds au harnais, aucune île dominante.)
+    // (3e retour Thibaut 2026-11-13, à r=15 : creux −0.38 → −0.60, en
+    //  compensation de la fenêtre périphérique — sinon la terre chassée
+    //  du bord recentre le quantile et soude les trois îles en une masse
+    //  unique de 75 %. Mesuré : masse 38 %, ~10 composantes, îles
+    //  détachées du bord, visibles en entier.)
+    periphOcean = true;
     const phase = (randShape() * Math.PI * 2) / 3;
     shapeBias = (dc, th) =>
       0.48 * Math.cos(3 * (th - phase)) * dc
-      - 0.38 * Math.pow(1 - dc, 2);
+      - 0.60 * Math.pow(1 - dc, 2);
   } else if (mapType === 'archipelago') {
     // Creux central modéré + 4 entailles angulaires traversantes : sans le
     // creux, le détail forme au centre UNE masse géante ; creux trop fort,
@@ -1337,10 +1366,16 @@ function generateMap(N, seedStr, params) {
     // (2e retour Thibaut 2026-11-13, calibré Perlin sur 8 seeds : creux
     //  −0.30 → −0.38, entailles −0.12 → −0.16 — 10-20 composantes, masse
     //  principale ≤ 48 % sur 8/8 seeds au harnais.)
+    // (3e retour Thibaut 2026-11-13, à r=15 : creux −0.38 → −0.60 et
+    //  entailles −0.16 → −0.28, en compensation de la fenêtre
+    //  périphérique — sans cela la terre chassée du bord recentre le
+    //  quantile et soude l'archipel en une masse unique de 99 %. Mesuré
+    //  à r=15 : masse ~39 %, ~12 composantes, bord 0 % de terre.)
+    periphOcean = true;
     const phase4 = randShape() * Math.PI / 2;
     shapeBias = (dc, th) =>
-      -0.38 * Math.pow(1 - dc, 2)
-      - 0.16 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
+      -0.60 * Math.pow(1 - dc, 2)
+      - 0.28 * Math.cos(4 * (th - phase4)) * (0.3 + 0.7 * dc);
   } else if (mapType === 'fragmented') {
     // Creux central + 6 entailles angulaires TRAVERSANTES (cos 6θ, phase
     // tirée par le PRNG dédié) : le seul creux laissait une masse unique à
@@ -1438,7 +1473,22 @@ function generateMap(N, seedStr, params) {
                : (noiseMode === 'mixed') ? 0.55
                : 1;
       if (sq < 1) e = 0.5 + (e - 0.5) * sq;
-      e += shapeBias(dcW, thW);
+      if (periphOcean) {
+        // Fenêtre périphérique (cf. commentaire PERIPH_OCEAN ci-dessus) :
+        // sur la distance VRAIE (le warp d'amplitude 0.55 peut fausser dcW
+        // de ±0.55 — fenêtrer sur dcW rouvrirait la porte au bord réel).
+        // Calibré à r=15 sur 8 seeds : fenêtre 85 %→98 %, creux 90 %→100 %
+        // (profondeur 0.42) — terre au bord 56 % → 0 %, 0 masse coupée ;
+        // les creux des masques sont renforcés en compensation (le seuil
+        // de mer étant un quantile GLOBAL, la terre chassée du bord se
+        // redistribue au centre et souderait les îles sans cela).
+        const t1 = Math.max(0, Math.min(1, (dist - 0.85) / 0.13));
+        const w = 1 - t1 * t1 * (3 - 2 * t1); // 1 → 0 entre 85 % et 98 % du rayon
+        const t2 = Math.max(0, Math.min(1, (dist - 0.90) / 0.10));
+        e += shapeBias(dcW, thW) * w - 0.42 * t2 * t2 * (3 - 2 * t2);
+      } else {
+        e += shapeBias(dcW, thW);
+      }
     }
 
     elev[i] = Math.max(0, Math.min(1, e));

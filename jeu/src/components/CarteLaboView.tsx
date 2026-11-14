@@ -29,7 +29,7 @@ export function CarteLaboView() {
         export JSON. Le lien copié s'ouvre directement dans le labo, à l'identique.
       </p>
       <iframe
-        src="../static/generateur-carte-labo.html?v=11"
+        src="../static/generateur-carte-labo.html?v=12"
         title="Générateur de carte — version labo"
         style={{ width: '100%', height: 'calc(100vh - 220px)', minHeight: 520, border: '1px solid var(--border)', borderRadius: 8 }}
         allowFullScreen
