@@ -3218,7 +3218,7 @@ possible T+2 — soit au maximum un enfant tous les deux tours.
 J2 naissances 119 → 84, conceptions 112 → 32, croissance +99 →
 +64. Le diag moteur passe de 647 à 408 entrées de log sur 4 tours.
 
-**Paramètre remains** : fertBaseRate = 1 (arbitrage 2026-11-02) —
+**Paramètre restant** : fertBaseRate = 1 (arbitrage 2026-11-02) —
 une femme mariée de 16-25 ans avec un mari jeune conçoit à chaque
 tour éligible. Si le taux de naissances reste trop élevé après ce
 fix, le levier est la baisse de fertBaseRate (paramètre « Fécondité

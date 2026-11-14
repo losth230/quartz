@@ -7122,3 +7122,46 @@ par l’Edge (redéploiement requis — src/engine touché) loge les 50.
 supersede la convention 2026-10-29.
 
 Tête : feat 5d7ed075 → règles 5ea29885 → ce journal.
+
+## 2026-11-14 (suite 4) — Trop de naissances : DOUBLON d’appel de conceptionEtNaissances
+
+**Signalement** : « il y a beaucoup trop de naissances, est-ce qu’une
+femme peut enfanter et tomber enceinte au même tour ? »
+
+**Diagnostic** : populationTourB (population.ts) appelait
+conceptionEtNaissances DEUX FOIS (bloc « 3.4 Grossesses et
+naissances » dupliqué mot pour mot — vestige probable d’un merge).
+Mécanique du bug : passe 1 = accouchements des Enceintes + jet de
+conception ; passe 2 = les conceptions de la passe 1 SONT ENCEINTES
+→ elles ACCOUCHENT dans la même résolution (grossesse de 0 tour),
+puis un second jet pour les femmes restées non enceintes. Effets
+cumulés : grossesses instantanées + jet de conception doublé —
+l’arbitrage 2026-11-13 (« pas d’accouchement et conception au même
+tour ») était contourné dans les deux sens. Les tests du 2026-11-13
+naissances.test.ts testaient conceptionEtNaissances en ISOLEMENT
+(une passe) — le doublon était dans populationTourB, invisible pour
+eux. L’écart démo : proba attendue ~56 conceptions (somme
+computeFecondite) vs 217 observées.
+
+**Fix (6d01c777)** : un seul appel dans populationTourB (commentaire
+SUPERSEDÉ sur place). Test de non-régression END-TO-END dans
+regression.test.ts (« UNE seule passe de conception par tour ») :
+invariant conceptions du récap == femmes nouvellement Enceinte en
+fin de tour, vérifié sur 2 tours de la partie à 8, contrôle positif
+totalConceptions > 0 ; VALIDÉ en échec sur le doublon restauré (le
+test échoue, 4/5), puis vert sur le fix. diag-out.txt régénéré :
+647 → 408 entrées de log sur 4 tours (commit avec le feat). Suite :
+378/378 verts.
+
+**Chiffres L2** (simulation T42→43 sur état réel) : J1 naissances
+227 → 129, conceptions 217 → 92, +230 → +132 vivants/tour ; J2
+119 → 84, 112 → 32, +99 → +64. Croissance restante élevée mais
+conforme au paramétrage : fertBaseRate = 1 (arbitrage 2026-11-02) —
+levier documenté dans les règles si Thibaut veut un taux plus bas.
+
+**Règles** (d15db2e4) : entrée « une seule passe de conception par
+tour » + réponse à la question ; correction d’un mot dans ce même
+commit (coquille « remains » → « restant » dans l’entrée règles du
+jour).
+
+Tête : fix 6d01c777 (+ diag-out.txt) → règles d15db2e4 → ce journal.
