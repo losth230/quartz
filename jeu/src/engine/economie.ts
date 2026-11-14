@@ -317,17 +317,13 @@ export function taxBirthFactor(ville: City | undefined, C: Cfg = cfgOf()): numbe
 //  récap : métiers × taxes − consommation ; tribut de vassalité sur l'Or).
 // ══════════════════════════════════════════════════════════════════════
 
-/**
- * NOURRITURE DU BÉTAIL (revue valeurs 2026-10-16) : chaque unité de
- *  Bétail en stock rapporte 4 Nourriture par tour — le revenu des
- *  troupeaux (Pâturages). Crédité à chaque fin de tour via le canal
- *  « Autres » du récap.
- */
-export function nourritureBetail(p: Player): number {
-  const betail = p.resources['Bétail']?.stock ?? 0
-  return Math.max(0, betail) * 4
-}
 
+/**
+ * (RETRAIT 2026-11-14, arbitrage Thibaut « le bétail ne produit pas de
+ * nourriture, ça n’a jamais été demandé » : l’ancien bonus « chaque
+ * unité de Bétail en stock rapporte 4 Nourriture par tour » est
+ * supprimé du moteur — la fonction nourritureBetail n’existe plus.)
+ */
 /** Impôt que la population de p produit sur UN tour (canal « Habitants » :
  *  taxes − consommation, × gainsCrediteStock comme au fin de tour). */
 export function impotPopulation(state: GameState, p: Player, C: Cfg): Record<string, number> {

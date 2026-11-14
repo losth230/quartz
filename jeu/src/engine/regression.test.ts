@@ -199,3 +199,24 @@ test('moteur : un tour de plus après rechargé du JSON (cycle sérialisation)',
   runTurn(roundTrip)
   assert.equal(roundTrip.turn, avant + 1, 'un tour doit s\'exécuter après un cycle de sérialisation')
 })
+
+test('bétail en stock : AUCUNE Nourriture produite (retrait arbitrage 2026-11-14)', () => {
+  // Arbitrage Thibaut « le bétail ne produit pas de nourriture, ça
+  //  n’a jamais été demandé » : l’ancien bonus « chaque unité de
+  //  Bétail en stock rapporte 4 Nourriture par tour » (canal
+  //  « autres ») est retiré. Les setups par défaut n’ont aucune
+  //  ligne « Autres » : le canal doit rester à 0 même avec du Bétail.
+  const state = partieHuitJoueurs()
+  const p = state.players[0]!
+  p.resources['Bétail']!.stock = 10
+  const nAvant = p.resources['Nourriture']!.stock
+  runTurn(state)
+  const row = state.history.filter((r) => r.joueur === p.n).at(-1)!
+  assert.ok(row.apports, 'apports présents dans la ligne d\u2019history')
+  assert.equal(row.apports!.autres?.['Nourriture'] ?? 0, 0,
+    'le canal autres ne crédite aucune Nourriture (plus de bonus Bétail × 4)')
+  let somme = 0
+  for (const v of Object.values(row.apports!)) somme += v['Nourriture'] ?? 0
+  assert.ok(Math.abs(p.resources['Nourriture']!.stock - nAvant - somme) < 1e-6,
+    'réconciliation au centime : delta Nourriture == somme des apports du récap')
+})
