@@ -6533,3 +6533,113 @@ aucune masse n'est coupée. Les graines des trois types rejouent
 différemment d'avant ce correctif (changement de forme voulu) ;
 les autres types sont inchangés. Ctrl+F5 pour vider le cache (le
 bundle jeu référence maintenant `?v=14`).
+
+## Conversion culturelle V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, base c3035943)
+
+**Retour.** « Est-ce que tu pourrais me proposer autre chose pour la
+conversion culturelle, qui soit plus cohérente et plus jouable de
+manière technique ? » — l'ancien moteur tirait au hasard une
+tentative à 10 % par habitant puis une culture dans un tirage
+pondéré ; Thibaut a tranché la V2 déterministe « Pression/Ancrage »
+sur proposition (3 variantes), avec : plancher minuscule CONSERVÉ
+(une ville homogène n'est pas immunisée), conversion personnage par
+personnage SANS les familles, cap 1 par ville-tour en PARAMÈTRE
+réglable (conversionMax, équilibrage explicite différé en second
+temps).
+
+**Commit jeu :** e3ede969 (feat) — engine/culture.ts réécrit (duel
+par ville : Force = pression touristique + poids démographique
+local ×(1+évangile), bonus d'accueil Nationalisme + Guilde des
+évangélistes ; ancrage = compatriotes × poids + noblesse ;
+conversion des moins ancrés sous la force dominante, cap
+conversionMax ; plancher rng 1 % des villes 100 % homogènes ;
+Dirigeant immunisé), bloc « Balance culturelle » dans
+components/pays/VilleCarte.tsx (source unique detailConversionVille
+— la vue et le moteur calculent les mêmes nombres), params.ts
+(conversionMax 1 PROVISOIRE, conversionPlancher 0,01,
+conversionAncrageNoble 15 ; conversionProba et conversionMemeCulture
+retirés), defaultConfig.ts (migration ciblée conversionDeterministe2026,
+patron taxes25 : les 2 clés mortes dépouillées, les 3 nouvelles
+venues de mergeParams), tests : conversion.test.ts NOUVEAU (8 tests :
+ville homogène + plancher, minorité fond à 1/tour, conversionMax=3,
+renversement par tourisme massif, isolé avant communauté, noble
+résiste, Dirigeant immunisé, majorité des villes) et réécriture des
+tests Évangile/Nationalisme (dogmes.test.ts) et Guilde des
+évangélistes (tier3.test.ts) sur le détail exact des forces.
+**Commit règles :** e8161862 (docs/ia/regles-et-arbitrages.md —
+section « Conversion culturelle V2 « Pression/Ancrage » »).
+**Présent commit : journal seul.**
+
+**Leçon de design.** Le scénario « 25/25 ville mixte stable » imaginé
+en amont était faux en pratique : les cultures du référentiel portent
+une pression de base 0,001 qui départage toute égalité démographique
+parfaite (la culture du référentiel l'emporte de 0,001 et fond l'autre
+à cap/tour). Repéré À L'ANALYSE avant d'écrire les tests — aucun run
+raté, le harnais est passé 360/360 du premier coup. Comportement
+accepté (knife-edge d'égalité parfaite, rarement durable) et
+l'immobilité verrouillée autrement : le test d'ancrage utilise
+un noble (ancrage +15) contre une force juste au-dessus du roturier.
+
+**Effets pour l'arbitre.** La conversion devient LISIBLE : chaque
+ville affiche ses forces culturelles (pression + présence), sa
+culture dominante et les conversions prévues du tour. Une minorité
+fond au rythme du cap (les isolés d'abord, les nobles en dernier) ;
+un tourisme culturel massif renverse une ville pure (pression >
+démographie locale) ; une faible pression étrangère ne tient pas
+face à une masse locale. L'équilibrage du cap reste à régler en
+second temps (conversionMax). Diag régénéré : seuls les compteurs de
+simulation bougent (log 459 → 497, commandants J1 6 → 4 — le moteur
+ne consomme plus un rng par habitant, le flux des événements aval
+est décalé) ; AUCUNE autre ligne ne diffère. 360/360 tests natifs
+(352 + 8), 36 fichiers ; tsc = baseline stub @supabase seule ;
+diff vs base c3035943 exactement 7 fichiers src + diag-out.txt.
+Ctrl+F5 pour vider le cache (nouveau bundle à l'URL
+losth230.github.io/quartz/jeu/).
+
+## Cap de conversion proportionnel 10 % (arbitrage Thibaut 2026-11-15, base f2918326)
+
+**Arbitrage.** « Le cap de conversion passe à 10 % des habitants de
+la ville » — le cap FIXE conversionMax (1/ville-tour, provisoire
+depuis le 2026-11-14) devient le TAUX conversionTaux (défaut 0,10
+des vivants, arrondi inférieur, minimum 1). Duel
+« Pression/Ancrage » inchangé par ailleurs.
+
+**Commit jeu :** c32d26d6 (feat) — engine/culture.ts (cap =
+max(1, floor(conversionTaux × vivants)) par ville-tour + champ cap
+du détail), params.ts (conversionTaux 0,10 remplace conversionMax 1
+— changement d'UNITÉ : une valeur « 1 » sauvegardée voudrait dire
+100 %, la clé est morte et dépouillée), defaultConfig.ts (migration
+ciblée conversionTaux2026, patron taxes25 : delete conversionMax,
+la nouvelle clé vient de mergeParams, une personnalisation de
+conversionMax retombe sur le défaut 10 %), VilleCarte.tsx (ligne
+« cap de conversion N/tour (10 % des vivants) » dans le bloc
+« Balance culturelle »), conversion.test.ts réaligné (cap 5 sur 50
+vivants : la minorité fond en 2 tours ; taux 0,3 → cap 15 : minorité
+fond en un tour ; renversement à 5/tour ; isolé-avant-communauté cap
+4 ; NOBLE protégé PAR LA FORCE : 20 Nordiques force 100 contre 19
+Déistes, roturiers ancrage 95 basculent au cap 3, noble ancrage 110
+résiste — l'ancienne configuration du test rendait le noble
+convertissable puisque le cap 2 l'englobait).
+**Commit règles :** 9f3cd54e (docs/ia/regles-et-arbitrages.md,
+section « Cap de conversion proportionnel — 10 % des habitants »).
+**Présent commit : journal seul.**
+
+**⚠ INCIDENT d'écrasement externe, corrigé dans ce commit.** Le
+commit externe 8e8e3b0d (labo générateur, 5e retour) a poussé le
+journal au CONTENU COMPLET basé sur la version 867c8012 — mon
+entrée « Conversion culturelle V2 » du commit f2918326 a été
+PERDUE du fichier (le parent du commit externe était bien
+f2918326, mais le contenu du journal était une version STALE).
+Restaurée ICI : l'entrée V2 est réinsérée ci-dessus, à l'identique
+du sha f2918326, AVANT cette entrée-ci. RÈGLE pour les sessions
+parallèles : toujours re-lire le journal DEPUIS la tête avant tout
+append (raw.githubusercontent au sha de tête), jamais partir d'une
+copie locale de tour précédent.
+
+**Validation.** **360/360 tests natifs**, 36 fichiers ; tsc =
+baseline 3 erreurs stub @supabase seule ; diff vs base (tarball
+tête 8e8e3b0d) = 5 fichiers src + diag-out.txt exactement ; diag
+régénéré LÉGITIME : log 497 → 513 entrées, commandants J1 4 → 5
+(plus de conversions par tour au cap 10 %, suites aléatoires aval
+décalées — RIEN d'autre ne diffère). Ctrl+F5 requis (nouveau
+bundle).
