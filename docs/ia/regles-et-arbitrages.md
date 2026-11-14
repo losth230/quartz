@@ -3223,3 +3223,41 @@ une femme mariée de 16-25 ans avec un mari jeune conçoit à chaque
 tour éligible. Si le taux de naissances reste trop élevé après ce
 fix, le levier est la baisse de fertBaseRate (paramètre « Fécondité
 de base », onglet Paramètres — pas d’arbitrage pris ce jour).
+
+## 2026-11-14 (suite 3) — Les bâtiments de prérequis remplacent le tier précédent
+
+**Contexte** (demande « pour les bâtiments : les bâtiments de
+prérequis doivent remplacer le bâtiment de tier précédent ») : le
+champ `requis` d’une construction (Caserne ← Poste de garde, Place
+du marché ← Echoppe, Port de pêche et Port de commerce ← Ponton,
+Hôpital ← Clinique, Barraquements ← Caserne, Usine ← Camp de
+travailleurs…) exigeait la présence du bâtiment inférieur mais le
+LAISSAIT dans la ville : ses effets restaient comptés en cumul, à
+l’inverse des remplacements explicites (`remplaceBatiment` : Silo à
+grain ← Grange, Ecole supérieure ← Ecole intermédiaire, Camp de
+travailleurs ← Camp de bûcheron et Camp de mineur) qui neutralisent
+le remplacé. 17 paires prérequis/successeur du référentiel n’étaient
+pas couvertes, et le mutateur `faireConstruire` laissait le prérequis
+dans la liste `ville.batiments` alors que le moteur ne neutralisait
+rien du tout.
+
+**Règle (2026-11-14)** : un bâtiment qui porte un `requis` REMPLACE
+son prérequis à la construction — effets neutralisés dans le moteur
+ET retrait de la liste des bâtiments de la ville (même mécanique que
+les tiers d’aménagements, vague 3c). `remplaceBatimentRef` unionne
+désormais les remplacements explicites (`remplaceBatiment`) et le
+prérequis ; deux successeurs d’un même prérequis coexistent (Port de
+pêche et Port de commerce remplacent chacun le Ponton, pas l’un
+l’autre). Aucun aménagement ne porte `requis` : la règle ne concerne
+que les bâtiments. La propagation est automatique aux effets, caps
+de métiers, garnison, routes commerciales et domiciles, ainsi qu’à
+l’affichage (« remplacé par »).
+
+**Changement de régime des cumuls** (chiffres des tests) : Poste de
+garde + Caserne ne cumule plus (domiciles apportés : 10 au lieu de
+20) ; Place du marché + Plateforme commerciale → +2 routes (et non
++3) ; Place + Guilde des marchands reste +3 (la Guilde remplace la
+Plateforme, pas la Place) ; la Place du marché qui exige l’Echoppe
+retombe à +1 route au lieu de +2. Les états sauvegardés existants ne
+sont pas modifiés rétroactivement : seule la construction future
+retire le prérequis de la liste.
