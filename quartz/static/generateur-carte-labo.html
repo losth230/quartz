@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=4" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=5" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -619,7 +619,7 @@
         </div>
         <div class="field">
           <label>Océan</label>
-          <input type="number" id="cap-ocean" min="0" max="1000" value="250" step="10">
+          <input type="number" id="cap-ocean" min="0" max="1000" value="0" step="10" title="Plafond de tuiles Océan. 0 = illimité (défaut, 7e retour 2026-11-14 : l'ancien défaut 250, une fois dépassé, abaissait le seuil de mer GLOBAL et gonflait la carte à 65 % de terre en soudant les îles en un seul bloc). Cap volontaire : la mer se resserre PARTOUT (les hauts-fonds remontent), sans zone lisse dans un coin. Un type de carte (Continents, Grandes îles, Archipel…) désactive ce cap tout seul.">
         </div>
         <div class="field">
           <label>Volcan</label>
@@ -736,6 +736,7 @@
 const MAP_PRESETS = {
   // Un gros continent unique, qui touche presque les bords
   'continent': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 35,
     'e-cont':    4,   // continents très larges
     'e-scale':   14,
@@ -747,6 +748,7 @@ const MAP_PRESETS = {
   // (compact abaissé : à 70, la bosse lisse du canal « continent » dominait
   //  le masque de forme angulaire et reliait les deux masses en une seule)
   'continents': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 68,
     'e-cont':    6,
     // (4e retour 2026-11-13 : compact 50→15, scale 16→20 — avec les bosses
@@ -761,6 +763,7 @@ const MAP_PRESETS = {
   },
   // Une seule masse qui couvre quasiment toute la carte (comme la Pangée)
   'pangea': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 25,
     'e-cont':    3,   // très basse fréquence = une seule bosse centrale
     'e-scale':   12,
@@ -776,6 +779,7 @@ const MAP_PRESETS = {
   //  retour par défaut (2e retour Thibaut 2026-11-13) — valeurs d'origine
   //  validées au harnais)
   'islands-large': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 66,
     'e-cont':    8,
     // (4e retour 2026-11-13 : compact 35→15, scale 18→22 — cf. continents :
@@ -794,6 +798,7 @@ const MAP_PRESETS = {
   //  retour par défaut, 2e retour Thibaut 2026-11-13 — valeurs d'origine
   //  validées au harnais)
   'archipelago': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 72,
     'e-cont':    11,
     // (4e retour 2026-11-13 : compact 18→12, scale 24→26 — cf. continents :
@@ -809,6 +814,7 @@ const MAP_PRESETS = {
   //  traversantes cos 6θ du masque ; 15-19 composantes jouables, masse
   //  principale ≤ 40 % sur 8/8 seeds au harnais)
   'fragmented': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 60,
     'e-cont':    13,
     'e-scale':   38,
@@ -821,6 +827,7 @@ const MAP_PRESETS = {
   //  l'inverse du but ; l'excavation centrale du masque de forme attire
   //  désormais le quantile de mer au centre)
   'inland-sea': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 40,
     'e-cont':    4,
     'e-scale':   14,
@@ -830,6 +837,7 @@ const MAP_PRESETS = {
   },
   // Grand continent criblé de petits lacs et golfes
   'lakes': {
+    'cap-ocean': 0, // un preset EST son budget de mer : un cap océan résiduel abaisserait le seuil GLOBAL et souderait les îles (7e retour 2026-11-14)
     sealevel: 38,
     'e-cont':    5,
     'e-scale':   22,
@@ -847,8 +855,13 @@ const DEFAULTS = {
   constraints: {
     surroundSame: 5,
     // (Nouveau retour Thibaut 2026-11-13 : caps ACTIFS par défaut — 0 = illimité)
+    // (7e retour 2026-11-14 : cap-ocean défaut 250 → 0. Sur 721 tuiles (r=15),
+    //  le cap dépassé abaissait le seuil de mer GLOBAL au quantile du cap :
+    //  65 % de terre, une seule masse — TOUS les presets étaient soudés en
+    //  un bloc (incident « ceci est censé être un archipel »). Un type de
+    //  carte EST son budget de mer ; le cap océan reste un OUTIL manuel.)
     'cap-plaine': 200, 'cap-foret': 200, 'cap-desert': 50, 'cap-marais': 80,
-    'cap-montagne': 80, 'cap-ocean': 250, 'cap-volcan': 15
+    'cap-montagne': 80, 'cap-ocean': 0, 'cap-volcan': 15
   }
 };
 

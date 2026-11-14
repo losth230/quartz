@@ -95,11 +95,21 @@ function refParams(ex, over) {
 // Params d'un PRESET tel que le labo l'utilise réellement (MAP_PRESETS
 // appliqué : sea + elev). C2 teste volontairement le quantile à sea 45
 // SANS preset ; C6 teste les presets réels.
-function presetParams(ex, name) {
-  const p = refParams(ex, { mapType: name });
+function presetParams(ex, name, uiCaps) {
+  // uiCaps : caps de DÉFAUT DE L'UI (7e retour : le chemin réel de l'arbitre
+  // part des défauts DOM, PUIS le preset écrase les champs qu'il possède.
+  // Sans uiCaps : caps à 0 (comportement historique des autres contrats).
+  const caps = uiCaps
+    ? Object.assign({}, uiCaps)
+    : { 'Plaine': 0, 'Forêt': 0, 'Désert': 0, 'Marais': 0, 'Montagne': 0, 'Océan': 0, 'Volcan': 0 };
+  const p = refParams(ex, { mapType: name, constraints: { caps, surroundSame: 5 } });
   const preset = ex.MAP_PRESETS[name];
   if (preset) {
     if (preset.sealevel !== undefined) p.sea = preset.sealevel / 100;
+    // (7e retour 2026-11-14 : chaque preset pose 'cap-ocean': 0 — un cap
+    //  océan résiduel dépassé abaissait le seuil GLOBAL et soudait les
+    //  îles en un bloc de 65 % de terre. Incident navigation privée.)
+    if (preset['cap-ocean'] !== undefined) p.constraints.caps['Océan'] = preset['cap-ocean'];
     const m = { 'e-cont': 'cont', 'e-scale': 'scale', 'e-compact': 'compact', 'e-edge': 'edge', 'e-pers': 'pers' };
     for (const k in m) if (preset[k] !== undefined) p.elev[m[k]] = preset[k] / 100;
   }
@@ -218,6 +228,58 @@ if (ex.encodeShare) {
   }
   chk('C6 masses détachées du bord (3 presets × 5 seeds, r=15)', bad.length === 0,
     bad.slice(0, 4).join(', ') || 'anneau extérieur ≤ 5 % de terre partout');
+}
+
+// C7 : les CAPS DE L'UI PAR DÉFAUT ne doivent pas dérailler les presets
+// (7e retour Thibaut 2026-11-14, incident navigation privée : « ceci est
+// censé être un archipel » — le défaut cap-ocean=250, une fois dépassé,
+// abaissait le seuil de mer GLOBAL au quantile du cap : 65 % de terre,
+// masse unique de 96-99 % sur les 3 presets × 8 seeds. Chemin UI fidèle :
+// défauts DOM (caps plaine 200 / forêt 200 / désert 50 / marais 80 /
+// montagne 80 / océan 250 / volcan 15) PUIS preset appliqué (qui pose
+// cap-ocean=0). Contrats par type × seed, r=15 : part de terre dans
+// [24 %, 40 %], au moins 6 masses, masse principale ≤ 25 % de la terre.)
+{
+  const N7 = 15;
+  const uiCaps = { 'Plaine': 200, 'Forêt': 200, 'Désert': 50, 'Marais': 80, 'Montagne': 80, 'Océan': 250, 'Volcan': 15 };
+  const DIRS = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
+  const masses = (m) => {
+    const key = new Map();
+    for (let i = 0; i < m.tiles.length; i++) key.set(m.tiles[i].q + ',' + m.tiles[i].r, i);
+    const land = [];
+    for (let i = 0; i < m.tiles.length; i++) if (m.biome[i] !== 'Océan') land.push(i);
+    const inLand = new Set(land);
+    const seen = new Set(); const sizes = [];
+    for (const st of land) {
+      if (seen.has(st)) continue;
+      let size = 0; const stack = [st]; seen.add(st);
+      while (stack.length) {
+        const c = stack.pop(); size++;
+        const t = m.tiles[c];
+        for (const [dq, dr] of DIRS) {
+          const j = key.get((t.q + dq) + ',' + (t.r + dr));
+          if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
+        }
+      }
+      sizes.push(size);
+    }
+    sizes.sort((a, b) => b - a);
+    return { land: land.length, tot: m.tiles.length, comps: sizes.length, top: sizes[0] || 0 };
+  };
+  const bad = [];
+  for (const type of ['continents', 'islands-large', 'archipelago']) {
+    for (const seed of seeds) {
+      const m = ex.generateMap(N7, seed, presetParams(ex, type, uiCaps));
+      const r = masses(m);
+      const landPct = r.land / r.tot;
+      const topPct = r.top / r.land;
+      if (landPct < 0.24 || landPct > 0.40) bad.push(`${type}/${seed}: terre ${(landPct * 100).toFixed(0)}%`);
+      else if (r.comps < 6) bad.push(`${type}/${seed}: ${r.comps} masses`);
+      else if (topPct > 0.25) bad.push(`${type}/${seed}: masse ${(topPct * 100).toFixed(0)}%`);
+    }
+  }
+  chk('C7 presets insensibles aux caps UI par défaut (3 presets × 5 seeds, r=15)', bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'terre 24-40 %, ≥ 6 masses, masse ≤ 25 % partout');
 }
 
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');
