@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=1" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=4" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -432,7 +432,7 @@
     <div id="biome-counts" style="font-size:10px;color:var(--text-muted);padding:4px 6px;line-height:1.6;display:none;"></div>
     <div class="field">
       <label>Mer</label>
-      <input type="range" id="sealevel" min="25" max="65" value="45">
+      <input type="range" id="sealevel" min="25" max="75" value="45">
       <span class="value" id="sealevel-v">45%</span>
     </div>
     <div class="field" title="Décalage FIN du seuil de la mer, en unités d'élévation — INDEPENDANT du curseur « Mer » (qui fixe la PART de tuiles en océan, en quantile : une carte à 45 % a toujours exactement 45 % d'océan quoi qu'il arrive). « Élévation de la mer » déplace le seuil ABSOLU : négatif = mer globalement plus basse, les hauts-fonds juste sous le seuil deviennent des côtes PARTOUT sur la carte (pas seulement dans un coin) ; positif = mer globalement plus haute (transgression, golfes et baies s'élargissent). 0 = quantile pur, comportement d'origine. Ex. : −0,10 sur une carte à 45 % découvre toutes les zones peu profondes. C'est aussi le mécanisme du cap Océan : quand le plafond est atteint, le seuil baisse GLOBALEMENT au lieu de supprimer des tuiles précises (fini la zone lisse dans un seul coin).">
@@ -492,7 +492,7 @@
         </div>
         <div class="field" title="Plus c'est haut, plus les côtes sont DÉCOUPÉES (péninsules, golfes, presqu'îles). Bas = côtes lisses et rondes.">
           <label>Côtes irrégul.</label>
-          <input type="range" id="e-scale" min="5" max="30" value="18">
+          <input type="range" id="e-scale" min="5" max="40" value="18">
           <span class="value" id="e-scale-v">18</span>
         </div>
         <div class="field" title="Compacité des terres. Haut = continents d'un seul tenant, océans bien dégagés. Bas = archipels, beaucoup de petites îles.">
