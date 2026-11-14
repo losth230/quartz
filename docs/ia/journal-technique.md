@@ -6736,3 +6736,67 @@ DÉPLOYÉ : la preuve ultime d'un tour labo est le site live (curl github.io
 + grep des marqueurs de la nouvelle version). (3) Un cache-buster déjà
 servi avec l'ancien contenu est brûlé : bump d'un cran au correctif
 suivant.
+
+
+## Labo générateur : promotion du labo en officiel — l'arbitre testait sur le générateur OFFICIEL, resté à la génération d'origine (6e retour Thibaut 2026-11-14, base 3b526c2b)
+
+**Retour.** « C'est très bien pour le paramétrage continents, mais
+grandes îles et archipel font toujours apparaître simplement une
+grosse masse de terre. » Le continents validé prouve que l'arbitre a
+bien vu la v14 (6 masses de 33-45 tuiles) ; or le symptôme « une
+grosse masse » ne se reproduisait dans AUCUNE simulation du labo
+v14 : 40 seeds, sea 65-72, rayons 10-18, 5 bruits différents —
+top1 jamais unique, jamais > 62 % (1 seed d'archi à r=12).
+
+**Diagnostic.** Deux générateurs coexistent : le LABO
+(`quartz/static/generateur-carte-labo.html`, 14 commits de
+calibrage) et l'OFFICIEL (`quartz/static/generateur-carte.html`,
+embarqué dans la page Wargame « Générateur de carte » via iframe
+?v=3), fork du 13/11 (5c7ae218) jamais retouché depuis (seul
+cbe01587 : rendu visible du bouton 🧪). L'officiel N'A PAS les
+masques de forme (aucun `mapType` dans son code) : ses presets ne
+poussent que des curseurs. Mesuré (harnais chargé sur l'officiel,
+8 seeds, r=15, presets UI écrêtés) : continents 1 masse à 82-90 %
+de la terre, grandes îles 79-90 % (top1 256-291 tuiles), archipel
+83-93 % — « une grosse masse de terre », mot pour mot. Vérifié par
+ailleurs que le labo est un SUR-ENSEMBLE STRICT de l'officiel
+(toutes fonctions et ids de l'officiel présents au labo ; ne
+manquent que les 2 boutons 🧪 labo, propres à l'officiel) : la
+promotion est une substitution sûre.
+
+Deuxième bug trouvé au passage : **écrêtage des presets par les
+bornes des sliders** — sealevel max 65 (presets 68/66/72 servis à
+65 par le DOM) et e-scale max 30 (fragmented 38 servi à 30). Le
+labo restait correct à 65, mais les presets calibrés au harnais
+n'étaient jamais appliqués exactement par l'UI.
+
+**Ce qui a été fait.** Promotion complète du labo validé (v14) en
+officiel : `quartz/static/generateur-carte.html` = code du labo
+sans bandeau LABO, avec les 2 boutons « 🧪 Labo » de l'officiel
+(href bumpé ?v=16), titre neutre, libellé export JSON neutre. Le
+labo reçoit les mêmes bornes corrigées (sealevel max 75, e-scale
+max 40) et son lien retour est bumpé (?v=4). Cache-busters :
+iframe de la page Wargame ?v=3 → ?v=4, composant jeu
+`CarteLaboView.tsx` ?v=15 → ?v=16.
+
+**Validation.** `node --check` sur les scripts extraits des deux
+fichiers ; harnais 11/11 sur les DEUX fichiers (parties pures
+identiques, marqueur FIN DE LA PARTIE PURE conservé dans
+l'officiel) ; mesure par seed du chemin UI complet (presets +
+nouvelles bornes DOM) : continents 6 masses, top 40-45 tuiles,
+masse max 19 %, terre 32 % ; grandes îles 9-14 îles, top 27-32,
+masse 12-13 %, terre 34 % ; archipel 15-20 îles, masse 6-18 %,
+terre 28 %. Avant/après sur l'officiel : masse dominante 79-93 %
+de la terre → 6-20 masses équilibrées.
+
+**Commits.** feat(wargame) : promotion labo → officiel, bornes de
+sliders sealevel 75 / e-scale 40, cache-busters ?v=4 (page) et
+?v=16 (composant + boutons labo) ; docs(wargame) : journal (ce
+commit).
+
+**Effet pour l'arbitre.** Sur la page Wargame « Générateur de
+carte » (l'officiel, celui de référence, iframe ?v=4) :
+continents / grandes îles / archipel produisent désormais les
+constellations validées au labo — Ctrl+F5 nécessaire pour
+l'iframe. Le labo (bouton 🧪) reste l'outil d'expérimentation et
+sert la même génération que l'officiel jusqu'au prochain fork.
