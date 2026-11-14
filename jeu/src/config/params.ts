@@ -21,10 +21,12 @@ export interface GameParams {
   migrationSuzerain: number
   /** (REFLI) …n'importe quel joueur — plus aucun lecteur. */
   migrationMonde: number
-  /** (Arbitrage Thibaut 2026-10-28) Probabilité MAXIMALE de départ
-   *  par le flux de migration par bonheur — atteinte à 0 de bonheur.
+  /** (Arbitrage Thibaut 2026-10-28, AMENDÉ 2026-11-15 « descendre à
+   *  0-5 % de migration ») Probabilité MAXIMALE de départ par le
+   *  flux de migration par bonheur — atteinte à 0 de bonheur.
    *  Linéaire : p = migrationBonheurMax × (100 − bonheur) / 100
-   *  (0 % à 100 de bonheur, défaut 10 % à 0). */
+   *  (0 % à 100 de bonheur, défaut 5 % à 0 — l'échelle historique
+   *  0-10 % du 2026-10-28 est divisée par deux). */
   migrationBonheurMax: number
   /** (Arbitrage Thibaut 2026-10-29, v3 ADDITIVE au 6e retour du flux :
    *  « la formule se base sur le bonheur et tous les autres
@@ -250,8 +252,11 @@ export const DEFAULT_PARAMS: GameParams = {
   migrationEcole: 0.10,
   migrationSuzerain: 0.02,
   migrationMonde: 0.01,
-  // (Arbitrage Thibaut 2026-10-28 — flux de migration par bonheur)
-  migrationBonheurMax: 0.10,
+  // (Arbitrage Thibaut 2026-10-28 — flux de migration par bonheur ;
+  //  AMENDÉ 2026-11-15 : « au lieu de faire 0-10 % entre 100 et 0 de
+  //  bonheur, j'aimerais descendre à 0-5 % de migration » — la proba
+  //  max passe de 10 % à 5 %, migration ciblée migrationBonheurDemi2026)
+  migrationBonheurMax: 0.05,
   // (v3 ADDITIVE, 6e arbitrage Thibaut 2026-10-29 : bonus ADDITIFS sur
   //  la base d'attrait du bonheur — les multiplicatifs v2 ×1,25/×1,5
   //  et les ×1,5 emploi/logement du 5e retour sont REMPLACÉS)
@@ -394,7 +399,7 @@ export const PARAM_META: {
   //  migrationEcole/Suzerain/Monde ne sont plus éditables ici et
   //  restent comme REFLIS de compatibilité. Remplacée le jour même
   //  par le flux de migration par BONHEUR ci-dessous.)
-  { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
+  { key: 'migrationBonheurMax', label: 'Migration par bonheur — proba de départ à bonheur 0', groupe: 'Population', unite: 'proba', aide: 'Linéaire : p = proba max × (100 − bonheur)/100 — 0 % à 100 de bonheur. Défaut 5 % à 0 de bonheur (arbitrage 2026-11-15 : l\'échelle historique 0-10 % du 2026-10-28 est divisée par deux). Chaque habitant vivant (sauf Dirigeant/Héritier) peut quitter sa ville à chaque fin de tour, vers une ville du monde tirée au hasard pondéré (culture, bonheur).' },
   { key: 'migrationBonheurCulture', label: 'Migration par bonheur — bonus d\'une ville de SA culture', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : la formule se base sur l\'attrait du bonheur (×[1 ; 2]) et tous les autres modificateurs S\'ADDITIONNENT — +0,25 (défaut) pour une ville de la culture du migrant, +0,5 pour une ville du même joueur, +1 emploi/logement pour qui manque. Culture + même joueur = attrait × 1,75.' },
   { key: 'migrationBonheurMemeJoueur', label: 'Migration par bonheur — bonus d\'une ville du MÊME joueur', groupe: 'Population', aide: 'Pondération v3 ADDITIVE (retour 2026-10-29) : +0,5 (défaut) pour une ville du même joueur que le migrant — la migration interne est privilégiée en S\'ADDITIONNANT aux autres bonus sur la base d\'attrait du bonheur. NB : un migrant peut revenir vers une ville d\'où il vient (retour légitime).' },
   { key: 'migrationBonheurEmploi', label: 'Migration par bonheur — bonus d\'une ville avec des EMPLOIS disponibles', groupe: 'Population', aide: 'Bonus ADDITIF (retour 2026-10-29, v3) : +1 (défaut) pour une ville candidate aux postes non pourvus SI le migrant est sans métier — la ville pèse ×2 pour un chômeur. S\'additionne avec même joueur, culture et logement sur la base d\'attrait du bonheur.' },

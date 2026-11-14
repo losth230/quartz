@@ -10,8 +10,10 @@
 //   · PROBA DE DÉPART — LINÉAIRE, retour explicite Thibaut : « entre
 //     0 % et 10 %, le 10 % étant à 0 de bonheur et le 0 % à 100 » —
 //       p = migrationBonheurMax × (100 − bonheur) / 100
-//     soit à défauts (0,10) : 0 % à 100 de bonheur, 5 % à 50,
-//     10 % à 0. Un tirage PAR HABITANT vivant, à chaque fin de tour.
+//     Arbitrage 2026-11-15 (« descendre à 0-5 % de migration ») :
+//     l'échelle est DIVISÉE PAR DEUX, défaut 0,05 — soit 0 % à 100
+//     de bonheur, 2,5 % à 50, 5 % à 0. Un tirage PAR HABITANT
+//     vivant, à chaque fin de tour.
 //   · DESTINATIONS — TOUTES les villes du monde, tous joueurs : un
 //     habitant change de joueur au besoin (transfert physique de
 //     son tableau de population, même principe que l'ancienne
@@ -110,7 +112,9 @@ import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bon
 import { updateCityCultures } from './culture'
 
 /** Probabilité qu'un habitant quitte sa ville : LINÉAIRE en bonheur
- *  (arbitrage Thibaut 2026-10-28 : 0 % à 100, max à 0). Pure. */
+ *  (arbitrage Thibaut 2026-10-28 : 0 % à 100, max à 0 ; échelle
+ *  divisée par deux le 2026-11-15 : défaut 0,05, soit 2,5 % à 50
+ *  de bonheur et 5 % à 0). Pure. */
 export function probaDepartBonheur(bonheur: number, C: Cfg): number {
   return Math.max(0, (C.p.migrationBonheurMax * (100 - bonheur)) / 100)
 }

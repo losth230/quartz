@@ -712,6 +712,15 @@ export interface GameConfig {
    *  dépouillée ; conversionTaux vient de mergeParams. Migration
    *  ciblée (cfgOf), indépendante du tampon schemaVersion. */
   conversionTaux2026?: boolean
+  /** Migration par bonheur divisée par deux (arbitrage Thibaut
+   *  2026-11-15 « descendre à 0-5 % de migration ») : le défaut
+   *  de migrationBonheurMax passe de 0,10 (échelle 0-10 % du
+   *  2026-10-28) à 0,05 (5 % à 0 de bonheur, 2,5 % à 50,
+   *  0 % à 100). Migration ciblée (patron taxes25, SANS bump du
+   *  tampon schemaVersion) : seule une valeur ENCORE À L'ANCIEN
+   *  DÉFAUT (0,10) est ramenée à 0,05 — une personnalisation est
+   *  conservée. */
+  migrationBonheurDemi2026?: boolean
   // (muraille40_2026 / slotsVides2026 retirés le 2026-10-24 : migrations
   //  ciblées des TECHS de progrès, supprimées avec le système.)
   /** Suppression de la martialité (arbitrage Thibaut 2026-10-21) :
@@ -2221,6 +2230,19 @@ export function cfgOf(config?: GameConfig): Cfg {
     const pm = merged.params as unknown as Record<string, unknown>
     delete pm.conversionMax
     merged.conversionTaux2026 = true
+  }
+  // (Arbitrage Thibaut 2026-11-15 — « descendre à 0-5 % de
+  //  migration » : le défaut de migrationBonheurMax passe de 0,10
+  //  à 0,05. Migration ciblée (patron taxes25, SANS bump du
+  //  tampon schemaVersion — règle (x)) : SEULE une valeur encore
+  //  égale à l'ancien défaut 0,10 est ramenée au nouveau défaut
+  //  0,05 ; une valeur PERSONNALISÉE est conservée telle quelle.
+  //  Le défaut neuf vient aussi de mergeParams/DEFAULT_PARAMS pour
+  //  les nouvelles parties. Marquée migrationBonheurDemi2026.)
+  if (!merged.migrationBonheurDemi2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    if (pm.migrationBonheurMax === 0.10) pm.migrationBonheurMax = 0.05
+    merged.migrationBonheurDemi2026 = true
   }
   // SUPPRESSION DE LA MARTIALITÉ (arbitrage Thibaut 2026-10-21) :
   //  l'hérédité est conservée, mais la martialité disparaît du jeu —

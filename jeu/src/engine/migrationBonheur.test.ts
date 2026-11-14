@@ -74,13 +74,13 @@ function villeTest(nom: string, culture?: string): City {
 
 // ── Formules pures ──────────────────────────────────────────────────
 
-test('proba de départ : LINÉAIRE — 0 % à 100 de bonheur, max à 0, moitié à 50', () => {
+test('proba de départ : LINÉAIRE — 0 % à 100 de bonheur, max à 0, moitié à 50 (arbitrage 2026-11-15 : échelle 0-5 %)', () => {
   const { C } = partie()
-  C.p.migrationBonheurMax = 0.10
+  assert.equal(C.p.migrationBonheurMax, 0.05, 'nouveau défaut 0,05 (arbitrage 2026-11-15)')
   assert.equal(probaDepartBonheur(100, C), 0, '0 % à 100 de bonheur (retour arbitre)')
-  assert.equal(probaDepartBonheur(0, C), 0.10, '10 % à 0 de bonheur (retour arbitre)')
-  assert.ok(Math.abs(probaDepartBonheur(50, C) - 0.05) < 1e-12, '5 % à 50')
-  assert.equal(probaDepartBonheur(75, C), 0.025, '2,5 % à 75')
+  assert.equal(probaDepartBonheur(0, C), 0.05, '5 % à 0 de bonheur (échelle divisée par deux)')
+  assert.ok(Math.abs(probaDepartBonheur(50, C) - 0.025) < 1e-12, '2,5 % à 50')
+  assert.equal(probaDepartBonheur(75, C), 0.0125, '1,25 % à 75')
   C.p.migrationBonheurMax = 0
   assert.equal(probaDepartBonheur(0, C), 0, 'proba max nulle = flux coupé')
 })
@@ -273,9 +273,9 @@ test('couples inséparables : conjoint ANCRÉ (Dirigeant/Héritier/en armée) �
   assert.ok(!state.log.some((e) => e.texte.includes('Pers-e1') || e.texte.includes('Pers-s1') || e.texte.includes('Pers-k1')), 'aucun départ journalisé pour le foyer, le soldat ou l enfant')
 })
 
-test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les premiers tours', () => {
+test('flux : aux DÉFAUTS (0,05), une partie réelle voit des départs tôt (arbitrage 2026-11-15)', () => {
   const { state, C } = partie(20261101)
-  assert.equal(C.p.migrationBonheurMax, 0.10)
+  assert.equal(C.p.migrationBonheurMax, 0.05)
   assert.equal(C.p.migrationBonheurCulture, 0.25)
   assert.equal(C.p.migrationBonheurMemeJoueur, 0.5)
   assert.equal(C.p.migrationBonheurEmploi, 1)
@@ -283,9 +283,9 @@ test('flux : aux DÉFAUTS (0,10), une partie réelle voit des départs dès les 
   // au setup : villes sans bâtiments → bonheur d'emblée < 100
   const b0 = bonheurVilleComplete(state, state.players[0], state.players[0].villes[0], C)
   assert.ok(b0 < 100, `le bonheur initial est dégradé (${b0}/100) — le flux a prise`)
-  for (let t = 0; t < 3; t++) migrationBonheur(state, makeRng(1000 + t))
+  for (let t = 0; t < 8; t++) migrationBonheur(state, makeRng(1000 + t))
   const logs = state.log.filter((e) => e.texte.includes('cherche meilleure vie'))
-  assert.ok(logs.length > 0, 'au moins un départ en 3 tours aux défauts (graine fixe)')
+  assert.ok(logs.length > 0, 'au moins un départ en 8 tours aux nouveaux défauts (graine fixe)')
 })
 
 // ── Facteurs emploi & logement (5e arbitrage, 2026-10-29) ──────────
