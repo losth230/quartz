@@ -7006,3 +7006,17 @@ VÉRIFICATIONS : 375/375 tests natifs (374 + 1 nouveau) ; diag
 régénéré, 0 diff avec la tête (non inclu au feat) ; 4 fichiers du
 feat vérifiés par curl raw.githubusercontent + cmp, identiques au
 bit près ; règles appendées puis vérifiées identiques.
+
+SUITE (déploiement Edge, même session) : le run Deploy Edge Function
+de 312982a9 a échoué pour une cause TRANSITOIRE — annotation :
+« Failed to resolve latest Supabase CLI release: rate limit
+exceeded » (limite d’API GitHub au setup de la CLI Supabase, aucun
+rapport avec le code) ; l’Edge vivait encore avec le comportement
+précédent (Or sur les déménagements internes). Relancé par 1845a58d
+(fix de doc : le commentaire du canal dans tour.ts précise
+« migrant d’un AUTRE joueur ») — Deploy Edge Function SUCCESS,
+l’Edge vit avec l’arbitrage du jour. ÉTAT FINAL sur 1845a58d :
+CI jeu success (375/375), Pages success — bundle live
+index-DO4qfapD.js, marqueurs vérifiés (terreAccueil ×2, loi
+« migrant d’un autre joueur arrive »). Tête : feat 312982a9 →
+règles c6b796fc → journal 74ccafbe → fix 1845a58d → ce journal.
