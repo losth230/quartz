@@ -3120,3 +3120,37 @@ crédite AUCUN Or — ni stock, ni log, ni canal ; le setup du test
 neutralise les 8 joueurs par défaut du setup standard par des
 soldats, la seule destination aux lits libres est la seconde ville
 du joueur Socialisme).
+
+## 2026-11-14 — Le Bétail ne produit PAS de Nourriture (arbitrage Thibaut)
+
+**Contexte** (enquête « les changements de nourriture ne sont jamais
+ceux affichés dans la barre des ressources ») : le moteur créditait,
+depuis la revue de valeurs du 2026-10-16, un bonus caché « chaque unité
+de Bétail en stock rapporte 4 Nourriture par tour » dans le canal
+« autres » du récap (`appliquerEffetsAutres`), sans que ce revenu
+n’apparaisse nulle part dans la barre de ressources
+(`productionDetaillee` calcule le canal « autres » sur les seules
+lignes « Autres » des villes). Résultat en partie réelle L2 : jusqu’à
++161 Nourriture/tour crédités au J2 (Bétail fin de tour × 4, vérifié
+tour par tour sur les 42 tours de l’historique) jamais affichés —
+l’écart barre vs réel croissait à chaque tour.
+
+**Arbitrage** : « le bétail ne produit pas de nourriture, ça n’a jamais
+été demandé » (Thibaut, 2026-11-14). Le bonus est RETIRÉ du moteur :
+le canal « autres » ne porte plus que les lignes « Autres » du
+classeur (nombre × bonus par ville). La fonction `nourritureBetail`
+est supprimée d’`economie.ts`. Barre, récap et stock réels sont
+désormais cohérents pour ce canal.
+
+**Règle** : le Bétail en stock ne produit rien par tour ; sa seule
+valeur est celle des lignes « Autres » des villes et des effets qui
+le consomment (habitations, sacres, etc.).
+
+**Note d’enquête** (pour mémoire, aucun changement de règle) : les
+autres écarts Nourriture observés historiquement (J1 T6-T27, J2 T5-T17)
+sont des dépenses/trades CLIENT (commerce, constructions — jamais
+tracés dans la barre ni le récap, même pattern que pour l’Or) ; les
+sacres de rang de pays (40/60/100/200 Nourriture) ne sont pas en cause
+(les deux joueurs sont Baronnie). Le détail de timing « le bonus était
+calculé sur le Bétail de FIN de tour » devient sans objet après le
+retrait.
