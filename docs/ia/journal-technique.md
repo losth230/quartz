@@ -6831,3 +6831,83 @@ build ») ; bundle live index-CM3MCDYK.js vérifié : « Vous êtes
 Joueur » ×1, « (vous) » ×1 (bandeau — le commentaire JSX est
 strippé), « Mon n° de joueur » ×2 (info-bulle + SetupPanel),
 « Tour de Crystal » ×10 (merveilles intactes).
+
+
+## Cultures invisibles dans les villes : la conversion culturelle joue désormais AVANT la migration (retour Thibaut 2026-11-14 « J1 attire les habitants de J2, qui sont zélotes, mais pourtant il n'y a que des culturalistes dans sa ville », base 0c685ed1, feat b8f18241, règles d943ee68)
+
+SYMPTÔME (salon chasse-pecheL2, tours 5-7, rapport Thibaut :
+« le rework de la culture semble avoir fait planter les cultures
+présentes au sein d'une ville »). J1 attire manifestement des
+habitants de J2 (zélotes), mais sa capitale n'affiche QUE du
+Communautarisme — la minorité zélote attendue est invisible.
+
+DIAGNOSTIC (données réelles du salon, fetch dans salon-L2.json +
+lecture du moteur) :
+- L'attraction est RÉELLE. Journal L2 : T5 Zebar, Lulu et Horu
+  quittent J1 pour J2 (bonheur 68) ; T6 Florine arrive chez J1
+  (bonheur 75) ; T7 Guillemette, Charlemagne et Horu arrivent chez
+  J1 (bonheur 77). Rostres croisés confirmés dans les tableaux
+  population : p2c5/p2c14 hébergés par J1, p1c3/p1c5/p1c18/p1c23
+  hébergés par J2 (les migrants gardent leur id de roster d'origine).
+- Mais chaque arrivant est converti le tour MÊME de son arrivée :
+  la conversion culturelle V2 (rework « Pression/Ancrage » du
+  2026-11-14) vivait dans la phase B des naissances, APRÈS le flux de
+  migration (étape 4bis). Un migrant isolé n'a AUCUN compatriote
+  dans sa ville d'accueil : ancrage = poids local × compatriotes =
+  0 ; la force dominante l'emporte dans le duel, et le cap (10 % des
+  vivants, minimum 1 par ville et par tour) garantit la bascule.
+  Journaux L2 : Florine « quitte Capitale » T6 puis « se convertit au
+  Communautarisme » T6 ; Guillemette, Charlemagne et Horu idem T7.
+  Les deux capitales sont culturellement PURES (66 et 74 vivants,
+  100 % chacun) : aucune minorité n'a jamais été publiée.
+- Le rework V2 avait arbitré « un isolé bascule avant une communauté
+  » ; son interaction avec la migration par bonheur (#28) n'avait
+  jamais été arbitrée : les deux mécaniques se neutralisaient.
+
+ARBITRAGE THIBAUT (2026-11-14) : « un habitant qui arrive dans une
+nouvelle ville garde sa culture d'origine, je propose d'inverser et
+rendre la conversion culturelle avant les migrations ». Implémenté
+littéralement : la conversion devient l'étape 4bis du tour, la
+migration passe 4ter, la phase B des naissances devient 4quater.
+Séquence finale : morts (phase A) → conversions (4bis) → départs
+(4ter) → naissances (phase B). L'arbitrage 2026-11-11 « les morts et
+départs avant les naissances » est conservé. Un arrivant garde sa
+culture le tour de son arrivée et redevient éligible à la conversion
+au tour suivant — l'assimilation est différée d'un tour, pas
+supprimée (un isolé d'ancrage 0 bascule toujours à J+1 tant que sa
+communauté ne pèse pas assez).
+
+FICHIERS : tour.ts (étape 4bis insérée, registre ETAPES_TOUR 20 → 21
+étapes : « Moteur de population — phase A », « Conversions
+culturelles », « Migration par bonheur »), population.ts
+(applyCultureInfluence retiré de la phase B, updateCityCultures
+conservé APRÈS les naissances — un nouveau-né porte la culture de sa
+mère : la minorité d'un arrivant peut croître par les naissances),
+migrationBonheur.ts (en-tête PLACEMENT réécrit), tour.test.ts
+(registre verrouillé à 21 étapes), migrationBonheur.test.ts (test de
+non-régression : rouge sur l'ordre ancien vérifié en restaurant les
+fichiers d'origine, vert sur le nouveau), regression.test.ts (voir
+ci-dessous), diag-out.txt (trajectoire rng décalée).
+
+INCIDENT ANNEXE — test de déterminisme : le réordonnancement décale
+le flux rng (les tirages « plancher 1 % » des villes pures sont
+consommés avant les naissances au lieu d'après) ; au tour 1 de la
+graine du test, des naissances surviennent désormais — et le test
+« 2 tours comparés au bit près » a révélé un défaut latent : newId
+(shared.ts) embarque Date.now() (voulu pour l'unicité des ids en
+partie réelle) ; le test ne passait que parce qu'aucune naissance
+ne survenait au premier tour de cette graine. Corrigé côté test :
+determiniserIds() réécrit les ids « c… » (et leurs références
+mariageId/mereId/pereId/pereBioId) en ids déterministes avant la
+comparaison — le flux rng reste comparé au bit près. Aucun
+changement moteur.
+
+VÉRIFICATIONS : 372/372 tests natifs (371 + 1 nouveau, node
+--experimental-strip-types, stub @supabase recréé dans le sandbox
+après réinitialisation) ; test d'ordre rouge/vert vérifié ; diag
+régénéré : log 427 → 647 entrées sur 4 tours, composition saine
+(436 naissances, 31 conversions, 57 « cherche meilleure vie »,
+aucun spam — la graine du diag change de trajectoire, rien de
+pathologique) ; tsc validé par le build du déploiement Pages
+(« tsc && vite build ») ; sandbox sans npm install (tsc local
+impossible, stub typescript).
