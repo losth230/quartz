@@ -419,5 +419,74 @@ if (ex.encodeShare) {
     bad.slice(0, 4).join(', ') || 'monotone partout, budget des bosses constant, masse ≤ 40 %');
 }
 
+// C9 : BRUIT POSITIONNEL (11e retour Thibaut 2026-11-14 : « la distance
+//  entre les masses semble figée » — demande : « un gros bruit »). Les
+//  masses ne sont plus sur une rosace figée : COUNT tiré par graine
+//  (×0.80-×1.00 : 5-6 continents, 7-11 grandes îles, 14-18 îles
+//  d'archipel), SEP tiré par graine (×0.95-×1.30 : rayon d'anneau et
+//  capacités de couronnes variables), jitter de placement ADAPTATIF
+//  borné par le mou réel (gap − corde anti-soudure 3.25σ̂), et
+//  compensation des masses abandonnées (élargissement √count/posés :
+//  sans elle le quantile plonge dans le fond et soude les masses).
+//  Contrats, par type à bosses × 8 seeds, r=15, preset défaut :
+//  a) PAS DE SOUDURE : distance min entre centroïdes des masses
+//     (comps ≥ 15 tuiles ; archipel : ≥ 8 et non-îlet, i.e. pas
+//     entièrement au-delà de 10 pas du centre) ≥ 0.95 × corde
+//     anti-soudure 3.25σ̂ (continents 13.3, grandes îles 9.3,
+//     archipel 6.7 px) ;
+//  b) VARIÉTÉ STRUCTURELLE : le nombre de masses prend ≥ 2 valeurs
+//     distinctes sur les 8 seeds pour chacun des 3 types — deux cartes
+//     de même preset ne se ressemblent plus mécaniquement.
+{
+  const N9 = 15;
+  const DIRS9 = [[1,0],[-1,0],[0,1],[0,-1],[1,-1],[-1,1]];
+  const minDist = { continents: 13.3, 'islands-large': 9.3, archipelago: 6.7 };
+  const minSize = { continents: 15, 'islands-large': 15, archipelago: 8 };
+  const bad = [];
+  const counts = { continents: new Set(), 'islands-large': new Set(), archipelago: new Set() };
+  for (const type of ['continents', 'islands-large', 'archipelago']) {
+    for (const seed of seeds) {
+      const m = ex.generateMap(N9, seed, presetParams(ex, type, null));
+      const key = new Map();
+      for (let i = 0; i < m.tiles.length; i++) key.set(m.tiles[i].q + ',' + m.tiles[i].r, i);
+      const land = [];
+      for (let i = 0; i < m.tiles.length; i++) if (m.biome[i] !== 'Océan') land.push(i);
+      const inLand = new Set(land);
+      const seen = new Set(); const masses9 = [];
+      for (const st of land) {
+        if (seen.has(st)) continue;
+        let size = 0, sx = 0, sy = 0, dmin = 99; const stack = [st]; seen.add(st);
+        while (stack.length) {
+          const c = stack.pop(); size++;
+          const t = m.tiles[c];
+          sx += Math.sqrt(3) * (t.q + t.r / 2); sy += 1.5 * t.r;
+          const d = Math.max(Math.abs(t.q), Math.abs(t.r), Math.abs(t.q + t.r));
+          if (d < dmin) dmin = d;
+          for (const [dq, dr] of DIRS9) {
+            const j = key.get((t.q + dq) + ',' + (t.r + dr));
+            if (j !== undefined && inLand.has(j) && !seen.has(j)) { seen.add(j); stack.push(j); }
+          }
+        }
+        // masse = assez grosse, et pas un îlet (un îlet est entièrement
+        // au-delà de 10 pas du centre — définition du C6)
+        if (size >= minSize[type] && dmin < 10) masses9.push({ cx: sx / size, cy: sy / size });
+      }
+      counts[type].add(masses9.length);
+      let dminAll = Infinity;
+      for (let i = 0; i < masses9.length; i++)
+        for (let j = i + 1; j < masses9.length; j++) {
+          const d = Math.hypot(masses9[i].cx - masses9[j].cx, masses9[i].cy - masses9[j].cy);
+          if (d < dminAll) dminAll = d;
+        }
+      if (masses9.length < 2) bad.push(type + '/' + seed + ': ' + masses9.length + ' masse(s)');
+      else if (dminAll < minDist[type]) bad.push(type + '/' + seed + ': minD ' + dminAll.toFixed(1) + ' < ' + minDist[type]);
+    }
+  }
+  for (const type of ['continents', 'islands-large', 'archipelago'])
+    if (counts[type].size < 2) bad.push(type + ': count figé (' + [...counts[type]].join(',') + ')');
+  chk('C9 bruit positionnel (3 presets × 8 seeds, r=15 : pas de soudure à ≥ 0.95×3.25σ̂, count variable par graine)', bad.length === 0,
+    bad.slice(0, 4).join(', ') || 'minD ≥ corde, counts variables par type');
+}
+
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');
 process.exit(failures ? 1 : 0);

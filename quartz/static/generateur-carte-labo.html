@@ -333,7 +333,7 @@
 </style>
 <canvas id="map"></canvas>
 
-<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=8" title="Revenir à la version officielle">↩ officiel</a></div>
+<div id="labo-banner"><span class="labo-tag">🧪 LABO</span> bac à essai de génération — cartes non officielles · <a href="generateur-carte.html?v=9" title="Revenir à la version officielle">↩ officiel</a></div>
 
 <div id="info" class="panel"></div>
 
@@ -1438,6 +1438,13 @@ function generateMap(N, seedStr, params) {
   //  2.35σ d'un centre déjà posé : l'espacement est garanti par
   //  construction, sans anneaux réguliers visibles.
   function islandArchipel(count, sigRel, amp, rMin, rMax, floorBias, sepFact, dipAmp, dipRRel, edgeL, isletAmp) {
+    // (11e retour Thibaut 2026-11-14 : « la distance entre les masses
+    //  semble figée ») — COUNT tiré par graine (×0.80-×1.00) : 5-6
+    //  continents, 9-11 grandes îles, 14-18 îles d'archipel, des
+    //  STRUCTURES différentes d'une carte à l'autre. Le facteur est
+    //  tiré par APPEL : le curseur « Taille masses » (count × m) reste
+    //  monotone en m à graine fixée (harnais C8).
+    count = Math.max(2, Math.round(count * (0.80 + 0.20 * randShape())));
     // dipAmp/dipRRel (4e retour) : creux central explicite. Sans lui, une
     // bosse posée à rMin avec σ ~ rMin/1.3 déverse son PLATEAU sur le
     // centre (contribution exp(−(1.3)⁴/2) ≈ 0.33·amp — mesuré : centre
@@ -1462,7 +1469,19 @@ function generateMap(N, seedStr, params) {
     // ~6 px du centre pour un plateau qui s'étend à 26 px) : masses
     // compactes centrales et soudées, mesuré sur tous les essais.
     const RPX = N * 1.6;
-    const sep = (sepFact || 2.75) * sigRel * RPX;
+    // (11e retour) SEP tiré par graine (×0.95-×1.30) : le rayon de
+    //  l'anneau (continents, count 5 : 12.6-14.9 px) et les capacités
+    //  des couronnes varient d'une carte à l'autre (grandes îles :
+    //  6-9 bosses par couronne extérieure) — des cartes resserrées,
+    //  d'autres aérées.
+    const sepMul = 0.95 + 0.35 * randShape();
+    const sep = (sepFact || 2.75) * sepMul * sigRel * RPX;
+    // CORDE ANTI-SOUDURE (3.25σ) : sous cette distance entre centres,
+    //  les queues super-gaussiennes se somment au point médian et
+    //  franchissent le seuil (mesuré à 2.6σ : paires soudées de 80-92
+    //  tuiles ; le calibrage historique tenait 3.3σ sans soudure sur
+    //  8 seeds). Sert de plancher à l'anneau et de référence au jitter.
+    const weldC = 3.25 * sigRel * RPX;
     const a0 = randShape() * Math.PI * 2;
     // Mode de placement : count ≤ 6 → ANNEAU équiréparti auto-calibré
     // (r_ring = sep / 2·sin(π/count), l'espacement angulaire couvre la
@@ -1485,6 +1504,10 @@ function generateMap(N, seedStr, params) {
     const targets = [];
     if (ringMode) {
       let rRing = sep / (2 * Math.sin(Math.PI / count));
+      // (11e) à count réduit l'anneau peut rétrécir (variété) mais
+      //  JAMAIS sous la corde anti-soudure 3.25σ (marge 5 % pour le
+      //  jitter de σ et le warp de dentelle).
+      rRing = Math.max(rRing, weldC * 1.05 / (2 * Math.sin(Math.PI / count)));
       rRing = Math.max(rMin * RPX, Math.min(rMax * RPX, rRing));
       for (let k = 0; k < count; k++)
         targets.push({ ang: a0 + k * Math.PI * 2 / count, rad: rRing, gap: 0.98 * 2 * rRing * Math.sin(Math.PI / count) });
@@ -1543,16 +1566,39 @@ function generateMap(N, seedStr, params) {
       const t = targets[k];
       const rejD = Math.min(sep, t.gap);
       const rejD2 = rejD * rejD;
-      // jitter borné + rejet par collision en « MEILLEUR des essais » :
-      // si aucun essai n'est libre, on garde le plus éloigné des spots
-      // déjà posés (garder le DERNIER essai plaquait deux bosses l'une
-      // sur l'autre — mesuré : aire ÷ 3).
-      let bestX = 0, bestY = 0, ok = false;
-      let bestD2 = -1;
+      // (11e retour) GROS BRUIT positionnel ADAPTATIF : le rejet de
+      //  collision reste le plancher dur, et le jitter est borné par
+      //  le MOU réel (gap − corde anti-soudure weldC) — à
+      //  configuration saturée (6 continents : mou ~0.5 px) il
+      //  retombe au niveau du calibrage historique ; à count réduit
+      //  ou couronne lâche il monte à ±5-13° et les distances
+      //  VARIENT réellement. SÉCURITÉ ANTI-SOUDURE (leçon du 4e
+      //  retour, rejouée aux deux premiers essais de ce 11e : un
+      //  repli « au hasard des essais » ou « cible exacte contre un
+      //  voisin jitteré » pose des bosses à 2.6σ dont les queues se
+      //  soudent — 80 à 231 tuiles mesurées) : le repli prend le
+      //  PLUS ÉLOIGNÉ du tissu posé entre la CIBLE EXACTE et le
+      //  meilleur essai — tous deux dans le budget de jitter, donc
+      //  à ≥ weldC : au pire un détroit étroit, jamais une soudure.
+      let ok = false;
+      let bestX = t.rad * Math.cos(t.ang), bestY = t.rad * Math.sin(t.ang);
+      let bestD2 = Infinity;
+      for (const s of spots) {
+        const dd = (s.cx - bestX) * (s.cx - bestX) + (s.cy - bestY) * (s.cy - bestY);
+        if (dd < bestD2) bestD2 = dd;
+      }
+      const slack = Math.max(0, t.gap - weldC);
+      const jitA = t.rad > 0 ? Math.min(0.25, 0.7 * slack / t.rad) : 0;
+      const jitR = t.rad > 0 ? Math.min(0.10, 0.3 * slack / t.rad) : 0;
       for (let tries = 0; tries < 24 && !ok; tries++) {
-        const ang = t.ang + 0.06 * (randShape() - 0.5) + tries * 0.09;
-        const bx = t.rad * Math.cos(ang);
-        const by = t.rad * Math.sin(ang);
+        const ang = t.ang + jitA * (randShape() - 0.5);
+        let radTry = t.rad;
+        if (jitR > 0) {
+          radTry = t.rad * (1 + jitR * (randShape() - 0.5));
+          radTry = Math.max(rMin * RPX, Math.min(rMax * RPX, radTry));
+        }
+        const bx = radTry * Math.cos(ang);
+        const by = radTry * Math.sin(ang);
         let d2min = Infinity;
         for (const s of spots) {
           const d2 = (s.cx - bx) * (s.cx - bx) + (s.cy - by) * (s.cy - by);
@@ -1570,6 +1616,23 @@ function generateMap(N, seedStr, params) {
         s: sigRel * RPX * (0.95 + 0.12 * randShape()),
         a: amp * (0.9 + 0.2 * randShape())
       });
+    }
+    // (11e retour) COMPENSATION DES MASSES ABANDONNÉES : quand la
+    //  structure (capacité des couronnes au rayon/sep tirés par
+    //  graine) pose MOINS de masses que le count demandé, les
+    //  bosses restent dimensionnées pour le count complet alors que
+    //  le seuil de terre est un QUANTILE GLOBAL : il descend
+    //  chercher son budget dans le FOND de bruit, et les plaques du
+    //  fond soudent les masses entre elles (mesuré : Grandes
+    //  îles/grimoire, 7 bosses posées au lieu de 9 → pont centre →
+    //  bord de 78 tuiles, masse 32 %). On élargit les bosses posées
+    //  du ratio d'aire (√count/posés, borné ×1.35) : la couverture
+    //  des bosses absorbe le budget, le seuil remonte au-dessus du
+    //  fond. À count respecté (anneau des continents, couronnes
+    //  non saturées) : facteur 1, no-op exact.
+    if (spots.length < count) {
+      const grow = Math.min(1.35, Math.sqrt(count / spots.length));
+      for (const s of spots) s.s *= grow;
     }
     // (10e retour Thibaut 2026-11-14 : « pas toutes les îles au bord — du
     //  bruit, des îles par ci et par là ») — ÎLETS ÉPARSES : petites
