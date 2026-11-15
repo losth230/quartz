@@ -3361,3 +3361,32 @@ plafonné à 100.
 Au passage corrigé par la même règle : le dogme de la Liberté
 (effet `bonheurVille`, +10 dans les villes de la culture
 porteuse) n'apparaissait pas non plus dans l'affichage.
+
+## 2026-11-15 (suite 3) — Productions réelles des métiers affichées dans la page Population
+
+**Retour Thibaut** : « il faudrait que les productions réelles des
+métiers des joueurs soient affichées dans la page population ».
+
+**Règle** : la carte « 🏘️ Métiers et places par ville » de la page
+Population porte une colonne « Production / tour » : pour chaque
+métier de chaque ville, la production brute RÉELLE par tour — LA
+valeur du moteur, pas un recalcul parallèle. Source : le canal
+`parMetier` de `detailGainsVille` (economie.ts), décomposition PAR
+MÉTIER du canal `metiers` existant : saison courante appliquée (le
+Fermier ne produit qu'en été), fiche × multiplicateur de rang
+social (bourgeois ×1,5, noble ×1,5) × bonus guildes tier 3 (Guilde
+des marins +0,5 Or/Commerçant…) × merveilles mondiales (Sanctuaire
+de Salmodiva +2 Nourriture/Fermier en été…) × champs nourriciers
+(Naturalisme +1/Fermier en été), AVANT taxes. « — » = ne produit
+rien dans les conditions actuelles (métier absent du canal, ex.
+Fermier hors été ; enfant ; métier non productif). La ligne
+Sans-emploi ne montre une production QUE si le dogme du Travail
+(travailNourriture) crédite les sans-emplois. Les cités libres
+n'ont pas de production créditée par le moteur (colonne vide) ;
+les taxes et le net restent dans le détail de la carte de ville.
+
+**Invariants (test de garde)** : la somme des ressources du canal
+parMetier, tous métiers confondus, égale EXACTEMENT le canal
+metiers commun — chaque crédit passe par le même helper (aucun
+double comptage possible) ; Fermier présent en été (+20 × nb),
+absent hors été ; Pêcheur +6 toute l'année.
