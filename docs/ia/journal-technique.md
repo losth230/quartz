@@ -7446,3 +7446,35 @@ npx tsc --noEmit) — esbuild/tsc non installables localement
 (paquets interdits dans le sandbox).
 
 Tête : feat 50d2fa02 → règles f8a0eb78 → ce journal.
+
+## 2026-11-15 (suite 3, post-scriptum) — Les 2 fixes de typecheck CI du feat 50d2fa02
+
+Le feat des productions réelles (50d2fa02) a échoué DEUX FOIS au
+typecheck strict de la CI (ci-jeu, npx tsc --noEmit) — les tests
+moteurs locaux ne voient PAS ces erreurs : les composants .tsx ne
+sont pas exécutés par la suite node, et tsc n'est pas installable
+localement (paquets interdits dans le sandbox). Leçons consignées.
+
+**Fix 1 (ee392fba)** : la prop `player` était typée dans le type
+inline des props de CarteMetiersPlaces mais ABSENTE du
+destructuring → `Cannot find name 'player'` dans le corps.
+(TS2304.)
+
+**Fix 2 (6d97824e)** : accolade FERMANTE EN TROP dans la fermeture
+du map villesOcc — l'ancien code refermait par `))` (map à corps
+parenthésé implicite) ; en passant à un corps EN ACCOLADES avec
+`return (`, la fermeture `})}` de la ligne intermédiaire ferme le
+corps de l'arrow (v) et il ne restait que `)}` à écrire, pas
+`})}`. TS1005 « Unexpected token. Did you mean {'}'} » + « ','
+expected », l. 116. Diagnostic via les ANNOTATIONS des check-runs
+de l'API GitHub (check-runs/{id}/annotations — les logs bruts
+exigent des droits admin, les badges SVG et la page du run sont
+trompeurs/JS-rendered, l'API publique est vite rate-limitée).
+
+Après les 2 fixes : typecheck, tests (384), bundle Edge, diag et
+Pages TOUS VERTS sur 6d97824e ; bundle live renouvelé
+(index-BjuG554r.js). Les runs « failure » sur 50d2fa02, ed8655cf
+et ee392fba sont historiques et attendus.
+
+Tête : feat 50d2fa02 → règles f8a0eb78 → journal ed8655cf → fix
+ee392fba → fix 6d97824e → ce journal.
