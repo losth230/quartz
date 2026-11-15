@@ -7302,3 +7302,61 @@ n'est pas rétroactif, seules les constructions futures sont
 gardées.
 
 Tête : feat 446efb87 → règles 65216bd8 → ce journal.
+
+## 2026-11-15 (suite) — Vérif bonus Guilde sur L2 réel ; Caverne/Jardins sans texte ; « Salmodiva » acté
+
+**Retour Thibaut (3 points)** : (1) comment vérifier
+que le bonus +5 Nourriture en été de la Guilde des artisans
+fonctionne ; (2) confirmation : l'orthographe est bien
+« Salmodiva » ; (3) dans les merveilles naturelles, Caverne de la
+tisseuse et Jardins Flamboyants n'ont pas de texte.
+
+**(1) Vérification du bonus Guilde (scratch jetable, NON
+committé)** : simulation de la résolution T43 → T44 sur l'état L2
+réel (fetch Supabase, sans config → DEFAULT_CONFIG) via un scratch
+moteur replay. Résultats : le canal bâtiments été
+(`effetsNourrEteBatimentsVille`) vaut {Nourriture: 5} pour J1
+Ville 2 (Guilde des artisans) ET J2 Capitale (Guilde des
+artisans). Le récap T43 (tour JOUÉ en Hiver) reste nourrEte={}
+— NORMAL ; le récap T44 (tour JOUÉ en Été) affiche nourrEte
+{Nourriture: 5} pour J1 ET J2. Sémantique rappelée (arbitrage
+historique, tour.ts) : la saison bascule en FIN de tour, le récap
+d'une résolution reflète la saison JOUÉE → le +5 apparaît à la
+première résolution d'un tour joué en été. En jeu, le contrôle se
+fait sur : la ligne « Nourr - été » du récap du dernier tour
+(RecapDernierTour.tsx / VilleCarte.tsx), le stock +5 Nourriture,
+et la fiche de la Guilde (« été : +5 Nourriture »). Les autres
+récaps L2 nourrEte={} sont normaux : les Champs produisent via
+les emplacements de métiers, aucun aménagement n'a d'effet été
+structuré. VERDICT : le bonus fonctionne.
+
+**(2) Arbitrage orthographe** : « Salmodiva » confirmé par Thibaut,
+l'entrée « Sanctuaire de Salmodiva » du référentiel reste telle
+quelle, PAS de renommage ni migration — la mention « renommage à
+arbitrer » du 2026-11-15 (matin) est close (voir règles 2026-11-15
+(suite)).
+
+**(3) Merveilles muettes — fix (b02896f3)** : diagnostic par
+scratch sur les 10 merveilles : `resumeConstruction` ne rendait
+NI `effetsParRang` NI `bonheurApporte`. Or ces canaux n'existent
+QUE sur deux merveilles : Caverne de la tisseuse (+1 Soie PAR
+RANG d'habitation) et Jardins Flamboyants (+10 Bonheur) → résumé
+VIDE dans le wiki et le picker pour ces deux-là seulement, alors
+que leurs effets s'appliquaient bien en jeu (les 8 autres étaient
+couvertes par les canaux classiques). Fix dans
+`jeu/src/engine/constructions.ts` : rendu
+`+{quantité} {ressource} par rang d'habitation / tour` pour
+effetsParRang et `+{n} Bonheur dans l'habitation` pour
+bonheurApporte (même convention que les autres canaux : l'effet
+vit dans le référentiel, il doit être visible). Test de garde
+ajouté (`merveillesNaturelles.test.ts`) : les 10 merveilles
+rendent toutes un résumé non vide + libellés exacts Caverne/Jardins
+(apostrophe droite, comme « levée d'armée »). Piège rencontré :
+première version du test comparait à l'apostrophe typographique
+U+2019 alors que le moteur rend l'apostrophe droite — corrigé.
+
+**Tests** : 382/382 verts (381 + 1 nouveau). Diag régénéré :
+IDENTIQUE à la tête (resumeConstruction ne touche pas le registre)
+→ diag-out.txt non committé. Scratchs supprimés avant push.
+
+Tête : fix b02896f3 → règles fe9db39a → ce journal.
