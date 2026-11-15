@@ -7360,3 +7360,47 @@ IDENTIQUE à la tête (resumeConstruction ne touche pas le registre)
 → diag-out.txt non committé. Scratchs supprimés avant push.
 
 Tête : fix b02896f3 → règles fe9db39a → ce journal.
+
+## 2026-11-15 (suite 2) — Jardins Flamboyants « ne semble pas fonctionner » : bug d'AFFICHAGE du bonheur, le moteur était correct
+
+**Retour Thibaut** : « jardins flamboyants ne semble pas
+fonctionner ».
+
+**Diagnostic** : le +10 Bonheur (canal `bonheurApporte`) était
+correctement appliqué par le moteur — `bonheurVilleComplete`
+(bonheur.ts) somme le canal, consommé par la migration par
+bonheur (migrationBonheur.ts) et le statut social (statutSocial.ts)
+; `bonheurApportesVille` = 10 avec les Jardins était déjà testé
+(merveillesNaturelles.test.ts). Mais la carte de ville
+(VilleCarte.tsx) recalculait le chiffre affiché à la main :
+`min(100, bonheurVille(s) + bonusBonheurRegime)` — elle OMETTAIT
+le canal `bonheurApporte` (merveilles naturelles) ET le dogme
+`bonheurVille` de la culture de la ville, bien que son commentaire
+clame « même calcul que le moteur (bonheurVilleComplete) ». Le
+joueur construisait les Jardins, le moteur créditait bien +10, mais
+le chiffre affiché ne bougeait jamais.
+
+**Fix (eef8d99a)** : VilleCarte.tsx appelle maintenant
+`bonheurVilleComplete(state, p, ville, C)` (l'unique source de
+vérité, même calcul que migrations et statut social) et détaille
+les contributions entre parenthèses : « (régime +5 · dogme +10 ·
+merveilles +10) ». Info-bulle mise à jour. Import bonheurVille
+retiré (noUnusedLocals), imports bonheurVilleComplete /
+bonheurApportesVille / effetsDogmeCulture ajoutés.
+
+**Test de garde** (merveillesNaturelles.test.ts) :
+`bonheurVilleComplete` avec les Jardins = sans + exactement 10
+(garde « sous le plafond » sur le témoin, cumul vérifié, plafond
+100 par le min commun). Au passage, le dogme de la Liberté
+(bonheurVille) est maintenant visible dans l'affichage, il était
+aussi omis.
+
+**Règle posée** (règles 2026-11-15 (suite 2)) : tout affichage du
+bonheur d'une ville DOIT passer par bonheurVilleComplete, jamais
+par une recopie de formule.
+
+**Tests** : 383/383 verts (382 + 1 nouveau). Diag régénéré :
+IDENTIQUE à la tête → diag-out.txt non committé. Pas de scratch
+cette fois (diagnostic par lecture du code + test de garde).
+
+Tête : fix eef8d99a → règles 5a39aeca → ce journal.
