@@ -3261,3 +3261,46 @@ Plateforme, pas la Place) ; la Place du marché qui exige l’Echoppe
 retombe à +1 route au lieu de +2. Les états sauvegardés existants ne
 sont pas modifiés rétroactivement : seule la construction future
 retire le prérequis de la liste.
+
+## 2026-11-15 (retour du matin) — Chaîne nourriture, Fermier +20, Pêcheur +6 sans bétail, Sanctuaire de Samodiva au coût de Soie, densités labo 4 %
+
+**Chaîne nourriture** (retour « pour les bâtiments nourriture, la
+vraie chaine est grange -> silo à grain -> moulin à vent -> guilde
+des artisans de la terre ») : le champ `requis` complète la chaîne
+aux deux bouts — le Silo à grain EXIGE la Grange, la Guilde des
+artisans de la terre EXIGE le Moulin à vent (le Moulin à vent
+exigeait déjà le Silo à grain) ; chaque successeur REMPLACE son
+prérequis (règle des prérequis du 2026-11-14) et le remplacement
+explicite du Moulin couvre toute la chaîne (Silo + Grange).
+
+**Guilde des artisans de la terre** : augmente de 5 la production
+de Nourriture EN ÉTÉ (+5 Nourriture par tour, effet `ete` du canal
+« Nourr - été », crédité au stock EN PLUS de la nourriture
+générale, jamais doublonné avec les flux normaux — le Charbon −1
+reste un flux permanent). Le canal s’appelle
+`effetsNourrEteBatimentsVille` : bâtiments remplacés exclus,
+branché dans l’étape « Nourr - été » du tour aux côtés des
+aménagements Champ/Rizière.
+
+**Fermier** : 20 Nourriture en été (avant 15) — la fiche reste
+`ete` (été seulement). **Pêcheur** : 6 Nourriture TOUTE L’ANNÉE
+(avant 4) et PAS de bétail — l’ancien bonus « +0,5 Bétail par
+Pêcheur dans une ville côtière avec bâtiment côtier (Ponton) » du
+2026-11-02 est retiré ; le champ `cotier` du référentiel ne régit
+plus que les EMPLACEMENTS de métiers (capMetierVille). Configs
+sauvegardées : garde-fous de migration par cfgOf (5/10/15 → 20
+pour le Fermier ; 4 → 6 pour le Pêcheur, fiche jamais été), les
+valeurs personnalisées par l’arbitre sont conservées.
+
+**Sanctuaire de Samodiva** : ne produit PAS 5 Soies par tour —
+les 5 Soies deviennent un COÛT de construction (20 Or + 20 Bois +
+5 Soie) ; le bonus « Fermiers +2 Nourriture par habitant en été »
+est inchangé. (NB : l’entrée du référentiel est orthographiée
+« Sanctuaire de Salmodiva » ; renommage à arbitrer séparément —
+le nom est une clé d’état.)
+
+**Densités du labo générateur** : les 6 ressources de base passent
+de 3,5 % à 4 % (Baleines, Poissons, Or, Fer, Charbon, Soie) ; le
+Bétail et les Ruines à 5 % (Bétail : 4,5 → 5 % ; Ruines :
+6 → 5 %, proximité 0 % conservée : ruines toujours éparpillées) ;
+le Geyser reste hors champ (12 %). Cache-buster ?v=23.
