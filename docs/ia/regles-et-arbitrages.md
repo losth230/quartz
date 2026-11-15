@@ -3332,3 +3332,32 @@ l'orthographe voulue — l'entrée du référentiel « Sanctuaire de
 Salmodiva » est CORRECTE telle quelle, PAS de renommage (le nom
 reste une clé d'état stable). La mention « renommage à arbitrer »
 du 2026-11-15 (retour du matin) est close.
+
+## 2026-11-15 (suite 2) — Bonheur affiché de la carte de ville : LE calcul du moteur (Jardins Flamboyants visibles)
+
+**Retour Thibaut** : « jardins flamboyants ne semble pas
+fonctionner ».
+
+**Diagnostic** : le +10 Bonheur des Jardins Flamboyants (canal
+`bonheurApporte`) S'APPLIQUAIT bien côté moteur — le calcul
+complet `bonheurVilleComplete` (utilisé par la migration par
+bonheur et le statut social) somme bien le canal, et un test
+moteur (merveillesNaturelles.test.ts) le vérifiait déjà. Mais
+l'AFFICHAGE de la carte de ville (VilleCarte.tsx) recalculait le
+bonheur À LA MAIN : `min(100, bonheurVille + bonus de régime)`,
+en OMETTANT le canal des merveilles naturelles (et le dogme
+`bonheurVille` de la culture de la ville) — le chiffre affiché ne
+bougeait donc jamais à la construction des Jardins, d'où
+l'impression de dysfunctionnement.
+
+**Règle** : TOUT affichage du bonheur d'une ville DOIT appeler le
+calcul complet du moteur (`bonheurVilleComplete`) — jamais une
+recopie de formule. La carte de ville affiche désormais la valeur
+du moteur et détaille les contributions entre parenthèses
+(régime, dogme, merveilles). Test de garde ajouté : les Jardins
+ajoutent exactement +10 au bonheur complet, cumulé au reste,
+plafonné à 100.
+
+Au passage corrigé par la même règle : le dogme de la Liberté
+(effet `bonheurVille`, +10 dans les villes de la culture
+porteuse) n'apparaissait pas non plus dans l'affichage.
