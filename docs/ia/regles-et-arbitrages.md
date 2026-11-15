@@ -3304,3 +3304,31 @@ de 3,5 % à 4 % (Baleines, Poissons, Or, Fer, Charbon, Soie) ; le
 Bétail et les Ruines à 5 % (Bétail : 4,5 → 5 % ; Ruines :
 6 → 5 %, proximité 0 % conservée : ruines toujours éparpillées) ;
 le Geyser reste hors champ (12 %). Cache-buster ?v=23.
+
+## 2026-11-15 (suite) — Merveilles naturelles : plus aucune muette ; « Salmodiva » confirmé
+
+**Retour Thibaut** : « dans les merveilles naturelles, caverne de la
+tisseuse et jardins flamboyants n'ont pas de texte ».
+
+**Diagnostic** : `resumeConstruction` ne rendait ni le canal
+`effetsParRang` ni le canal `bonheurApporte` — les deux seules
+merveilles portant ces canaux (Caverne de la tisseuse : +1 Soie par
+rang d'habitation ; Jardins Flamboyants : +10 Bonheur) affichaient
+donc un résumé VIDE dans le wiki et le picker, alors que leurs
+effets s'appliquaient bien en jeu. Les 8 autres merveilles étaient
+déjà couvertes par les canaux classiques.
+
+**Règle** : tout canal d'effet porté par une construction du
+référentiel DOIT être rendu par le résumé — un effet invisible dans
+le wiki est un bug d'affichage, pas une spécificité. Rendu ajouté :
+`+{quantité} {ressource} par rang d'habitation / tour` pour
+`effetsParRang`, `+{n} Bonheur dans l'habitation` pour
+`bonheurApporte`. Test de garde : les 10 merveilles naturelles
+rendent toutes un résumé non vide, libellés exacts vérifiés pour
+Caverne et Jardins.
+
+**Arbitrage orthographe** : Thibaut confirme que « Salmodiva » est
+l'orthographe voulue — l'entrée du référentiel « Sanctuaire de
+Salmodiva » est CORRECTE telle quelle, PAS de renommage (le nom
+reste une clé d'état stable). La mention « renommage à arbitrer »
+du 2026-11-15 (retour du matin) est close.
