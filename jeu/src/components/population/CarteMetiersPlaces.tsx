@@ -113,7 +113,7 @@ export function CarteMetiersPlaces({
                 </tr>
                 )
               })}
-            })}
+            )}
           </tbody>
         </table>
       </div>
