@@ -140,6 +140,18 @@ function gainsVilleBruts(state: GameState, p: Player, ville: City, C: Cfg): Reco
 export interface GainsVilleDetail {
   habitants: number
   metiers: Record<string, number>
+  /** (Retour Thibaut 2026-11-15 « productions réelles des métiers
+   *  des joueurs dans la page population ») : décomposition PAR
+   *  MÉTIER du canal metiers — production brute RÉELLE de chaque
+   *  métier de la ville, saison courante et multiplicateurs
+   *  APPLIQUÉS (fiche × multiplicateur de rang social × guildes
+   *  tier 3 / merveilles mondiales / champs nourriciers), AVANT
+   *  taxes ; clé « Sans-emploi » pour la production du dogme du
+   *  Travail (travailNourriture). Un métier absent du canal = ne
+   *  produit rien dans les conditions actuelles (ex. Fermier hors
+   *  été). Somme des ressources d'un métier = sa contribution
+   *  exacte au canal metiers commun. */
+  parMetier: Record<string, Record<string, number>>
   taxeMult: Record<string, number>
   /** Bonus de taxe ADDITIF par ressource (vague 3a, rework métiers
    *  & emplacements 2026-10-21) : Gouverneur +10 % sur toutes les
@@ -180,6 +192,19 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  de rang, comme les bonus Ponton / Champs nourriciers. Bâtiments
   //  REMPLACÉS exclus par modificateursPaysJoueur.)
   const modsTier3 = modificateursPaysJoueur(p, C)
+  // (Retour Thibaut 2026-11-15 « productions réelles des métiers
+  //  des joueurs dans la page population ») : décomposition du
+  //  canal metiers PAR MÉTIER — chaque crédit passe par le helper
+  //  `credit` qui alimente l'agrégat (metiers) ET le détail
+  //  (parMetier), garantissant que la somme par métier égale
+  //  exactement le canal commun. Clé 'Sans-emploi' pour le dogme
+  //  du Travail (production sans métier).)
+  const parMetier: Record<string, Record<string, number>> = {}
+  const credit = (metier: string, res: string, v: number) => {
+    metiers[res] = (metiers[res] ?? 0) + v
+    const parRes = parMetier[metier] ?? (parMetier[metier] = {})
+    parRes[res] = (parRes[res] ?? 0) + v
+  }
   for (const c of vivants) {
     // (Dogme du Travail, 2026-10-30 : les SANS-EMPLOIS d'une culture
     //  ayant pris le dogme produisent +v Nourriture par tour —
@@ -190,7 +215,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     //  ville et alimente impôts/vassalité comme les autres gains.)
     if (!c.metier) {
       const trav = effetsDogmeCulture(state, c.culture, 'travailNourriture', C)
-      if (trav > 0) metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + trav
+      if (trav > 0) credit('Sans-emploi', 'Nourriture', trav)
       continue
     }
     const td = metierDef(c.metier, C.config)
@@ -221,7 +246,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     //  +0,5 Or par Commerçant du pays, avant taxes, × mult de rang.)
     for (const bm of modsTier3.bonusMetierParHabitant) {
       if (c.metier === bm.metier) {
-        metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
+        credit(c.metier, bm.ressource, bm.valeur * mult)
       }
     }
     // (Merveilles mondiales 2026-11-15 : bonus PAR HABITANT de la
@@ -231,19 +256,19 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     //  marins et champsNourriciers.)
     for (const bm of bonusMetierParHabitantVille(ville, C)) {
       if (c.metier === bm.metier && (!bm.ete || state.saison === 'Été')) {
-        metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
+        credit(c.metier, bm.ressource, bm.valeur * mult)
       }
     }
     // (RETRAIT 2026-11-15 : plus de bonus Bétail des Pêcheurs — cf.
     //  l'arbitrage documenté en tête de boucle.)
     if (champsNourriciers && state.saison === 'Été' && c.metier === 'Fermier') {
-      metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + champsNourriciers * mult
+      credit('Fermier', 'Nourriture', champsNourriciers * mult)
     }
     if (td.ressource1 && td.valeur1 !== 0) {
-      metiers[td.ressource1] = (metiers[td.ressource1] ?? 0) + td.valeur1 * mult
+      credit(c.metier, td.ressource1, td.valeur1 * mult)
     }
     if (td.ressource2 && td.valeur2 !== 0) {
-      metiers[td.ressource2] = (metiers[td.ressource2] ?? 0) + td.valeur2 * mult
+      credit(c.metier, td.ressource2, td.valeur2 * mult)
     }
   }
   // Taxes : le niveau module la production PAR RESSOURCE (arbitrage
@@ -297,7 +322,7 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   for (const [res, v] of Object.entries(taxes)) net[res] = (net[res] ?? 0) + v
   for (const [res, v] of Object.entries(conso)) net[res] = (net[res] ?? 0) + v
   for (const k of Object.keys(net)) if (net[k] === 0) delete net[k]
-  return { habitants: vivants.length, metiers, taxeMult, bonusTaxes, taxes, conso, net }
+  return { habitants: vivants.length, metiers, parMetier, taxeMult, bonusTaxes, taxes, conso, net }
 }
 
 /** Facteur de taxes sur la conception (Faible ×taxNaissFaibles / Moyenne ×1 / Forte ×taxNaissHautes — ±25 %, marqueur (z) ; valeurs reconfirmées par l'arbitrage taxes 2026-10-28 : les naissances partent du côté de la Nourriture). */

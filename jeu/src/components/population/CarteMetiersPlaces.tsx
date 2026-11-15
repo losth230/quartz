@@ -10,10 +10,11 @@
 //  occupationsMetierVille (testé).
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, City, GameState } from '../../engine/types'
+import type { Character, City, GameState, Player } from '../../engine/types'
 import type { Cfg } from '../../config/defaultConfig'
 import { occupationsMetierVille } from '../../engine/metiers'
-import { Card } from '../ui'
+import { detailGainsVille } from '../../engine/economie'
+import { Card, fmt } from '../ui'
 
 export function CarteMetiersPlaces({
   vivants, villesOcc, villesDuJoueur, estCite, C, descMetier, state, joueur,
@@ -31,6 +32,11 @@ export function CarteMetiersPlaces({
    *  le 2026-10-24 (arbitrage Thibaut). */
   state?: GameState
   joueur?: number
+  /** (Retour Thibaut 2026-11-15 « productions réelles des métiers
+   *  des joueurs dans la page population ») : le joueur dont la
+   *  population est affichée — absent pour une cité libre (pas de
+   *  production créditée par le moteur, la colonne reste vide). */
+  player?: Player
 }) {
   // ctx optionnel : les routes ne comptent que pour une ville de joueur.
   const ctx = state !== undefined && joueur !== undefined ? { state, joueur } : undefined
@@ -38,13 +44,23 @@ export function CarteMetiersPlaces({
     <Card title="🏘️ Métiers et places par ville">
       <div className="table-wrap">
         <table className="tbl small">
-          <thead><tr><th>Ville</th><th>Métier</th><th>En poste</th><th>Places max</th><th>Places libres</th><th>Vivants</th></tr></thead>
+          <thead><tr><th>Ville</th><th>Métier</th><th>En poste</th><th>Places max</th><th>Places libres</th><th>Vivants</th><th>Production / tour</th></tr></thead>
           <tbody>
             {villesOcc.map((v) => {
               const habitants = vivants.filter((c) => c.ville === v.nom)
               const villeObj = villesDuJoueur?.find((vv) => vv.nom === v.nom) ?? null
+              // (Retour Thibaut 2026-11-15 : production brute RÉELLE
+              //  par métier — LE calcul du moteur (detailGainsVille),
+              //  saison courante et multiplicateurs appliqués, avant
+              //  taxes ; une seule passe par ville.)
+              const detail = player && villeObj && state ? detailGainsVille(state, player, villeObj, C) : null
               const lignes = occupationsMetierVille(habitants, villeObj, C, ctx)
-              return lignes.map((l, i) => (
+              return lignes.map((l, i) => {
+                // (les ENFANTS ne sont pas des sans-emplois : jamais de
+                //  production sur leur ligne, même si le dogme du
+                //  Travail crédite les Sans-emploi.)
+                const prod = !l.enfants ? (detail?.parMetier[l.metier ?? 'Sans-emploi'] ?? null) : null
+                return (
                 <tr key={`${v.nom}-${l.metier ?? (l.enfants ? 'enfants' : 'sans')}`}>
                   <td>
                     {i === 0
@@ -73,8 +89,30 @@ export function CarteMetiersPlaces({
                       : <span className="muted">—</span>}
                   </td>
                   <td>{i === 0 ? habitants.length : ''}</td>
+                  {/* (Retour Thibaut 2026-11-15 « productions réelles
+                      des métiers » : production brute RÉELLE du
+                      métier, au calcul du moteur — saison courante
+                      appliquée (le Fermier ne produit qu'en été),
+                      fiche × multiplicateur de rang social × bonus
+                      guildes tier 3 / merveilles / champs
+                      nourriciers — AVANT taxes (taxes et net restent
+                      dans le détail de la carte de ville).) */}
+                  <td
+                    title={
+                      l.enfants
+                        ? 'Les enfants ne produisent rien'
+                        : prod
+                          ? 'Production brute réelle par tour et par métier, au calcul du moteur (detailGainsVille) : saison courante appliquée (le Fermier ne produit qu’en été), fiche × multiplicateur de rang social × bonus guildes tier 3 / merveilles mondiales / champs nourriciers — avant taxes'
+                          : 'Ne produit rien dans les conditions actuelles (saison, absence de fiche ou métier non productif)'
+                    }
+                  >
+                    {prod && Object.keys(prod).length > 0
+                      ? Object.entries(prod).map(([res, val]) => `${fmt(val)} ${res}`).join(' + ')
+                      : <span className="muted">—</span>}
+                  </td>
                 </tr>
-              ))
+                )
+              })}
             })}
           </tbody>
         </table>
@@ -98,6 +136,13 @@ export function CarteMetiersPlaces({
         nominations d'école/armée) et les Chasseurs CHANGENT de métier dès qu'un
         autre poste est disponible — le Chasseur n'est jamais qu'un poste de
         repli. Les cités libres ne sont pas concernées par les caps.
+        {' '}Colonne « Production / tour » (retour Thibaut 2026-11-15) :
+        production brute RÉELLE du métier, au calcul du moteur (detailGainsVille)
+        — saison courante appliquée (le Fermier ne produit qu'en été), fiche ×
+        multiplicateur de rang social × bonus guildes tier 3 / merveilles
+        mondiales / champs nourriciers — AVANT taxes ; « — » = ne produit rien
+        dans les conditions actuelles. Les cités libres n'ont pas de production
+        créditée par le moteur (colonne vide).
       </p>
     </Card>
   )

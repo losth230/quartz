@@ -361,6 +361,44 @@ test('Fermier (arbitrage 2026-11-15) : +20 Nourriture en ÉTÉ seulement (champ 
   assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2) < 1e-9, 'hors été : le Fermier ne produit rien, le Chasseur reste')
 })
 
+// (Retour Thibaut 2026-11-15 « productions réelles des métiers des
+//  joueurs dans la page population » : le canal parMetier décompose
+//  le canal metiers PAR MÉTIER — même saison, mêmes multiplicateurs,
+//  la somme par ressource régit l'agrégat commun.)
+test('productions réelles (2026-11-15) : parMetier décompose exactement le canal metiers — Fermier été/hiver, Chasseur, Pêcheur', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  state.population[p.n] = [
+    perso('f-30', 30, { metier: 'Fermier' }),
+    perso('f-31', 31, { metier: 'Fermier' }),
+    perso('c-20', 20, { metier: C.p.metierChasseur }),
+    perso('p-40', 40, { metier: 'Pêcheur' }),
+  ]
+  invaliderIndexPopulation()
+  const ville = p.villes[0]
+  state.saison = 'Été'
+  const dete = detailGainsVille(state, p, ville, C)
+  assert.ok(Math.abs((dete.parMetier['Fermier']?.['Nourriture'] ?? 0) - 40) < 1e-9, 'été : 2 Fermiers = +40 Nourriture')
+  assert.ok(Math.abs((dete.parMetier[C.p.metierChasseur]?.['Nourriture'] ?? 0) - 2) < 1e-9, 'Chasseur = +2 Nourriture')
+  assert.ok(Math.abs((dete.parMetier['Pêcheur']?.['Nourriture'] ?? 0) - 6) < 1e-9, 'Pêcheur = +6 Nourriture toute l\u2019année')
+  assert.equal(dete.parMetier['Sans-emploi'], undefined, 'sans dogme du Travail : pas de canal Sans-emploi')
+  // la somme PAR MÉTIER régit exactement l'agrégat commun
+  for (const [res, v] of Object.entries(dete.metiers)) {
+    const somme = Object.values(dete.parMetier).reduce((acc, parRes) => acc + (parRes[res] ?? 0), 0)
+    assert.ok(Math.abs(somme - v) < 1e-9, `somme parMetier(${res}) = ${somme} doit égaler metiers(${res}) = ${v}`)
+  }
+  // hors été : le Fermier DISPARAÎT du canal (production réelle 0)
+  state.saison = 'Hiver'
+  const dhiver = detailGainsVille(state, p, ville, C)
+  assert.equal(dhiver.parMetier['Fermier'], undefined, 'hors été : le Fermier n\u2019a aucune ligne de production')
+  assert.ok(Math.abs((dhiver.parMetier['Pêcheur']?.['Nourriture'] ?? 0) - 6) < 1e-9, 'le Pêcheur produit toujours +6')
+  for (const [res, v] of Object.entries(dhiver.metiers)) {
+    const somme = Object.values(dhiver.parMetier).reduce((acc, parRes) => acc + (parRes[res] ?? 0), 0)
+    assert.ok(Math.abs(somme - v) < 1e-9, `somme parMetier(${res}) = ${somme} doit égaler metiers(${res}) = ${v}`)
+  }
+})
+
 test('Taxes (vague 3a) : bonus ADDITIFS — Gouverneur +10 % toutes ressources, Banquier +10 % Or, cumul = +20 %', () => {
   const state = partie()
   const C = cfgOf(state.config)
