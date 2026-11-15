@@ -7216,3 +7216,89 @@ sauvegardés existants : seules les constructions futures retirent
 le prérequis de la liste.
 
 Tête : fix ed9bfc00 → règles f2276b6e → ce journal.
+
+## 2026-11-15 (matin) — Chaîne nourriture, +5 été de la Guilde des artisans, revalo Fermier/Pêcheur, Sanctuaire au coût de Soie, densités labo 4 %
+
+**Signalement** (retour Thibaut) : « on va continuer sur la chaine
+des bâtiments, pour les bâtiments nourriture, la vraie chaine est
+grange -> silo à grain -> moulin à vent -> guilde des artisans de
+la terre. Attention, la guilde des artisans de la terre augmente
+de 5 la production de nourriture en été, tu sembles avoir oublié
+ça » ; « le fermier doit maintenant produire 20 nourriture en été
+de base » ; « le pêcheur produit 6 nourriture toute l'année, mais
+pas de bétail » ; « le sanctuaire de samodiva ne produit pas 5
+soies par tour mais coûte 5 soies à produire » ; « passe les
+toutes de 3,5 % de densité à 4 % de densité sauf bétail et ruines
+à 5 % ».
+
+**Diagnostic** :
+- chaîne nourriture : le Moulin portait déjà `requis` Silo +
+  `remplaceBatiment` [Silo, Grange], mais le Silo n'exigeait PAS
+  la Grange et la Guilde n'exigeait PAS le Moulin (remplacement
+  explicite seul) — la chaîne d'EXIGENCE était incomplète aux
+  deux bouts ;
+- canal été : la banque lit les effets `ete` (canal fluxEte) mais
+  seuls les AMÉNAGEMENTS étaient sommés dans l'étape « Nourr -
+  été » du tour (Champ, Rizière) ; AUCUN bâtiment ne portait
+  d'effet été et le canal bâtiments n'existait pas ;
+- le bonus « +0,5 Bétail par Pêcheur en ville côtière à bâtiment
+  côtier » (paramètre cotier, 2026-11-02) contredisait « pas de
+  bétail » ;
+- le Sanctuaire de Salmodiva (merveille du retour des merveilles
+  2026-11-15) portait un effet flux +5 Soie/tour ;
+- RES_DEFAULTS du labo : 35 ‰ sur les 6 ressources de base,
+  Bétail 45 ‰, Ruines 60 ‰.
+
+**Fix (446efb87)** :
+- référentiel : `requis` « Grange » sur le Silo à grain, `requis`
+  « Moulin à vent » sur la Guilde des artisans de la terre +
+  effet {Nourriture +5, ete: true} ; Fermier 15 → 20 ; Pêcheur
+  4 → 6 ; Sanctuaire : effet +5 Soie retiré, coût +5 Soie
+  (20 Or + 20 Bois + 5 Soie) ;
+- moteur : `effetsNourrEteBatimentsVille` (batiments.ts,
+  bâtiments remplacés exclus) branché dans l'étape 3quinquies-bis
+  du tour (crédité UNIQUEMENT en été, en plus de la nourriture
+  générale) ; retrait du bonus bétail d'economie.ts (imports
+  villeCotiere/estCotiereRef retirés — le champ `cotier` ne régit
+  plus que capMetierVille) ;
+- migration defaultConfig : garde-fou Pêcheur 4 → 6 (fiche jamais
+  `ete`), commentaire Fermier (5/10/15 migrent vers 20) ;
+- labo : RES_DEFAULTS 35 → 40 ‰ (Baleines, Poissons, Or, Fer,
+  Charbon, Soie), Bétail 45 → 50 ‰, Ruines 60 → 50 ‰ (proximité
+  0 % conservée : éparpillées), Geyser inchangé (120 ‰, hors
+  champ), cache-buster ?v=23, harnais C10 à 50 ‰ ;
+- tests : 2 nouveaux (tier3 : chaîne d'exigence + canal été +
+  neutralisation d'une liste non nettoyée + libellé « été : +5
+  Nourriture » ; merveilles : coût 20 Or + 20 Bois + 5 Soie et
+  AUCUN flux Soie) ; 6 mis au nouveau régime (domiciles :
+  prérequis Silo/Guilde, metiers : Fermier 20 + Ponton sans
+  Bétail avec garde 6 Nourriture/tour, merveilles : 20+2=22,
+  taxes : cité libre 22, config : migration 5/10/15 → 20 et
+  4 → 6, personnalisée conservée). 381/381 verts, harnais labo
+  TOUS LES CONTRATS TIENNENT, diag régénéré (canal fluxVille
+  23 → 22 règles, Guilde « Nourriture +5 (été) », Sanctuaire
+  sans Soie).
+
+**Règles (65216bd8)** : entrée « 2026-11-15 (retour du matin) ».
+
+**Coquille relevée** : le référentiel écrit « Sanctuaire de
+SALMODIVA », Thibaut écrit « samodiva » — renommage à arbitrer
+séparément (le nom est une clé d'état : migration nécessaire si
+retenu).
+
+**Chiffres L2** (état T42, saison Hiver, sans config →
+DEFAULT_CONFIG reçoit les nouvelles fiches directes) : J1 56
+Fermiers / 18 Pêcheurs, J2 59 Fermiers / 4 Pêcheurs. Été
+prochain : J1 +560 Nourriture (56 × +5) et J2 +590 (59 × +5) sur
+la base Fermier ; Pêcheurs toute l'année : J1 18 × 6 = 108
+(avant 72), J2 4 × 6 = 24 (avant 16) ; le retrait du bonus
+bétail ne touchait que les 6 Pêcheurs de la Capitale J1 (Port de
+pêche, prox Mer) : −3 Bétail/tour ; la Guilde des artisans
+(J1 Ville 2 + J2 Capitale) apporte +5 Nourriture chacune au canal
+Nourr - été ; le Sanctuaire de J2 ne crédite plus +5 Soie/tour.
+Les Silo/Guilde déjà construits SANS leur prérequis (J2 Capitale :
+Grange + Silo + Guilde sans Moulin) restent valides — le refus
+n'est pas rétroactif, seules les constructions futures sont
+gardées.
+
+Tête : feat 446efb87 → règles 65216bd8 → ce journal.
