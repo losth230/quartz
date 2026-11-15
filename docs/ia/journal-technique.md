@@ -7404,3 +7404,45 @@ IDENTIQUE à la tête → diag-out.txt non committé. Pas de scratch
 cette fois (diagnostic par lecture du code + test de garde).
 
 Tête : fix eef8d99a → règles 5a39aeca → ce journal.
+
+## 2026-11-15 (suite 3) — Productions réelles des métiers dans la page Population (canal parMetier)
+
+**Retour Thibaut** : « il faudrait que les productions réelles des
+métiers des joueurs soient affichées dans la page population ».
+
+**Choix d'implémentation (feat 50d2fa02)** : pas de recalcul
+parallèle dans l'UI — le moteur expose la décomposition. Le canal
+`metiers` de `detailGainsVille` (economie.ts) agrégeait la
+production brute de la ville PAR RESSOURCE, sans dire quel métier
+produisait quoi. Refactor : un helper local `credit(metier, res,
+v)` alimente l'agrégat `metiers` ET un nouveau canal
+`parMetier: Record<metier, Record<res, number>>` (champ ajouté à
+`GainsVilleDetail`, aucune construction littérale ailleurs —
+aucun autre site à migrer). Tous les canaux de production passent
+par lui : fiches (ressource1/2), bonus guildes tier 3 par
+habitant, merveilles mondiales par habitant (drapeau été),
+champs nourriciers, dogme du Travail (clé « Sans-emploi »).
+Invariant structurel : la somme parMetier ≡ metiers par ressource
+(test de garde, métiers.test.ts : Fermier 2×20 été / absent
+hiver, Chasseur +2, Pêcheur +6, sommes exactes été ET hiver).
+
+**UI** : la carte « 🏘️ Métiers et places par ville »
+(population/CarteMetiersPlaces.tsx) gagne une colonne
+« Production / tour » : par ligne de métier, la production brute
+réelle formatée « 40 Nourriture » (multi-ressources « + »), « — »
+si le canal est absent (Fermier hors été, enfant — les enfants ne
+sont pas des sans-emplois, jamais de production sur leur ligne
+même si le dogme du Travail crédite les Sans-emploi). Une SEULE
+passe de detailGainsVille PAR VILLE (pas par ligne). Prop
+`player` passée par PopulationTable (undefined pour une cité
+libre : pas de production créditée par le moteur, colonne vide).
+Info-bulle par cellule + explication au pied de carte ; taxes et
+net restent dans le détail de la carte de ville (pas de doublon).
+
+**Tests** : 384/384 verts (383 + 1 nouveau). Diag régénéré :
+IDENTIQUE à la tête (detailGainsVille ne touche pas au registre)
+→ diag-out.txt non committé. Typecheck TSX via la CI (ci-jeu :
+npx tsc --noEmit) — esbuild/tsc non installables localement
+(paquets interdits dans le sandbox).
+
+Tête : feat 50d2fa02 → règles f8a0eb78 → ce journal.
