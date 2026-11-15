@@ -24,7 +24,7 @@ import type { City, GameState, Player } from './types'
 import { coutConstructionRef, resumeConstruction } from './constructions'
 import { effetsAmenagementsVille } from './amenagements'
 import { garnisonHabitationVille } from './garnisons'
-import { bonheurApportesVille } from './bonheur'
+import { bonheurApportesVille, bonheurVilleComplete } from './bonheur'
 import { maxRoutesJoueur } from './commerce'
 import { reductionLeveeBatiments } from './constructions'
 import { emissairesConstructionsJoueur } from './batiments'
@@ -90,6 +90,21 @@ test('Jardins Flamboyants : +10 Bonheur dans l\u2019habitation', () => {
   assert.equal(bonheurApportesVille(ville, C), 0, 'sans merveille : aucun bonus')
   ville.amenagements = ['Jardins Flamboyants']
   assert.equal(bonheurApportesVille(ville, C), 10, '+10 avec les Jardins')
+})
+
+// (Retour Thibaut 2026-11-15 « jardins flamboyants ne semble pas
+//  fonctionner » : le +10 s'appliquait bien côté moteur mais la
+//  carte de ville l’ignorait dans son affichage — garde le canal
+//  branché dans le calcul COMPLET (bonheurVilleComplete), celui
+//  que la carte doit afficher.)
+test('Jardins Flamboyants (règle 2026-11-15) : le +10 Bonheur est dans le calcul complet du moteur (bonheurVilleComplete), cumulé, plafonné à 100', () => {
+  const { state, p, ville, C } = partieTemoin()
+  ville.amenagements = []
+  const avant = bonheurVilleComplete(state, p, ville, C)
+  ville.amenagements = ['Jardins Flamboyants']
+  const apres = bonheurVilleComplete(state, p, ville, C)
+  assert.ok(avant < 100, `garde : le bonheur témoin doit être sous le plafond (obtenu : ${avant})`)
+  assert.equal(apres, avant + 10, 'les Jardins ajoutent exactement +10 au bonheur complet de la ville')
 })
 
 test('Pic Ascendant, Ruines de Seth, Echine du dragon : flux par tour', () => {

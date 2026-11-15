@@ -54,7 +54,8 @@ import { effetsTourBatiment, garnisonBatiment } from '../../engine/batiments'
 import { constructionsRefs, coutConstructionRef, resumeConstruction } from '../../engine/constructions'
 import { amenagementRef, aCampDeBatisseurs, effetsNourrEteAmenagementsVille } from '../../engine/amenagements'
 import { garnisonHabitationVille, detailGarnisonVille, rangNiveau } from '../../engine/regimes'
-import { scoresVille, bonheurVille, bonusBonheurRegime } from '../../engine/bonheur'
+import { scoresVille, bonusBonheurRegime, bonheurVilleComplete, bonheurApportesVille } from '../../engine/bonheur'
+import { effetsDogmeCulture } from '../../engine/dogmes'
 import { initStockVille, stockRang, vivantsVille, domicilesApportesVille, domicilesCultureVille } from '../../engine/domiciles'
 import { occupationsMetierVille } from '../../engine/metiers'
 import { typeVille, habitationDef, rangsDisponibles, debiterCoutHabitation, coutRang } from '../../engine/habitations'
@@ -252,10 +253,20 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           const s = scoresVille(state, p, ville, C)
           // (Refonte « 8 lois » des régimes, 2026-10-29, Démocratie
           //  « Le pouvoir du peuple ») : bonus de Bonheur du régime
-          //  du joueur, plafonné à 100 — même calcul que le moteur
-          //  (bonheurVilleComplete).
+          //  du joueur, plafonné à 100.
+          // (Retour Thibaut 2026-11-15 « jardins flamboyants ne
+          //  semble pas fonctionner » : la carte recalculait le
+          //  bonheur À LA MAIN et OUBLIAIT le canal des merveilles
+          //  naturelles (Jardins Flamboyants : +10 Bonheur, champ
+          //  bonheurApporte) — le +10 s'appliquait bien côté moteur
+          //  (migrations, statut social) mais l'affichage ne
+          //  bougeait pas. La carte utilise maintenant LE MÊME
+          //  calcul que le moteur : bonheurVilleComplete (régime +
+          //  dogme bonheurVille + bonheurApporte, plafonné 100).)
           const bonus = bonusBonheurRegime(p, C)
-          const b = Math.min(100, bonheurVille(s) + bonus)
+          const dogme = effetsDogmeCulture(state, ville.culture, 'bonheurVille', C)
+          const merveilles = bonheurApportesVille(ville, C)
+          const b = bonheurVilleComplete(state, p, ville, C)
           const axes: Array<[string, number]> = [
             ['Emploi', s.emploi],
             ['Logement', s.logement],
@@ -267,12 +278,17 @@ export function VilleCarte({ idx, ville, joueur, p, C, setPlayer }: {
           return (
             <div
               className="bonheur-bloc"
-              title="Bonheur : moyenne simple des 4 facteurs (emploi, logement, sécurité, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré) + la loi du régime (refonte « 8 lois », plafonné à 100)"
+              title="Bonheur : moyenne simple des 4 facteurs (emploi, logement, sécurité, santé) — indicateur pur à ce jour (aucun effet natalité/impôts arbitré) + la loi du régime (refonte « 8 lois », plafonné à 100) + le dogme de la culture de la ville (effet bonheurVille) + les merveilles naturelles (Jardins Flamboyants : +10)"
             >
               <div className="bonheur-moyen">
                 Bonheur <strong style={{ color: coul(b) }}>{b}</strong>
                 <span className="muted">/100</span>
-                {bonus > 0 && <span className="muted small"> ({p.regime} +{bonus})</span>}
+                {(bonus > 0 || dogme > 0 || merveilles > 0) && (
+                  <span className="muted small">
+                    {' '}
+                    ({[bonus > 0 ? `${p.regime} +${bonus}` : '', dogme > 0 ? `dogme +${dogme}` : '', merveilles > 0 ? `merveilles +${merveilles}` : ''].filter(Boolean).join(' · ')})
+                  </span>
+                )}
               </div>
               {axes.map(([label, v]) => (
                 <div key={label} className="bonheur-axe" title={`${label} : ${v}/100`}>
