@@ -447,6 +447,17 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   const multAmenag = multAmenagementsRoutesRef(ref)
   if (multAmenag > 1) parts.push(`aménagements des routes ×${multAmenag}`)
   if (ref.accordeDogme) parts.push(`1 choix de dogme hors palier à la construction`)
+  // (Merveilles NATURELLES, retour Thibaut 2026-11-15 « caverne de la
+  //  tisseuse et jardins flamboyants n'ont pas de texte » : leurs deux
+  //  canaux dédiés — effetsParRang (Caverne : +1 Soie PAR RANG
+  //  d'habitation) et bonheurApporte (Jardins : +10 Bonheur) —
+  //  n'étaient pas rendus par le résumé, qui restait VIDE dans le
+  //  wiki et le picker ; même convention que les autres canaux :
+  //  l'effet vit dans le référentiel, il doit être visible.)
+  for (const e of ref.effetsParRang ?? []) {
+    parts.push(`+${e.quantite} ${e.ressource} par rang d'habitation / tour`)
+  }
+  if (ref.bonheurApporte) parts.push(`+${ref.bonheurApporte} Bonheur dans l'habitation`)
   // Effets de PLATEAU (Responsable des voies, Guilde des marchands) :
   //  texte du référentiel affiché tel quel — la portée se règle à la
   //  main. (Convention 2026-11-04, retour Thibaut : ce qui n'est PAS

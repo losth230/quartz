@@ -55,6 +55,23 @@ test('merveilles naturelles : les 10 existent, catégorie Aménagement, coût un
   }
 })
 
+// (Retour Thibaut 2026-11-15 « caverne de la tisseuse et jardins
+//  flamboyants n'ont pas de texte » : les canaux effetsParRang et
+//  bonheurApporte rejoignent le résumé du picker/wiki — AUCUNE
+//  merveille naturelle ne doit rester muette.)
+test('merveilles naturelles (règle 2026-11-15) : AUCUNE ne rend un résumé vide — Caverne « +1 Soie par rang d\u2019habitation / tour », Jardins « +10 Bonheur dans l\u2019habitation »', () => {
+  const { C } = partieTemoin()
+  for (const nom of MN) {
+    const ref = C.config.constructions.find((c) => c.nom === nom)
+    const lib = resumeConstruction(ref, C.config)
+    assert.ok(lib.length > 0, `${nom} doit afficher un résumé (obtenu : "${lib}")`)
+  }
+  const caverne = resumeConstruction(C.config.constructions.find((c) => c.nom === 'Caverne de la tisseuse'), C.config)
+  assert.ok(caverne.includes('+1 Soie par rang d\'habitation / tour'), `libellé Caverne : ${caverne}`)
+  const jardins = resumeConstruction(C.config.constructions.find((c) => c.nom === 'Jardins Flamboyants'), C.config)
+  assert.ok(jardins.includes('+10 Bonheur dans l\'habitation'), `libellé Jardins : ${jardins}`)
+})
+
 test('Caverne de la tisseuse : +1 Soie PAR RANG (Hameau 1, Cité 2, Grande Cité 3)', () => {
   const { ville, C } = partieTemoin()
   ville.amenagements = ['Caverne de la tisseuse']
