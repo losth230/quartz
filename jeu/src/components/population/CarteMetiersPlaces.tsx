@@ -17,7 +17,7 @@ import { detailGainsVille } from '../../engine/economie'
 import { Card, fmt } from '../ui'
 
 export function CarteMetiersPlaces({
-  vivants, villesOcc, villesDuJoueur, estCite, C, descMetier, state, joueur,
+  vivants, villesOcc, villesDuJoueur, estCite, C, descMetier, state, joueur, player,
 }: {
   vivants: Character[]
   villesOcc: Array<{ nom: string }>
