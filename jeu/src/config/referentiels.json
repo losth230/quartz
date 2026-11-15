@@ -2486,6 +2486,7 @@
           "places": 7
         }
       ],
+      "requis": "Grange",
       "remplaceBatiment": [
         "Grange"
       ],
@@ -2682,6 +2683,11 @@
         {
           "ressource": "Charbon",
           "quantite": -1
+        },
+        {
+          "ressource": "Nourriture",
+          "quantite": 5,
+          "ete": true
         }
       ],
       "rangMinHabitation": 2,
@@ -2691,6 +2697,7 @@
           "places": 30
         }
       ],
+      "requis": "Moulin à vent",
       "remplaceBatiment": [
         "Moulin à vent"
       ],
@@ -5828,12 +5835,7 @@
       "cout": "",
       "production": "",
       "description": "",
-      "effets": [
-        {
-          "ressource": "Soie",
-          "quantite": 5
-        }
-      ],
+      "effets": [],
       "rangMinHabitation": 1,
       "bonusMetierParHabitantVille": [
         {
@@ -5857,6 +5859,10 @@
         {
           "ressource": "Bois",
           "valeur": 20
+        },
+        {
+          "ressource": "Soie",
+          "valeur": 5
         }
       ]
     },
@@ -6546,7 +6552,7 @@
       "qualite": "roturier"
     },
     {
-      "valeur1": 15,
+      "valeur1": 20,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",
@@ -6571,7 +6577,7 @@
       "qualite": "roturier"
     },
     {
-      "valeur1": 4,
+      "valeur1": 6,
       "ressource1": "Nourriture",
       "valeur2": 0,
       "ressource2": "",

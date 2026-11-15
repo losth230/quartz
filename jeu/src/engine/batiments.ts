@@ -25,8 +25,8 @@ import type { City, GameState, Player } from './types'
 import type { GameConfig } from '../config/defaultConfig'
 import type { Cfg } from './gameData'
 import {
-  constructionRef, coutBatimentRef, effetsConstructionRef, garnisonConstructionRef,
-  batimentsRefs, prerequisConstruction, type ConstructionRef,
+  constructionRef, coutBatimentRef, effetsConstructionRef, effetsEteConstructionRef,
+  garnisonConstructionRef, batimentsRefs, prerequisConstruction, type ConstructionRef,
 } from './constructions'
 
 /** Toutes les références de bâtiments du référentiel canonique. */
@@ -141,6 +141,28 @@ export function effetsBatimentsVille(ville: City, C: Cfg): Record<string, number
   for (const nom of ville.batiments) {
     if (ignores.has(nom)) continue
     for (const [res, v] of Object.entries(effetsTourBatiment(nom, C, groupe))) {
+      out[res] = (out[res] ?? 0) + v
+    }
+  }
+  return out
+}
+
+/** Production d'ÉTÉ des BÂTIMENTS d'une ville (canal « Nourr - été »,
+ *  arbitrage Thibaut 2026-11-15 : la Guilde des artisans de la terre
+ *  augmente de 5 la production de Nourriture en été) — effets marqués
+ *  « été » du référentiel, bâtiments REMPLACÉS exclus (patron
+ *  batimentsRemplaces, même sémantique que le canal flux). Créditée au
+ *  stock uniquement quand la saison est Été (étape « Nourr - été » du
+ *  tour, aux côtés des aménagements Champ/Rizière). */
+export function effetsNourrEteBatimentsVille(ville: City, C: Cfg): Record<string, number> {
+  const ignores = batimentsRemplaces(ville, C)
+  const groupe = ville.type
+  const out: Record<string, number> = {}
+  for (const nom of ville.batiments) {
+    if (ignores.has(nom)) continue
+    const ref = constructionRef(nom, C.config, groupe)
+    if (!ref) continue
+    for (const [res, v] of Object.entries(effetsEteConstructionRef(ref, C.config))) {
       out[res] = (out[res] ?? 0) + v
     }
   }

@@ -2031,6 +2031,7 @@ export function cfgOf(config?: GameConfig): Cfg {
   if (Array.isArray(merged.metiers)) {
     const defChasseur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Chasseur')
     const defFermier = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Fermier')
+    const defPecheur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Pêcheur')
     const defEleveur = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Éleveur')
     const defArtiste = DEFAULT_CONFIG.metiers.find((t) => t.metier === 'Artiste')
     for (const t of merged.metiers) {
@@ -2052,13 +2053,22 @@ export function cfgOf(config?: GameConfig): Cfg {
         t.valeur2 = defChasseur.valeur2
         t.ressource2 = defChasseur.ressource2
       }
-      // (arbitrage 2026-11-11 : Fermier +15 — le défaut +10 du
-      //  2026-11-01 rejoint les anciens défauts 5 et 15 du même
-      //  jour ; tous migrent vers le défaut courant)
+      // (arbitrage 2026-11-15 : Fermier +20 — les défauts SUCCESSIFS
+      //  5 puis 15 (matin/soir du 2026-11-01), 10 et 15 (2026-11-11)
+      //  rejoignent la liste ; tous migrent vers le défaut courant)
       if (t.metier === 'Fermier' && defFermier && t.ete === true
         && (t.valeur1 === 5 || t.valeur1 === 15 || t.valeur1 === 10)
         && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
         t.valeur1 = defFermier.valeur1
+      }
+      // (arbitrage 2026-11-15 : Pêcheur +6 Nourriture toute l'année —
+      //  l'ancien défaut 4 (et le bonus Bétail des bâtiments
+      //  côtiers, retiré le même jour) migre vers le défaut courant.
+      //  Le Pêcheur n'est JAMAIS `ete` : la fiche doit rester
+      //  annuelle, une entrée marquée été ne migré pas.)
+      if (t.metier === 'Pêcheur' && defPecheur && t.ete !== true
+        && t.valeur1 === 4 && t.ressource1 === 'Nourriture' && t.valeur2 === 0) {
+        t.valeur1 = defPecheur.valeur1
       }
       // ÉLEVEUR (2026-11-11) : anciens défauts — v1 (2,4 Nourriture,
       //  pas de Bétail) et fiche 2026-10-25 (0,5 Bétail + 2 Nourriture)

@@ -11,8 +11,6 @@
 import type { Character, City, GameState, Player } from './types'
 import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
-import { villeCotiere } from './geographie'
-import { constructionRef, estCotiereRef } from './constructions'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
 import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille } from './batiments'
@@ -161,12 +159,12 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   // Vague 3a : les métiers marqués `ete` (Fermier) ne produisent
   //  qu'en saison d'Été ; Sans-emploi (metier null) ne produit rien.
   const metiers: Record<string, number> = {}
-  // (2026-11-02, paramètre `cotier` : un bâtiment CÔTIER présent
-  //  dans une ville à proximité — donnée du référentiel, plus de nom
-  //  « Ponton » codé en dur — chaque Pêcheur de la ville produit
-  //  +0,5 Bétail par tour, AVANT le calcul des taxes.)
-  const batimentCotierActif = villeCotiere(ville)
-    && (ville.batiments ?? []).some((b) => estCotiereRef(constructionRef(b, C.config)))
+  // (RETRAIT 2026-11-15, arbitrage Thibaut « le pêcheur produit 6
+  //  Nourriture toute l'année, mais pas de bétail » : l'ancien bonus
+  //  « +0,5 Bétail par Pêcheur dans une ville côtière avec bâtiment
+  //  côtier (Ponton) » disparaît — le champ `cotier` du référentiel
+  //  ne régit plus que les EMPLACEMENTS de métiers (capMetierVille),
+  //  les gains des Pêcheurs viennent uniquement de leur fiche.)
   // (Refonte 12 lois, 2026-10-29, Naturalisme « Champs
   //  nourriciers » : si la VILLE est de culture Naturalisme, chaque
   //  FERMIER produit +1 Nourriture par tour d'ÉTÉ — le Fermier est
@@ -236,9 +234,8 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
         metiers[bm.ressource] = (metiers[bm.ressource] ?? 0) + bm.valeur * mult
       }
     }
-    if (batimentCotierActif && c.metier === 'Pêcheur') {
-      metiers['Bétail'] = (metiers['Bétail'] ?? 0) + 0.5 * mult
-    }
+    // (RETRAIT 2026-11-15 : plus de bonus Bétail des Pêcheurs — cf.
+    //  l'arbitrage documenté en tête de boucle.)
     if (champsNourriciers && state.saison === 'Été' && c.metier === 'Fermier') {
       metiers['Nourriture'] = (metiers['Nourriture'] ?? 0) + champsNourriciers * mult
     }

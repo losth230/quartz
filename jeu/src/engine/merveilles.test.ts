@@ -39,7 +39,7 @@ import {
 import { detailGainsVille } from './economie'
 import { effetsCommerceJoueur, detailCommerceJoueur, maxRoutesJoueur, creerRouteCommerce } from './commerce'
 import { detailConversionVille } from './culture'
-import { constructionRef, resumeConstruction } from './constructions'
+import { constructionRef, resumeConstruction, effetsConstructionRef, effetsEteConstructionRef, coutConstructionRef } from './constructions'
 import { capMetierVille } from './metiers'
 import { normaliserEtat } from './villes'
 import {
@@ -249,7 +249,7 @@ test('Pyramide des Xoltans : production des Bourgeois de LA VILLE ×2 EN PLUS du
 
 // ── 5. Sanctuaire de Salmodiva : Fermiers +2 Nourriture en ÉTÉ ────────────
 
-test('Sanctuaire de Salmodiva : les Fermiers de la ville produisent +2 Nourriture par tour EN ÉTÉ seulement (15 + 2 = 17), rien hors été', () => {
+test('Sanctuaire de Salmodiva : les Fermiers de la ville produisent +2 Nourriture par tour EN ÉTÉ seulement (20 + 2 = 22), rien hors été', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]!
@@ -264,17 +264,38 @@ test('Sanctuaire de Salmodiva : les Fermiers de la ville produisent +2 Nourritur
   assert.equal(bms[0]?.valeur, 2)
   assert.equal(bms[0]?.ete, true, 'le bonus est marqué ÉTÉ')
 
-  // moteur : en été le Fermier produit 15 + 2 = 17 Nourriture
+  // moteur : en été le Fermier produit 20 + 2 = 22 Nourriture
+  //  (arbitrage 2026-11-15 : le Fermier produit 20 Nourriture en été)
   state.saison = 'Été'
   const ete = detailGainsVille(state, p, p.villes[0], C)
-  assert.ok(Math.abs(ete.metiers['Nourriture']! - 17) < 1e-9,
-    `été : 15 (métier) + 2 (Sanctuaire) = 17 (obtenu ${ete.metiers['Nourriture']})`)
+  assert.ok(Math.abs(ete.metiers['Nourriture']! - 22) < 1e-9,
+    `été : 20 (métier) + 2 (Sanctuaire) = 22 (obtenu ${ete.metiers['Nourriture']})`)
   // hors été : le Fermier ne produit rien (métier été) et le bonus
   //  ne joue pas non plus — AUCUNE clé Nourriture
   state.saison = 'Hiver'
   const hiver = detailGainsVille(state, p, p.villes[0], C)
   assert.equal(hiver.metiers['Nourriture'], undefined,
     'hiver : ni le métier ni le bonus ne créditent la Nourriture')
+})
+
+// ── 5bis. Sanctuaire de Salmodiva (arbitrage 2026-11-15) : les 5 Soies
+//    sont un COÛT de construction, PAS une production ───────────────────
+
+test('Sanctuaire de Salmodiva (arbitrage 2026-11-15) : ne PRODUIT PAS de Soie par tour — les 5 Soies sont un COÛT de construction (20 Or + 20 Bois + 5 Soie)', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const ref = constructionRef('Sanctuaire de Salmodiva', C.config, 'Ville')
+  assert.ok(ref, 'Sanctuaire au référentiel')
+  // AUCUN flux par tour (l ancienne production +5 Soie/tour disparaît)
+  assert.deepEqual(effetsConstructionRef(ref, C.config), {}, 'aucun flux par tour (plus de +5 Soie)')
+  assert.deepEqual(effetsEteConstructionRef(ref, C.config), {}, 'aucun flux d été non plus')
+  // les 5 Soies migrent vers le COÛT de construction
+  assert.deepEqual(coutConstructionRef(ref), { Or: 20, Bois: 20, Soie: 5 },
+    'coût : 20 Or + 20 Bois + 5 Soie (arbitrage « coûte 5 soies à produire »)')
+  // le résumé du picker ne promet plus de Soie par tour
+  const lib = resumeConstruction(ref, C.config)
+  assert.ok(!lib.includes('Soie'), `libellé sans production de Soie : ${lib}`)
+  assert.ok(lib.includes('fermier +2 Nourriture / habitant en été'), `le bonus Fermier reste : ${lib}`)
 })
 
 // ── 6. Laboratoire de Falheim : part Science des Professeurs +10 % ────────

@@ -343,7 +343,7 @@ test('reaffecterMetiers (vague 3a) : priorisation — un sans-emploi prend un po
     'le log agrégé raconte les postes pris')
 })
 
-test('Fermier (arbitrage 2026-11-11) : +15 Nourriture en ÉTÉ seulement (champ ete du référentiel)', () => {
+test('Fermier (arbitrage 2026-11-15) : +20 Nourriture en ÉTÉ seulement (champ ete du référentiel)', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -355,7 +355,7 @@ test('Fermier (arbitrage 2026-11-11) : +15 Nourriture en ÉTÉ seulement (champ 
   const ville = p.villes[0]
   state.saison = 'Été'
   const dete = detailGainsVille(state, p, ville, C)
-  assert.ok(Math.abs(dete.metiers['Nourriture'] - (15 + 2)) < 1e-9, 'été : Fermier +15 et Chasseur +2 Nourriture')
+  assert.ok(Math.abs(dete.metiers['Nourriture'] - (20 + 2)) < 1e-9, 'été : Fermier +20 et Chasseur +2 Nourriture')
   state.saison = 'Hiver'
   const dhiver = detailGainsVille(state, p, ville, C)
   assert.ok(Math.abs(dhiver.metiers['Nourriture'] - 2) < 1e-9, 'hors été : le Fermier ne produit rien, le Chasseur reste')
@@ -533,7 +533,7 @@ test('nettoyage 2026-10-22 (retour Thibaut, retrait du code mort) : les no-ops d
   assert.ok(!detail.some((l) => l.label.startsWith('base du rang')), 'aucune ligne « base du rang » dans le détail de garnison')
 })
 
-test('vague 3b : Ponton — chaque Pêcheur de la ville produit +0,5 Bétail par tour (ville CÔTIÈRE : Rivière ou Mer, gains bruts avant taxes)', () => {
+test('vague 3b : Ponton — les Pêcheurs ne produisent PAS de Bétail (retrait arbitrage 2026-11-15 « le pêcheur produit 6 Nourriture toute l année, mais pas de bétail ») ; le bâtiment côtier n ouvre que des EMPLACEMENTS (ville CÔTIÈRE : Rivière ou Mer)', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]
@@ -549,16 +549,18 @@ test('vague 3b : Ponton — chaque Pêcheur de la ville produit +0,5 Bétail par
   //  câblé littéralement — une proximité non listée compte).
   ville.proximite = 'Mer'
   assert.equal(capMetierVille('Pêcheur', ville, C), 2, 'Mer : Ponton côtier → +2 emplacements de Pêcheur')
-  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Mer : 2 Pêcheurs × +0,5 Bétail (Ponton)')
+  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'] ?? 0, 0,
+    'Mer : PAS de Bétail (l ancien bonus +0,5 Bétail/Pêcheur est retiré, arbitrage 2026-11-15)')
+  assert.ok(Math.abs((detailGainsVille(state, p, ville, C).metiers['Nourriture'] ?? 0) - 12) < 1e-9,
+    'Mer : 2 Pêcheurs × 6 Nourriture (référentiel 2026-11-15, toute l année)')
   ville.proximite = 'Rivière'
-  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Rivière : côtière aussi (même bonus)')
+  assert.equal(capMetierVille('Pêcheur', ville, C), 2, 'Rivière : côtière aussi (mêmes emplacements)')
+  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'] ?? 0, 0, 'Rivière : pas de Bétail non plus')
   ville.proximite = 'Colline'
   assert.equal(capMetierVille('Pêcheur', ville, C), 2, 'Colline (proximité non listée) : côtière aussi — arbitrage littéral (vague 2)')
-  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'], 1, 'Colline : 2 Pêcheurs × +0,5 Bétail (Ponton)')
   // Plaine (ou sans proximité) : le bâtiment n'a AUCUN effet moteur
   ville.proximite = 'Plaine'
   assert.equal(capMetierVille('Pêcheur', ville, C), 0, 'Plaine : le Ponton n ouvre aucun poste (bâtiment côtier)')
-  assert.equal(detailGainsVille(state, p, ville, C).metiers['Bétail'] ?? 0, 0, 'Plaine : pas de Bétail des Pêcheurs')
   // sans Ponton, pas de Bétail des Pêcheurs
   ville.batiments = []
   ville.proximite = 'Mer'

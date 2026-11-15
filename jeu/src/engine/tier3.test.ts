@@ -36,6 +36,7 @@ import { emptyRecap } from './shared'
 import { rangDe } from './statutSocial'
 import {
   batimentsActifsVille, modificateursPaysJoueur, emissairesConstructionsJoueur,
+  effetsBatimentsVille, effetsNourrEteBatimentsVille,
 } from './batiments'
 import { detailGainsVille, impotsVassaux } from './economie'
 import { effetsCommerceJoueur, maxRoutesJoueur, creerRouteCommerce } from './commerce'
@@ -228,6 +229,48 @@ test('batimentsActifsVille (règle prérequis 2026-11-14) : le bâtiment exigé 
   p.villes[0] = chateau(p, ['Poste de garde', 'Caserne'])
   assert.equal(batimentsActifsVille(p.villes[0], C).join(), 'Caserne',
     'version Château : la Caserne remplace aussi son prérequis')
+})
+
+// ── Test 2ter (règle chaîne nourriture 2026-11-15) : la vraie chaîne
+//    est grange → silo à grain → moulin à vent → guilde des artisans
+//    de la terre — et la Guilde apporte +5 Nourriture en ÉTÉ ──────────
+
+test('chaîne nourriture (règle 2026-11-15) : Grange → Silo à grain → Moulin à vent → Guilde des artisans de la terre — chaque maillon exige le précédent, la Guilde porte +5 Nourriture en ÉTÉ (canal « Nourr - été », jamais doublonné)', () => {
+  const state = partie()
+  const C = cfgOf(state.config)
+  const p = state.players[0]
+  // la chaîne d'exigence complète (champ requis) : Silo ← Grange,
+  //  Moulin ← Silo, Guilde ← Moulin (le Moulin remplace déjà Silo ET
+  //  Grange via remplaceBatiment explicite)
+  assert.equal(constructionRef('Silo à grain', C.config)?.requis, 'Grange')
+  assert.equal(constructionRef('Moulin à vent', C.config)?.requis, 'Silo à grain')
+  assert.equal(constructionRef('Guilde des artisans de la terre', C.config)?.requis, 'Moulin à vent')
+  // au fil de l'eau : chaque successeur neutralise son prérequis
+  p.villes[0] = villeTest(p, ['Grange'])
+  assert.deepEqual(effetsNourrEteBatimentsVille(p.villes[0], C), {}, 'Grange seule : aucun effet d été')
+  p.villes[0] = villeTest(p, ['Silo à grain'])
+  assert.deepEqual(effetsNourrEteBatimentsVille(p.villes[0], C), {}, 'Silo (a remplacé la Grange) : aucun effet d été')
+  p.villes[0] = villeTest(p, ['Moulin à vent'])
+  assert.deepEqual(effetsNourrEteBatimentsVille(p.villes[0], C), {}, 'Moulin (a remplacé Silo + Grange) : aucun effet d été')
+  p.villes[0] = villeTest(p, ['Guilde des artisans de la terre'])
+  // +5 Nourriture en ÉTÉ (arbitrage Thibaut 2026-11-15 « la guilde des
+  //  artisans de la terre augmente de 5 la production de nourriture
+  //  en été ») ; le Charbon −1 reste un flux NORMAL — le canal été ne
+  //  double JAMAIS un effet
+  assert.deepEqual(effetsNourrEteBatimentsVille(p.villes[0], C), { Nourriture: 5 },
+    'Guilde : +5 Nourriture en été (canal Nourr - été)')
+  assert.deepEqual(effetsBatimentsVille(p.villes[0], C), { Charbon: -1 },
+    'Guilde : flux normal Charbon −1 (l été ne doublonne pas les flux)')
+  // vieille liste non nettoyée (états pré-2026-11-14) : les prérequis
+  //  restés dans la liste sont neutralisés par la Guilde
+  p.villes[0] = villeTest(p, ['Grange', 'Silo à grain', 'Moulin à vent', 'Guilde des artisans de la terre'])
+  assert.deepEqual(effetsNourrEteBatimentsVille(p.villes[0], C), { Nourriture: 5 },
+    'chaîne entière dans la liste : seule la Guilde compte (remplacements)')
+  assert.equal(batimentsActifsVille(p.villes[0], C).join(), 'Guilde des artisans de la terre',
+    'bâtiments actifs : la Guilde seule')
+  // le résumé affiché du picker mentionne le +5 d'été
+  const lib = resumeConstruction(constructionRef('Guilde des artisans de la terre', C.config), C.config)
+  assert.ok(lib.includes('été : +5 Nourriture'), `libellé : ${lib}`)
 })
 
 // ── Test 3 : detailGainsVille — production et taxes des guildes ──────────

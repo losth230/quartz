@@ -491,8 +491,9 @@ if (ex.encodeShare) {
 }
 
 // C10 : 12e retour Thibaut 2026-11-14 — « j'aimerais que la mer centrale
-//  par défaut soit retirée sur les continents » + « bétail à 4.5 % ».
-//  a) BÉTAIL : densité par défaut 45 ‰ dans RES_DEFAULTS (avant 35 ‰) ;
+//  par défaut soit retirée sur les continents » + « bétail à 4.5 % » ;
+//  13e retour 2026-11-15 — Bétail à 5 % (50 ‰).
+//  a) BÉTAIL : densité par défaut 50 ‰ dans RES_DEFAULTS (avant 45 ‰) ;
 //  b) CENTRE ATTEIGNABLE : le creux central explicite est retiré, le
 //     semis peut poser une masse au centre — ≥ 1 seed sur 5 avec de
 //     la terre à hexdist ≤ 2 du centre sur Continents (11e : 0/8, mer
@@ -500,7 +501,7 @@ if (ex.encodeShare) {
 {
   const bad = [];
   const bet = ex.RES_DEFAULTS['Bétail'];
-  if (!bet || bet.density !== 45) bad.push('Bétail défaut ' + (bet ? bet.density : '?') + ' ‰ ≠ 45 ‰');
+  if (!bet || bet.density !== 50) bad.push('Bétail défaut ' + (bet ? bet.density : '?') + ' ‰ ≠ 50 ‰');
   let reach = 0;
   for (const seed of seeds) {
     const m = ex.generateMap(15, seed, presetParams(ex, 'continents', null));
@@ -511,8 +512,8 @@ if (ex.encodeShare) {
     }
   }
   if (reach < 1) bad.push('0/5 seeds avec terre centrale (hexdist ≤ 2)');
-  chk('C10 12e retour (Bétail défaut 45 ‰, centre continental atteignable sur ≥ 1/5 seeds)', bad.length === 0,
-    bad.join(', ') || ('Bétail 45 ‰, ' + reach + '/5 seeds avec terre centrale'));
+  chk('C10 13e retour (Bétail défaut 50 ‰, centre continental atteignable sur ≥ 1/5 seeds)', bad.length === 0,
+    bad.join(', ') || ('Bétail 50 ‰, ' + reach + '/5 seeds avec terre centrale'));
 }
 
 console.log(failures ? `\n${failures} ÉCHEC(S)` : '\nTOUS LES CONTRATS TIENNENT');

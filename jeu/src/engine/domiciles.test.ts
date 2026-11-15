@@ -437,12 +437,20 @@ test('fiche bâtiments : prérequis rang 2 lus depuis le champ coût (« X requi
   assert.equal(prerequisConstruction(constructionRef('Caserne', C.config)), 'Poste de garde')
   assert.equal(prerequisConstruction(constructionRef('Ecole militaire', C.config)), "Terrain d'entrainement")
   assert.equal(prerequisConstruction(constructionRef('Clinique', C.config)), 'Herboristerie')
-  // le remplacement n'est PAS un prérequis : Silo à grain remplace la
-  //  Grange via le champ dédié (pas de « requis » dans le coût)
-  assert.equal(prerequisConstruction(constructionRef('Silo à grain', C.config)), null)
+  // (RÈGLE CHAÎNE NOURRITURE 2026-11-15, retour Thibaut « la vraie
+  //  chaîne est grange → silo à grain → moulin à vent → guilde des
+  //  artisans de la terre ») le Silo à grain EXIGE la Grange (champ
+  //  requis) ET la remplace via le champ dédié ; le Moulin à vent
+  //  exige le Silo ; la Guilde des artisans de la terre exige le
+  //  Moulin à vent — chaque successeur remplace son prérequis
+  //  (règle des prérequis 2026-11-14).
+  assert.equal(prerequisConstruction(constructionRef('Silo à grain', C.config)), 'Grange')
   // (NORMALISATION 2026-11-02 : remplaceBatiment est un TABLEAU — le
   //  remplacement vit dans les données, lu par remplaceBatimentRef.)
   assert.deepEqual(constructionRef('Silo à grain', C.config)?.remplaceBatiment, ['Grange'])
+  assert.equal(prerequisConstruction(constructionRef('Moulin à vent', C.config)), 'Silo à grain')
+  assert.equal(prerequisConstruction(constructionRef('Guilde des artisans de la terre', C.config)), 'Moulin à vent')
+  assert.deepEqual(constructionRef('Guilde des artisans de la terre', C.config)?.remplaceBatiment, ['Moulin à vent'])
 })
 
 test('fiche bâtiments : Caserne rang 2 (Ville ET Château), +4 Garde, +10 Taudis', () => {

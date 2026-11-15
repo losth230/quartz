@@ -65,7 +65,7 @@ total : 119 règles — sources : batiment 72, amenagement 47
   amenagement.sericiculture-tier-3@terrain — Sériciculture (tier 3) (Terrain) : Tisseur +6 · Commerçant +5
   amenagement.site-archeologique-tier-2@terrain — Site archéologique (tier 2) (Terrain) : Archéologue +4
   amenagement.site-archeologique-tier-3@terrain — Site archéologique (tier 3) (Terrain) : Archéologue +7
-  batiment.sanctuaire-de-salmodiva@ville — Sanctuaire de Salmodiva (Ville) : Soie +5 · Fermier +4
+  batiment.sanctuaire-de-salmodiva@ville — Sanctuaire de Salmodiva (Ville) : Fermier +4
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
   batiment.camp-de-travailleurs@ville — Camp de travailleurs (Ville) : Bûcheron +2 · Mineur +2
@@ -75,7 +75,7 @@ total : 119 règles — sources : batiment 72, amenagement 47
   batiment.port-de-commerce@ville — Port de commerce (Ville) : Pêcheur +4 · Commerçant +10
   batiment.port-de-peche@ville — Port de pêche (Ville) : Pêcheur +6
   batiment.clinique@ville — Clinique (Ville) : Guérisseur +5
-  batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
+  batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Nourriture +5 (été) · Fermier +30
   batiment.barraquements@ville — Barraquements (Ville) : Garde +4
   batiment.complexe-d-exploitation-maritime@ville — Complexe d'exploitation maritime (Ville) : Commerçant +24
   batiment.usine@ville — Usine (Ville) : Bûcheron +2 · Mineur +2 · Forgeron +2 · Tisseur +2 · Charbonnier +2
@@ -124,7 +124,7 @@ total : 119 règles — sources : batiment 72, amenagement 47
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
   batiment.ordre-des-chevaliers-du-notan@ville — Ordre des chevaliers du Notan (Ville) : levée d'armée −50 Or
-── canal fluxVille : 23 règles ──
+── canal fluxVille : 22 règles ──
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.banque-centrale@capitale — Banque centrale (Capitale) : Or +8
@@ -133,10 +133,9 @@ total : 119 règles — sources : batiment 72, amenagement 47
   amenagement.pic-ascendant@merveille-naturelle — Pic Ascendant (Merveille naturelle) : Science +1
   amenagement.ruines-de-seth@merveille-naturelle — Ruines de Seth (Merveille naturelle) : Or +2 · Tourisme +10
   amenagement.echine-du-dragon@merveille-naturelle — Echine du dragon (Merveille naturelle) : Charbon +1 · Fer +1
-  batiment.sanctuaire-de-salmodiva@ville — Sanctuaire de Salmodiva (Ville) : Soie +5 · Fermier +4
   batiment.musee-d-archeologie@ville — Musée d’Archéologie (Ville) : Tourisme +30
   batiment.moulin-a-vent@ville — Moulin à vent (Ville) : Charbon -1 · Éleveur +4 · Fermier +15
-  batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Fermier +30
+  batiment.guilde-des-artisans-de-la-terre@ville — Guilde des artisans de la terre (Ville) : Charbon -1 · Nourriture +5 (été) · Fermier +30
   batiment.guilde-des-marchands@ville — Guilde des marchands (Ville) : Charbon -1
   batiment.guilde-des-marins@ville — Guilde des marins (Ville) : Charbon -1 · Commerçant +40
   batiment.ecole-intermediaire@chateau — Ecole intermédiaire (Château) : Or -3 · Professeur +2 · Scientifique +1

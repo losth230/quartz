@@ -560,45 +560,53 @@ test('config : la ligne titre « Ministre » reste, ses textes sont vidés (reto
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
 })
 
-// ── Gains Fermier & Chasseur (arbitrages 2026-11-01) : migration ciblée ──
-test('config : gains Fermier +15 été / Chasseur +2 actualisés dans une config sauvegardée à un ancien défaut (arbitrages 2026-11-01 et 2026-11-11)', () => {
+// ── Gains Fermier, Chasseur & Pêcheur : migration ciblée ──
+test('config : gains Fermier +20 été / Chasseur +2 / Pêcheur +6 actualisés dans une config sauvegardée à un ancien défaut (arbitrages 2026-11-01, 2026-11-11 et 2026-11-15)', () => {
   // les défauts du référentiel portent les nouveaux gains
   const refF = cfgOf(undefined).metiers.find((t) => t.metier === 'Fermier')!
   const refC = cfgOf(undefined).metiers.find((t) => t.metier === 'Chasseur')!
-  assert.equal(refF.valeur1, 15, 'référentiel : Fermier +15 Nourriture (arbitrage 2026-11-11)')
+  const refP = cfgOf(undefined).metiers.find((t) => t.metier === 'Pêcheur')!
+  assert.equal(refF.valeur1, 20, 'référentiel : Fermier +20 Nourriture (arbitrage 2026-11-15)')
   assert.equal(refF.ete, true, 'référentiel : le Fermier reste ete (été seulement)')
   assert.equal(refC.valeur1, 2, 'référentiel : Chasseur +2 Nourriture')
+  assert.equal(refP.valeur1, 6, 'référentiel : Pêcheur +6 Nourriture toute l année (arbitrage 2026-11-15)')
   // une config SAUVEGARDÉE AVANT (p. ex. la config mondiale du salon en
   //  cours) porte encore un ANCIEN défaut : actualisé par cfgOf —
-  //  défauts SUCCESSIFS du Fermier le 2026-11-01 : 5 (matin), puis 15
-  //  (après-midi) ; les deux migrent vers le défaut courant
+  //  défauts SUCCESSIFS du Fermier : 5 puis 15 (2026-11-01), 10 et 15
+  //  (2026-11-11) ; tous migrent vers le défaut courant +20
   const c = cloneDefaultConfig()
   c.schemaVersion = 5 // déjà convergée : le garde-fou joue quand même
   const f = c.metiers.find((t) => t.metier === 'Fermier')!
   f.valeur1 = 5
   const ch = c.metiers.find((t) => t.metier === 'Chasseur')!
   ch.valeur1 = 1.5
-  // une entrée PERSONNALISÉE par l'arbitre est conservée
   const pe = c.metiers.find((t) => t.metier === 'Pêcheur')!
-  pe.valeur1 = 99
+  pe.valeur1 = 4 // ancien défaut (avant l arbitrage +6 du 2026-11-15)
   const C = cfgOf(c)
-  assert.equal(C.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
-    'config sauvegardée : le Fermier à l ancien défaut exact (5) passe à +15')
+  assert.equal(C.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 20,
+    'config sauvegardée : le Fermier à l ancien défaut exact (5) passe à +20')
   assert.equal(C.metiers.find((t) => t.metier === 'Chasseur')!.valeur1, 2,
     'config sauvegardée : le Chasseur à l ancien défaut exact passe à +2')
-  assert.equal(C.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1, 99,
+  assert.equal(C.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1, 6,
+    'config sauvegardée : le Pêcheur à l ancien défaut exact (4) passe à +6')
+  // une entrée PERSONNALISÉE par l'arbitre est conservée
+  const c2 = cloneDefaultConfig()
+  c2.schemaVersion = 5
+  c2.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1 = 99
+  const C2p = cfgOf(c2)
+  assert.equal(C2p.metiers.find((t) => t.metier === 'Pêcheur')!.valeur1, 99,
     'une valeur personnalisée par l arbitre est conservée')
-  // cas du DÉFAUT INTERMÉDIAIRE (+15, config convergée entre les deux
-  //  arbitrages du même jour) : migré AUSSI vers +10
+  // cas des DÉFAUTS INTERMÉDIAIRES (+10 et +15, configs convergées
+  //  entre les arbitrages des 2026-11-01/2026-11-11) : migrés AUSSI
   const c15 = cloneDefaultConfig()
   c15.schemaVersion = 5
   c15.metiers.find((t) => t.metier === 'Fermier')!.valeur1 = 15
   const C15 = cfgOf(c15)
-  assert.equal(C15.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
-    'config convergée au défaut intermédiaire (+15) : reste à +15 (défaut courant)')
+  assert.equal(C15.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 20,
+    'config convergée au défaut intermédiaire (+15) : migre vers +20 (défaut courant)')
   // idempotence : la re-lecture d une config déjà actualisée est stable
   const C2 = cfgOf(C.config)
-  assert.equal(C2.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 15,
+  assert.equal(C2.metiers.find((t) => t.metier === 'Fermier')!.valeur1, 20,
     're-lecture : le garde-fou ne change rien de plus (idempotent)')
 })
 

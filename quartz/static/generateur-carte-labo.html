@@ -905,18 +905,24 @@ const DEFAULTS = {
 //  Désert, minuscule (~8 tuiles à 3 % de terre) : à 3,5 ‰, k = 0,28 →
 //  absent de ~70 % des cartes malgré le taux honnête. 120 ‰ = ~1 geyser
 //  par carte avec déserts suffisants, ressource rare mais présente.)
+// (13e retour Thibaut 2026-11-15 : « passe les toutes de 3,5 % à 4 %
+//  sauf bétail et ruines à 5 % » — les 6 ressources de base 35 → 40 ‰,
+//  Bétail 45 → 50 ‰, Ruines 60 → 50 ‰ (proximité 0 conservée :
+//  éparpillées). Geyser inchangé (hors champ de la demande).)
 const RES_DEFAULTS = {
-  // (12e retour Thibaut 2026-11-14) densité par défaut 4.5 %
-  //  (demande : « non pas à 3.5 % mais à 4.5 % de densité »)
-  'Bétail':   { density: 45, prox: 65, size: 4 },
-  'Baleines': { density: 35, prox: 65, size: 3 },
-  'Poissons': { density: 35, prox: 65, size: 4 },
-  'Or':       { density: 35, prox: 65, size: 3 },
-  'Fer':      { density: 35, prox: 65, size: 4 },
-  'Charbon':  { density: 35, prox: 65, size: 4 },
-  'Ruines':   { density: 60, prox: 0,  size: 2 },
+  // (13e retour Thibaut 2026-11-15) densité par défaut 4 %
+  //  pour les 6 ressources de base, Bétail et Ruines à 5 %
+  //  (demande : « passe les toutes de 3,5 % à 4 % sauf bétail et
+  //  ruines à 5 % » ; le Geyser, déjà à 12 %, est hors champ)
+  'Bétail':   { density: 50, prox: 65, size: 4 },
+  'Baleines': { density: 40, prox: 65, size: 3 },
+  'Poissons': { density: 40, prox: 65, size: 4 },
+  'Or':       { density: 40, prox: 65, size: 3 },
+  'Fer':      { density: 40, prox: 65, size: 4 },
+  'Charbon':  { density: 40, prox: 65, size: 4 },
+  'Ruines':   { density: 50, prox: 0,  size: 2 },
   'Geyser':   { density: 120, prox: 65, size: 2 },
-  'Soie':     { density: 35, prox: 65, size: 3 }
+  'Soie':     { density: 40, prox: 65, size: 3 }
 };
 
 // ============================================================

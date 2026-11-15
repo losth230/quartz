@@ -41,7 +41,7 @@ import { cfgOf } from './gameData'
 import { saisonForTurn } from './saisons'
 import { calculerGainsPopulation } from './economie'
 import { designerGouverneurs, purgerMetiersSurnombre, attribuerPlacesLibres } from './metiers'
-import { appliquerEffetsBatiments } from './batiments'
+import { appliquerEffetsBatiments, effetsNourrEteBatimentsVille } from './batiments'
 import { appliquerEffetsAmenagements, effetsNourrEteAmenagementsVille } from './amenagements'
 import { appliquerEffetsAutres, effetsNourrEteAutresVille } from './autres'
 import { appliquerEffetsRegimesCultures, resynchroniserTourisme } from './regimes'
@@ -142,7 +142,7 @@ export const ETAPES_TOUR: EtapeTour[] = [
   {
     numero: '3quinquies-bis',
     nom: 'Nourr — été',
-    description: 'En ÉTÉ seulement : production de nourriture d\u2019été (aménagements Champ/Rizière + lignes « Autres » « Nourr - été »), créditée au stock de Nourriture EN PLUS de la nourriture générale.',
+    description: 'En ÉTÉ seulement : production de nourriture d\u2019été (aménagements Champ/Rizière + BÂTIMENTS à effet d\u2019été, ex. Guilde des artisans de la terre +5, + lignes « Autres » « Nourr - été »), créditée au stock de Nourriture EN PLUS de la nourriture générale.',
   },
   {
     numero: '3sexies',
@@ -299,7 +299,9 @@ export function runTurn(state: GameState): GameState {
   }
 
   // 3quinquies-bis. Nourr - été : production de NOURRITURE D'ÉTÉ —
-  // aménagements d'été (Champ, Rizière) + lignes « Autres » de ressource
+  // aménagements d'été (Champ, Rizière) + BÂTIMENTS à effet d'été
+  // (Guilde des artisans de la terre +5 Nourriture, arbitrage Thibaut
+  // 2026-11-15) + lignes « Autres » de ressource
   // « Nourr - été ». Créditée au stock de Nourriture UNIQUEMENT quand la
   // saison est Été (macro FinDeTour du classeur : prodSummer = ligne
   // « Nourr - été », S'AJOUTE à la nourriture générale — jamais un
@@ -309,6 +311,9 @@ export function runTurn(state: GameState): GameState {
     const out: Record<string, number> = {}
     if (state.saison === 'Été') {
       for (const ville of p.villes) {
+        for (const [res, v] of Object.entries(effetsNourrEteBatimentsVille(ville, C))) {
+          out[res] = (out[res] ?? 0) + v
+        }
         for (const [res, v] of Object.entries(effetsNourrEteAmenagementsVille(ville, C.config))) {
           out[res] = (out[res] ?? 0) + v
         }
