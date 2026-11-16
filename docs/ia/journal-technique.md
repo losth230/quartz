@@ -7478,3 +7478,57 @@ et ee392fba sont historiques et attendus.
 
 Tête : feat 50d2fa02 → règles f8a0eb78 → journal ed8655cf → fix
 ee392fba → fix 6d97824e → ce journal.
+
+## 2026-11-16 — Retour au tirage de conversion pondéré par le tourisme
+
+Arbitrage Thibaut « je n'aime pas le fonctionnement actuel du
+tourisme. Je préférais l'ancien » : la V2 « Pression/Ancrage » du
+2026-11-14 (et son cap proportionnel du 2026-11-15) est retirée,
+sans le poids des compatriotes — chaque habitant vivant (hors
+Dirigeant) a 5 % (conversionProba, réglable) par tour de se
+convertir, culture d'arrivée tirée au hasard pondéré par le
+TOURISME de chaque culture du monde (culture actuelle candidate :
+tirée = pas de conversion). Dogmes conservés (Évangile poids ×1,1 ;
+Nationalisme +0,15 × poids des autres vers la culture d'accueil) ;
+Guilde des évangélistes TRANSFORMÉE « poids dans la conversion
+×1.1 » (culture de la ville d'accueil) ; Tour de Crystal : proba du
+jet ÷1,1 (ancrageConversionMultVille) ; ordre du tour inchangé
+(conversion 4bis AVANT migration 4ter).
+
+Implémentation : engine/culture.ts réécrit (applyCultureInfluence =
+tirage par habitant, chance(conversionProba ÷ Tour-mult) puis
+pickWeighted sur poids ; exports calculPression + poidsConversion ;
+detailConversionVille V2 supprimé) ; params.ts (conversionProba
+0,05 revient, 5 clés V2 retirées de l'interface/défaut/PARAM_META) ;
+defaultConfig.ts (migration ciblée conversionTirage2026, patron
+taxes25 sans bump ; CORRECTIF de la migration V2
+conversionDeterministe2026 qui détruisait conversionProba à chaque
+cfgOf) ; VilleCarte.tsx (bloc « Balance culturelle » remplacé par
+« Conversion : X % par habitant / tour » + tableau des poids et
+parts du tirage) ; docblocks batiments/constructions/tour.
+
+Tests : conversion.test.ts réécrit (7), dogmes/tier3/merveilles
+réalignés, migrationBonheur test d'ordre réécrit en deux tours
+(conversionProba 0 puis 1 : l'ancien invariant « aucun migré ne
+change de culture le tour de son arrivée » est trop fort sous le
+tirage — un migrant peut être converti dans sa ville de DÉPART le
+même tour, la conversion lit la population PRÉ-FLUX). DEUX
+enquêtes de régression causées par le décalage du flux aléatoire
+(le tirage consomme un rng PAR HABITANT) : (1) regression.test.ts
+« une seule passe de conception » — écart conceptions vs nouvelles
+enceintes ELUCIDÉ : une femme enceinte qui fait une FAUSSE COUCHE
+à l'étape santé peut RE-CONCEVOIR à la passe des naissances du
+même tour (cas Béatrix Morneplaine, graine 20261018 T3, J4) :
+invariant amendé (conceptions = nouvelles + re-conceptions après
+fausse couche), toujours PAS de grossesse de 0 tour ; (2) le test
+d'ordre ci-dessus. 312/312 tests moteur verts ; les 23 tests de
+rendu échouent SEULEMENT au bac à sable (react absent) — CI les
+joue via tsx.
+
+Validation : diag-out.txt régénéré (log 408 → 463, commandants J1
+4 → 3 — flux aléatoire décalé, rien d'autre) ; VilleCarte vérifié
+par DIFF EXACT contre l'original distant (2 hunks : import +
+bloc conversion), le vérificateur JSX maison (check-jsx.mts
+recréé) signalant un faux positif IDENTIQUE sur l'original. Docs :
+règles (section « Retour au tirage », SUPERSEDÉ sur les sections
+V2 et cap, Tour de Crystal/dogmes/guilde réalignés) + ce journal.
