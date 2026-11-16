@@ -47,6 +47,10 @@ Le dépôt `losth230/quartz` contient aussi le site vitrine « Quartz » ; le je
   docblocks d'arbitrage concernés ne sont pas supprimés mais remplacés par un
   commentaire « RETRAIT 2026-10-19 (retour arbitre — à refaire) » ; les fiches
   peuplesLibres/peuplesAutres restent dans le référentiel comme source pour la refonte.
+  (Mise à jour 2026-11-16 : le « Peuple » du setup PORTE DÉSORMAIS DES EFFETS par
+  habitant — champ `peuple` hérité de la mère, immuable, table `effetsPeuple` du
+  référentiel ; voir docs/ia/regles-et-arbitrages.md, section « Peuple des habitants ».
+  L'attrait migratoire, lui, reste retiré.)
 - **Toute évolution du référentiel devant atteindre des configs existantes** →
   incrémenter `SCHEMA_VERSION_CONFIG` (config/defaultConfig.ts). Les configs sont
   « convergées » une fois puis tamponnées : supprimer/renommer une ligne dans les
