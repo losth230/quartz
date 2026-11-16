@@ -7633,3 +7633,46 @@ de données + UN commit de docs sur `v4` :
   inchangés (les Lauriers restent à validation manuelle, aucune
   mécanique nouvelle). Docs : regles-et-arbitrages.md (suite 3) +
   cette entrée.
+
+---
+
+## 2026-11-16 (suite 4) — Lauriers I à V (implémentation)
+
+Arbitrage de la session : le Laurier IV devient COMMUN à toutes les
+voies « habitation de rang 3 », les anciens triomphes passent en
+LAURIER V (victoire à 5 Lauriers), Militaire III « une habitation
+avec 4 bâtiments militaires » (toute la famille Militaire du
+référentiel compte, quartiers inclus), et les crises ne se tirent
+plus qu'aux LAURIERS I et III (avant : chaque Laurier I-III).
+
+- `referentiels.json` : chaque voie passe à 5 Lauriers — IV réécrit
+  « Améliorer une habitation au rang 3 (Grande Cité ou Forteresse) »,
+  V = ancien triomphe de la suite 3 ; Scientifique : 5 Lauriers
+  vides (différée). Diff minimal (insertions), garde-fou cfgOf
+  « mise à jour des conditions » propage la 5e ligne aux configs
+  sauvegardées SANS bump de schemaVersion (la comparaison par
+  index détecte la longueur nouvelle).
+- `engine/victory.ts` : ROMAINS + V, borne cocherLaurier 1-5,
+  victoireAtteinte n >= 5 (4 Lauriers ne suffisent plus),
+  victoryProgress ratio /5 et « X/5 Lauriers », constante exportée
+  LAURIERS_CRISE = [1, 3] — le journal ne rappelle la crise qu'aux
+  paliers I et III, proclamation VICTOIRE au Laurier V.
+- UI (textes uniquement, .tsx édités au `edit` ciblé, équilibre JSX
+  vérifié) : Dashboard (titre « Lauriers I à V », légende radar
+  « 100 % = Laurier V », crises I et III), OngletsVictoires (5
+  Lauriers, Laurier V = Victoire, palier IV commun affiché — la
+  liste par voie itère la table, 5 lignes automatiques), AideAuto
+  (ligne voies de victoire actualisée), types.ts (docblock
+  p.lauriers 0-5).
+- Nouveau `engine/victory.test.ts` (5 tests de garde) : référentiel
+  (5 Lauriers/voie, IV commun, V = triomphes exacts, Scientifique
+  vide, Militaire III), ordre strict 1-5 + décoche, journal des
+  crises I/III uniquement + VICTOIRE au V, victoireAtteinte 4 ≠
+  victoire / 5 = victoire, radar /5. **400/401 tests natifs
+  locaux** (395 + 5 ; le seul KO est salon.test.ts, ERR_MODULE_NOT_FOUND
+  @supabase/supabase-js, node_modules absent au sandbox — rejoué
+  par la CI). Harnais rtest reconstruit (workdir réinitialisé).
+- Docs : regles-et-arbitrages.md (suite 4) + cette entrée. Reste
+  différé : voie Scientifique, Laurier III Scientifique des Nains,
+  affichage UI des talents de peuple, jauges de progression
+  automatiques.
