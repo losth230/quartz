@@ -7,7 +7,8 @@
 
 import type { Character, City, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
-import { cfgOf, metierDef, cultureDef, traitDef, type Cfg } from './gameData'
+import { cfgOf, metierDef, cultureDef, traitDef, peupleEffetDef, type Cfg } from './gameData'
+import { talentsActifs } from './talentsPeuple'
 import { schoolRankOf } from './gameData2'
 import { bump, fullName, isNobleDyn } from './shared'
 import { rangDe } from './statutSocial'
@@ -358,6 +359,36 @@ function emplacementsMetierVille(
     ).length
   }
   if (ctx) total += emplacementsRoutesVille(metier, ctx.state, ctx.joueur, ville.nom, C)
+  // (Effets de peuple du JOUEUR, arbitrage Thibaut 2026-11-16 « Or
+  //  des mines » : la fiche effetsPeuple du peuple du joueur ouvre
+  //  des emplacements PAR AMÉNAGEMENT PRÉSENT dans la ville (+1
+  //  Commerçant par carrière/mine des Khazhags Nains). Sans ctx
+  //  (cités libres, appels sans état) : aucun effet.)
+  if (ctx) {
+    const pj = ctx.state.players.find((q) => q.n === ctx.joueur)
+    for (const epa of peupleEffetDef(pj?.peuple ?? '', C.config)?.emplacementsParAmenagement ?? []) {
+      if (epa.metier !== metier) continue
+      total += epa.places * (ville.amenagements ?? [])
+        .filter((a) => epa.amenagements.includes(a)).length
+    }
+  }
+  // (Talents de peuple LAURIERS, arbitrage Thibaut 2026-11-16
+  //  « Routes de l'entrefer » : un talent actif (Économique) ouvre
+  //  des emplacements PAR ROUTE SORTANTE du joueur, dans la ville
+  //  d'ORIGINE de la route. Porté par le peuple du JOUEUR.)
+  if (ctx) {
+    const pj = ctx.state.players.find((q) => q.n === ctx.joueur)
+    const nbRoutes = (ctx.state.routesCommerce ?? []).filter(
+      (r) => !('marchandId' in r) && r.joueur === ctx.joueur && r.villeOrigine === ville.nom,
+    ).length
+    if (nbRoutes > 0) {
+      for (const t of talentsActifs(pj, C)) {
+        for (const e of t.emplacementsParRoute ?? []) {
+          if (e.metier === metier) total += e.places * nbRoutes
+        }
+      }
+    }
+  }
   return total
 }
 

@@ -114,7 +114,7 @@
 
 import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf, regimeDef, modPeupleHabitant, type Cfg } from './gameData'
+import { cfgOf, regimeDef, modPeupleHabitant, poidsArriveePeuple, type Cfg } from './gameData'
 import { bumpMouvement, emptyRecap, fullName, neDemenageJamais, perteDemenagement } from './shared'
 import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bonheur'
 import { updateCityCultures } from './culture'
@@ -287,7 +287,13 @@ export function migrationBonheur(state: GameState, rng: Rng): Record<number, num
         const dest = rng.pickWeighted(candidats, (f) =>
           poidsDestination(c, f.ville, f.bonheur, C, f.joueur.n === p.n,
             facteurEmploi(!c.metier, f.emploisLibres, C)
-            + facteurLogement(!c.domicile, f.logementsLibres, C)))
+            + facteurLogement(!c.domicile, f.logementsLibres, C))
+          // (Effets de peuple, arbitrage Thibaut 2026-11-16
+          //  « Isolationnistes », 3e clause : poids d'attraction des
+          //  villes d'un joueur de peuple x0,8 — MULTIPLICATIF sur le
+          //  poids de tirage, uniquement pour les migrants d'AUTRES
+          //  joueurs (migration INTERNE inchangée). Défaut 1.)
+          * (f.joueur.n !== p.n ? poidsArriveePeuple(f.joueur, C) : 1))
         // Transfert physique du FOYER chez le porteur de la ville de
         //  destination (principe conservé de l'ancienne migration
         //  scolaire) — conjoint et enfants suivent sans tirage propre.

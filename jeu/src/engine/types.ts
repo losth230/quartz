@@ -80,6 +80,55 @@ export interface EffetPeupleDef {
   /** Modificateur ADDITIF (points absolus) de la proba de jet de
    *  conversion culturelle d'un habitant de ce peuple. */
   conversionProbaMod?: number
+  /** (Arbitrage Thibaut 2026-11-16 « Isolationnistes », 3e clause :
+   *  « poids x0,8 ».) Multiplicateur MULTIPLICATIF (hors convention
+   *  des points absolus — arbitré explicitement en POIDS) du poids
+   *  d'attraction des villes du JOUEUR de ce peuple pour les
+   *  migrants d'AUTRES joueurs (migration INTERNE inchangée).
+   *  Défaut 1. Porté par le peuple du JOUEUR destinataire. */
+  poidsArriveeMod?: number
+  /** (Arbitrage Thibaut 2026-11-16 « Or des mines » : +1 Commerçant
+   *  par aménagement de carrière/mine d'or/mine de fer/mine de
+   *  charbon.) Emplacements de métier ouverts PAR AMÉNAGEMENT
+   *  PRÉSENT dans la ville — porté par le peuple du JOUEUR. */
+  emplacementsParAmenagement?: {
+    /** Noms exacts d'aménagements du référentiel (tiers compris). */
+    amenagements: string[]
+    metier: string
+    /** Emplacements par aménagement présent. */
+    places: number
+  }[]
+}
+
+/** TALENTS DE PEUPLE — fiche de faction « base au setup + talents
+ *  débloqués par LAURIERS » (arbitrages Thibaut 2026-11-16) :
+ *  un talent s'active quand le joueur de ce peuple valide le
+ *  LAURIER `laurierMin` de la VOIE (voies du référentiel victoires) ;
+ *  il est DÉRIVÉ de p.lauriers — aucun état à stocker ni synchroniser.
+ *  Les entrées d'une même voie s'ADDITIONNENT (L1 + L3 cumulés).
+ *  Champs d'effets structurés lus par le moteur aux sites :
+ *   · emplacementsParRoute — cap de métier, PAR ROUTE SORTANTE du
+ *     joueur, dans la ville d'ORIGINE (metiers.ts) ;
+ *   · fluxParMetier — flux PAR HABITANT porteur d'un des métiers,
+ *     avant taxes, × multiplicateur de rang (economie.ts, patron
+ *     Guilde des marins) ;
+ *   · reductionLeveeParBatiment — réduction du prix de levée PAR
+ *     BÂTIMENT de la ville de levée (armees.ts, s'additionne aux
+ *     canaux réductionLeveeArmee et lois de régime) ;
+ *   · texte seul (aucun champ d'effet) — règle de PLATEAU, aide de
+ *     jeu affichée, jamais moteur. */
+export interface TalentPeupleDef {
+  peuple: string
+  /** Voie de victoire EXACTE du référentiel (victoires[].voie). */
+  voie: string
+  /** Talent actif dès que ce Laurier (1-4) est validé sur la voie. */
+  laurierMin: number
+  nom: string
+  /** Texte lisible (affichage + aides de jeu au plateau). */
+  texte: string
+  emplacementsParRoute?: { metier: string; places: number }[]
+  fluxParMetier?: { metiers: string[]; ressource: string; valeur: number }[]
+  reductionLeveeParBatiment?: { batiment: string; reduction: number }[]
 }
 
 export interface BuildingDef {

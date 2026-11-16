@@ -80,3 +80,13 @@ export function modPeupleHabitant(
 ): number {
   return peupleEffetDef(c.peuple ?? '', C?.config)?.[key] ?? 0
 }
+
+/** (Arbitrage Thibaut 2026-11-16 « Isolationnistes », 3e clause —
+ *  « poids x0,8 ») : multiplicateur du POIDS d'attraction des
+ *  villes d'un joueur de ce peuple pour les migrants d'AUTRES
+ *  joueurs (migration interne inchangée). Défaut 1. Porté par le
+ *  peuple du JOUEUR DESTINATAIRE — cf. EffetPeupleDef.poidsArriveeMod.
+ *  Pure. */
+export function poidsArriveePeuple(joueur: { peuple?: string }, C?: Cfg): number {
+  return peupleEffetDef(joueur.peuple ?? '', C?.config)?.poidsArriveeMod ?? 1
+}

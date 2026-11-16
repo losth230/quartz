@@ -14,6 +14,7 @@ import { gouverneurDeVille } from './metiers'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
 import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille } from './batiments'
+import { talentsActifs } from './talentsPeuple'
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -192,6 +193,18 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
   //  de rang, comme les bonus Ponton / Champs nourriciers. Bâtiments
   //  REMPLACÉS exclus par modificateursPaysJoueur.)
   const modsTier3 = modificateursPaysJoueur(p, C)
+  // (Talents de peuple LAURIERS, arbitrage Thibaut 2026-11-16 —
+  //  talent actif dès le Laurier de sa voie (talentsActifs, DÉRIVÉ
+  //  de p.lauriers, aucun état) : flux PAR HABITANT porteur d'un
+  //  des métiers listés, avant taxes, × multiplicateur de rang —
+  //  MÊME PATRON que la Guilde des marins (Guilde des savants,
+  //  arbitrage : le talent est porté par le JOUEUR, il profite à
+  //  tous ses habitants, peuple d'origine compris).
+  //  ex. Khazhags Nains « Savoir des profondeurs » : +0,1 Science
+  //  par Mineur/Forgeron/Charbonnier dès le Laurier I Scientifique ;
+  //  « Or du commerce nain » : +0,5 Or par Commerçant dès le
+  //  Laurier III Économique (cumulés par entrées).)
+  const talentsFluxMetier = talentsActifs(p, C).flatMap((t) => t.fluxParMetier ?? [])
   // (Retour Thibaut 2026-11-15 « productions réelles des métiers
   //  des joueurs dans la page population ») : décomposition du
   //  canal metiers PAR MÉTIER — chaque crédit passe par le helper
@@ -247,6 +260,14 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     for (const bm of modsTier3.bonusMetierParHabitant) {
       if (c.metier === bm.metier) {
         credit(c.metier, bm.ressource, bm.valeur * mult)
+      }
+    }
+    // (Talents de peuple : même patron — flux AVANT taxes, × mult de
+    //  rang, passé par le même helper `credit` (canal metiers ET
+    //  détail parMetier, aucun double comptage possible).)
+    for (const tf of talentsFluxMetier) {
+      if (tf.metiers.includes(c.metier)) {
+        credit(c.metier, tf.ressource, tf.valeur * mult)
       }
     }
     // (Merveilles mondiales 2026-11-15 : bonus PAR HABITANT de la
