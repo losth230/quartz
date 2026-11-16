@@ -24,7 +24,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createGame, type SetupLine } from './setup'
-import type { Character } from './types'
+import type { Character, CiteLibre } from './types'
 import type { Rng } from './rng'
 import { makeRng } from './rng'
 import { cfgOf, peupleDef, peupleEffetDef, modPeupleHabitant } from './gameData'
@@ -84,8 +84,11 @@ test('setup : habitants du peuple du joueur (cour comprise) ; cité libre du jou
     }
   }
   // Une cité libre par joueur : le peuple de la cité = peuple du joueur.
-  (state.citesLibres ?? []).length === state.players.length || assert.fail('une cité libre par joueur')
-  (state.citesLibres ?? []).forEach((cite, i) => {
+  // (Typé explicitement : `a ?? []` en union casse l'inférence des
+  //  paramètres du forEach sous noImplicitAny — leçon CI 2026-11-16.)
+  const cites: CiteLibre[] = state.citesLibres ?? []
+  assert.equal(cites.length, state.players.length, 'une cité libre par joueur')
+  cites.forEach((cite, i) => {
     assert.equal(cite.peuple, state.players[i]?.peuple,
       `cité libre ${i + 1} : peuple du joueur ${i + 1}`)
     for (const c of cite.population ?? []) {
@@ -221,7 +224,8 @@ test('cité libre apparue en cours de partie : peuple tiré au hasard parmi les 
   const p = state.players[0]!
   const nom = villeDevientCiteLibre(state, p, 1)
   assert.ok(nom, 'la colonie devient cité libre')
-  const cite = (state.citesLibres ?? []).find((x) => x.nom === nom)
+  const cites2: CiteLibre[] = state.citesLibres ?? []
+  const cite = cites2.find((x) => x.nom === nom)
   assert.ok(cite)
   assert.ok(C.peuples.includes(cite!.peuple ?? ''),
     `peuple de la nouvelle cité tiré parmi les peuples disponibles (${cite!.peuple})`)
