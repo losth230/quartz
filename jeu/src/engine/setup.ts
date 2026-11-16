@@ -91,6 +91,9 @@ export function createGame(setups: SetupLine[], seed: number, mode?: 'local' | '
       type: typesCites.length > 0 ? rng.pick(typesCites).type : 'Ville',
       habitation: rng.pick(['Hameau', 'Château'] as ('Hameau' | 'Château')[]),
       culture: rng.pick(C.cultures)?.nom ?? '',
+      // (Arbitrage Thibaut 2026-11-16 : chaque joueur a SA cité libre
+      //  → le peuple de ses habitants est celui du joueur.)
+      peuple: state.players[i]?.peuple,
       taxes: 'Moyenne',
       suzerain: null,
       emissaires: {},
@@ -225,6 +228,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       sexe,
       age: rng.int(0, Math.max(1, Math.round(C.p.setupAgeMax))),
       culture: player.culture,
+      peuple: player.peuple,
       ville: rng.pick(player.villes).nom,
       orientation: randomOrientation(),
       traits: randomTraits(),
@@ -249,7 +253,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
   if (!reineName) reineName = roiName + 'e'
   const roi: Character = {
     id: nextId(), nom: roiName, prenom: rng.pick(prenomsM), dynastie: roiName,
-    sexe: 'M', age: 20, culture: player.culture, ville: player.villes[0].nom,
+    sexe: 'M', age: 20, culture: player.culture, peuple: player.peuple, ville: player.villes[0].nom,
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
     mariageId: null, mereId: null, pereId: null, pereBioId: null,
@@ -262,7 +266,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
   }
   const reine: Character = {
     id: nextId(), nom: reineName, prenom: rng.pick(prenomsF), dynastie: reineName,
-    sexe: 'F', age: 20, culture: player.culture, ville: player.villes[0].nom,
+    sexe: 'F', age: 20, culture: player.culture, peuple: player.peuple, ville: player.villes[0].nom,
     orientation: (C.orientations[0]?.nom ?? 'Hétérosexuelle') as Character['orientation'],
     traits: randomTraits(), statut: 'Sain', mariage: null, mere: null, pere: null,
     mariageId: null, mereId: null, pereId: null, pereBioId: null,
@@ -287,7 +291,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       const frere: Character = {
         id: nextId(), nom: ref.nom, prenom: sexe === 'M' ? rng.pick(prenomsM) : rng.pick(prenomsF),
         dynastie: ref.dynastie,
-        sexe, age: rng.int(20, 40), culture: player.culture,
+        sexe, age: rng.int(20, 40), culture: player.culture, peuple: player.peuple,
         ville: player.villes[0].nom,
         orientation: randomOrientation(), traits: randomTraits(), statut: 'Sain',
         mariage: null, mere: null, pere: null, pereBio: null, enfantBatard: false,
@@ -311,7 +315,7 @@ export function makePopulation(player: Player, s: SetupLine, rng: Rng, C: Cfg): 
       nom: heredite === 'Féminine' ? reineName : roi.nom,
       prenom: sexe === 'M' ? rng.pick(prenomsM) : rng.pick(prenomsF),
       dynastie: heredite === 'Féminine' ? reineName : roi.nom,
-      sexe, age: rng.int(0, 15), culture: player.culture,
+      sexe, age: rng.int(0, 15), culture: player.culture, peuple: player.peuple,
       ville: player.villes[0].nom,
       orientation: randomOrientation(), traits: randomTraits(), statut: 'Sain',
       mariage: null, mere: fullName(reine), pere: fullName(roi), pereBio: null,
@@ -431,6 +435,7 @@ export function ajouterHabitant(
       sexe,
       age: rng.int(C.p.adultAge, Math.max(C.p.adultAge + 1, 60)),
       culture,
+      peuple: p.peuple,
       ville: nomVille,
       orientation: rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation'],
       traits,
@@ -503,6 +508,7 @@ export function peuplerNouvelleVille(
       sexe,
       age: rng.int(0, Math.max(1, Math.round(C.p.setupAgeMax))),
       culture,
+      peuple: p.peuple,
       ville: nomVille,
       orientation: rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation'],
       traits,

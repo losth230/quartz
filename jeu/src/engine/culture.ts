@@ -38,7 +38,7 @@
 
 import type { City, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
-import { cfgOf } from './gameData'
+import { cfgOf, modPeupleHabitant } from './gameData'
 import { bump, fullName } from './shared'
 import { conversionLocaleBatimentsVille, ancrageConversionMultVille } from './batiments'
 import { productionTourismeBatiment } from './batiments'
@@ -157,7 +157,11 @@ export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, rec
     //  de conversion des habitants de cette habitation réduites de
     //  10 % » — retour au tirage 2026-11-16 : la résistance ×N se
     //  lit DIRECTEMENT sur la proba du jet, ÷N.)
-    const proba = C.p.conversionProba / (villeAccueil ? ancrageConversionMultVille(villeAccueil, C) : 1)
+    const proba = Math.max(0,
+      C.p.conversionProba / (villeAccueil ? ancrageConversionMultVille(villeAccueil, C) : 1)
+      // (Effets de peuple, arbitrage Thibaut 2026-11-16 : modificateur
+      //  ADDITIF en points absolus, ex. Khazhags Nains −0,02.)
+      + modPeupleHabitant(c, 'conversionProbaMod', C))
     if (!rng.chance(proba)) continue
     const poids = poidsConversion(state, C, pression, villeAccueil)
     // (Dogme du Nationalisme, correctif arbitre Thibaut du 30/10 :

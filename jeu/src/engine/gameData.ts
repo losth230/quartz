@@ -59,3 +59,24 @@ export function peupleDef(nom: string, cfg?: GameConfig): PeupleDef | undefined 
   if (!b) return undefined
   return { nom, noms: b.noms, prenomsM: b.prenomsM, prenomsF: b.prenomsF }
 }
+
+/** Fiche d'effets d'un peuple (table effetsPeuple du référentiel,
+ *  arbitrage Thibaut 2026-11-16 : le peuple d'un habitant offre un
+ *  bonus, comme les cultures — cf. EffetPeupleDef, engine/types.ts). */
+export function peupleEffetDef(nom: string, cfg?: GameConfig): import('./types').EffetPeupleDef | undefined {
+  const c = cfg ?? DEFAULT_CONFIG
+  return (c.effetsPeuple ?? []).find((e) => e.nom === nom)
+}
+
+/** Modificateur ADDITIF (points absolus) porté par le PEUPLE d'un
+ *  habitant pour une clé d'effet (migrationBonheurMod,
+ *  conversionProbaMod). Le peuple est hérité de la mère et ne
+ *  change JAMAIS — un habitant sans peuple (vieille sauvegarde non
+ *  rattrapée) ne porte aucun effet (0). Pure. */
+export function modPeupleHabitant(
+  c: import('./types').Character,
+  key: 'migrationBonheurMod' | 'conversionProbaMod',
+  C?: Cfg,
+): number {
+  return peupleEffetDef(c.peuple ?? '', C?.config)?.[key] ?? 0
+}

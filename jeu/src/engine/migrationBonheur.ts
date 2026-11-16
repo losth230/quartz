@@ -114,7 +114,7 @@
 
 import type { Character, City, GameState, Player } from './types'
 import type { Rng } from './rng'
-import { cfgOf, regimeDef, type Cfg } from './gameData'
+import { cfgOf, regimeDef, modPeupleHabitant, type Cfg } from './gameData'
 import { bumpMouvement, emptyRecap, fullName, neDemenageJamais, perteDemenagement } from './shared'
 import { bonheurVilleComplete, emploisOffertsVille, logementsVille } from './bonheur'
 import { updateCityCultures } from './culture'
@@ -272,7 +272,13 @@ export function migrationBonheur(state: GameState, rng: Rng): Record<number, num
         //  Autoritarisme « Frontières closes ») : probabilité de
         //  départ × departHabitantsMult (0,8 = 20 % de chances de
         //  moins de partir).
-        if (!rng.chance(probaDepartBonheur(src.bonheur, C) * multDepartRegime(p, C))) continue
+        // (Effets de peuple, arbitrage Thibaut 2026-11-16 :
+        //  modificateur ADDITIF en points absolus sur la proba de
+        //  départ par BONHEUR, ex. Khazhags Nains −0,02
+        //  (isolationnistes).)
+        if (!rng.chance(Math.max(0,
+          probaDepartBonheur(src.bonheur, C) * multDepartRegime(p, C)
+          + modPeupleHabitant(c, 'migrationBonheurMod', C)))) continue
         // Bonus emploi & logement (v3 ADDITIVE, 6e arbitrage
         //  2026-10-29) : S'ADDITIONNENT dans la parenthèse sur la
         //  base d'attrait du bonheur — le statut regardé est celui

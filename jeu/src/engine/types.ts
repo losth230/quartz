@@ -63,6 +63,25 @@ export interface PeupleDef {
   prenomsF: string[]
 }
 
+/** Effets de peuple pour un HABITANT (arbitrage Thibaut 2026-11-16 :
+ *  « le peuple d'un habitant offre un bonus, comme les cultures, à la
+ *  différence près qu'un habitant ne peut jamais changer de peuple »).
+ *  Le peuple est posé au setup (peuple du joueur), hérité par la MÈRE
+ *  à la naissance, et ne change JAMAIS (ni conversion, ni migration).
+ *  Les clés sont des MODIFICATEURS additifs lus par le moteur aux
+ *  sites concernés — structure miroir des effets de culture. */
+export interface EffetPeupleDef {
+  nom: string
+  /** Libellé lisible (affichage uniquement). */
+  effet: string
+  /** Modificateur ADDITIF (points absolus) de la proba de départ par
+   *  BONHEUR d'un habitant de ce peuple (migrationBonheur). */
+  migrationBonheurMod?: number
+  /** Modificateur ADDITIF (points absolus) de la proba de jet de
+   *  conversion culturelle d'un habitant de ce peuple. */
+  conversionProbaMod?: number
+}
+
 export interface BuildingDef {
   nom: string
   categorie: 'Santé' | 'Éducation' | 'Économie' | 'Culture'
@@ -89,6 +108,13 @@ export interface Character {
   sexe: Sexe
   age: number
   culture: string
+  /** Peuple de l'habitant (arbitrage Thibaut 2026-11-16) : posé au
+   *  setup (peuple du joueur), hérité par la MÈRE à la naissance,
+   *  JAMAIS converti ni migré — un habitant ne change pas de peuple.
+   *  Porte des effets par peuple (table effetsPeuple). Champ
+   *  optionnel : habitants des vieilles sauvegardes → rattrapés par
+   *  normaliserEtat au peuple de leur porteur. */
+  peuple?: string
   ville: string
   orientation: Orientation
   traits: [string, string, string]
@@ -292,6 +318,12 @@ export interface CiteLibre {
   type: string
   /** Culture des habitants de la cité. */
   culture?: string
+  /** Peuple des habitants de la cité (arbitrage Thibaut 2026-11-16) :
+   *  au setup, chaque joueur a SA cité libre → peuple du joueur ;
+   *  une cité libre qui apparaît en cours de partie → peuple tiré au
+   *  hasard parmi les peuples disponibles. Les habitants héritent de
+   *  ce peuple (puis de leur mère par la suite). */
+  peuple?: string
   /** Niveau de taxes de la cité (module la production PAR RESSOURCE,
    *  arbitrage Thibaut 2026-10-28 : Nourriture ×taxNourr* du côté des
    *  naissances, toutes les autres ressources ×taxOr* à l'envers —

@@ -272,7 +272,7 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
     const enfant: Character = {
       id: newId(rng),
       nom: mere.nom,
-      prenom: pickName(state, p, rng, undefined),
+      prenom: pickName(state, p, mere, rng, undefined),
       dynastie: dyn,
       // (clé posée seulement pour les bébés nobles — le format
       //  compact de sauvegarde omet prestige sinon)
@@ -280,6 +280,9 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
       sexe: rng.pickWeighted(C.genres, (g) => g.poids).nom === 'Masculin' ? 'M' : 'F',
       age: 0,
       culture: mere.culture,
+      // (Arbitrage Thibaut 2026-11-16 : le peuple est hérité de la
+      //  MÈRE — bâtard compris — et ne change jamais.)
+      peuple: mere.peuple ?? p.peuple,
       ville: mere.ville,
       orientation: rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation'],
       traits: ['', '', ''],
@@ -319,9 +322,14 @@ function accoucher(state: GameState, p: Player, mere: Character, pere: Character
   mere.enfantBatard = false
 }
 
-function pickName(state: GameState, p: Player, rng: Rng, sexe: 'M' | 'F' | undefined): string {
+function pickName(state: GameState, p: Player, mere: Character, rng: Rng, sexe: 'M' | 'F' | undefined): string {
   const C = cfgOf(state.config)
-  const peup = peupleDef(p.peuple, C.config) ?? peupleDef(C.peuples[0], C.config)
+  // (Arbitrage Thibaut 2026-11-16 : les prénoms du nouveau-né suivent
+  //  le peuple de sa MÈRE — cohérent avec l'héritage du peuple ; le
+  //  peuple du porteur ne sert que de repli (mère sans peuple, très
+  //  vieille sauvegarde).)
+  const peup = peupleDef(mere.peuple ?? p.peuple, C.config) ?? peupleDef(p.peuple, C.config)
+    ?? peupleDef(C.peuples[0], C.config)
   if (!peup) return 'Anonyme'
   if (sexe === 'F') return rng.pick(peup.prenomsF)
   if (sexe === 'M') return rng.pick(peup.prenomsM)

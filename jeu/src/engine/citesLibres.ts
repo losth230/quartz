@@ -287,9 +287,14 @@ function ajouterCiteLibre(
   if (nb <= 0) return 0
   const rng = makeRng(state.rngState)
   const pop = cite.population ?? (cite.population = [])
-  const peuple = C.peuples.length > 0
-    ? peupleDef(rng.pick(C.peuples), C.config)
-    : undefined
+  // (Arbitrage Thibaut 2026-11-16 : les habitants d'une cité libre
+  //  portent le peuple de la cité — celui du joueur propriétaire au
+  //  setup, tiré au hasard pour une cité apparue en cours de partie.
+  //  Le tirage ci-dessous reste TOUJOURS consommé pour ne pas
+  //  décaler le flux aléatoire des sauvegardes existantes.)
+  const peupleTire = C.peuples.length > 0 ? rng.pick(C.peuples) : ''
+  const peupleNom = cite.peuple ?? peupleTire
+  const peuple = C.peuples.length > 0 ? peupleDef(peupleNom, C.config) : undefined
   const banque = peuple ?? C.banquesNoms[0]
   const culture = cite.culture || C.config.cultures[0]?.nom || ''
   // nouvelle famille noble : nom jamais utilisé comme dynastie
@@ -325,6 +330,7 @@ function ajouterCiteLibre(
       //  mais consomment), les adultes reçoivent le metier Chasseur.
       age: ageTiree,
       culture,
+      peuple: peupleNom || undefined,
       ville: cite.nom,
       orientation: rng.pickWeighted(C.orientations, (o) => o.poids).nom as Character['orientation'],
       traits,
@@ -414,6 +420,15 @@ export function villeDevientCiteLibre(
 ): string | null {
   const ville = p.villes[idx]
   if (!ville) return null
+  // (Arbitrage Thibaut 2026-11-16 : une cité libre qui APPARAÎT en
+  //  cours de partie reçoit un peuple TIRÉ AU HASARD parmi les
+  //  peuples disponibles — les habitants partants conservent le
+  //  leur, un peuple ne change JAMAIS. Le tirage est SAUVÉ dans
+  //  rngState, comme tout tirage du moteur.)
+  const rngPeuple = makeRng(state.rngState)
+  const CC = cfgOf(state.config)
+  const peupleCite = CC.peuples.length > 0 ? rngPeuple.pick(CC.peuples) : undefined
+  state.rngState = rngPeuple.state()
   // Tourisme (retour Thibaut 2026-10-16) : la production de la ville
   //  part avec elle — stock recalculé = production courante.
   resynchroniserTourisme(state, p, `ville « ${ville.nom} » devenue cité libre`)
@@ -433,7 +448,6 @@ export function villeDevientCiteLibre(
   // Arbitrage complémentaire (2026-10-21) : un Dirigeant ou Héritier
   //  ne déménage jamais — ré-ancré (sa ville est perdue, il DOIT
   //  suivre) mais il GARDE son titre et son domicile.
-  const CC = cfgOf(state.config)
   for (const c of restants) {
     if (isNobleDyn(c.dynastie, CC) && c.ville === nom) {
       const dest = p.villes.find((v) => v.nom !== nom)?.nom ?? c.ville
@@ -450,6 +464,7 @@ export function villeDevientCiteLibre(
     nom: nomFinal,
     type: (ville.type ?? 'Ville') === 'Ch\u00e2teau' ? 'Militaires - Ch\u00e2teau' : 'Industrielles - Ville',
     culture: ville.culture,
+    peuple: peupleCite,
     taxes: ville.taxes,
     habitation: (ville.type ?? 'Ville') === 'Ch\u00e2teau' ? 'Ch\u00e2teau' : 'Hameau',
     suzerain: null,

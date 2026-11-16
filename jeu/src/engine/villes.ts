@@ -58,6 +58,16 @@ export function normaliserEtat(state: GameState): void {
   //  historique « tableaux manquants = crash moteur ET rendu ».)
   if (!Array.isArray(state.dogmes)) state.dogmes = []
   if (!state.population || typeof state.population !== 'object') state.population = {}
+  // (Peuple des habitants, arbitrage Thibaut 2026-11-16 : champ
+  //  optionnel — les habitants des sauvegardes antérieures sont
+  //  rattrapés au peuple de leur PORTEUR (pour une cité libre : le
+  //  peuple de la cité s'il existe, sinon AUCUN — pas de peuple, pas
+  //  d'effet). Idempotent.)
+  for (const p of state.players ?? []) {
+    for (const c of state.population[p.n] ?? []) {
+      if (c.peuple === undefined) c.peuple = p.peuple
+    }
+  }
   for (const p of state.players ?? []) {
     for (const v of p.villes ?? []) {
       if (!Array.isArray(v.batiments)) v.batiments = []
