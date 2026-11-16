@@ -1863,10 +1863,10 @@ référentiel change l'effet des dogmes DÉJÀ pris, lu par type par
 | Dogme de la Fraternité | AUCUN effet moteur — révoltes −20 % : la mécanique des révoltes n'est PAS implémentée (le dogme est au référentiel, son effet viendra avec elle) |
 | Dogme de la Liberté | bonheurVille +10 — +10 Bonheur dans les villes de la culture (avant le plafond 100) |
 | Dogme de la Santé | maladieContractMod −0,05 — −5 points de contraction pour les personnages de la culture |
-| Dogme de l'Évangile | pressionCulture +0,1 — poids de la culture ×1,1 dans la conversion culturelle (le poids FINAL, présence locale incluse) |
+| Dogme de l'Évangile | pressionCulture +0,1 — poids de la culture ×1,1 dans le tirage de conversion culturelle (le poids du TIRAGE pondéré par le tourisme, lecture 2026-11-16 ; sous la V2 du 14/11 c'était le poids final, présence locale incluse) |
 | Dogme de la Mère Patrie | tributVassal +0,05 — tribut REÇU par un suzerain de la culture ×1,05 (les DEUX chemins : fin de tour et impôt manuel ; le vassal paie SA part, la différence est créée) |
 | Dogme des Guerres Saintes | garnisonHorsCulture −40 — garnison des villes d'une AUTRE culture −40, une fois PAR culture porteuse (les villes porteuses sont protégées, plancher 0) |
-| Dogme du Nationalisme | conversionLocale +0,15 — habitants d'autres cultures vivant dans une ville de la culture : +15 % de chances DANS le tirage de conversion de se convertir à elle (pas de jet séparé) |
+| Dogme du Nationalisme | conversionLocale +0,15 — habitants d'autres cultures vivant dans une ville de la culture : +0,15 × poids des autres cultures AJOUTÉ au poids de la culture d'accueil dans le tirage de conversion (pas de jet séparé) |
 
 ### Interprétations d'implémentation (à arbitrer)
 
@@ -2161,9 +2161,12 @@ conservée telle quelle.
   `tributVassalPlus` (Guilde des diplomates : +5 % sur les DEUX
   chemins du tribut, vassal paie SA part, différence CRÉÉE —
   patrons Mère Patrie / Vassaux dévoués), `conversionLocalePlus`
-  (Guilde des évangélistes : +10 % vers la culture de la ville
-  DANS le tirage pondéré, pattern exact du Nationalisme, lu par
-  ville d'accueil, cumulatif au dogme), `scienceProfesseurPlus`
+  (Guilde des évangélistes : poids de la culture de la ville ×1,1
+  pour les habitants de cette ville dans le tirage de conversion —
+  « poids dans la conversion ×1.1 », pattern exact de l'Évangile
+  appliqué à la culture d'accueil, TRANSFORMATION 2026-11-16 :
+  l'ancien « +10 % vers la culture de la ville » du pattern
+  Nationalisme est retiré), `scienceProfesseurPlus`
   (Guilde des savants : part de taxe Science du Professeur 0,10 →
   0,15) ;
 - **effets de PLATEAU** (`effetPlateau`, texte d'affichage
@@ -2743,6 +2746,15 @@ dans le log — identité légitime).
 
 ## Conversion culturelle V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, base c3035943)
 
+> **⚠ SUPERSEDÉ le 2026-11-16** — retour au TIRAGE pondéré par le
+> tourisme (Thibaut « je préférais l'ancien ») : cf. la section
+> « Retour au tirage de conversion » en fin de document. Le duel
+> Pression/Ancrage, le plancher des villes pures et les paramètres
+> conversionPoidsLocal / conversionPlancher / conversionAncrageNoble
+> sont RETIRÉS ; les migrations conversionDeterministe2026 et
+> conversionTaux2026 subsistent pour dépouiller les vieilles
+> sauvegardes.
+
 **Demande.** « Est-ce que tu pourrais me proposer autre chose pour la
 conversion culturelle, qui soit plus cohérente et plus jouable de
 manière technique ? » — l'ancien moteur tirait au hasard, pour chaque
@@ -2832,6 +2844,11 @@ des événements aval est décalé ; RIEN d'autre ne diffère).
 
 ## Cap de conversion proportionnel — 10 % des habitants (arbitrage Thibaut 2026-11-15)
 
+> **⚠ SUPERSEDÉ le 2026-11-16** — avec le retour au tirage, il n'y a
+> plus de CAP ni de taux par ville : chaque habitant a son propre jet
+> (cf. la section « Retour au tirage de conversion »). conversionTaux
+> est retiré par la migration conversionTirage2026.
+
 **Arbitrage.** « Le cap de conversion passe à 10 % des habitants de
 la ville » — le cap FIXE de la V2 (conversionMax 1 par ville-tour,
 posé provisoirement le 2026-11-14) devient un TAUX : la culture
@@ -2917,7 +2934,7 @@ Motte→Donjon→Forteresse). Coûts et effets des fiches :
 | Sanctuaire de Salmodiva | 1 | 20 Or + 20 Bois | +5 Soie/tour ; Fermiers de la ville +2 Nourriture/tour **en été** ; +4 emplacements de Fermier |
 | Musée d'Archéologie | 1 | 40 Or + 10 Pierres + 10 Soie | +30 Tourisme |
 | Jardins d'Alexandrie | 1 | 40 Or + 10 Bétail + 10 Bois | +30 Maisons |
-| Tour de Crystal | 1 | 40 Or + 10 Charbon | à la construction, le constructeur choisit un dogme **hors palier** pour sa culture ; ancrage des habitants de la ville ×1,1 (conversion réduite) |
+| Tour de Crystal | 1 | 40 Or + 10 Charbon | à la construction, le constructeur choisit un dogme **hors palier** pour sa culture ; chances de conversion des habitants de la ville réduites de 10 % (proba du jet ÷1,1) |
 | Temple de Bahamutt | 2 | 40 Or + 20 Fer | +30 Tourisme ; +4 emplacements de Garde |
 | Ordre des chevaliers du Notan | 2 | 70 Or + 40 Fer + 10 Charbon | levée d'armée −50 Or dans cette ville ; « attaquer une habitation réduit sa garnison de 50 » (effet de plateau) |
 | Antre de la déesse araignée | 3 | 80 Or + 30 Soie + 20 Charbon | +5 émissaires tant que construite ; +2 Soie/tour |
@@ -2941,9 +2958,10 @@ Motte→Donjon→Forteresse). Coûts et effets des fiches :
    lui (pas le pontife), à consommer dans l'onglet Dogmes ; il ne
    consomme pas les paliers de Tourisme de la culture.
 4. **Tour de Crystal**, « chances de conversion réduites de 10 % » :
-   l'ANCRAGE des habitants de cette ville est multiplié ×1,1 dans le
-   duel Pression/Ancrage (résistance à la conversion) — la Balance
-   culturelle affiche l'effet réel.
+   la PROBA du jet de conversion de chaque habitant de cette ville est
+   divisée par 1,1 (ancrageConversionMultVille — retour au tirage
+   2026-11-16 ; sous la V2 du 2026-11-14 c'était l'ancrage ×1,1) —
+   la carte de ville affiche la proba réelle.
 5. « Chercheurs » = métier **Scientifique** (renommé Professeur le
    2026-10-21) ; le Laboratoire de Falheim monte la part de taxe
    Science des Professeurs de la ville +10 % (additive, cumul Guilde
@@ -3039,6 +3057,17 @@ naissances) ; le plancher des villes 100 % pures (1 %) est inchangé ;
 le registre du wiki « Ordre du tour » reflète la nouvelle séquence
 (21 étapes : « Moteur de population — phase A », « Conversions
 culturelles », « Migration par bonheur »).
+
+> **NB retour au tirage 2026-11-16** : l'ORDRE (conversion 4bis
+> AVANT migration 4ter) est STRUCTUREL et conservé sous le tirage.
+> La conversion lit la population PRÉ-FLUX : un arrivant ne peut
+> toujours pas être converti dans sa ville d'ARRIVÉE le tour même
+> de son arrivée — en revanche il a pu être converti dans sa ville
+> de DÉPART le même tour (le tirage joue sur les habitants présents
+> avant le flux). L'ancien invariant « aucun migré ne change de
+> culture le tour de son arrivée » est donc trop fort sous le
+> tirage ; le test d'ordre le vérifie désormais conversion coupée
+> (conversionProba 0) puis réactivée (conversionProba 1).
 
 Vérifications : 372/372 tests natifs (371 + 1 nouveau : un arrivant
 garde sa culture le tour de son arrivée, l'assimilation reprend au
@@ -3390,3 +3419,64 @@ parMetier, tous métiers confondus, égale EXACTEMENT le canal
 metiers commun — chaque crédit passe par le même helper (aucun
 double comptage possible) ; Fermier présent en été (+20 × nb),
 absent hors été ; Pêcheur +6 toute l'année.
+
+## 2026-11-16 — Retour au tirage de conversion pondéré par le tourisme (arbitrage Thibaut « je préférais l'ancien »)
+
+**Arbitrage.** La V2 « Pression/Ancrage » (2026-11-14, sections
+supersédées ci-dessus) est RETIRÉE. Retour à l'ANCIEN mécanisme,
+arbitré SANS le poids des compatriotes : chaque habitant vivant
+(hors Dirigeant) a **conversionProba = 5 %** par tour de se
+convertir ; la culture d'arrivée est tirée **au hasard pondéré par
+le TOURISME de chaque culture du monde** (pression : tourisme
+général + tourisme des habitations de la culture). Toutes les
+cultures du monde sont candidates, **la culture actuelle incluse**
+(tirée = pas de conversion, le jet est « consommé »).
+
+**Éléments conservés / transformés.**
+- **Évangile** (pressionCulture +0,1) : le poids de SA culture
+  ×1,1 dans le tirage.
+- **Nationalisme** (conversionLocale +0,15) : pour un habitant
+  d'une autre culture vivant dans une ville de la culture, +0,15 ×
+  poids total des AUTRES cultures ajouté au poids de la culture
+  d'accueil — dans le tirage, pas de jet séparé.
+- **Guilde des évangélistes** (conversionLocalePlus) :
+  TRANSFORMÉE — « poids dans la conversion ×1.1 » comme
+  l'Évangile, appliqué au poids de la culture de la ville
+  d'accueil pour les habitants de cette ville (l'ancien « +10 %
+  de part vers la ville d'accueil » du pattern Nationalisme est
+  retiré).
+- **Tour de Crystal** (merveille, ancrageConversionMultVille) :
+  « chances de conversion réduites de 10 % » = proba du jet ÷1,1
+  pour les habitants de la ville.
+- **Ordre du tour** : la conversion (4bis) reste AVANT la
+  migration (4ter, arbitrage incident salon L2 du 2026-11-14) ;
+  cf. le NB de la section « Conversion culturelle AVANT la
+  migration ».
+
+**Paramètres.** conversionProba (0,05) REVIENT, réglable
+(PARAM_META, groupe Culture) ; conversionPoidsLocal /
+conversionTaux / conversionPlancher / conversionAncrageNoble /
+conversionMemeCulture sont retirés. Migration ciblée
+**conversionTirage2026** (patron taxes25, sans bump de tampon) :
+purge des 5 clés mortes + pose le flag ; la migration V2
+conversionDeterministe2026 subsiste pour les vieilles sauvegardes
+et ne détruit plus conversionProba (seule conversionMemeCulture
+reste délétée).
+
+**Verrous.** engine/conversion.test.ts réécrit (7 tests : jet 5 %
+vivants hors Dirigeant/décédé ; pondération tourisme ; culture
+actuelle candidate ; Guilde ×1,1 ; Tour de Crystal proba ÷1,1 ;
+migration conversionTirage2026 idempotente ; updateCityCultures)
+; dogmes.test.ts et tier3.test.ts réalignés (poidsConversion) ;
+merveilles.test.ts (Tour de Crystal proba) ; migrationBonheur.test
+(ts) test d'ordre réécrit en deux tours (conversionProba 0 puis 1)
+; regression.test.ts : l'invariant « une seule passe de
+conception » AMENDÉ — une femme enceinte qui fait une FAUSSE
+COUCHE à l'étape santé (arbitrage 2026-11-02) peut RE-CONCEVOIR à
+la passe des naissances du même tour (cas Béatrix Morneplaine,
+graine 20261018 T3, révélé par le décalage du flux aléatoire) :
+conceptions = nouvelles enceintes + re-conceptions après fausse
+couche, toujours PAS de grossesse de 0 tour. **312/312 tests
+natifs.** Diag régénéré : log 408 → 463, commandants J1 4 → 3
+(le tirage par habitant consomme plus de rng, tout le flux aléatoire
+aval est décalé — rien d'autre ne diffère).
