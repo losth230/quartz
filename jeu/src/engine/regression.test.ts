@@ -240,19 +240,47 @@ test('naissances : UNE seule passe de conception par tour (régression doublon 2
   const state = partieHuitJoueurs()
   let totalConceptions = 0
   for (let tour = 0; tour < 2; tour++) {
+    const logAvant = state.log.length
     const enceintesAvant = new Set(
       state.players.flatMap((p) => (state.population[p.n] ?? [])
         .filter((c) => c.statut === 'Enceinte').map((c) => c.id)),
     )
     runTurn(state)
-    for (const p of state.players) {
-      const nouvelles = (state.population[p.n] ?? [])
-        .filter((c) => c.statut === 'Enceinte' && !enceintesAvant.has(c.id))
-      const conceptions = Object.values(p.recap?.conceptions ?? {}).reduce((a, b) => a + b, 0)
-      totalConceptions += conceptions
-      assert.equal(conceptions, nouvelles.length,
-        `J${p.n} T${state.turn} : chaque conception laisse la femme Enceinte (conceptions ${conceptions} vs nouvelles enceintes ${nouvelles.length}) — une seule passe par tour, pas de grossesse de 0 tour`)
-    }
+    // Invariant COMPTÉ AU NIVEAU MONDIAL : le flux de migration peut
+    //  déplacer une femme Enceinte vers un AUTRE porteur entre la
+    //  conception et la fin de tour (constaté au retour du tirage de
+    //  conversion 2026-11-16 — le rng consommé par habitant déplace
+    //  les tirages du flux) : compter par joueur casserait l'égalité
+    //  sans aucune grossesse de 0 tour.
+    //
+    // CASE LÉGITIME (constatée au retour du tirage 2026-11-16, graine
+    //  20261018, T3 « Béatrix Morneplaine ») : une femme Enceinte en
+    //  début de tour peut faire une FAUSSE COUCHE à l'étape santé
+    //  (statut → Sain, arbitrage 2026-11-02) puis RE-CONCEVOIR à la
+    //  passe des naissances du MÊME tour — elle n'est pas dans
+    //  accoucheesCeTour, elle est donc éligible. Elle est Enceinte
+    //  en fin de tour mais figure déjà dans enceintesAvant : il faut
+    //  la compter comme RE-CONCEPTION, sinon conceptions > nouvelles
+    //  sans aucune grossesse de 0 tour.
+    const logsTour = state.log.slice(logAvant)
+    const fausseCouche = new Set(logsTour
+      .filter((l) => l.type === 'Naissance' && l.texte.includes('perd le bébé'))
+      .map((l) => l.texte.split(' tombe malade')[0]))
+    const reconceptions = Object.values(state.population)
+      .flat()
+      .filter((c) => c?.statut === 'Enceinte' && enceintesAvant.has(c.id)
+        && fausseCouche.has(`${c.prenom} ${c.nom}`)).length
+    const nouvelles = Object.values(state.population)
+      .flat()
+      .filter((c) => c?.statut === 'Enceinte' && !enceintesAvant.has(c.id)).length
+    const conceptions = state.players.reduce(
+      (a, p) => a + Object.values(p.recap?.conceptions ?? {}).reduce((x, y) => x + y, 0), 0)
+    totalConceptions += conceptions
+    // Une grossesse de 0 tour (concevoir PUIS accoucher le même tour)
+    // laisse la mère Saine en fin de tour : elle manque des DEUX
+    //  compteurs et fait échouer l'égalité.
+    assert.equal(conceptions, nouvelles + reconceptions,
+      `T${state.turn} : chaque conception laisse une femme Enceinte quelque part (conceptions ${conceptions} vs nouvelles ${nouvelles} + re-conceptions après fausse couche ${reconceptions}) — une seule passe par tour, pas de grossesse de 0 tour`)
   }
   assert.ok(totalConceptions > 0, 'le témoin doit concevoir au moins une fois (test non vide)')
 })

@@ -148,25 +148,15 @@ export interface GameParams {
   traitHeriteParEssai: number
   traitHeriteEssais: number
   traitTirageSlot: number
-  // ── Conversion culturelle (V2 « Pression/Ancrage », arbitrage
-  //     Thibaut 2026-11-14 : plus de proba par habitant — duel
-  //     déterministe par ville, cf. engine/culture.ts) ──
-  /** Poids démographique local : compté dans la FORCE d'une culture
-   *  (par vivant de la culture dans la ville) ET dans l'ANCRAGE
-   *  d'un habitant (par compatriote) — même constante, deux faces. */
-  conversionPoidsLocal: number
-  /** Cap de conversions par ville et par tour, en PART des vivants
-   *  de la ville (arbitrage Thibaut 2026-11-15 : « le cap de
-   *  conversion passe à 10 % des habitants de la ville » ; succède
-   *  au cap fixe conversionMax 1 du 2026-11-14). Plancher d'au
-   *  moins 1 conversion par ville-tour. */
-  conversionTaux: number
-  /** Plancher résiduel : proba qu'une ville 100 % homogène tente
-   *  UNE conversion vers la culture étrangère la plus forte. */
-  conversionPlancher: number
-  /** Bonus d'ancrage des NOBLES (rang social noble) : ils sont
-   *  convertis en dernier. */
-  conversionAncrageNoble: number
+  // ── Conversion culturelle (retour Thibaut 2026-11-16 « je
+  //     préférais l'ancien » : FINI le duel V2 « Pression/Ancrage »
+  //     du 2026-11-14, retour au TIRAGE PAR HABITANT, cf.
+  //     engine/culture.ts) ──
+  /** Probabilité par habitant vivant et par tour (hors Dirigeant) de
+   *  se convertir ; la culture d'arrivée est tirée au hasard pondéré
+   *  par le TOURISME de chaque culture du monde, la culture actuelle
+   *  étant candidate (tirée = pas de conversion). Défaut 5 %. */
+  conversionProba: number
   // ── Dogmes de culture (fondations 2026-10-30) ──
   palierTourismeDogme: number
   /** (Bonus du pontife, arbitrage Thibaut 2026-11-01) Taux de la dîme
@@ -309,11 +299,10 @@ export const DEFAULT_PARAMS: GameParams = {
   traitHeriteParEssai: 0.4,
   traitHeriteEssais: 3,
   traitTirageSlot: 0.3,
-  // ── Conversion culturelle V2 « Pression/Ancrage » (2026-11-14) ──
-  conversionPoidsLocal: 5,
-  conversionTaux: 0.1,
-  conversionPlancher: 0.01,
-  conversionAncrageNoble: 15,
+  // ── Conversion culturelle (retour Thibaut 2026-11-16 : tirage par
+  //    habitant à 5 %, pondéré par le tourisme — l'ancien règne, cf.
+  //    engine/culture.ts) ──
+  conversionProba: 0.05,
   // ── Dogmes de culture (fondations 2026-10-30) ──
   //  Palier de Tourisme d'une culture ouvrant le choix d'un dogme
   //  (arbitrage Thibaut 30/10 : 50 → 1er dogme, 100 → 2e… cumul à
@@ -444,12 +433,8 @@ export const PARAM_META: {
   { key: 'traitHeriteParEssai', label: 'Proba d\'hériter d\'un trait parental (par essai)', groupe: 'Traits' },
   { key: 'traitHeriteEssais', label: 'Nombre d\'essais d\'héritage par trait', groupe: 'Traits' },
   { key: 'traitTirageSlot', label: 'Proba de tirage aléatoire par slot libre', groupe: 'Traits' },
-  { key: 'conversionPoidsLocal', label: 'Poids démographique local (force et ancrage)', groupe: 'Culture', aide: 'V2 « Pression/Ancrage » (2026-11-14) : chaque habitant de la culture renforce la FORCE de sa culture dans sa ville (conversion des autres) et l\'ANCRAGE de ses compatriotes (résistance à la conversion). Une culture de force supérieure convertit les moins ancrés, jusqu\'au cap par ville.' },
-  { key: 'conversionTaux', label: 'Cap de conversions — part des vivants (par ville-tour)', groupe: 'Culture', unite: 'proportion', aide: 'Plafond de conversions par ville et par tour dans le duel « Pression/Ancrage » : conversionTaux × vivants de la ville (arrondi à l\'inférieur, minimum 1). Défaut 10 % (arbitrage 2026-11-15).' },
-  { key: 'conversionPlancher', label: 'Plancher — villes 100 % homogènes', groupe: 'Culture', unite: 'proba', aide: 'Une ville entièrement composée d\'une seule culture tente, avec cette proba par tour, UNE conversion vers la culture étrangère la plus forte (pression touristique). En ville mixte, l\'ancrage protège totalement.' },
-  { key: 'conversionAncrageNoble', label: 'Ancrage bonus des nobles', groupe: 'Culture', aide: 'Les nobles (rang social) résistent davantage à la conversion culturelle : ils ne basculent qu\'en dernier, quand la force adverse dépasse leur ancrage de ce montant.' },
+  { key: 'conversionProba', label: 'Proba de conversion par habitant et par tour', groupe: 'Culture', unite: 'proba', aide: 'Retour à l’ancien mécanisme (arbitrage 2026-11-16) : chaque habitant vivant (hors Dirigeant) a cette probabilité par tour de se convertir ; la culture d’arrivée est tirée au hasard pondéré par le TOURISME de chaque culture du monde (général + habitations), la culture actuelle étant candidate (tirée = pas de conversion). Le dogme de l’Évangile et la Guilde des évangélistes multiplient le poids d’une culture (×1,1) ; le dogme du Nationalisme ajoute +15 % de part vers la culture de la ville d’accueil ; la Tour de Crystal réduit la proba de ses habitants.' },
   { key: 'palierTourismeDogme', label: 'Dogmes — palier de Tourisme d\'une culture', groupe: 'Culture', unite: 'Tourisme', aide: 'Quand le Tourisme d\'une culture (somme des valeurs de Tourisme de ses villes, tous joueurs, SANS les cités libres) franchit un palier, le joueur ayant le plus de Tourisme dans cette culture choisit un dogme. Un dogme à chaque palier, cumul à l\'infini, jamais remplaçable ; dogmes, lois et effets de culture se cumulent. (Fondations 2026-10-30 : aucun dogme n\'est encore défini au référentiel.)' },
-  { key: 'conversionPoidsLocal', label: 'Poids des voisins de même culture', groupe: 'Culture' },
   { key: 'pelerinageTaux', label: 'Pèlerinage — taux de la dîme du pontife', groupe: 'Culture', unite: 'proportion', aide: 'Bonus du pontife (arbitrage 2026-11-01) : à chaque fin de tour, chaque habitation d\'une culture ayant AU MOINS un dogme verse cette part de sa production (Or, Nourriture, Science) au pontife de la culture (le joueur y ayant le plus de Tourisme, évalué au moment du prélèvement). Prélèvement réel sur les stocks — les habitations du pontife paient aussi (net nul chez lui). Pas de culte établi (aucun dogme) : pas de dîme. C\'est une dîme, pas une taxe : aucun bonus de taxes reçues ne s\'y applique.' },
   { key: 'taxNourrFaibles', label: 'Taxes faibles — multiplicateur Nourriture', groupe: 'Taxes' },
   { key: 'taxNourrHautes', label: 'Taxes fortes — multiplicateur Nourriture', groupe: 'Taxes' },

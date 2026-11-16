@@ -347,11 +347,13 @@ export function scienceProfesseurPlusVille(ville: City, C: Cfg): number {
   return total
 }
 
-/** Multiplicateur d'ANCRAGE de conversion des habitants de la ville
- *  (Tour de Crystal ×1,1 — arbitrage Thibaut 2026-11-15 : « chances
- *  de conversion réduites de 10 % » = résistance ×N, cumul
- *  multiplicatif par merveille active, lu dans le duel
- *  Pression/Ancrage, culture.ts). */
+/** Multiplicateur de RÉSISTANCE de conversion des habitants de la
+ *  ville (Tour de Crystal ×1,1 — arbitrage Thibaut 2026-11-15 :
+ *  « chances de conversion réduites de 10 % »). Retour au tirage par
+ *  habitant (2026-11-16) : la résistance ×N se lit DIRECTEMENT sur la
+ *  proba du jet, ÷N — un habitant de la ville passe son jet à
+ *  conversionProba ÷ N, cumul multiplicatif par merveille active
+ *  (lu dans culture.ts, applyCultureInfluence). */
 export function ancrageConversionMultVille(ville: City, C: Cfg): number {
   let out = 1
   for (const nom of batimentsActifsVille(ville, C)) {
@@ -384,10 +386,13 @@ export function merveilleConstruiteAilleurs(
   return null
 }
 
-/** Conversion locale vers la culture de la VILLE d'accueil portée par
- *  ses bâtiments ACTIFS (Guilde des évangélistes, tier 3 — cumulée au
- *  dogme Nationalisme conversionLocale, lu PAR VILLE d'accueil dans
- *  culture.ts). */
+/** Poids de conversion de la culture de la VILLE d'accueil porté par
+ *  ses bâtiments ACTIFS (Guilde des évangélistes — arbitrage Thibaut
+ *  2026-11-16 « poids dans la conversion ×1,1 comme l'évangélisme » :
+ *  le poids de la culture d'accueil est ×(1+v) pour les habitants de
+ *  la ville, PLUS de bonus de part vers la ville. Cumulé au dogme
+ *  Nationalisme (qui garde son ancien canal de part), lu PAR VILLE
+ *  d'accueil dans culture.ts). */
 export function conversionLocaleBatimentsVille(ville: City, C: Cfg): number {
   let total = 0
   for (const nom of batimentsActifsVille(ville, C)) {

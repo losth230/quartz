@@ -1,21 +1,20 @@
 // ═══════════════════════════════════════════════════════════════════════════
-//  TESTS CONVERSION CULTURELLE V2 « Pression/Ancrage » (arbitrage Thibaut
-//  2026-11-14 « proposer autre chose, plus cohérent et plus jouable de
-//  manière technique ») — duel déterministe par ville :
-//   · Force(culture) = pression touristique mondiale + poids
-//     démographique local (conversionPoidsLocal × vivants de la
-//     culture dans la ville) ;
-//   · la culture dominante convertit les habitants dont l'ANCRAGE
-//     (compatriotes × poids + noblesse) est dépassé, les moins
-//     ancrés d'abord (ex æquo : ordre de recensement), au plus
-//     conversionTaux × vivants de la ville par tour (défaut 10 %,
-//     arbitrage Thibaut 2026-11-15 « le cap de conversion passe à
-//     10 % des habitants de la ville », minimum 1) ;
-//   · Dirigeant immunisé ; nobles convertis en dernier ;
-//   · plancher minuscule (conversionPlancher, 1 %) : une ville
-//     100 % homogène tente UNE conversion vers la culture
-//     étrangère la plus forte — en ville mixte, l'ancrage protège
-//     totalement (aucun rng).
+//  TESTS CONVERSION CULTURELLE — TIRAGE PAR HABITANT (retour Thibaut
+//  2026-11-16 « je préférais l'ancien », fin du duel V2
+//  « Pression/Ancrage » du 2026-11-14) :
+//   · chaque habitant vivant (hors Dirigeant) a conversionProba
+//     (défaut 5 %) de chances par tour de se convertir ;
+//   · la culture d'arrivée est tirée au hasard PONDÉRÉ par le
+//     TOURISME de chaque culture du monde (pression touristique) —
+//     SANS poids démographique des compatriotes (arbitrage « ancien
+//     sans le poids des compatriotes ») ;
+//   · la culture ACTUELLE est candidate : tirée = pas de
+//     conversion ;
+//   · Évangile : poids de la culture ×1,1 ; Guilde des
+//     évangélistes : poids de la culture de la ville ×1,1
+//     (arbitrage « comme l'évangélisme ») ; Nationalisme : +0,15 ×
+//     poids des autres vers la culture d'accueil ;
+//   · Tour de Crystal : proba du jet ÷1,1 (chances réduites).
 // ═══════════════════════════════════════════════════════════════════════════
 
 import { test } from 'node:test'
@@ -25,15 +24,19 @@ import type { Character, GameState, Player } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { emptyRecap } from './shared'
-import { applyCultureInfluence, detailConversionVille, updateCityCultures } from './culture'
+import { applyCultureInfluence, calculPression, poidsConversion, updateCityCultures } from './culture'
+import { cloneDefaultConfig, cfgOf as cfgOfConfig } from '../config/defaultConfig'
 
 const SETUP: SetupLine[] = [{
   nom: 'Test', peuple: 'NORLS', culture: 'Culture Nordique', regime: 'Autoritarisme',
   taillePopulation: 10, pourcentageMariages: 40, villes: ['Capitale'],
+}, {
+  nom: 'Autre', peuple: 'NORLS', culture: 'Déisme', regime: 'Autoritarisme',
+  taillePopulation: 4, pourcentageMariages: 40, villes: ['AutreCap'],
 }]
 
 function partie(): GameState {
-  return createGame(SETUP, 20261114, 'local')
+  return createGame(SETUP, 20261116, 'local')
 }
 
 /** Personnage de test complet (patron tier3.test.ts — tuples de 3
@@ -50,11 +53,21 @@ function perso(id: string, age: number, o: { metier?: string | null; ville?: str
   }
 }
 
-/** Rng factice configurable (patron dogmes.test.ts) — seule la face
- *  `chance` sert au plancher ; le cast final évite d'implémenter les
- *  8 faces de l'interface. */
-function fakeRng(o: { chance?: (p: number) => boolean }): Rng {
-  return { chance: o.chance ?? (() => false) } as unknown as Rng
+/** Rng factice configurable : chance(p) et pickWeighted renvoyant
+ *  l'entrée de poids MAX (déterministe — le tirage réel est
+ *  aléatoire, le test verrouille les POIDS). */
+function fakeRng(o: {
+  chance?: (p: number) => boolean
+  poids?: Array<Record<string, number>>
+}): Rng {
+  return {
+    chance: o.chance ?? (() => false),
+    pickWeighted: (items: Array<[string, number]>) => {
+      const poids = Object.fromEntries(items)
+      o.poids?.push(poids)
+      return items.reduce((a, b) => (b[1] > a[1] ? b : a))
+    },
+  } as unknown as Rng
 }
 
 /** Population d'un joueur remplacée par `n` Nordiques dans Capitale. */
@@ -65,221 +78,162 @@ function nordiques(state: GameState, p: Player, n: number): Character[] {
   return pop
 }
 
-// ── 1. Ville homogène : duel lisible + plancher minuscule ─────────────────
+// ── 1. Le jet : 5 % par habitant vivant, hors Dirigeant ──────────────────
 
-test('V2 conversion : ville homogène — dominant unique, plancher 1 % vers l étrangère la plus forte, RIEN sans le rng', () => {
+test('conversion : un jet à conversionProba (5 %) par habitant VIVANT — décédés et Dirigeant immunisés', () => {
   const state = partie()
-  const C = cfgOf(state.config)
   const p = state.players[0]
   if (!p) throw new Error('joueur absent')
-  const pop = nordiques(state, p, 10)
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  // détail : la démocratie locale écrase les pressions de base (0,001)
-  const d = detailConversionVille(state, p, ville, C)
-  assert.equal(d.dominant, 'Culture Nordique', 'les 10 Nordiques dominent')
-  assert.equal(d.convertibles.length, 0, 'aucun éligible : ville 100 % dominante')
-  assert.ok(d.plancher, 'ville homogène → plancher actif')
-  assert.equal(d.plancherVers, 'Communautarisme',
-    'le plancher vise la première culture du référentiel (pressions de base égales)')
-  const fN = d.forces['Culture Nordique']?.force
-  assert.ok(fN !== undefined && Math.abs(fN - 50) < 1e-9, 'force Nordique = poids × 10 vivants')
-  // sans le rng : AUCUNE conversion, un seul jet (le plancher)
-  let jets = 0
-  let recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return false } }), recap)
-  assert.equal(jets, 1, 'un seul jet rng par ville : le plancher')
-  assert.equal(Object.keys(recap.conversions).length, 0, 'le plancher raté ne convertit personne')
-  // avec le rng : 1 conversion, le PREMIER au recensement
-  jets = 0
-  recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return true } }), recap)
-  assert.equal(jets, 1)
-  assert.equal(pop[0]!.culture, 'Communautarisme', 'premier au recensement bascule')
-  assert.equal(recap.conversions['Communautarisme'], 1, 'récap de conversions crédité')
-  assert.ok(state.log.some((l) => l.type === 'Culture' && l.texte.includes('se convertit à la culture Communautarisme')),
-    'journal de conversion standard')
+  const pop = nordiques(state, p, 3)
+  pop[0]!.statut = 'Décédé'
+  pop[1]!.metier = 'Dirigeant'
+  const probs: number[] = []
+  const rng = fakeRng({ chance: (pr) => { probs.push(pr); return false } })
+  applyCultureInfluence(state, p, rng, emptyRecap())
+  assert.equal(probs.length, 1, 'un SEUL jet : le vivant non-Dirigeant')
+  assert.ok(Math.abs(probs[0]! - 0.05) < 1e-12, 'la proba du jet est conversionProba (5 %)')
 })
 
-// ── 2. Minorité fond au cap proportionnel (10 % des habitants) ───────────
+// ── 2. Le tirage : pondéré par le TOURISME des cultures du monde ─────────
 
-test('V2 conversion : minorité fond au cap 10 % des vivants par ville-tour, ordre de recensement, AUCUN jet rng', () => {
+test('conversion : le tirage est pondéré par le tourisme de CHAQUE culture (pression), SANS poids des compatriotes', () => {
   const state = partie()
-  const C = cfgOf(state.config)
   const p = state.players[0]
   if (!p) throw new Error('joueur absent')
-  const pop = nordiques(state, p, 40)
-  const minorite: Character[] = []
-  for (let i = 0; i < 10; i++) {
-    const c = perso(`B${i}`, 30, { culture: 'Déisme' })
-    minorite.push(c)
-    pop.push(c)
+  // un seul habitant, isolé dans sa ville : AUCUN bonus de
+  // compatriotes ne doit gonfler sa culture (arbitrage 2026-11-16)
+  const habitant = perso('E1', 30)
+  state.population[p.n] = [habitant]
+  // le joueur 0 est Nordique avec du tourisme GÉNÉRAL hors villes
+  p.resources['Tourisme'] = { stock: 100, prod: 0 }
+  const C = cfgOf(state.config)
+  const pression = calculPression(state, C)
+  assert.ok((pression['Culture Nordique'] ?? 0) >= 100,
+    `la pression Nordique vaut son tourisme général (≈100), obtenu ${pression['Culture Nordique']}`)
+  // un autre joueur Déiste pousse sa culture : 300 de tourisme général
+  const autre = state.players[1]
+  if (!autre) throw new Error('joueur 1 absent')
+  autre.culture = 'Déisme'
+  autre.resources['Tourisme'] = { stock: 300, prod: 0 }
+  const poidsRecus: Array<Record<string, number>> = []
+  const rng = fakeRng({ chance: () => true, poids: poidsRecus })
+  applyCultureInfluence(state, p, rng, emptyRecap())
+  assert.equal(poidsRecus.length, 1, 'un tirage (le jet est passé)')
+  const poids = poidsRecus[0]!
+  const pN = poids['Culture Nordique'] ?? 0
+  const pD = poids['Déisme'] ?? 0
+  assert.ok(Math.abs(pD / pN - 3) < 1e-3,
+    `Déisme pèse 3 × la Culture Nordique (tourisme 300 vs 100), obtenu ${pD}/${pN}`)
+  assert.equal(habitant.culture, 'Déisme', 'le tirage (max) convertit vers le tourisme dominant')
+  assert.ok(state.log.some((l) => l.texte.includes('se convertit à la culture Déisme')),
+    'la conversion est journalisée')
+})
+
+// ── 3. La culture actuelle est candidate : tirée = pas de conversion ─────
+
+test('conversion : la culture ACTUELLE est candidate — tirée (poids max), l habitant ne change pas', () => {
+  const state = partie()
+  const p = state.players[0]
+  if (!p) throw new Error('joueur absent')
+  const habitant = perso('E1', 30, { culture: 'Déisme' })
+  state.population[p.n] = [habitant]
+  // la culture actuelle (Déisme) a le poids MAX du tirage
+  const autre = state.players[1]
+  if (!autre) throw new Error('joueur 1 absent')
+  autre.culture = 'Déisme'
+  autre.resources['Tourisme'] = { stock: 500, prod: 0 }
+  const rng = fakeRng({ chance: () => true })
+  const recap = emptyRecap()
+  const logsAvant = state.log.length
+  applyCultureInfluence(state, p, rng, recap)
+  assert.equal(habitant.culture, 'Déisme', 'tirée = pas de conversion')
+  assert.equal(state.log.length, logsAvant, 'aucun log de conversion')
+  assert.equal(Object.keys(recap.conversions).length, 0, 'aucun recap de conversion')
+})
+
+// ── 4. Guilde des évangélistes : poids de la culture de la ville ×1,1 ────
+
+test('conversion : Guilde des évangélistes — poids de la culture de la VILLE ×1,1 (comme l Évangile, arbitrage 2026-11-16)', () => {
+  const state = partie()
+  const p = state.players[0]
+  if (!p) throw new Error('joueur absent')
+  const C = cfgOf(state.config)
+  // guilde de TEST INJECTÉE au référentiel (effets VIDES : la vraie
+  //  porte Tourisme +70 qui polluerait la pression)
+  C.config.constructions.push({
+    categorie: 'Bâtiment', groupe: 'Château', famille: 'Guilde',
+    nom: 'Guilde test conversion', cout: '', production: '', description: '',
+    effets: [], rangMinHabitation: 3, conversionLocalePlus: 0.1, couts: [],
+  })
+  const ville = p.villes[0]
+  if (!ville) throw new Error('ville absente')
+  const pression = calculPression(state, C)
+  // SANS la guilde : poids bruts
+  const sans = poidsConversion(state, C, pression, ville)
+  // AVEC la guilde dans la ville : la culture de la ville (Nordique)
+  //  gagne ×1,1, les autres ne bougent pas
+  ville.batiments = [...(ville.batiments ?? []), 'Guilde test conversion']
+  const avec = poidsConversion(state, C, pression, ville)
+  assert.ok(Math.abs((avec['Culture Nordique'] ?? 0) - 1.1 * (sans['Culture Nordique'] ?? 0)) < 1e-9,
+    'la culture de la ville gagne ×1,1 (poids dans la conversion)')
+  for (const cult of Object.keys(sans)) {
+    if (cult !== 'Culture Nordique') {
+      assert.ok(Math.abs((avec[cult] ?? 0) - (sans[cult] ?? 0)) < 1e-12,
+        `le poids de ${cult} est inchangé`)
+    }
   }
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  const d = detailConversionVille(state, p, ville, C)
-  assert.equal(d.dominant, 'Culture Nordique', '40 Nordiques écrasent 10 Déistes')
-  // cap = 10 % de 50 vivants = 5 (arbitrage Thibaut 2026-11-15)
-  assert.equal(d.cap, 5, 'cap de la ville : 10 % des 50 vivants')
-  assert.equal(d.convertibles.length, 5, 'cinq conversions prévues ce tour')
-  const cible = d.convertibles[0]
-  assert.ok(cible && cible.vers === 'Culture Nordique')
-  // moteur : déterministe, zéro rng
-  let jets = 0
-  let recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return true } }), recap)
-  assert.equal(jets, 0, 'ville mixte : aucun jet rng, la conversion est déterministe')
-  assert.equal(minorite[0]!.culture, 'Culture Nordique', 'le premier Déiste au recensement bascule')
-  assert.equal(recap.conversions['Culture Nordique'], 5, '5 conversions ce tour (cap)')
-  // 2e tour : les 5 restants basculent — la minorité fond en 2 tours
-  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return true } }), recap)
-  assert.equal(minorite[5]!.culture, 'Culture Nordique', 'au tour suivant, les suivants basculent')
-  assert.equal(minorite.filter((c) => c.culture === 'Déisme').length, 0, 'la minorité a fondu en 2 tours au cap 10 %')
 })
 
-// ── 3. conversionTaux réglable ────────────────────────────────────────────
+// ── 5. Tour de Crystal : proba du jet ÷1,1 ───────────────────────────────
 
-test('V2 conversion : conversionTaux est un paramètre réglable (0,3 → cap 15 : la minorité fond en un tour)', () => {
+test('conversion : Tour de Crystal — les chances des habitants de la ville sont réduites (proba ÷1,1)', () => {
   const state = partie()
-  const C = cfgOf(state.config)
   const p = state.players[0]
   if (!p) throw new Error('joueur absent')
-  const pop = nordiques(state, p, 40)
-  for (let i = 0; i < 10; i++) pop.push(perso(`B${i}`, 30, { culture: 'Déisme' }))
+  const pop = nordiques(state, p, 1)
   const ville = p.villes[0]
   if (!ville) throw new Error('ville absente')
-  C.p.conversionTaux = 0.3
-  const d = detailConversionVille(state, p, ville, C)
-  assert.equal(d.cap, 15, 'cap réglé à 30 % de 50 vivants = 15')
-  assert.equal(d.convertibles.length, 10, 'cap 15 > éligibles 10 : toute la minorité est prévue')
-  const recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => true }), recap)
-  assert.equal(recap.conversions['Culture Nordique'], 10, 'les dix Déistes convertis d un coup')
+  const probs: number[] = []
+  applyCultureInfluence(state, p, fakeRng({ chance: (pr) => { probs.push(pr); return false } }), emptyRecap())
+  assert.ok(Math.abs(probs[0]! - 0.05) < 1e-12, 'sans la Tour : proba pleine (5 %)')
+  ville.batiments = [...(ville.batiments ?? []), 'Tour de Crystal']
+  probs.length = 0
+  applyCultureInfluence(state, p, fakeRng({ chance: (pr) => { probs.push(pr); return false } }), emptyRecap())
+  assert.ok(Math.abs(probs[0]! - 0.05 / 1.1) < 1e-12,
+    `avec la Tour : proba ÷1,1 (chances réduites de 10 %), obtenu ${probs[0]}`)
+  void pop
 })
 
-// ── 4. Tourisme massif renverse une ville pure ────────────────────────────
+// ── 6. Migration : les clés V2 sont mortes, conversionProba est semé ─────
 
-test('V2 conversion : un tourisme étranger massif RENVERSE une ville pure (pression > démographie locale)', () => {
-  const SETUP2: SetupLine[] = [
-    { nom: 'Test', peuple: 'NORLS', culture: 'Culture Nordique', regime: 'Autoritarisme',
-      taillePopulation: 10, pourcentageMariages: 40, villes: ['Capitale'] },
-    { nom: 'Étranger', peuple: 'NORLS', culture: 'Déisme', regime: 'Autoritarisme',
-      taillePopulation: 10, pourcentageMariages: 40, villes: ['Capitale2'] },
-  ]
-  const state = createGame(SETUP2, 20261114, 'local')
-  const C = cfgOf(state.config)
-  const p = state.players[0]
-  const etranger = state.players[1]
-  if (!p || !etranger) throw new Error('joueurs absents')
-  const pop = nordiques(state, p, 50)
-  // tourisme GÉNÉRAL du joueur Déiste : pression Déisme = 300
-  etranger.resources['Tourisme'] = { stock: 300, prod: 0 }
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  const d = detailConversionVille(state, p, ville, C)
-  // force Déisme = 300,001 vs Nordique = 50 × 5 = 250 : RENVERSEMENT
-  assert.equal(d.dominant, 'Déisme', 'la pression touristique dépasse la démographie locale')
-  assert.ok(!d.plancher, 'la ville a des éligibles (50 Nordiques) : duel, pas plancher')
-  // cap = 10 % de 50 vivants = 5 : le renversement part à 5/tour
-  assert.equal(d.cap, 5, 'cap : 10 % des 50 vivants')
-  assert.equal(d.convertibles.length, 5, 'cinq Nordiques basculent ce tour')
-  const recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => true }), recap)
-  assert.equal(pop[0]!.culture, 'Déisme', 'le premier Nordique est converti au Déisme')
-  assert.equal(pop[4]!.culture, 'Déisme', 'le cinquième aussi (cap 5)')
-  assert.equal(pop[5]!.culture, 'Culture Nordique', 'le sixième attend le tour suivant')
-  assert.equal(recap.conversions['Déisme'], 5)
-})
-
-// ── 5. Ancrage : l'isolé bascule avant la communauté ──────────────────────
-
-test('V2 conversion : l ancrage ordonne les conversions — l isolé avant la communauté (ex æquo : recensement)', () => {
-  const state = partie()
-  const C = cfgOf(state.config)
-  const p = state.players[0]
-  if (!p) throw new Error('joueur absent')
-  const pop = nordiques(state, p, 22)
-  const isole = perso('L1', 30, { culture: 'Lunisme' })
-  pop.push(isole)
-  for (let i = 0; i < 20; i++) pop.push(perso(`D${i}`, 30, { culture: 'Déisme' }))
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  const d = detailConversionVille(state, p, ville, C)
-  // ancrage : Lunisme isolé = 5 ; Déisme = 100 ; Nordique force = 110
-  //  cap = 10 % de 43 vivants = 4
-  assert.equal(d.cap, 4, 'cap : 10 % des 43 vivants')
-  assert.equal(d.convertibles.length, 4, 'l isolé (ancrage 5) passe AVANT la communauté (ancrage 100)')
-  const c1 = d.convertibles[0]
-  assert.ok(c1 && c1.id === 'L1', 'le Lunisme isolé est le moins ancré')
-  C.p.conversionTaux = 0.05
-  const d2 = detailConversionVille(state, p, ville, C)
-  assert.equal(d2.cap, 2, 'taux réglé à 5 % : cap 2')
-  const deuxieme = d2.convertibles[1]
-  assert.ok(deuxieme && deuxieme.id === 'D0', 'ensuite le premier Déiste au recensement')
-})
-
-// ── 6. Nobles : ancrage +15, convertis en dernier / protégés ──────────────
-
-test('V2 conversion : le noble résiste (ancrage + conversionAncrageNoble) là où les roturiers basculent', () => {
-  const state = partie()
-  const C = cfgOf(state.config)
-  const p = state.players[0]
-  if (!p) throw new Error('joueur absent')
-  // 20 Nordiques (force 100) contre 18 Déistes + 1 noble Déiste
-  //  (force 95,001) : les roturiers (ancrage 95) basculent au cap,
-  //  le noble (ancrage 95 + 15 = 110) résiste PAR LA FORCE — pas
-  //  seulement parce que le cap est plein.
-  const pop = nordiques(state, p, 20)
-  const roturiers: Character[] = []
-  for (let i = 0; i < 18; i++) {
-    const c = perso(`R${i}`, 30, { culture: 'Déisme' })
-    roturiers.push(c)
-    pop.push(c)
+test('conversion (migration) : une config V2 perd ses clés mortes et reçoit conversionProba 5 % — idempotent', () => {
+  const c = cloneDefaultConfig()
+  // config sauvegardée SOUS la V2 : les 4 clés V2 + les reliques
+  const pm = c.params as unknown as Record<string, unknown>
+  pm.conversionTaux = 0.1
+  pm.conversionPlancher = 0.01
+  pm.conversionAncrageNoble = 15
+  pm.conversionPoidsLocal = 5
+  pm.conversionMax = 1
+  c.conversionDeterministe2026 = true
+  c.conversionTaux2026 = true
+  const merged = cfgOfConfig(c)
+  assert.ok(merged.config.conversionTirage2026, 'tampon de la migration posé')
+  const out = merged.p as unknown as Record<string, unknown>
+  for (const cle of ['conversionTaux', 'conversionPlancher', 'conversionAncrageNoble', 'conversionPoidsLocal', 'conversionMax', 'conversionMemeCulture']) {
+    assert.ok(out[cle] === undefined, `la clé morte ${cle} est dépouillée`)
   }
-  const noble = perso('N1', 30, { culture: 'Déisme', prestige: 300 })
-  pop.push(noble)
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  const d = detailConversionVille(state, p, ville, C)
-  assert.equal(d.cap, 3, 'cap : 10 % des 39 vivants')
-  assert.equal(d.convertibles.length, 3, 'trois roturiers prévus (cap 3)')
-  for (const c of d.convertibles) {
-    assert.ok(c.id !== 'N1', 'le noble n est jamais dans les convertibles')
-  }
-  const recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => true }), recap)
-  assert.equal(roturiers[0]!.culture, 'Culture Nordique', 'les roturiers basculent')
-  assert.equal(recap.conversions['Culture Nordique'], 3)
-  assert.equal(noble.culture, 'Déisme', 'le noble reste Déiste (ancrage 110 > force 100)')
+  assert.ok(Math.abs((out.conversionProba as number) - 0.05) < 1e-12,
+    'conversionProba est semé par mergeParams (défaut 5 %)')
+  // idempotent
+  const re = cfgOfConfig(c)
+  assert.ok(re.config.conversionTirage2026, 'idempotent : le tampon tient')
+  assert.ok(Math.abs((re.p as unknown as Record<string, unknown>).conversionProba as number - 0.05) < 1e-12)
 })
 
-// ── 7. Dirigeant immunisé ─────────────────────────────────────────────────
+// ── 7. updateCityCultures : inchangé (majorité des vivants) ───────────────
 
-test('V2 conversion : le Dirigeant est immunisé (comportement conservé) et sa seule présence neutralise le plancher', () => {
-  const state = partie()
-  const C = cfgOf(state.config)
-  const p = state.players[0]
-  if (!p) throw new Error('joueur absent')
-  const pop = nordiques(state, p, 10)
-  const dirigeant = perso('X1', 40, { culture: 'Déisme', metier: 'Dirigeant' })
-  pop.push(dirigeant)
-  const ville = p.villes[0]
-  if (!ville) throw new Error('ville absente')
-  const d = detailConversionVille(state, p, ville, C)
-  assert.equal(d.dominant, 'Culture Nordique')
-  assert.equal(d.convertibles.length, 0, 'le Dirigeant n est jamais éligible')
-  assert.ok(!d.plancher, 'la ville n est pas homogène : pas de plancher')
-  let jets = 0
-  const recap = emptyRecap()
-  applyCultureInfluence(state, p, fakeRng({ chance: () => { jets++; return true } }), recap)
-  assert.equal(jets, 0, 'rien à tenter : aucun jet rng')
-  assert.equal(dirigeant.culture, 'Déisme', 'le Dirigeant garde sa culture')
-  assert.equal(Object.keys(recap.conversions).length, 0)
-})
-
-// ── 8. Culture de la ville : la majorité des vivants ───────────────────────
-
-test('V2 conversion : updateCityCultures — la culture de la ville suit la majorité des vivants', () => {
+test('conversion : updateCityCultures — la culture de la ville suit la majorité des vivants', () => {
   const state = partie()
   const p = state.players[0]
   if (!p) throw new Error('joueur absent')

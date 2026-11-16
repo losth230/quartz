@@ -29,6 +29,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createGame, type SetupLine } from './setup'
 import type { Character, City, GameState, Player } from './types'
+import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { cloneDefaultConfig, cfgOf as cfgOfConfig } from '../config/defaultConfig'
 import {
@@ -38,7 +39,8 @@ import {
 } from './batiments'
 import { detailGainsVille } from './economie'
 import { effetsCommerceJoueur, detailCommerceJoueur, maxRoutesJoueur, creerRouteCommerce } from './commerce'
-import { detailConversionVille } from './culture'
+import { applyCultureInfluence } from './culture'
+import { emptyRecap } from './shared'
 import { constructionRef, resumeConstruction, effetsConstructionRef, effetsEteConstructionRef, coutConstructionRef } from './constructions'
 import { capMetierVille } from './metiers'
 import { normaliserEtat } from './villes'
@@ -46,6 +48,13 @@ import {
   accorderDogmeMerveille, dogmesBonusEnAttente, choisirDogmeMerveille,
   dogmesCulture, paliersDogmesEnAttente,
 } from './dogmes'
+
+/** Rng factice configurable (patron tier3.test.ts) — seule la face
+ *  `chance` sert à la conversion ; le cast final évite d'implémenter
+ *  les 8 faces de l'interface. */
+function fakeRng(o: { chance?: (p: number) => boolean }): Rng {
+  return { chance: o.chance ?? (() => false) } as unknown as Rng
+}
 
 const SETUP: SetupLine[] = [{
   nom: 'Test', peuple: 'NORLS', culture: 'Culture Nordique', regime: 'Autoritarisme',
@@ -401,46 +410,32 @@ test('Antichambre d’Alexandrie : les aménagements octroyés par les routes so
     `la ligne de route affiche le flux doublé (${fluxLigne}, moteur ${avec})`)
 })
 
-// ── 8. Tour de Crystal : ancrage ×1,1 dans le duel Pression/Ancrage ───────
+// ── 8. Tour de Crystal : proba de conversion ÷1,1 (tirage par habitant) ───
 
-test('Tour de Crystal : ancrage des habitants ×1,1 — l isolé qui basculait AVANT la merveille ne bascule plus (convertibles vides), la Balance culturelle suit', () => {
+test('Tour de Crystal : proba du jet de conversion des habitants de la ville ÷1,1 (chances réduites de 10 %)', () => {
   const state = partie()
   const C = cfgOf(state.config)
   const p = state.players[0]!
   const ville = p.villes[0]!
-  // un Nordique (culture de la ville) + un Déiste ISOLÉ (ancrage =
-  //  poids × 1 = 5) ; on règle la pression touristique du joueur
-  //  pour placer la force Nordique ENTRE l ancrage (5) et l ancrage
-  //  ×1,1 (5,5) : 5,25
-  state.population[p.n] = [
-    perso('A0', 30, { ville: ville.nom }),
-    perso('B0', 30, { ville: ville.nom, culture: 'Déisme' }),
-  ]
-  const d0 = detailConversionVille(state, p, ville, C)
-  const forceN0 = d0.forces['Culture Nordique']?.force ?? 0
-  assert.ok(forceN0 > 0, 'pré-condition : la force Nordique est lisible')
-  p.resources['Tourisme'] = { stock: 5.25 - forceN0, prod: 0 }
-
-  // SANS la Tour : le Déiste isolé (ancrage 5) bascule (force 5,25)
-  const sans = detailConversionVille(state, p, ville, C)
-  assert.equal(sans.dominant, 'Culture Nordique', 'la culture de la ville domine')
-  assert.equal(sans.convertibles.length, 1, 'sans la Tour : l isolé bascule (ancrage 5 < force 5,25)')
-  assert.ok(Math.abs((sans.convertibles[0]?.ancrage ?? 0) - 5) < 1e-9,
-    'ancrage de l isolé sans la Tour : 5')
-
+  // un habitant isolé dans la ville (hors Dirigeant)
+  state.population[p.n] = [perso('A0', 30, { ville: ville.nom })]
+  // SANS la Tour : proba pleine (conversionProba, 5 %)
+  const probsSans: number[] = []
+  applyCultureInfluence(state, p, fakeRng({ chance: (pr) => { probsSans.push(pr); return false } }), emptyRecap())
+  assert.ok(Math.abs(probsSans[0]! - 0.05) < 1e-12, 'sans la Tour : proba pleine (5 %)')
   // lecteur : ×1 sans, ×1,1 avec
   assert.equal(ancrageConversionMultVille(ville, C), 1, 'lecteur : ×1 sans Tour')
   ville.batiments = [...(ville.batiments ?? []), 'Tour de Crystal']
   assert.ok(Math.abs(ancrageConversionMultVille(ville, C) - 1.1) < 1e-9,
     'lecteur : ×1,1 avec la Tour de Crystal')
-
-  // AVEC la Tour : ancrage 5,5 > force 5,25 — personne ne bascule,
-  //  et le DÉTAIL (Balance culturelle) le montre déjà
-  const avec = detailConversionVille(state, p, ville, C)
-  assert.equal(avec.convertibles.length, 0,
-    'avec la Tour : l isolé ne bascule plus (ancrage ×1,1 = 5,5 > force 5,25)')
-  assert.equal(avec.dominant, 'Culture Nordique', 'la dominante ne change pas (l ancrage ne touche que la résistance)')
+  // AVEC la Tour : la proba du jet est ÷1,1 (≈ 4,55 % — chances
+  //  réduites de 10 %, retour au tirage par habitant 2026-11-16)
+  const probsAvec: number[] = []
+  applyCultureInfluence(state, p, fakeRng({ chance: (pr) => { probsAvec.push(pr); return false } }), emptyRecap())
+  assert.ok(Math.abs(probsAvec[0]! - 0.05 / 1.1) < 1e-12,
+    'avec la Tour : proba ÷1,1 (chances réduites de 10 %)')
 })
+
 
 // ── 9. Tour de Crystal : dogme HORS PALIER au constructeur ────────────────
 

@@ -428,7 +428,7 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   const tribut = tributVassalPlusRef(ref)
   if (tribut > 0) parts.push(`+${Math.round(tribut * 100)} % tribut vassal`)
   const convLocale = conversionLocalePlusRef(ref)
-  if (convLocale > 0) parts.push(`+${Math.round(convLocale * 100)} % conversion vers la culture de la ville`)
+  if (convLocale > 0) parts.push(`poids dans la conversion ×${(1 + convLocale).toFixed(1)} (culture de la ville)`)
   const sciProf = scienceProfesseurPlusRef(ref)
   if (sciProf > 0) parts.push(`Science des Professeurs +${Math.round(sciProf * 100)} %`)
   // (Merveilles mondiales, fiches Thibaut 2026-11-15 : les canaux

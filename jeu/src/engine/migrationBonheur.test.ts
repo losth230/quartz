@@ -463,12 +463,32 @@ test("récap (arbitrage Thibaut 2026-11-14) : l'Or de la Terre d'accueil appara�
 //  habitants de J2, zélotes, mais il n'y a que des culturalistes dans
 //  sa ville » — jouée APRÈS le flux, la conversion retournait chaque
 //  arrivant isolé (ancrage 0) à la culture dominante le tour MÊME de
-//  son arrivée : aucune minorité culturelle n'était jamais visible.)
+//  son arrivée : aucune minorité culturelle n'était jamais visible.
+//
+// Retour au tirage 2026-11-16 : la conversion lit la population
+// PRÉ-FLUX (l'étape 4bis passe AVANT le flux 4ter, structure
+// inchangée), donc un migrant ne peut PAS être converti dans sa
+// ville d'ARRIVÉE le tour même de son arrivée. En revanche il a pu
+// être converti dans sa ville de DÉPART le même tour (le tirage par
+// habitant joue sur les habitants présents avant le flux) : l'ancien
+// invariant « aucun migré n'a changé de culture le tour de son
+// arrivée » est trop fort sous le tirage. Nouvelle lecture, en deux
+// tours étanches :
+//  - tour 1, conversionProba = 0 : le flux joue, aucun habitant
+//    n'est converti ce tour-là, chaque arrivant garde exactement sa
+//    culture de début de tour ;
+//  - tour 2, conversionProba = 1 : l'assimilation reprend, les
+//    arrivants du tour 1 (présents avant le flux du tour 2) peuvent
+//    être convertis.)
 
 test('ordre (arbitrage 2026-11-14) : la conversion se joue AVANT la migration — un arrivant garde sa culture d\u2019origine le tour de son arrivée', () => {
   const { state, C } = partie(20261114)
   // Chaque joueur n'a qu'UNE ville : tout départ est inter-joueurs.
   C.p.migrationBonheurMax = 0.15 // quelques départs ciblés, pas un raz-de-marée
+  // Tour 1 : conversion désactivée — toute différence de culture
+  //  d'un migré ne pourrait venir QUE du tirage pré-flux, ici
+  //  impossible : l'invariant ci-dessous devient étanche.
+  C.p.conversionProba = 0
   // Photographie avant : id → { joueur, culture }
   const avant = new Map<string, { joueur: number; culture: string }>()
   for (const [nStr, liste] of Object.entries(state.population)) {
@@ -484,16 +504,18 @@ test('ordre (arbitrage 2026-11-14) : la conversion se joue AVANT la migration �
     }
   }
   assert.ok(migres.size > 0, `le flux a joué à cette graine (${migres.size} migrés inter-joueurs)`)
-  // INVARIANT DE L'ARBITRAGE : aucun migré n'a changé de culture le
-  // tour de son arrivée (l'incident L2 : arrivés isolés, ancrage 0,
-  // ils étaient convertis par la culture dominante avant publication)
+  // INVARIANT DE L'ARBITRAGE : avec la conversion coupée ce tour,
+  //  chaque arrivant garde SA culture de début de tour — la
+  //  conversion s'est déjà jouée AVANT le flux et n'a pas pu
+  //  l'atteindre dans sa ville d'arrivée.
   for (const [id, m] of migres) {
     assert.equal(m.apres.culture, m.avant.culture,
       `${id} garde sa culture d'origine (${m.avant.culture}) le tour de son arrivée`)
   }
-  // Le tour SUIVANT, l'assimilation reprend : les arrivants isolés
-  // (ancrage 0 < force dominante, cap ≥ 1 par ville) redeviennent
-  // éligibles à la conversion.
+  // Tour 2 : conversion à proba 1 — l'assimilation reprend. Les
+  //  arrivants du tour 1 sont des habitants présents AVANT le flux
+  //  de ce tour 2 : le tirage peut les convertir.
+  C.p.conversionProba = 1
   runTurn(state)
   const assimiles = [...migres.values()].filter((m) => m.avant.culture !== m.apres.culture).length
   assert.ok(assimiles > 0, `l'assimilation reprend au tour suivant (${assimiles} migrés convertis)`)

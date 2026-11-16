@@ -1,50 +1,49 @@
 // ══════════════════════════════════════════════════════════════════════
 //  CULTURE — CONVERSIONS ET VILLES (ApplyCultureInfluence)
-//  V2 « Pression/Ancrage » (arbitrage Thibaut 2026-11-14, retour
-//  « proposer autre chose pour la conversion culturelle, plus
-//  cohérente et plus jouable techniquement ») : FINI le tirage au
-//  hasard par habitant (proba 10 % + pickWeighted) — la conversion
-//  devient un DUEL DÉTERMINISTE PAR VILLE, lisible et affichable.
-//  ⚅ Force d'une culture dans une ville = pression touristique
-//     mondiale de la culture (revue 2026-10-16 : tourisme général
-//     + tourisme rattaché aux habitations de cette culture)
-//     + poids démographique (conversionPoidsLocal × vivants de la
-//     culture dans la ville) ; le tout ×(1+évangile).
-//  ⚅ Ancrage d'un habitant = poids démographique de ses
-//     compatriotes dans la ville (conversionPoidsLocal × vivants
-//     de sa culture) + bonus de noblesse (conversionAncrageNoble)
-//     : c'est la RÉSISTANCE — un isolé bascule avant une
-//     communauté, un roturier avant un noble, et une communauté
-//     nombreuse protège ses membres tant que la force dominante ne
-//     dépasse pas le poids de ses compatriotes.
-//  ⚅ Conversions : la culture dominante D de la ville (Force max,
-//     ex æquo : ordre du référentiel) convertit les habitants les
-//     MOINS ancrés dont l'ancrage < Force(D) — au plus
-//     conversionTaux × vivants de la ville par tour (défaut 10 %,
-//     arbitrage Thibaut 2026-11-15 « le cap de conversion passe à
-//     10 % des habitants de la ville », plancher de 1 conversion).
-//     Le Dirigeant est immunisé (comportement conservé) ; les
-//     nobles résistent davantage (ancrage +15).
-//  ⚅ Plancher minuscule (arbitrage Thibaut 2026-11-14 : une ville
-//     homogène n'est PAS immunisée) : une ville 100 % dominante
-//     tente rng.chance(conversionPlancher) (défaut 1 %) → 1
-//     habitant bascule vers la culture étrangère la plus forte.
-//     En ville MIXTE, l'ancrage protège TOTALEMENT : pas de
-//     plancher, zéro conversion si tout le monde résiste.
-//  Toute la balance est EXPOSÉE via detailConversionVille (bloc
-//  « Balance culturelle » de la carte de ville, mêmes nombres que
-//  le moteur — le helper est la source unique de vérité).
+//  TIRAGE PAR HABITANT (retour Thibaut 2026-11-16 « je préférais
+//  l'ancien ») : FINI le duel déterministe V2 « Pression/Ancrage » du
+//  2026-11-14 — chaque habitant vivant (hors Dirigeant, immunisé) a
+//  CONVERSIONPROBA (défaut 5 %) de chances PAR TOUR de se convertir ;
+//  la culture d'arrivée est tirée au hasard PONDÉRÉ par le tourisme
+//  de CHAQUE culture du monde (pression touristique, revue
+//  2026-10-16 : tourisme général des joueurs de la culture +
+//  tourisme rattaché aux habitations de cette culture — SANS le
+//  poids démographique des compatriotes, arbitrage Thibaut
+//  2026-11-16 « ancien sans le poids des compatriotes »).
+//  La culture ACTUELLE de l'habitant est candidate du tirage
+//  (arbitrage Thibaut 2026-11-16) : tirée = pas de conversion.
+//  Modificateurs du tirage (tous dans le POIDS, jamais de jet
+//  séparé — retours arbitre 30/10 et 03/11 conservés) :
+//  ⚅ Dogme de l'Évangile (pressionCulture) : le poids de la
+//     culture porteuse est ×(1+v), défaut ×1,1.
+//  ⚅ Guilde des évangélistes (conversionLocalePlus, arbitrée
+//     2026-11-16 « poids dans la conversion ×1,1 comme
+//     l'évangélisme ») : le poids de la culture de la ville
+//     d'accueil est ×(1+v) pour les habitants de cette ville
+//     (lecture sur les bâtiments ACTIFS, cumul multiplicatif).
+//  ⚅ Dogme du Nationalisme (conversionLocale) : les habitants
+//     d'une AUTRE culture vivant dans une ville de la culture
+//     gagnent +v × le poids TOTAL des autres cultures — vers la
+//     culture d'accueil uniquement (défaut +0,15).
+//  ⚅ Tour de Crystal (ancrageConversionMult) : « chances de
+//     conversion des habitants de cette habitation réduites de
+//     10 % » → la proba du jet est ÷N (×N sur la résistance),
+//     pour les habitants de la ville qui l'abrite.
+//  L'ORDRE DU TOUR est inchangé : la conversion se joue AVANT le
+//  flux de migration, sur la population d'avant le flux (arbitrage
+//  Thibaut 2026-11-14, incident salon L2 — un arrivant garde sa
+//  culture le tour de son arrivée, éligible au tour suivant).
 //  updateCityCultures (majorité des vivants) est inchangé.
 // ══════════════════════════════════════════════════════════════════════
 
-import type { Character, City, GameState, Player, PlayerRecap } from './types'
+import type { City, GameState, Player, PlayerRecap } from './types'
 import type { Rng } from './rng'
 import { cfgOf } from './gameData'
 import { bump, fullName } from './shared'
-import { productionTourismeBatiment, conversionLocaleBatimentsVille, ancrageConversionMultVille } from './batiments'
+import { conversionLocaleBatimentsVille, ancrageConversionMultVille } from './batiments'
+import { productionTourismeBatiment } from './batiments'
 import { detailGainsVille } from './economie'
 import { effetsDogmeCulture } from './dogmes'
-import { rangDe } from './statutSocial'
 
 // ── Influence culturelle (ApplyCultureInfluence) ─────────────────────────
 
@@ -76,12 +75,11 @@ function tourismeVillesDe(state: GameState, p: Player): number {
  *  technologies ne produisent plus de tourisme, système de
  *  progrès supprimé) + le tourisme de CHAQUE HABITATION de cette
  *  culture (bâtiments, aménagements et production locale de la
- *  ville). Un joueur qui a une capitale culturelle puissante
- *  pousse sa culture partout, et une ville d'accueil convertit ses
- *  habitants à la culture qu'elle pratique. (V2 2026-11-14 : le
- *  calcul de pression est CONSERVÉ tel quel — seule la MÉCANIQUE
- *  DE CONVERSION qui le consomme change.) */
-function calculPression(state: GameState, C: ReturnType<typeof cfgOf>): Record<string, number> {
+ *  ville). Un joueur qui a une capitale culturelle puissante pousse
+ *  sa culture partout. (Retour 2026-11-16 : c'est la SEULE base de
+ *  pondération du tirage de conversion — plus de poids
+ *  démographique local.) */
+export function calculPression(state: GameState, C: ReturnType<typeof cfgOf>): Record<string, number> {
   const pression: Record<string, number> = {}
   for (const cult of C.cultures) pression[cult.nom] = 0.001
   // tourisme GÉNÉRAL par culture : total des joueurs de cette culture
@@ -105,203 +103,87 @@ function calculPression(state: GameState, C: ReturnType<typeof cfgOf>): Record<s
   return pression
 }
 
-// ── V2 « Pression/Ancrage » : détail par ville (source unique) ───────────
-
-/** Ligne « Balance culturelle » d'une culture dans une ville. */
-export interface DetailForceCulture {
-  /** pression touristique mondiale de la culture (hors présence locale). */
-  pression: number
-  /** présence démographique : conversionPoidsLocal × vivants de la culture dans la ville. */
-  presence: number
-  /** force finale : (pression + présence) ×(1+évangile) + bonus d'accueil. */
-  force: number
-}
-
-/** Conversion prévue ce tour pour un habitant. */
-export interface DetailConversion {
-  id: string
-  nom: string
-  /** culture ACTUELLE de l'habitant. */
-  culture: string
-  /** culture d'arrivée (la dominante). */
-  vers: string
-  /** ancrage : force de sa culture + noblesse. */
-  ancrage: number
-}
-
-/** Balance culturelle complète d'une ville — exactement ce que le
- *  moteur appliquera au prochain fin de tour (hors plancher 1 %,
- *  aléatoire). Rendu par le bloc « Balance culturelle » de la
- *  carte de ville. */
-export interface DetailConversionVille {
-  /** vivants de la ville. */
-  vivants: number
-  /** force par culture, ordre du référentiel. */
-  forces: Record<string, DetailForceCulture>
-  /** culture dominante (force max, ex æquo : ordre du référentiel). */
-  dominant: string
-  /** conversions prévues ce tour, plus faible ancrage d'abord,
-   *  plafonnées au cap : conversionTaux × vivants (min 1). Vide =
-   *  personne ne bascule. */
-  convertibles: DetailConversion[]
-  /** cap effectif de la ville ce tour : max(1, conversionTaux × vivants). */
-  cap: number
-  /** vrai si la ville est 100 % dominante : plancher résiduel 1 %. */
-  plancher: boolean
-  /** culture cible du plancher (étrangère la plus forte), si plancher. */
-  plancherVers: string | null
-}
-
-/** Duel « Pression/Ancrage » d'UNE ville (V2 2026-11-14). Pur :
- *  ne mute RIEN — applyCultureInfluence et la vue consomment le
- *  même résultat. */
-function conversionDetailVille(
+/** Poids de conversion d'une culture pour un habitant donné :
+ *  pression touristique ×(1+évangile) ; la culture de la ville
+ *  d'accueil est ×(1+guilde des évangélistes). Pur — consommé par
+ *  applyCultureInfluence (et exposé à la vue, source unique).
+ *  NB : le bonus du dogme Nationalisme (+v × poids des autres vers
+ *  la culture d'accueil) n'est PAS dans ce poids — il ne joue que
+ *  pour les habitants d'une AUTRE culture que celle d'accueil, le
+ *  moteur l'ajoute au moment du tirage. */
+export function poidsConversion(
   state: GameState,
-  p: Player,
-  ville: City,
+  C: ReturnType<typeof cfgOf>,
   pression: Record<string, number>,
-  C: ReturnType<typeof cfgOf>,
-): DetailConversionVille {
-  const pop = state.population[p.n] ?? []
-  const vivants = pop.filter((c) => c.statut !== 'Décédé' && c.ville === ville.nom)
-  // vivants par culture dans la ville (le Dirigeant COMPTE dans la
-  // présence démographique — il pèse sur sa culture — mais reste
-  // immunisé contre la conversion).
-  const nb: Record<string, number> = {}
-  for (const c of vivants) nb[c.culture] = (nb[c.culture] ?? 0) + 1
-  // Forces : pression + présence, ×(1+évangile), puis bonus
-  // d'accueil (dogme du Nationalisme conversionLocale + Guilde des
-  // évangélistes conversionLocalePlus — remap V2 du correctif
-  // arbitre Thibaut 30/10 et de la vague tier 3 : « pas un jet
-  // séparé, pris en compte dans le test de conversion » → la
-  // culture d'accueil de la ville gagne +v × la force TOTALE des
-  // autres cultures, les chances en plus ne mènent QUE vers la
-  // culture d'accueil).
-  const forces: Record<string, DetailForceCulture> = {}
-  const ordre: string[] = []
-  for (const cult of C.cultures) ordre.push(cult.nom)
-  for (const cult of Object.keys(pression)) if (!ordre.includes(cult)) ordre.push(cult)
-  for (const cult of ordre) {
-    const pr = pression[cult] ?? 0
-    const presence = C.p.conversionPoidsLocal * (nb[cult] ?? 0)
-    const base = (pr + presence) * (1 + effetsDogmeCulture(state, cult, 'pressionCulture', C))
-    forces[cult] = { pression: pr, presence, force: base }
+  villeAccueil: City | undefined,
+): Record<string, number> {
+  const poids: Record<string, number> = {}
+  for (const [cult, w] of Object.entries(pression)) {
+    poids[cult] = w * (1 + effetsDogmeCulture(state, cult, 'pressionCulture', C))
   }
-  const accueil = ville.culture ?? p.culture
-  const nationalisme = effetsDogmeCulture(state, accueil, 'conversionLocale', C)
-  const guilde = conversionLocaleBatimentsVille(ville, C)
-  if ((nationalisme > 0 || guilde > 0) && forces[accueil] !== undefined) {
-    const autres = ordre.filter((cult) => cult !== accueil)
-      .reduce((acc, cult) => acc + forces[cult]!.force, 0)
-    forces[accueil]!.force += (nationalisme + guilde) * autres
-  }
-  // Culture dominante D : force max, ex æquo → ordre du référentiel.
-  let dominant = ordre[0] ?? accueil
-  for (const cult of ordre) {
-    if ((forces[cult]?.force ?? 0) > (forces[dominant]?.force ?? 0)) dominant = cult
-  }
-  // Ancrage d'un habitant = force de SA culture dans la ville +
-  // noblesse. Éligibles à la conversion : vivants de culture ≠ D,
-  // hors Dirigeant (immunisé, comportement conservé).
-  // Ancrage d'un habitant (forme arbitrée 2026-11-14) : poids ×
-  //  compatriotes de SA culture dans la ville + noblesse. C'est la
-  //  RÉSISTANCE (défense) ; la pression touristique de sa culture
-  //  ne joue que dans la FORCE (offense). Un isolé bascule avant
-  //  une communauté, un roturier avant un noble ; une communauté
-  //  nombreuse protège ses membres tant que la force dominante ne
-  //  dépasse pas le poids de ses compatriotes (+ noblesse).
-  const ancrage = (c: Character): number =>
-    (C.p.conversionPoidsLocal * (nb[c.culture] ?? 0)
-    + (rangDe(c, C) === 'noble' ? C.p.conversionAncrageNoble : 0))
-    // (Merveilles mondiales 2026-11-15 : la Tour de Crystal —
-    //  « chances de conversion des habitants de cette habitation
-    //  réduites de 10 % » = ANCRAGE ×1,1, arbitrage Thibaut. Appliqué
-    //  DANS ancrage() : le bloc « Balance culturelle » affiche les
-    //  mêmes nombres, le helper reste la source de vérité.)
-    * ancrageConversionMultVille(ville, C)
-  const forceDominante = forces[dominant]?.force ?? 0
-  // conversions prévues : éligibles dont l'ancrage < Force(D), ancrage
-  // croissant (ex æquo → ordre de recensement : sort V8 est stable),
-  // plafonnées au cap PROPORTIONNEL (arbitrage Thibaut 2026-11-15 :
-  // 10 % des habitants de la ville, plancher d'au moins 1).
-  const cap = Math.max(1, Math.floor(C.p.conversionTaux * vivants.length))
-  const convertibles = vivants
-    .map((c) => ({ c, a: ancrage(c) }))
-    .filter(({ c, a }) => c.culture !== dominant && c.metier !== C.p.metierDirigeant && a < forceDominante)
-    .sort((x, y) => x.a - y.a)
-    .slice(0, cap)
-    .map(({ c, a }) => ({ id: c.id, nom: fullName(c), culture: c.culture, vers: dominant, ancrage: a }))
-  // Plancher minuscule : uniquement si la ville est 100 % dominante
-  // (aucun vivant d'une autre culture, Dirigeant compris — une
-  // minorité réduite au seul Dirigeant immunisé ne déclenche rien).
-  const pure = vivants.every((c) => c.culture === dominant)
-  let plancherVers: string | null = null
-  if (pure) {
-    let meilleure: string | null = null
-    for (const cult of ordre) {
-      if (cult === dominant) continue
-      if (meilleure === null || (forces[cult]?.force ?? 0) > (forces[meilleure]?.force ?? 0)) {
-        meilleure = cult
-      }
+  // Guilde des évangélistes (arbitrage 2026-11-16 « comme
+  //  l'évangélisme ») : poids de la culture de la VILLE d'accueil
+  //  ×(1+v par guilde active) pour les habitants de cette ville.
+  if (villeAccueil) {
+    const accueil = villeAccueil.culture
+    const guilde = conversionLocaleBatimentsVille(villeAccueil, C)
+    if (guilde > 0 && accueil && poids[accueil] !== undefined) {
+      poids[accueil] *= 1 + guilde
     }
-    plancherVers = meilleure
   }
-  return {
-    vivants: vivants.length,
-    forces,
-    dominant,
-    convertibles,
-    cap,
-    plancher: pure && plancherVers !== null,
-    plancherVers,
+  // (Sécurité : une culture sans poids positif est injouable au
+  //  pickWeighted — le référentiel garantit 0,001 partout, on
+  //  replanche à 0,001 si un poids finissait à 0.)
+  for (const cult of Object.keys(poids)) {
+    if (poids[cult]! < 0) poids[cult] = 0.001
   }
+  return poids
 }
 
-/** Balance culturelle d'une ville POUR LA VUE (bloc « Balance
- *  culturelle » de la carte de ville) — recompute de la pression,
- *  puis duel identique au moteur. */
-export function detailConversionVille(
-  state: GameState,
-  p: Player,
-  ville: City,
-  C: ReturnType<typeof cfgOf>,
-): DetailConversionVille {
-  return conversionDetailVille(state, p, ville, calculPression(state, C), C)
-}
-
-/** Fin de tour (V2 2026-11-14) : pour chaque ville du joueur, la
- *  culture dominante convertit ses habitants les moins ancrés
- *  (détail complet cf. conversionDetailVille). Aucun tirage au
- *  hasard par habitant — le SEUL rng est le plancher 1 % des
- *  villes 100 % dominantes. */
+/** Fin de tour : pour CHAQUE habitant vivant du joueur (hors
+ *  Dirigeant), jet à conversionProba (÷ Tour de Crystal de sa
+ *  ville), puis tirage pondéré par le tourisme des cultures du
+ *  monde. La culture actuelle est candidate : tirée = pas de
+ *  conversion. */
 export function applyCultureInfluence(state: GameState, p: Player, rng: Rng, recap: PlayerRecap) {
   const C = cfgOf(state.config)
   const pression = calculPression(state, C)
   const pop = state.population[p.n] ?? []
-  for (const ville of p.villes) {
-    const d = conversionDetailVille(state, p, ville, pression, C)
-    if (d.vivants === 0) continue
-    const convertir = (c: Character, vers: string) => {
-      c.culture = vers
-      bump(recap.conversions, vers)
+  for (const c of pop) {
+    if (c.statut === 'Décédé' || c.metier === C.p.metierDirigeant) continue
+    const villeAccueil = p.villes.find((v) => v.nom === c.ville)
+    const culteAccueil = villeAccueil?.culture
+    // (Merveilles mondiales 2026-11-15, Tour de Crystal : « chances
+    //  de conversion des habitants de cette habitation réduites de
+    //  10 % » — retour au tirage 2026-11-16 : la résistance ×N se
+    //  lit DIRECTEMENT sur la proba du jet, ÷N.)
+    const proba = C.p.conversionProba / (villeAccueil ? ancrageConversionMultVille(villeAccueil, C) : 1)
+    if (!rng.chance(proba)) continue
+    const poids = poidsConversion(state, C, pression, villeAccueil)
+    // (Dogme du Nationalisme, correctif arbitre Thibaut du 30/10 :
+    //  « pas un jet séparé, pris en compte dans le test de
+    //  conversion déjà présent ». La culture de la ville d'ACCUEIL
+    //  du personnage — si elle porte le dogme et que le personnage
+    //  est d'une AUTRE culture — gagne +v × le poids TOTAL des
+    //  autres cultures dans le tirage : les chances en plus ne
+    //  mènent QUE vers la culture d'accueil.)
+    const nationalisme = culteAccueil && culteAccueil !== c.culture
+      ? effetsDogmeCulture(state, culteAccueil, 'conversionLocale', C)
+      : 0
+    if (nationalisme > 0 && culteAccueil && poids[culteAccueil] !== undefined) {
+      const poidsAutres = Object.entries(poids)
+        .filter(([cult]) => cult !== culteAccueil)
+        .reduce((acc, [, w]) => acc + w, 0)
+      poids[culteAccueil] += nationalisme * poidsAutres
+    }
+    const nouvelle = rng.pickWeighted(Object.entries(poids), (e) => e[1])[0]
+    if (nouvelle !== c.culture) {
+      c.culture = nouvelle
+      bump(recap.conversions, nouvelle)
       state.log.push({
         turn: state.turn + 1, type: 'Culture', joueur: p.n,
-        texte: `${fullName(c)} se convertit à la culture ${vers}.`,
+        texte: `${fullName(c)} se convertit à la culture ${nouvelle}.`,
       })
-    }
-    if (d.convertibles.length > 0) {
-      for (const cible of d.convertibles) {
-        const c = pop.find((x) => x.id === cible.id)
-        if (c && c.statut !== 'Décédé' && c.culture !== cible.vers) convertir(c, cible.vers)
-      }
-    } else if (d.plancher && d.plancherVers && rng.chance(C.p.conversionPlancher)) {
-      // plancher : 1 habitant (premier au recensement — ancrage
-      // égal en ville pure) bascule vers la culture étrangère la
-      // plus forte.
-      const c = pop.find(
-        (x) => x.statut !== 'Décédé' && x.ville === ville.nom && x.metier !== C.p.metierDirigeant,
-      )
-      if (c && c.culture !== d.plancherVers) convertir(c, d.plancherVers)
     }
   }
 }

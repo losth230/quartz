@@ -448,13 +448,11 @@ export function runTurn(state: GameState): GameState {
     recapsPopulation[p.n] = populationTourA(state, p, rng)
   }
 
-  // 4bis. CONVERSION CULTURELLE (V2 « Pression/Ancrage », rework
-  //  2026-11-14) — AVANT la migration (arbitrage Thibaut 2026-11-14,
+  // 4bis. CONVERSION CULTURELLE (tirage par habitant, retour Thibaut
+  //  2026-11-16 — le duel V2 « Pression/Ancrage » du 2026-11-14 est
+  //  retiré) — AVANT la migration (arbitrage Thibaut 2026-11-14,
   //  incident salon L2 : « un habitant qui arrive dans une nouvelle
-  //  ville garde sa culture d'origine » — jouée APRÈS le flux, la
-  //  conversion retournait chaque arrivant isolé (ancrage 0) à la
-  //  culture dominante le tour MÊME de son arrivée, aucune minorité
-  //  culturelle n'était jamais visible). La conversion se joue donc
+  //  ville garde sa culture d'origine »). La conversion se joue donc
   //  sur la population d'AVANT le flux : les arrivants ne sont
   //  éligibles qu'au tour suivant.
   for (const p of state.players) {

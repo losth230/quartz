@@ -747,11 +747,10 @@ export interface GameConfig {
   /** Conversion culturelle V2 « Pression/Ancrage » (arbitrage
    *  Thibaut 2026-11-14 « proposer autre chose, plus cohérent et
    *  plus jouable techniquement ») : fin du tirage au hasard par
-   *  habitant (conversionProba / conversionMemeCulture, clés
-   *  mortes retirées) — duel déterministe par ville ; les
-   *  nouveaux paramètres (conversionMax 1 PROVISOIRE,
-   *  conversionPlancher 0,01, conversionAncrageNoble 15) viennent
-   *  de mergeParams. Marqueur (z) : migration ciblée (cfgOf)
+   *  habitant — duel déterministe par ville. (HISTORIQUE — retiré
+   *  le 2026-11-16, retour Thibaut « je préférais l'ancien » : le
+   *  tirage par habitant est rétabli, cf. conversionTirage2026.)
+   *  Marqueur (z) : migration ciblée (cfgOf)
    *  indépendante du tampon schemaVersion, patron taxes25. */
   conversionDeterministe2026?: boolean
   /** Cap de conversion PROPORTIONNEL (arbitrage Thibaut
@@ -763,6 +762,21 @@ export interface GameConfig {
    *  dépouillée ; conversionTaux vient de mergeParams. Migration
    *  ciblée (cfgOf), indépendante du tampon schemaVersion. */
   conversionTaux2026?: boolean
+  /** Retour au TIRAGE PAR HABITANT (arbitrage Thibaut 2026-11-16 « je
+   *  préférais l'ancien ») : fin du duel déterministe V2
+   *  « Pression/Ancrage » (2026-11-14/15) — chaque habitant vivant a
+   *  conversionProba (5 %) par tour de se convertir, la culture étant
+   *  tirée au hasard pondéré par le TOURISME des cultures du monde
+   *  (SANS poids démographique des compatriotes, arbitrage « ancien
+   *  sans le poids des compatriotes »). Les clés V2 mortes
+   *  (conversionTaux, conversionPlancher, conversionAncrageNoble,
+   *  conversionPoidsLocal, conversionMax, conversionMemeCulture)
+   *  sont dépouillées ; conversionProba vient de mergeParams
+   *  (défaut 0,05). La Guilde des évangélistes change de canal :
+   *  poids ×1,1 « comme l'évangélisme » (plus de bonus de part vers
+   *  la ville d'accueil). Migration ciblée (cfgOf), indépendante du
+   *  tampon schemaVersion, patron taxes25. */
+  conversionTirage2026?: boolean
   /** Migration par bonheur divisée par deux (arbitrage Thibaut
    *  2026-11-15 « descendre à 0-5 % de migration ») : le défaut
    *  de migrationBonheurMax passe de 0,10 (échelle 0-10 % du
@@ -2264,16 +2278,17 @@ export function cfgOf(config?: GameConfig): Cfg {
   // (Arbitrage Thibaut 2026-11-14 — conversion culturelle V2
   //  « Pression/Ancrage » : duel déterministe par ville, plus de
   //  tirage au hasard par habitant. Migration ciblée (patron
-  //  taxes25, SANS bump du tampon schemaVersion — règle (x)) :
-  //  les clés conversionProba / conversionMemeCulture sont mortes
-  //  (aucune personnalisation ne peut survivre : le moteur ne les
-  //  lit plus) et sont dépouillées ; les trois nouveaux paramètres
-  //  (conversionMax, conversionPlancher, conversionAncrageNoble)
-  //  sont semés par mergeParams, qui étale DEFAULT_PARAMS sous la
-  //  personnalisation — une clé personnalisée existante prime.)
+  //  taxes25, SANS bump du tampon schemaVersion — règle (x)).
+  //  (RETRAIT 2026-11-16, retour Thibaut « je préférais l'ancien » :
+  //  le tirage par habitant est RÉTABLI — la clé conversionProba
+  //  redevient VIVANTE (semée par mergeParams, défaut 0,05) et
+  //  n'est PLUS dépouillée ici ; seule la clé conversionMemeCulture,
+  //  morte elle (l'ancienne pondération par présence locale ne
+  //  revient PAS — arbitrage « ancien sans le poids des
+  //  compatriotes »), reste supprimée. Les clés V2 mortes sont
+  //  dépouillées par la migration conversionTirage2026 ci-dessous.)
   if (!merged.conversionDeterministe2026) {
     const pm = merged.params as unknown as Record<string, unknown>
-    delete pm.conversionProba
     delete pm.conversionMemeCulture
     merged.conversionDeterministe2026 = true
   }
@@ -2291,6 +2306,27 @@ export function cfgOf(config?: GameConfig): Cfg {
     const pm = merged.params as unknown as Record<string, unknown>
     delete pm.conversionMax
     merged.conversionTaux2026 = true
+  }
+  // (Arbitrage Thibaut 2026-11-16 — « je préférais l'ancien » : retour
+  //  au TIRAGE PAR HABITANT pondéré par le tourisme, fin du duel V2
+  //  « Pression/Ancrage ». Migration ciblée (patron taxes25, SANS bump
+  //  du tampon schemaVersion — règle (x)) : les clés V2 sont MORTES
+  //  (le moteur ne les lit plus : conversionTaux, conversionPlancher,
+  //  conversionAncrageNoble, conversionPoidsLocal — plus les
+  //  historiques conversionMax / conversionMemeCulture) et sont
+  //  dépouillées ; conversionProba est semé par mergeParams (défaut
+  //  0,05). Aucune personnalisation ne peut survivre : les unités de
+  //  ces clés (part des vivants, poids démographique) n'ont plus de
+  //  sens dans le tirage.)
+  if (!merged.conversionTirage2026) {
+    const pm = merged.params as unknown as Record<string, unknown>
+    delete pm.conversionTaux
+    delete pm.conversionPlancher
+    delete pm.conversionAncrageNoble
+    delete pm.conversionPoidsLocal
+    delete pm.conversionMax
+    delete pm.conversionMemeCulture
+    merged.conversionTirage2026 = true
   }
   // (Arbitrage Thibaut 2026-11-15 — « descendre à 0-5 % de
   //  migration » : le défaut de migrationBonheurMax passe de 0,10
