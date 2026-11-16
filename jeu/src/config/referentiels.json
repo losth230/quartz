@@ -1837,9 +1837,77 @@
   "effetsPeuple": [
     {
       "nom": "Khazhags Nains",
-      "effet": "Isolationniste : -2 points de chances de migrer par bonheur et -2 points de chances de conversion culturelle.",
+      "effet": "Isolationniste : -2 points de chances de migrer par bonheur, -2 points de chances de conversion culturelle, et poids d'attraction x0,8 pour les habitants des autres joueurs. Or des mines : +1 emplacement de Commerçant par aménagement de carrière, mine d'or, mine de fer ou mine de charbon.",
       "migrationBonheurMod": -0.02,
-      "conversionProbaMod": -0.02
+      "conversionProbaMod": -0.02,
+      "poidsArriveeMod": 0.8,
+      "emplacementsParAmenagement": [
+        {
+          "amenagements": ["Carrière", "Carrière (tier 2)", "Carrière (tier 3)", "Mine d'Or", "Mine d'Or (tier 2)", "Mine d'Or (tier 3)", "Mine de Fer", "Mine de Fer (tier 2)", "Mine de Fer (tier 3)", "Mine de Charbon", "Mine de Charbon (tier 2)", "Mine de Charbon (tier 3)"],
+          "metier": "Commerçant",
+          "places": 1
+        }
+      ]
+    }
+  ],
+  "talentsPeuple": [
+    {
+      "peuple": "Khazhags Nains",
+      "voie": "Économique",
+      "laurierMin": 1,
+      "nom": "Routes de l'entrefer",
+      "texte": "Les routes commerciales octroient +1 emplacement de Mineur et +1 emplacement de Commerçant (par route sortante, dans la ville d'origine).",
+      "emplacementsParRoute": [
+        { "metier": "Mineur", "places": 1 },
+        { "metier": "Commerçant", "places": 1 }
+      ]
+    },
+    {
+      "peuple": "Khazhags Nains",
+      "voie": "Économique",
+      "laurierMin": 3,
+      "nom": "Or du commerce nain",
+      "texte": "Les Commerçants produisent +0,5 Or par tour.",
+      "fluxParMetier": [
+        {
+          "metiers": ["Commerçant"],
+          "ressource": "Or",
+          "valeur": 0.5
+        }
+      ]
+    },
+    {
+      "peuple": "Khazhags Nains",
+      "voie": "Scientifique",
+      "laurierMin": 1,
+      "nom": "Savoir des profondeurs",
+      "texte": "Les Mineurs, Forgerons et Charbonniers produisent +0,1 Science par tour.",
+      "fluxParMetier": [
+        {
+          "metiers": ["Mineur", "Forgeron", "Charbonnier"],
+          "ressource": "Science",
+          "valeur": 0.1
+        }
+      ]
+    },
+    {
+      "peuple": "Khazhags Nains",
+      "voie": "Militaire",
+      "laurierMin": 1,
+      "nom": "Semelles de granit",
+      "texte": "Les armées naines peuvent entrer sur les cases de montagne pour 2 PM (règle de plateau)."
+    },
+    {
+      "peuple": "Khazhags Nains",
+      "voie": "Militaire",
+      "laurierMin": 3,
+      "nom": "Guerre des tunnels",
+      "texte": "Les Postes de garde, Casernes et Barraquements réduisent les coûts de levées d'armée de -10, -20 et -30 Or respectivement.",
+      "reductionLeveeParBatiment": [
+        { "batiment": "Poste de garde", "reduction": 10 },
+        { "batiment": "Caserne", "reduction": 20 },
+        { "batiment": "Barraquements", "reduction": 30 }
+      ]
     }
   ],
   "tourismeSeuils": [

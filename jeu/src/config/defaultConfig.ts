@@ -14,7 +14,7 @@ import { mergeParams, type GameParams, type GameParamStrings } from './params'
 // (2026-10-27, audit : HabitationDef n'est plus défini en double ici —
 //  l'UNIQUE définition vit dans engine/types.ts, importée puis
 //  ré-exportée pour ne pas casser les imports existants.)
-import type { HabitationDef, EffetPeupleDef } from '../engine/types'
+import type { HabitationDef, EffetPeupleDef, TalentPeupleDef } from '../engine/types'
 
 export type { HabitationDef }
 
@@ -634,6 +634,10 @@ export interface GameConfig {
    *  cf. EffetPeupleDef) — table du référentiel, backfillée par le
    *  spread de cfgOf pour les vieilles configs. */
   effetsPeuple: EffetPeupleDef[]
+  /** Talents de peuple par LAURIERS de voies de victoire (arbitrage
+   *  Thibaut 2026-11-16, cf. TalentPeupleDef) — table du
+   *  référentiel, backfillée par le spread de cfgOf. */
+  talentsPeuple: TalentPeupleDef[]
   batiments: BuildingDef[]
   // ── données de référence « fiches » (affichage, 100% éditables) ──
   init: {
@@ -1073,6 +1077,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   peupleBanque: peupleBanqueOf(),
   peuples: peuplesNoms(),
   effetsPeuple: (ref as { effetsPeuple?: EffetPeupleDef[] }).effetsPeuple ?? [],
+  talentsPeuple: (ref as { talentsPeuple?: TalentPeupleDef[] }).talentsPeuple ?? [],
   batiments: normaliserBatiments(),
   init: ref.init,
   traitsGenetiques: ref.traitsGenetiques,
@@ -1239,6 +1244,7 @@ export interface Cfg {
   peupleBanque: Record<string, number>
   peuples: string[]
   effetsPeuple: EffetPeupleDef[]
+  talentsPeuple: TalentPeupleDef[]
   batiments: BuildingDef[]
   couleurs: CouleursConfig
   config: GameConfig
@@ -2614,6 +2620,7 @@ export function cfgOf(config?: GameConfig): Cfg {
     peupleBanque: merged.peupleBanque,
     peuples: merged.peuples,
     effetsPeuple: merged.effetsPeuple ?? DEFAULT_CONFIG.effetsPeuple,
+    talentsPeuple: merged.talentsPeuple ?? DEFAULT_CONFIG.talentsPeuple,
     batiments: merged.batiments,
     couleurs: migrerCouleurs(merged.couleurs),
     config: merged,
