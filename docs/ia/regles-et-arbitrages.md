@@ -3667,3 +3667,42 @@ affiche Lauriers validés / 5, et le journal ne rappelle la crise
 qu'aux paliers I et III. Les Lauriers déjà validés dans les parties
 en cours (p.lauriers) sont conservés : un joueur à 4 Lauriers doit
 désormais le triomphe (Laurier V) pour gagner.
+
+## 2026-11-16 (suite 5) — JAUGES AUTOMATIQUES des Lauriers, coche manuelle (arbitrage Thibaut)
+
+« Jauge automatique avec coche manuelle me semble bien » — l'app
+CALCULE où en est chaque joueur sur chaque condition et l'affiche,
+mais la validation reste 100 % manuelle au radar (arbitre
+maître). Motifs actés :
+
+- **Culturelle I** : « avoir 100 tourisme correspond à avoir une
+  PRODUCTION de 100 tourisme » — le texte devient « Produire 100
+  Tourisme par tour » (le Tourisme n'est jamais cumulé : stock =
+  production, resynchroniserTourisme).
+- Affichage : progression « actuel/cible » à côté des coches du
+  tableau de l'accueil ET au survol du radar (« prochain : …
+  (34/50) »).
+- **Pourquoi pas de coche auto** : certaines conditions sont
+  transitoires (300 pts d'armée perdus, routes fermées, rang déchu)
+  alors qu'un Laurier validé ne se dévalide pas ; et les talents de
+  peuple en dérivent — les allers-retours y mettraient le feu.
+
+Arbitrages de comptage (proposés puis actés avec les jauges) :
+- « Habitations » du monde (Culturelle V) = les VILLES des joueurs ;
+  les cités libres sont des cités, pas des habitations.
+- Militaire III : TOUTE la famille Militaire compte (quartiers
+  inclus), bâtiments PRÉSENTS dans la liste de l'habitation (les
+  remplacements neutralisent les effets, pas la présence).
+- Économique V : 5 bâtiments de famille Guilde présents chez le
+  joueur.
+- Militaire V : réduction TOTALE de la MEILLEURE habitation
+  (bâtiments + Conscription × rang de pays + talents de peuple),
+  même formule que le prix de levée.
+- Armée en campagne (Militaire I) : somme des PUISSANCES des armées
+  levées du joueur ; les garnisons (calcul par ville) ne comptent
+  pas.
+
+Audit de faisabilité préalable : 100 % des conditions des 5 voies
+définies sont calculables depuis l'état existant (zéro champ
+nouveau) ; la voie Scientifique (différée) reste sans jauge
+(repli « … »).
