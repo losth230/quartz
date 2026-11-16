@@ -726,10 +726,11 @@ test('Dogmes de l\u2019Évangile et du Nationalisme : poids ×1,1 et +0,15 de pa
   let poidsRecus: Array<Record<string, number>> = []
   applyCultureInfluence(pb.state, pB, fakeRng({
     chance: () => true,
-    pickWeighted: (items: Array<[string, number]>) => {
-      poidsRecus.push(Object.fromEntries(items))
-      return items.reduce((a, b) => (b[1] > a[1] ? b : a))
-    },
+    pickWeighted: (<T>(items: T[]) => {
+      const arr = items as Array<[string, number]>
+      poidsRecus.push(Object.fromEntries(arr))
+      return arr.reduce((a, b) => (b[1] > a[1] ? b : a)) as T
+    }),
   }), recapTest())
   assert.equal(poidsRecus.length, 1, 'UN tirage : le bonus vit dans le poids, pas un jet séparé')
   const poids = poidsRecus[0]!

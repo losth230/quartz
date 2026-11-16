@@ -458,7 +458,8 @@ test('Guilde des évangélistes (tier 3) : poids de la culture de la ville ×1,1
   let jets = 0
   applyCultureInfluence(state, p, fakeRng({
     chance: () => { jets++; return true },
-    pickWeighted: (items: Array<[string, number]>) => items.reduce((a, b) => (b[1] > a[1] ? b : a)),
+    pickWeighted: (<T>(items: T[]) =>
+      (items as Array<[string, number]>).reduce((a, b) => (b[1] > a[1] ? b : a)) as T),
   }), emptyRecap())
   assert.equal(jets, 1, 'UN seul jet — le bonus vit dans le poids, pas un jet séparé')
   assert.equal(habitant.culture, 'Culture Nordique',
