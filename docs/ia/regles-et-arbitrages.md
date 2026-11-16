@@ -3589,3 +3589,46 @@ le Laurier III ; poids ×0,8 — même flux de tirage, chaque poids
 Khazhags = poids Basiléens × 0,8, helper défaut 1). 395 tests natifs
 (388 + 7). Reste à faire (arbitré différé) : affichage UI des
 talents (fiche peuple lisible au setup/radar).
+
+---
+
+## 2026-11-16 (suite 3) — Conditions des LAURIERS réécrites (arbitrage Thibaut, textes d'affichage)
+
+Les textes de conditions des Lauriers (vidés le 2026-10-24) sont
+RÉÉCRITS au référentiel — validation TOUJOURS MANUELLE au radar
+(décision inchangée), le moteur ne vérifie pas ; les textes
+réactivent le survol « prochain : … » du radar et sont ACTUALISÉS
+automatiquement dans les configs sauvegardées par le garde-fou
+« mise à jour des conditions » de cfgOf. **Motif acté : chaque voie
+suit le même escalier** — Laurier I spécifique → habitation rang 2
+(Cité/Donjon) → Laurier III spécifique → habitation rang 3
+(Grande Cité/Forteresse) → Laurier IV = triomphe.
+
+- **Culturelle** : I « Accumuler 100 Tourisme » (même seuil que le
+  Rang I de pontificat — synergie assumée) ; II rang 2 ; III
+  « 3 merveilles » (merveilles mondiales, uniques au monde) ; IV
+  « Toutes les habitations du monde, y compris chez les autres
+  joueurs, sont de ta culture » (arbitré MONDIAL).
+- **Démographique** : I « 3 habitations » ; II rang 2 ; III « 100
+  bourgeois » ; IV « 90 de bonheur dans toutes tes habitations ».
+- **Diplomatique** : I « 2 cités libres vassales » ; II rang 2 ;
+  III « rang d'Empereur » (rang de pays 5) ; IV « 12 émissaires
+  dans la même cité libre ».
+- **Économique** : I « 2 routes commerciales » ; II rang 2 ; III
+  « 50 Commerçants » (confirmé après hésitation) ; IV « 5 guildes »
+  (bâtiments uniques par ville : plusieurs villes nécessaires).
+- **Militaire** : I « 300 points d'armée en campagne » (arbitré —
+  lourd pour un palier I, assumé) ; II rang 2 ; III rang 3 ; IV
+  « −100 Or de levée d'armée dans une de tes habitations »
+  (faisable : canaux réductionLeveeArmee 63 max + Conscription
+  autoritarisme jusqu'à 50 + talent Khazhags « Guerre des tunnels »
+  60 — plusieurs chemins, synergie fiche Nains).
+- **Scientifique** : IGNORÉE pour l'instant (conditions laissées
+  vides, à arbitrer plus tard — propositions faites : 5
+  Scientifiques / 20 Science par tour / Observatoire et
+  Laboratoire de Falheim).
+
+**Faisabilité vérifiée au référentiel** : l'escalier rang 2/rang 3
+est atteignable (Hameau→Cité→Grande Cité / Motte→Donjon→Forteresse,
+bâtiments rang 3 et guildes présents), 5 guildes ≥ 7 existantes,
+merveilles mondiales au nombre de 5.

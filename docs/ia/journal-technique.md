@@ -7610,3 +7610,26 @@ implémentation complète). Implémentation en UNE passe sur `v4` :
   modifié : zéro risque d'équilibre JSX au push.
 - **Docs** : regles-et-arbitrages.md (fiche actée, suite 2) + cette
   entrée. Reste différé : affichage UI des talents au setup/radar.
+
+---
+
+## 2026-11-16 (suite 3) — Conditions des Lauriers réécrites (implémentation)
+
+Arbitrage de la session de chat (fiche victoires Thibaut + arbitrages :
+« garder 50 Commerçants », Culturelle IV « mondial », Militaire I
+« 300 points d'armée en campagne », Scientifique ignorée). UN commit
+de données + UN commit de docs sur `v4` :
+
+- `referentiels.json` : `victoires[].lauriers[].condition` remplis
+  pour 5 voies sur 6 (Scientifique laissée vide), format de sortie
+  reformaté (json.dump indent=2 — reformate aussi les blocs inline
+  talents/effets de la suite 2, contenu identique). Le garde-fou
+  cfgOf « mise à jour des conditions » propage automatiquement les
+  textes aux configs sauvegardées, SANS bump de schemaVersion.
+- Faisabilité préalablement vérifiée : escalier rang 2/3 atteignable
+  (typesHabitation), −100 Or de levée atteignable (canaux 63 +
+  Conscription 50 + talent Nains 60), 5 guildes sur 7 existantes.
+- Pas de code moteur touché : 395/395 tests natifs locaux
+  inchangés (les Lauriers restent à validation manuelle, aucune
+  mécanique nouvelle). Docs : regles-et-arbitrages.md (suite 3) +
+  cette entrée.
