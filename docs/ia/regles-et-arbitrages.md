@@ -3632,3 +3632,38 @@ suit le même escalier** — Laurier I spécifique → habitation rang 2
 est atteignable (Hameau→Cité→Grande Cité / Motte→Donjon→Forteresse,
 bâtiments rang 3 et guildes présents), 5 guildes ≥ 7 existantes,
 merveilles mondiales au nombre de 5.
+
+## 2026-11-16 (suite 4) — LAURIERS I à V : palier commun au IV, triomphes au V (arbitrage Thibaut)
+
+Refonte de l'escalier acté en suite 3 : **les voies passent à CINQ
+Lauriers**. Le motif devient — Laurier I spécifique → habitation
+rang 2 (Cité/Donjon) → Laurier III spécifique → **Laurier IV COMMUN
+à toutes les voies : habitation de rang 3 (Grande Cité ou
+Forteresse)** → **Laurier V = le triomphe de la voie** (l'ancien
+Laurier IV de la suite 3). Obtenir le Laurier V = VICTOIRE (le
+moteur valide désormais à 5 Lauriers cochés, plus 4).
+
+- **Culturelle** : V « Toutes les habitations du monde (y compris
+  chez les autres joueurs) sont de ta culture ».
+- **Démographique** : V « 90 de bonheur dans toutes tes
+  habitations ».
+- **Diplomatique** : V « 12 émissaires dans la même cité libre ».
+- **Économique** : V « 5 guildes ».
+- **Militaire** : III réécrit « Posséder une habitation avec 4
+  bâtiments militaires » (arbitré : TOUTE la famille Militaire du
+  référentiel compte, quartiers inclus — Bas quartier, Quartier
+  intermédiaire, Haut quartier, Banlieue ; faisable dès le rang 2 :
+  Herses + Caserne + Réseau de routes + Tour de sorcier) ; V
+  « −100 Or de levée d'armée dans une de tes habitations ».
+- **Scientifique** : toujours différée (5 Lauriers vides).
+
+**Crises** (arbitrage Thibaut, révision de la règle « chaque Laurier
+I-III déclenche une crise ») : **une crise est tirée aux Lauriers I
+et III UNIQUEMENT** — pas de crise aux Lauriers II, IV ni V.
+
+Conséquences moteur : `cocherLaurier` borne 1-5 (ordre strict
+inchangé), la proclamation de victoire passe au Laurier V, le radar
+affiche Lauriers validés / 5, et le journal ne rappelle la crise
+qu'aux paliers I et III. Les Lauriers déjà validés dans les parties
+en cours (p.lauriers) sont conservés : un joueur à 4 Lauriers doit
+désormais le triomphe (Laurier V) pour gagner.
