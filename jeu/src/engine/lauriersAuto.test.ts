@@ -134,7 +134,7 @@ test('jaugeProchainLaurier : le prochain niveau, null si voie terminée ou non c
 })
 
 test('radar : la jauge calculée s\'affiche au survol, sans jamais cocher', () => {
-  const { state, C, p } = jeu()
+  const { state, p } = jeu()
   p.villes[0].rang = 'Cité'
   p.lauriers = { 'Culturelle': 1 }
   const detail = victoryProgress(state)[0].details.culturelle
