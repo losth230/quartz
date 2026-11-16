@@ -189,7 +189,7 @@ export function Dashboard() {
           couleursJoueurs={couleursJoueurs} couleurRessource={cR} />
       </Card>
 
-      <Card title="Voies de victoire — Lauriers I à IV (chapitre XII, refonte 2026-10-14)">
+      <Card title="Voies de victoire — Lauriers I à V (chapitre XII, refonte 2026-10-14, Laurier V ajouté le 2026-11-16)">
         {vainqueurs.length > 0 && (
           <div className="pos mb" style={{ fontWeight: 'bold' }}>
             👑 Victoire : {vainqueurs.map((v) => `${v.nom} (${v.voie})`).join(' · ')}
@@ -202,8 +202,8 @@ export function Dashboard() {
             <Radar axes={axesVictoire.map((a) => a.label)} series={seriesRadar}
               couleursJoueurs={couleursJoueurs} largeur={430} />
             <p className="muted small">
-              0 % au centre, 100 % au bord = Laurier IV. Cochez les Lauriers dans le
-              tableau à droite (ordre strict) ; chaque Laurier I-III validé déclenche une crise.
+              0 % au centre, 100 % au bord = Laurier V. Cochez les Lauriers dans le
+              tableau à droite (ordre strict) ; les Lauriers I et III validés déclenchent une crise.
             </p>
           </div>
           <div className="table-wrap">

@@ -530,13 +530,14 @@ export interface Player {
    *  il reste uniquement pour que les vieilles sauvegardes
    *  s'ouvrent sans crash.) */
   progresDebloques?: string[]
-  /** Lauriers de victoire validés (refonte 2026-10-14) : clé = nom de la
-   *  voie (table victoires du référentiel), valeur = nombre de Lauriers
-   *  validés 0-4, en ORDRE STRICT (un Laurier ne se valide que si le
-   *  précédent est acquis — cocherLaurier dans engine/victory.ts,
-   *  cochage manuel au radar de l'accueil ; crise à chaque Laurier
-   *  I-III validé, Laurier IV = victoire). Champ optionnel : absent
-   *  des vieilles sauvegardes → aucun Laurier validé. */
+  /** Lauriers de victoire validés (refonte 2026-10-14, Laurier V ajouté
+   *  le 2026-11-16) : clé = nom de la voie (table victoires du
+   *  référentiel), valeur = nombre de Lauriers validés 0-5, en ORDRE
+   *  STRICT (un Laurier ne se valide que si le précédent est acquis —
+   *  cocherLaurier dans engine/victory.ts, cochage manuel au radar
+   *  de l'accueil ; crise aux Lauriers I et III validés, Laurier V =
+   *  victoire). Champ optionnel : absent des vieilles sauvegardes →
+   *  aucun Laurier validé. */
   lauriers?: Record<string, number>
 }
 

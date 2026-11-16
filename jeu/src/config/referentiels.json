@@ -2018,6 +2018,11 @@
         },
         {
           "laurier": "Laurier IV",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "Toutes les habitations du monde (y compris chez les autres joueurs) sont de ta culture.",
           "bonus": ""
         }
@@ -2043,6 +2048,11 @@
         },
         {
           "laurier": "Laurier IV",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "Atteindre 90 de bonheur dans toutes tes habitations.",
           "bonus": ""
         }
@@ -2068,6 +2078,11 @@
         },
         {
           "laurier": "Laurier IV",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "Placer 12 émissaires dans la même cité libre.",
           "bonus": ""
         }
@@ -2093,6 +2108,11 @@
         },
         {
           "laurier": "Laurier IV",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "Posséder 5 guildes.",
           "bonus": ""
         }
@@ -2113,11 +2133,16 @@
         },
         {
           "laurier": "Laurier III",
-          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "condition": "Posséder une habitation avec 4 bâtiments militaires.",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "Atteindre -100 Or de levée d'armée dans une de tes habitations.",
           "bonus": ""
         }
@@ -2143,6 +2168,11 @@
         },
         {
           "laurier": "Laurier IV",
+          "condition": "",
+          "bonus": ""
+        },
+        {
+          "laurier": "Laurier V",
           "condition": "",
           "bonus": ""
         }

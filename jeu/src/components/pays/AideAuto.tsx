@@ -34,7 +34,7 @@ export function AideAuto() {
           <ul className="small">
             <li><strong>Émissaires & suzeraineté</strong> : saisie manuelle page « 🗼 Cités libres » (1 tentative par saison).</li>
             <li><strong>Population des cités libres</strong> : statut (Sain / Malade / Décédé), naissances et vieillissement manuels.</li>
-            <li><strong>Voies de victoire</strong> : Lauriers — cases à cocher sur l'Accueil (textes de conditions retirés du référentiel le 2026-10-24, Lauriers vides).</li>
+            <li><strong>Voies de victoire</strong> : Lauriers I à V — cases à cocher sur l'Accueil (conditions du référentiel, crises aux Lauriers I et III ; voie Scientifique à arbitrer).</li>
             <li><strong>Levées d'armées et dés du plateau.</strong></li>
           </ul>
           <p className="muted small" style={{ marginBottom: 0 }}>
