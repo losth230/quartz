@@ -7573,3 +7573,40 @@ tolérance 1e-9 ; (2) le test migration « base vs tous-Khazhags »
 comparait DEUX runs déjà modifiées (le SETUP donne des Khazhags au
 joueur 1) — la base neutralise maintenant C.config.effetsPeuple = [].
 Diag régénéré sans erreur.
+
+---
+
+## 2026-11-16 (suite 2) — Fiche de faction Nains : talents par Lauriers + clauses de base (implémentation)
+
+Design arbitré dans la session de chat (fiche Thibaut + 3 arbitrages :
+« poids ×0,8 », talent Scientifique « tous les habitants du joueur »,
+implémentation complète). Implémentation en UNE passe sur `v4` :
+
+- **Données** : `referentiels.json` — Khazhags `effetsPeuple` étendu
+  (`poidsArriveeMod: 0,8`, `emplacementsParAmenagement` des 12
+  aménagements de mine, texte de fiche complet) + NOUVELLE table
+  `talentsPeuple` (5 entrées Khazhags : Éco I/III, Scien I, Mil I/III).
+- **Types/config** : `EffetPeupleDef` + 2 champs, `TalentPeupleDef`
+  (engine/types.ts, docblocks d'arbitrage) ; `GameConfig.talentsPeuple`
+  branché aux 4 sites de defaultConfig (interface, DEFAULT_CONFIG,
+  Cfg, cfgOf spread — backfill des vieilles configs par le tampon
+  d'UNION existant).
+- **Nouveau module** `engine/talentsPeuple.ts` : `talentsPeupleDef` +
+  `talentsActifs` (DÉRIVÉ de p.lauriers — zéro état, zéro synchro
+  multijoueur, type structurel pour prixArmee).
+- **Branchements moteur** (4 sites) : metiers.ts (cap de métier —
+  Or des mines par aménagement + Routes de l'entrefer par route
+  sortante), economie.ts (fluxParMetier avant taxes × mult de rang,
+  même patron/canal que la Guilde des marins), armees.ts/prixArmee
+  (reductionLeveeParBatiment s'additionne aux canaux + lois de
+  régime), migrationBonheur.ts (poids ×0,8 des destinations du peuple
+  porteur pour les migrants d'autres joueurs — poidsArriveePeuple,
+  gameData.ts).
+- **Tests** : engine/talentsPeuple.test.ts (7 tests dont l'invariant
+  de ratio exact ×0,8 sur les poids capturés du tirage de
+  destination, à même flux rng). **395/395 tests natifs locaux**
+  (388 + 7) ; les 23 tests de rendu restent locaux-KO (npm bloqué au
+  sandbox, tsx/react absents — rejoués par la CI). Pas de .tsx
+  modifié : zéro risque d'équilibre JSX au push.
+- **Docs** : regles-et-arbitrages.md (fiche actée, suite 2) + cette
+  entrée. Reste différé : affichage UI des talents au setup/radar.

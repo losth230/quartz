@@ -3528,3 +3528,64 @@ prénoms ; jamais converti, photo avant/après tir forcé ; jet Khazhag
 libre apparue peuple aléatoire, partants le conservent). 320/320 tests
 natifs. Le tirage peuple de `ajouterCiteLibre` reste TOUJOURS consommé
 (flux aléatoire inchangé pour les tests seedés). Diag régénéré.
+
+---
+
+## 2026-11-16 (suite 2) — Fiche de faction « Nains » Khazhags : Or des mines, clause d'arrivée, talents par Lauriers (arbitrages Thibaut)
+
+**Système acté** (sessions de design 2026-11-16) : une faction = une
+fiche de peuple à **strate de base** (table `effetsPeuple`, active dès
+le setup) **+ des TALENTS débloqués par LAURIERS** de voies de victoire
+(« base au setup + chaque fois qu'un palier de victoire est atteint il
+déverrouille un talent de faction »). Le talent est **ENTIÈREMENT
+DÉRIVÉ de `p.lauriers`** (talentsActifs, table `talentsPeuple`) :
+aucun état à stocker ni synchroniser, le multijoueur n'a rien à
+transporter. Entrées d'une même voie ADDITIONNÉES (L1 + L3 cumulés dès
+le Laurier III). Arbitrages transverses : **forces pures** (pas de
+faiblesses), **choix libres avec doublons possibles** (les effets sont
+portés par le JOUEUR, jamais par la faction — aucun compteur global),
+et le talent Scientifique est **porté par le joueur** (« tous les
+habitants du joueur » : un immigrant d'autre peuple chez le Nain
+profite du savoir-faire nain).
+
+**Fiche Khazhags Nains (actée, table effetsPeuple + talentsPeuple) :**
+
+- **Or des mines** (base, `emplacementsParAmenagement`) : +1 emplacement
+  de Commerçant par aménagement de Carrière, Mine d'Or, Mine de Fer ou
+  Mine de Charbon (tiers 2/3 compris — s'additionne aux emplacements
+  propres des fiches des mines, lu dans la cap de métier de la ville).
+- **Isolationnistes, 3e clause** (base, `poidsArriveeMod : 0,8`) :
+  arbitré « **poids ×0,8** » — MULTIPLICATIF sur le poids de tirage
+  des destinations d'un joueur Khazhag, uniquement pour les migrants
+  d'AUTRES joueurs (migration INTERNE inchangée). Hors convention des
+  points absolus des deux autres clauses : arbitré explicitement en
+  POIDS.
+- **Économique** — Laurier I « Routes de l'entrefer » (`emplacementsParRoute`) :
+  +1 emplacement de Mineur et +1 Commerçant par route sortante, dans la
+  ville d'ORIGINE. Laurier III « Or du commerce nain » (`fluxParMetier`) :
+  Commerçants +0,5 Or/tour, avant taxes, × multiplicateur de rang
+  (patron Guilde des marins, canal `parMetier`).
+- **Scientifique** — Laurier I « Savoir des profondeurs » (`fluxParMetier`) :
+  Mineurs, Forgerons et Charbonniers +0,1 Science/tour, avant taxes,
+  × multiplicateur de rang. Laurier III : à définir.
+- **Militaire** — Laurier I « Semelles de granit » : les armées naines
+  peuvent entrer sur les cases de montagne pour 2 PM — règle de
+  PLATEAU, aide de jeu affichée, jamais moteur (même convention que
+  les dogmes). Laurier III « Guerre des tunnels »
+  (`reductionLeveeParBatiment`) : Poste de garde −10, Caserne −20,
+  Barraquements −30 Or sur le prix de levée (par bâtiment présent
+  dans la ville de levée, S'ADDITIONNE aux canaux réductionLeveeArmee
+  et aux lois de régime, plancher 0).
+
+**Verrous** (engine/talentsPeuple.test.ts, 7 tests : référentiel 5
+talents sur voies valides ; talentsActifs dérivés des Lauriers
+(ordre strict, voie hors fiche, peuple sans fiche, joueur absent) ;
+Or des mines écart Nains/Basiléens = +4 pour 4 mines, sans ctx aucun
+effet ; Routes de l'entrefer +1 Mineur/+1 Commerçant par route
+sortante ; Savoir des profondeurs +0,1 Science par Mineur AVANT
+taxes, portée joueur (habitant Basiléen chez le Nain profite aussi) ;
+Guerre des tunnels −60 pour Poste+Caserne+Barraquements, rien avant
+le Laurier III ; poids ×0,8 — même flux de tirage, chaque poids
+Khazhags = poids Basiléens × 0,8, helper défaut 1). 395 tests natifs
+(388 + 7). Reste à faire (arbitré différé) : affichage UI des
+talents (fiche peuple lisible au setup/radar).
