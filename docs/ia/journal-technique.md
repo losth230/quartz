@@ -7676,3 +7676,46 @@ plus qu'aux LAURIERS I et III (avant : chaque Laurier I-III).
   différé : voie Scientifique, Laurier III Scientifique des Nains,
   affichage UI des talents de peuple, jauges de progression
   automatiques.
+
+---
+
+## 2026-11-16 (suite 5) — Jauges automatiques des Lauriers (implémentation)
+
+Arbitrage : « jauge automatique avec coche manuelle » + Culturelle I
+redéfini « production de 100 Tourisme par tour ». Nouveau module
+`engine/lauriersAuto.ts` (fonctions PURES, aucune mutation, aucune
+coche automatique — cocherLaurier reste l'unique chemin de
+validation) :
+
+- `jaugeCondition(state, p, voie, niveau, C)` → { actuel, cible }
+  ou null (Scientifique vide / condition inconnue). II et IV
+  communs = meilleur rang d'habitation du joueur (cibles 2 et 3) ;
+  I/III/V par voie : tourismeCourant, villes, vassales
+  (suzerain), routesCommerce, Σ puissance des armées, merveilles /
+  bourgeois (rangDe) / rangPaysNiveau / Commerçants (metier) /
+  famille Militaire par habitation (max), villes du monde de la
+  culture du joueur / min bonheurVilleComplete / max émissaires
+  d'une cité / Σ guildes / max reductionLeveeArmeeVille.
+- `armees.ts` : EXTRACTION de `reductionLeveeArmeeVille` (bâtiments
+  + Conscription × rang de pays + talents) de prixArmee — la jauge
+  du Laurier V Militaire utilise la formule exacte du prix, zéro
+  duplication de canaux.
+- `victory.ts` : le survol du radar ajoute « (actuel/cible) » au
+  « prochain : … » (jaugeProchainLaurier importé de lauriersAuto).
+- `Dashboard.tsx` : jauge « actuel/cible » affichée à côté des
+  coches du tableau (IIFE, équilibre JSX vérifié au `edit` ciblé).
+- `referentiels.json` : Culturelle I « Accumuler 100 Tourisme » →
+  « Produire 100 Tourisme par tour » (arbitrage « avoir 100
+  tourisme = production de 100 »).
+- Nouveau `engine/lauriersAuto.test.ts` (6 tests de garde) :
+  rangs II/IV, les 5 jauges I, III (avec
+  prestige/metier/rang/bâtiments), les 5 jauges V (dont réduction
+  10 base Baronnie → 100 avec Empire + Ordre des chevaliers),
+  prochain Laurier + null (terminé/vide), radar sans coche auto.
+  **406 pass + 1 KO local** (salon.test.ts : @supabase absent au
+  sandbox, rejoué par la CI) — 400 pass hors salon, soit +6 vs la
+  baseline du tour précédent (aucun test de base perdu). Harnais
+  rtest reconstruit.
+- Docs : regles-et-arbitrages.md (suite 5) + cette entrée. Reste
+  différé : voie Scientifique, Laurier III Scientifique Nains,
+  affichage des talents au setup/radar.
