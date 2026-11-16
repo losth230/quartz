@@ -3480,3 +3480,51 @@ couche, toujours PAS de grossesse de 0 tour. **312/312 tests
 natifs.** Diag régénéré : log 408 → 463, commandants J1 4 → 3
 (le tirage par habitant consomme plus de rng, tout le flux aléatoire
 aval est décalé — rien d'autre ne diffère).
+
+---
+
+## 2026-11-16 (suite) — Peuple des habitants : identité héritée de la mère, immuable, avec effets (arbitrage Thibaut)
+
+**Arbitrage.** « Rajouter un nouveau paramètre pour les habitants : le
+peuple. Le peuple fonctionnerait comme la culture mais serait défini par
+le peuple choisi par le joueur au début de partie, et héréditaire par la
+mère. L'idée est que le peuple d'un habitant offre un bonus, comme les
+cultures, à la différence près qu'un habitant ne peut jamais changer
+de peuple. » Acté 2026-11-16 :
+
+- le champ `peuple` est posé au SETUP (peuple du joueur porteur) ;
+- **hérité par la MÈRE** à la naissance (bâtards inclus) ; le prénom est
+  tiré dans la banque de noms du peuple de la mère (repli : porteur) ;
+- **immuable** : ni la conversion culturelle ni la migration ne le
+  touchent jamais — il n'y a PAS de mécanique de changement de peuple ;
+- les vieilles sauvegardes sont rattrapées par `normaliserEtat`
+  (backfill idempotent au peuple du porteur).
+
+**Premier effet test : les Khazhags Nains « isolationnistes ».** Nouveau
+peuple sélectionnable (banque de noms n°2 : Schwarzmond, Alaric…). La
+nouvelle table `effetsPeuple` du référentiel porte, par peuple, des
+modificateurs ADDITIFS en **points absolus** (5 % → 3 %, pas −20 %) :
+
+- `migrationBonheurMod : -0.02` — −2 points de chances de partir à cause
+  du bonheur ;
+- `conversionProbaMod : -0.02` — −2 points de chances au jet de
+  conversion culturelle (après la division Tour de Crystal, clampé à 0).
+
+**Cités libres.** Chaque cité libre du setup porte le peuple de son
+joueur ; une cité libre qui APPARAÎT en cours de partie reçoit un peuple
+TIRÉ AU HASARD parmi les peuples disponibles (tirage sauvegardé dans la
+cité) ; les habitants qui la quittent conservent leur peuple (immuable).
+Une ville qui DEVIENT cité libre en cours de partie reçoit aussi un
+peuple tiré au hasard.
+
+**Affichage.** Colonne « Peuple » dans la page Population (après la
+culture).
+
+**Verrous.** engine/peuple.test.ts (8 tests : référentiel/banque 2/
+effets ; setup peuple joueur + cités libres ; héritage mère + banque de
+prénoms ; jamais converti, photo avant/après tir forcé ; jet Khazhag
+0,05 − 0,02 = 0,03 vs Basiléens 0,05 ; départ bonheur −2 points absolus
+élément-wise, clamp 0 ; rattrapage normaliserEtat idempotent ; cité
+libre apparue peuple aléatoire, partants le conservent). 320/320 tests
+natifs. Le tirage peuple de `ajouterCiteLibre` reste TOUJOURS consommé
+(flux aléatoire inchangé pour les tests seedés). Diag régénéré.

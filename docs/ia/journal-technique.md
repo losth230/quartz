@@ -7532,3 +7532,44 @@ bloc conversion), le vérificateur JSX maison (check-jsx.mts
 recréé) signalant un faux positif IDENTIQUE sur l'original. Docs :
 règles (section « Retour au tirage », SUPERSEDÉ sur les sections
 V2 et cap, Tour de Crystal/dogmes/guilde réalignés) + ce journal.
+
+---
+
+## 2026-11-16 (suite) — Peuple des habitants : champ immuable hérité de la mère, effets Khazhags Nains (feat)
+
+Implémentation de l'arbitrage « peuple comme la culture, mais jamais
+changé ». Character.peuple?: string (posé au setup peuple du porteur ;
+hérité de la MÈRE à la naissance, bâtards inclus, prénom dans la banque
+du peuple de la mère, repli porteur). Immuable par construction : ni
+culture.ts ni migrationBonheur.ts ne l'écrivent. Rattrapage idempotent
+dans villes.ts normaliserEtat (backfill c.peuple ??= p.peuple).
+
+Nouvelle table effetsPeuple du référentiel (après peuplesAutres) :
+modificateurs ADDITIFS en points absolus lus par gameData.ts
+peupleEffetDef/modPeupleHabitant. Appliqués dans DEUX jets :
+migrationBonheur.ts (proba de départ par bonheur + mod, clamp 0) et
+culture.ts (proba de conversion ÷ ancrage Tour de Crystal + mod, clamp
+0). Premier peuple à effet : Khazhags Nains isolationnistes
+(migrationBonheurMod −0,02, conversionProbaMod −0,02), ajouté aux
+peuples sélectionnables (BANQUE_PEUPLE['Khazhags Nains'] = 2 dans
+defaultConfig.ts ; effetsPeuple sur GameConfig/Cfg, cfgOf merge avec
+repli DEFAULT_CONFIG — une sauvegarde sans la clé récupère la table,
+pas de bump SCHEMA_VERSION nécessaire).
+
+Cités libres : celles du setup portent le peuple du joueur ;
+ajouterCiteLibre garde le tirage rng.pick(C.peuples) TOUJOURS consommé
+(flux seedé inchangé) puis peupleNom = cite.peuple ?? peupleTire ;
+villeDevientCiteLibre : tirage en tête via rngPeuple dédié (l'ancien
+CC de milieu de fonction supprimé).
+
+Affichage : colonne Peuple dans la page Population
+(PopulationTable.tsx th + colSpan 13→14 ×2 ; LignePersonnage.tsx td
+peuple ?? '—').
+
+Tests : engine/peuple.test.ts NOUVEAU (8 tests, 320/320 natifs).
+Deux corrections en séance : (1) flottant — 0,05 − 0,02 =
+0,030000000000000002, assert.includes(0.03) faux négatif, passé en
+tolérance 1e-9 ; (2) le test migration « base vs tous-Khazhags »
+comparait DEUX runs déjà modifiées (le SETUP donne des Khazhags au
+joueur 1) — la base neutralise maintenant C.config.effetsPeuple = [].
+Diag régénéré sans erreur.
