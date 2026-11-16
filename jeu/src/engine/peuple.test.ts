@@ -24,7 +24,7 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { createGame, type SetupLine } from './setup'
-import type { Character, GameState } from './types'
+import type { Character } from './types'
 import type { Rng } from './rng'
 import { makeRng } from './rng'
 import { cfgOf, peupleDef, peupleEffetDef, modPeupleHabitant } from './gameData'
@@ -84,8 +84,8 @@ test('setup : habitants du peuple du joueur (cour comprise) ; cité libre du jou
     }
   }
   // Une cité libre par joueur : le peuple de la cité = peuple du joueur.
-  assert.equal(state.citesLibres.length, state.players.length)
-  state.citesLibres.forEach((cite, i) => {
+  (state.citesLibres ?? []).length === state.players.length || assert.fail('une cité libre par joueur')
+  (state.citesLibres ?? []).forEach((cite, i) => {
     assert.equal(cite.peuple, state.players[i]?.peuple,
       `cité libre ${i + 1} : peuple du joueur ${i + 1}`)
     for (const c of cite.population ?? []) {
