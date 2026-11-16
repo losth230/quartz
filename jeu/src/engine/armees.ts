@@ -323,6 +323,41 @@ export function libererSoldats(
  *  REVIT comme loi du régime AUTORITARISME — prix de levée −10 Or
  *  par RANG DU PAYS du joueur qui lève (champ leveeOrParRangPays),
  *  lue ci-dessous, S'ADDITIONNANT aux réductions de la ville.) */
+/** RÉDUCTION TOTALE du prix de levée pour une ville de levée donnée
+ *  (canaux réductionLeveeArmee des BÂTIMENTS + loi de régime
+ *  Conscription par rang du pays + talents de peuple Lauriers
+ *  « réduction par bâtiment »). EXTRAITE de prixArmee (2026-11-16,
+ *  jauges de Lauriers — lauriersAuto.ts jauge le Laurier V Militaire
+ *  « −100 Or de levée d'armée dans une de tes habitations » avec la
+ *  même formule que le prix, sans dupliquer les canaux).
+ *  (Talents de peuple LAURIERS, arbitrage Thibaut 2026-11-16 —
+ *  Khazhags Nains « Guerre des tunnels » (Laurier III Militaire) :
+ *  réduction de levée PAR BÂTIMENT de la ville de levée, S'ADDITIONNE
+ *  aux canaux réductionLeveeArmee des constructions et aux lois de
+ *  régime — dérivé de p.lauriers (talentsActifs), aucun état.)
+ *  (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
+ *  « Conscription ») : réduction du prix de levée par RANG DU
+ *  PAYS du joueur qui lève (leveeOrParRangPays × rangPaysNiveau)
+ *  — le texte de la loi existait dès l'origine du jeu, il
+ *  n'avait JAMAIS été codé avant la refonte. S'ADDITIONNE aux
+ *  réductions de la ville de levée, plancher 0. */
+export function reductionLeveeArmeeVille(
+  ville: { batiments?: string[] } | undefined,
+  p: { regime?: string; rang?: string; peuple?: string; lauriers?: Record<string, number> } | undefined,
+  C: Cfg,
+): number {
+  let reducTalent = 0
+  for (const t of talentsActifs(p, C)) {
+    for (const rb of t.reductionLeveeParBatiment ?? []) {
+      reducTalent += rb.reduction * (ville?.batiments ?? [])
+        .filter((b) => b === rb.batiment).length
+    }
+  }
+  return (ville ? reductionLeveeBatiments(ville, C) : 0)
+    + (regimeDef(p?.regime ?? '', C.config)?.leveeOrParRangPays ?? 0) * rangPaysNiveau(p, C)
+    + reducTalent
+}
+
 export function prixArmee(
   puissanceCible: number,
   C: Cfg,
@@ -332,27 +367,7 @@ export function prixArmee(
   const tranche = Math.max(1, C.p.armeePriXPuissance)
   if (puissanceCible <= 0) return 0
   const prix = (puissanceCible / tranche) * C.p.armeePrixOr
-  // (Talents de peuple LAURIERS, arbitrage Thibaut 2026-11-16 —
-  //  Khazhags Nains « Guerre des tunnels » (Laurier III Militaire) :
-  //  réduction de levée PAR BÂTIMENT de la ville de levée, S'ADDITIONNE
-  //  aux canaux réductionLeveeArmee des constructions et aux lois de
-  //  régime — dérivé de p.lauriers (talentsActifs), aucun état.)
-  let reducTalent = 0
-  for (const t of talentsActifs(p, C)) {
-    for (const rb of t.reductionLeveeParBatiment ?? []) {
-      reducTalent += rb.reduction * (ville?.batiments ?? [])
-        .filter((b) => b === rb.batiment).length
-    }
-  }
-  // (Refonte « 8 lois » des régimes, 2026-10-29, Autoritarisme
-  //  « Conscription ») : réduction du prix de levée par RANG DU
-  //  PAYS du joueur qui lève (leveeOrParRangPays × rangPaysNiveau)
-  //  — le texte de la loi existait dès l'origine du jeu, il
-  //  n'avait JAMAIS été codé avant la refonte. S'ADDITIONNE aux
-  //  réductions de la ville de levée, plancher 0.
-  const reduction = (ville ? reductionLeveeBatiments(ville, C) : 0)
-    + (regimeDef(p?.regime ?? '', C.config)?.leveeOrParRangPays ?? 0) * rangPaysNiveau(p, C)
-    + reducTalent
+  const reduction = reductionLeveeArmeeVille(ville, p, C)
   return Math.max(0, Math.round(prix - reduction))
 }
 

@@ -2003,7 +2003,7 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "Accumuler 100 Tourisme.",
+          "condition": "Produire 100 Tourisme par tour.",
           "bonus": ""
         },
         {

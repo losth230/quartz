@@ -21,6 +21,7 @@
 
 import type { GameState, Player } from './types'
 import { cfgOf } from './gameData'
+import { jaugeProchainLaurier } from './lauriersAuto'
 
 const ROMAINS = ['I', 'II', 'III', 'IV', 'V']
 
@@ -107,7 +108,8 @@ export function victoryLabels(state?: GameState): { key: string; label: string }
  *  = Lauriers validés / 5, détail au survol = « X/5 Lauriers » et
  *  condition du prochain Laurier à accomplir. */
 export function victoryProgress(state: GameState): VictoryProgress[] {
-  const victoires = cfgOf(state.config).config.victoires
+  const C = cfgOf(state.config)
+  const victoires = C.config.victoires
   return state.players.map((p) => {
     const valeurs: Record<string, number> = {}
     const details: Record<string, string> = {}
@@ -118,10 +120,15 @@ export function victoryProgress(state: GameState): VictoryProgress[] {
       //  du référentiel (Lauriers vides, retour arbitre) — repli « … »
       //  au survol du radar. (Textes RESTAURÉS le 2026-11-16 : le
       //  repli ne sert plus que pour la voie Scientifique, vide.))
+      // (2026-11-16, jauges : l'arbitrage « jauge automatique avec
+      //  coche manuelle » ajoute la progression CALCULÉE du prochain
+      //  Laurier au survol — la validation reste 100 % manuelle.)
+      const jauge = jaugeProchainLaurier(state, p, v.voie, C)
       details[cleVoie(v.voie)] =
         n >= 5
           ? `${n}/5 Lauriers — voie ${v.voie} TERMINÉE 👑`
           : `${n}/5 Lauriers — prochain : ${v.lauriers[n]?.condition || '…'}`
+            + (jauge ? ` (${Math.round(jauge.actuel)}/${jauge.cible})` : '')
     }
     return { joueur: p.n, nom: p.nom, valeurs, details }
   })

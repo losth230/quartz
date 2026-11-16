@@ -9,6 +9,7 @@ import { cfgOf, couleurRessource, fondRessource } from '../engine/gameData'
 import {
   cocherLaurier, victoireAtteinte, victoryProgress, victoryLabels,
 } from '../engine/victory'
+import { jaugeProchainLaurier } from '../engine/lauriersAuto'
 import { Card, fmt } from './ui'
 import { HistogrammeEmpile, CourbeRessource, Radar } from './charts'
 import type { GroupeChart, SerieCourbe, SerieRadar } from './charts'
@@ -246,6 +247,16 @@ export function Dashboard() {
                             </span>
                           )
                         })}
+                        {/* (2026-11-16, arbitrage « jauge automatique avec
+                            coche manuelle » : progression CALCULÉE du prochain
+                            Laurier, affichée à côté des coches ; la validation
+                            reste manuelle.) */}
+                        {(() => {
+                          const g = jaugeProchainLaurier(state, p, v.voie, C)
+                          return g
+                            ? <span className="muted small" style={{ marginLeft: 6, whiteSpace: 'nowrap' }}>{Math.round(g.actuel)}/{g.cible}</span>
+                            : null
+                        })()}
                       </td>
                     )
                   })}
