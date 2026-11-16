@@ -7719,3 +7719,12 @@ validation) :
 - Docs : regles-et-arbitrages.md (suite 5) + cette entrée. Reste
   différé : voie Scientifique, Laurier III Scientifique Nains,
   affichage des talents au setup/radar.
+
+**Post-scriptum (fix CI)** : le commit jauges a échoué au typecheck
+(TS6133 « 'C' is declared but its value is never read » — C
+déstructuré non lu dans le test radar de lauriersAuto.test.ts),
+diagnostic par les ANNOTATIONS du check-run (`check-runs/{id}/annotations`,
+message tsc exposé même quand le log demande les droits admin).
+Fix 975ec360 : la destructuration omet C. CI verte, bundle live
+`index-0nNyrTvV.js`, « Produire 100 Tourisme par tour » présent, ancien
+texte absent.
