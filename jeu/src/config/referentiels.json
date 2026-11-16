@@ -1843,7 +1843,20 @@
       "poidsArriveeMod": 0.8,
       "emplacementsParAmenagement": [
         {
-          "amenagements": ["Carrière", "Carrière (tier 2)", "Carrière (tier 3)", "Mine d'Or", "Mine d'Or (tier 2)", "Mine d'Or (tier 3)", "Mine de Fer", "Mine de Fer (tier 2)", "Mine de Fer (tier 3)", "Mine de Charbon", "Mine de Charbon (tier 2)", "Mine de Charbon (tier 3)"],
+          "amenagements": [
+            "Carrière",
+            "Carrière (tier 2)",
+            "Carrière (tier 3)",
+            "Mine d'Or",
+            "Mine d'Or (tier 2)",
+            "Mine d'Or (tier 3)",
+            "Mine de Fer",
+            "Mine de Fer (tier 2)",
+            "Mine de Fer (tier 3)",
+            "Mine de Charbon",
+            "Mine de Charbon (tier 2)",
+            "Mine de Charbon (tier 3)"
+          ],
           "metier": "Commerçant",
           "places": 1
         }
@@ -1858,8 +1871,14 @@
       "nom": "Routes de l'entrefer",
       "texte": "Les routes commerciales octroient +1 emplacement de Mineur et +1 emplacement de Commerçant (par route sortante, dans la ville d'origine).",
       "emplacementsParRoute": [
-        { "metier": "Mineur", "places": 1 },
-        { "metier": "Commerçant", "places": 1 }
+        {
+          "metier": "Mineur",
+          "places": 1
+        },
+        {
+          "metier": "Commerçant",
+          "places": 1
+        }
       ]
     },
     {
@@ -1870,7 +1889,9 @@
       "texte": "Les Commerçants produisent +0,5 Or par tour.",
       "fluxParMetier": [
         {
-          "metiers": ["Commerçant"],
+          "metiers": [
+            "Commerçant"
+          ],
           "ressource": "Or",
           "valeur": 0.5
         }
@@ -1884,7 +1905,11 @@
       "texte": "Les Mineurs, Forgerons et Charbonniers produisent +0,1 Science par tour.",
       "fluxParMetier": [
         {
-          "metiers": ["Mineur", "Forgeron", "Charbonnier"],
+          "metiers": [
+            "Mineur",
+            "Forgeron",
+            "Charbonnier"
+          ],
           "ressource": "Science",
           "valeur": 0.1
         }
@@ -1904,9 +1929,18 @@
       "nom": "Guerre des tunnels",
       "texte": "Les Postes de garde, Casernes et Barraquements réduisent les coûts de levées d'armée de -10, -20 et -30 Or respectivement.",
       "reductionLeveeParBatiment": [
-        { "batiment": "Poste de garde", "reduction": 10 },
-        { "batiment": "Caserne", "reduction": 20 },
-        { "batiment": "Barraquements", "reduction": 30 }
+        {
+          "batiment": "Poste de garde",
+          "reduction": 10
+        },
+        {
+          "batiment": "Caserne",
+          "reduction": 20
+        },
+        {
+          "batiment": "Barraquements",
+          "reduction": 30
+        }
       ]
     }
   ],
@@ -1969,22 +2003,22 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "",
+          "condition": "Accumuler 100 Tourisme.",
           "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 2 (Cité ou Donjon).",
           "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "",
+          "condition": "Posséder 3 merveilles.",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "",
+          "condition": "Toutes les habitations du monde (y compris chez les autres joueurs) sont de ta culture.",
           "bonus": ""
         }
       ]
@@ -1994,22 +2028,22 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "",
+          "condition": "Posséder 3 habitations.",
           "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 2 (Cité ou Donjon).",
           "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "",
+          "condition": "Compter 100 bourgeois.",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "",
+          "condition": "Atteindre 90 de bonheur dans toutes tes habitations.",
           "bonus": ""
         }
       ]
@@ -2019,22 +2053,22 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "",
+          "condition": "Avoir 2 cités libres vassales.",
           "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 2 (Cité ou Donjon).",
           "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "",
+          "condition": "Atteindre le rang d'Empereur (rang de pays 5).",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "",
+          "condition": "Placer 12 émissaires dans la même cité libre.",
           "bonus": ""
         }
       ]
@@ -2044,22 +2078,22 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "",
+          "condition": "Ouvrir 2 routes commerciales.",
           "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 2 (Cité ou Donjon).",
           "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "",
+          "condition": "Compter 50 Commerçants.",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "",
+          "condition": "Posséder 5 guildes.",
           "bonus": ""
         }
       ]
@@ -2069,22 +2103,22 @@
       "lauriers": [
         {
           "laurier": "Laurier I",
-          "condition": "",
+          "condition": "Aligner 300 points d'armée en campagne.",
           "bonus": ""
         },
         {
           "laurier": "Laurier II",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 2 (Cité ou Donjon).",
           "bonus": ""
         },
         {
           "laurier": "Laurier III",
-          "condition": "",
+          "condition": "Améliorer une habitation au rang 3 (Grande Cité ou Forteresse).",
           "bonus": ""
         },
         {
           "laurier": "Laurier IV",
-          "condition": "",
+          "condition": "Atteindre -100 Or de levée d'armée dans une de tes habitations.",
           "bonus": ""
         }
       ]
