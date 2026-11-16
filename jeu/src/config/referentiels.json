@@ -1827,6 +1827,19 @@
       "nom": "VERMINES DE KAOSS",
       "description": "",
       "lignes": []
+    },
+    {
+      "nom": "Khazhags Nains",
+      "description": "",
+      "lignes": []
+    }
+  ],
+  "effetsPeuple": [
+    {
+      "nom": "Khazhags Nains",
+      "effet": "Isolationniste : -2 points de chances de migrer par bonheur et -2 points de chances de conversion culturelle.",
+      "migrationBonheurMod": -0.02,
+      "conversionProbaMod": -0.02
     }
   ],
   "tourismeSeuils": [

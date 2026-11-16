@@ -361,7 +361,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
     <thead>
       <tr>
         <th>Nom</th><th>Dynastie · Rang</th><th>Sx</th><th>Âge</th><th>Ville</th>
-        <th>Culture</th><th>Métier</th><th>Domicile</th><th>Traits</th>
+        <th>Culture</th><th>Peuple</th><th>Métier</th><th>Domicile</th><th>Traits</th>
         <th>Statut</th><th>Mariage</th><th>Fécondité</th><th>Actions</th>
       </tr>
     </thead>
@@ -416,7 +416,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               {rowsCour.length
                 ? rowsCour.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
                     .map((c) => <LignePersonnage key={c.id} c={c} avecMariage {...propsLigne} />)
-                : <tr><td colSpan={13} className="muted">aucun personnage de haut rang — ni dynastie noble, ni prestige ≥ 100 (bourgeois à 100, anobli à 250)</td></tr>}
+                : <tr><td colSpan={14} className="muted">aucun personnage de haut rang — ni dynastie noble, ni prestige ≥ 100 (bourgeois à 100, anobli à 250)</td></tr>}
             </tbody>
           </table>
         </div>
@@ -438,7 +438,7 @@ export function PopulationTable({ joueur }: { joueur: number }) {
               {rowsClassique.length
                 ? rowsClassique.slice(pageCour * PAR_PAGE, (pageCour + 1) * PAR_PAGE)
                     .map((c) => <LignePersonnage key={c.id} c={c} avecMariage={false} {...propsLigne} />)
-                : <tr><td colSpan={13} className="muted">aucun habitant</td></tr>}
+                : <tr><td colSpan={14} className="muted">aucun habitant</td></tr>}
             </tbody>
           </table>
               {(() => {

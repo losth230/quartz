@@ -14,7 +14,7 @@ import { mergeParams, type GameParams, type GameParamStrings } from './params'
 // (2026-10-27, audit : HabitationDef n'est plus défini en double ici —
 //  l'UNIQUE définition vit dans engine/types.ts, importée puis
 //  ré-exportée pour ne pas casser les imports existants.)
-import type { HabitationDef } from '../engine/types'
+import type { HabitationDef, EffetPeupleDef } from '../engine/types'
 
 export type { HabitationDef }
 
@@ -630,6 +630,10 @@ export interface GameConfig {
   banquesNoms: BanqueNoms[]
   peupleBanque: Record<string, number>
   peuples: string[]
+  /** Effets de peuple par habitant (arbitrage Thibaut 2026-11-16,
+   *  cf. EffetPeupleDef) — table du référentiel, backfillée par le
+   *  spread de cfgOf pour les vieilles configs. */
+  effetsPeuple: EffetPeupleDef[]
   batiments: BuildingDef[]
   // ── données de référence « fiches » (affichage, 100% éditables) ──
   init: {
@@ -1038,6 +1042,7 @@ function peuplesNoms(): string[] {
 const BANQUE_PEUPLE: Record<string, number> = {
   'Basiléens': 0, 'PEAUX VERTES': 1, 'HOMMES LEZARDS': 0, 'NAINS': 2, "ELFES D'OR": 0,
   'NORLS': 0, "LEGIONS D'OUTRE-TOMBE": 2, 'VERMINES DE KAOSS': 0, 'KROVORS': 0, 'THRAKSANS': 1,
+  'Khazhags Nains': 2,
 }
 function peupleBanqueOf(): Record<string, number> {
   const out: Record<string, number> = {}
@@ -1067,6 +1072,7 @@ export const DEFAULT_CONFIG: GameConfig = {
   banquesNoms: ref.banquesNoms,
   peupleBanque: peupleBanqueOf(),
   peuples: peuplesNoms(),
+  effetsPeuple: (ref as { effetsPeuple?: EffetPeupleDef[] }).effetsPeuple ?? [],
   batiments: normaliserBatiments(),
   init: ref.init,
   traitsGenetiques: ref.traitsGenetiques,
@@ -1232,6 +1238,7 @@ export interface Cfg {
   banquesNoms: BanqueNoms[]
   peupleBanque: Record<string, number>
   peuples: string[]
+  effetsPeuple: EffetPeupleDef[]
   batiments: BuildingDef[]
   couleurs: CouleursConfig
   config: GameConfig
@@ -2606,6 +2613,7 @@ export function cfgOf(config?: GameConfig): Cfg {
     banquesNoms: merged.banquesNoms,
     peupleBanque: merged.peupleBanque,
     peuples: merged.peuples,
+    effetsPeuple: merged.effetsPeuple ?? DEFAULT_CONFIG.effetsPeuple,
     batiments: merged.batiments,
     couleurs: migrerCouleurs(merged.couleurs),
     config: merged,

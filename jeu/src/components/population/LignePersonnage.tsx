@@ -67,6 +67,10 @@ export function LignePersonnage({
       <td>{c.age}</td>
       <td>{c.ville}</td>
       <td>{c.culture}</td>
+      {/* (Peuple de l'habitant, arbitrage Thibaut 2026-11-16 :
+          hérité de la mère, jamais converti — « — » pour les
+          vieux habitants sans peuple.) */}
+      <td>{c.peuple ?? '—'}</td>
       <td>
         {/* Marqueur (y), retour Thibaut : attribution de métier avec
             DESCRIPTION (gains du métier, noblesse, éducation) AVANT
