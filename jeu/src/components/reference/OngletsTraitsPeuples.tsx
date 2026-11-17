@@ -21,7 +21,8 @@
 
 import type { Cfg } from '../../engine/gameData'
 import { peupleEffetDef } from '../../engine/gameData'
-import { talentsPeupleDef, type TalentPeupleDef } from '../../engine/talentsPeuple'
+import { talentsPeupleDef } from '../../engine/talentsPeuple'
+import type { TalentPeupleDef } from '../../engine/types'
 import { Card } from '../ui'
 
 /** Chiffres romains des Lauriers (I à V — 5 Lauriers par voie depuis
