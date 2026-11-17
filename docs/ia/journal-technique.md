@@ -7784,3 +7784,11 @@ et réservé aux Nains).
   entrée. Reste différé : voie de victoire Scientifique, Laurier
   III Scientifique Nains, affichage des talents de peuple au
   setup/radar, wiki metiersEffets de l'Ingénieur.
+
+**Post-scriptum (fix CI)** : le commit fiche a échoué au typecheck
+(TS strict : champ `pereId` manquant dans le perso de test de
+talentsPeuple.test.ts — le harnais strip-types n'exécute PAS les
+types, tsc seul les attrape ; diagnostic par les ANNOTATIONS du
+check-run). Fix e01c12ea : champ ajouté. CI verte, deploy vert,
+bundle live `index-B_jd0gIA.js` — « Grand Atelier des
+Ingénieurs » et « réservé au peuple » présents au bundle.
