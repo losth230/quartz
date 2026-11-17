@@ -7,8 +7,8 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 119 règles — sources : batiment 72, amenagement 47
-── canal placesMetier : 89 règles ──
+total : 122 règles — sources : batiment 75, amenagement 47
+── canal placesMetier : 91 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
   batiment.camp-de-mineur@ville — Camp de mineur (Ville) : Mineur +2
@@ -16,6 +16,8 @@ total : 119 règles — sources : batiment 72, amenagement 47
   batiment.grange@ville — Grange (Ville) : Éleveur +2 · Fermier +4
   batiment.herboristerie@ville — Herboristerie (Ville) : Guérisseur +2
   batiment.ponton@ville — Ponton (Ville) : Pêcheur +2
+  batiment.forge@ville — Forge (Ville) : Bois -1 · Ingénieur +2 · Charbonnier +1
+  batiment.forge@chateau — Forge (Château) : Bois -1 · Ingénieur +2 · Charbonnier +1
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@chateau — Camp de bûcheron (Château) : Bûcheron +2
   batiment.camp-de-mineur@chateau — Camp de mineur (Château) : Mineur +2
@@ -124,7 +126,9 @@ total : 119 règles — sources : batiment 72, amenagement 47
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
   batiment.ordre-des-chevaliers-du-notan@ville — Ordre des chevaliers du Notan (Ville) : levée d'armée −50 Or
-── canal fluxVille : 22 règles ──
+── canal fluxVille : 25 règles ──
+  batiment.forge@ville — Forge (Ville) : Bois -1 · Ingénieur +2 · Charbonnier +1
+  batiment.forge@chateau — Forge (Château) : Bois -1 · Ingénieur +2 · Charbonnier +1
   batiment.conjuratoire@chateau — Conjuratoire (Château) : Tourisme +15
   batiment.ecole-elementaire@chateau — Ecole élémentaire (Château) : Or -1 · Professeur +1 · Scientifique +1
   batiment.banque-centrale@capitale — Banque centrale (Capitale) : Or +8
@@ -146,6 +150,7 @@ total : 119 règles — sources : batiment 72, amenagement 47
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
   batiment.temple-de-bahamutt@ville — Temple de Bahamutt (Ville) : Tourisme +30 · Garde +4
   batiment.antre-de-la-deesse-araignee@ville — Antre de la déesse araignée (Ville) : Soie +2
+  batiment.grand-atelier-des-ingenieurs@ville — Grand Atelier des Ingénieurs (Ville) : Charbon -1
   batiment.palais-des-empereurs-de-lun@ville — Palais des empereurs de Lun (Ville) : Tourisme +80
 ── canal garnisonVille : 2 règles ──
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
