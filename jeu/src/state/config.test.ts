@@ -224,10 +224,12 @@ test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plu
     11, 'les 4 vieilles merveilles sont purgées, les 11 nouvelles du référentiel sont là')
   assert.equal(
     C.config.constructions.filter((x) => x.categorie === 'Bâtiment').length,
-    // 85 = 84 bâtiments du référentiel (73 + les 11 MERVEILLES
-    //  MONDIALES des fiches Thibaut 2026-11-15) + le perso, ni
+    // 88 = 87 bâtiments du référentiel (73 + les 11 MERVEILLES
+    //  MONDIALES des fiches Thibaut 2026-11-15 + les 3 bâtiments de
+    //  faction Khazhags Nains 2026-11-17 : Forge Ville, Forge
+    //  Château, Grand Atelier des Ingénieurs) + le perso, ni
     //  perdus ni doublés
-    85, '84 bâtiments du référentiel (73 + 11 merveilles mondiales 2026-11-15) + le perso, ni perdus ni doublés')
+    88, '87 bâtiments du référentiel (73 + 11 merveilles + 3 faction Nains) + le perso, ni perdus ni doublés')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
     'un bâtiment perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')
@@ -410,8 +412,11 @@ test('config : les BÂTIMENTS rang 2 sont réactivés, les configs resyncées su
   //  chevaliers du Notan, Antre de la déesse araignée, Laboratoire
   //  de Falheim, Palais des empereurs de Lun, Pyramide des Xoltans,
   //  Antichambre d'Alexandrie) → 54.
+  //  Fiche Khazhags Nains 2026-11-17 : + le GRAND ATELIER DES
+  //  INGÉNIEURS (rang 3, famille Guilde, unique au monde) → 55.
+  //  (La Forge est de rang 1, hors de ce comptage.)
   const rang2defs = c.constructions.filter((x) => x.categorie === 'Bâtiment' && (x.rangMinHabitation ?? 0) >= 2)
-  assert.equal(rang2defs.length, 54, `54 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
+  assert.equal(rang2defs.length, 55, `55 bâtiments rang 2+ attendus au référentiel (trouvé ${rang2defs.length})`)
   // une config monde SAUVEGARDÉE AVANT (vieux « Moulin à vent » rang 2
   //  aux effets/coûts obsolètes) est RESYNCÉE : purge de TOUS les
   //  bâtiments rang ≥ 2, réinjection des valeurs du RÉFÉRENTIEL

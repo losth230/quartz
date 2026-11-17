@@ -73,10 +73,12 @@ test('cfgOf : conversion v2 → courante (titres → metiers, champ interne reno
   // referentiel converti : table metiers, champ metier — la vague 3a
   //  (migration metiersAmenagements2026) AJOUTE les métiers manquants
   //  du nouveau référentiel derrière la table convertie : 1 Testeur +
-  //  24 (le Marchand est retiré du jeu le 2026-10-24 ; le GUÉRISSEUR
+  //  25 (le Marchand est retiré du jeu le 2026-10-24 ; le GUÉRISSEUR
   //  est ajouté le 2026-10-25 — arbitre 2026-11-13 : +3 % guérison,
-  //  −3 % contraction, poste d'Herboristerie).
-  assert.equal(C.metiers.length, 25)
+  //  −3 % contraction, poste d'Herboristerie ; l'INGÉNIEUR dédié aux
+  //  Khazhags Nains est ajouté le 2026-11-17 — fiche faction Forge /
+  //  Grand Atelier).
+  assert.equal(C.metiers.length, 26)
   assert.equal(C.metiers[0].metier, 'Testeur', 'le champ interne titre devient metier')
   assert.ok(C.metiers.some((m) => m.metier === 'Fermier'), 'vague 3a : les métiers manquants sont ajoutés')
   assert.ok(!C.metiers.some((m) => m.metier === 'Propagandiste'), 'vague 3a : Propagandiste retiré')

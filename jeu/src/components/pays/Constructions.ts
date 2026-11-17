@@ -70,7 +70,7 @@ export function faireConstruire(o: {
       //  construit que dans une VILLE, du groupe Château que dans un
       //  CHÂTEAU (la vue filtre, ce garde-fou couvre les états
       //  importés/rebasés).
-      if (ref && (ref.groupe === 'Ville' || ref.groupe === 'Château') && (ref.famille ?? '') !== 'Merveille') {
+      if (ref && (ref.groupe === 'Ville' || ref.groupe === 'Château') && (ref.famille ?? '') !== 'Merveille' && ref.uniqueAuMonde !== true) {
         const typeVilleActuel = (ville.type ?? 'Ville').toLowerCase()
         if (ref.groupe.toLowerCase() !== typeVilleActuel) {
           s.log.push({
@@ -157,7 +157,10 @@ export function faireConstruire(o: {
       //  BLOQUANT du mutateur : le coût n'est pas débité, rien
       //  n'est poussé (les autres garde-fous restent des ⚠ non
       //  bloquants, revue 2026-10-16).
-      if ((ref?.famille ?? '') === 'Merveille') {
+      // (Fiche Khazhags Nains 2026-11-17 : le drapeau `uniqueAuMonde`
+      //  étend l'unicité au Grand Atelier des Ingénieurs, merveille
+      //  mondiale de famille Guilde — « compte comme une guilde ».)
+      if ((ref?.famille ?? '') === 'Merveille' || ref?.uniqueAuMonde === true) {
         const ailleurs = merveilleConstruiteAilleurs(s, nom, t.n, ville.nom)
         if (ailleurs) {
           const proprietaire = s.players.find((q) => q.n === ailleurs.joueur)
@@ -167,6 +170,20 @@ export function faireConstruire(o: {
           })
           return
         }
+      }
+      // (Fiche Khazhags Nains 2026-11-17, arbitrage « réservé aux
+      //  Khazhags Nains aussi » : le champ `peuples` du référentiel
+      //  restreint la construction de faction au peuple du JOUEUR —
+      //  la Forge et le Grand Atelier ne se construisent pas chez un
+      //  autre peuple. 2e garde-fou BLOQUANT, même calibre que
+      //  l'unicité mondiale (exclusivité réelle) : le coût n'est pas
+      //  débité, rien n'est poussé.)
+      if (ref?.peuples && !ref.peuples.includes(t.peuple)) {
+        s.log.push({
+          turn: s.turn, type: 'Système', joueur: t.n,
+          texte: `⚠ ${nom} est réservé au peuple ${ref.peuples.join(' / ')} — ${t.nom} est ${t.peuple}. Construction REFUSÉE.`,
+        })
+        return
       }
       const cout = type === 'batiment'
         ? coutBatiment(nom, C, groupe)
@@ -308,7 +325,7 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
     const rang = rangNiveau(ville, C)
     // Alerte rouge d'une construction (revue 2026-10-16 : les limites
     //  s'INDIQUENT en rouge dans le picker, elles ne bloquent jamais).
-    const alertePour = (b: { nom: string; famille?: string; requis?: string }): string => {
+    const alertePour = (b: { nom: string; famille?: string; requis?: string; uniqueAuMonde?: boolean }): string => {
       const warns: string[] = []
       if (ville.batiments.includes(b.nom)) warns.push('Déjà construit dans cette ville (le référentiel prévoit un seul exemplaire).')
       const pre = prerequisConstruction(b)
@@ -328,8 +345,10 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
       }
       // (Merveilles mondiales 2026-11-15 : UNIQUE AU MONDE — une
       //  merveille construite dans une autre ville du monde est
-      //  signalée en rouge ; le mutateur REFUSE.)
-      if (fam === 'Merveille') {
+      //  signalée en rouge ; le mutateur REFUSE. 2026-11-17 : le
+      //  drapeau `uniqueAuMonde` (Grand Atelier des Ingénieurs)
+      //  reçoit la même alerte.)
+      if (fam === 'Merveille' || b.uniqueAuMonde === true) {
         const ailleurs = merveilleConstruiteAilleurs(state, b.nom, p.n, ville.nom)
         if (ailleurs) warns.push(`Déjà construite à ${ailleurs.villeNom} (Joueur ${ailleurs.joueur}) — unique au monde.`)
       }
@@ -340,13 +359,21 @@ export function faireBatParFamille(o: { state: GameState; p: Player; C: Cfg }): 
     // (Merveilles mondiales 2026-11-15 : BYPASS du groupe pour la
     //  famille « Merveille » — une merveille se construit dans
     //  N'IMPORTE QUELLE habitation, Ville comme Château, selon son
-    //  rangMinHabitation (= tier de la fiche).)
-    const okGroupe = (b: { groupe: string; famille?: string }) =>
-      (b.famille ?? '') === 'Merveille' ? true
+    //  rangMinHabitation (= tier de la fiche). Le drapeau
+    //  `uniqueAuMonde` (2026-11-17, Grand Atelier des Ingénieurs)
+    //  reçoit le même bypass.)
+    const okGroupe = (b: { groupe: string; famille?: string; uniqueAuMonde?: boolean }) =>
+      (b.famille ?? '') === 'Merveille' || b.uniqueAuMonde === true ? true
       : b.groupe === 'Capitale' ? false
       : b.groupe.toLowerCase() === type
+    // (Fiche Khazhags Nains 2026-11-17 : le champ `peuples` MASQUE
+    //  les bâtiments de faction réservés à un autre peuple — le
+    //  mutateur garde le REFUS bloquant pour couvrir les états
+    //  importés/rebasés.)
+    const okPeuple = (b: { peuples?: string[] }) =>
+      !b.peuples || b.peuples.includes(p.peuple)
     const eligibles = [
-      ...batRefs.filter((b) => okGroupe(b)).map((b) => ({ b, groupe: b.groupe })),
+      ...batRefs.filter((b) => okGroupe(b) && okPeuple(b)).map((b) => ({ b, groupe: b.groupe })),
       ...(estCapitale ? refsBatCapitale.map((b) => ({ b, groupe: 'Capitale' })) : []),
     ]
     // Retour Thibaut 2026-10-15 : séparation par RANG D'HABITATION pour

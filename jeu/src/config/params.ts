@@ -219,6 +219,10 @@ export interface GameParams {
   metierGarde: string
   metierBanquier: string
   metierTroubadour: string
+  // (Fiche Khazhags Nains, arbitrage Thibaut 2026-11-17 : métier
+  //  dédié à la faction — +10 % taxe d'Or ET +10 % taxe de Science,
+  //  équivalent Banquier + Professeur ; roturier.)
+  metierIngenieur: string
   traitBatard: string
   traitConsanguin: string
   traitObstine: string
@@ -356,6 +360,7 @@ export const DEFAULT_PARAMS: GameParams = {
   metierGarde: 'Garde',
   metierBanquier: 'Banquier',
   metierTroubadour: 'Troubadour',
+  metierIngenieur: 'Ingénieur',
   traitBatard: 'Bâtard',
   traitConsanguin: 'Consanguin',
   traitObstine: 'Obstiné',

@@ -347,6 +347,29 @@ export function scienceProfesseurPlusVille(ville: City, C: Cfg): number {
   return total
 }
 
+/** Parts de taxe des INGÉNIEURS du JOUEUR (fiche Khazhags Nains,
+ * arbitrages Thibaut 2026-11-17) : base +10 % Or / +10 % Science
+ * (« l'équivalent de banquier + professeur »), remplacées par les
+ * champs ingenieurOrPart / ingenieurSciencePart du GRAND ATELIER DES
+ * INGÉNIEURS si le joueur en possède un exemplaire actif (+20 % Or /
+ * +50 % Science — AU LIEU DE, pas additif ; une seule instance
+ * possible au monde, uniqueAuMonde). Niveau PAYS : scan des bâtiments
+ * ACTIFS de toutes les villes du joueur, patron
+ * scienceProfesseurPlusVille mais côté joueur. Lu par
+ * detailGainsVille (economie.ts). */
+export function partsIngenieurJoueur(p: Player, C: Cfg): { or: number; science: number } {
+  let or = 0.1
+  let science = 0.1
+  for (const ville of p.villes) {
+    for (const nom of batimentsActifsVille(ville, C)) {
+      const ref = constructionRef(nom, C.config, ville.type)
+      if (ref?.ingenieurOrPart !== undefined) or = Math.max(or, ref.ingenieurOrPart)
+      if (ref?.ingenieurSciencePart !== undefined) science = Math.max(science, ref.ingenieurSciencePart)
+    }
+  }
+  return { or, science }
+}
+
 /** Multiplicateur de RÉSISTANCE de conversion des habitants de la
  *  ville (Tour de Crystal ×1,1 — arbitrage Thibaut 2026-11-15 :
  *  « chances de conversion réduites de 10 % »). Retour au tirage par
@@ -379,7 +402,13 @@ export function merveilleConstruiteAilleurs(
       // champ `famille` est lu, il vit dans referentiels.json, pas dans
       // la config de la partie — une vieille sauvegarde portant un
       // homonyme non-merveille n'est donc pas bloquée à tort.
-      if ((constructionRef(nom, undefined, v.type)?.famille ?? '') !== 'Merveille') continue
+      // (Fiche Khazhags Nains 2026-11-17 : l'unicité mondiale s'étend
+      //  au drapeau `uniqueAuMonde` — le Grand Atelier des
+      //  Ingénieurs est une merveille mondiale mais de famille Guilde
+      //  (« compte comme une guilde »), il ne passe pas par famille
+      //  « Merveille ».)
+      const r = constructionRef(nom, undefined, v.type)
+      if (((r?.famille ?? '') !== 'Merveille') && r?.uniqueAuMonde !== true) continue
       return { joueur: q.n, villeNom: v.nom }
     }
   }

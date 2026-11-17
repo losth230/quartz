@@ -13,7 +13,7 @@ import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
-import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille } from './batiments'
+import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille, partsIngenieurJoueur } from './batiments'
 import { talentsActifs } from './talentsPeuple'
 
 // ══════════════════════════════════════════════════════════════════════
@@ -327,6 +327,19 @@ export function detailGainsVille(state: GameState, p: Player, ville: City, C: Cf
     ajouteBonus('Science', 0.1 + modsTier3.scienceProfesseurPlus + scienceProfesseurPlusVille(ville, C))
   }
   if (C.p.metierTroubadour && vivants.some((c) => c.metier === C.p.metierTroubadour) && metiers['Tourisme'] !== undefined) ajouteBonus('Tourisme', 0.1)
+  // (Fiche Khazhags Nains, arbitrage Thibaut 2026-11-17 : le métier
+  //  Ingénieur — dédié à la faction, roturier — porte les DEUX bonus
+  //  à la fois, « l'équivalent de banquier + professeur » : +10 %
+  //  taxe d'Or ET +10 % taxe de Science (additifs aux autres
+  //  titulaires, comme le Gouverneur). Le GRAND ATELIER DES
+  //  INGÉNIEURS — merveille mondiale unique, famille Guilde — monte
+  //  les parts de tout le PAYS à +20 % Or / +50 % Science AU LIEU DE
+  //  10/10 (parts lues par partsIngenieurJoueur, niveau joueur).)
+  if (C.p.metierIngenieur && vivants.some((c) => c.metier === C.p.metierIngenieur)) {
+    const partsIng = partsIngenieurJoueur(p, C)
+    if (metiers['Or'] !== undefined) ajouteBonus('Or', partsIng.or)
+    if (metiers['Science'] !== undefined) ajouteBonus('Science', partsIng.science)
+  }
   const taxes: Record<string, number> = {}
   for (const [res, v] of Object.entries(metiers)) {
     const tv = v * taxeMult[res] * (1 + (bonusTaxes[res] ?? 0))

@@ -523,6 +523,35 @@ export interface ConstructionRef {
    *  0 et DORT jusqu'à leur retour. Lu par emplacementsMetierVille
    *  (engine/metiers.ts). Champ optionnel : absent = faux. */
   batimentDeFaction?: boolean
+  // ── FICHE KHAZHAGS NAINS (arbitrages Thibaut 2026-11-17 : Forge,
+  // métier Ingénieur, Grand Atelier des Ingénieurs). Tous optionnels,
+  // absent = sans effet.
+  /** PEUPLES autorisés à construire CE bâtiment de faction
+   *  (Forge, Grand Atelier — « réservé aux Khazhags Nains aussi »).
+   *  Champ optionnel : absent = bâtiment commun. Le picker « +
+   *  Construire » MASQUE le bâtiment pour les autres peuples, et le
+   *  mutateur REFUSE (garde-fou BLOQUANT, même calibre que les
+   *  merveilles uniques au monde — exclusivité réelle). */
+  peuples?: string[]
+  /** UNICITÉ MONDIALE étendue hors famille « Merveille » (retour
+   *  arbitre : le Grand Atelier des Ingénieurs est une « merveille
+   *  mondiale unique » mais de famille Guilde — « ce bâtiment compte
+   *  comme une guilde »). true → le garde-fou du mutateur refuse la
+   *  construction si un exemplaire existe déjà dans une autre
+   *  habitation (même joueur ou non), et le picker l'alerte en rouge ;
+   *  lu par merveilleConstruiteAilleurs (engine/batiments.ts).
+   *  Comme les merveilles, il se construit dans N'IMPORTE QUEL
+   *  habitation (bypass du groupe Ville/Château). */
+  uniqueAuMonde?: boolean
+  /** GRAND ATELIER DES INGÉNIEURS : les Ingénieurs du PAYS passent
+   *  de +10 %/+10 % à CES parts de taxe (arbitrage : +20 % Or et
+   *  +50 % Science AU LIEU DE, pas additif — une seule instance
+   *  possible au monde). Lu par partsIngenieurJoueur
+   *  (engine/batiments.ts), appliqué dans detailGainsVille
+   *  (economie.ts) — patron scienceProfesseurPlusVille, mais
+   *  niveau JOUEUR. */
+  ingenieurOrPart?: number
+  ingenieurSciencePart?: number
 }
 /** Un emplacement de métier accordé par une construction (vague 3a). */
 export interface EmplacementDef {

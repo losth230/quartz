@@ -1837,27 +1837,45 @@
   "effetsPeuple": [
     {
       "nom": "Khazhags Nains",
-      "effet": "Isolationniste : -2 points de chances de migrer par bonheur, -2 points de chances de conversion culturelle, et poids d'attraction x0,8 pour les habitants des autres joueurs. Or des mines : +1 emplacement de Commerçant par aménagement de carrière, mine d'or, mine de fer ou mine de charbon.",
+      "effet": "Isolationniste : -2 points de chances de migrer par bonheur, -2 points de chances de conversion culturelle, et poids d'attraction x0,8 pour les habitants des autres joueurs. Or des mines : +1 emplacement de Commerçant par aménagement de mine d'or, +1 emplacement de Mineur par carrière, +1 emplacement de Forgeron par mine de fer et +1 emplacement de Charbonnier par mine de charbon.",
       "migrationBonheurMod": -0.02,
       "conversionProbaMod": -0.02,
       "poidsArriveeMod": 0.8,
       "emplacementsParAmenagement": [
         {
           "amenagements": [
-            "Carrière",
-            "Carrière (tier 2)",
-            "Carrière (tier 3)",
             "Mine d'Or",
             "Mine d'Or (tier 2)",
-            "Mine d'Or (tier 3)",
+            "Mine d'Or (tier 3)"
+          ],
+          "metier": "Commerçant",
+          "places": 1
+        },
+        {
+          "amenagements": [
+            "Carrière",
+            "Carrière (tier 2)",
+            "Carrière (tier 3)"
+          ],
+          "metier": "Mineur",
+          "places": 1
+        },
+        {
+          "amenagements": [
             "Mine de Fer",
             "Mine de Fer (tier 2)",
-            "Mine de Fer (tier 3)",
+            "Mine de Fer (tier 3)"
+          ],
+          "metier": "Forgeron",
+          "places": 1
+        },
+        {
+          "amenagements": [
             "Mine de Charbon",
             "Mine de Charbon (tier 2)",
             "Mine de Charbon (tier 3)"
           ],
-          "metier": "Commerçant",
+          "metier": "Charbonnier",
           "places": 1
         }
       ]
@@ -2689,6 +2707,86 @@
       "remplaceBatiment": [
         "Silo à grain",
         "Grange"
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Economique",
+      "nom": "Forge",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Bois",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 1,
+      "batimentDeFaction": true,
+      "peuples": [
+        "Khazhags Nains"
+      ],
+      "emplacements": [
+        {
+          "metier": "Ingénieur",
+          "places": 2
+        },
+        {
+          "metier": "Charbonnier",
+          "places": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 8
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Economique",
+      "nom": "Forge",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Bois",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 1,
+      "batimentDeFaction": true,
+      "peuples": [
+        "Khazhags Nains"
+      ],
+      "emplacements": [
+        {
+          "metier": "Ingénieur",
+          "places": 2
+        },
+        {
+          "metier": "Charbonnier",
+          "places": 1
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 10
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 8
+        }
       ]
     },
     {
@@ -6220,6 +6318,47 @@
     {
       "categorie": "Bâtiment",
       "groupe": "Ville",
+      "famille": "Guilde",
+      "nom": "Grand Atelier des Ingénieurs",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [
+        {
+          "ressource": "Charbon",
+          "quantite": -1
+        }
+      ],
+      "rangMinHabitation": 3,
+      "batimentDeFaction": true,
+      "uniqueAuMonde": true,
+      "peuples": [
+        "Khazhags Nains"
+      ],
+      "ingenieurOrPart": 0.2,
+      "ingenieurSciencePart": 0.5,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 80
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 40
+        },
+        {
+          "ressource": "Fer",
+          "valeur": 20
+        },
+        {
+          "ressource": "Charbon",
+          "valeur": 20
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
       "famille": "Merveille",
       "nom": "Palais des empereurs de Lun",
       "cout": "",
@@ -6792,6 +6931,18 @@
       "attribution": "",
       "metier": "Troubadour",
       "qualite": "bourgeois"
+    },
+    {
+      "valeur1": 0,
+      "ressource1": "",
+      "valeur2": 0,
+      "ressource2": "",
+      "description": "+10 % de taxe d'Or et +10 % de taxe de Science dans la ville",
+      "nobleSeul": false,
+      "regleGenre": "vide",
+      "attribution": "",
+      "metier": "Ingénieur",
+      "qualite": "roturier"
     },
     {
       "valeur1": 0,

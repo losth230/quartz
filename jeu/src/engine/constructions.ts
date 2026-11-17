@@ -447,6 +447,16 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   const multAmenag = multAmenagementsRoutesRef(ref)
   if (multAmenag > 1) parts.push(`aménagements des routes ×${multAmenag}`)
   if (ref.accordeDogme) parts.push(`1 choix de dogme hors palier à la construction`)
+  // (Fiche Khazhags Nains 2026-11-17 : Forge, métier Ingénieur, Grand
+  //  Atelier — les nouveaux canaux s'affichent pareil (picker « +
+  //  Construire », badges, wiki) : restriction de peuple, unicité
+  //  mondiale hors famille Merveille, parts d'Ingénieur au niveau
+  //  pays.)
+  if (ref.peuples && ref.peuples.length > 0) parts.push(`réservé aux ${ref.peuples.join(' / ')}`)
+  if (ref.uniqueAuMonde) parts.push(`unique au monde`)
+  if (ref.ingenieurOrPart !== undefined || ref.ingenieurSciencePart !== undefined) {
+    parts.push(`Ingénieurs du pays : +${Math.round((ref.ingenieurOrPart ?? 0.1) * 100)} % Or, +${Math.round((ref.ingenieurSciencePart ?? 0.1) * 100)} % Science (au lieu de +10 / +10)`)
+  }
   // (Merveilles NATURELLES, retour Thibaut 2026-11-15 « caverne de la
   //  tisseuse et jardins flamboyants n'ont pas de texte » : leurs deux
   //  canaux dédiés — effetsParRang (Caverne : +1 Soie PAR RANG
