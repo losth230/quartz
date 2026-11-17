@@ -72,8 +72,22 @@ export interface PeupleDef {
  *  sites concernés — structure miroir des effets de culture. */
 export interface EffetPeupleDef {
   nom: string
-  /** Libellé lisible (affichage uniquement). */
-  effet: string
+  /** Libellé combiné lisible (affichage uniquement). LEGACY : les
+   *  configs sauvegardées avant le 2026-11-17 ne portent QUE ce
+   *  champ — l'UI lui préfère les deux champs SÉPARÉS ci-dessous
+   *  (arbitrage Thibaut 2026-11-17 : « sépare les pouvoirs des
+   *  nains HABITANTS des pouvoirs du JOUEUR nain ») et n'utilise
+   *  `effet` que comme repli des vieilles fiches. */
+  effet?: string
+  /** POUVOIRS DES HABITANTS (texte d'affichage) : effets portés par
+   *  CHAQUE habitant de ce peuple (isolationnisme — migration,
+   *  conversion, attraction), indépendants du porteur. */
+  effetHabitants?: string
+  /** POUVOIRS DU JOUEUR (texte d'affichage) : effets portés par le
+   *  peuple du JOUEUR porteur (Or des mines, etc. — ils profitent
+   *  à toute la population du porteur, pas aux habitants
+   *  Khazhags vivant chez un autre joueur). */
+  effetJoueur?: string
   /** Modificateur ADDITIF (points absolus) de la proba de départ par
    *  BONHEUR d'un habitant de ce peuple (migrationBonheur). */
   migrationBonheurMod?: number

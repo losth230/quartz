@@ -1838,6 +1838,8 @@
     {
       "nom": "Khazhags Nains",
       "effet": "Isolationniste : -2 points de chances de migrer par bonheur, -2 points de chances de conversion culturelle, et poids d'attraction x0,8 pour les habitants des autres joueurs. Or des mines : +1 emplacement de Commerçant par aménagement de mine d'or, +1 emplacement de Mineur par carrière, +1 emplacement de Forgeron par mine de fer et +1 emplacement de Charbonnier par mine de charbon.",
+      "effetHabitants": "Isolationniste : -2 points de chances de migrer par bonheur, -2 points de chances de conversion culturelle, et poids d'attraction x0,8 pour les habitants des autres joueurs.",
+      "effetJoueur": "Or des mines : +1 emplacement de Commerçant par aménagement de mine d'or, +1 emplacement de Mineur par carrière, +1 emplacement de Forgeron par mine de fer et +1 emplacement de Charbonnier par mine de charbon.",
       "migrationBonheurMod": -0.02,
       "conversionProbaMod": -0.02,
       "poidsArriveeMod": 0.8,

@@ -64,6 +64,14 @@ test('référentiel : Khazhags Nains sélectionnables (banque 2) + effets isolat
   assert.ok(f, 'fiche d\'effets présente')
   assert.equal(f!.migrationBonheurMod, -0.02)
   assert.equal(f!.conversionProbaMod, -0.02)
+  // (Retour Thibaut 2026-11-17 « sépare les pouvoirs des nains
+  //  HABITANTS de ceux du JOUEUR nain » : les deux textes vivent
+  //  dans des champs SÉPARÉS — Isolationniste côté habitants,
+  //  Or des mines côté joueur.)
+  assert.ok(f!.effetHabitants?.includes('Isolationniste'),
+    'pouvoirs des habitants : texte isolationniste séparé')
+  assert.ok(f!.effetJoueur?.includes('Or des mines'),
+    'pouvoirs du joueur : texte Or des mines séparé')
   // Peuple sans fiche d'effets : aucun modificateur.
   assert.equal(peupleEffetDef('Basiléens', C.config), undefined)
   const c: Character = { peuple: 'Basiléens' } as Character

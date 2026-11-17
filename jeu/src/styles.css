@@ -993,3 +993,10 @@ input[type='range'] {
   line-height: 1.2;
 }
 .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* (Fiche peuple du wiki, retour Thibaut 2026-11-17 « mise en page pas
+   très propre » : les pouvoirs habitants/joueur, les talents et les
+   bâtiments de faction s'alignent en cartes de largeur égale, avec
+   un libellé de section au-dessus de chaque rangée.) */
+.fiche-pouvoir { flex: 1 1 280px; }
+.fiche-section-label { margin: 10px 0 0; font-weight: 600; }
