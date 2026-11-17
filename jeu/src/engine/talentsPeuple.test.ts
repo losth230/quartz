@@ -228,7 +228,7 @@ function persoFaction(id: string, age: number, metier: string | null, ville: str
     id, nom: 'Test', prenom: `Pers-${id}`, dynastie: 'Roturier', sexe: 'M', age,
     culture: 'Culture Nordique', ville, orientation: 'Hétérosexuel',
     traits: ['Obstiné', 'Stérile', 'Fécond'], statut: 'Sain', mariage: null, mariageId: null,
-    mere: null, mereId: null, pere: null, pereBio: null, pereBioId: null, enfantBatard: false,
+    mere: null, mereId: null, pere: null, pereId: null, pereBio: null, pereBioId: null, enfantBatard: false,
     metier, fecondite: 0, armee: null, peuple: 'Khazhags Nains',
   }
 }
