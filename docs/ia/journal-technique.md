@@ -7821,3 +7821,10 @@ Arbitré : afficher l'effet de base + les 5 talents par voie/Laurier.
   dans « Autres peuples (PNJ du monde) » alors que la fiche les rend
   pleinement jouables — à déplacer dans « Peuples libres » si voulu
   (donnée du classeur, arbitre).
+
+**Post-scriptum (fix CI)** : le commit onglet Peuples a échoué au
+typecheck — `TalentPeupleDef` importé de talentsPeuple alors que le
+type vit dans engine/types (le module ne le ré-exporte pas). Fix
+e2d55f7e. CI verte, deploy vert, bundle live `index-DZZtCk1t.js` —
+« Effet de base » et « Laurier I » présents, « fiches sont vides »
+absent.
