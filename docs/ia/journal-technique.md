@@ -7828,3 +7828,34 @@ type vit dans engine/types (le module ne le ré-exporte pas). Fix
 e2d55f7e. CI verte, deploy vert, bundle live `index-DZZtCk1t.js` —
 « Effet de base » et « Laurier I » présents, « fiches sont vides »
 absent.
+
+---
+
+## 2026-11-17 (3) — Fiche peuple wiki : pouvoirs habitants/joueur séparés + bâtiments & merveilles de faction (retour Thibaut)
+
+Retour Thibaut sur la fiche : « la mise en page n'est pas très
+propre », « sépare les pouvoirs des nains habitants de juste les
+pouvoirs que reçoit le joueur s'il joue nain », « il manque les
+bâtiments et merveilles de faction ».
+
+- types.ts : EffetPeupleDef — `effet` devient OPTIONNEL (repli
+  legacy), nouveaux `effetHabitants?` et `effetJoueur?` documentés
+  (arbitrage 2026-11-17). Aucun changement moteur : les mods
+  structurés sont inchangés, seule l'affichage est séparée.
+- referentiels.json : effetsPeuple Khazhags — textes séparés
+  Isolationniste (habitants) / Or des mines (joueur) ; `effet`
+  combiné conservé pour compat.
+- OngletsTraitsPeuples.tsx : fiche réorganisée en sections
+  libellées — cartes égales `.fiche-pouvoir` (flex 1 1 280px) :
+  Pouvoirs des habitants · Pouvoirs du joueur (repli `effet` si
+  fiche non séparée) · Talents par voie (frule-row, était blocs
+  empilés) · NOUVEAU Bâtiments & merveilles de faction :
+  constructions `peuples` incluant le peuple, doublons
+  Ville/Château fusionnés (badges), rang/famille, coût fmtCout
+  (coutConstructionRef), effets resumeConstruction via
+  TexteAvecItalique, badge « unique au monde »
+  (uniqueAuMonde/famille Merveille). Paragraphe d'en-tête
+  réécrit en langage joueur.
+- styles.css : .fiche-pouvoir, .fiche-section-label.
+- peuple.test.ts : verrous des deux textes séparés. 342/342 tests
+  moteur locaux verts.

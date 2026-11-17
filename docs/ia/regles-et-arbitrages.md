@@ -3774,3 +3774,37 @@ Décisions d'implémentation (proposées, non arbitrées) :
   `cfgOf` (complétion par nom / métiers manquants), SANS bump de
   `SCHEMA_VERSION_CONFIG` — la partie en cours les reçoit sans
   republier la config.
+
+---
+
+## 2026-11-17 (retour fiche) — Fiche peuple du wiki : pouvoirs HABITANTS vs pouvoirs JOUEUR séparés, bâtiments & merveilles de faction, mise en page (arbitrage Thibaut)
+
+**Arbitrage.** Retour Thibaut sur la fiche Khazhags du wiki :
+« la mise en page n'est pas très propre », « sépare les pouvoirs des
+nains HABITANTS de juste les pouvoirs que reçoit le joueur s'il joue
+nain », « il manque les bâtiments et merveilles de faction ».
+
+- **Séparation des pouvoirs.** La table `effetsPeuple` porte
+  désormais DEUX textes séparés : `effetHabitants` (pouvoirs portés
+  par CHAQUE habitant du peuple : Isolationniste — migration,
+  conversion, attraction ×0,8) et `effetJoueur` (pouvoirs portés par
+  le peuple du JOUEUR porteur : Or des mines — emplacements par
+  aménagement, profitant à toute sa population, pas aux habitants
+  Khazhags vivant chez un autre joueur). L'ancien champ combiné
+  `effet` devient optionnel, gardé comme REPLI d'affichage pour les
+  fiches/vieilles configs qui ne portent que lui — les modificateurs
+  moteur (champs structurés) sont inchangés.
+- **Bâtiments & merveilles de faction.** La fiche liste les
+  constructions du référentiel réservées au peuple (champ `peuples` :
+  Forge, Grand Atelier des Ingénieurs), doublons Ville/Château
+  fusionnés (groupes en badge), avec rang, famille, coût et effets
+  calculés par le moteur (mêmes canaux que le wiki Bâtiments) ;
+  badge « unique au monde » pour `uniqueAuMonde`/famille Merveille.
+- **Mise en page.** Fiche réorganisée en sections libellées, cartes
+  de largeur égale (`.fiche-pouvoir`) : Pouvoirs des habitants ·
+  Pouvoirs du joueur · Talents par voie · Bâtiments & merveilles de
+  faction. Le paragraphe technique d'en-tête est remplacé par une
+  phrase lisible.
+
+**Verrous.** peuple.test.ts : assertions des deux textes séparés
+(Isolationniste / Or des mines). 342/342 tests moteur locaux, CI 404.
