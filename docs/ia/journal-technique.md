@@ -7792,3 +7792,32 @@ types, tsc seul les attrape ; diagnostic par les ANNOTATIONS du
 check-run). Fix e01c12ea : champ ajouté. CI verte, deploy vert,
 bundle live `index-B_jd0gIA.js` — « Grand Atelier des
 Ingénieurs » et « réservé au peuple » présents au bundle.
+
+---
+
+## 2026-11-17 (2) — Onglet Peuples du wiki : la fiche peuple ENFIN rendue
+
+Retour Thibaut : « dans le référentiel, les descriptions des bonus de
+faction n'ont aucun sens ». Ciblage par ask_user_question : l'onglet
+« Peuples » du wiki (Référentiels) annonçait encore « Règles de
+factions retirées intégralement le 2026-10-24 / fiches vides » —
+totalement faux depuis la fiche Khazhags Nains (2026-11-16/17) — et
+AUCUNE surface du jeu ne montrait l'effet de base ni les talents.
+Arbitré : afficher l'effet de base + les 5 talents par voie/Laurier.
+
+- `components/reference/OngletsTraitsPeuples.tsx` : texte obsolète
+  remplacé ; chaque peuple rend sa fiche MOTEUR depuis les DONNÉES —
+  effet de base (`peupleEffetDef`, table effetsPeuple) puis talents
+  (`talentsPeupleDef`, table talentsPeuple) groupés par voie (ordre
+  de première apparition au référentiel), triés par Laurier
+  croissant, en chiffres romains (« Laurier I — Routes de
+  l'entrefer : … »). Rendu par les classes existantes
+  (fiche-peuple/frule) ; structure libre legacy (description/lignes)
+  conservée pour l'arbitre. Peuple sans fiche : rien (exact).
+- Aucun test moteur touché (composant, couvert par le typecheck CI +
+  le test de rendu R3 du panneau qui vérifie le rendu global sans
+  crash).
+- NOTE de classeur pour Thibaut : les Khazhags Nains sont classés
+  dans « Autres peuples (PNJ du monde) » alors que la fiche les rend
+  pleinement jouables — à déplacer dans « Peuples libres » si voulu
+  (donnée du classeur, arbitre).
