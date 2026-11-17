@@ -3706,3 +3706,71 @@ Audit de faisabilité préalable : 100 % des conditions des 5 voies
 définies sont calculables depuis l'état existant (zéro champ
 nouveau) ; la voie Scientifique (différée) reste sans jauge
 (repli « … »).
+
+## 2026-11-17 — FICHE KHAZHAGS NAINS (2) : Or des mines différencié, Forge, métier Ingénieur, Grand Atelier des Ingénieurs (arbitrages Thibaut)
+
+Demande Thibaut du 17/11 + arbitrages demandés dans la foulée :
+
+- **Or des mines** (effet de base, `effetsPeuple`) devient
+  DIFFÉRENCIÉ par type de mine (tiers 2/3 inclus) : « +1
+  commerçant pour les aménagements de mine d'or, +1 emplacement de
+  mineur pour les aménagements de carrière, +1 emplacement de
+  forgeron pour les mines de fer et +1 emplacement de charbonnier
+  pour les mines de charbon » (plus de +1 Commerçant générique sur
+  les 4 types).
+- **Forge** (NOUVEAU bâtiment de faction) : coût 10 Or + 8 Pierres,
+  consomme 1 Bois par tour, +2 emplacements d'Ingénieur et +1
+  emplacement de Charbonnier. **Arbitré : construite dans les
+  groupes Ville ET Château** (2 entrées du référentiel).
+- **Ingénieur** (NOUVEAU métier dédié à la faction) : « augmentent
+  l'or par tour des habitants de 10 % et la science par tour des
+  habitants de 10 %, c'est l'équivalent de banquier + professeur »
+  (canal des taxes, cumul additif avec les autres titulaires).
+  **Arbitré : roturier** (pas bourgeois).
+- **Grand Atelier des Ingénieurs** (NOUVELLE merveille mondiale
+  unique) : coût 80 Or + 40 Pierres + 20 Fer + 20 Charbon,
+  consomme 1 Charbon par tour, « compte comme une guilde en ce qui
+  concerne les conditions de victoire » (famille Guilde → jauge
+  Économique V). « Tous les ingénieurs de votre pays augmentent
+  la génération d'or de 20 % au lieu de 10 % et la génération
+  [de science] de 50 % au lieu de 10 % » — **arbitré : 20/50 AU
+  LIEU DE 10/10, pas additif** (le message de Thibaut portait
+  « génération d'or » deux fois ; la seconde clause se lit comme
+  la SCIENCE, sinon elle contredit la première). **Arbitré :
+  réservé aux Khazhags Nains aussi** (comme la Forge).
+
+Décisions d'implémentation (proposées, non arbitrées) :
+
+- `peuples: ['Khazhags Nains']` sur les 3 entrées : le picker
+  MASQUE le bâtiment chez les autres peuples, le mutateur REFUSE
+  (garde-fou BLOQUANT, même calibre que l'unicité mondiale —
+  exclusivité réelle, coût non débité).
+- `uniqueAuMonde: true` sur le Grand Atelier : l'unicité mondiale
+  (1 seule, 1er construit) s'étend AU-DELÀ de la famille
+  « Merveille » — le Grand Atelier est de famille Guilde mais
+  reçoit le même garde-fou, la même alerte rouge et le même BYPASS
+  de groupe que les merveilles (constructible dans toute
+  habitation, Ville ou Château).
+- `batimentDeFaction: true` sur Forge et Grand Atelier : la loi
+  Déisme « Monuments pieux » (+N Scientifiques par bâtiment de
+  faction) s'active sur eux — comportement voulu, prévu depuis le
+  retour arbitre du 2026-10-29 (« les bâtiments de faction vont
+  revenir — laisse le Monuments pieux sur eux »).
+- Forge : famille Economique (elle occupe le créneau « 1
+  bâtiment Économique par rang » de la ville) — pour ne pas gonfler
+  la famille Militaire ni la jauge des guildes ; rang
+  d'habitation 1. Grand Atelier : rang 3 (convention merveilles),
+  il occupe le créneau « 1 Guilde par ville » de sa ville
+  (conséquence assumée de « compte comme une guilde »).
+- Les parts d'Ingénieur vivent dans le RÉFÉRENTIEL
+  (`ingenieurOrPart` / `ingenieurSciencePart` sur le Grand
+  Atelier), lues par `partsIngenieurJoueur` (niveau JOUEUR, patron
+  `scienceProfesseurPlusVille` mais pays) — rien ne vit dans le
+  code. Sans Grand Atelier : +10 %/+10 % (patron Banquier +
+  Professeur codé sur `C.p.metierIngenieur`, paramètre semé par
+  `mergeParams`).
+- Configs sauvegardées : les 3 constructions et la ligne métier
+  Ingénieur sont AJOUTÉES automatiquement par le garde-fou
+  `cfgOf` (complétion par nom / métiers manquants), SANS bump de
+  `SCHEMA_VERSION_CONFIG` — la partie en cours les reçoit sans
+  republier la config.

@@ -7728,3 +7728,59 @@ message tsc exposé même quand le log demande les droits admin).
 Fix 975ec360 : la destructuration omet C. CI verte, bundle live
 `index-0nNyrTvV.js`, « Produire 100 Tourisme par tour » présent, ancien
 texte absent.
+
+---
+
+## 2026-11-17 — Fiche Khazhags Nains (2) : Or des mines différencié, Forge, Ingénieur, Grand Atelier
+
+Travail du jour : complétion de la fiche Nains (demande Thibaut
+17/11 09:37 + 3 arbitrages ask_user_question : Forge Ville ET
+Château, Ingénieur roturier, Grand Atelier 20/50 au lieu de 10/10
+et réservé aux Nains).
+
+- `referentiels.json` : effetsPeuple Khazhags — 4 entrées
+  emplacementsParAmenagement DIFFÉRENCIÉES (Mine d'Or → Commerçant,
+  Carrière → Mineur, Mine de Fer → Forgeron, Mine de Charbon →
+  Charbonnier, tiers inclus) + texte d'effet réécrit ; ligne métier
+  Ingénieur (roturier, pas de production propre) ; 3 constructions
+  (Forge ×2 groupes Ville/Château — Economique rang 1, batimentDeFaction,
+  peuples Khazhags, effets Bois -1, emplacements 2 Ingénieur +
+  1 Charbonnier, coût 10 Or + 8 Pierre ; Grand Atelier des
+  Ingénieurs — Guilde rang 3, uniqueAuMonde, batimentDeFaction,
+  peuples Khazhags, effets Charbon -1, ingenieurOrPart 0.2 /
+  ingenieurSciencePart 0.5, coût 80 Or + 40 Pierre + 20 Fer +
+  20 Charbon).
+- `config/defaultConfig.ts` : 4 champs ConstructionRef
+  (`peuples`, `uniqueAuMonde`, `ingenieurOrPart`,
+  `ingenieurSciencePart`), commentaires datés.
+- `config/params.ts` : `metierIngenieur: 'Ingénieur'` (interface +
+  défaut, semé par mergeParams dans les configs existantes).
+- `engine/batiments.ts` : `merveilleConstruiteAilleurs` étendu au
+  drapeau `uniqueAuMonde` (le Grand Atelier est de famille Guilde) ;
+  nouveau `partsIngenieurJoueur` (parts 10/10 par défaut, 20/50 si
+  Grand Atelier actif — « au lieu de », niveau JOUEUR).
+- `engine/economie.ts` : bloc taxes Ingénieur après Banquier/
+  Professeur/Troubadour (canal bonusTaxes, additif aux autres
+  titulaires, gardé par `C.p.metierIngenieur`).
+- `engine/constructions.ts` : resumeConstruction rend les nouveaux
+  canaux (réservé au peuple, unique au monde, parts d'Ingénieur).
+- `components/pays/Constructions.ts` : garde-fou BLOQUANT peuple
+  (REFUS, coût non débité) + `uniqueAuMonde` branché au garde-fou
+  mondial, à l'alerte rouge du picker et au BYPASS de groupe
+  (merveille constructible dans toute habitation) ; okPeuple
+  masque les bâtiments de faction des autres peuples.
+- Tests `engine/talentsPeuple.test.ts` : « Or des mines » RÉÉCRIT
+  (mapping différencié, tiers inclus, écart porteur/non-porteur) +
+  4 nouveaux (Forge coût/effets/emplacements cumulables,
+  Ingénieur 10/10 additif Banquier, Grand Atelier 20/50 + famille
+  Guilde + coût, unicité mondiale + régressions merveilles/Forge).
+  Comptages figés réalignés : params.test.ts 26 métiers,
+  state/config.test.ts 88 bâtiments / 55 rang 2+.
+- **404 pass + 0 fail** hors salon (400 + 4 nouveaux, baseline
+  du tour précédent conservée). Harnais rtest reconstruit
+  (loader.mjs : resolve .ts extensionless + .json sans import
+  attributes).
+- Docs : regles-et-arbitrages.md (section 2026-11-17) + cette
+  entrée. Reste différé : voie de victoire Scientifique, Laurier
+  III Scientifique Nains, affichage des talents de peuple au
+  setup/radar, wiki metiersEffets de l'Ingénieur.
