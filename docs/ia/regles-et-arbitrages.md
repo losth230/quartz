@@ -3808,3 +3808,67 @@ nain », « il manque les bâtiments et merveilles de faction ».
 
 **Verrous.** peuple.test.ts : assertions des deux textes séparés
 (Isolationniste / Or des mines). 342/342 tests moteur locaux, CI 404.
+
+---
+
+## 2026-11-18 — Fiche « PEAUX VERTES » : deuxième faction jouable (fiche Thibaut)
+
+**Fiche fournie par Thibaut** (deuxième faction, après les Khazhags
+Nains). Le peuple PEAUX VERTES existait déjà comme peuple LIBRE
+jouable (banque de noms n°1) : la fiche ajoute ses pouvoirs, ses
+talents et ses constructions, sans toucher au système.
+
+### Base (effetsPeuple, deux canaux)
+
+- **Taillés pour la guerre** (pouvoirs HABITANTS) : un habitant
+  Peaux-Vertes de métier Commandant, Soldat ou Garde ne consomme
+  AUCUNE nourriture — règle évaluée AVANT le rang social, le dogme
+  et le régime : même un noble Garde ne consomme rien. Portée par le
+  peuple de l'HABITANT (hérité de la mère), où qu'il vive.
+- **Union du Klan** (pouvoirs JOUEUR) : fonder une habitation coûte
+  3 Bois et 5 Or de moins — uniquement le PREMIER rang du type (la
+  fondation) ; les AMÉLIORATIONS de rang ne sont jamais réduites
+  (cliquet), la réduction est clampée à 0 par ressource.
+
+### Bâtiment & merveille de faction
+
+- **Autel Eud Guer** (bâtiment de faction, Ville ET Château, rang
+  d'habitation 1, 6 Bois + 12 Or, réservé PEAUX VERTES) : −15 Or sur
+  la levée d'armée dans cette habitation (cumulatif par exemplaire,
+  même canal que les réductions de bâtiments) et +15 Taudis.
+- **Grand Autel Noirecendre** (merveille de faction, famille
+  Merveille → unique au monde, 80 Or + 60 Bois + 20 Pierre) : tant
+  qu'elle tient, chaque Autel Eud Guer du joueur (toutes villes)
+  gagne +15 Or de levée, +1 émissaire et +15 Taudis
+  (canal `buffBatiment*`, niveau JOUEUR, rétroactif sur les autels
+  déjà posés).
+
+### Talents (lauriers, renommables par l'arbitre)
+
+- **Démographique I « Crocs et pièges »** : Chasseurs +1
+  Nourriture/tour (flux par habitant avant taxes, même patron que la
+  Guilde des marins) et +5 emplacements de Chasseur PAR RANG
+  d'habitation (rangNiveau) ; **III « Autels hurlants »** : +10
+  Bonheur par Autel Eud Guer (avant le plafond 100).
+- **Militaire I « Jambes de raid »** : +1 PM et 1 armée
+  supplémentaire — règle de PLATEAU, texte seul : le moteur n'a ni
+  PM ni plafond d'armées (ce dernier a été retiré, retour
+  2026-10-18) ; **III « Klan en marche »** : coût de levée −10 Or
+  PAR ARMÉE POSSÉDÉE, appliqué APRÈS les réductions de ville, plancher
+  0, volontairement HORS `reductionLeveeArmeeVille` pour ne pas
+  fausser la jauge des Lauriers (niveau habitation).
+- **Diplomatique I « Serments de sang »** : tribut vassal +2 % par
+  Autel Eud Guer, ADDITIF aux canaux existants (dogme Mère Patrie,
+  Guilde des diplomates, régime), partagé entre l'impôt manuel
+  (`impotsVassaux`) et le tribut de fin de tour ; **III « La peur du
+  klan »** : coût de levée des armées des VASSAUX +10 Or par rang
+  de pays du SUZERAIN (`prixArmee` reçoit le suzerain en 5e
+  argument, `ArmiesPanel` le passe sur les 7 grilles) et +2
+  emplacements de Garde par Autel.
+
+**Verrous.** `peauxvertes.test.ts` (12 tests) : référentiel, deux
+canaux base, consommation 0, fondation réduite vs amélioration
+intacte, autel (levée/Taudis), Grand Autel (buffs + unicité via
+`merveilleConstruiteAilleurs`), Démo I/III, Mil I inerte vs Mil III,
+Dipl I ratios ×1,02/×1,04, Dipl III (+2 Gardes, +10/+20 Or Baronnie
+→ Comté).

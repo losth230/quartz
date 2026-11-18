@@ -7859,3 +7859,55 @@ bâtiments et merveilles de faction ».
 - styles.css : .fiche-pouvoir, .fiche-section-label.
 - peuple.test.ts : verrous des deux textes séparés. 342/342 tests
   moteur locaux verts.
+
+---
+
+## 2026-11-18 — Fiche « PEAUX VERTES » : 2e faction (base, talents, bâtiment + merveille de faction)
+
+Fiche Thibaut, implémentée intégralement dans le référentiel et le
+moteur. Le peuple PEAUX VERTES était déjà jouable (peuple libre).
+
+- types.ts : EffetPeupleDef += `metiersSansConsoNourriture?` et
+  `reductionCoutFondation?` (Array ressource/valeur) ;
+  TalentPeupleDef += `emplacementsParRangHabitation`,
+  `emplacementsParBatiment`, `bonheurParBatiment`,
+  `tributVassalParBatiment`, `reductionLeveeParArmeePossedee`,
+  `surcoutLeveeVassalParRangPays`. defaultConfig :
+  ConstructionRef += `batimentDeFaction`, flat `buffBatiment?`,
+  `buffBatimentLeveeArmee?`, `buffBatimentEmissaires?`,
+  `buffBatimentTaudis?`.
+- referentiels.json : effetsPeuple « PEAUX VERTES » (effet +
+  effetHabitants « Taillés pour la guerre » + effetJoueur « Union
+  du Klan », canaux structurés) ; talentsPeuple : 6 talents
+  (noms IA renommables : Crocs et pièges / Autels hurlants /
+  Jambes de raid / Klan en marche / Serments de sang / La peur du
+  klan) ; constructions += Autel Eud Guer ×2 (Ville ET Château,
+  batimentDeFaction, peuples ['PEAUX VERTES'], reductionLeveeArmee
+  15, +15 Taudis, 6 Bois + 12 Or) et Grand Autel Noirecendre
+  (famille Merveille → unique au monde, buffBatiment 'Autel Eud
+  Guer' 15/1/15, 80 Or + 60 Bois + 20 Pierre).
+- economie.ts : consoNourrHabitant → 0 sur métier listé AVANT
+  rang/dogme/régime ; impotsVassaux ×(1+tributVassalTalentsBatiment).
+  vassalite.ts : helper partagent tribut talents (impôt manuel +
+  transfererTributVassal). habitations.ts : debiterCoutHabitation
+  applique reductionCoutFondation si rangNiveau==1 (fondation
+  uniquement, clamp 0). metiers.ts : emplacementsMetierVille +=
+  emplacementsParBatiment (× exemplaires dans la ville) et
+  emplacementsParRangHabitation (× rangNiveau). armees.ts :
+  reductionLeveeArmeeVille += buff Grand Autel par ville ;
+  prixArmee : 5e param `suzerain` (surcoût vassal × rangPaysNiveau),
+  −reductionLeveeParArmeePossedee × p.armees.length APRÈS les
+  réductions, plancher 0, volontairement hors
+  reductionLeveeArmeeVille (jauge lauriersAuto). batiments.ts :
+  refBuffBatimentJoueur + emissairesConstructionsJoueur += buff.
+  bonheur.ts : bonheurVilleComplete += bonheurParBatiment ;
+  logementsVille += taudisGrandAutelVille (propriétaire retrouvé
+  via state). constructions.ts : resumeConstruction rend les
+  buffBatiment*. ArmiesPanel.tsx : les 7 appels prixArmee passent
+  le suzerain.
+- Comptages réalignés : merveilles.test.ts 11→12 ; state/
+  config.test.ts bâtiments 91 (73 + 12 merveilles + 6 faction).
+- peauxvertes.test.ts (12 tests) : OK ; suite complète locale 445
+  tests, 422 pass (les 23 échecs = rendus React connus, verts en
+  CI). diag-out.txt régénéré (log 471 entrées).
+- Docs : section règles 2026-11-18 + cette entrée.
