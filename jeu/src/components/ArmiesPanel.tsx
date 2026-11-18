@@ -46,6 +46,12 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
   const ages = agesRecrutementSoldat(C)
   const p = state.players.find((x) => x.n === joueur)
   if (!p) return null
+  // (Fiche PEAUX VERTES 2026-11-18, Diplomatique III « coût de levée
+  //  des armées de vos vassaux +10 Or par rang de votre pays » : le
+  //  SUZERAIN du joueur qui lève passe à prixArmee — seul un vassal
+  //  dont le suzerain porte le talent paie le surcoût.)
+  const suzerainDe = (x?: { vassalDe?: number | null }) =>
+    x?.vassalDe != null ? state.players.find((q) => q.n === x.vassalDe) : undefined
   const pop = state.population[joueur] ?? []
   const vivants = pop.filter((c) => c.statut !== 'Décédé')
 
@@ -68,9 +74,9 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
   //  Autoritarisme « Conscription » (refonte « 8 lois » des
   //  régimes, 2026-10-29 : −N Or par rang du pays du joueur).
   const villeLeveeObj = p.villes.find((v) => v.nom === villeLevee)
-  const prix = prixArmee(puissance, C, villeLeveeObj, p)
+  const prix = prixArmee(puissance, C, villeLeveeObj, p, suzerainDe(p))
   // Prix SANS les réductions de la ville (pour afficher l'économie)
-  const prixBrut = prixArmee(puissance, C, undefined, p)
+  const prixBrut = prixArmee(puissance, C, undefined, p, suzerainDe(p))
   const orDispo = p.resources['Or']?.stock ?? 0
   const leverArmee = () => {
     const cmd = commandantsDispo.find((c) => c.id === commandant)
@@ -81,7 +87,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
       if (!target) return
       // Prix de levée (classeur : 1 Or tous les 2 points de force) :
       // débité UNE FOIS à la levée — pas d'entretien par tour.
-      const prix2 = prixArmee(puissance, C, villeLeveeObj, target)
+      const prix2 = prixArmee(puissance, C, villeLeveeObj, target, suzerainDe(target))
       const rs = target.resources['Or']
       if (rs && rs.stock < prix2) return
       if (rs && prix2 > 0) rs.stock -= prix2
@@ -125,7 +131,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
           // la ville de renfort (arbitrage Thibaut 2026-10-28).
           const deltaRenfort = Math.round(renfortParArmee[idx] ?? 15)
           const villeRenfortObj = p.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
-          const prixRenfort = prixArmee(deltaRenfort, C, villeRenfortObj, p)
+          const prixRenfort = prixArmee(deltaRenfort, C, villeRenfortObj, p, suzerainDe(p))
           return (
             <div key={idx} className={`mini ${cmdMort ? 'warn-box' : ''}`}>
               <div className="mini-title">
@@ -248,7 +254,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                   value={String(deltaRenfort)}
                   options={Array.from({ length: 20 }, (_, k) => (k + 1) * 15).map((d) => ({
                     value: String(d),
-                    label: `+${fmt(d)} pts (${fmt(prixArmee(d, C, villeRenfortObj, p))} Or)`,
+                    label: `+${fmt(d)} pts (${fmt(prixArmee(d, C, villeRenfortObj, p, suzerainDe(p)))} Or)`,
                   }))}
                   onChange={(v) => setRenfortParArmee((m) => ({ ...m, [idx]: Math.round(Number(v)) }))}
                 />
@@ -269,7 +275,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
                     setPlayer((x, s) => {
                       const armee = x.armees[idx]
                       const villeObj = x.villes.find((v) => v.nom === (villeRenfortParArmee[idx] ?? ''))
-                      const prix2 = prixArmee(delta, C, villeObj, x)
+                      const prix2 = prixArmee(delta, C, villeObj, x, suzerainDe(x))
                       const rs = x.resources['Or']
                       if (rs && rs.stock < prix2) return
                       if (rs && prix2 > 0) rs.stock -= prix2
@@ -313,7 +319,7 @@ export function ArmiesPanel({ joueur }: { joueur: number }) {
               value={String(puissance)}
               options={Array.from({ length: 18 }, (_, k) => 45 + k * 15).map((v) => ({
                 value: String(v),
-                label: `${fmt(v)} pts (${fmt(prixArmee(v, C, villeLeveeObj, p))} Or)`,
+                label: `${fmt(v)} pts (${fmt(prixArmee(v, C, villeLeveeObj, p, suzerainDe(p)))} Or)`,
               }))}
               onChange={(v) => setPuissance(Math.round(Number(v)))}
             />

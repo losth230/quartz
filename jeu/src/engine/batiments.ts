@@ -229,7 +229,40 @@ export function emissairesConstructionsJoueur(p: Player, C: Cfg): number {
       total += (ref?.emissairesApportes ?? 0)
     }
   }
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18, Grand Autel
+  //  Noirecendre : « vos Autels Eud Guer octroient 1 émissaire » —
+  //  tant que le Grand Autel (canal buffBatiment*) est construit
+  //  chez le joueur, chaque exemplaire du bâtiment buffé (n'importe
+  //  où chez lui) gagne +N émissaires. Niveau JOUEUR, même siège
+  //  que les canaux de guildes tier 3.)
+  const refBuff = refBuffBatimentJoueur(p, C)
+  if (refBuff) {
+    total += (refBuff.buffBatimentEmissaires ?? 0) * p.villes.reduce(
+      (n, v) => n + v.batiments.filter((b) => b === refBuff.buffBatiment).length, 0)
+  }
   return total
+}
+
+/** (Fiche PEAUX VERTES 2026-11-18, Grand Autel Noirecendre.) Référence
+ *  de la construction BUFF-porteuse (canal `buffBatiment`) construite
+ *  par le joueur, undefined sinon — tant qu'elle tient, chaque
+ *  exemplaire du bâtiment nommé gère les bonus buffBatiment* (levée
+ *  d'armée, émissaires, Taudis). Lu par reductionLeveeArmeeVille
+ *  (armees.ts), emissairesConstructionsJoueur ci-dessus et
+ *  logementsVille (bonheur.ts — via le propriétaire retrouvé dans
+ *  le state). Pure. */
+export function refBuffBatimentJoueur(
+  p: { villes?: Array<{ batiments?: string[] }> } | undefined,
+  C: Cfg,
+): import('../config/defaultConfig').ConstructionRef | undefined {
+  if (!p) return undefined
+  for (const ville of p.villes ?? []) {
+    for (const nom of ville.batiments ?? []) {
+      const ref = constructionRef(nom, C.config)
+      if (ref?.buffBatiment) return ref
+    }
+  }
+  return undefined
 }
 
 // ── Règle « le remplacé ne compte plus » — généralisée (vague tier 3,

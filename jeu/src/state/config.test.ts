@@ -220,16 +220,19 @@ test('config : migration v5 — les BÂTIMENTS pré-rework sont réalignés (plu
     // (Merveilles mondiales, fiches Thibaut 2026-11-15 : les 4
     //  ANCIENNES merveilles (dont deux homonymes des nouvelles) sont
     //  purgées, puis les 11 NOUVELLES du référentiel sont
-    //  réintégrées par la complétion.)
-    11, 'les 4 vieilles merveilles sont purgées, les 11 nouvelles du référentiel sont là')
+    //  réintégrées par la complétion. Fiche PEAUX VERTES 2026-11-18 :
+    //  + le GRAND ATEL NOIRECENDRE, merveille de faction → 12.)
+    12, 'les 4 vieilles merveilles sont purgées, les 11 nouvelles + la merveille de faction Peaux-Vertes du référentiel sont là')
   assert.equal(
     C.config.constructions.filter((x) => x.categorie === 'Bâtiment').length,
     // 88 = 87 bâtiments du référentiel (73 + les 11 MERVEILLES
     //  MONDIALES des fiches Thibaut 2026-11-15 + les 3 bâtiments de
     //  faction Khazhags Nains 2026-11-17 : Forge Ville, Forge
-    //  Château, Grand Atelier des Ingénieurs) + le perso, ni
-    //  perdus ni doublés
-    88, '87 bâtiments du référentiel (73 + 11 merveilles + 3 faction Nains) + le perso, ni perdus ni doublés')
+    //  Château, Grand Atelier des Ingénieurs + les 3 bâtiments de
+    //  faction PEAUX VERTES 2026-11-18 : Autel Eud Guer Ville,
+    //  Autel Eud Guer Château, Grand Autel Noirecendre) + le perso,
+    //  ni perdus ni doublés
+    91, '90 bâtiments du référentiel (73 + 12 merveilles + 3 faction Nains + 3 faction Peaux-Vertes) + le perso, ni perdus ni doublés')
   assert.ok(C.config.constructions.some((x) => x.nom === 'Mon bâtiment perso'),
     'un bâtiment perso (hors référentiel) est conservé')
   assert.equal(C.config.schemaVersion, 5, 'tampon v5 apposé')

@@ -7,7 +7,7 @@ renommage armée idx=0 : OK
 tour suivant (armées en place) : OK — turn 7
 
 ═══ REGISTRE DE RÈGLES PAR CANAL ═══
-total : 122 règles — sources : batiment 75, amenagement 47
+total : 124 règles — sources : batiment 77, amenagement 47
 ── canal placesMetier : 91 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.camp-de-bucheron@ville — Camp de bûcheron (Ville) : Bûcheron +2
@@ -100,12 +100,14 @@ total : 122 règles — sources : batiment 75, amenagement 47
   batiment.guilde-des-savants@chateau — Guilde des savants (Château) : Charbon -1 · Scientifique +15
   batiment.temple-de-bahamutt@ville — Temple de Bahamutt (Ville) : Tourisme +30 · Garde +4
   batiment.laboratoire-de-falheim@ville — Laboratoire de Falheim (Ville) : Scientifique +12
-── canal logements : 18 règles ──
+── canal logements : 20 règles ──
   batiment.poste-de-garde@ville — Poste de garde (Ville) : Garde +4 · Taudis +10
   batiment.bas-quartier@ville — Bas quartier (Ville) : Taudis +20
   batiment.poste-de-garde@chateau — Poste de garde (Château) : Garde +4 · Taudis +10
   batiment.bas-quartier@chateau — Bas quartier (Château) : Taudis +20
   amenagement.sepulcre-du-rayonnant@merveille-naturelle — Sépulcre du Rayonnant (Merveille naturelle) : Garnison +20 · Taudis +10
+  batiment.autel-eud-guer@ville — Autel Eud Guer (Ville) : Taudis +15 · levée d'armée −15 Or
+  batiment.autel-eud-guer@chateau — Autel Eud Guer (Château) : Taudis +15 · levée d'armée −15 Or
   batiment.jardins-d-alexandrie@ville — Jardins d’Alexandrie (Ville) : Maison +30
   batiment.caserne@ville — Caserne (Ville) : Garde +4 · Taudis +10
   batiment.tour-de-sorcier@ville — Tour de sorcier (Ville) : Scientifique +1 · Maison de notable +1
@@ -119,10 +121,12 @@ total : 122 règles — sources : batiment 75, amenagement 47
   batiment.banlieue@chateau — Banlieue (Château) : Maison +40
   batiment.guilde-des-bourgeois@chateau — Guilde des bourgeois (Château) : Maison de notable +20
   batiment.pyramide-des-xoltans@ville — Pyramide des Xoltans (Ville) : Maison +40
-── canal reductionLeveeArmee : 6 règles ──
+── canal reductionLeveeArmee : 8 règles ──
   batiment.terrain-d-entrainement@chateau — Terrain d'entrainement (Château) : levée d'armée −10 Or
   batiment.grande-caserne@capitale — Grande caserne (Capitale) : Garnison +40 · levée d'armée −8 Or
   amenagement.antre-de-magmadon@merveille-naturelle — Antre de Magmadon (Merveille naturelle) : levée d'armée −15 Or
+  batiment.autel-eud-guer@ville — Autel Eud Guer (Ville) : Taudis +15 · levée d'armée −15 Or
+  batiment.autel-eud-guer@chateau — Autel Eud Guer (Château) : Taudis +15 · levée d'armée −15 Or
   batiment.ecole-militaire@chateau — Ecole militaire (Château) : Garde +2 · levée d'armée −25 Or
   batiment.guilde-des-explorateurs@chateau — Guilde des explorateurs (Château) : Charbon -1 · levée d'armée −20 Or
   batiment.ordre-des-chevaliers-du-notan@ville — Ordre des chevaliers du Notan (Ville) : levée d'armée −50 Or

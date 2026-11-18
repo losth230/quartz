@@ -90,11 +90,14 @@ function perso(id: string, age: number, o: { metier?: string | null; ville?: str
 test('merveilles (référentiel) : 11 entrées famille Merveille — tiers 1/2/3, coûts structurés des fiches, textes vidés', () => {
   const C = cfgOf()
   const mers = C.config.constructions.filter((c) => (c.famille ?? '') === 'Merveille')
-  assert.equal(mers.length, 11, '11 merveilles mondiales au référentiel')
-  // tiers : 4 de tier 1, 2 de tier 2, 5 de tier 3
+  // (Fiche PEAUX VERTES 2026-11-18 : + Grand Autel Noirecendre —
+  //  11 merveilles mondiales + 1 merveille DE FACTION = 12, la
+  //  répartition passe de 4/2/5 à 5/2/5.)
+  assert.equal(mers.length, 12, '11 merveilles mondiales + 1 merveille de faction (Grand Autel Noirecendre) au référentiel')
+  // tiers : 5 de tier 1, 2 de tier 2, 5 de tier 3
   const parRang = [1, 2, 3].map((r) => mers.filter((m) => m.rangMinHabitation === r).length)
-  assert.deepEqual(parRang, [4, 2, 5],
-    `répartition par tier : 4/2/5 attendu (obtenu ${parRang.join('/')})`)
+  assert.deepEqual(parRang, [5, 2, 5],
+    `répartition par tier : 5/2/5 attendu (obtenu ${parRang.join('/')})`)
   // toutes Bâtiment groupe Ville, textes VIDÉS (convention du référentiel)
   for (const m of mers) {
     assert.equal(m.categorie, 'Bâtiment', `${m.nom} : catégorie Bâtiment`)
@@ -148,7 +151,7 @@ test('merveilles (convergence) : une vieille config (v4) purge les 4 ANCIENNES m
   c.constructions.push(...merveillesVieilles)
   const C = cfgOfConfig(c)
   const mers = C.config.constructions.filter((x) => (x.famille ?? '') === 'Merveille')
-  assert.equal(mers.length, 11, 'les 4 vieilles sont purgées, les 11 nouvelles sont là')
+  assert.equal(mers.length, 12, 'les 4 vieilles sont purgées, les 11 nouvelles + la faction sont là')
   assert.ok(!mers.some((m) => m.nom === 'Mont Caracole' || m.nom === 'Grands bains'),
     'les deux anciennes sans homonyme neuf ont disparu')
   assert.equal(mers.filter((m) => m.nom === 'Sanctuaire de Salmodiva').length, 1,
@@ -161,8 +164,8 @@ test('merveilles (convergence) : une vieille config (v4) purge les 4 ANCIENNES m
   }
   // idempotence : la re-lecture d une config convergée est stable
   const C2 = cfgOfConfig(C.config)
-  assert.equal(C2.config.constructions.filter((x) => (x.famille ?? '') === 'Merveille').length, 11,
-    're-lecture : toujours 11, pas de doublon')
+  assert.equal(C2.config.constructions.filter((x) => (x.famille ?? '') === 'Merveille').length, 12,
+    're-lecture : toujours 12, pas de doublon')
 })
 
 // ── 3. Unicité mondiale : merveilleConstruiteAilleurs ──────────────────────

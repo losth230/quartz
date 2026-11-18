@@ -10,6 +10,7 @@ import type { Rng } from './rng'
 import { cfgOf, metierDef, regimeDef } from './gameData'
 import type { Cfg } from './gameData'
 import { reductionLeveeBatiments } from './constructions'
+import { refBuffBatimentJoueur } from './batiments'
 import { rangPaysNiveau } from './rangs'
 import { talentsActifs } from './talentsPeuple'
 import { emptyRecap, fullName } from './shared'
@@ -343,7 +344,7 @@ export function libererSoldats(
  *  réductions de la ville de levée, plancher 0. */
 export function reductionLeveeArmeeVille(
   ville: { batiments?: string[] } | undefined,
-  p: { regime?: string; rang?: string; peuple?: string; lauriers?: Record<string, number> } | undefined,
+  p: { regime?: string; rang?: string; peuple?: string; lauriers?: Record<string, number>; villes?: Array<{ batiments?: string[] }> } | undefined,
   C: Cfg,
 ): number {
   let reducTalent = 0
@@ -353,22 +354,61 @@ export function reductionLeveeArmeeVille(
         .filter((b) => b === rb.batiment).length
     }
   }
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18, Grand Autel
+  //  Noirecendre : « vos Autels Eud Guer réduisent de 15 Or
+  //  supplémentaire la levée d'armée » — tant que le Grand Autel
+  //  (canal buffBatiment*) est construit, chaque Autel Eud Guer
+  //  DE LA VILLE DE LEVÉE ajoute +N à la réduction. Le paramètre
+  //  p structurel s'enrichit de `villes` (le joueur complet l'est
+  //  à tous les appelants).)
+  const refBuff = refBuffBatimentJoueur(p as { villes: Array<{ batiments?: string[] }> } | undefined, C)
+  const reducGrandAutel = refBuff
+    ? (refBuff.buffBatimentLeveeArmee ?? 0) * (ville?.batiments ?? [])
+      .filter((b) => b === refBuff.buffBatiment).length
+    : 0
   return (ville ? reductionLeveeBatiments(ville, C) : 0)
     + (regimeDef(p?.regime ?? '', C.config)?.leveeOrParRangPays ?? 0) * rangPaysNiveau(p, C)
     + reducTalent
+    + reducGrandAutel
 }
 
 export function prixArmee(
   puissanceCible: number,
   C: Cfg,
   ville?: { batiments?: string[] },
-  p?: { regime?: string; rang?: string; peuple?: string; lauriers?: Record<string, number> },
+  p?: { regime?: string; rang?: string; peuple?: string; lauriers?: Record<string, number>; villes?: Array<{ batiments?: string[] }>; armees?: Array<unknown> },
+  /** (Fiche PEAUX VERTES 2026-11-18, Diplomatique III) : SUZERAIN
+   *  du joueur `p` quand celui-ci est un VASSAL — porte le talent
+   *  surcoutLeveeVassalParRangPays (« coût de levée des armées de
+   *  vos vassaux +10 Or par rang de votre pays »). Optionnel :
+   *  sans suzerain, aucun surcoût. */
+  suzerain?: { peuple?: string; lauriers?: Record<string, number>; rang?: string },
 ): number {
   const tranche = Math.max(1, C.p.armeePriXPuissance)
   if (puissanceCible <= 0) return 0
   const prix = (puissanceCible / tranche) * C.p.armeePrixOr
   const reduction = reductionLeveeArmeeVille(ville, p, C)
-  return Math.max(0, Math.round(prix - reduction))
+  let out = Math.max(0, Math.round(prix - reduction))
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18, Militaire
+  //  III « coût de levée de vos armées -10 Or par armée que vous
+  //  possédez » : talent canal reductionLeveeParArmeePossedee —
+  //  taille de la banque d'armées du joueur qui lève, APRÈS les
+  //  autres réductions, plancher 0. Volontairement HORS
+  //  reductionLeveeArmeeVille : la jauge des Lauriers Militaires
+  //  (lauriersAuto) doit rester au niveau HABITATION.)
+  for (const t of talentsActifs(p, C)) {
+    out -= (t.reductionLeveeParArmeePossedee ?? 0) * (p?.armees?.length ?? 0)
+  }
+  // (Fiche PEAUX VERTES 2026-11-18, Diplomatique III « coût de
+  //  levée des armées de vos vassaux +10 Or par rang de votre
+  //  pays » : SURCOÛT infligé par le talent du SUZERAIN —
+  //  × rangPaysNiveau du suzerain porteur, plancher 0.)
+  if (suzerain) {
+    for (const t of talentsActifs(suzerain, C)) {
+      out += (t.surcoutLeveeVassalParRangPays ?? 0) * rangPaysNiveau(suzerain, C)
+    }
+  }
+  return Math.max(0, Math.round(out))
 }
 
 /** Plafond d'armées — SUPPRIMÉ (retour joueur 2026-10-18) : plus aucun

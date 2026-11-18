@@ -457,6 +457,16 @@ export function resumeConstruction(ref: ConstructionRef | undefined, cfg?: GameC
   if (ref.ingenieurOrPart !== undefined || ref.ingenieurSciencePart !== undefined) {
     parts.push(`Ingénieurs du pays : +${Math.round((ref.ingenieurOrPart ?? 0.1) * 100)} % Or, +${Math.round((ref.ingenieurSciencePart ?? 0.1) * 100)} % Science (au lieu de +10 / +10)`)
   }
+  // (Fiche PEAUX VERTES 2026-11-18, Grand Autel Noirecendre : le
+  //  canal buffBatiment* s'affiche pareil — tant que ce bâtiment
+  //  tient, chaque exemplaire du bâtiment buffé gagne les bonus.)
+  if (ref.buffBatiment) {
+    const bout: string[] = []
+    if (ref.buffBatimentLeveeArmee) bout.push(`-${ref.buffBatimentLeveeArmee} Or de levée`)
+    if (ref.buffBatimentEmissaires) bout.push(`+${ref.buffBatimentEmissaires} émissaire${ref.buffBatimentEmissaires > 1 ? 's' : ''}`)
+    if (ref.buffBatimentTaudis) bout.push(`+${ref.buffBatimentTaudis} Taudis`)
+    if (bout.length > 0) parts.push(`chaque ${ref.buffBatiment} : ${bout.join(', ')} (tant que ce bâtiment tient)`)
+  }
   // (Merveilles NATURELLES, retour Thibaut 2026-11-15 « caverne de la
   //  tisseuse et jardins flamboyants n'ont pas de texte » : leurs deux
   //  canaux dédiés — effetsParRang (Caverne : +1 Soie PAR RANG

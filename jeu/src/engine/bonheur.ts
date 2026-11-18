@@ -40,6 +40,8 @@ import { rangNiveau, rangsDefsType, nomRang } from './rangs'
 import { domicilesApportesVille, domicilesCultureVille } from './domiciles'
 import { effetsDogmeCulture } from './dogmes'
 import { constructionRef } from './constructions'
+import { talentsActifs } from './talentsPeuple'
+import { refBuffBatimentJoueur } from './batiments'
 
 // ── Formules pures (testées isolément) ───────────────────────────────
 
@@ -131,6 +133,16 @@ export function logementsVille(ville: City, C: Cfg, state?: GameState): number {
   //  cohérent.)
   const apportes = domicilesApportesVille(ville, C).reduce((acc, e) => acc + e.nombre, 0)
     + domicilesCultureVille(ville, C, state).reduce((acc, e) => acc + e.nombre, 0)
+    // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18, Grand
+    //  Autel Noirecendre : « vos Autels Eud Guer octroient +15
+    //  Taudis » — tant que le Grand Autelier (canal buffBatiment*)
+    //  est construit, chaque Autel de CETTE ville ajoute +N Taudis
+    //  au parc. `state` requis pour retrouver le PROPRIÉTAIRE de la
+    //  ville (sans état : aucun bonus, appels sans état = cités
+    //  libres).
+    //  Villes d'un joueur homonymes interdites par convention — le
+    //  premier propriétaire trouvé fait foi.)
+    + taudisGrandAutelVille(ville, C, state)
   if (stockVille !== null) return stockVille + apportes
   const def = rangsDefsType(ville.type ?? 'Ville', C).find(
     (d) => nomRang(d.rang).toLowerCase() === nomRang(ville.rang ?? 'Hameau').toLowerCase(),
@@ -148,6 +160,20 @@ export function logementsVille(ville: City, C: Cfg, state?: GameState): number {
 }
 
 // ── Scores d'une ville réelle ────────────────────────────────────────
+
+/** (Fiche PEAUX VERTES 2026-11-18, Grand Autel Noirecendre.) Taudis
+ *  supplémentaires de la ville : +`buffBatimentTaudis` par exemplaire
+ *  du bâtiment buffé (Autel Eud Guer) SI le propriétaire de la ville
+ *  possède la construction BUFF-porteuse (canal buffBatiment*).
+ * `state` optionnel : sans état, aucun bonus. Pure. */
+function taudisGrandAutelVille(ville: City, C: Cfg, state?: GameState): number {
+  if (!state) return 0
+  const proprio = state.players.find((q) => q.villes.some((v) => v.nom === ville.nom))
+  const refBuff = refBuffBatimentJoueur(proprio, C)
+  if (!refBuff) return 0
+  return (refBuff.buffBatimentTaudis ?? 0)
+    * (ville.batiments ?? []).filter((b) => b === refBuff.buffBatiment).length
+}
 
 export function scoresVille(state: GameState, p: Player, ville: City, C: Cfg): ScoresVille {
   const pop = (state.population[p.n] ?? []).filter(
@@ -209,14 +235,26 @@ export function bonusBonheurRegime(p: Player, C: Cfg): number {
  *  régime, AVANT le plafond 100.) */
 export function bonheurVilleComplete(state: GameState, p: Player, ville: City, C: Cfg): number {
   const dogme = effetsDogmeCulture(state, ville.culture, 'bonheurVille', C)
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18,
+  //  Démographique III « vos Autels Eud Guer offrent +10 Bonheur » :
+  //  talent canal bonheurParBatiment — +N par exemplaire du
+  //  bâtiment construit dans la ville, AVANT le plafond 100.)
+  let bonheurTalentsBatiment = 0
+  for (const t of talentsActifs(p, C)) {
+    for (const bb of t.bonheurParBatiment ?? []) {
+      bonheurTalentsBatiment += bb.bonheur * (ville.batiments ?? []).filter((b) => b === bb.batiment).length
+    }
+  }
   return Math.min(
     100,
     bonheurVille(scoresVille(state, p, ville, C)) + bonusBonheurRegime(p, C) + dogme
       // MERVEILLES NATURELLES (fiches 2026-10-25) : Bonheur apporté
       //  par les constructions de la ville (Jardins Flamboyants :
       //  +10) — champ bonheurApporte du référentiel, bâtiments ET
-      //  aménagements, cumulable, plafonné par le min(100) commun.
-      + bonheurApportesVille(ville, C),
+      //  aménagements, cumulable, plafonné par le min(100) commun
+      //  + +10 Bonheur par Autel Eud Guer (PEAUX VERTES 2026-11-18).
+      + bonheurApportesVille(ville, C)
+      + bonheurTalentsBatiment,
   )
 }
 
