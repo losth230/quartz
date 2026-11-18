@@ -15,6 +15,7 @@ import { rangDe } from './statutSocial'
 import { constructionRef, emplacementsConstructionRef, estCotiereRef } from './constructions'
 import { batimentsActifsVille } from './batiments'
 import { metiersDisponiblesRang } from './habitations'
+import { rangNiveau } from './rangs'
 import { villeCotiere } from './geographie'
 import { effetsDogmeCulture } from './dogmes'
 
@@ -386,6 +387,22 @@ function emplacementsMetierVille(
         for (const e of t.emplacementsParRoute ?? []) {
           if (e.metier === metier) total += e.places * nbRoutes
         }
+      }
+    }
+    // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18 — deux
+    //  canaux de talents « emplacements », portés par le peuple du
+    //  JOUEUR : emplacementsParBatiment (+2 Garde PAR Autel Eud
+    //  Guer construit dans la ville, Diplomatique III) et
+    //  emplacementsParRangHabitation (+5 Chasseurs PAR RANG de
+    //  l'habitation, Démographique I, × rangNiveau).)
+    for (const t of talentsActifs(pj, C)) {
+      for (const eb of t.emplacementsParBatiment ?? []) {
+        if (eb.metier !== metier) continue
+        total += eb.places * (ville.batiments ?? []).filter((b) => b === eb.batiment).length
+      }
+      for (const er of t.emplacementsParRangHabitation ?? []) {
+        if (er.metier !== metier) continue
+        total += er.places * rangNiveau(ville, C)
       }
     }
   }

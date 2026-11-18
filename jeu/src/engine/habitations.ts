@@ -26,9 +26,9 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { City, GameState, Player } from './types'
-import { type Cfg } from './gameData'
+import { peupleEffetDef, type Cfg } from './gameData'
 import { agregerCouts } from './constructions'
-import { nomRang, rangsDefsType } from './rangs'
+import { nomRang, rangNiveau, rangsDefsType } from './rangs'
 export { nomRang, rangsDefsType } from './rangs'
 
 /** Type d'habitation d'une ville (« Ville » ou « Château » ; défaut
@@ -88,7 +88,18 @@ export function debiterCoutHabitation(
   //  arbitre. Vague 2, arbitrage 2026-10-23 « Grand bailli : c'est un
   //  ministre, on supprime pour l'instant » : l'office n'existe plus.)
   const def = habitationDef(ville, C)
-  const cout = coutHabitation(ville, C)
+  let cout = coutHabitation(ville, C)
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18 « Union du
+  //  Klan » : fonder une habitation coûte 3 Bois et 5 Or de moins —
+  //  réduction ADDITIVE du coût du PREMIER rang du type (la
+  //  fondation, rangNiveau == 1 ; les AMÉLIORATIONS de rang ne sont
+  //  pas des fondations), clampée à 0 par ressource. Portée par le
+  //  peuple du JOUEUR.)
+  if (rangNiveau(ville, C) === 1) {
+    for (const rc of peupleEffetDef(p.peuple ?? '', C.config)?.reductionCoutFondation ?? []) {
+      cout = { ...cout, [rc.ressource]: Math.max(0, (cout[rc.ressource] ?? 0) - rc.valeur) }
+    }
+  }
   // (RETRAIT 2026-10-24, retour arbitre : plus de réduction de coût par
   //  les technologies — Colonialisme durable/économe, Expansion
   //  maritime — supprimées avec le système de progrès.)

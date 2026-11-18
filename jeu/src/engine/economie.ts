@@ -9,12 +9,17 @@
 // ══════════════════════════════════════════════════════════════════════
 
 import type { Character, City, GameState, Player } from './types'
-import { cfgOf, cultureDef, metierDef, regimeDef, type Cfg } from './gameData'
+import { cfgOf, cultureDef, metierDef, peupleEffetDef, regimeDef, type Cfg } from './gameData'
 import { gouverneurDeVille } from './metiers'
 import { rangDe } from './statutSocial'
 import { effetsDogmeCulture } from './dogmes'
 import { modificateursPaysJoueur, multProductionBourgeoisVille, bonusMetierParHabitantVille, scienceProfesseurPlusVille, partsIngenieurJoueur } from './batiments'
 import { talentsActifs } from './talentsPeuple'
+import { tributVassalTalentsBatiment } from './vassalite'
+// (Fiche PEAUX VERTES 2026-11-18 « Taillés pour la guerre » :
+//  consoNourrHabitant lit metiersSansConsoNourriture de
+//  effetsPeuple ; « +2 % de tribut par Autel » partagé avec la
+//  fin de tour via tributVassalTalentsBatiment (vassalite.ts).)
 
 // ══════════════════════════════════════════════════════════════════════
 //  GAINS DE POPULATION PAR VILLE (CalculerGainsPopulation)
@@ -67,6 +72,13 @@ export function multProdRang(c: Character, C: Cfg): number {
  *  dogme n'est pas consulté — les habitants des cités libres sont
  *  de toute façon tous roturiers (prestige non calculé).) */
 export function consoNourrHabitant(c: Character, C: Cfg, regime?: string, state?: GameState): number {
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18 « Taillés pour
+  //  la guerre » : un habitant de ce peuple porteur d'un des métiers
+  //  de metiersSansConsoNourriture ne consomme RIEN — AVANT tout
+  //  autre calcul (rang social, dogme, régime), quel que soit son
+  //  rang. Porté par le peuple de l'HABITANT, hérité de la mère.)
+  if ((peupleEffetDef(c.peuple ?? '', C.config)?.metiersSansConsoNourriture ?? [])
+    .includes(c.metier ?? '')) return 0
   // (refonte 12 lois, 2026-10-29 : rangDe — le seuil bourgeois peut
   //  être abaissé par « Bourgeoisie facile » (Communautarisme, 80))
   const r = rangDe(c, C)
@@ -414,11 +426,17 @@ export function impotsVassaux(state: GameState, p: Player, C: Cfg): ImpotVassal[
   //  dévoués). Symétrique du branchement de transfererTributVassal
   //  (fin de tour) : les deux chemins du tribut portent la guilde.)
   const multGuilde = 1 + modificateursPaysJoueur(p, C).tributVassalPlus
+  // (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18, Diplomatique
+  //  I « les taxes de vos vassaux augmentent de 2% par Autel Eud
+  //  Guer » : talent canal tributVassalParBatiment, ADDITIF au
+  //  multiplicateur (même siège que la Guilde des diplomates) —
+  //  helper partagé avec le tribut de fin de tour (vassalite.ts).)
+  const multTalentsBatiment = tributVassalTalentsBatiment(p, C)
   const multDogme = 1 + effetsDogmeCulture(state, p.culture, 'tributVassal', C)
   for (const v of state.players) {
     if (v.vassalDe !== p.n || p.vassalDe === v.n) continue // serment croisé ignoré
     const gains = gainsPopulationJoueur(state, v, C)
-    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement * multDogme * multGuilde
+    const part = (gains['Or'] ?? 0) * C.p.vassalPrelevement * multDogme * multGuilde * (1 + multTalentsBatiment)
     if (part !== 0) out.push({ vassal: v.nom, montant: part })
   }
   return out

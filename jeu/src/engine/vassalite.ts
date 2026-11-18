@@ -10,6 +10,25 @@ import type { Cfg } from './gameData'
 import { regimeDef } from './gameData'
 import { effetsDogmeCulture } from './dogmes'
 import { modificateursPaysJoueur } from './batiments'
+import { talentsActifs } from './talentsPeuple'
+
+/** Part additive du tribut vassal portée par les TALENTS de peuple
+ *  « par bâtiment » (PEAUX VERTES 2026-11-18, Diplomatique I :
+ *  +0,02 par Autel Eud Guer construit). Partagé entre le tribut de
+ *  fin de tour et l'impôt manuel. Pure. */
+export function tributVassalTalentsBatiment(
+  suzerain: { peuple?: string; lauriers?: Record<string, number>; villes: Array<{ batiments?: string[] }> },
+  C: Cfg,
+): number {
+  let total = 0
+  for (const t of talentsActifs(suzerain, C)) {
+    for (const tb of t.tributVassalParBatiment ?? []) {
+      total += tb.part * suzerain.villes.reduce(
+        (n, v) => n + (v.batiments ?? []).filter((b) => b === tb.batiment).length, 0)
+    }
+  }
+  return total
+}
 
 //  Chaque vassal reverse une part des revenus de ses habitants (gains
 //  d'Or, après taxes) à son suzerain. Les chaînes A→B→C fonctionnent :
@@ -50,6 +69,12 @@ export function transfererTributVassal(
       * (regimeDef(suzerain.regime, C.config)?.tributVassalMult ?? 1)
       * (1 + effetsDogmeCulture(state, suzerain.culture, 'tributVassal', C))
       * (1 + modificateursPaysJoueur(suzerain, C).tributVassalPlus)
+      // (Fiche PEAUX VERTES 2026-11-18, Diplomatique I « +2 % de
+      //  tribut par Autel Eud Guer » : talent canal
+      //  tributVassalParBatiment — symétrique du branchement
+      //  d'impotsVassaux (impôt manuel), les DEUX chemins du tribut
+      //  portent le talent.)
+      * (1 + tributVassalTalentsBatiment(suzerain, C))
     const gainsSuz = gainsParJoueur[suzerain.n] ?? (gainsParJoueur[suzerain.n] = {})
     gainsSuz['Or'] = (gainsSuz['Or'] ?? 0) + recu
     state.log.push({

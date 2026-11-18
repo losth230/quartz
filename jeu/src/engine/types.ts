@@ -112,6 +112,18 @@ export interface EffetPeupleDef {
     /** Emplacements par aménagement présent. */
     places: number
   }[]
+  /** (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18 « Taillés pour
+   *  la guerre ») : métiers dont un HABITANT de ce peuple ne
+   *  consomme AUCUNE Nourriture. Porté par le peuple de l'HABITANT
+   *  (hérité de la mère) : consoNourrHabitant (economie.ts) retourne
+   *  0 AVANT tout autre calcul (rang social, régime, dogme). */
+  metiersSansConsoNourriture?: string[]
+  /** (Fiche PEAUX VERTES, arbitrage Thibaut 2026-11-18 « Union du
+   *  Klan ») : réduction ADDITIVE du coût de FONDATION d'une
+   *  habitation (premier rang de son type — rangNiveau == 1).
+   *  Porté par le peuple du JOUEUR : debiterCoutHabitation
+   *  (habitations.ts), clampé à 0 par ressource. */
+  reductionCoutFondation?: Array<{ ressource: string; valeur: number }>
 }
 
 /** TALENTS DE PEUPLE — fiche de faction « base au setup + talents
@@ -143,6 +155,34 @@ export interface TalentPeupleDef {
   emplacementsParRoute?: { metier: string; places: number }[]
   fluxParMetier?: { metiers: string[]; ressource: string; valeur: number }[]
   reductionLeveeParBatiment?: { batiment: string; reduction: number }[]
+  // ── Canaux PEAUX VERTES (fiche 2026-11-18) — tous optionnels,
+  //    portés par le peuple du JOUEUR, dérivés de p.lauriers.
+  /** Vos habitations offrent +N emplacements de `metier` PAR RANG de
+   *  l'habitation (Démographique I « +5 Chasseurs par rang ») —
+   *  emplacementsMetierVille (metiers.ts), × rangNiveau(ville). */
+  emplacementsParRangHabitation?: Array<{ metier: string; places: number }>
+  /** Chaque bâtiment `batiment` construit dans la ville ouvre +N
+   *  emplacements de `metier` (Diplomatique III « +2 Garde par Autel
+   *  Eud Guer ») — emplacementsMetierVille (metiers.ts). */
+  emplacementsParBatiment?: Array<{ batiment: string; metier: string; places: number }>
+  /** Chaque bâtiment `batiment` construit dans la ville ajoute +N
+   *  Bonheur (Démographique III « +10 Bonheur par Autel ») —
+   *  bonheurVilleComplete (bonheur.ts), avant le plafond 100. */
+  bonheurParBatiment?: Array<{ batiment: string; bonheur: number }>
+  /** Chaque bâtiment `batiment` construit ajoute +`part` au
+   *  MULTIPLICATEUR de tribut vassal (Diplomatique I « taxes de vos
+   *  vassaux +2 % par Autel ») — impôt vassal (economie.ts),
+   *  additif au canal tributVassalPlus des guildes. */
+  tributVassalParBatiment?: Array<{ batiment: string; part: number }>
+  /** Réduction de levée d'armée PAR ARMÉE POSSÉDÉE (Militaire III
+   *  « −10 Or par armée que vous possédez ») — prixArmee
+   *  (armees.ts), après les autres réductions, plancher 0. */
+  reductionLeveeParArmeePossedee?: number
+  /** SURCOÛT de levée d'armée infligé aux VASSAUX, +N Or PAR RANG
+   *  DE PAYS du suzerain porteur du talent (Diplomatique III
+   *  « +10 Or par rang de votre pays ») — prixArmee (armees.ts),
+   *  paramètre suzerain. */
+  surcoutLeveeVassalParRangPays?: number
 }
 
 export interface BuildingDef {

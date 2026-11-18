@@ -552,6 +552,24 @@ export interface ConstructionRef {
    *  niveau JOUEUR. */
   ingenieurOrPart?: number
   ingenieurSciencePart?: number
+  // ── FICHE PEAUX VERTES (arbitrage Thibaut 2026-11-18 : Grand
+  //  Autel Noirecendre, merveille de faction « vos Autels Eud Guer
+  //  réduisent de 15 Or supplémentaire la levée d'armée et octroient
+  //  1 émissaire et +15 Taudis »). Tous optionnels, absent = sans
+  //  effet. Tant que CE bâtiment est construit, CHAQUE exemplaire du
+  //  bâtiment `buffBatiment` (n'importe où chez le joueur) gagne
+  //  les bonus ci-dessous — lus par reductionLeveeArmeeVille
+  //  (armees.ts), emissairesConstructionsJoueur (batiments.ts) et
+  //  logementsVille (bonheur.ts), niveau JOUEUR comme les parts
+  //  d'Ingénieur.
+  /** Bâtiment BUFFÉ tant que celui-ci tient ('Autel Eud Guer'). */
+  buffBatiment?: string
+  /** Bonus de réduction de levée d'armée par exemplaire buffé. */
+  buffBatimentLeveeArmee?: number
+  /** Émissaires octroyés par exemplaire buffé. */
+  buffBatimentEmissaires?: number
+  /** Taudis octroyés par exemplaire buffé. */
+  buffBatimentTaudis?: number
 }
 /** Un emplacement de métier accordé par une construction (vague 3a). */
 export interface EmplacementDef {

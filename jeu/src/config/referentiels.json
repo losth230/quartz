@@ -1881,6 +1881,27 @@
           "places": 1
         }
       ]
+    },
+    {
+      "nom": "PEAUX VERTES",
+      "effet": "Taillés pour la guerre : les Peaux-Vertes ayant pour métier Commandant, Soldat ou Garde n'ont aucune consommation de nourriture. Union du Klan : fonder une habitation coûte 3 Bois et 5 Or de moins.",
+      "effetHabitants": "Taillés pour la guerre : les Peaux-Vertes ayant pour métier Commandant, Soldat ou Garde n'ont aucune consommation de nourriture.",
+      "effetJoueur": "Union du Klan : fonder une habitation coûte 3 Bois et 5 Or de moins.",
+      "metiersSansConsoNourriture": [
+        "Commandant",
+        "Soldat",
+        "Garde"
+      ],
+      "reductionCoutFondation": [
+        {
+          "ressource": "Bois",
+          "valeur": 3
+        },
+        {
+          "ressource": "Or",
+          "valeur": 5
+        }
+      ]
     }
   ],
   "talentsPeuple": [
@@ -1960,6 +1981,84 @@
         {
           "batiment": "Barraquements",
           "reduction": 30
+        }
+      ]
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Démographique",
+      "laurierMin": 1,
+      "nom": "Crocs et pièges",
+      "texte": "Vos chasseurs produisent +1 Nourriture par tour. Vos habitations offrent +5 Chasseurs par rang de l'habitation.",
+      "fluxParMetier": [
+        {
+          "metiers": [
+            "Chasseur"
+          ],
+          "ressource": "Nourriture",
+          "valeur": 1
+        }
+      ],
+      "emplacementsParRangHabitation": [
+        {
+          "metier": "Chasseur",
+          "places": 5
+        }
+      ]
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Démographique",
+      "laurierMin": 3,
+      "nom": "Autels hurlants",
+      "texte": "Vos Autels Eud Guer offrent +10 Bonheur.",
+      "bonheurParBatiment": [
+        {
+          "batiment": "Autel Eud Guer",
+          "bonheur": 10
+        }
+      ]
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Militaire",
+      "laurierMin": 1,
+      "nom": "Jambes de raid",
+      "texte": "Vos armées ont +1 PM. Vous pouvez posséder une armée supplémentaire. (Règle de plateau — le moteur ne compte ni les PM ni de plafond d'armées.)"
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Militaire",
+      "laurierMin": 3,
+      "nom": "Klan en marche",
+      "texte": "Vous pouvez posséder une armée supplémentaire. Coût de levée de vos armées -10 Or par armée que vous possédez.",
+      "reductionLeveeParArmeePossedee": 10
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Diplomatique",
+      "laurierMin": 1,
+      "nom": "Serments de sang",
+      "texte": "Les taxes de vos vassaux augmentent de 2% par Autel Eud Guer que vous avez construit.",
+      "tributVassalParBatiment": [
+        {
+          "batiment": "Autel Eud Guer",
+          "part": 0.02
+        }
+      ]
+    },
+    {
+      "peuple": "PEAUX VERTES",
+      "voie": "Diplomatique",
+      "laurierMin": 3,
+      "nom": "La peur du klan",
+      "texte": "Coût de levée des armées de vos vassaux +10 Or par rang de votre pays. +2 emplacements de Garde dans chacun de vos Autels Eud Guer.",
+      "surcoutLeveeVassalParRangPays": 10,
+      "emplacementsParBatiment": [
+        {
+          "batiment": "Autel Eud Guer",
+          "metier": "Garde",
+          "places": 2
         }
       ]
     }
@@ -6440,6 +6539,103 @@
         {
           "ressource": "Pierre",
           "valeur": 50
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Militaire",
+      "nom": "Autel Eud Guer",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "batimentDeFaction": true,
+      "peuples": [
+        "PEAUX VERTES"
+      ],
+      "reductionLeveeArmee": 15,
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 15
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Bois",
+          "valeur": 6
+        },
+        {
+          "ressource": "Or",
+          "valeur": 12
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Château",
+      "famille": "Militaire",
+      "nom": "Autel Eud Guer",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "batimentDeFaction": true,
+      "peuples": [
+        "PEAUX VERTES"
+      ],
+      "reductionLeveeArmee": 15,
+      "domicilesApportes": [
+        {
+          "domicile": "Taudis",
+          "nombre": 15
+        }
+      ],
+      "couts": [
+        {
+          "ressource": "Bois",
+          "valeur": 6
+        },
+        {
+          "ressource": "Or",
+          "valeur": 12
+        }
+      ]
+    },
+    {
+      "categorie": "Bâtiment",
+      "groupe": "Ville",
+      "famille": "Merveille",
+      "nom": "Grand Autel Noirecendre",
+      "cout": "",
+      "production": "",
+      "description": "",
+      "effets": [],
+      "rangMinHabitation": 1,
+      "batimentDeFaction": true,
+      "peuples": [
+        "PEAUX VERTES"
+      ],
+      "buffBatiment": "Autel Eud Guer",
+      "buffBatimentLeveeArmee": 15,
+      "buffBatimentEmissaires": 1,
+      "buffBatimentTaudis": 15,
+      "couts": [
+        {
+          "ressource": "Or",
+          "valeur": 80
+        },
+        {
+          "ressource": "Bois",
+          "valeur": 60
+        },
+        {
+          "ressource": "Pierre",
+          "valeur": 20
         }
       ]
     }
